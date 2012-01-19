@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ $HeadURL:
+  ~ $Id:
+  ~
+  ~ Copyright (c) 2006-2011 by Public Library of Science
+  ~
+  ~ http://plos.org
+  ~ http://ambraproject.org
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.topazproject.ambra.models" default-lazy="false">
+
+  <class name="Article" table="Article">
+    <id name="id" type="org.ambraproject.hibernate.URIType" column="articleUri" length="100">
+      <generator class="org.ambraproject.hibernate.AmbraIdGenerator" />
+    </id>
+    <property name="state" type="int" column="state"/>
+    <property name="eIssn" type="string" column="eIssn" />
+    <property name="archiveName" type="string" column="archiveName" />
+    <property name="contextElement" type="string" column="contextElement" />
+
+    <many-to-one name="dublinCore" class="DublinCore" cascade="save-update,delete" column="dublinCoreIdentifier" lazy="false"/>
+
+    <many-to-one name="isPartOf" class="Article" column="isPartOf" cascade="none"/>
+
+    <list name="parts" table="ArticlePartsJoinTable" cascade="save-update,all-delete-orphan">
+      <key column="articleUri"/>
+      <list-index column="sortOrder"/>
+      <many-to-many class="ObjectInfo" column="objectInfoUri"/>
+    </list>
+
+    <list name="authors" table="ArticleAuthorJoinTable" cascade="save-update,all-delete-orphan">
+      <key column="articleUri" />
+      <list-index column="sortOrder" />
+      <many-to-many class="ArticleContributor" column="contributorUri"/>
+    </list>
+
+    <list name="editors" table="ArticleEditorJoinTable" cascade="save-update,all-delete-orphan">
+      <key column="articleUri" />
+      <list-index column="sortOrder" />
+      <many-to-many class="ArticleContributor" column="contributorUri"/>
+    </list>
+
+    <set name="categories" table="ArticleCategoryJoinTable" cascade="save-update,all-delete-orphan" lazy="false">
+      <key column="articleUri" />
+      <many-to-many class="Category" column="articleCategoryUri"/>
+    </set>
+
+    <set name="articleType" table="ArticleTypes" lazy="false" cascade="save-update,all">
+      <key column="articleUri" />
+      <element column="typeUri" type="org.ambraproject.hibernate.URIType" />
+    </set>
+
+    <set name="representations" table="ArticleRepresentationsJoinTable" cascade="save-update,all-delete-orphan">
+      <key column="articleUri" />
+      <many-to-many class="Representation" column="representationsUri"/>
+    </set>
+
+    <set name="relatedArticles" table="ArticleRelatedJoinTable" cascade="save-update,all-delete-orphan">
+      <key column="articleUri" />
+      <many-to-many class="RelatedArticle" column="articleRelatedUri"/>
+    </set>
+  </class>
+
+</hibernate-mapping>

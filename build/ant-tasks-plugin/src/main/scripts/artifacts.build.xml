@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL:: $
+  $Id: $
+
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <artifact:dependencies filesetId="antcontrib.fileset" useScope="runtime">
+    <dependency groupId="ant-contrib" artifactId="ant-contrib" version="1.0b2"/>
+  </artifact:dependencies>
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset refid="antcontrib.fileset"/>
+    </classpath>
+  </taskdef>
+
+
+  <!-- Fetch the list of dependencies and copy to asked location -->
+  <target name="get-artifacts">
+    <!-- Get Tomcat and unjar it in classes -->
+    <mkdir dir="${location}"/>
+
+    <for list="${dependencies}" param="dependency">
+      <sequential>
+        <propertyregex property="groupId" input="@{dependency}"
+          regexp="([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="artifactId" input="@{dependency}"
+          regexp="[^:]*:([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="version" input="@{dependency}"
+          regexp="[^:]*:[^:]*:(.*)" select="\1" casesensitive="false"
+          override="true"/>
+
+        <echo message="${groupId},${artifactId},${version}"/>
+
+        <var name="fileSet" value="${artifactId}:${version}"/>
+        <!-- Get the war file dependency as parameters -->
+        <artifact:dependencies filesetId="${fileSet}" useScope="runtime">
+          <dependency groupId="${groupId}" artifactId="${artifactId}"
+            version="${version}" type="${type}"/>
+        </artifact:dependencies>
+
+        <copy todir="${location}" flatten="true">
+          <fileset refid="${fileSet}"/>
+        </copy>
+      </sequential>
+    </for>
+  </target>
+  <!-- Fetch the list of dependencies and untar it -->
+  <target name="untar">
+    <!-- Get Tomcat and unjar it in classes -->
+    <mkdir dir="${location}"/>
+
+    <for list="${dependencies}" param="dependency">
+      <sequential>
+        <propertyregex property="groupId" input="@{dependency}"
+          regexp="([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="artifactId" input="@{dependency}"
+          regexp="[^:]*:([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="version" input="@{dependency}"
+          regexp="[^:]*:[^:]*:(.*)" select="\1" casesensitive="false"
+          override="true"/>
+
+        <echo message="${groupId},${artifactId},${version},${type}"/>
+
+        <var name="fileSet" value="${artifactId}:${version}"/>
+        <!-- Get the war file dependency as parameters -->
+        <artifact:dependencies filesetId="${fileSet}" useScope="runtime">
+          <dependency groupId="${groupId}" artifactId="${artifactId}"
+            version="${version}" type="${type}"/>
+        </artifact:dependencies>
+
+        <untar dest="${location}" overwrite="false" compression="${compression}">
+          <fileset refid="${fileSet}" />
+        </untar>
+
+      </sequential>
+    </for>
+  </target>
+
+</project>
+

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ $HeadURL$
+~ $Id$
+~ Copyright (c) 2006-2011 by Public Library of Science
+~ http://plos.org
+~ http://ambraproject.org
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~ http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd"
+       xmlns:tx="http://www.springframework.org/schema/tx">
+
+  <!--Hibernate Session factory stuff-->
+  <bean id="sessionFactoryBuilder" class="org.topazproject.ambra.testutils.HibernateTestSessionFactory"
+        destroy-method="close"/>
+
+  <bean id="sessionFactory" class="org.hibernate.SessionFactory" factory-bean="sessionFactoryBuilder"
+        factory-method="getFactory"/>
+
+  <bean id="hibernateEntityUtil" class="org.topazproject.ambra.util.HibernateEntityUtil">
+    <constructor-arg>
+      <bean class="java.util.Map" factory-bean="sessionFactory" factory-method="getAllClassMetadata" />
+    </constructor-arg>
+  </bean>
+
+  <bean id="dummyDataStore" class="org.topazproject.ambra.testutils.DummyHibernateDataStore">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <!--Transaction manager stuff.
+  This lets transactions be wrapped around service invocations as they would in production-->
+  <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+  <bean id="articleHtmlEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="ArticleHtmlCache"/>
+  </bean>
+
+  <bean id="articleHtmlCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0" ref="articleHtmlEhcache"/>
+  </bean>
+
+  <!-- File store stuff  (lazy-init all these)
+  NOTE: Since we want to use relative file paths for the test config files,
+  be sure to set your working directory either to the new hope home dir or the webapp directory -->
+  <bean id="ingestZip" class="java.util.zip.ZipFile" lazy-init="true">
+    <constructor-arg index="0" value="src/test/resources/test-ingest.zip"/>
+  </bean>
+  <bean id="configuration" class="org.topazproject.ambra.testutils.AmbraTestConfigurationFactory" lazy-init="true"
+        factory-method="getConfiguration">
+    <constructor-arg index="0" value="${project.basedir}/src/test/resources/ambra-test-config.xml"/>
+  </bean>
+
+  <!--Solr server factory-->
+  <bean id="solrServerFactory" class="org.topazproject.ambra.testutils.EmbeddedSolrServerFactory"
+      destroy-method="tearDown"/>
+
+  <!-- Set up XML factories -->
+  <bean id="documentBuilderFactory" class="org.topazproject.ambra.util.DocumentBuilderFactoryCreator"
+        factory-method="createFactory"/>
+  <bean id="documentBuilder" factory-bean="documentBuilderFactory" factory-method="newDocumentBuilder" />
+
+  <!--Ingest archive processor that uses xsl to parse article xml.-->
+  <bean id="ingestArchiveProcessor" class="org.topazproject.ambra.article.service.XslIngestArchiveProcessor" >
+    <property name="documentBuilder" ref="documentBuilder"/>
+    <property name="xslStyleSheet" value="org/topazproject/ambra/article/service/pmc2obj.xslt"/>
+    <property name="configuration" ref="configuration"/>
+  </bean>
+
+
+  <bean id="fileStoreService" class="org.plos.filestore.impl.FileSystemImpl" lazy-init="true">
+    <constructor-arg index="0" value="${project.basedir}/src/test/filestore"/>
+    <constructor-arg index="1" value=""/>
+  </bean>
+
+  <!--Service Beans-->
+  <!-- Set up XML factories -->
+  <bean id="permissionsService" class="org.topazproject.ambra.permission.service.PermissionsServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="annotationService" class="org.topazproject.ambra.annotation.service.AnnotationServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="applicationId" value="test-app"/>
+    <property name="permissionsService" ref="permissionsService" />
+    <property name="articleHtmlCache" ref="articleHtmlCache"/>
+  </bean>
+
+  <bean id="replyService" class="org.topazproject.ambra.annotation.service.ReplyServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="applicationId" value="test-app"/>
+    <property name="permissionsService" ref="permissionsService" />
+  </bean>
+
+  <bean id="citationService" class="org.topazproject.ambra.admin.service.impl.CitationServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
+  <bean id="trackbackService" class="org.topazproject.ambra.annotation.service.TrackbackServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="ratingsService" class="org.topazproject.ambra.rating.service.RatingsServiceImpl">
+    <property name="applicationId" value="test-app-id"/>
+    <property name="permissionsService" ref="permissionsService" />
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
+  <bean id="articlePersistenceService" class="org.topazproject.ambra.article.service.ArticlePersistenceServiceImpl">
+    <property name="fileStoreService" ref="fileStoreService"/>
+    <property name="permissionsService" ref="permissionsService" />
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="journalService" class="org.topazproject.ambra.journal.JournalServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="configuration" ref="configuration"/>
+  </bean>
+
+  <bean id="browseService" class="org.topazproject.ambra.article.service.BrowseServiceImpl" lazy-init="true">
+    <property name="journalService" ref="journalService"/>
+    <property name="browseSolrCache"><null/></property>
+    <property name="serverFactory" ref="solrServerFactory"/>
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="articlePersistenceService" ref="articlePersistenceService"/>
+  </bean>
+
+  <bean id="articleDocumentService" class="org.topazproject.ambra.article.service.ArticleDocumentServiceImpl" lazy-init="true">
+    <property name="documentBuilderFactory" ref="documentBuilderFactory"/>
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="journalService" ref="journalService"/>
+    <property name="fileStoreService" ref="fileStoreService"/>
+  </bean>
+
+  <bean id="flagManagementService" class="org.topazproject.ambra.admin.service.impl.FlagManagementServiceImpl">
+    <property name="annotationConverter" ref="annotationConverter"/>
+    <property name="annotationService" ref="annotationService"/>
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="ingester" class="org.topazproject.ambra.article.service.HibernateIngesterImpl">
+    <property name="fileStoreService" ref="fileStoreService" />
+    <property name="ingestArchiveProcessor" ref="ingestArchiveProcessor" />
+    <property name="syndicationService" ref="syndicationService" />
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="entityUtil" ref="hibernateEntityUtil"/>
+    <property name="documentManagementService" ref="documentManagementService"/>
+  </bean>
+
+  <bean id="ingestedDocumentDir" class="java.lang.String">
+    <constructor-arg index="0" value="src/test/output" />
+  </bean>
+
+  <bean id="articleIndexingService" class="org.topazproject.ambra.search.service.ArticleIndexingServiceImpl">
+    <property name="ambraConfiguration" ref="configuration"/>
+    <property name="articleDocumentService" ref="articleDocumentService"/>
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="messageSender" ref="messageSender"/>
+    <property name="ambraMailer" ref="ambraMailer" />
+  </bean>
+
+  <bean id="searchService" class="org.topazproject.ambra.search.service.SolrSearchService">
+      <property name="serverFactory" ref="solrServerFactory"/>
+    <property name="configuration" ref="configuration"/>
+  </bean>
+
+  <bean id="messageSender" class="org.topazproject.ambra.search.service.DummySOLRMessageSender">
+    <property name="solrServerFactory" ref="solrServerFactory"/>
+  </bean>
+
+  <bean id="ambraMailer" class="org.topazproject.ambra.service.DummyAmbraMailer" />
+
+  <bean id="syndicationService" class="org.topazproject.ambra.admin.service.impl.SyndicationServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="ambraConfiguration" ref="configuration"/>
+    <property name="journalService" ref="journalService"/>
+    <property name="messageService" ref="messageService"/>
+  </bean>
+
+  <bean id="adminService" class="org.topazproject.ambra.admin.service.impl.AdminServiceImpl">
+    <property name="journalService" ref="journalService"/>
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="userService" class="org.topazproject.ambra.user.service.UserServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="applicationId" value="topaz-ambra"/>
+    <property name="permissionsService" ref="permissionsService"/>
+  </bean>
+
+  <bean id="searchUserAction" class="org.topazproject.ambra.user.action.SearchUserAction">
+    <property name="userService" ref="userService"/>
+    <property name="adminService" ref="adminService"/>
+    <property name="ambraConfiguration" ref="configuration"/>
+  </bean>
+
+  <bean id="xmlService" class="org.topazproject.ambra.service.XMLServiceImpl" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <property name="xslTemplate" value="${project.basedir}/src/main/resources/viewnlm-v2.xsl"/>
+    <property name="ambraConfiguration" ref="configuration"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+  </bean>
+
+  <util:map id="xmlFactoryProperties">
+    <entry key="javax.xml.transform.TransformerFactory"
+           value="net.sf.saxon.TransformerFactoryImpl"/>
+    <entry key="javax.xml.transform.Transformer"
+           value="net.sf.saxon.Controller"/>
+  </util:map>
+
+  <bean id="solrFieldConverter" class="org.topazproject.ambra.solr.SolrFieldConversionImpl">
+    <property name="allTimeViewsField" value="all_time_views" />
+    <property name="viewCountingFields">
+      <map>
+        <entry key="14" value="two_week_field"/>
+        <entry key="30" value="one_month_field"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="profanityCheckingService" class="org.topazproject.ambra.util.ProfanityCheckingServiceImpl">
+    <property name="profaneWords" ref="profaneWords" />
+  </bean>
+  <bean id="annotationConverter" class="org.topazproject.ambra.annotation.service.AnnotationConverterImpl">
+    <property name="userService" ref="userService"/>
+  </bean>
+  <bean id="messageService" class="org.topazproject.ambra.queue.MessageServiceImpl">
+    <property name="sender" ref="messageSender"/>
+    <property name="ambraConfiguration" ref="configuration"/>
+  </bean>
+  <util:list id="profaneWords">
+    <value>ass</value>
+    <value>ass lick</value>
+    <value>asses</value>
+    <value>asshole</value>
+  </util:list>
+
+  <bean id="documentManagementService" class="org.topazproject.ambra.admin.service.impl.DocumentManagementServiceImpl">
+    <property name="articlePersistenceService" ref="articlePersistenceService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="journalService" ref="journalService"/>
+    <property name="fileStoreService" ref="fileStoreService"/>
+    <property name="plosDoiUrl" value="http://dx.plos.org/ambra-doi-resolver/10.1371/"/>
+    <property name="plosEmail" value="dev@ambraproject.org"/>
+    <property name="crossrefXslTemplate" value="${project.basedir}/src/test/resources/crossref.xsl"/>
+    <property name="documentDirectory" value="${project.basedir}/src/test/resources/ingest"/>
+    <property name="ingestedDocumentDirectory" value="${project.basedir}/src/test/resources/ingested"/>
+    <property name="documentPrefix" value="info:doi/10.1371/journal."/>
+    <property name="onPublishListeners"><list/></property>
+    <property name="onDeleteListeners"><list/></property>
+  </bean>
+</beans>
