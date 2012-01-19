@@ -1,0 +1,24 @@
+# $HeadURL::                                                                   $
+# $Id$
+
+# Remove/recreate symbolic link in /usr/local/topaz
+PKG=topaz
+LINK=/usr/local/topaz/$PKG
+# Remove it if it points to nowhere
+[ ! -e $LINK ] && [ -L $LINK ] && rm -f $LINK
+# Recreate it (presumably to some other older/newer version of same package)
+if [ ! -L $LINK ]; then
+  DIR=`ls -td /usr/local/topaz/*"$PKG"-* 2>/dev/null | head -1`
+  [ -n "$DIR" ] && ln -s `basename $DIR` $LINK
+fi
+
+# Remove /etc/sysconfig/... if not changed
+if [ -x /etc/sysconfig/$PKG ]; then
+  MEM=`free -mo | grep Mem | awk '{print $2-128}'`
+  TOMCAT_OPTS="-Xmx${MEM}m -XX:MaxPermSize=256m"
+  if [ "`cat /etc/sysconfig/$PKG`" = "export ${PKG}_TOMCAT_OPTS=\"${TOMCAT_OPTS}\"" ]; then
+    rm -f /etc/sysconfig/$PKG
+  fi
+fi
+
+exit 0

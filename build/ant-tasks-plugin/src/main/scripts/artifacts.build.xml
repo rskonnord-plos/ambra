@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL:: $
+  $Id: $
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <artifact:dependencies filesetId="antcontrib.fileset" useScope="runtime">
+    <dependency groupId="ant-contrib" artifactId="ant-contrib" version="1.0b2"/>
+  </artifact:dependencies>
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset refid="antcontrib.fileset"/>
+    </classpath>
+  </taskdef>
+
+
+  <!-- Fetch the list of dependencies and copy to asked location -->
+  <target name="get-artifacts">
+    <!-- Get Tomcat and unjar it in classes -->
+    <mkdir dir="${location}"/>
+
+    <for list="${dependencies}" param="dependency">
+      <sequential>
+        <propertyregex property="groupId" input="@{dependency}"
+          regexp="([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="artifactId" input="@{dependency}"
+          regexp="[^:]*:([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="version" input="@{dependency}"
+          regexp="[^:]*:[^:]*:(.*)" select="\1" casesensitive="false"
+          override="true"/>
+
+        <echo message="${groupId},${artifactId},${version}"/>
+
+        <var name="fileSet" value="${artifactId}:${version}"/>
+        <!-- Get the war file dependency as parameters -->
+        <artifact:dependencies filesetId="${fileSet}" useScope="runtime">
+          <dependency groupId="${groupId}" artifactId="${artifactId}"
+            version="${version}" type="${type}"/>
+        </artifact:dependencies>
+
+        <copy todir="${location}" flatten="true">
+          <fileset refid="${fileSet}"/>
+        </copy>
+      </sequential>
+    </for>
+  </target>
+
+</project>

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# $HeadURL::                                                                   $
+# $Id$
+#
+# Start multicast
+# Copyright (c) 2006 by Topaz, Inc.
+# http://topazproject.org
+#
+# Licensed under the Educational Community License version 1.0
+# http://opensource.org/licenses/ecl1.php
+
+# This script is intended to be called from other init scripts.
+# This is used for ecache and mulgara/xacml caching.
+
+ifconfig eth0 multicast
+ifconfig lo multicast
+

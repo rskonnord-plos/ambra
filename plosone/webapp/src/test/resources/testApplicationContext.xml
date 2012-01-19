@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+  <!-- creating all actions with the right injections -->
+  <bean class="org.plos.article.action.FetchArticleAction" />
+
+  <bean class="org.plos.article.action.FetchObjectAction"/>
+
+  <bean class="org.plos.article.action.SecondaryObjectAction"/>
+
+  <bean class="org.plos.annotation.action.CreateAnnotationAction"/>
+
+  <bean class="org.plos.annotation.action.DeleteAnnotationAction"/>
+
+  <bean class="org.plos.annotation.action.ListAnnotationAction"/>
+
+  <bean class="org.plos.annotation.action.GetAnnotationAction" />
+
+  <bean class="org.plos.annotation.action.CreateReplyAction"/>
+
+  <bean class="org.plos.annotation.action.BodyFetchAction"/>
+
+  <bean class="org.plos.annotation.action.ListReplyAction"/>
+
+  <bean class="org.plos.annotation.action.DeleteReplyAction"/>
+
+  <bean class="org.plos.annotation.action.GetReplyAction"/>
+  
+  <bean class="org.plos.user.action.MemberUserProfileAction"/>
+
+  <bean class="org.plos.user.action.AdminUserProfileAction"/>
+
+  <bean class="org.plos.user.action.MemberUserAlertsAction"/>
+
+  <bean class="org.plos.user.action.AdminUserAlertsAction"/>
+
+  <bean class="org.plos.user.action.AssignAdminRoleAction"/>
+
+  <bean class="org.plos.user.action.DisplayUserAction"/>
+
+  <bean class="org.plos.annotation.action.CreateFlagAction" />
+
+  <bean class="org.plos.annotation.action.GetFlagAction" />
+
+  <bean class="org.plos.annotation.action.DeleteFlagAction" />
+
+  <bean class="org.plos.annotation.action.UnflagAnnotationAction" />
+
+  <bean class="org.plos.annotation.action.ListFlagAction" />
+
+  <bean class="org.plos.search.action.SearchAction" />
+
+  <bean class="org.plos.user.action.SearchUserAction" />
+
+</beans>

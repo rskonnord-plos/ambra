@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>${pom.parent.groupId}.archetypes</groupId>
+  <artifactId>webservice</artifactId>
+  <version>0.5-rc8</version>
+  <packaging>maven-plugin</packaging>
+  <name>Topaz Webservice Archetype</name>
+  <description>This archetype sets up the basic structure for a Topaz webservice.</description>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>the-whole-shebang</artifactId>
+    <version>0.5-rc8</version>
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-archetype-plugin</artifactId>
+      <version>1.0-alpha-3</version>
+    </dependency>
+  </dependencies>
+</project>

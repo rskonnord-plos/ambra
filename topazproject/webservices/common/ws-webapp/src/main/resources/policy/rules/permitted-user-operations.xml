@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicyId="permitted-user-operations"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+
+  <Description>
+    Allow all authenticated users to perform actions listed here.
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <Rule RuleId="permitListedOperations" Effect="Permit">
+
+    <Target>
+      <AnyTarget/>
+    </Target>
+
+    <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+      <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+        AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">annotations:createAnnotation</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">annotations:setAnnotationState</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">replies:createReply</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">replies:setReplyState</AttributeValue>
+      </Apply>
+    </Condition>
+
+  </Rule>
+
+  <Obligations>
+    <Obligation ObligationId="log" FulfillOn="Permit">
+      <AttributeAssignment AttributeId="policy" 
+        DataType="http://www.w3.org/2001/XMLSchema#string">permitted-user-operations</AttributeAssignment>
+    </Obligation>
+  </Obligations>
+
+</Policy>

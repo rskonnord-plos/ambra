@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>org.topazproject.fedoragsearch.service</title>
+  </head>
+  <body>
+    <p>
+      Exposes <a href="http://defxws2006.cvt.dk/fedoragsearch/">fedoragsearch</a>'s
+      operatons API.
+    </p>
+    <p>
+      To get a handle to the API, call
+      new OperationsServiceLocator().getFgsOperations(<i>URL</i>) with the URL of
+      the running fedoragsearch webservice.
+    </p>
+    <p>
+      Most of the API parameters provide reasonable default values if <i>null</i>
+      is passed as the parameter. For example, the Operations.gfindObjects()
+      is usually configured to return all its results as non-transformed XML if
+      null is passed as the resultPageXslt (last paramter).
+    </p>
+    <p>
+      See also documentation on trac wiki:
+      <a href="http://gandalf.topazproject.org/trac/wiki/FedoraSearch">FedoraSearch</a>
+    </p>
+  </body>
+</html>
