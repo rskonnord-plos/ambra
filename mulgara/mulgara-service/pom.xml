@@ -1,0 +1,189 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>mulgara-service</artifactId>
+  <packaging>war</packaging>
+  <name>Mulgara Webservice Webapp</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>mulgara</artifactId>
+    <version>0.8.2-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.mulgara</groupId>
+      <artifactId>mulgara-lite</artifactId>
+      <!-- WARNING: When changing this, change version in mulgara & antrun task below too! -->
+      <version>1.0.1-t5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mulgara</groupId>
+      <artifactId>mulgara</artifactId>
+      <!-- WARNING: When changing this, change mulgara version in antrun task below too! -->
+      <version>1.0.1-t5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>filter-resolver</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>string-compare-resolver</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>conf-helper</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <!--
+          Extract relevant jars and classes from mulgara jars and put into our war.
+          Note that mulgara consists of many jars representing its various modules.
+          None have the format "*mulgara*.jar" in them - many have the form
+          "*resolver*.jar". See also MulgaraMavenPackage wiki page.
+        -->
+
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <taskdef resource="org/apache/maven/artifact/ant/antlib.xml" classpathref="maven.plugin.classpath" />
+
+                <dependencies filesetId="mulgara-libs" useScope="runtime">
+                  <dependency groupId="org.mulgara" artifactId="mulgara-lite" version="1.0.1-t5" />
+                </dependencies>
+
+                <property name="webinf" location="${project.build.directory}/${project.build.finalName}/WEB-INF" />
+
+                <unjar dest="${webinf}" overwrite="false">
+                  <fileset refid="mulgara-libs" />
+                  <patternset>
+                    <include name="lib/*.jar" />
+                    <exclude name="lib/*rmi*" />
+                    <exclude name="lib/*beep*" />
+                    <exclude name="lib/*axis*" />
+                    <exclude name="lib/dtd-base*" />
+                    <exclude name="lib/log4j*" />
+                    <exclude name="lib/commons-logging*" />
+                    <exclude name="lib/javax.servlet*" />
+                    <exclude name="lib/*jetty*" />
+                  </patternset>
+                </unjar>
+                <unjar dest="${webinf}/classes" overwrite="false">
+                  <fileset refid="mulgara-libs" />
+                  <patternset>
+                    <include name="org/**" />
+                    <include name="com/**" />
+                    <include name="javax/**" />
+                  </patternset>
+                </unjar>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact-ant</artifactId>
+            <version>2.0.4</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>it-mulgara</id>
+      <build>
+        <plugins>
+          
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>0.3.1</version>
+            <configuration>
+              <container>
+                <containerId>jetty6x</containerId>
+                <type>embedded</type>
+                <output>${project.build.directory}/jetty.log</output>
+                <log>${project.build.directory}/cargo.log</log>
+                <dependencies>
+                  <dependency>
+                    <location>${user.home}/.m2/topaz/container-classes</location>
+                  </dependency>
+                </dependencies>
+              </container>
+              <configuration>
+                <home>${project.build.directory}/jetty</home>
+                <properties>
+                  <cargo.servlet.port>9091</cargo.servlet.port>
+                  <cargo.logging>high</cargo.logging>
+                </properties>
+              </configuration>
+            </configuration>
+          
+            <executions>
+              <execution>
+                <id>jetty-start</id>
+                <phase>pre-integration-test</phase>
+                <goals><goal>start</goal></goals>
+              </execution>
+              <execution>
+                <id>jetty-stop</id>
+                <phase>post-integration-test</phase>
+                <goals><goal>stop</goal></goals>
+              </execution>
+          
+            </executions>
+          </plugin>
+
+        </plugins>
+
+      </build>
+    </profile>
+  </profiles>
+      
+</project>

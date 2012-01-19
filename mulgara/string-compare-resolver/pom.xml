@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>string-compare-resolver</artifactId>
+  <packaging>jar</packaging>
+  <version>0.8.2-SNAPSHOT</version>
+  <name>Mulgara string-comparison resolver</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>mulgara</artifactId>
+    <version>0.8.2-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mulgara</groupId>
+      <artifactId>mulgara</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xerces</artifactId>
+      <version>1.4.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>mulgara-client</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <forkMode>never</forkMode> <!-- Fixes annoying issue with surefire - see MSUREFIRE-121 -->
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>it-helper</id>
+
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>it-compile</id>
+                <phase>test-compile</phase>
+                <goals><goal>run</goal></goals>
+                <configuration>
+                  <tasks>
+                    <mkdir dir="${project.build.testOutputDirectory}" />
+                    <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+                      <classpath refid="maven.test.classpath" />
+                    </taskdef>
+                    <groovyc destdir="${project.build.testOutputDirectory}" srcdir="${basedir}/src/it/groovy/" listfiles="true">
+                      <classpath refid="maven.test.classpath" />
+                    </groovyc>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

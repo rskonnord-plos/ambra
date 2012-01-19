@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>fedora-libs</artifactId>
+  <version>0.8.2-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Fedora Libs</name>
+  
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>the-whole-shebang</artifactId>
+    <version>0.8.2-SNAPSHOT</version>
+  </parent>
+
+  <modules>
+    <module>fedora-client</module>
+    <module>fedora-patches</module>
+    <module>fedora-bundle</module>
+  </modules>
+</project>

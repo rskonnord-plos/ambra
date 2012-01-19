@@ -1,0 +1,175 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  - Copyright (c) 2007 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<struts>
+
+  <package name="default-compbiol" extends="default" namespace="/journals/compbiol">
+
+    <action name="home" class="org.plos.action.HomePageAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/index.ftl</param>
+      </result>
+    </action>
+    
+    <action name="recentArticles" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/compbiol/article/recentArticles.ftl</result>
+    </action>
+
+    <action name="mostCommented" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/compbiol/article/mostCommented.ftl</result>
+    </action>
+
+  </package>
+
+  <package name="article-compbiol" extends="default-compbiol" namespace="/journals/compbiol/article">
+    <action name="browseIssue" class="org.plos.article.action.BrowseIssueAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/article/browseIssue.ftl</param>
+      </result>
+    </action>
+
+    <action name="browseVolume" class="org.plos.article.action.BrowseVolumeAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/article/browseVolume.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="static-compbiol" extends="default-compbiol" namespace="/journals/compbiol/static">
+
+    <action name="about" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/about.ftl</param>
+      </result>
+    </action>
+
+    <action name="aeChecklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/ae_checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="authors" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/authors.ftl</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/browse.ftl</param>
+      </result>
+    </action>
+
+    <action name="checklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="contact" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/contact.ftl</param>
+      </result>
+    </action>
+
+    <action name="developing" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/developing.ftl</param>
+      </result>
+    </action>
+
+     <action name="downloads" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/downloads.ftl</param>
+      </result>
+    </action>
+
+    <action name="edboard" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/edboard.ftl</param>
+      </result>
+    </action>
+
+    <action name="eic" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/eic.ftl</param>
+      </result>
+    </action>
+
+    <action name="guidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="hotezWho" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/hotez_who.ftl</param>
+      </result>
+    </action>
+    
+    <action name="information" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/information.ftl</param>
+      </result>
+    </action>
+
+    <action name="policies" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/policies.ftl</param>
+      </result>
+    </action>
+
+    <action name="reviewerGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/reviewer_guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="revisedChecklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/revised_checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="rssFeeds" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/rssFeeds.ftl</param>
+      </result>
+    </action>
+
+    <action name="scope" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/scope.ftl</param>
+      </result>
+    </action>
+
+    <action name="sitemap" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/sitemap.ftl</param>
+      </result>
+    </action>
+
+    <action name="users" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/users.ftl</param>
+      </result>
+    </action>
+
+    <action name="whypublish" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/compbiol/static/whypublish.ftl</param>
+      </result>
+    </action>
+   
+  </package>
+</struts>

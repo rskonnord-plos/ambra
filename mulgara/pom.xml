@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>mulgara</artifactId>
+  <version>0.8.2-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Mulgara Libs</name>
+  
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>the-whole-shebang</artifactId>
+    <version>0.8.2-SNAPSHOT</version>
+  </parent>
+
+  <modules>
+    <module>filter-resolver</module>
+    <module>string-compare-resolver</module>
+    <module>conf-helper</module>
+    <module>mulgara-client</module>
+    <module>mulgara-service</module>
+  </modules>
+</project>

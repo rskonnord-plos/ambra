@@ -1,0 +1,181 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  - Copyright (c) 2007 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<struts>
+
+  <package name="default-pathogens" extends="default" namespace="/journals/pathogens">
+
+    <action name="home" class="org.plos.action.HomePageAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/index.ftl</param>
+      </result>
+    </action>
+    
+    <action name="recentArticles" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/pathogens/article/recentArticles.ftl</result>
+    </action>
+
+    <action name="mostCommented" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/pathogens/article/mostCommented.ftl</result>
+    </action>
+
+  </package>
+
+  <package name="article-pathogens" extends="default-pathogens" namespace="/journals/pathogens/article">
+    <action name="browseIssue" class="org.plos.article.action.BrowseIssueAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/article/browseIssue.ftl</param>
+      </result>
+    </action>
+
+    <action name="browseVolume" class="org.plos.article.action.BrowseVolumeAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/article/browseVolume.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="static-pathogens" extends="default-pathogens" namespace="/journals/pathogens/static">
+
+    <action name="about" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/about.ftl</param>
+      </result>
+    </action>
+
+    <action name="aeChecklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/ae_checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="authors" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/authors.ftl</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/browse.ftl</param>
+      </result>
+    </action>
+
+    <action name="checklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="contact" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/contact.ftl</param>
+      </result>
+    </action>
+
+    <action name="developing" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/developing.ftl</param>
+      </result>
+    </action>
+
+     <action name="downloads" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/downloads.ftl</param>
+      </result>
+    </action>
+
+    <action name="edboard" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/edboard.ftl</param>
+      </result>
+    </action>
+
+    <action name="eic" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/eic.ftl</param>
+      </result>
+    </action>
+
+    <action name="guidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="hotezWho" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/hotez_who.ftl</param>
+      </result>
+    </action>
+    
+    <action name="information" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/information.ftl</param>
+      </result>
+    </action>
+
+    <action name="policies" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/policies.ftl</param>
+      </result>
+    </action>
+
+    <action name="reviewerGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/reviewer_guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="revisedChecklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/revised_checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="rssFeeds" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/rssFeeds.ftl</param>
+      </result>
+    </action>
+
+    <action name="scope" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/scope.ftl</param>
+      </result>
+    </action>
+
+    <action name="sitemap" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/sitemap.ftl</param>
+      </result>
+    </action>
+
+    <action name="toc" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/toc.ftl</param>
+      </result>
+    </action>
+
+    <action name="users" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/users.ftl</param>
+      </result>
+    </action>
+
+    <action name="whypublish" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/pathogens/static/whypublish.ftl</param>
+      </result>
+    </action>
+   
+  </package>
+</struts>

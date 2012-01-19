@@ -1,0 +1,86 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  - Copyright (c) 2007 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<struts>
+
+  <package name="default-clinicalTrials" extends="default" namespace="/journals/clinicalTrials">
+
+    <action name="home" class="org.plos.action.HomePageAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/index.ftl</param>
+      </result>
+    </action>
+
+  </package>
+
+  <package name="static-clinicalTrials" extends="default" namespace="/journals/clinicalTrials/static">
+    <action name="about" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/about.ftl</param>
+      </result>
+    </action>
+
+    <action name="authors" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/authors.ftl</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/browse.ftl</param>
+      </result>
+    </action>
+
+    <action name="checklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="contact" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/contact.ftl</param>
+      </result>
+    </action>
+
+    <action name="faq" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/faq.ftl</param>
+      </result>
+    </action>
+
+    <action name="information" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/information.ftl</param>
+      </result>
+    </action>
+
+    <action name="rssFeeds" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/rssFeeds.ftl</param>
+      </result>
+    </action>
+
+    <action name="sitemap" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/sitemap.ftl</param>
+      </result>
+    </action>
+
+    <action name="users" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/clinicalTrials/static/users.ftl</param>
+      </result>
+    </action>
+  </package>
+
+</struts>

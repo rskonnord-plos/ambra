@@ -1,0 +1,113 @@
+/**
+ * CSS for the browseVolume.ftl. Based on tabbed browsing implementation from http://www.dynamicdrive.com/dynamicindex17/tabcontent.htm
+ */
+.plosTabsContainer {
+	margin-top: 30px;
+}
+
+.plostabs {
+	background:transparent url(../images/tab_bg.gif) repeat-x scroll center bottom;
+	float:left;
+	line-height:normal;
+	margin:0pt !important;
+	padding:0pt 0pt 0pt 10px !important;
+	width:892px;
+	display:block;
+  margin-bottom:5px;
+  z-index:10;
+  list-style-type:none;
+}
+
+.plostabs li {
+  background:transparent url(../images/tab_left.gif) no-repeat scroll 0% 0%;
+color:#666666;
+cursor:pointer;
+float:left;
+font-size:0.9em;
+font-weight:bold;
+list-style-image:none;
+list-style-position:outside;
+list-style-type:none;
+margin:0pt 2px;
+padding:0pt 0pt 0pt 8px;
+}
+
+.plostabs li.selected {
+  background-position:0% -40px;
+}
+
+.plostabs li a {
+	background:transparent url(../images/tab_right.gif) no-repeat scroll 100% 0%;
+  display:block;
+  float:left;
+  padding:8px 16px 8px 8px !important;
+  text-decoration:none;
+}
+
+.plostabs li a:visited {
+	color: #2d2b2b;
+}
+
+.plostabs li a:hover {
+	text-decoration: underline;
+	color: #2d2b2b;
+}
+
+.plostabs li.selected a { 
+  background-position:100% -40px;
+  padding-bottom:9px !important;
+}
+
+.plostabs li.selected a:hover { /*selected main tab style */
+	text-decoration: none;
+}
+
+.tabcontent {
+	display: none;
+}
+
+@media print {
+	.tabcontent {
+		display: block !important;
+	}
+}
+
+.plosTabPane {
+	padding:30px 0pt 20px 30px;
+	background:#FFFFFF none repeat scroll 0%;
+  border:1px solid #bababa;
+  border-top:0;
+  float:left;
+  margin:0pt;
+  width:870px;
+}
+
+.thumbnail {
+	width: 122px;
+	float: left;
+	margin: 10px 11px 20px 11px;
+	text-align: center;
+}
+
+.thumbnail img {
+	width: 120px;
+	height: 120px;
+	margin: 0;
+	border: 1px solid #999;
+	display: block;
+}
+
+.thumbnail a:link,.thumbnail a:visited {
+	font-size: .9em;
+	margin: 0;
+	padding: 0;
+}
+
+.thumbnail a {
+	font-size: 100%;
+	font-weight: bold;
+}
+
+.thumbnail p {
+	display: block;
+}

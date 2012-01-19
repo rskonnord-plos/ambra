@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/* $HeadURL:: http://russ@gandalf.topazproject.org/svn/branches/0.8.2/plos/libs/scripts/src/main/#$
+ * $Id: journal-ntd.xml 3874 2007-10-08 03:46:16Z amit $
+ *
+ * Copyright (c) 2007 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Educational Community License version 1.0
+ * http://opensource.org/licenses/ecl1.php
+ */
+-->
+
+<journal>
+  <key>PLoSPathogens</key>
+  <eIssn>1553-7366</eIssn>
+  <dublinCore>
+    <title>PLoS Pathogens</title>
+  </dublinCore>
+  <!-- seed Journal with these initial Articles
+  <simpleCollection>
+    <doi></doi>
+  </simpleCollection>
+  -->
+</journal>

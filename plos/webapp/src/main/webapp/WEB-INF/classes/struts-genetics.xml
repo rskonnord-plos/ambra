@@ -1,0 +1,175 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  - Copyright (c) 2007 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<struts>
+
+  <package name="default-genetics" extends="default" namespace="/journals/genetics">
+
+    <action name="home" class="org.plos.action.HomePageAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/index.ftl</param>
+      </result>
+    </action>
+    
+    <action name="recentArticles" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/genetics/article/recentArticles.ftl</result>
+    </action>
+
+    <action name="mostCommented" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/genetics/article/mostCommented.ftl</result>
+    </action>
+
+  </package>
+
+  <package name="article-genetics" extends="default-genetics" namespace="/journals/genetics/article">
+    <action name="browseIssue" class="org.plos.article.action.BrowseIssueAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/article/browseIssue.ftl</param>
+      </result>
+    </action>
+
+    <action name="browseVolume" class="org.plos.article.action.BrowseVolumeAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/article/browseVolume.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="static-genetics" extends="default-genetics" namespace="/journals/genetics/static">
+
+    <action name="about" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/about.ftl</param>
+      </result>
+    </action>
+
+    <action name="aeChecklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/ae_checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="authors" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/authors.ftl</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/browse.ftl</param>
+      </result>
+    </action>
+
+    <action name="checklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="contact" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/contact.ftl</param>
+      </result>
+    </action>
+
+    <action name="developing" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/developing.ftl</param>
+      </result>
+    </action>
+
+     <action name="downloads" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/downloads.ftl</param>
+      </result>
+    </action>
+
+    <action name="edboard" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/edboard.ftl</param>
+      </result>
+    </action>
+
+    <action name="eic" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/eic.ftl</param>
+      </result>
+    </action>
+
+    <action name="guidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="hotezWho" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/hotez_who.ftl</param>
+      </result>
+    </action>
+    
+    <action name="information" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/information.ftl</param>
+      </result>
+    </action>
+
+    <action name="policies" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/policies.ftl</param>
+      </result>
+    </action>
+
+    <action name="reviewerGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/reviewer_guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="revisedChecklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/revised_checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="rssFeeds" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/rssFeeds.ftl</param>
+      </result>
+    </action>
+
+    <action name="scope" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/scope.ftl</param>
+      </result>
+    </action>
+
+    <action name="sitemap" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/sitemap.ftl</param>
+      </result>
+    </action>
+
+    <action name="users" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/users.ftl</param>
+      </result>
+    </action>
+
+    <action name="whypublish" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/journals/genetics/static/whypublish.ftl</param>
+      </result>
+    </action>
+   
+  </package>
+</struts>
