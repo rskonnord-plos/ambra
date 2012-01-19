@@ -1,0 +1,34 @@
+<!ELEMENT MulgaraConfig (ExternalConfigPaths?, MulgaraHost?, Jetty?, ServerName, RMIPort?, PersistencePath, TransactionTimeout? TripleStoreImplementation, StartupScript?)>
+
+  <!ELEMENT ExternalConfigPaths (MulgaraLogging, WebDefault)>
+
+    <!ELEMENT MulgaraLogging (#PCDATA)>
+    <!ELEMENT WebDefault (#PCDATA)>
+
+  <!ELEMENT MulgaraHost (#PCDATA)>
+
+  <!ELEMENT Jetty (Listener)>
+
+    <!ELEMENT Listener (Host?, Port, MinThreads, MaxThreads, MaxIdleTimeMs, MaxReadTimeMs, LowResourcePersistTimeMs)>
+
+      <!ELEMENT Host (#PCDATA)>
+      <!ELEMENT Port (#PCDATA)>
+      <!ELEMENT MinThreads (#PCDATA)>
+      <!ELEMENT MaxThreads (#PCDATA)>
+      <!ELEMENT MaxIdleTimeMs (#PCDATA)>
+      <!ELEMENT MaxReadTimeMs (#PCDATA)>
+      <!ELEMENT LowResourcePersistTimeMs (#PCDATA)>
+
+  <!ELEMENT ServerName (#PCDATA)>
+
+  <!ELEMENT RMIPort (#PCDATA)>
+
+  <!ELEMENT PersistencePath (#PCDATA)>
+
+  <!ELEMENT TransactionTimeout (#PCDATA)>
+
+  <!ELEMENT TripleStoreImplementation (#PCDATA)>
+
+  <!ELEMENT StartupScript (#PCDATA)>
+
+  <!ELEMENT Smtp (#PCDATA)>
