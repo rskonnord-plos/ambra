@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.ambraproject</groupId>
+  <artifactId>ecqs</artifactId>
+  <version>1.1</version>
+  <packaging>jar</packaging>
+  <name>ESUP CAS Quick Start</name>
+
+  <parent>
+    <groupId>org.ambraproject</groupId>
+    <artifactId>ambra</artifactId>
+    <version>1.1</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.esup-portail</groupId>
+      <artifactId>esup-cas-quick-start</artifactId>
+      <version>2.0.6-1</version>
+      <type>zip</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ambra-cas-mod</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>conf-helper</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ambra-password-service</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.ambraproject.plugins</groupId>
+        <artifactId>ant-tasks</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>ecqs-package</goal>
+            </goals>
+            <configuration>
+              <DEST_DIR>${project.build.directory}/classes</DEST_DIR> 
+              <SRC_ZIP>org.esup-portail:esup-cas-quick-start:2.0.6-1</SRC_ZIP>
+              <ROOT>esup-cas-quick-start-2.0.6-1</ROOT>
+              <CAS_SERVER_LIB_PATH>custom/cas-server-patch/web/WEB-INF/lib</CAS_SERVER_LIB_PATH>
+              <topaz_repository>http://maven.ambraproject.org/maven2/release/</topaz_repository>
+              <dependencies>
+                org.ambraproject:ambra-cas-mod:${project.parent.version},org.ambraproject:conf-helper:${project.parent.version},org.ambraproject:ambra-password-service:${project.parent.version}
+              </dependencies>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
