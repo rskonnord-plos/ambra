@@ -1,0 +1,74 @@
+<?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>topazproject-libs</artifactId>
+    <groupId>org.topazproject</groupId>
+    <version>0.5-rc6</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>fedora-client</artifactId>
+  <name>Fedora client stub</name>
+  <version>0.5-rc6</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.0.1</version>
+
+      <!-- shouldn't add junit -->
+
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>auth-helper</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>wsdl2java</goal></goals>
+            <configuration>
+              <packageSpace>org.topazproject.fedora.client</packageSpace>
+              <sourceDependencies>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/fedora-types.xsd</sourceDependency>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/fedora-auditing.xsd</sourceDependency>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/Fedora-API-M.wsdl</sourceDependency>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/Fedora-API-A.wsdl</sourceDependency>
+              </sourceDependencies>
+              <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+              <serverSide>false</serverSide>
+              <deployScope>session</deployScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins> 
+  </build>
+</project>

@@ -1,0 +1,320 @@
+#!/usr/bin/env bash
+# $HeadURL::                                                                                      $
+# $Id$
+#
+# Tomcat init script
+# Copyright (c) 2006 by Topaz, Inc.
+# http://topazproject.org
+#
+# Licensed under the Educational Community License version 1.0
+# http://opensource.org/licenses/ecl1.php
+
+# Environment:
+#  Variable      Default -- Description
+#  ------------- --------------------------------------------------------------
+#  TRUST_STORE   /etc/topaz/keystore.jks -- The value to set the
+#                javax.net.ssl.trustStore system property. Set to "default" to
+#                turn this off.
+#  TRUST_PASS    changeit -- The value for the javax.net.ssl.trustStorePassword
+#                system property. Set to "default" to turn this off.
+#  CATALINA_HOME This is where tomcat is installed. It is usually overridden
+#                by <basename>_CATALINA_HOME.
+#  JAVA_HOME     /usr/local/topaz/java -- This is where the JDK is installed.
+#                It really should be set before running this script.
+#  TOMCAT_OPTS   -Xmx400m -XX:MaxPermSize=256m -- These are the options to be
+#                used for starting tomcat. <basename>_TOMCAT_OPTS overrides
+#                these.
+#  STARTUP       jsvc -- This can be "jsvc" or "java". If set to jsvc and jsvc
+#                is not found, we revert ot running via java. If starting or
+#                stopping with jsvc, must be root
+#
+# TODO:
+# - Get rid of stopid <basename>_ENV_VAR override stuff (must do diags first)
+# - Move report/reportall diagnostics to a separate script
+
+# Defaults:
+USER="topaz"
+GROUP=$USER
+TOPAZ_LOCAL="/usr/local/topaz"
+TOPAZ_CONFIG="/etc/topaz"
+[ -z "$TRUST_STORE" ] && TRUST_STORE=$TOPAZ_CONFIG/keystore.jks
+[ -z "$TRUST_PASS" ]  && TRUST_PASS=changeit
+[ -z "$CATALINA_HOME" ] && CATALINA_HOME=
+[ -z "$JAVA_HOME" ] && [ -d $TOPAZ_LOCAL/java ] && JAVA_HOME="$TOPAZ_LOCAL/java"
+[ -z "$TOMCAT_OPTS" ] && TOMCAT_OPTS="-Xmx400m -XX:MaxPermSize=256m"
+[ -z "$STARTUP" ] && STARTUP="jsvc"
+VARDIR="/var"
+LOGDIR="${VARDIR}/log/topaz"
+PIDDIR="${VARDIR}/run/topaz"
+JSVC="jsvc"
+JVM="server"
+
+# Overrides: basename_CATALINA_HOME, basename_TOMCAT_OPTS, basename_USER
+SERVERS="cas mulgara fedora topaz plosone"
+cas_CATALINA_HOME="$TOPAZ_LOCAL/cas"
+topaz_CATALINA_HOME="$TOPAZ_LOCAL/topaz"
+mulgara_CATALINA_HOME="$TOPAZ_LOCAL/mulgara"
+plosone_CATALINA_HOME="$TOPAZ_LOCAL/plosone"
+
+# These ports are only for printing status. If they're accurate, status will be better
+PORT=
+cas_PORT=7443
+topaz_PORT=8008
+mulgara_PORT=9091
+plosone_PORT=8080
+fedora_PORT=9090
+
+#
+# Should not need to modify stuff below here
+#
+
+# Verify that JAVA_HOME is set and exists
+[ -z "$JAVA_HOME" ] && echo "JAVA_HOME must be set" && exit 1
+[ ! -d "$JAVA_HOME" ] && echo "JAVA_HOME ($JAVA_HOME) invalid" && exit 1
+[ ! -e "$JAVA_HOME/lib/tools.jar" ] && echo "JAVA_HOME ($JAVA_HOME) is not JDK (no tools.jar)" && exit 1
+
+# Optionally change basename (used mostly for testing)
+if [ "--basename" == "$1" -o "-b" == "$1" ]; then
+  BASENAME=$2
+  shift 2
+else
+  BASENAME=$(basename $0)
+fi
+
+# Define log filename
+STDLOG="${LOGDIR}/${BASENAME}.out.`date +%Y-%m-%d`"
+touch ${STDLOG}
+[ `id -u` -eq 0 -a -n "$USER" ] && chown ${USER} $STDLOG
+STDLOG_LNK="${LOGDIR}/${BASENAME}.out"
+[ -h "${STDLOG_LNK}" ] && rm -f ${STDLOG_LNK}
+ln -s `basename ${STDLOG}` ${STDLOG_LNK}
+
+# Log stuff w/date as tomcat doesn't include dates when logging!
+log() { echo "`date` $*" >> $STDLOG; echo $*; }
+
+# Setup TOMCAT_TRUST_OPTS properly
+if [ -n "$TRUST_STORE" -a "$TRUST_STORE" != "default" ]; then
+  [ -n "$USER" -a -e "$TRUST_STORE" ] && chown $USER.$GROUP $TRUST_STORE
+  TOMCAT_TRUST_OPTS="-Djavax.net.ssl.trustStore=${TRUST_STORE}"
+  if [ -n "$TRUST_PASS" -a "$TRUST_PASS" != "default" ]; then
+    TOMCAT_TRUST_OPTS="$TOMCAT_TRUST_OPTS -Djavax.net.ssl.trustStorePassword='$TRUST_PASS'"
+  fi
+fi
+
+# Expand configuration (use appropriate overrides or defaults if no overrides)
+expand () { eval "$1=\${${BASENAME}_$1:-\$$1}"; }
+expand CATALINA_HOME
+expand TOMCAT_OPTS
+expand USER
+expand PORT
+
+# Having CATALINA_HOME set properly is critical
+check_catalina() {
+  [ -z "$CATALINA_HOME" ] && log "Must set/define CATALINA_HOME (for $BASENAME)" && exit 1
+  [ \! -d "$CATALINA_HOME" ] && log "CATALINA_HOME ($CATALINA_HOME) does not exist" && exit 1
+}
+
+# Setup other catalina defaults
+CATALINA_ENDORSED_DIRS=${CATALINA_HOME}/common/endorsed
+CATALINA_POLICY=${CATALINA_HOME}/conf/catalina.policy
+
+# Compute classpath
+getjars () { echo `(cd /; find $1 -name '*.jar')` | tr ' ' ':'; }
+TC=${CATALINA_HOME}
+CLASSPATH="$TC/bin/bootstrap.jar:$TC/bin/commons-logging-api.jar"
+
+# Add the javac compiler - for jsp files (tomcat's catalina.sh does this too)
+CLASSPATH="$JAVA_HOME/lib/tools.jar:$CLASSPATH"
+
+# Find jsvc (in case root's PATH) doesn't contain it
+if which ${JSVC} >/dev/null 2>&1; then
+  # For some reason, jsvc has trouble starting if it is not an absolute path
+  JSVC=`which ${JSVC}`
+elif [ -x "${TC}/bin/jsvc" ];          then JSVC="${TC}/bin/jsvc"
+elif [ -x "${TOPAZ_LOCAL}/bin/jsvc" ]; then JSVC="${TOPAZ_LOCAL}/bin/jsvc"
+elif [ -x /usr/local/bin/jsvc ];       then JSVC=/usr/local/bin/jsvc
+else STARTUP="java"
+fi
+
+PIDFILE="${PIDDIR}/${BASENAME}-${STARTUP}.pid"
+
+# Define options for JSVC
+JSVC_OPTS="-outfile ${STDLOG} -pidfile ${PIDFILE} -cp ${CLASSPATH}"
+[ -n "$JVM" ] && JSVC_OPTS="${JSVC_OPTS} -jvm ${JVM}"
+[ -n "$USER" ] && JSVC_OPTS="$JSVC_OPTS -user ${USER}"
+JSVC_OPTS="${JSVC_OPTS} \
+  -Djava.endorsed.dirs=${CATALINA_ENDORSED_DIRS} \
+  -Dcatalina.base=${CATALINA_HOME} \
+  -Dcatalina.home=${CATALINA_HOME}"
+#  -Djava.security.manager \
+#  -Djava.security.policy=${CATALINA_POLICY}
+JSVC_OPTS="${JSVC_OPTS} ${TOMCAT_OPTS} ${TOMCAT_TRUST_OPTS}"
+
+# Find lsof (in case root's PATH doesn't contain it)
+LSOF=`which lsof`
+[ -z "$LSOF" ] && LSOF=/usr/sbin/lsof
+
+# You must be root to run jsvc
+test_root() { [ `id -u` -ne 0 ] && echo "You must be root!" && exit 1; }
+
+# Create dirs
+create_dirs() {
+  mkdir -p ${PIDDIR}
+  [ -n "$USER" ] && chown -R ${USER} ${PIDDIR}
+}
+
+# Catalina configuration
+CATALINA_TMPDIR=$CATALINA_HOME/temp
+CATALINA_OPTS="-Djava.endorsed.dirs=${CATALINA_ENDORSED_DIRS} \
+  -classpath ${CLASSPATH} \
+  -Dcatalina.base=${CATALINA_HOME} \
+  -Dcatalina.home=${CATALINA_HOME} \
+  -Djava.io.tmpdir=${CATALINA_TMPDIR} \
+  org.apache.catalina.startup.Bootstrap"
+
+jsvc() {
+  check_catalina
+  # Make sure that we have jsvc
+  if ! which ${JSVC} >/dev/null 2>&1; then
+    echo "Cannot find ${JSVC} executable"
+    echo "Install from ${CATALINA_HOME}/bin/jsvc.tar.gz"
+    exit 1
+  fi
+  # It seems important to start from CATALINA_HOME to read server.xml
+  cd ${CATALINA_HOME}
+  ${JSVC} ${JSVC_OPTS} "$@" org.apache.catalina.startup.Bootstrap
+}
+
+jsvc_start() {
+  test_root
+  # Start and wait a while for it to start properly
+  jsvc -wait 10
+  chmod ugo+r ${PIDFILE}
+}
+
+jsvc_stop() {
+  test_root
+  jsvc -stop
+}
+
+su_cmd() {
+  if [ -n "$USER" ]; then
+    su $USER -s /bin/bash -c "$* >>$STDLOG 2>&1 & echo \$! >$PIDFILE"
+  else
+    "$@" >>$STDLOG 2>&1 &
+    echo $! >$PIDFILE
+  fi
+}
+
+java_start() {
+  su_cmd $JAVA_HOME/bin/java -$JVM $TOMCAT_OPTS $TOMCAT_TRUST_OPTS $CATALINA_OPTS start
+  # TODO: Wait here until PID in $PIDFILE is listening on $PORT (or until some timeout)
+}
+
+java_stop() {
+  $JAVA_HOME/bin/java $TOMCAT_OPTS $CATALINA_OPTS stop >>$STDLOG 2>&1
+  # Give it a few seconds to stop (to delete PID file)
+  PID=`cat ${PIDFILE} 2>/dev/null`
+  i=1
+  while [ -n "$PID" ] ; do
+    PID=`ps -p $PID -o pid | tail -n +2`
+    sleep 1
+    i=$((i+1))
+    [ $i -gt 15 ] && break
+  done
+  [ -z "$PID" ] && rm -f $PIDFILE
+}
+
+case "$1" in
+  start)
+    # Don't try to start up twice!
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      if ps -p ${PID} >/dev/null; then
+        echo "${BASENAME} already running (${PID})"
+	exit 0
+      fi
+    fi
+    # jsvc doesn't abort if somebody else is on our port, so let's be smart!
+    if [ -n "$PORT" ]; then
+      TMPFILE=/tmp/${BASENAME}.status.$$
+      if $LSOF -i:$PORT -Fp > ${TMPFILE}; then
+        echo "No PID file for ${BASENAME}, but port $PORT already in use by pid `cat ${TMPFILE}`"
+	rm -f ${TMPFILE}
+	exit 1
+      fi
+    fi
+    create_dirs
+    log "Starting ${BASENAME} in ${CATALINA_HOME} via ${STARTUP}"
+    ${STARTUP}_start
+    ;;
+  stop)
+    create_dirs
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    log "Stopping ${BASENAME} (${PID})"
+    ${STARTUP}_stop
+    if [ -e ${PIDFILE} ]; then
+      echo "Unable to stop ${BASENAME} (${PID})"
+      kill -QUIT ${PID}
+      exit 1
+    fi
+    ;;
+  restart|reload)
+    create_dirs
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    log "Restarting ${BASENAME} (${PID}) in ${CATALINA_HOME}"
+    ${STARTUP}_stop
+    ${STARTUP}_start
+    ;;
+  status|check)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      TMPFILE=/tmp/${BASENAME}.status.$$
+      if ps o "pid user rss %mem etime time %cpu comm" -p ${PID} > ${TMPFILE} 2>&1; then
+        echo "${BASENAME} (${PID}) is running from ${CATALINA_HOME}"
+        cat ${TMPFILE}
+        $LSOF -n -P -i -a -p $PID | grep "LISTEN"
+      else
+        echo "${BASENAME} not running"
+      fi
+      rm -f ${TMPFILE}
+    else
+      echo "${BASENAME} not running"
+    fi
+    ;;
+  report)
+    # Spit out a very simple status dump (really used by reportall below)
+    # Note: fedora and mckoi will almost always report xxx(unknown)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      if ps -p $PID >/dev/null; then
+        PORTS=`$LSOF -p $PID -a -iTCP -Fn -n -P | grep -v '-' | sort | uniq | tr 'n' ' '`
+        echo "$PID $BASENAME `echo $PORTS`"
+      else
+        echo "$BASENAME not running -- but PIDFILE ($PIDFILE:$PID) exists"
+      fi
+    elif [ -n "$PORT" ]; then
+      PID=`$LSOF -i:$PORT | grep LISTEN | awk '{print $2}'`
+      if [ -n "$PID" ]; then
+        PORTS=`$LSOF -p $PID -a -iTCP -Fn -n -P | grep -v '-' | sort | uniq | tr 'n' ' '`
+        echo "`echo $PID` unknown($BASENAME) `echo $PORTS`"
+      else
+        # No PIDFILE and noting listening on our configured PORT
+        echo "$BASENAME not running on port $PORT"
+      fi
+    else
+      # No PIDFILE and no configured PORT
+      echo "$BASENAME not running"
+    fi
+    ;;
+  reportall)
+    for server in ${SERVERS}; do
+      $0 --basename $server report
+    done
+    ;;
+  *)
+    echo "Usage: $0 [--basename name] {start|stop|restart|status}"
+    exit 1
+esac
+
+exit $?

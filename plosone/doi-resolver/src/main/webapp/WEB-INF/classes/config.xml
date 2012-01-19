@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+  <!-- Allow command-line overrides etc. (eg. -Dtopaz.services.fedora.uri=xxx) -->
+  <system/>
+  <!-- Allow administrator overrides -->
+  <xml fileName="file:///etc/topaz/plosOneDoi.xml" optional="true"/>
+  <!-- Shared defaults if no admin overrides -->
+  <xml fileName="plosOneDoi.xml"/>
+</configuration>

@@ -1,0 +1,24 @@
+# $HeadURL::                                                                   $
+# $Id$
+
+PKG=topaz
+
+# Register the service
+/sbin/chkconfig --add $PKG
+
+# Create symbolic link in /usr/local/topaz
+LINK=/usr/local/topaz/$PKG
+rm -f $LINK
+DIR=`ls -td /usr/local/topaz/*"$PKG"-* 2>/dev/null | head -1`
+[ -n "$DIR" ] && ln -s `basename $DIR` $LINK
+
+# Dynamically create /etc/sysconfig/... if it doesn't exist
+if [ ! -e /etc/sysconfig/$PKG ]; then
+  MEM=`free -mo | grep Mem | awk '{print $2-128}'`
+  cat >/etc/sysconfig/$PKG <<EOF
+export ${PKG}_TOMCAT_OPTS="-Xmx${MEM}m -XX:MaxPermSize=256m"
+EOF
+  chmod 755 /etc/sysconfig/$PKG
+fi
+
+exit 0

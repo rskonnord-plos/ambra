@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<articles>
+  <article>
+    <uri>info:doi/10.1371/journal.pbio.0020042</uri>
+    <title>Identifying Protein Function—A Call for Community Action</title>
+    <description><p>Functional information is lacking for many of the hypothetical proteins encoded within sequenced genomes. Richard Roberts proposes that a community-based approach might offer an effecient way to fill the function gap</p></description>
+    <date>2004-03-16</date>
+    <authors>
+      <author>Richard J Roberts</author>
+    </authors>
+    <categories>
+      <category>Bioinformatics</category>
+      <category>Genetics</category>
+      <category>Microbiology</category>
+    </categories>
+    <subjects>
+      <subject>Bioinformatics/Computational Biology</subject>
+      <subject>Genetics/Genomics/Gene Therapy</subject>
+      <subject>Microbiology</subject>
+    </subjects>
+  </article>
+</articles>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<config>
+  <topaz>
+    <mulgara>
+      <baseuri>local:///topazproject</baseuri>
+    </mulgara>
+    <objects>
+      <base-uri>info:doi/10.1371/</base-uri>
+    </objects>
+    <models>
+      <ri type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=ri</ri>
+      <articles type="${topaz.models.ri[@type]}">${topaz.models.ri}</articles>
+      <annotations type="${topaz.models.ri[@type]}">${topaz.models.ri}</annotations>
+      <users type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=users</users>
+      <grants type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=grants</grants>
+      <revokes type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=revokes</revokes>
+      <pp type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=pp</pp>
+      <preferences type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=preferences</preferences>
+      <profiles type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=profiles</profiles>
+      <ratings type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=ratings</ratings>
+      <alerts type="http://topazproject.org/models#filter">${topaz.mulgara.baseuri}#filter:model=alerts</alerts>
+      <str type="http://topazproject.org/models#StringCompare">${topaz.mulgara.baseuri}#str</str>
+      <xsd type="http://mulgara.org/mulgara#XMLSchemaModel">${topaz.mulgara.baseuri}#xsd</xsd>
+    </models>
+    <services>
+      <fedora>
+        <base-url>http://localhost:9090/fedora/</base-url>
+        <uri>${topaz.services.fedora.base-url}services/management</uri>
+        <auth-method>BASIC</auth-method>
+        <userName>fedoraAdmin</userName>
+        <password>fedoraAdmin</password>
+      </fedora>
+      <fedoraUploader>
+        <uri>${topaz.services.fedora.base-url}management/upload</uri>
+        <auth-method>BASIC</auth-method>
+        <userName>fedoraAdmin</userName>
+        <password>fedoraAdmin</password>
+      </fedoraUploader>
+      <itql>
+        <uri>http://localhost:9091/mulgara-service/services/ItqlBeanService</uri>
+        <auth-method>BASIC</auth-method>
+        <userName>fedoraAdmin</userName>
+        <password>fedoraAdmin</password>
+      </itql>
+      <itql-admin>
+        <uri>${topaz.services.itql.uri}</uri>
+        <auth-method>BASIC</auth-method>
+        <userName>fedoraAdmin</userName>
+        <password>fedoraAdmin</password>
+      </itql-admin>
+    </services>
+    
+    <server>
+      <hostname>localhost</hostname>
+      <https-port>8443</https-port>
+    </server>
+
+    <cas-server>
+      <base-url>https://localhost:7443/cas</base-url>
+    </cas-server>
+    
+    <life-cycle-listeners>
+      <listener name="models">org.topazproject.bootstrap.WebAppListenerInitModels</listener>
+      <listener name="ehcache">net.sf.ehcache.constructs.web.ShutdownListener</listener>
+    </life-cycle-listeners>
+
+    <fedoragsearch>
+      <urls>
+        <url>http://localhost:9092/ws-search-webapp/services/FedoraGenericSearchServicePort</url>
+      </urls>
+      <repository>Topaz</repository>
+      <index>TopazIndex</index>
+      <indexDocXslt>topazFoxmlToLucene</indexDocXslt>
+      <resultPageXslt>copyXml</resultPageXslt>
+      <fgsrepository>
+        <fedoraSoap>${topaz.services.fedora.base-url}services</fedoraSoap>
+        <fedoraUser>fedoraAdmin</fedoraUser>
+        <fedoraPass>fedoraAdmin</fedoraPass>
+      </fgsrepository>
+    </fedoragsearch>
+    
+  </topaz>
+</config>

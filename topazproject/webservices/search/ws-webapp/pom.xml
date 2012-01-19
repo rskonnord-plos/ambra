@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+  <packaging>war</packaging>
+  <name>Search Webservice Webapp</name>
+
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-search</artifactId>
+    <version>0.5-rc6</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-server</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-users-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-common-webapp</artifactId>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>dependency-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${pom.parent.groupId}</groupId>
+                  <artifactId>${pom.parent.artifactId}-server</artifactId>
+                  <version>${pom.parent.version}</version>
+                  <type>jar</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/exploded-server-jar</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xslt-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals><goal>transform</goal></goals>
+            <configuration>
+              <xslFile>${basedir}/src/main/stylesheets/server-config.xslt</xslFile>
+              <srcDir>${project.build.directory}/exploded-server-jar/</srcDir>
+              <srcIncludes>deploy.wsdd</srcIncludes>
+              <destDir>${project.build.directory}/${project.build.finalName}/WEB-INF/</destDir>
+              <fileNameRegex>deploy</fileNameRegex>
+              <fileNameReplacement>server-config</fileNameReplacement>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.topazproject.plugins</groupId>
+        <artifactId>ant-tasks</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals><goal>svninfo</goal></goals>
+            <configuration>
+              <directory>..</directory>
+              <outputPath>${project.build.directory}/${project.build.finalName}/svninfo.txt</outputPath>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
