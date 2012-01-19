@@ -1,0 +1,81 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  Copyright (c) 2007-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<struts>
+  <package name="default-overlay" extends="default" namespace="/journals/overlayJournal">
+    <action name="home" class="org.plos.action.HomePageAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/index.ftl</param>
+      </result>
+    </action>
+    <action name="recentArticles" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/overlayJournal/article/recentArticles.ftl</result>
+    </action>
+    <action name="mostCommented" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/overlayJournal/article/mostCommented.ftl</result>
+    </action>
+    <action name="mostViewed" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/overlayJournal/article/mostViewed.ftl</result>
+    </action>
+  </package>
+  
+  <package name="static-overlay" extends="default-overlay" namespace="/journals/overlayJournal/static">
+    <action name="browse" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/browse.ftl</param>
+      </result>
+    </action>
+    <action name="users" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/users.ftl</param>
+      </result>
+    </action>
+    <action name="commentGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/commentGuidelines.ftl</param>
+      </result>
+    </action>
+    <action name="ratingGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/ratingGuidelines.ftl</param>
+      </result>
+    </action>
+    <action name="help" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/help.ftl</param>
+      </result>
+    </action>
+    <action name="sitemap" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/sitemap.ftl</param>
+      </result>
+    </action>
+    <action name="rssInfo" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/rssInfo.ftl</param>
+      </result>
+    </action>
+    <action name="releaseNotes" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/overlayJournal/static/releaseNotes.ftl</param>
+      </result>
+    </action>
+  </package>  
+</struts>

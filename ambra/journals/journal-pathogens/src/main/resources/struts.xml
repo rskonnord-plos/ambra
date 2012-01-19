@@ -1,0 +1,196 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  Copyright (c) 2007-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<struts>
+
+  <package name="default-pathogens" extends="default" namespace="/journals/pathogens">
+    <action name="home" class="org.plos.action.HomePageAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/index.ftl</param>
+      </result>
+    </action>
+    <action name="recentArticles" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/pathogens/article/recentArticles.ftl</result>
+    </action>
+    <action name="mostCommented" class="org.plos.action.HomePageAction">
+      <result name="success">/journals/pathogens/article/mostCommented.ftl</result>
+    </action>
+  </package>
+
+  <package name="article-pathogens" extends="article" namespace="/journals/pathogens/article">
+    <action name="browse" class="org.plos.article.action.BrowseArticlesAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/article/browse.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="static-pathogens" extends="default-pathogens" namespace="/journals/pathogens/static">
+    <action name="about" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/about.ftl</param>
+      </result>
+    </action>
+
+    <action name="authors" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/authors.ftl</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/browse.ftl</param>
+      </result>
+    </action>
+
+    <action name="checklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="contact" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/contact.ftl</param>
+      </result>
+    </action>
+
+    <action name="edboard" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/edboard.ftl</param>
+      </result>
+    </action>
+
+    <action name="eic" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/eic.ftl</param>
+      </result>
+    </action>
+
+    <action name="guidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="information" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/information.ftl</param>
+      </result>
+    </action>
+
+    <action name="policies" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/policies.ftl</param>
+      </result>
+    </action>
+
+    <action name="reviewerGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/reviewer_guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="rssFeeds" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/rssFeeds.ftl</param>
+      </result>
+    </action>
+
+    <action name="sitemap" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/sitemap.ftl</param>
+      </result>
+    </action>
+
+    <action name="users" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/pathogens/static/users.ftl</param>
+      </result>
+    </action>
+    <!-- shared static pages -->
+    <action name="commentGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/commentGuidelines.ftl</param>
+      </result>
+    </action>
+    <action name="competing" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/competing.ftl</param>
+      </result>
+    </action>
+    <action name="figureGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/figure_guidelines.ftl</param>
+      </result>
+    </action>
+    <action name="help" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/help.ftl</param>
+      </result>
+    </action>
+    <action name="latexGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/latexGuidelines.ftl</param>
+      </result>
+    </action>
+    <action name="license" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/license.ftl</param>
+      </result>
+    </action>
+    <action name="privacy" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/privacy.ftl</param>
+      </result>
+    </action>
+    <action name="ratingGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/ratingGuidelines.ftl</param>
+      </result>
+    </action>
+        <action name="releaseNotes" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosone/static/releaseNotes.ftl</param>
+      </result>
+    </action>
+    <action name="rssInfo" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/rssInfo.ftl</param>
+      </result>
+    </action>
+    <action name="searchHelp" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/searchHelp.ftl</param>
+      </result>
+    </action>
+    <action name="terms" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/terms.ftl</param>
+      </result>
+    </action>
+    <action name="userFaq" class="org.plos.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/journals/plosJournals/static/userFaq.ftl</param>
+      </result>
+    </action>
+  </package>
+</struts>

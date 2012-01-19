@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>ambra-util</artifactId>
+  <packaging>jar</packaging>
+  <name>Ambra Utilities</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>ambra</artifactId>
+    <version>0.9-rc1</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>ambra-otm-models</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>conf-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>entity-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo.groovy</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <goals><goal>compile</goal></goals>
+          </execution>
+          <!--
+          <execution>
+            <id>testCompile</id>
+            <goals><goal>testCompile</goal></goals>
+          </execution>
+          -->
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>migration</id>
+      <build>
+        <defaultGoal>exec:java</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.0.2</version>
+            <configuration>
+              <mainClass>migration</mainClass>
+              <arguments>
+                <argument>${args}</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

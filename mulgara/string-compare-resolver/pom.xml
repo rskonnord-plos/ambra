@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>string-compare-resolver</artifactId>
+  <packaging>jar</packaging>
+  <version>0.9-rc1</version>
+  <name>Topaz Mulgara String-comparison Resolver</name>
+  <description>A Mulgara resolver providing additional string-comparison functions.</description>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>mulgara</artifactId>
+    <version>0.9-rc1</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mulgara</groupId>
+      <artifactId>mulgara</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <forkMode>never</forkMode> <!-- Fixes annoying issue with surefire - see MSUREFIRE-121 -->
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo.groovy</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

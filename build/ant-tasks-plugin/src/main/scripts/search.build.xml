@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <artifact:dependencies filesetId="cargo.fileset" useScope="runtime">
+    <dependency groupId="org.codehaus.cargo" artifactId="cargo-ant" version="0.8"/>
+    <dependency groupId="org.codehaus.cargo" artifactId="cargo-core-uberjar" version="0.8"/>
+  </artifact:dependencies>
+
+  <artifact:dependencies filesetId="log4j.fileset" useScope="runtime">
+    <dependency groupId="log4j" artifactId="log4j" version="1.2.12" type="jar"/>
+  </artifact:dependencies>
+
+  <artifact:dependencies filesetId="antcontrib.fileset" useScope="runtime">
+    <dependency groupId="ant-contrib" artifactId="ant-contrib" version="1.0b2"/>
+  </artifact:dependencies>
+
+  <taskdef resource="cargo.tasks">
+    <classpath>
+      <fileset refid="cargo.fileset"/>
+    </classpath>
+  </taskdef>
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset refid="antcontrib.fileset"/>
+    </classpath>
+  </taskdef>
+
+  <target name="init">
+    <property name="home"               location="${DEST_DIR}/${ROOT}"/>
+    <property name="tomcatinstall.dir"  location="${home}/tomcat/install"/>
+    <property name="tomcatconfig.dir"   location="${home}/tomcat/config"/>
+    <property name="tomcatlog.dir"      location="${home}/tomcat/log"/>
+    <property name="port"               value="${PORT}"/>
+
+    <condition property="tomcathome" value="${TOMCAT_HOME}"
+        else="${tomcatinstall.dir}/apache-tomcat-${TOMCAT_VERSION}/apache-tomcat-${TOMCAT_VERSION}">
+      <isset property="TOMCAT_HOME"/>
+    </condition>
+  </target>
+
+  <!-- Download and install tomcat -->
+  <target name="search-install" depends="init">
+    <echo message="Installing Tomcat into ${tomcatinstall.dir} ..."/>
+
+    <artifact:dependencies filesetId="tomcat.fileset" useScope="runtime">
+      <dependency groupId="tomcat" artifactId="apache-tomcat"
+                  version="${TOMCAT_VERSION}" type="zip"/>
+    </artifact:dependencies>
+    <pathconvert property="tomcat-zip" refid="tomcat.fileset"/>
+
+    <cargo containerId="tomcat5x" action="stop">
+      <zipUrlInstaller installUrl="file:${tomcat-zip}" installDir="${tomcatinstall.dir}"/>
+      <configuration home="${tomcatconfig.dir}"/>
+    </cargo>
+  </target>
+
+  <!-- Clean out the whole search/tomcat directory -->
+  <target name="search-uninstall" depends="init">
+    <delete dir="${home}"/>
+  </target>
+
+  <!-- Start fedoragsearch -->
+  <target name="search-start" depends="init">
+    <echo>Starting fedoragsearch (spawn=${SPAWN})</echo>
+
+    <artifact:dependencies filesetId="search.fileset" useScope="runtime">
+      <dependency groupId="org.topazproject.ws" artifactId="ws-search-webapp"
+                  version="${webappVersion}" type="war"/>
+    </artifact:dependencies>
+    <pathconvert property="search-war"  refid="search.fileset"/>
+
+    <condition property="wait" value="true" else="false">
+      <isfalse value="${SPAWN}"/>
+    </condition>
+
+    <delete dir="${tomcatconfig.dir}" />
+    <mkdir dir="${tomcatlog.dir}"/>
+    <mkdir dir="${tomcatconfig.dir}"/>
+
+    <echo message="Starting fedoragsearch..."/>
+    <echo message="Using tomcat  = ${tomcathome}"/>
+    <echo message="Using home    = ${home}"/>
+    <echo message="Using log-dir = ${tomcatlog.dir}"/>
+    <echo message="Using war     = ${search-war}"/>
+    <echo message="Using port    = ${port}"/>
+    <echo message="Shutdown port = ${SHUTDOWN_PORT}"/>
+
+    <delete>
+      <fileset dir="${home}" includes="search*.properties"/>
+    </delete>
+
+    <tempfile property="temp.file" prefix="search" suffix=".properties" destDir="${home}"/>
+    <echo file="${temp.file}" message=""/>
+    <propertyselector property="prop.list" casesensitive="false" match="(ambra|log4j|com)\..*"/>
+    <if>
+      <isset property="prop.list"/>
+      <then>
+        <for list="${prop.list}" param="property">
+          <sequential>
+            <propertycopy name="prop.value" from="@{property}" override="true"/>
+            <echo file="${temp.file}" append="true">@{property}=${prop.value}${line.separator}</echo>
+          </sequential>
+        </for>
+      </then>
+    </if>
+
+    <cargo containerId="tomcat5x" home="${tomcathome}" output="${tomcatlog.dir}/output.log"
+        log="${tomcatlog.dir}/cargo.log" action="start" wait="${wait}">
+      <!-- not supported yet by cargo...
+      <syspropertyset>
+        <propertyref prefix="ambra."/>
+        <propertyref prefix="log4j."/>
+        <propertyref prefix="com."/>
+      </syspropertyset>
+      -->
+      <extraClasspath>
+        <fileset refid="log4j.fileset"/>
+      </extraClasspath>
+      <syspropertyset file="${temp.file}"/>
+      <configuration home="${tomcatconfig.dir}">
+        <property name="cargo.servlet.port" value="${port}"/>
+        <property name="cargo.logging" value="high"/>
+        <property name="cargo.jvmargs" value="${jvmargs}"/>
+        <property name="cargo.rmi.port" value="${SHUTDOWN_PORT}"/>
+        <deployable type="war" file="${search-war}">
+          <property name="context" value="ws-search-webapp"/>
+        </deployable>
+      </configuration>
+    </cargo>
+
+    <delete file="${temp.file}"/>
+
+  </target>
+
+  <!-- Stop fedoragsearch -->
+  <target name="search-stop" depends="init">
+    <cargo containerId="tomcat5x" home="${tomcathome}" action="stop">
+      <configuration home="${tomcatconfig.dir}">
+        <property name="cargo.rmi.port" value="${SHUTDOWN_PORT}"/>
+      </configuration>
+    </cargo>
+  </target>
+  
+</project>

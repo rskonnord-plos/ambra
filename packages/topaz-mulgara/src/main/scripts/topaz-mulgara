@@ -1,0 +1,417 @@
+#!/usr/bin/env bash
+# $HeadURL::                                                                   $
+# $Id$
+#
+# Mulgara init script
+# Copyright (c) 2006-2008 by Topaz, Inc.
+# http://topazproject.org
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# chkconfig: 2345 92 14
+# description: mulgara rdf database
+
+# Validate valid configuration files
+[ -e /etc/topaz/mulgara.xml ] && ! xmllint --noout /etc/topaz/mulgara.xml && exit 1
+
+# Source function library (not really used but seems standard on redhat)
+. /etc/init.d/functions
+
+# Read our configuration from sysconfig (a redhat convention)
+[ -e /etc/sysconfig/topaz-common ] && . /etc/sysconfig/topaz-common
+[ -e /etc/sysconfig/topaz-mulgara ] && . /etc/sysconfig/topaz-mulgara
+
+# If our system is setup incorrectly somehow, minimal attempt to clean up
+[ -n "$JAVA_HOME" ] && [ ! -d "$JAVA_HOME" ] && \
+    echo "WARN: Resetting Invalid JAVA_HOME ($JAVA_HOME)" && JAVA_HOME=
+    
+# Try to set JAVA_HOME if not set above
+[ -z "$JAVA_HOME" ] && JAVA_HOME=`find /opt -maxdepth 1 -name 'jdk*' -a \! -type f | head -1`
+export JAVA_HOME
+
+# Start multicast for ehcache (please change if the interface is different)
+ifconfig eth0 multicast
+ifconfig lo multicast
+
+# Start/stop/etc topaz-mulgara
+usage() {
+cat <<EOF; exit 1
+usage: $1 [options] start|stop|restart|status|report|dump
+
+Options:
+  -h, --help    Usage information (this message)
+  -n timeout    The number of seconds to wait after starting or stopping
+                (default=45)
+  -f            If we can't stop in <timeout>, send TERM signal
+  -F            If we can't stop in <timeout>, send KILL signal
+  -w            If we can't stop in <timeout>, don't stop - print an error msg
+
+Environment:
+  Variable      Default -- Description
+  ------------- --------------------------------------------------------------
+  JAVA_HOME     This is where the JDK is installed.
+  JAVA_OPTS     -Xmx400m -XX:MaxPermSize=256m -- These are the options to be
+                used for starting mulgara.
+  STARTUP       jsvc -- This can be "jsvc" or "java". If set to jsvc and jsvc
+                is not found, we revert ot running via java. If starting or
+                stopping with jsvc, must be root
+  SU_USER       The user to start/stop server as.
+  DATABASE_DIR  The location where to store the database
+  SERVERNAME    The RMI server name
+  LOG4J_CONFIG  The location of the log4j config file
+EOF
+}
+
+# Defaults:
+[ -z "$SU_USER" ] && SU_USER="topaz"
+SU_GROUP=$SU_USER
+TOPAZ_LOCAL="/usr/local/topaz"
+TOPAZ_CONFIG="/etc/topaz"
+[ -z "$JAVA_OPTS" ] && JAVA_OPTS="-Xmx400m -XX:MaxPermSize=256m"
+[ -z "$STARTUP" ] && STARTUP="jsvc"
+[[ "$OPTIONS" != *"-p "* ]] && OPTIONS="$OPTIONS -p 35791"
+VARDIR="/var"
+LOGDIR="${VARDIR}/log/topaz"
+PIDDIR="${VARDIR}/run/topaz"
+JSVC="jsvc"
+JVM="server"
+verbose=
+
+MULGARA_HOME="$TOPAZ_LOCAL/topaz-mulgara"
+MULGARA_JAR="`ls \"$MULGARA_HOME\"/mulgara-service-*.jar`"
+
+# These ports are only for printing status. If they're accurate, status will be better
+PORT=
+topaz_mulgara_PORT=1099
+
+#
+# Should not need to modify stuff below here
+#
+
+BASENAME=$(basename $0)
+killsignal=15
+timeout=45
+
+# Verify that JAVA_HOME is set and exists
+[ -z "$JAVA_HOME" ] && echo "JAVA_HOME must be set" && exit 1
+[ ! -d "$JAVA_HOME" ] && echo "JAVA_HOME ($JAVA_HOME) invalid" && exit 1
+if [ "$OS" != "apple" -a ! -e "$JAVA_HOME/lib/tools.jar" ]; then
+  echo "JAVA_HOME ($JAVA_HOME) is not JDK (no tools.jar)" && exit 1
+fi
+
+[ "--help" == "$1" ] && usage $BASENAME
+
+# Deprecated:
+[ "--basename" == "$1" ] && BASENAME=$2 && shift 2
+
+# Parse command line options
+while getopts b:n:fFwhVv opt; do
+  case $opt in
+    b) # Change the basename (used mostly for testing)
+       BASENAME="$OPTARG"
+       ;;
+    f) # If we can't stop in timeout, send TERM signal
+       killsignal=15
+       ;;
+    F) # If we can't stop in timeout, send KILL signal
+       killsignal=9
+       ;;
+    w) # if we want to just wait for mulgara to stop normally
+       killsignal=0
+       ;;
+    n) # Number of seconds to wait for processes to start or stop
+       timeout="$OPTARG"
+       ;;
+    h) # help: display usage
+       usage $BASENAME
+       ;;
+    V) # Show version
+       echo "Version: $Id$"
+       exit 1
+       ;;
+    v) # Turn on verbose
+       verbose=1
+       ;;
+  esac
+done
+shift `expr $OPTIND - 1`
+[ $# -eq 0 ] && usage $BASENAME
+
+# Define log filename
+STDLOG="${LOGDIR}/${BASENAME}.out.`date +%Y-%m-%d`"
+STDLOG_LNK="${LOGDIR}/${BASENAME}.out"
+create_log() {
+  if [ `id -u` -eq 0 -a -n "$SU_USER" ] ; then
+    touch ${STDLOG}
+    [ -h "${STDLOG_LNK}" ] && rm -f ${STDLOG_LNK}
+    ln -s `basename ${STDLOG}` ${STDLOG_LNK}
+    chown $SU_USER $STDLOG
+    chown $SU_USER $STDLOG_LNK
+  else
+    STDLOG=$STDLOG_LNK
+    [ ! -e "$STDLOG" ] && echo "Unable to create $STDLOG. Should be root." && exit 1
+  fi
+}
+
+# Log stuff w/date
+log() {
+  [ -w "$STDLOG" ] && echo "`date` $*" >> $STDLOG;
+  echo "$*";
+}
+debug() {
+  [ -w "$STDLOG" ] && echo "`date` $*" >> $STDLOG;
+  [ -n "$verbose" ] && echo "$*";
+}
+
+# Expand configuration (use appropriate overrides or defaults if no overrides)
+expand () { eval "$1=\${${BASENAME//-/_}_$1:-\$$1}"; }
+expand JAVA_OPTS
+expand SU_USER
+expand PORT
+
+MULGARA_RUN="
+  -jar ${MULGARA_JAR} \
+  -l file://${LOG4J_CONFIG} \
+  -s ${SERVERNAME} \
+  -a ${DATABASE_DIR} \
+  -r ${PORT} \
+  ${OPTIONS}"
+
+# Find jsvc (in case root's PATH) doesn't contain it
+if which ${JSVC} >/dev/null 2>&1; then
+  # For some reason, jsvc has trouble starting if it is not an absolute path
+  JSVC=`which ${JSVC}`
+elif [ -x "${TC}/bin/jsvc" ];          then JSVC="${TC}/bin/jsvc"
+elif [ -x "${TOPAZ_LOCAL}/bin/jsvc" ]; then JSVC="${TOPAZ_LOCAL}/bin/jsvc"
+elif [ -x /usr/local/bin/jsvc ];       then JSVC=/usr/local/bin/jsvc
+else STARTUP="java"
+fi
+
+PIDFILE="${PIDDIR}/${BASENAME}-${STARTUP}.pid"
+
+# Define options for JSVC
+JSVC_OPTS="-outfile ${STDLOG} -pidfile ${PIDFILE} -cp ${CLASSPATH}"
+[ -n "$JVM" ] && JSVC_OPTS="${JSVC_OPTS} -jvm ${JVM}"
+[ -n "$SU_USER" ] && JSVC_OPTS="$JSVC_OPTS -user ${SU_USER}"
+JSVC_OPTS="${JSVC_OPTS} ${JAVA_OPTS}"
+
+# Find lsof (in case root's PATH doesn't contain it)
+LSOF=`which lsof`
+[ -z "$LSOF" ] && LSOF=/usr/sbin/lsof
+
+# You must be root to run jsvc
+test_root() { [ `id -u` -ne 0 ] && echo "You must be root!" && exit 1; }
+
+# Create dirs
+create_dirs() {
+  mkdir -p ${PIDDIR}
+  [ -n "$SU_USER" -a `id -u` -eq 0 ] && chown -R ${SU_USER} ${PIDDIR}
+}
+
+# jsvc setup
+jsvc() {
+  # Make sure that we have jsvc
+  if ! which ${JSVC} >/dev/null 2>&1; then
+    echo "Cannot find ${JSVC} executable"
+    echo "Install from ${MULGARA_HOME}/bin/jsvc.tar.gz"
+    exit 1
+  fi
+  cd ${MULGARA_HOME}
+  ${JSVC} ${JSVC_OPTS} ${MULGARA_RUN} "$@"
+}
+
+jsvc_start() {
+  test_root
+  # Start and wait a while for it to start properly
+  jsvc -wait 10
+  chmod ugo+r ${PIDFILE}
+}
+
+jsvc_stop() {
+  test_root
+  jsvc -stop
+}
+
+su_cmd() {
+  start="$1"
+  shift
+  if [ -n "$SU_USER" -a `id -u` -eq 0 ] ; then
+    if [ "$start" = "start" ] ; then
+      # Run the thing as root and create the pidfile
+      su $SU_USER -s /bin/bash -c "$* >>$STDLOG 2>&1 & echo \$! >$PIDFILE"
+    else
+      su $SU_USER -s /bin/bash -c "$* >>$STDLOG 2>&1"
+    fi
+  elif [ -n "$SU_USER" -a `id -u` -ne `id -u $SU_USER` ] ; then
+    echo "Must be root or $SU_USER to run \"""$@""\""
+    exit 1
+  else
+    "$@" >>$STDLOG 2>&1 &
+    echo $! >$PIDFILE
+  fi
+}
+
+java_start() {
+  su_cmd start $JAVA_HOME/bin/java -$JVM $JAVA_OPTS $MULGARA_RUN
+  # Give it a few seconds to start (to create PID file)
+  PID=`cat ${PIDFILE} 2>/dev/null`
+  i=1
+  while [ -z "$PID" ] ; do
+    sleep 1
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    i=$((i+1))
+    [ $i -gt "$timeout" ] && break
+  done
+  # Now see if we're listening yet
+  if [ -n "$PID" -a -n "$PORT" ]; then
+    RESULT=`$LSOF -i :$PORT | grep LISTEN`
+    while [ -z "$RESULT" ] && checkpid $PID ; do
+      sleep 1
+      RESULT=`$LSOF -i :$PORT | grep LISTEN`
+      i=$((i+1))
+      [ $i -gt "$timeout" ] && break
+    done
+  fi
+  if [ -z "$PID" -o $i -gt "$timeout" ]; then
+    log "$BASENAME still starting...there may be a problem"
+  elif ! checkpid $PID ; then
+    log "$BASENAME failed to start - please check the logs"
+    rm -f $PIDFILE
+  fi
+}
+
+java_stop() {
+  PID=`cat ${PIDFILE} 2>/dev/null`
+  su_cmd stop $JAVA_HOME/bin/java $JAVA_OPTS $MULGARA_RUN -x
+  # Give it a few seconds to stop (to delete PID file)
+  i=1
+  while [ -n "$PID" ] ; do
+    sleep 1
+    PID=`ps -p $PID -o pid | tail -n +2`
+    i=$((i+1))
+    [ $i -gt "$timeout" ] && break
+  done
+  if [ -z "$PID" ]; then
+    rm -f $PIDFILE
+  elif [ "$killsignal" -ne 0 ]; then
+    log "Killing $BASENAME (kill -$killsignal $PID)"
+    kill -$killsignal $PID
+    sleep 4
+    PID=`ps -p $PID -o pid | tail -n +2`
+    [ -z "$PID" ] && rm -f $PIDFILE
+  fi
+}
+
+case "$1" in
+  start)
+    create_log
+    # Don't try to start up twice!
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      if ps -p ${PID} >/dev/null; then
+        echo "${BASENAME} already running (${PID})"
+	exit 0
+      fi
+    fi
+    # jsvc doesn't abort if somebody else is on our port, so let's be smart!
+    if [ -n "$PORT" ]; then
+      RESULT=`$LSOF -i :$PORT | grep LISTEN`
+      if [ -n "$RESULT" ]; then
+        echo "No PID file for ${BASENAME}, but port $PORT already in use"
+	exit 1
+      fi
+    fi
+    create_dirs
+    log "Starting ${BASENAME} in ${MULGARA_HOME} via ${STARTUP}"
+    ${STARTUP}_start
+    ;;
+  stop)
+    create_log
+    create_dirs
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    log "Stopping ${BASENAME} (${PID})"
+    ${STARTUP}_stop
+    if [ -e ${PIDFILE} ]; then
+      log "Unable to stop ${BASENAME} (${PID}), doing thread-dump"
+      kill -QUIT ${PID}
+      exit 1
+    fi
+    ;;
+  restart|reload)
+    create_log
+    create_dirs
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    log "Restarting ${BASENAME} (${PID}) in ${MULGARA_HOME}"
+    ${STARTUP}_stop
+    ${STARTUP}_start
+    ;;
+  status|check)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      TMPFILE=/tmp/${BASENAME}.status.$$
+      if ps o "pid user rss %mem etime time %cpu comm" -p ${PID} > ${TMPFILE} 2>&1; then
+        echo "${BASENAME} (${PID}) is running from ${MULGARA_HOME}"
+        cat ${TMPFILE}
+        $LSOF -n -P -i -a -p $PID | grep "LISTEN"
+      else
+        echo "${BASENAME} not running"
+      fi
+      rm -f ${TMPFILE}
+    else
+      echo "${BASENAME} not running"
+    fi
+    ;;
+  dump)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      log "Writing thread-dump for ${BASENAME} (${PID}) into ${STDLOG}"
+      kill -QUIT ${PID}
+      exit 0
+    else
+      log "${BASENAME} not running? (No pidfile: ${PIDFILE})"
+    fi
+    ;;
+  report)
+    # Spit out a very simple status dump
+    # Note: fedora and mckoi will almost always report xxx(unknown)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      if ps -p $PID >/dev/null; then
+        PORTS=`$LSOF -p $PID -a -iTCP -Fn -n -P | grep -v '-' | sort | uniq | tr 'n' ' '`
+        echo "$PID $BASENAME `echo $PORTS`"
+      else
+        echo "$BASENAME not running -- but PIDFILE ($PIDFILE:$PID) exists"
+      fi
+    elif [ -n "$PORT" ]; then
+      PID=`$LSOF -i:$PORT | grep LISTEN | awk '{print $2}'`
+      if [ -n "$PID" ]; then
+        PORTS=`$LSOF -p $PID -a -iTCP -Fn -n -P | grep -v '-' | sort | uniq | tr 'n' ' '`
+        echo "`echo $PID` unknown($BASENAME) `echo $PORTS`"
+      elif [ `id -u` -eq 0 ] ; then
+        # No PIDFILE and noting listening on our configured PORT
+        echo "$BASENAME not running on port $PORT"
+      else
+        # lsof might be unreliable, so we really don't know (TODO: Use netstat)
+	echo "$BASENAME might be running"
+      fi
+    else
+      # No PIDFILE and no configured PORT
+      echo "$BASENAME not running"
+    fi
+    ;;
+  *)
+    usage $0
+    exit 1
+esac
+
+exit $?

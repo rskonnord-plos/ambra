@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>journals</artifactId>
+  <packaging>pom</packaging>
+  <version>0.9-rc1</version>
+  <name>Parent POM for Journals</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>ambra</artifactId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.9-rc1</version>
+  </parent>
+
+  <modules>
+    <module>all-journals</module>
+    <module>journal-clinicalTrials</module>
+    <module>journal-compbiol</module>
+    <module>journal-genetics</module>
+    <module>journal-ntd</module>
+    <module>journal-overlay</module>
+    <module>journal-pathogens</module>
+    <module>journal-plosone</module>
+  </modules>
+
+</project>

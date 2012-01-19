@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                     $
+  $Id$
+  
+  Copyright (c) 2007-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  
+  This file contains most of the defaults for the ambra webapp. However, there may be additional
+  defaults in the conf-helper library's global-defaults.xml. Additionally, if in dev mode, some
+  of these values may be overridden by settings in defaults-dev.xml. Finally, look for overrides
+  in /etc/topaz/ambra.xml.
+  
+  See also libs/conf-helper/src/main/resources/globa-defaults.xml
+-->
+<config>
+  <ambra>
+    <network>
+      <hosts>
+        <!-- Set hosts.default to FQHN (not localhost) if installing all components on one host
+          (or to webhead FQHN for multiple host installation) -->
+        <default>localhost</default>
+        <mailhost>localhost</mailhost>
+        <!-- For multibox install, change the following entires to the appropriate FQHNs -->
+        <cas>${ambra.network.hosts.default}</cas>
+        <registration>${ambra.network.hosts.cas}</registration>
+        <fedora>${ambra.network.hosts.default}</fedora>
+        <mulgara>${ambra.network.hosts.default}</mulgara>
+        <ambra>${ambra.network.hosts.default}</ambra>
+      </hosts>
+    </network>
+    <platform>
+      <host>${ambra.network.hosts.default}:${ambra.network.ports.default}</host>
+      <port>
+        <http>${ambra.network.ports.default}</http>
+        <https>${ambra.network.ports.ambra-ssl}</https>
+      </port>
+      <appContext>/ambra-webapp</appContext><!-- web application context; leave empty if deployed in root directory  -->
+      <resourceSubDir></resourceSubDir><!-- used only if web resources like images/css are deployed in a separate directory; rarely used  -->
+      <defaultJournalName>AmbraJournal</defaultJournalName>
+      
+      <!-- The DOI url prefix to use for this server -->
+      <doiUrlPrefix>http://dx.doi.org/</doiUrlPrefix>
+      
+      <!-- Action for retrieving an article where doi is appended to this string -->
+      <articleAction>article/</articleAction>
+
+      <!-- common display constants -->
+      <name>Ambra</name>
+      <email>
+        <general>webmaster@example.org</general>
+        <feedback>webmaster@example.org</feedback>
+      </email>
+      <copyright>
+        This work is licensed under a Creative Commons Attribution-Share Alike 3.0 License,
+        http://creativecommons.org/licenses/by-sa/3.0/
+      </copyright>
+      <webserverUrl>http://${ambra.network.hosts.default}:${ambra.network.ports.default}${ambra.platform.appContext}/</webserverUrl>
+    </platform>
+
+    <!-- virtual journal config -->
+    <virtualJournals>
+      <!-- redundant config for default journal -->
+      <default>
+        <journal>AmbraJournal</journal>
+        <mappingPrefix>/journals/ambraJournal</mappingPrefix>
+      </default>
+      <!-- comma separated list of virtual journal names -->
+      <journals>AmbraJournal,OverlayJournal</journals>
+      <!-- entries to config each virtual journal -->
+      <AmbraJournal>
+        <eIssn>1111-2222</eIssn>
+        <description>Ambra Journal</description>
+        <mappingPrefix>/journals/ambraJournal</mappingPrefix>
+        <rules>
+          <host>.*ambra.*</host>
+          <plosJournal>AmbraJournal</plosJournal>
+        </rules>
+        <url>http://ambra.example.org</url>
+        <!-- Atom feed overrides -->
+        <platform>
+          <feed>
+            <title>Ambra Journal</title>
+            <id>${ambra.aliases.id}feed.ambj</id>
+          </feed>
+        </platform>
+      </AmbraJournal>
+    </virtualJournals>
+
+    <topaz>
+      <blobStore>
+        <!-- must match the name of a bean in the applicationContext.xml -->
+        <beanName>fedoraBlobStore</beanName>
+      </blobStore>
+    </topaz>
+
+    <services>
+      <search>
+        <snippetsMax>3</snippetsMax><!-- Number of snippets to show per document -->
+        <fieldMaxLength>50</fieldMaxLength><!-- Max chars per indexed field? -->
+        <cacheExpiration>600000</cacheExpiration><!-- Milliseconds to cache search results -->
+        <pageSize>10</pageSize><!-- Number of results per page -->
+        <fetchSize>10</fetchSize><!-- Number of results to fetch at a time -->
+        <indexPath>/var/lib/topaz/data/lucene</indexPath>
+        <defaultFields>description,title,body,creator</defaultFields>
+      </search>
+
+      <!-- URLs to access the CAS Single Signon Server.
+        login: the login page
+        logout: the logout page
+        proxy-receptor: the URL for getting a proxy ticket using a PGT
+        proxy-validate: the URL to validate/authenticate proxy and regular tickets
+      -->
+      <cas>
+        <url>
+          <base>https://${ambra.network.hosts.cas}:${ambra.network.ports.cas-ssl}/cas</base>
+          <login>${ambra.services.cas.url.base}/login</login>
+          <logout>${ambra.services.cas.url.base}/logout</logout>
+          <proxy-receptor>${ambra.services.cas.url.base}/proxy</proxy-receptor>
+          <proxy-validate>${ambra.services.cas.url.base}/proxyValidate</proxy-validate>
+        </url>
+      </cas>
+
+      <!-- defaults for generating an Atom Feed -->
+      <feed>
+        <title>Ambra Journal</title>
+        <tagline>Publishing science, accelerating research</tagline>
+        <icon>${webserver-url}images/favicon.ico</icon>
+        <id>${ambra.aliases.id}feed.ambr</id><!-- Unique id. Should change for different criteria -->
+        <extended><!-- Configuration of extended atom feeds -->
+          <prefix>plos</prefix><!-- namespace prefix for custom elements -->
+          <namespace>http://www.plos.org/atom/ns#plos</namespace><!-- custom element namespace -->
+        </extended>
+        <basePath>/article/</basePath><!-- Path to rss feeds after journal context -->
+        <defaultFile>feed</defaultFile><!-- Default rss feed if none other specified -->
+        <categoryPrefix>feed?category=</categoryPrefix><!-- File prefix for a specific category -->
+        <defaultName>New Articles</defaultName><!-- Name of default feed (prefixed by journal) -->
+        <defaultDuration>3</defaultDuration><!-- Default duraiton in months -->
+      </feed>
+
+      <registration>
+        <appContext>/ambra-registration</appContext><!-- app context for registration -->
+        <url>
+          <base>
+            https://${ambra.network.hosts.cas}:${ambra.network.ports.cas-ssl}${ambra.services.registration.appContext}
+          </base>
+          <!-- properties below are used by pub app to determine where to send the user for certain actions -->
+          <registration>${ambra.services.registration.url.base}/register.action</registration>
+          <change-password>${ambra.services.registration.url.base}/changePassword.action</change-password>
+          <change-email>${ambra.services.registration.url.base}/changeEmail.action</change-email>
+        </url>
+      </registration>
+      
+      <documentManagement>
+        <ingestSourceDir>
+          /var/spool/ambra/ingestion-queue
+        </ingestSourceDir>
+        <ingestDestinationDir>
+          /var/spool/ambra/ingested
+        </ingestDestinationDir>
+        <documentPrefix>${ambra.aliases.id}journal.</documentPrefix>
+      </documentManagement>
+      
+      <!-- crossref information - set parameters and sendToXref to true to turn on -->
+      <crossref>
+        <plos>
+          <doiurl>http://${ambra.network.hosts.default}:${ambra.network.ports.default}/ambra-doi-resolver/</doiurl><!-- URL where your URIs can be found -->
+          <email>webmaster@example.org</email><!-- email address to send info to -->
+        </plos>
+        <login>crossref-username</login><!-- crossref login -->
+        <password>crossref-password</password><!-- crossref password -->
+        <area>test</area><!-- set to "live" to activate, "test" for dev -->
+        <sendToXref>false</sendToXref><!-- Set to true to turn on crossref posting -->
+        <post>
+          <url>
+            http://doi.crossref.org/servlet/deposit?operation=doMDUpload&amp;login_id=${ambra.services.crossref.login}&amp;login_passwd=${ambra.services.crossref.password}&amp;area=${ambra.services.crossref.area}
+          </url>
+        </post>
+      </crossref>
+    </services>
+
+    <!-- Define defaults for spring - must be redone soon -->
+    <spring>
+      <server>
+        <ambra>${ambra.network.hosts.ambra}:${ambra.network.ports.ambra}</ambra>
+        <search>${ambra.network.hosts.ambra}:${ambra.network.ports.ambra}</search>
+        <mulgara>${ambra.network.hosts.mulgara}</mulgara>
+      </server>
+      <homesite>${ambra.network.hosts.default}</homesite>
+      <service>
+        <!-- This may need to be mucked with to be just one -->
+        <search>${ambra.services.search.fedoraGSearch.urls.url}</search>
+      </service>
+    </spring>
+
+    <articleTypeList>
+      <articleType>
+        <typeUri>http://rdf.plos.org/RDF/articleType/Research%20Article</typeUri>
+        <typeHeading>Research Article</typeHeading>
+        <default>true</default>
+      </articleType>
+      <articleType>
+        <typeUri>http://rdf.plos.org/RDF/articleType/Issue%20Image</typeUri>
+        <typeHeading>Issue Image</typeHeading>
+      </articleType>
+    </articleTypeList>
+
+    <!--
+      # This section defines the various journals and the css and javascript files which should be
+      # included on each page as well as the page title.  The values within the <default> tag are used
+      # if any of the values are missing in the <page> definitions.  Note, that the title, css, and
+      # javascript level values are entirely replaced, they are not additive.  Override config files
+      # may define values for each of those three variables and they will supsercede values present
+      # in subsequent config values.  The lookup for values is as follows:
+      # 1. Page defined in journal
+      # 2. Default value defined in journal
+      # 3. Page defined in default journal
+      # 4. Default value in default journal
+      # To define an empty value for a certain page so that it doesn't use defaults, just put the
+      # element tag with no value, e.g. <javascript></javascript>
+    -->
+    <freemarker>
+      <journal>
+        <name>AmbraJournal</name>
+        <metaKeywords>Ambra\, RDF</metaKeywords>
+        <metaDescription>
+          Ambra is a new Open Source end-to-end electronic publishing system.
+        </metaDescription>
+        <articleTitlePrefix>Ambra Journal:</articleTitlePrefix>
+        <displayName>Ambra</displayName>
+        <default>
+          <title>Ambra : It's refreshing.</title>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+          </javascript>
+        </default>
+        <page>
+          <name>/index.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/home.css</file>
+            <file>/css/article_markup.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_home.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/article/article_body.ftl</name>
+          <title>CODE_ARTICLE_TITLE</title>
+          <css>
+            <file>dojo.css</file>
+            <file>/css/star_rating.css</file>
+            <file>/css/rating.css</file>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_article.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/article/browseIssue.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/article/browseVolume.ftl</name>
+          <css>
+            <file>dojo.css</file>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/ambraTabs.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_jaTabs.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/discussion/discussion.ftl</name>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_discussion.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/discussion/startDiscussion.ftl</name>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_newDiscussion.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/rating/index.ftl</name>
+          <css>
+            <file>/css/star_rating.css</file>
+            <file>/css/rating.css</file>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/article_markup.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_discussion.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/article/imageWindow.ftl</name>
+          <css>
+            <file>/css/images.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/slideshowReference.ftl</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/article/imageWindowLarge.ftl</name>
+          <css>
+            <file>/css/images.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/article/emailArticle.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/forms.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/article/emailSuccess.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/forms.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/article/browse.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/article_markup.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/feedback/feedbackEntry.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/forms.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/feedback/feedbackSuccess.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/forms.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/search/searchStart.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/advsearch.js</file>
+            <file>/javascript/init_global.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/user/alerts.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/forms.css</file>
+            <file>/css/static.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/user/createNewUser.ftl</name>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_newProfile.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/user/editUser.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/forms.css</file>
+            <file>/css/static.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/user_profile.js</file>
+          </javascript>
+        </page>
+      </journal>
+    </freemarker>
+  </ambra>
+
+  <!-- See the PlosStruts2Filter dispatcher on how struts constants are configured -->
+  <struts>
+    <devMode>false</devMode>
+  </struts>
+
+</config>
