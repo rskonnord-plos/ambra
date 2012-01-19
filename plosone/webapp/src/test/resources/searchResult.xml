@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lucenesearch xmlns:dc="http://purl.org/dc/elements/1.1/" query="carbon" indexName="topaz"
+              hitPageStart="0" hitPageSize="10" hitTotal="1">
+  <hit no="1" score="0.036502987">
+    <field name="PID">doi:10.1371%2Fjournal.pone.0000008</field>
+    <field name="property.type">FedoraObject</field>
+    <field name="property.state">Active</field>
+    <field name="property.createdDate">2006-11-22T23:06:02.921Z</field>
+    <field name="property.lastModifiedDate">2006-11-22T23:06:10.406Z</field>
+    <field name="property.contentModel">PlosArticle</field>
+    <field name="title">Molecular Adaptation during Adaptive Radiation in ...</field>
+    <field name="title">Background</field>
+    <field name="title">Results</field>
+    <field name="title">Significance</field>
+    <field name="creator">Maxim V. Kapralov</field>
+    <field name="creator">Dmitry A. Filatov</field>
+    <field name="subject">Evolutionary Biology</field>
+    <field name="description">We report the first evidence for adaptive changes ...</field>
+    <field name="publisher">Public Library of Science</field>
+    <field name="date">2006-11-22</field>
+    <field name="format">text/xml</field>
+    <field name="identifier">info:doi/10.1371/journal.pone.0000008</field>
+    <field name="identifier">doi:10.1371%2Fjournal.pone.0000008</field>
+    <field name="language">en</field>
+    <field name="rights">Kapralov and Filatov. This is an open-access artic ...</field>
+    <field name="body" snippet="yes">CO2 assimilation and photorespiratory
+      <span class="highlight">carbon</span>
+      ... for almost all
+      <span class="highlight">carbon</span>
+      fixation on Earth. Despite ... and photorespiratory
+      <span class="highlight">carbon</span>
+      oxidation. The enzyme
+    </field>
+    <field name="repositoryName">Topaz</field>
+  </hit>
+</lucenesearch>

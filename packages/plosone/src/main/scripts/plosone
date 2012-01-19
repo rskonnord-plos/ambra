@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# $HeadURL::                                                                   $
+# $Id$
+#
+# Tomcat init script
+# Copyright (c) 2006 by Topaz, Inc.
+# http://topazproject.org
+#
+# Licensed under the Educational Community License version 1.0
+# http://opensource.org/licenses/ecl1.php
+
+# chkconfig: 2345 96 10
+# description: plosone container
+
+# Validate valid configuration files
+[ -e /etc/topaz/plosone.xml ] && ! xmllint --noout /etc/topaz/plosone.xml && exit 1
+
+# Source function library (not really used but seems standard on redhat)
+. /etc/init.d/functions
+
+# Read our configuration from sysconfig (a redhat convention)
+[ -e /etc/sysconfig/topaz-common ] && . /etc/sysconfig/topaz-common
+[ -e /etc/sysconfig/plosone ] && . /etc/sysconfig/plosone
+
+# If our system is setup incorrectly somehow, minimal attempt to clean up
+[ -n "$JAVA_HOME" ] && [ ! -d "$JAVA_HOME" ] && \
+    echo "WARN: Resetting Invalid JAVA_HOME ($JAVA_HOME)" && JAVA_HOME=
+    
+# Try to set JAVA_HOME if not set above
+[ -z "$JAVA_HOME" ] && JAVA_HOME=`find /opt -maxdepth 1 -name 'jdk*' -a \! -type f | head -1`
+export JAVA_HOME
+
+# Start/stop/etc tomcat
+/usr/local/topaz/bin/tomcat --basename $(basename `readlink -f $0`) "$@"

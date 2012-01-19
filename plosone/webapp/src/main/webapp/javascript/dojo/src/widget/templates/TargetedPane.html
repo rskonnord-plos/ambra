@@ -1,0 +1,27 @@
+<!--  <div id="${this.widgetId}" dojoAttachEvent="onMouseDown" class="dojoTargetedPane">
+	<div dojoAttachPoint="titleBar" class="dojoFloatingPaneTitleBar"  style="display:none">
+	  	<img dojoAttachPoint="titleBarIcon"  class="dojoFloatingPaneTitleBarIcon">
+		<div dojoAttachPoint="closeAction" dojoAttachEvent="onClick:closeWindow"
+   	  		class="dojoFloatingPaneCloseIcon"></div>
+		<div dojoAttachPoint="restoreAction" dojoAttachEvent="onClick:restoreWindow"
+   	  		class="dojoFloatingPaneRestoreIcon"></div>
+		<div dojoAttachPoint="maximizeAction" dojoAttachEvent="onClick:maximizeWindow"
+   	  		class="dojoFloatingPaneMaximizeIcon"></div>
+		<div dojoAttachPoint="minimizeAction" dojoAttachEvent="onClick:minimizeWindow"
+   	  		class="dojoFloatingPaneMinimizeIcon"></div>
+	  	<div dojoAttachPoint="titleBarText" class="dojoFloatingPaneTitleText">${this.title}</div>
+	</div>
+
+	<div id="${this.widgetId}_container" dojoAttachPoint="containerNode" class="dojoFloatingPaneClient"></div>
+
+	<div dojoAttachPoint="resizeBar" class="dojoFloatingPaneResizebar" style="display:none"></div>
+</div>-->
+
+
+<div id="${this.widgetId}" class="dojoDialog" dojoattachpoint="wrapper">
+	<span dojoattachpoint="tabStartOuter" dojoonfocus="trapTabs" dojoonblur="clearTrap"	tabindex="0"></span>
+	<span dojoattachpoint="tabStart" dojoonfocus="trapTabs" dojoonblur="clearTrap" tabindex="0"></span>
+	<div dojoattachpoint="containerNode" style="position: relative; z-index: 2;"></div>
+	<span dojoattachpoint="tabEnd" dojoonfocus="trapTabs" dojoonblur="clearTrap" tabindex="0"></span>
+	<span dojoattachpoint="tabEndOuter" dojoonfocus="trapTabs" dojoonblur="clearTrap" tabindex="0"></span>
+</div>

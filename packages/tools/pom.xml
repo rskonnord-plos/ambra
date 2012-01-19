@@ -1,0 +1,154 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject.packages</groupId>
+  <artifactId>topaz-tools</artifactId>
+  <packaging>pom</packaging>
+  <name>topaztools</name>
+
+  <parent>
+    <groupId>org.topazproject.packages</groupId>
+    <artifactId>packages</artifactId>
+    <version>0.8-rc2</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>plosone-runscripts</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>plosone-scripts</artifactId>
+      <version>${pom.version}</version>
+      <type>jar</type>
+      <classifier>scripts</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>plosone-util</artifactId>
+      <version>${pom.version}</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>article-util</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>rpm</id>
+      <build>
+        <plugins>
+          
+          <plugin> <!-- Copy rpm into local repository and ~/.m2/rpms -->
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions><execution><id>copy-rpm</id></execution></executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rpm-maven-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>rpm</goal>
+                </goals>
+              </execution>
+            </executions>
+
+            <configuration>
+              <release>rc2</release>
+              <copyright>Educational Community License version 1.0</copyright>
+              <distribution>Topaz Repository Framework</distribution>
+              <group>Applications/Internet</group>
+
+              <mappings>
+                <mapping>
+                  <directory>/usr/local/topaz</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/var/log/topaz</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/usr/local/topaz/bin</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                  <sources>
+                    <source>
+                      <location>${project.build.directory}/${project.build.finalName}-tools.dir/bin</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/local/topaz/lib</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                  <sources>
+                    <source>
+                      <location>${project.build.directory}/${project.build.finalName}-tools.dir/lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/local/topaz/scripts</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                  <sources>
+                    <source>
+                      <location>${project.build.directory}/${project.build.finalName}-tools.dir/scripts</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/local/topaz/classes</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                  <sources>
+                    <source>
+                      <location>src/main/resources/log4j.xml</location>
+                    </source>
+                  </sources>
+                </mapping>
+              </mappings>
+
+              <preinstallScript>src/main/scripts/preinstall</preinstallScript>
+              <postinstallScript>src/main/scripts/postinstall</postinstallScript>
+              <requires>
+                <require>/bin/bash</require>
+              </requires>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+
+  Note that plosone-install only installs the tomcat container, not the plosone war file.
+  plosone-start expands the plosone war file into the container.
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <artifact:dependencies filesetId="cargo.fileset" useScope="runtime">
+    <dependency groupId="org.codehaus.cargo" artifactId="cargo-ant" version="0.8"/>
+    <dependency groupId="org.codehaus.cargo" artifactId="cargo-core-uberjar" version="0.8"/>
+  </artifact:dependencies>
+
+  <artifact:dependencies filesetId="antcontrib.fileset" useScope="runtime">
+    <dependency groupId="ant-contrib" artifactId="ant-contrib" version="1.0b2"/>
+  </artifact:dependencies>
+
+  <taskdef resource="cargo.tasks">
+    <classpath>
+      <fileset refid="cargo.fileset"/>
+    </classpath>
+  </taskdef>
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset refid="antcontrib.fileset"/>
+    </classpath>
+  </taskdef>
+
+  <target name="init">
+    <property name="home"               location="${DEST_DIR}/${ROOT}"/>
+    <property name="tomcatinstall.dir"  location="${home}/tomcat/install"/>
+    <property name="tomcatconfig.dir"   location="${home}/tomcat/config"/>
+    <property name="tomcatlog.dir"      location="${home}/tomcat/log"/>
+    <property name="port"               value="${PORT}"/>
+
+    <condition property="tomcat.url" value="${TOMCAT_URL}"
+        else="http://www.apache.org/dist/tomcat/tomcat-5/v5.5.23/bin/apache-tomcat-5.5.23.zip">
+      <isset property="TOMCAT_URL"/>
+    </condition>
+
+    <condition property="tomcathome" value="${TOMCAT_HOME}"
+        else="${tomcatinstall.dir}/apache-tomcat-5.5.23/apache-tomcat-5.5.23">
+      <isset property="TOMCAT_HOME"/>
+    </condition>
+  </target>
+
+  <!-- Download and install tomcat -->
+  <target name="plosone-install" depends="init">
+    <echo message="Installing Tomcat into ${tomcatinstall.dir} ..."/>
+
+    <cargo containerId="tomcat5x" action="stop">
+      <zipUrlInstaller installUrl="${tomcat.url}" installDir="${tomcatinstall.dir}"/>
+      <configuration home="${tomcatconfig.dir}"/>
+    </cargo>
+  </target>
+
+  <!-- Clean out the whole plosone/tomcat directory -->
+  <target name="plosone-uninstall" depends="init">
+    <delete dir="${home}"/>
+  </target>
+
+  <!-- Start plosone -->
+  <target name="plosone-start" depends="init">
+    <echo>Starting PLos-ONE (spawn=${SPAWN})</echo>
+
+    <artifact:dependencies filesetId="plosone.fileset" useScope="runtime">
+      <dependency groupId="org.plosone" artifactId="plosone-webapp"
+                  version="${webappVersion}" type="war"/>
+    </artifact:dependencies>
+    <pathconvert property="plosone-war" refid="plosone.fileset"/>
+
+    <artifact:dependencies filesetId="plosreg.fileset" useScope="runtime">
+      <dependency groupId="org.plos" artifactId="plos-registration-webapp"
+                  version="${webappVersion}" type="war"/>
+    </artifact:dependencies>
+    <pathconvert property="plosreg-war" refid="plosreg.fileset"/>
+
+    <artifact:dependencies filesetId="search.fileset" useScope="runtime">
+      <dependency groupId="org.topazproject.ws" artifactId="ws-search-webapp"
+                  version="${webappVersion}" type="war"/>
+    </artifact:dependencies>
+    <pathconvert property="search-war" refid="search.fileset"/>
+
+    <artifact:dependencies filesetId="log4j.fileset" useScope="runtime">
+      <dependency groupId="log4j" artifactId="log4j" version="1.2.14" type="jar"/>
+    </artifact:dependencies>
+    <pathconvert property="log4j-jar" refid="log4j.fileset"/>
+
+    <condition property="wait" value="true" else="false">
+      <isfalse value="${SPAWN}"/>
+    </condition>
+
+    <delete dir="${tomcatconfig.dir}" />
+    <mkdir dir="${tomcatlog.dir}"/>
+    <mkdir dir="${tomcatconfig.dir}"/>
+
+    <echo message="Starting PLoS-ONE..."/>
+    <echo message="Using tomcat  = ${tomcathome}"/>
+    <echo message="Using home    = ${home}"/>
+    <echo message="Using log-dir = ${tomcatlog.dir}"/>
+    <echo message="Using war     = ${plosone-war}"/>
+    <echo message="Using war     = ${plosreg-war}"/>
+    <echo message="Using war     = ${search-war}"/>
+    <echo message="Using port    = ${port}"/>
+    <echo message="Shutdown port = ${SHUTDOWN_PORT}"/>
+    <echo message="Use -Dlog4j.configuration=file:///..location.. to specify log4j config"/>
+
+    <delete>
+      <fileset dir="${home}" includes="plosone*.properties"/>
+    </delete>
+
+    <tempfile property="temp.file" prefix="plosone" suffix=".properties" destDir="${home}"/>
+    <echo file="${temp.file}" message=""/>
+    <propertyselector property="prop.list" casesensitive="false"
+        match="(topaz|plosone|plos-registration|crossref|itql|log4j|com|ingest|server|service|hosts|ports|org|pub)\..*"/>
+    <if>
+      <isset property="prop.list"/>
+      <then>
+        <for list="${prop.list}" param="property">
+          <sequential>
+            <propertycopy name="prop.value" from="@{property}" override="true"/>
+            <echo file="${temp.file}" append="true">@{property}=${prop.value}${line.separator}</echo>
+          </sequential>
+        </for>
+      </then>
+    </if>
+
+    <echo file="${temp.file}"
+      append="true">org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true</echo>
+    <cargo containerId="tomcat5x" home="${tomcathome}" output="${tomcatlog.dir}/output.log"
+        log="${tomcatlog.dir}/cargo.log" action="start" wait="${wait}">
+      <extraClasspath>
+        <pathelement location="${log4j-jar}"/>
+      </extraClasspath>
+      <!-- not supported yet by cargo...
+      <syspropertyset>
+        <propertyref prefix="plosone."/>
+      </syspropertyset>
+      -->
+      <syspropertyset file="${temp.file}"/>
+      <configuration home="${tomcatconfig.dir}">
+        <property name="cargo.servlet.port" value="${port}"/>
+        <property name="cargo.logging" value="high"/>
+        <property name="cargo.jvmargs" value="${jvmargs}"/>
+        <property name="cargo.rmi.port" value="${SHUTDOWN_PORT}"/>
+        <deployable type="war" file="${plosone-war}">
+          <property name="context" value="plosone-webapp"/>
+        </deployable>
+        <deployable type="war" file="${plosreg-war}">
+          <property name="context" value="plos-registration"/>
+        </deployable>
+        <deployable type="war" file="${search-war}">
+          <property name="context" value="ws-search-webapp"/>
+        </deployable>
+      </configuration>
+    </cargo>
+
+    <delete file="${temp.file}"/>
+
+  </target>
+
+  <!-- Stop plosone -->
+  <target name="plosone-stop" depends="init">
+    <cargo containerId="tomcat5x" home="${tomcathome}" action="stop">
+      <configuration home="${tomcatconfig.dir}">
+        <property name="cargo.rmi.port" value="${SHUTDOWN_PORT}"/>
+      </configuration>
+    </cargo>
+  </target>
+    
+</project>

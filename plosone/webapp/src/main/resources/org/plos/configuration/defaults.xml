@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                     $
+  $Id$
+
+  Copyright (c) 2007 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+
+  This file contains most of the defaults for the plosone webapp. However, there may be additional
+  defaults in the conf-helper library's global-defaults.xml. Additionally, if in dev mode, some
+  of these values may be overridden by settings in defaults-dev.xml. Finally, look for overrides
+  in /etc/topaz/plosone.xml.
+
+  See also libs/conf-helper/src/main/resources/globa-defaults.xml
+-->
+<config>
+  <!-- URLs to access the CAS Single Signon Server.
+       login: the login page
+       logout: the logout page
+       proxy-receptor: the URL for getting a proxy ticket using a PGT
+       proxy-validate: the URL to validate/authenticate proxy and regular tickets
+   -->
+  <cas>
+    <url>
+      <base>https://${network.hosts.cas}:${network.ports.cas-ssl}/cas</base>
+      <login>${cas.url.base}/login</login>
+      <logout>${cas.url.base}/logout</logout>
+      <proxy-receptor>${cas.url.base}/proxy</proxy-receptor>
+      <proxy-validate>${cas.url.base}/proxyValidate</proxy-validate>
+    </url>
+  </cas>
+
+  <pub>
+    <host>${network.hosts.default}:${network.ports.default}</host>
+    <port>
+      <http>${network.ports.default}</http>
+      <https>${network.ports.plosone-ssl}</https>
+    </port>
+
+    <url><proxy-callback>https://${network.hosts.plosone}:${network.ports.plosone-ssl}${pub.app-context}/CasProxyServlet</proxy-callback></url>
+
+    <app-context></app-context> <!-- web application context; leave empty if deployed in root directory  -->
+    <resource-sub-dir></resource-sub-dir> <!-- used only if web resources like images/css are deployed in a separate directory; rarely used  -->
+
+    <!-- virtual journal config -->
+    <virtualJournals>
+      <!-- default values used if no virtual journal rules match -->
+      <default>
+        <journal>PLoSONE</journal>
+        <description></description>
+        <mappingPrefix></mappingPrefix>
+        <url>http://www.plosone.org</url>
+      </default>
+      <!-- entries to config each virtual journal -->
+      <!-- comma separated list of virtual journal names -->
+      <journals>PLoSClinicalTrials</journals>
+      <PLoSClinicalTrials>
+        <description>Clinical Trials</description>
+        <mappingPrefix>/journals/clinicalTrials</mappingPrefix>
+        <rules>
+          <host>clinicaltrials\..*</host>
+          <plosJournal>clinicaltrials</plosJournal>
+        </rules>
+        <url>http://clinicaltrials.ploshubs.org</url>
+      </PLoSClinicalTrials>
+      <!-- virtual journal config entry
+      <${journalName}>
+        <description>${display for Admin, etc.}</description>
+        <mappingPrefix>${URI path prefix for virtual journal resources}</mappingPrefix>
+        <rules>
+          <${httpHeader}>${regex to match against HTTP Header value}</${httpHeader}>
+          <${httpHeader}>${regex to match against HTTP Header value}</${httpHeader}>
+        </rules>
+      </${journalName}>
+      -->
+    </virtualJournals>
+
+    <search>
+      <snippetsMax>3</snippetsMax>          <!-- Number of snippets to show per document -->
+      <fieldMaxLength>50</fieldMaxLength>   <!-- Max chars per indexed field? -->
+      <cacheDuration>600000</cacheDuration> <!-- Milliseconds to cache search results -->
+      <pageSize>10</pageSize>               <!-- Number of results per page -->
+      <fetchSize>10</fetchSize>             <!-- Number of results to fetch at a time -->
+    </search>
+
+    <!-- Action for retrieving an article where doi is appended to this string -->
+    <article-action>article/</article-action>
+
+    <!-- common display constants -->
+    <name>Public Library of Science</name>
+    <email><general>webmaster@plos.org</general></email>
+    <copyright>This work is licensed under a Creative Commons Attribution-Share Alike 3.0 License, http://creativecommons.org/licenses/by-sa/3.0/</copyright>
+
+    <!-- defaults for generating a PLoS ONE Atom Feed -->
+    <feed>
+      <title>PLoS ONE</title>
+      <tagline>Publishing science, accelerating research</tagline>
+      <icon>${webserver-url}images/pone_favicon.ico</icon>
+      <id>info:doi/1371/feed.pone</id> <!-- Unique id. Should change for different criteria -->
+      <extended> <!-- Configuration of extended atom feeds -->
+        <prefix>plos</prefix> <!-- namespace prefix for custom elements -->
+        <namespace>http://www.plos.org/atom/ns#plos</namespace> <!-- custom element namespace -->
+      </extended>
+      <basePath>/article/</basePath>           <!-- Path to rss feeds after journal context -->
+      <defaultFile>feed</defaultFile>          <!-- Default rss feed if none other specified -->
+      <categoryPrefix>feed?category=</categoryPrefix> <!-- File prefix for a specific category -->
+      <defaultName>New Articles</defaultName>  <!-- Name of default feed (prefixed by journal) -->
+      <defaultDuration>3</defaultDuration>     <!-- Default duraiton in months -->
+    </feed>
+
+    <!-- Define defaults for spring - must be redone soon -->
+    <spring>
+      <!-- crossref information - set parameters and sendToXref to true to turn on -->
+      <crossref>
+        <plos>
+          <doiurl>http://...</doiurl>        <!-- URL where your URIs can be found -->
+          <email>webmaster@your-org</email>  <!-- email address to send info to -->
+        </plos>
+        <login>crossref-username</login>     <!-- crossref login -->
+        <password>your-password</password>   <!-- crossref password -->
+        <area>test</area>                    <!-- set to "live" to activate, "test" for dev -->
+        <sendToXref>false</sendToXref>       <!-- Set to true to turn on crossref posting -->
+        <post><url>http://doi.crossref.org/servlet/deposit?operation=doMDUpload&amp;login_id=${pub.spring.crossref.login}&amp;login_passwd=${pub.spring.crossref.password}&amp;area=${pub.spring.crossref.area}</url></post>
+      </crossref>
+
+      <hostname>${network.hosts.plosone}</hostname>
+      <mailhost>${network.hosts.mailhost}</mailhost> <!-- SMTP server -->
+      <server>
+        <plosone>${network.hosts.plosone}:${network.ports.plosone}</plosone>
+        <cas>${network.hosts.cas}:${network.ports.cas-ssl}</cas>
+        <search>${network.hosts.plosone}:${network.ports.plosone}</search>
+        <mulgara>${network.hosts.mulgara}:${network.ports.mulgara}</mulgara>
+      </server>
+      <homesite>${network.hosts.default}</homesite>
+      <service>
+        <!-- This may need to be mucked with to be just one -->
+        <search>${topaz.fedoragsearch.urls.url}</search>
+      </service>
+      <ingest>
+        <source>/var/spool/plosone/ingestion-queue</source>
+        <destination>/var/spool/plosone/ingested</destination>
+      </ingest>
+      <itql><uri>http://${pub.spring.server.mulgara}/mulgara-service/services/ItqlBeanService</uri></itql>
+      <email><feedback>webmaster@plos.org</feedback></email>
+      <!-- Temporary default for /etc/topaz/plosone.xml -->
+      <hosts><mailhost>${network.hosts.default}</mailhost></hosts>
+    </spring>
+  </pub>
+
+  <plos-registration>
+    <app-context>/plos-registration</app-context> <!-- app context for registration -->
+    <url>
+      <base>https://${network.hosts.cas}:${network.ports.cas-ssl}${plos-registration.app-context}</base>
+      <!-- properties below are used by pub app to determine where to send the user for certain actions -->
+      <registration>${plos-registration.url.base}/register.action</registration>
+      <change-password>${plos-registration.url.base}/changePassword.action</change-password>
+      <change-email>${plos-registration.url.base}/changeEmail.action</change-email>
+    </url>
+  </plos-registration>
+
+  <topaz>
+    <search>
+      <indexpath>/var/lib/topaz/data/lucene</indexpath>
+      <defaultfields>description,title,body,creator</defaultfields>
+    </search>
+  </topaz>
+
+  <!--
+    # This section defines the various journals and the css and javascript files which should be
+    # included on each page as well as the page title.  The values within the <default> tag are used
+    # if any of the values are missing in the <page> definitions.  Note, that the title, css, and
+    # javascript level values are entirely replaced, they are not additive.  Override config files
+    # may define values for each of those three variables and they will supsercede values present
+    # in subsequent config values.  The lookup for values is as follows:
+    # 1. Page defined in journal
+    # 2. Default value defined in journal
+    # 3. Page defined in default journal
+    # 4. Default value in default journal
+    # To define an empty value for a certain page so that it doesn't use defaults, just put the
+    # element tag with no value, e.g. <javascript></javascript>
+   -->
+
+  <freemarker>
+    <default-journal-name>PLoSONE</default-journal-name>
+    <journal>
+      <name>PLoSONE</name>
+      <metaKeywords>PLoS\, Public Library of Science\, Open Access\, Open-Access\, Science\, Medicine\, Biology\, Research\, Peer-review\, Inclusive\, Interdisciplinary\, Ante-disciplinary\, Physics\, Chemistry\, Engineering</metaKeywords>
+      <metaDescription>PLoS ONE: an inclusive\, peer-reviewed\, open-access resource from the PUBLIC LIBRARY OF SCIENCE. Reports of well-performed scientific studies from all disciplines freely available to the whole world.</metaDescription>
+      <articleTitlePrefix>PLoS ONE: </articleTitlePrefix>
+      <displayName>PLoS ONE</displayName>
+      <default>
+        <title>PLoS ONE : Publishing science\, accelerating research</title>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/config_default.js</file>
+          <file>/javascript/dojo/dojo_home.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/dojoRequire_default.ftl</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+        </javascript>
+      </default>
+
+      <page>
+        <name>/article/article_body.ftl</name>
+        <title>CODE_ARTICLE_TITLE</title>
+        <css>
+          <file>/css/star_rating.css</file>
+          <file>/css/pone_rating.css</file>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/config_article.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/annotation.js</file>
+          <file>/javascript/topaz/displayComment.js</file>
+          <file>/javascript/topaz/rating.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/topaz/floatingMenu.js</file>
+          <file>/javascript/topaz/navigationUtil.js</file>
+          <file>/javascript/dojoRequire_article.ftl</file>
+          <file>/javascript/formSetup_article.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_article.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/discussion/discussion.ftl</name>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/config_discussion.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/dojoRequire_discussion.ftl</file>
+          <file>/javascript/topaz/responsePanel.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_discussion.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/discussion/startDiscussion.ftl</name>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/config_discussion.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/dojoRequire_discussion.ftl</file>
+          <file>/javascript/topaz/responsePanel.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_newDiscussion.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/rating/index.ftl</name>
+        <css>
+          <file>/css/star_rating.css</file>
+          <file>/css/pone_rating.css</file>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/config_discussion.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/rating.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/dojoRequire_discussion.ftl</file>
+          <file>/javascript/topaz/responsePanel.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_discussion.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/article/imageWindow.ftl</name>
+        <css>
+          <file>/css/pone_images.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/config_slideshow.js</file>
+          <file>/javascript/slideshowReference.ftl</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/dojoRequire_slideshow.ftl</file>
+          <file>/javascript/topaz/slideshow.js</file>
+          <file>/javascript/init_slideshow.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/article/imageWindowLarge.ftl</name>
+        <css>
+          <file>/css/pone_images.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/dojoRequire_slideshow.ftl</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/article/emailArticle.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_forms.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/article/emailSuccess.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_forms.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/feedback/feedbackEntry.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_forms.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/feedback/feedbackSuccess.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_forms.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/user/alerts.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_forms.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/user/createNewUser.ftl</name>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/topaz/htmlUtil.js</file>
+          <file>/javascript/dojoRequire_profile.ftl</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_newProfile.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/user/editPlosAlerts.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_forms.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/topaz/htmlUtil.js</file>
+          <file>/javascript/dojoRequire_profile.ftl</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_plosAlerts.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/user/editUser.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_forms.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/browserDetection.js</file>
+          <file>/javascript/dojo/dojo_plosone.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/formUtil.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/topaz/htmlUtil.js</file>
+          <file>/javascript/dojoRequire_profile.ftl</file>
+          <file>/javascript/config_profile.js</file>
+          <file>/javascript/topaz/horizontalTabs.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_profile.js</file>
+        </javascript>
+      </page>
+
+      <page>
+        <name>/static/browse.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/comment_guidelines.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/competing.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/contact.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/edboard.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/faq.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/figure_guidelines.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/guidelines.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/help.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/information.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/latex.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/license.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/media.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/policies.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/privacy.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/policies.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/reviwer_guidelines.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/rss_feeds.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/rss_info.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/serverError.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/sitemap.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/terms.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/static/whypublish.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_static.css</file>
+        </css>
+      </page>
+
+      <page>
+        <name>/index.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_home.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/dojo/dojo_home.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/topaz/htmlUtil.js</file>
+          <file>/javascript/dojoRequire_default.ftl</file>
+          <file>/javascript/config_home.js</file>
+          <file>/javascript/topaz/horizontalTabs.js</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+          <file>/javascript/init_home.js</file>
+        </javascript>
+      </page>
+    </journal>
+    <journal>
+      <name>PLoSClinicalTrials</name>
+      <metaKeywords>clinical trials\, clinical trial\, trial results\, medical publishing\, plos\, public library of science\, open access\, open-access\, science\, medical research\, clinical research\, human studies\, experimental treatment\, disease\, drug\, drugs\, device\, devices\, vaccine\, vaccines\, phase I\, phase II\, phase III\, phase IV\, journal\, portal\, gateway\, resource</metaKeywords>
+      <metaDescription>PLoS Hub â Clinical Trials: Connecting the community with open-access\, peer-reviewed clinical trials research.</metaDescription>
+      <articleTitlePrefix>PLoS Hub - Clinical Trials:  </articleTitlePrefix>
+      <displayName>PLoS Hub - Clinical Trials</displayName>
+      <default>
+        <title>PLoS Hub - Clinical Trials: Connecting communities with open-access research</title>
+      </default>
+      <page>
+        <name>/journals/clinicalTrials/index.ftl</name>
+        <css>
+          <file>/css/pone_screen.css</file>
+          <file>/css/pone_iepc.css</file>
+          <file>/css/pone_home.css</file>
+        </css>
+        <javascript>
+          <file>/javascript/dojo/dojo_home.js</file>
+          <file>/javascript/topaz/topaz.js</file>
+          <file>/javascript/topaz/domUtil.js</file>
+          <file>/javascript/topaz/htmlUtil.js</file>
+          <file>/javascript/dojoRequire_default.ftl</file>
+          <file>/javascript/init_global.js</file>
+          <file>/javascript/init_navigation.js</file>
+        </javascript>
+      </page>
+      <page>
+        <name>/article/article_body.ftl</name>
+        <title>CODE_ARTICLE_TITLE</title>
+      </page>
+    </journal>
+  </freemarker>
+</config>
