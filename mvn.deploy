@@ -1,0 +1,8 @@
+#!/bin/sh
+
+zip -q -d dist/mulgara-1.0.0.jar 'org/apache/log4j/*'
+
+mvn deploy:deploy-file -DpomFile=mulgara.pom -Dfile=dist/mulgara-1.0.0.jar -DrepositoryId=topaz -Durl=http://gandalf.topazproject.org/maven2
+
+mvn deploy:deploy-file -DpomFile=mulgara-lite.pom -Dfile=dist/mulgara-lite-1.0.0.jar -DrepositoryId=topaz -Durl=http://gandalf.topazproject.org/maven2
+
