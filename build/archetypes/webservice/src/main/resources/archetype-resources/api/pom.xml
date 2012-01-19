@@ -1,0 +1,93 @@
+#set( $service = $artifactId )
+#set( $Svc = "${service.substring(0, 1).toUpperCase()}${service.substring(1)}" )
+#set( $rev_pkg = "" )
+#foreach( $p in ${package.split('\.')} )
+#set( $rev_pkg = ".${p}${rev_pkg}" )
+#end
+#set( $rev_pkg = ${rev_pkg.substring(1)} )
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                              $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-api</artifactId>
+  <packaging>jar</packaging>
+  <name>${Svc} API</name>
+
+  <parent>
+    <groupId>${groupId}</groupId>
+    <artifactId>ws-${artifactId}</artifactId>
+    <version>0.5-rc3</version>
+  </parent>
+
+  <licenses>
+    <license>
+      <name>Educational Community License version 1.0</name>
+      <url>http://opensource.org/licenses/ecl1.php</url>
+    </license>
+  </licenses>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-common-api</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.topazproject.patch.plugin</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-wsdl</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>java2wsdl</goal>
+            </goals>
+            <configuration>
+              <implementationClassName>${Svc}ServiceImplementation</implementationClassName>
+              <filename>${wsdl.filename}</filename>
+              <all>true</all>
+              <namespace>${rev_pkg}</namespace>
+              <servicePortName>${Svc}ServicePort</servicePortName>
+              <location>http://localhost/service-location</location>
+              <classesDirectory>${project.build.directory}/classes</classesDirectory>
+              <classOfPortType>${package}.${Svc}</classOfPortType>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <configuration>
+              <tasks>
+                <copy todir="${project.build.directory}/classes" 
+                  file="${project.build.directory}/generated-sources/axistools/java2wsdl/${wsdl.filename}"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

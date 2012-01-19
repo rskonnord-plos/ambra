@@ -1,0 +1,52 @@
+<assembly>
+  <id>tomcat</id>
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <!-- Remove log4j configuration from webapp -->
+  <fileSets>
+    <fileSet>
+      <directory>${project.bug_workaround.build.directory}/webapps/mulgara-service</directory>
+      <outputDirectory>/webapps/mulgara-service</outputDirectory>
+      <excludes>
+        <exclude>WEB-INF/classes/log4j.xml</exclude>
+        <exclude>WEB-INF/classes/log4j.properties</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <!-- Copy over webapp specific server.xml file -->
+    <file>
+      <source>src/main/resources/server.xml</source>
+      <outputDirectory>conf</outputDirectory>
+    </file>
+    <!-- Copy over webassp specific log4j.properties file -->
+    <file>
+      <source>src/main/resources/log4j.xml</source>
+      <outputDirectory>common/classes</outputDirectory>
+    </file>
+  </files>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/webapps/</outputDirectory>
+      <outputFileNameMapping>${artifactId}</outputFileNameMapping>
+      <unpack>true</unpack>
+      <includes>
+        <include>*:war</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <includes>
+        <include>org.topazproject.packages:*</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

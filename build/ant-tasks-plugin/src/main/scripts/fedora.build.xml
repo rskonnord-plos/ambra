@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <artifact:dependencies filesetId="antcontrib.fileset" useScope="runtime">
+    <dependency groupId="ant-contrib" artifactId="ant-contrib" version="1.0b2"/>
+  </artifact:dependencies>
+
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset refid="antcontrib.fileset"/>
+    </classpath>
+  </taskdef>
+
+  <property environment="env"/>
+
+  <target name="exec-ext">
+    <!-- Define extension desired by fedora's scripts -->
+    <condition property="ext" value=".sh">
+      <os family="unix"/>
+    </condition>
+    <condition property="ext" value=".bat">
+      <os family="windows"/>
+    </condition>
+    <property name="ext" value=""/>
+    <!-- Now find an extension for ant/mvn -->
+    <condition property="antext" value="">
+      <os family="unix"/>
+    </condition>
+    <condition property="antext" value=".bat">
+      <os family="windows"/>
+    </condition>
+    <property name="antext" value=""/>
+  </target>
+
+  <target name="keytool">
+    <condition property="keytool" value="keytool.exe">
+      <os family="windows"/>
+    </condition>
+    <property name="keytool" value="keytool"/>
+  </target>
+
+
+  <target name="fedora-install" depends="exec-ext,keytool">
+    <property name="FEDORA_JAR"
+      value="${localRepository}/${fedora-groupId}/${fedora-artifactId}/${fedora-version}/${fedora-artifactId}-${fedora-version}.jar"/>
+
+    <mkdir dir="${FEDORA_INSTALL_DIR}"/>
+    <unjar src="${FEDORA_JAR}" dest="${FEDORA_INSTALL_DIR}"/>
+    <chmod perm="u+x">
+      <fileset dir="${FEDORA_HOME}">
+        <include name="**/bin/*"/>
+      </fileset>
+    </chmod>
+    <if>
+      <equals arg1="${DB}" arg2="mckoi" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Starting mckoi: FEDORA_HOME = ${FEDORA_HOME}</echo>
+        <exec dir="${FEDORA_HOME}"
+          executable="${FEDORA_HOME}/server/bin/mckoi-init${ext}">
+          <arg line="fedoraAdmin fedoraAdmin"/>
+          <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+        </exec>
+      </then>
+    </if>
+    <!-- install CAS server root cert in tomcat keystore -->
+    <exec
+      dir="${FEDORA_HOME}/server"
+      executable="${keytool}">
+      <arg line="-export -alias jakarta-tomcat -keystore ${ECQS_KEYSTORE} -file
+        ecqs.cert"/>
+    </exec>
+    <exec
+      dir="${FEDORA_HOME}/server"
+      executable="${keytool}">
+      <arg line="-import -alias jakarta-tomcat -keystore truststore -storepass
+        tomcat -file ecqs.cert -noprompt"/>
+    </exec>
+
+    <delete file="${FEDORA_HOME}/server/ecqs.cert"/>
+    
+  </target>
+
+  <target name="fedora-start" depends="fedora-start-or-spawn, fedora-if-spawned"/>
+  
+  <target name="fedora-start-or-spawn" depends="exec-ext">
+    <if>
+      <equals arg1="${DB}" arg2="mckoi" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Starting mckoi: FEDORA_HOME = ${FEDORA_HOME}</echo>
+        <exec dir="${FEDORA_HOME}" 
+          executable="${FEDORA_HOME}/server/bin/mckoi-start${ext}"
+          spawn="true">
+          <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+        </exec>
+
+        <echo>Spawned off mckoi</echo>
+        <!-- <sleep seconds="2"/> -->
+      </then>
+    </if>
+
+    <echo>Starting fedora: FEDORA_HOME = ${FEDORA_HOME}</echo>
+    <exec dir="${FEDORA_HOME}"
+      executable="${FEDORA_HOME}/server/bin/fedora-start${ext}"
+      spawn="${SPAWN}">
+      <arg line="${DB}"/>
+      <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+    </exec>
+  </target>
+
+  <target name="fedora-if-spawned" if="SPAWN">
+    <echo>Spawned off fedora; sleeping a bit to give it time to really start...</echo>
+    <sleep seconds="10"/>
+    <echo>Sleep done.</echo>
+  </target>
+
+  <target name="fedora-stop" depends="exec-ext">
+    <echo>Stopping fedora: FEDORA_HOME = ${FEDORA_HOME}</echo>
+
+    <exec dir="${FEDORA_HOME}" 
+      executable="${FEDORA_HOME}/server/bin/fedora-stop${ext}">
+      <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+    </exec>
+
+    <if>
+      <equals arg1="${DB}" arg2="mckoi" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Stopping mckoi: FEDORA_HOME = ${FEDORA_HOME}</echo>
+
+        <exec dir="${FEDORA_HOME}" executable="${FEDORA_HOME}/server/bin/mckoi-stop${ext}">
+          <arg line="fedoraAdmin fedoraAdmin"/>
+          <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+        </exec>
+      </then>
+    </if>
+  </target>
+
+  <target name="fedora-package" depends="exec-ext">
+    <!-- fail if JAVA_HOME is not set -->
+    <fail unless="env.JAVA_HOME" message="JAVA_HOME is not set"/>
+            
+    <!-- untar fedora server distribution -->
+    <untar src="${SRC_SERVER_TAR}" dest="${DEST_DIR}"/>
+
+    <!-- untar fedora client distribution -->
+    <untar src="${SRC_CLIENT_TAR}" dest="${DEST_DIR}"/>
+
+    <!-- setup execute permissions for bin/* -->
+    <chmod perm="u+x">
+      <fileset dir="${DEST_DIR}">
+        <include name="**/bin/*"/>
+      </fileset>
+    </chmod>
+
+    <property name="FEDORA_HOME"
+      value="${DEST_DIR}/fedora-${VERSION}"/>
+
+    <property name="TOMCAT_HOME"
+      value="${FEDORA_HOME}/server/${TOMCAT}"/>
+
+    <!-- execute fedora-setup with no-ssl-authenticate-apim -->
+    <exec
+      dir="${FEDORA_HOME}"
+      executable="${FEDORA_HOME}/server/bin/fedora-setup${ext}">
+      <arg line="no-ssl-authenticate-apim"/>
+      <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+    </exec>
+
+    <!-- configure fedora (overwrite with our local copy) -->
+    <copy file="server/fedora.fcfg"
+      tofile="${FEDORA_HOME}/server/config/fedora.fcfg"
+      overwrite="true"/>
+
+    <copy file="server/fedora.sh"
+      tofile="${FEDORA_HOME}/server/bin/fedora.sh"
+      overwrite="true"/>
+
+    <!-- copy xacml policies -->
+    <copy todir="${FEDORA_HOME}/data/fedora-xacml-policies" overwrite="true">
+      <fileset dir="server/fedora-xacml-policies"/>
+    </copy>
+
+    <!-- configure mckoi (overwrite with our local copy) -->
+    <copy file="mckoi1.0.3/db.conf"
+      tofile="${FEDORA_HOME}/server/mckoi1.0.3/db.conf"
+      overwrite="true"/>
+    
+    <!-- configure CAS -->
+    <copy file="CAS/CAS.properties"
+      tofile="${TOMCAT_HOME}/server/classes/CAS.properties" overwrite="true"/>
+
+    <copy file="CAS/jaas.config"
+      tofile="${TOMCAT_HOME}/conf/jaas.config" overwrite="true"/>
+
+    <!-- copy jar files for CAS-BASIC -->
+    <copy file="${CAS_AUTHENTICATOR}" todir="${TOMCAT_HOME}/server/lib"
+      overwrite="true" flatten="true"/>
+
+    <copy file="${CAS_CLIENT}" todir="${TOMCAT_HOME}/server/lib"
+      overwrite="true" flatten="true"/>
+
+    <!-- make an entry for CAS-BASIC in catalina.jar -->
+    <mkdir dir="${TOMCAT_HOME}/catalina-jar-edit"/>
+    <unjar src="${TOMCAT_HOME}/server/lib/catalina.jar"
+      dest="${TOMCAT_HOME}/catalina-jar-edit"/>
+    <echo
+      file="${TOMCAT_HOME}/catalina-jar-edit/org/apache/catalina/startup/Authenticators.properties"
+      append ="yes"
+      message="CAS-BASIC=org.topazproject.tomcat.catalina.authenticator.CASBasicAuthenticator"
+      />
+    <jar destfile="${TOMCAT_HOME}/server/lib/catalina.jar"
+      basedir="${TOMCAT_HOME}/catalina-jar-edit"/>
+
+    <delete dir="${TOMCAT_HOME}/catalina-jar-edit"/>
+
+    <!-- replace BASIC auth with CAS-BASIC -->
+    <xslt basedir="${TOMCAT_HOME}/webapps" destdir="${TOMCAT_HOME}/web-xml-temp"
+      includes="**/web.xml" style="CAS/web-xml-convert.xslt" extension=".xml"/>
+
+    <copy todir="${TOMCAT_HOME}/webapps" overwrite="yes">
+      <fileset dir="${TOMCAT_HOME}/web-xml-temp"/>
+    </copy>
+
+    <delete dir="${TOMCAT_HOME}/web-xml-temp"/>
+    
+    <!-- copy authoriztion -->
+    <copy todir="${TOMCAT_HOME}/webapps/fedora/WEB-INF/lib" overwrite="true" flatten="true" 
+      file="${WS_ACCESS_CLIENT}"/>
+       
+    <copy todir="${TOMCAT_HOME}/webapps/fedora/WEB-INF/lib" overwrite="true" flatten="true" 
+      file="${WS_ACCESS_API}"/>
+       
+    <copy todir="${TOMCAT_HOME}/webapps/fedora/WEB-INF/lib" overwrite="true" flatten="true" 
+      file="${WS_COMMON_API}"/>
+       
+    <copy todir="${TOMCAT_HOME}/webapps/fedora/WEB-INF/lib" overwrite="true" flatten="true" 
+      file="${AUTH_HELPER}"/>
+       
+    <copy todir="${TOMCAT_HOME}/webapps/fedora/WEB-INF/lib" overwrite="true" flatten="true" 
+      file="${CONF_HELPER}"/>
+       
+    <copy todir="${TOMCAT_HOME}/webapps/fedora/WEB-INF/lib" overwrite="true" flatten="true" 
+      file="${FEDORA_SECURITY}"/>
+
+    <!-- copy fedora patches -->
+    <unjar src="${FEDORA_PATCHES}" 
+      dest="${TOMCAT_HOME}/webapps/fedora/WEB-INF/classes" overwrite="true">
+      <patternset>
+        <exclude name="META-INF/**/*"/>
+      </patternset>
+    </unjar> 
+    
+    <!-- Install access-service -->
+    <unjar src="${ACCESS_WAR}" dest="${TOMCAT_HOME}/webapps/access"/>
+
+  </target>
+</project>

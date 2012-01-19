@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config>
+  <topaz>
+    <annotations>
+      <pdpName>_default_</pdpName>
+    </annotations>
+    <replies>
+      <pdpName>_default_</pdpName>
+    </replies>
+  </topaz>
+</config>

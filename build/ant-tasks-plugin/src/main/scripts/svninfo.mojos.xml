@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>svninfo</goal>
+
+      <call>svninfo</call>
+      <requiresProject>true</requiresProject>
+
+      <description>
+        Copies svn info to a file
+      </description>
+
+      <parameters>
+        <parameter>
+          <name>directory</name>
+          <property>directory</property>
+          <required>true</required>
+          <expression>${directory}</expression>
+          <defaultValue>.</defaultValue>
+          <type>java.lang.String</type>
+          <description>The directory to run svn info on.</description>
+        </parameter>
+
+        <parameter>
+          <name>outputPath</name>
+          <property>outputPath</property>
+          <required>true</required>
+          <expression>${outputPath}</expression>
+          <defaultValue>svninfo.txt</defaultValue>
+          <type>java.lang.String</type>
+          <description>The path/file to put the output of svn/info into.</description>
+        </parameter>
+      </parameters>
+    </mojo>
+  </mojos>
+</pluginMetadata>
