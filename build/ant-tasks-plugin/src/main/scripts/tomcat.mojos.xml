@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::$
+  $Id:$
+
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>get-tomcat</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>get-tomcat</call>
+      <requiresProject>true</requiresProject>
+
+      <description>Fetch Tomcat and unzip it in the specified directory</description>
+
+      <parameters>
+
+        <!-- Name of Tomcat location -->
+        <parameter>
+          <name>tomcatLocation</name>
+          <property>tomcatLocation</property>
+          <required>true</required>
+        </parameter>
+
+        <!-- Name of Tomcat file -->
+        <parameter>
+          <name>tomcatFile</name>
+          <property>tomcatFile</property>
+          <required>true</required>
+        </parameter>
+
+        <!-- Pass the root directory in as Ant task cannot access it -->
+        <parameter>
+          <name>root</name>
+          <property>root</property>
+          <required>true</required>
+          <defaultValue>${project.build.directory}</defaultValue>
+        </parameter>
+
+      </parameters>
+
+    </mojo>
+  </mojos>
+</pluginMetadata>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Note that mulgara-install does nothing and is only present for symmetry.
+  The mulgara jar file is actually built by mulgara/mulgara-service.
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <target name="init">
+    <property name="home" location="${DEST_DIR}/${ROOT}"/>
+    <property name="port" value="${PORT}"/>
+    <property name="httpport" value="${HTTP_PORT}"/>
+    <property name="httppublicport" value="${HTTP_PUBLIC_PORT}"/>
+  </target>
+
+  <target name="jar">
+    <artifact:dependencies filesetId="mulgara.fileset" useScope="runtime">
+      <dependency groupId="org.topazproject" artifactId="mulgara-service"
+                  version="${jarVersion}" type="jar"/>
+    </artifact:dependencies>
+    <pathconvert property="mulgara-jar" refid="mulgara.fileset"/>
+  </target>
+
+  <!-- A no-op -->
+  <target name="mulgara-install" depends="init">
+  </target>
+
+  <!-- Clean out the whole mulgara directory -->
+  <target name="mulgara-uninstall" depends="init">
+    <delete dir="${home}"/>
+  </target>
+
+  <!-- Start mulgara -->
+  <target name="mulgara-start" depends="init,jar">
+    <echo>Starting Mulgara (spawn=${SPAWN})</echo>
+
+    <property name="ambra.topaz.tripleStore.mulgara.databaseDir" location="${home}/database"/>
+
+    <condition property="failonerr" value="true" else="false">
+      <isfalse value="${SPAWN}"/>
+    </condition>
+
+    <condition property="logging" value="-l '${log4j.conf}'" else="">
+      <isset property="log4j.conf"/>
+    </condition>
+
+    <condition property="config" value="-c '${mulgara.conf}'" else="">
+      <isset property="mulgara.conf"/>
+    </condition>
+
+    <echo message="Starting Mulgara..."/>
+    <echo message="Using home             = ${home}"/>
+    <echo message="Using jar              = ${mulgara-jar}"/>
+    <echo message="Using port             = ${port}"/>
+    <echo message="Using dbdir            = ${ambra.topaz.tripleStore.mulgara.databaseDir}"/>
+    <echo message="Using logging          = ${logging}"/>
+    <echo message="Using http port        = ${httpport}"/>
+    <echo message="Using http public port = ${httppublicport}"/>
+    <echo message="Use -Dambra.topaz.tripleStore.mulgara.databaseDir to specify specific DB"/>
+    <echo message="Use -Dlog4j.configuration=file:///..location.. to specify log4j config"/>
+    <echo message="Use -Dmulgara.configuration=file:///..location.. to specify alternative mulgara config"/>
+
+    <mkdir dir="${home}"/>
+
+    <java jar="${mulgara-jar}" fork="true" spawn="${SPAWN}" failonerror="${failonerr}"
+          dir="${home}">
+      <jvmarg line="${jvmargs}"/>
+      <arg value="--servername"/>
+      <arg value="topazproject"/>
+      <arg value="--path"/>
+      <arg file="${ambra.topaz.tripleStore.mulgara.databaseDir}"/>
+      <arg value="--port"/>
+      <arg value="${httpport}"/>
+      <arg value="--publicport"/>
+      <arg value="${httppublicport}"/>
+      <arg value="--rmiport"/>
+      <arg value="${port}"/>
+      <arg value="--rmiobjectport"/>
+      <arg value="${port}"/>
+      <arg line="${config}"/>
+      <arg line="${logging}"/>
+      <syspropertyset>
+        <propertyref prefix="ambra."/>
+        <propertyref prefix="log4j."/>
+        <propertyref prefix="com."/>
+      </syspropertyset>
+    </java>
+  </target>
+
+  <!-- Stop mulgara -->
+  <target name="mulgara-stop" depends="init,jar">
+    <echo>Stopping Mulgara</echo>
+
+    <java jar="${mulgara-jar}" fork="true" failonerror="true" dir="${home}">
+      <arg value="--servername"/>
+      <arg value="topazproject"/>
+      <arg value="--shutdown"/>
+    </java>
+  </target>
+    
+</project>
