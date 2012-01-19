@@ -1,0 +1,389 @@
+#!/usr/bin/env bash
+# $HeadURL::                                                                                      $
+# $Id$
+#
+# Tomcat init script
+# Copyright (c) 2006-2008 by Topaz, Inc.
+# http://topazproject.org
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# TODO:
+# - Get rid of stopid <basename>_ENV_VAR override stuff (must do diags first)
+# - Move report/reportall diagnostics to a separate script
+# - Pause until startup is complete
+
+usage() { # Args: $BASENAME
+cat <<EOF; exit 1
+usage: $1 [options] start|stop|restart|status|report|dump
+
+Options:
+  -h, --help    Usage information (this message)
+  -b basename   The name of the program. i.e. ambra_cas, ambra
+  -n timeout    The number of seconds to wait after starting or stopping
+                (default=45)
+  -f            If we can't stop in <timeout>, send TERM signal
+  -F            If we can't stop in <timeout>, send KILL signal
+  -w            If we can't stop in <timeout>, don't stop - print an error msg
+
+Environment:
+  Variable      Default -- Description
+  ------------- --------------------------------------------------------------
+  TRUST_STORE   /etc/topaz/keystore.jks -- The value to set the
+                javax.net.ssl.trustStore system property. Set to "default" to
+                turn this off.
+  TRUST_PASS    changeit -- The value for the javax.net.ssl.trustStorePassword
+                system property. Set to "default" to turn this off.
+  CATALINA_HOME This is where tomcat is installed. It is usually overridden
+                by <basename>_CATALINA_HOME.
+  JAVA_HOME     This is where the JDK is installed.
+  TOMCAT_OPTS   -Xmx400m -XX:MaxPermSize=256m -- These are the options to be
+                used for starting tomcat. <basename>_TOMCAT_OPTS overrides
+                these.
+  TOMCAT_START_OPTS Command line options only passed when starting tomcat.
+  SU_USER       The user to start/stop server as.
+EOF
+}
+
+# Defaults:
+[ -z "$SU_USER" ] && SU_USER="topaz"
+SU_GROUP=$SU_USER
+TOPAZ_LOCAL="/usr/local/topaz"
+TOPAZ_CONFIG="/etc/topaz"
+[ -z "$TRUST_STORE" ] && TRUST_STORE=$TOPAZ_CONFIG/keystore.jks
+[ -z "$TRUST_PASS" ]  && TRUST_PASS=changeit
+[ -z "$CATALINA_HOME" ] && CATALINA_HOME=
+[ -z "$TOMCAT_OPTS" ] && TOMCAT_OPTS="-Xmx400m -XX:MaxPermSize=256m"
+VARDIR="/var"
+LOGDIR="${VARDIR}/log/topaz"
+PIDDIR="${VARDIR}/run/topaz"
+JVM="server"
+verbose=
+
+# Overrides: basename_CATALINA_HOME, basename_TOMCAT_OPTS, basename_USER
+SERVERS="ambra_cas ambra"
+ambra_cas_CATALINA_HOME="$TOPAZ_LOCAL/ambra-cas"
+ambra_CATALINA_HOME="$TOPAZ_LOCAL/ambra"
+
+# These ports are only for printing status. If they're accurate, status will be better
+PORT=
+ambra_cas_PORT=7443
+ambra_PORT=8080
+
+#
+# Should not need to modify stuff below here
+#
+
+BASENAME=$(basename $0)
+killsignal=15
+timeout=45
+
+# Verify that JAVA_HOME is set and exists
+[ -z "$JAVA_HOME" ] && echo "JAVA_HOME must be set" && exit 1
+[ ! -d "$JAVA_HOME" ] && echo "JAVA_HOME ($JAVA_HOME) invalid" && exit 1
+if [ "$OS" != "apple" -a ! -e "$JAVA_HOME/lib/tools.jar" ]; then
+  echo "JAVA_HOME ($JAVA_HOME) is not JDK (no tools.jar)" && exit 1
+fi
+
+[ "--help" == "$1" ] && usage $BASENAME
+
+# Deprecated:
+[ "--basename" == "$1" ] && BASENAME=$2 && shift 2
+
+# Parse command line options
+while getopts b:n:fFwhVv opt; do
+  case $opt in
+    b) # Change the basename (used mostly for testing)
+       BASENAME="$OPTARG"
+       ;;
+    f) # If we can't stop in timeout, send TERM signal
+       killsignal=15
+       ;;
+    F) # If we can't stop in timeout, send KILL signal
+       killsignal=9
+       ;;
+    w) # if we want to just wait for tomcat to stop normally
+       killsignal=0
+       ;;
+    n) # Number of seconds to wait for processes to start or stop
+       timeout="$OPTARG"
+       ;;
+    h) # help: display usage
+       usage $BASENAME
+       ;;
+    V) # Show version
+       echo "Version: $Id$"
+       exit 1
+       ;;
+    v) # Turn on verbose
+       verbose=1
+       ;;
+  esac
+done
+shift `expr $OPTIND - 1`
+[ $# -eq 0 ] && usage $BASENAME
+
+# Define log filename
+STDLOG="${LOGDIR}/${BASENAME}.out.`date +%Y-%m-%d`"
+STDLOG_LNK="${LOGDIR}/${BASENAME}.out"
+create_log() {
+  if [ `id -u` -eq 0 -a -n "$SU_USER" ] ; then
+    touch ${STDLOG}
+    [ -h "${STDLOG_LNK}" ] && rm -f ${STDLOG_LNK}
+    ln -s `basename ${STDLOG}` ${STDLOG_LNK}
+    chown $SU_USER $STDLOG
+    chown $SU_USER $STDLOG_LNK
+  else
+    STDLOG=$STDLOG_LNK
+    [ ! -e "$STDLOG" ] && echo "Unable to create $STDLOG. Should be root." && exit 1
+  fi
+}
+
+# Log stuff w/date as tomcat doesn't include dates when logging!
+log() {
+  [ -w "$STDLOG" ] && echo "`date` $*" >> $STDLOG;
+  echo "$*";
+}
+debug() {
+  [ -w "$STDLOG" ] && echo "`date` $*" >> $STDLOG;
+  [ -n "$verbose" ] && echo "$*";
+}
+
+# Setup TOMCAT_TRUST_OPTS properly
+if [ -n "$TRUST_STORE" -a "$TRUST_STORE" != "default" ]; then
+  [ -n "$SU_USER" -a -e "$TRUST_STORE" -a `id -u` -eq 0 ] && chown $SU_USER:$SU_GROUP $TRUST_STORE
+  TOMCAT_TRUST_OPTS="-Djavax.net.ssl.trustStore=${TRUST_STORE}"
+  if [ -n "$TRUST_PASS" -a "$TRUST_PASS" != "default" ]; then
+    TOMCAT_TRUST_OPTS="$TOMCAT_TRUST_OPTS -Djavax.net.ssl.trustStorePassword='$TRUST_PASS'"
+  fi
+fi
+
+# Expand configuration (use appropriate overrides or defaults if no overrides)
+# NOTE: Replace all occurence of '-' with '_' in variable name first
+expand () { eval "$1=\${${BASENAME//-/_}_$1:-\$$1}"; }
+expand CATALINA_HOME
+expand TOMCAT_OPTS
+expand SU_USER
+expand PORT
+
+# Having CATALINA_HOME set properly is critical
+check_catalina() {
+  [ -z "$CATALINA_HOME" ] && log "Must set/define CATALINA_HOME (for $BASENAME)" && exit 1
+  [ \! -d "$CATALINA_HOME" ] && log "CATALINA_HOME ($CATALINA_HOME) does not exist" && exit 1
+}
+
+# Setup other catalina defaults
+CATALINA_ENDORSED_DIRS=${CATALINA_HOME}/common/endorsed
+CATALINA_POLICY=${CATALINA_HOME}/conf/catalina.policy
+
+# Compute classpath
+getjars () { echo `(cd /; find $1 -name '*.jar')` | tr ' ' ':'; }
+TC=${CATALINA_HOME}
+CLASSPATH="$TC/bin/bootstrap.jar:$TC/bin/commons-logging-api.jar"
+
+# Add the javac compiler - for jsp files (tomcat's catalina.sh does this too)
+CLASSPATH="$JAVA_HOME/lib/tools.jar:$CLASSPATH"
+
+PIDFILE="${PIDDIR}/${BASENAME}.pid"
+
+# Find lsof (in case root's PATH doesn't contain it)
+LSOF=`which lsof`
+[ -z "$LSOF" ] && LSOF=/usr/sbin/lsof
+
+# You must be root to run
+test_root() { [ `id -u` -ne 0 ] && echo "You must be root!" && exit 1; }
+
+# Create dirs
+create_dirs() {
+  mkdir -p ${PIDDIR}
+  [ -n "$SU_USER" -a `id -u` -eq 0 ] && chown -R ${SU_USER} ${PIDDIR}
+}
+
+# Catalina configuration
+CATALINA_TMPDIR=$CATALINA_HOME/temp
+CATALINA_OPTS="-Djava.endorsed.dirs=${CATALINA_ENDORSED_DIRS} \
+  -classpath ${CLASSPATH} \
+  -Dcatalina.base=${CATALINA_HOME} \
+  -Dcatalina.home=${CATALINA_HOME} \
+  -Djava.io.tmpdir=${CATALINA_TMPDIR} \
+  org.apache.catalina.startup.Bootstrap"
+
+su_cmd() {
+  start="$1"
+  shift
+  if [ -n "$SU_USER" -a `id -u` -eq 0 ] ; then
+    if [ "$start" = "start" ] ; then
+      # Run the thing as root and create the pidfile
+      su $SU_USER -s /bin/bash -c "$* >>$STDLOG 2>&1 & echo \$! >$PIDFILE"
+    else
+      su $SU_USER -s /bin/bash -c "$* >>$STDLOG 2>&1"
+    fi
+  elif [ -n "$SU_USER" -a `id -u` -ne `id -u $SU_USER` ] ; then
+    echo "Must be root or $SU_USER to run \"""$@""\""
+    exit 1
+  else
+    "$@" >>$STDLOG 2>&1 &
+    echo $! >$PIDFILE
+  fi
+}
+
+java_start() {
+  su_cmd start $JAVA_HOME/bin/java -$JVM $TOMCAT_OPTS $TOMCAT_START_OPTS $TOMCAT_TRUST_OPTS $CATALINA_OPTS start
+  # Give it a few seconds to start (to create PID file)
+  PID=`cat ${PIDFILE} 2>/dev/null`
+  i=1
+  while [ -z "$PID" ] ; do
+    sleep 1
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    i=$((i+1))
+    [ $i -gt "$timeout" ] && break
+  done
+  # Now see if we're listening yet
+  if [ -n "$PID" -a -n "$PORT" ]; then
+    RESULT=`$LSOF -i :$PORT | grep LISTEN`
+    while [ -z "$RESULT" ] ; do
+      sleep 1
+      RESULT=`$LSOF -i :$PORT | grep LISTEN`
+      i=$((i+1))
+      [ $i -gt "$timeout" ] && break
+    done
+  fi
+  PID=`cat ${PIDFILE} 2>/dev/null`
+  if [ -z "$PID" ]; then
+    log "$BASENAME still starting...there may be a problem"
+  fi
+}
+
+java_stop() {
+  PID=`cat ${PIDFILE} 2>/dev/null`
+  su_cmd stop $JAVA_HOME/bin/java $TOMCAT_OPTS $CATALINA_OPTS stop
+#  $JAVA_HOME/bin/java $TOMCAT_OPTS $CATALINA_OPTS stop >>$STDLOG 2>&1
+  # Give it a few seconds to stop (to delete PID file)
+  i=1
+  while [ -n "$PID" ] ; do
+    sleep 1
+    PID=`ps -p $PID -o pid | tail -n +2`
+    i=$((i+1))
+    [ $i -gt "$timeout" ] && break
+  done
+  if [ -z "$PID" ]; then
+    rm -f $PIDFILE
+  elif [ "$killsignal" -ne 0 ]; then
+    log "Killing $BASENAME (kill -$killsignal $PID)"
+    kill -$killsignal $PID
+    sleep 4
+    PID=`ps -p $PID -o pid | tail -n +2`
+    [ -z "$PID" ] && rm -f $PIDFILE
+  fi
+}
+
+case "$1" in
+  start)
+    create_log
+    # Don't try to start up twice!
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      if ps -p ${PID} >/dev/null; then
+        echo "${BASENAME} already running (${PID})"
+	exit 0
+      fi
+    fi
+    create_dirs
+    log "Starting ${BASENAME} in ${CATALINA_HOME} via java"
+    java_start
+    ;;
+  stop)
+    create_log
+    create_dirs
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    log "Stopping ${BASENAME} (${PID})"
+    java_stop
+    if [ -e ${PIDFILE} ]; then
+      log "Unable to stop ${BASENAME} (${PID}), doing thread-dump"
+      kill -QUIT ${PID}
+      exit 1
+    fi
+    ;;
+  restart|reload)
+    create_log
+    create_dirs
+    PID=`cat ${PIDFILE} 2>/dev/null`
+    log "Restarting ${BASENAME} (${PID}) in ${CATALINA_HOME}"
+    java_stop
+    java_start
+    ;;
+  status|check)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      TMPFILE=/tmp/${BASENAME}.status.$$
+      if ps o "pid user rss %mem etime time %cpu comm" -p ${PID} > ${TMPFILE} 2>&1; then
+        echo "${BASENAME} (${PID}) is running from ${CATALINA_HOME}"
+        cat ${TMPFILE}
+        $LSOF -n -P -i -a -p $PID | grep "LISTEN"
+      else
+        echo "${BASENAME} not running"
+      fi
+      rm -f ${TMPFILE}
+    else
+      echo "${BASENAME} not running"
+    fi
+    ;;
+  dump)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      log "Writing thread-dump for ${BASENAME} (${PID}) into ${STDLOG}"
+      kill -QUIT ${PID}
+      exit 0
+    else
+      log "${BASENAME} not running? (No pidfile: ${PIDFILE})"
+    fi
+    ;;
+  report)
+    # Spit out a very simple status dump (really used by reportall below)
+    # Note: fedora and mckoi will almost always report xxx(unknown)
+    if [ -e ${PIDFILE} ]; then
+      PID=`cat ${PIDFILE}`
+      if ps -p $PID >/dev/null; then
+        PORTS=`$LSOF -p $PID -a -iTCP -Fn -n -P | grep -v '-' | sort | uniq | tr 'n' ' '`
+        echo "$PID $BASENAME `echo $PORTS`"
+      else
+        echo "$BASENAME not running -- but PIDFILE ($PIDFILE:$PID) exists"
+      fi
+    elif [ -n "$PORT" ]; then
+      PID=`$LSOF -i:$PORT | grep LISTEN | awk '{print $2}'`
+      if [ -n "$PID" ]; then
+        PORTS=`$LSOF -p $PID -a -iTCP -Fn -n -P | grep -v '-' | sort | uniq | tr 'n' ' '`
+        echo "`echo $PID` unknown($BASENAME) `echo $PORTS`"
+      elif [ `id -u` -eq 0 ] ; then
+        # No PIDFILE and noting listening on our configured PORT
+        echo "$BASENAME not running on port $PORT"
+      else
+        # lsof might be unreliable, so we really don't know (TODO: Use netstat)
+	echo "$BASENAME might be running"
+      fi
+    else
+      # No PIDFILE and no configured PORT
+      echo "$BASENAME not running"
+    fi
+    ;;
+  reportall)
+    for server in ${SERVERS}; do
+      $0 --basename $server report
+    done
+    ;;
+  *)
+    usage $0
+    exit 1
+esac
+
+exit $?

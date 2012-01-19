@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  $HeadURL::                                                                                     $
+  $Id$
+
+  Copyright (c) 2007-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CAS and Ambra Registration configuration file. -->
+<config>
+  <ambra>
+    <network>
+      <hosts>
+        <!--
+        Set hosts.default to FQHN (not localhost) for a singleboxinstall (or to webhead FQHN for
+        multibox install) -->
+        <default>localhost</default>
+        <!-- FQHN of the machine -->
+        <cas>localhost</cas>
+        <!-- Mail host to send registration emails -->
+        <mailhost>localhost</mailhost>
+      </hosts>
+      <ports>
+        <!-- If using port 443, set cas-ssl to empty -->
+        <cas-ssl>7443</cas-ssl>
+        <!-- If 80, set default to empty (and/or update registration.ambra.url below) -->
+        <default>8080</default>
+      </ports>
+    </network>
+
+    <services>
+      <cas>
+        <!--
+        The following entries define how the webapp talk to the database.  For example, talking to
+        postgresql, you need the database name at the end of the url The user and password are for
+        the database as well. -->
+        <db>
+          <!-- Database user name -->
+          <user>casuser</user>
+          <!-- Database user password -->
+          <password>caspass</password>
+          <!-- JDBC URL -->
+          <url>jdbc:postgresql://localhost/casdb</url>
+          <!-- JDBS driver -->
+          <driver>org.postgresql.Driver</driver>
+        </db>
+      </cas>
+
+      <registration>
+        <!-- From address in registration emails -->
+        <from-email>registration@your-org</from-email>
+        <!-- Name of user in registration emails -->
+        <from-name>My Org Registration</from-name>
+        <!-- Directory for registration web-app -->
+        <context>/ambra-registration</context>
+        <!-- Information on Ambra needed -->
+        <ambra>
+          <!-- directory of publishing app -->
+          <context></context>
+          <!-- URL of publicly accessible publishing app (webhead if there is one) -->
+          <url>http://${ambra.network.hosts.default}:${ambra.network.ports.default}</url>
+        </ambra>
+      </registration>
+    </services>
+  </ambra>
+</config>

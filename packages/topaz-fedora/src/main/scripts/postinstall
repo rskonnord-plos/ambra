@@ -1,0 +1,25 @@
+# $HeadURL::                                                                   $
+# $Id$
+
+PKG=topaz-fedora
+
+# Fixup perms
+chmod a+x /usr/local/topaz/$PKG*/*/bin/*
+
+# Register the service
+/sbin/chkconfig --add topaz-fedora
+
+# Create symbolic link in /usr/local/topaz
+LINK=/usr/local/topaz/$PKG
+rm -f $LINK
+DIR=`ls -td /usr/local/topaz/*"$PKG"-* 2>/dev/null | head -1`
+[ -n "$DIR" ] && ln -s `basename $DIR` $LINK
+
+# Create link to the configuration file
+rm /usr/local/topaz/topaz-fedora/server/config/fedora.fcfg
+ln -s /etc/topaz/fedora.fcfg /usr/local/topaz/topaz-fedora/server/config/fedora.fcfg
+
+# Change directory permissions
+find $DIR -type d -exec chmod 755 {} \;
+
+exit 0
