@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                     $
+  $Id: $
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+
+  This file contains most of the defaults for the plosone webapp. However, there may be additional
+  defaults in the conf-helper library's global-defaults.xml. Additionally, if in dev mode, some
+  of these values may be overridden by settings in defaults-dev.xml. Finally, look for overrides
+  in /etc/topaz/plosone.xml.
+
+  See also libs/conf-helper/src/main/resources/globa-defaults.xml
+-->
+<config>
+  <cas></cas>
+  <registration>
+    <from-email>registration@your-org</from-email> <!-- From address in registration emails -->
+    <from-name>My Org Registration</from-name>     <!-- Name of from user in reg emails -->
+    <context>/plos-registration</context>          <!-- Directory of webapp -->
+    <!-- Full URL of registration webapp - Shouldn't need to be exposed -->
+    <url>https://${network.hosts.registration}:${network.ports.registration-ssl}${registration.context}</url>
+    <plosone> <!-- Location of publishing app so links in registration work -->
+      <context></context> <!-- directory of publishing app -->
+      <!-- URL of publicly accessible publishing app (webhead if there is one) -->
+      <url>http://${network.hosts.default}:${network.ports.default}</url>
+    </plosone>
+  </registration>
+</config>

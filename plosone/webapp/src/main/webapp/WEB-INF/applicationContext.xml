@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright (c) 2006 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+  <!--Plosone developer beans here -->
+  <bean id="fetchArticleService" class="org.plos.article.service.FetchArticleService" scope="session" >
+    <property name="annotationWebService" ref="annotationWebService"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="articleXmlUtils" ref="articleXmlUtils"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="articleXmlUtils" class="org.plos.util.ArticleXMLUtils" scope="session" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <property name="xslTemplate" value="/viewnlm-v2.xsl"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="articleService" ref="articleOtmService"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="citationService" class="org.plos.util.ArticleXMLUtils" scope="session" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <property name="xslTemplate" value="/citation.xsl"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="articleService" ref="articleOtmService"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="secondaryObjectService" class="org.plos.util.ArticleXMLUtils" scope="session" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <property name="xslTemplate" value="/objInfo.xsl"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="articleService" ref="articleOtmService"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+
+  <util:map id="xmlFactoryProperties">
+<!--       <entry key="javax.xml.transform.TransformerFactory"
+           value="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"/>-->
+    <entry key="javax.xml.transform.TransformerFactory"
+               value="net.sf.saxon.TransformerFactoryImpl"/>
+    <entry key="javax.xml.transform.Transformer"
+            value="net.sf.saxon.Controller"/>
+  </util:map>
+
+  <!-- TODO: Update the servicePort url's automatically using maven build process itself-->
+  <bean id="articleOtmService" class="org.plos.article.service.ArticleOtmService" scope="session">
+ <!--   <property name="smallImageRep" value="TIF"/>
+    <property name="mediumImageRep" value="TIF"/>
+    <property name="largeImageRep" value="TIF"/>
+    -->
+    <property name="smallImageRep" value="PNG_S"/>
+    <property name="mediumImageRep" value="PNG_M"/>
+    <property name="largeImageRep" value="PNG_L"/>
+    <aop:scoped-proxy/>
+   </bean>
+
+   <bean id="crossRefPosterService" class="org.plos.admin.service.CrossRefPosterService">
+    <!-- following is the URL for the CrossRef service. The three parameters which should be set are
+        * area=  test or live. Decides if the cross ref is actually 'posted'. area=test for testing, area=live for deployment
+        * login_id=crossref user name
+        * login_passwd=crossref user password
+    -->
+    <property name="doiXrefUrl" value="${pub.spring.crossref.post.url}"/>
+  </bean>
+
+  <bean id="flagManagementService" class="org.plos.admin.service.FlagManagementService" scope="session" />
+
+  <bean id="documentManagementService" class="org.plos.admin.service.DocumentManagementService" scope="session">
+    <!-- These pathnames are absolute -->
+    <property name="documentDirectory" value="${pub.spring.ingest.source}"/>
+    <property name="ingestedDocumentDirectory" value="${pub.spring.ingest.destination}"/>
+    <!-- Whereas this is relative to webapp/src/main/resources  -->
+    <property name="xslTemplate" value="/crossref.xsl"/>
+    <property name="articleCacheAdministrator" ref="articleCacheAdministrator"/>
+    <property name="plosDoiUrl" value="${pub.spring.crossref.plos.doiurl}"/>
+    <property name="plosEmail" value="${pub.spring.crossref.plos.email}"/>
+    <property name="sendToXref" value="${pub.spring.crossref.sendToXref}"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="defaultEncodingCharset" class="java.lang.String">
+    <constructor-arg value="UTF-8"/>
+  </bean>
+
+  <bean id="applicationId" class="java.lang.String">
+    <constructor-arg value="topaz-plosone"/>
+  </bean>
+
+  <bean id="auth-method" class="java.lang.String">
+    <constructor-arg value="NONE"/>
+  </bean>
+
+  <bean id="userContext" class="org.plos.web.UserContext" scope="session">
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="permissionWebService" class="org.plos.permission.service.PermissionWebService" scope="session">
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="lazyLoaderFactory" class="org.plos.annotation.service.AnnotationLazyLoaderFactory"/>
+
+  <bean id="annotationConverter" class="org.plos.annotation.service.AnnotationConverter" scope="session">
+    <property name="lazyLoaderFactory" ref="lazyLoaderFactory"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="replyWebService" class="org.plos.annotation.service.ReplyWebService" scope="session">
+    <property name="applicationId" ref="applicationId"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="defaultType" value="http://www.w3.org/2001/12/replyType#Comment"/>
+    <property name="permissionWebService" ref="permissionWebService"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="annotationWebService" class="org.plos.annotation.service.AnnotationWebService" scope="session">
+    <property name="articleCacheAdministrator" ref="articleCacheAdministrator"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="defaultType" value="http://www.w3.org/2000/10/annotationType#Comment"/>
+    <property name="permissionWebService" ref="permissionWebService"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="ratingsService"
+        class="org.plos.rating.service.RatingsService" scope="session">
+    <property name="applicationId" ref="applicationId"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="annotationService" class="org.plos.annotation.service.AnnotationService" scope="session">
+    <property name="converter" ref="annotationConverter"/>
+    <property name="replyWebService" ref="replyWebService"/>
+    <property name="permissionWebService" ref="permissionWebService"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="userService" class="org.plos.user.service.UserService" scope="session">
+    <property name="userContext" ref="userContext"/>
+    <property name="permissionWebService" ref="permissionWebService"/>
+    <property name="userCacheAdministrator" ref="userCacheAdministrator"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="emailAddressUrl" value="https://${pub.spring.server.cas}/cas/email?guid="/>
+    <property name="weeklyCategories">
+      <list>
+        <value>biology</value>
+        <value>clinical_trials</value>
+        <value>computational_biology</value>
+        <value>genetics</value>
+        <value>medicine</value>
+        <value>pathogens</value>
+        <value>plosntds</value>
+        <value>plosone</value>
+      </list>
+    </property>
+    <property name="monthlyCategories">
+      <list>
+        <value>biology</value>
+        <value>clinical_trials</value>
+        <value>computational_biology</value>
+        <value>genetics</value>
+        <value>medicine</value>
+        <value>pathogens</value>
+        <value>plosntds</value>
+        <value>plosone</value>
+      </list>
+    </property>
+    <property name="categoryNames">
+      <map>
+        <entry key="biology" value="PLoS Biology"/>
+        <entry key="computational_biology" value="PLoS Computational Biology"/>
+        <entry key="clinical_trials" value="PLoS Hub for Clinical Trials"/>
+        <entry key="genetics" value="PLoS Genetics"/>
+        <entry key="medicine" value="PLoS Medicine"/>
+        <entry key="pathogens" value="PLoS Pathogens"/>
+        <entry key="plosntds" value="PLoS Neglected Tropical Diseases"/>
+        <entry key="plosone" value="PLoS ONE"/>
+      </map>
+    </property>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="profanityCheckingService" class="org.plos.util.ProfanityCheckingService">
+    <property name="profaneWords" ref="profaneWords"/>
+  </bean>
+
+  <!-- Add all your constants to the map with a key and a value/ref -->
+  <util:map id="otherConstants" map-class="java.util.HashMap">
+    <entry key="countries" value-ref="countries"/>
+  </util:map>
+
+  <bean id="searchService" class="org.plos.search.service.SearchService" scope="session">
+    <property name="searchWebService" ref="searchWebService"/>
+    <property name="otmSession" ref="otmSession"/>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="searchWebService" class="org.plos.search.service.SearchWebService" scope="session">
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${pub.spring.service.search}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="otmFactory" class="org.plos.configuration.OtmConfiguration" scope="singleton">
+    <constructor-arg index="0" value="${pub.spring.itql.uri}" />
+    <property name="models">
+      <list>
+        <bean name="riModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="ri" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=ri"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="annotationsModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="annotations" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=ri"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="usersModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="users" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=users"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="grantsModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="grants" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=grants"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="revokesModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="revokes" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=revokes"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="ppModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="pp" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=pp"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="preferencesModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="preferences" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=preferences"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="profilesModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="profiles" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=profiles"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="alertsModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="alerts" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=alerts"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="criteriaModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="criteria" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#filter:model=criteria"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#filter" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="strModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="str" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#str"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://topazproject.org/models#StringCompare" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="xsdModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="xsd" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#xsd"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://mulgara.org/mulgara#XMLSchemaModel" />
+            </bean>
+          </constructor-arg>
+        </bean>
+        <bean name="prefixModel" class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="prefix" />
+          <constructor-arg index="1">
+            <bean class="java.net.URI">
+              <constructor-arg value="local:///topazproject#prefix"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg index="2">
+            <bean class="java.net.URI">
+              <constructor-arg value="http://mulgara.org/mulgara#PrefixModel" />
+            </bean>
+          </constructor-arg>
+        </bean>
+      </list>
+    </property>
+
+    <property name="preloadClasses">
+      <list>
+        <value>org.plos.models.Aggregation</value>
+        <value>org.plos.models.Annotation</value>
+        <value>org.plos.models.Annotea</value>
+        <value>org.plos.models.Article</value>
+        <value>org.plos.models.AuthenticationId</value>
+        <value>org.plos.models.Category</value>
+        <value>org.plos.models.Citation</value>
+        <value>org.plos.models.Comment</value>
+        <value>org.plos.models.DublinCore</value>
+        <value>org.plos.models.EditorialBoard</value>
+        <value>org.plos.models.FoafPerson</value>
+        <value>org.plos.models.Issue</value>
+        <value>org.plos.models.Journal</value>
+        <value>org.plos.models.License</value>
+        <value>org.plos.models.ObjectInfo</value>
+        <value>org.plos.models.PLoS</value>
+        <value>org.plos.models.Rating</value>
+        <value>org.plos.models.RatingContent</value>
+        <value>org.plos.models.RatingSummary</value>
+        <value>org.plos.models.RatingSummaryContent</value>
+        <value>org.plos.models.RelatedArticle</value>
+        <value>org.plos.models.Reply</value>
+        <value>org.plos.models.ReplyThread</value>
+        <value>org.plos.models.Trackback</value>
+        <value>org.plos.models.TrackbackContent</value>
+        <value>org.plos.models.UserAccount</value>
+        <value>org.plos.models.UserPreference</value>
+        <value>org.plos.models.UserPreferences</value>
+        <value>org.plos.models.UserProfile</value>
+        <value>org.plos.models.UserRole</value>
+        <value>org.plos.models.Volume</value>
+        <value>org.topazproject.otm.criterion.Conjunction</value>
+        <value>org.topazproject.otm.criterion.Criterion</value>
+        <value>org.topazproject.otm.criterion.DetachedCriteria</value>
+        <value>org.topazproject.otm.criterion.Disjunction</value>
+        <value>org.topazproject.otm.criterion.EQCriterion</value>
+        <value>org.topazproject.otm.criterion.ExistsCriterion</value>
+        <value>org.topazproject.otm.criterion.GECriterion</value>
+        <value>org.topazproject.otm.criterion.GTCriterion</value>
+        <value>org.topazproject.otm.criterion.LECriterion</value>
+        <value>org.topazproject.otm.criterion.LTCriterion</value>
+        <value>org.topazproject.otm.criterion.MinusCriterion</value>
+        <value>org.topazproject.otm.criterion.NECriterion</value>
+        <value>org.topazproject.otm.criterion.NotCriterion</value>
+        <value>org.topazproject.otm.criterion.NotExistsCriterion</value>
+        <value>org.topazproject.otm.criterion.Order</value>
+        <value>org.topazproject.otm.criterion.Parameter</value>
+        <value>org.topazproject.otm.criterion.TransCriterion</value>
+        <value>org.topazproject.otm.criterion.WalkCriterion</value>
+        <value>org.plos.article.service.BrowseService$CitationInfo</value>
+        <value>org.plos.article.service.BrowseService$UserProfileInfo</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="otmSessionFactory" factory-bean="otmFactory" factory-method="getFactory"
+      scope="singleton"/>
+
+  <bean id="otmSession" factory-bean="otmSessionFactory" factory-method="openSession"
+      destroy-method="close" scope="request">
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="journalService" class="org.plos.journal.JournalService" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="otmSessionFactory"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="journalCache"/>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <ref bean="carrierCache"/>
+    </constructor-arg>
+  </bean>
+
+  <bean id="browseService" class="org.plos.article.service.BrowseService" scope="session">
+    <aop:scoped-proxy/>
+  </bean>
+
+  <bean id="plosOneFreemarkerManager" class="org.plos.struts2.PlosOneFreemarkerManager">
+    <constructor-arg index="0">
+      <ref bean="plosOneFreemarkerConfig" />
+    </constructor-arg>
+  </bean>
+
+  <bean id="plosOneFreemarkerConfig" class="org.plos.struts2.PlosOneFreemarkerConfig" />
+
+  <!-- Caches -->
+  <bean id="userCacheAdministrator" class="com.opensymphony.oscache.general.GeneralCacheAdministrator" destroy-method="destroy">
+    <constructor-arg index="0">
+      <props>
+        <prop key="cache.memory">true</prop>
+<!--         <prop key="cache.persistence.class">com.opensymphony.oscache.plugins.diskpersistence.HashDiskPersistenceListener</prop> -->
+      </props>
+    </constructor-arg>
+  </bean>
+  <!-- store articles and annotations -->
+  <bean id="articleCacheAdministrator" class="com.opensymphony.oscache.general.GeneralCacheAdministrator" destroy-method="destroy">
+     <constructor-arg index="0">
+       <props>
+         <prop key="cache.memory">true</prop>
+         <prop key="cache.event.listeners">com.opensymphony.oscache.plugins.clustersupport.JavaGroupsBroadcastingListener</prop>
+<!--      <prop key="cache.cluster.properties">UDP(mcast_addr=231.12.21.135;mcast_port=45566;ip_ttl=1;mcast_send_buf_size=150000;mcast_recv_buf_size=80000):PING(timeout=2000;num_initial_members=3;):MERGE2(min_interval=5000;max_interval=10000):FD_SOCK:VERIFY_SUSPECT(timeout=1500):pbcast.NAKACK(gc_lag=50;retransmit_timeout=300,600,1200,2400,4800;max_xmit_size=8192):UNICAST(timeout=300,600,1200,2400):pbcast.STABLE(desired_avg_gossip=20000):FRAG(frag_size=8096;down_thread=false;up_thread=false):pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=false;print_local_addr=true)</prop> -->
+       <!--    <prop key="cache.capacity">500</prop>-->
+       </props>
+     </constructor-arg>
+  </bean>
+
+  <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <property name="configLocation">
+      <value>classpath:ehcache.xml</value>
+    </property>
+    <property name="shared" value="true"/>
+  </bean>
+
+  <bean id="journalCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>Journals</value>
+    </property>
+  </bean>
+
+  <bean id="carrierCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>ArticleCarriers</value>
+    </property>
+  </bean>
+
+  <bean id="browseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>BrowseCache</value>
+    </property>
+  </bean>
+
+  <bean id="feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>FeedCache</value>
+    </property>
+  </bean>
+
+  <!-- JMX exporting -->
+  <bean id="jmxExporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+    <property name="autodetect" value="true"/>
+  </bean>
+
+  <bean name="org.plos.cache:name=ehcache" class="net.sf.ehcache.management.CacheManager"
+      autowire="constructor"/>
+
+  <!--
+  <bean name="org.plos.cache:name=journal" class="net.sf.ehcache.management.Cache">
+    <constructor-arg type="net.sf.ehcache.Ehcache">
+      <ref bean="journalCache"/>
+    </constructor-arg>
+  </bean>
+  -->
+
+  <bean name="org.plos.logging:name=log4j" class="org.apache.log4j.jmx.HierarchyDynamicMBean"/>
+
+  <!-- email configuration -->
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${pub.spring.mailhost}"/>
+  </bean>
+
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPath" value="/WEB-INF/emailTemplates/"/>
+    <property name="defaultEncoding" ref="defaultEncodingCharset"/>
+  </bean>
+
+  <bean id="plosoneMailer" class="org.plos.service.PlosoneMailer">
+    <property name="mailSender" ref="mailSender"/>
+    <property name="fromEmailAddress" value="application@plosone.org"/>
+    <property name="freeMarkerConfigurer" ref="freemarkerConfig"/>
+    <property name="feedbackEmailMap">
+      <map>
+        <entry key="text" value="feedback-text.ftl"/>
+        <entry key="html" value="feedback-html.ftl"/>
+        <entry key="subject" value="My feedback for PLoS ONE"/>
+        <entry key="toEmailAddress" value="${pub.spring.email.feedback}"/>
+      </map>
+    </property>
+    <property name="emailThisArticleMap">
+      <map>
+        <entry key="text" value="emailThisArticle-text.ftl"/>
+        <entry key="html" value="emailThisArticle-html.ftl"/>
+        <entry key="url" value="${pub.spring.crossref.plos.doiurl}"/>
+        <entry key="subject" value="An Article from "/>
+      </map>
+    </property>
+  </bean>
+
+</beans>

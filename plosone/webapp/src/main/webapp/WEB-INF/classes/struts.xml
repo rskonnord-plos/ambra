@@ -1,0 +1,1042 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  - Copyright (c) 2006-2007 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<struts>
+
+  <constant name="struts.objectFactory"
+      value="org.apache.struts2.spring.StrutsSpringObjectFactory"/>
+  <constant name="struts.objectFactory.spring.autoWire" value="name"/>
+  <constant name="struts.devMode" value="false"/>
+  <constant name="struts.freemarker.manager.classname" value="plosOneFreemarkerManager"/>
+  <constant name="struts.i18n.encoding" value="UTF-8"/>
+  <constant name="struts.ui.theme" value="plosone-theme"/>
+  <constant name="struts.ui.templateDir" value="template"/>
+  <constant name="struts.ui.templateSuffix" value="ftl"/>
+  <!--
+  allow the mapping of friendly URIs, 
+  e.g. "/article/feed" v. requiring "/article/articleFeed.action?parms"
+  -->
+  <constant name="struts.mapper.class" value="org.plos.struts2.PlosOneActionMapper"/>
+
+  <include file="struts-default.xml" />
+
+  <package name="default" extends="struts-default">
+    <result-types>
+      <result-type name="freemarker"
+        class="org.apache.struts2.views.freemarker.FreemarkerResult" default="true">
+      </result-type>
+      <result-type name="plosOneFreemarker" class="org.plos.struts2.PlosOneFreemarkerResult">
+        <param name="location">/templates/main_template.ftl</param>
+      </result-type>
+      <result-type name="plosJournals" class="org.plos.struts2.PlosOneFreemarkerResult">
+        <param name="location">/templates/plos_journals_template.ftl</param>
+      </result-type>
+      <result-type name="plosStream" class="org.plos.struts2.PlosStreamResult" />
+      <result-type name="json" class="org.plos.struts2.JsonResult">
+        <param name="ignoreHierarchy">false</param>
+        <param name="noCache">true</param>
+      </result-type>
+      <result-type name="feed" class="org.plos.struts2.PlosOneFeedResult"/>
+      <result-type name="citation" class="org.plos.struts2.CitationResult"/>
+    </result-types>
+
+    <interceptors>
+      <interceptor name="journalSessionSetup" class="org.plos.journal.SessionFiltersInterceptor"/>
+      <interceptor name="ensureUserAccount" class="org.plos.user.EnsureUserAccountInterceptor"/>
+      <interceptor name="ensureAdmin" class="org.plos.user.EnsureRoleInterceptor">
+        <param name="roleToCheck">admin</param>
+      </interceptor>
+      <interceptor name="plosUserLookup" class="org.plos.user.UserAccountsInterceptor"/>
+      <interceptor name="json" class="com.googlecode.jsonplugin.JSONInterceptor"/>
+      
+      <interceptor-stack name="strutsBaseStack">
+        <interceptor-ref name="exception">
+          <param name="logEnabled">true</param>
+          <param name="logCategory">org.plos.UnhandledException</param>
+          <param name="logLevel">ERROR</param>
+        </interceptor-ref>
+        <interceptor-ref name="timer" />
+        <interceptor-ref name="logger"/>
+        <interceptor-ref name="alias"/>
+        <interceptor-ref name="servlet-config"/>
+        <interceptor-ref name="prepare"/>
+        <interceptor-ref name="i18n"/>
+        <interceptor-ref name="chain"/>
+        <interceptor-ref name="debugging"/>
+        <interceptor-ref name="model-driven"/>
+        <interceptor-ref name="fileUpload"/>
+        <interceptor-ref name="static-params"/>
+        <interceptor-ref name="params"/>
+        <interceptor-ref name="conversionError"/>
+        <interceptor-ref name="validation">
+          <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
+        <interceptor-ref name="workflow">
+           <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
+      </interceptor-stack>
+
+      <interceptor-stack name="plosBaseStack">
+        <interceptor-ref name="strutsBaseStack"/>
+        <interceptor-ref name="journalSessionSetup"/>
+        <interceptor-ref name="plosUserLookup"/>
+      </interceptor-stack>
+
+      <interceptor-stack name="plosUserStack">
+        <interceptor-ref name="plosBaseStack" />
+        <interceptor-ref name="ensureUserAccount" />
+      </interceptor-stack>
+
+      <interceptor-stack name="plosAdminStack">
+        <interceptor-ref name="plosUserStack" />
+        <interceptor-ref name="ensureAdmin" />
+      </interceptor-stack>
+    </interceptors>
+
+    <default-interceptor-ref name="plosUserStack" />
+
+    <default-action-ref name="pageNotFound" />
+
+    <global-results>
+      <result name="new-profile" type="redirect-action">
+        <param name="actionName">prePopulateNewUser</param>
+        <param name="namespace">/user</param>
+      </result>
+      <result name="update-profile" type="redirect-action">
+        <param name="actionName">prePopulateNewUser</param>
+        <param name="namespace">/user</param>
+      </result>
+      <result name="invalidProxyTicket" type="redirect">
+        <param name="location">${startingUrl}</param>
+        <param name="prependServletContext">false</param>
+      </result>
+      <result name="role-insufficient" type="plosOneFreemarker">
+        <param name="templateFile">/user/inSufficientRole.ftl</param>
+      </result>
+      <result name="error" type="plosOneFreemarker">
+        <param name="templateFile">/static/serverError.ftl</param>
+      </result>
+    </global-results>
+
+    <global-exception-mappings >
+      <exception-mapping exception="org.plos.service.InvalidProxyTicketException" result="invalidProxyTicket"/>
+      <exception-mapping exception="java.lang.Exception" result="error"/>
+    </global-exception-mappings>
+
+    <action name="logout" class="org.plos.action.LogoutAction">
+      <result type="redirect">/</result>
+    </action>
+
+    <action name="trackback" class="org.plos.action.TrackbackAction">
+      <result name="success">
+        <param name="location">/trackback/success.ftl</param>
+        <param name="contentType">application/xml</param>
+      </result>
+      <result name="error">
+        <param name="location">/trackback/error.ftl</param>
+        <param name="contentType">application/xml</param>
+      </result>
+    </action>
+
+    <action name="getTrackbacks" class="org.plos.action.TrackbackAction" method="getTrackbacks">
+      <result name="success">
+        <param name="location">/trackback/listTrackbacks.ftl</param>
+      </result>
+      <result name="error">
+        <param name="location">/trackback/error.ftl</param>
+        <param name="contentType">application/xml</param>
+      </result>
+    </action>
+
+    <action name="pageNotFound" class="org.plos.action.PageNotFoundAction">
+      <interceptor-ref name="strutsBaseStack"/>
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+    
+    <action name="home" class="org.plos.action.HomePageAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/index.ftl</param>
+      </result>
+    </action>
+
+    <action name="recentArticles" class="org.plos.action.HomePageAction">
+      <result name="success">/article/recentArticles.ftl</result>
+    </action>
+
+    <action name="mostCommented" class="org.plos.action.HomePageAction">
+      <result name="success">/article/mostCommented.ftl</result>
+    </action>
+
+
+    <action name="testFreemarker">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/WEB-INF/pages/include.ftl</param>
+      </result>
+    </action>
+
+    <action name="feedbackCreate" class="org.plos.action.FeedbackAction" method="executeRender">
+      <result type="plosOneFreemarker">
+        <param name="templateFile">/feedback/feedbackEntry.ftl</param>
+      </result>
+    </action>
+
+    <action name="feedback" class="org.plos.action.FeedbackAction" method="executeSend">
+      <result name="error" type="plosOneFreemarker">
+        <param name="templateFile">/feedback/feedbackEntry.ftl</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/feedback/feedbackEntry.ftl</param>
+      </result>
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/feedback/feedbackSuccess.ftl</param>
+      </result>
+    </action>
+
+    <action name="selectList" class="org.plos.action.ListingAction"/>
+
+  </package>
+
+  <package name="search" extends="default" namespace="/search">
+    <action name="searchStart" class="org.plos.action.NoOpAction">
+      <result>/WEB-INF/pages/search/searchStart.ftl</result>
+    </action>
+
+    <action name="simpleSearch" class="org.plos.search.action.SearchAction" method="executeSimpleSearch">
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/search/searchResults.ftl</param>
+      </result>
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/search/searchResults.ftl</param>
+      </result>
+    </action>
+
+    <action name="advancedSearch" class="org.plos.search.action.SearchAction" method="executeAdvancedSearch">
+      <result name="input">/WEB-INF/pages/search/searchStart.ftl</result>
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/WEB-INF/pages/search/searchResults.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="static" extends="default" namespace="/static">
+    <action name="about" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/about.ftl</param>
+      </result>
+    </action>
+
+    <action name="authors" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/authors.ftl</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/browse.ftl</param>
+      </result>
+    </action>
+
+    <action name="checklist" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/checklist.ftl</param>
+      </result>
+    </action>
+
+    <action name="commentGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/commentGuidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="competing" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/competing.ftl</param>
+      </result>
+    </action>
+
+    <action name="contact" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/contact.ftl</param>
+      </result>
+    </action>
+
+    <action name="edboard" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/edboard.ftl</param>
+      </result>
+    </action>
+
+    <action name="faq" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/faq.ftl</param>
+      </result>
+    </action>
+
+    <action name="figureGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/figure_guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="guidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="help" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/help.ftl</param>
+      </result>
+    </action>
+
+    <action name="information" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/information.ftl</param>
+      </result>
+    </action>
+
+    <action name="latex" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/latex.ftl</param>
+      </result>
+    </action>
+
+    <action name="license" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/license.ftl</param>
+      </result>
+    </action>
+
+    <action name="media" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/media.ftl</param>
+      </result>
+    </action>
+
+    <action name="policies" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/policies.ftl</param>
+      </result>
+    </action>
+
+    <action name="privacy" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/privacy.ftl</param>
+      </result>
+    </action>
+    
+    <action name="ratingGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/ratingGuidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="releaseNotes" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/releaseNotes.ftl</param>
+      </result>
+    </action>
+    
+    <action name="reviewerGuidelines" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/reviewer_guidelines.ftl</param>
+      </result>
+    </action>
+
+    <action name="rssFeeds" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/rss_feeds.ftl</param>
+      </result>
+    </action>
+
+    <action name="rssInfo" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/rssInfo.ftl</param>
+      </result>
+    </action>
+
+    <action name="error" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/serverError.ftl</param>
+      </result>
+    </action>
+
+    <action name="sitemap" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/sitemap.ftl</param>
+      </result>
+    </action>
+
+    <action name="terms" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/terms.ftl</param>
+      </result>
+    </action>
+
+    <action name="users" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/users.ftl</param>
+      </result>
+    </action>
+
+    <action name="whypublish" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/static/whypublish.ftl</param>
+      </result>
+    </action>
+
+  </package>
+
+  <package name="rate" extends="default" namespace="/rate">
+    <action name="getAverageRatingsForArticle" class="org.plos.rating.action.GetAverageRatingsAction">
+      <interceptor-ref name="chain"/>
+      <interceptor-ref name="plosUserStack"/>
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/article/article_body.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+    <action name="getAverageRatings" class="org.plos.rating.action.GetAverageRatingsAction">
+      <result name="success">/WEB-INF/pages/article/articleRatings.ftl</result>
+      <result name="error">/WEB-INF/pages/article/articleRatings.ftl</result>
+    </action>
+    <action name="getUpdatedRatings" class="org.plos.rating.action.GetAverageRatingsAction">
+     <result name="success" type="plosOneFreemarker">
+        <param name="location">/article/article_rhc_rating.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+    <action name="getArticleRatings" class="org.plos.rating.action.GetArticleRatingsAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/rating/index.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="rate-secure" extends="default" namespace="/rate/secure">
+    <action name="rateArticle" class="org.plos.rating.action.RateAction" method="rateArticle">
+      <result name="input" type="json"/>
+      <result name="success" type="json"/>
+      <result name="error" type="json"/>
+    </action>
+
+    <action name="createRatingFlagSubmit" class="org.plos.annotation.action.CreateFlagAction" method="createRatingFlag">
+      <result name="input"   type="json"/>
+      <result name="error"   type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="getRatingsForUser" class="org.plos.rating.action.RateAction" method="retrieveRatingsForUser">
+      <result name="input" type="json"/>
+      <result name="success" type="json"/>
+      <result name="error" type="json"/>
+    </action>
+  </package>
+
+  <package name="article" extends="default" namespace="/article">
+    <action name="listTrackbacks" class="org.plos.action.TrackbackAction" method="getTrackbacksForArticle">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/article/trackbackList.ftl</param>
+      </result>
+    </action>
+
+    <action name="articleList" class="org.plos.article.action.ArticleListAction">
+      <result name="success">/WEB-INF/pages/article/articleList.ftl</result>
+    </action>
+
+    <action name="emailArticle" class="org.plos.article.action.EmailArticleAction" method="executeRender">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/article/emailArticle.ftl</param>
+      </result>
+    </action>
+
+    <action name="findArticle" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/article/findArticle.ftl</param>
+      </result>
+    </action>
+
+
+    <action name="emailThisArticleCreate" class="org.plos.article.action.EmailArticleAction" method="executeRender">
+      <result name="success">/WEB-INF/pages/emailArticle/emailArticle.ftl</result>
+    </action>
+
+    <action name="emailThisArticleSubmit" class="org.plos.article.action.EmailArticleAction" method="executeSend">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/article/emailSuccess.ftl</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/article/emailArticle.ftl</param>
+      </result>
+    </action>
+
+    <action name="getNumTrackbacksForArticle" class="org.plos.action.TrackbackAction" method="getTrackbackCount">
+      <interceptor-ref name="chain"/>
+      <interceptor-ref name="plosUserStack"/>
+      <result type="chain">
+        <param name="actionName">getAverageRatingsForArticle</param>
+        <param name="namespace">/rate</param>
+      </result>
+    </action>
+
+    <action name="fetchArticle" class="org.plos.article.action.FetchArticleAction">
+      <result type="chain">
+        <param name="actionName">getNumTrackbacksForArticle</param>
+        <param name="namespace">/article</param>
+      </result>
+    </action>
+
+    <action name="fetchSecondaryObjects" class="org.plos.article.action.SecondaryObjectAction">
+      <result name="success">/WEB-INF/pages/article/displayImages.ftl</result>
+    </action>
+
+    <action name="slideshow" class="org.plos.article.action.SecondaryObjectAction" method="listFiguresAndTables">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/templates/headless_template.ftl</param>
+        <param name="templateFile">/article/imageWindow.ftl</param>
+      </result>
+    </action>
+
+    <action name="showImageLarge" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/templates/headless_template.ftl</param>
+        <param name="templateFile">/article/imageWindowLarge.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchObjectAttachment" class="org.plos.article.action.FetchObjectAction">
+      <result name="success" type="plosStream">
+        <param name="isAttachment">true</param>
+      </result>
+    </action>
+
+    <action name="fetchObject" class="org.plos.article.action.FetchObjectAction">
+      <result name="success" type="plosStream">
+        <param name="isAttachment">false</param>
+      </result>
+    </action>
+
+    <action name="fetchFirstRepresentation" class="org.plos.article.action.FetchObjectAction" method="fetchFirstObject">
+      <result name="success" type="plosStream">
+        <param name="isAttachment">true</param>
+      </result>
+    </action>
+
+    <action name="fetchAnnotatedArticle" class="org.plos.article.action.FetchArticleAction" method="getAnnotatedArticle">
+       <result name="success">/WEB-INF/pages/article/displayArticle.ftl</result>
+    </action>
+
+    <action name="fetchBody" class="org.plos.article.action.FetchArticleAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/article/article_content.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleRhc" class="org.plos.article.action.FetchArticleAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/article/article_rhc_count.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.plos.article.action.BrowseArticlesAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/article/browse.ftl</param>
+      </result>
+    </action>
+
+    <action name="citationList" class="org.plos.article.action.CreateCitation">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/article/citationList.ftl</param>
+      </result>
+    </action>
+    <action name="getRisCitation" class="org.plos.article.action.CreateCitation">
+      <result name="success" type="citation">
+        <param name="location">/article/ris.ftl</param>
+        <param name="contentType">text/plain</param>
+        <param name="fileExtension">.ris</param>
+      </result>
+    </action>
+    <action name="getBibTexCitation" class="org.plos.article.action.CreateCitation">
+      <result name="success" type="citation">
+        <param name="location">/article/bibtex.ftl</param>
+        <param name="contentType">text/plain</param>
+        <param name="fileExtension">.bib</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="article-feed" extends="default" namespace="/article/feed">
+    <action name="getFeed" class="org.plos.article.action.ArticleFeed" method="execute">
+      <result name="success" type="feed">
+        <param name="feedName">wireFeed</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="annotation" extends="default" namespace="/annotation">
+    <action name="fetchBody" class="org.plos.annotation.action.BodyFetchAction">
+      <result name="success">/WEB-INF/pages/annotation/showCommentBody.ftl</result>
+    </action>
+
+    <action name="listAnnotation" class="org.plos.annotation.action.ListAnnotationAction">
+      <result name="success">/WEB-INF/pages/annotation/listAnnotation.ftl</result>
+    </action>
+
+    <action name="getAnnotation" class="org.plos.annotation.action.GetAnnotationAction">
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="listReply" class="org.plos.annotation.action.ListReplyAction">
+      <result name="success">/WEB-INF/pages/annotation/listReply.ftl</result>
+    </action>
+
+    <action name="listAllReplies" class="org.plos.annotation.action.ListReplyAction"
+      method="listAllReplies">
+      <result name="success">/WEB-INF/pages/annotation/listReply.ftl</result>
+    </action>
+
+    <action name="listThreadedReplies" class="org.plos.annotation.action.ListReplyAction"
+      method="listAllReplies">
+      <result name="success">/WEB-INF/pages/annotation/listThreadedReply.ftl</result>
+    </action>
+
+    <action name="listThread" class="org.plos.annotation.action.ListReplyAction" method="listAllReplies">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/discussion/discussion.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="getCommentary" class="org.plos.annotation.action.GetCommentaryAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/discussion/commentary.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="listThreadRefresh" class="org.plos.annotation.action.ListReplyAction" method="listAllReplies">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/discussion/threaded_replies.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="getReply" class="org.plos.annotation.action.GetReplyAction">
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="listFlags" class="org.plos.annotation.action.ListFlagAction">
+      <result name="success">/WEB-INF/pages/annotation/listFlag.ftl</result>
+    </action>
+
+    <action name="getFlag" class="org.plos.annotation.action.GetFlagAction">
+      <result name="success" type="json"/>
+    </action>
+  </package>
+
+  <package name="annotation-secure" extends="default" namespace="/annotation/secure">
+    <action name="createAnnotation">
+      <result>/WEB-INF/pages/annotation/createAnnotation.ftl</result>
+    </action>
+
+    <action name="startDiscussion" class="org.plos.annotation.action.GetCommentaryAction" method="getArticleMetaInfo">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/discussion/startDiscussion.ftl</param>
+      </result>
+    </action>
+
+    <action name="createAnnotationSubmit" class="org.plos.annotation.action.CreateAnnotationAction">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="createDiscussionSubmit" class="org.plos.annotation.action.CreateAnnotationAction" method="executeSaveDiscussion">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="setAnnotationPublic" class="org.plos.annotation.action.SetAnnotationPublicAction" method="executeSetAnnotationPublic">
+      <result name="input">/WEB-INF/pages/annotation/listAnnotation.ftl</result>
+      <result name="error">/WEB-INF/pages/annotation/listAnnotation.ftl</result>
+      <result name="success">/WEB-INF/pages/annotation/listAnnotation.ftl</result>
+    </action>
+
+    <action name="deletePrivateAnnotation" class="org.plos.annotation.action.DeleteAnnotationAction" method="deletePrivateAnnotation">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <action name="deletePublicAnnotation" class="org.plos.annotation.action.DeleteAnnotationAction" method="deletePublicAnnotation">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <action name="createReplySubmit" class="org.plos.annotation.action.CreateReplyAction">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="deleteReply" class="org.plos.annotation.action.DeleteReplyAction" method="deleteReplyWithId">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <!--TODO: not needed ?? -->
+    <action name="createFlag">
+      <result>/WEB-INF/pages/annotation/createFlag.ftl</result>
+    </action>
+
+    <action name="createAnnotationFlagSubmit" class="org.plos.annotation.action.CreateFlagAction" method="createAnnotationFlag">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="createReplyFlagSubmit" class="org.plos.annotation.action.CreateFlagAction" method="createReplyFlag">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="deleteFlag" class="org.plos.annotation.action.DeleteFlagAction">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <action name="unflagAnnotation" class="org.plos.annotation.action.UnflagAnnotationAction" method="unflagAnnotation">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <action name="unflagReply" class="org.plos.annotation.action.UnflagAnnotationAction" method="unflagReply">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+  </package>
+
+  <package name="user-secure" extends="default" namespace="/user/secure">
+    <action name="secureRedirect" class="org.plos.action.RedirectAction">
+      <result type="redirect">
+        <param name="location">${goTo}</param>
+        <param name="prependServletContext">false</param>
+      </result>
+    </action>
+
+    <action name="getUserProfilePrivateFields" class="org.plos.user.action.DisplayUserAction" method="fetchUserProfileWithPrivateVisibility">
+      <result name="success">/WEB-INF/pages/user/displayPrivateFieldNames.ftl</result>
+    </action>
+
+    <action name="assignAdminRole" class="org.plos.action.NoOpAction">
+      <result>/WEB-INF/pages/user/assignAdminRole.ftl</result>
+    </action>
+
+    <action name="assignAdminRoleToSubmit" class="org.plos.user.action.AssignAdminRoleAction">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <action name="editAlerts" class="org.plos.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+      <result name="success" type="plosJournals">
+        <param name="templateFile">/user/editPlosAlerts.ftl</param>
+      </result>
+      <result name="input" type="plosJournals">
+        <param name="templateFile">/user/editPlosAlerts.ftl</param>
+      </result>
+    </action>
+
+    <action name="editAjaxAlerts" class="org.plos.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+      <result name="success"  type="plosOneFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="plosOneFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+
+    <action name="retrieveUserAlerts" class="org.plos.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+      <result name="success">/user/alerts.ftl</result>
+      <result name="input">/WEB-INF/pages/user/alerts.ftl</result>
+    </action>
+
+    <action name="saveAlerts" class="org.plos.user.action.MemberUserAlertsAction" method="saveAlerts">
+      <result name="success" type="plosJournals">
+        <param name="templateFile">/user/editPlosAlerts.ftl</param>
+      </result>
+      <result name="input" type="plosJournals">
+        <param name="templateFile">/user/editPlosAlerts.ftl</param>
+      </result>
+    </action>
+
+    <action name="saveAjaxAlerts" class="org.plos.user.action.MemberUserAlertsAction" method="saveAlerts">
+      <result name="success"  type="plosOneFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="input">type="plosOneFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error">type="plosOneFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+     </action>
+
+
+    <action name="editProfile" class="org.plos.user.action.MemberUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="plosJournals">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+      <result name="input" type="plosJournals">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="editPrefsAlerts" class="org.plos.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+      <result name="success" type="plosJournals">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+      <result name="input" type="plosJournals">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="editAjaxProfile" class="org.plos.user.action.MemberUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="plosOneFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="saveAjaxProfile" class="org.plos.user.action.MemberUserProfileAction" method="executeSaveUser">
+      <result name="success" type="redirect-action">editAjaxProfile.action</result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="plosOneFreemarker">
+        <param name="location">/static/serverError.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="saveProfile" class="org.plos.user.action.MemberUserProfileAction" method="executeSaveUser">
+      <result name="success" type="redirect">/user/secure/retrieveUserProfile.action </result>
+      <result name="input" type="plosJournals">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="retrieveUserProfile" class="org.plos.user.action.MemberUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="plosJournals">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+      <result name="input">/user/newUser.ftl</result>
+      <result name="error" type="plosJournals">
+        <param name="templateFile">/user/newUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="profile" class="org.plos.action.NoOpAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/user/profile.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="user" extends="default" namespace="/user">
+    <default-interceptor-ref name="plosBaseStack" />
+
+    <action name="prePopulateNewUser" class="org.plos.user.action.MemberUserProfileAction" method="prePopulateUserDetails">
+      <result name="new-profile" type="plosJournals">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+      <result name="update-profile" type="plosJournals">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+      <result name="success" type="redirect">/</result>
+    </action>
+
+    <action name="createNewUser" class="org.plos.user.action.MemberUserProfileAction" method="executeSaveUser">
+      <result name="success" type="redirect">/user/secure/editPrefsAlerts.action?tabId=alerts</result>
+      <result name="input" type="plosJournals">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="newUser">
+      <result>/WEB-INF/pages/user/newUser.ftl</result>
+    </action>
+
+    <action name="displayUser" class="org.plos.user.action.DisplayUserAction">
+      <result name="success">/WEB-INF/pages/user/displayUser.ftl</result>
+    </action>
+
+    <action name="showUser" class="org.plos.user.action.DisplayUserAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/user/displayUser.ftl</param>
+      </result>
+    </action>
+
+
+    <action name="displayUserAJAX" class="org.plos.user.action.DisplayUserAction">
+      <result name="success">/widget/userProfileTooltip.ftl</result>
+    </action>
+
+  </package>
+
+  <package name="admin" extends="default" namespace="/admin">
+    <default-interceptor-ref name="plosAdminStack" />
+
+    <action name="oldMenu" class="org.plos.action.NoOpAction">
+      <result>/WEB-INF/pages/todo.ftl</result>
+    </action>
+
+    <action name="adminTop" class="org.plos.admin.action.AdminTopAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/WEB-INF/pages/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="ingestArchives" class="org.plos.admin.action.IngestArchivesAction">
+        <result name="success">/WEB-INF/pages/admin/adminTop.ftl</result>
+    </action>
+
+    <action name="publishArchives" class="org.plos.admin.action.PublishArchivesAction">
+        <result name="success">/WEB-INF/pages/admin/adminTop.ftl</result>
+    </action>
+
+    <action name="processFlags" class="org.plos.admin.action.ProcessFlagsAction">
+        <result name="success">/WEB-INF/pages/admin/adminTop.ftl</result>
+    </action>
+
+    <action name="viewAnnotation" class="org.plos.admin.action.ViewAnnotationAction">
+        <result name="success">/WEB-INF/pages/admin/viewAnnotation.ftl</result>
+    </action>
+
+    <action name="viewRating" class="org.plos.admin.action.ViewRatingAction">
+        <result name="success">/WEB-INF/pages/admin/viewRating.ftl</result>
+    </action>
+
+        <action name="viewReply" class="org.plos.annotation.action.GetReplyAction">
+        <result name="success">/WEB-INF/pages/admin/viewReply.ftl</result>
+    </action>
+
+    <action name="findUser" class="org.plos.action.NoOpAction">
+        <result>/WEB-INF/pages/user/searchUser.ftl</result>
+    </action>
+
+    <action name="findUserByUserId" class="org.plos.user.action.SearchUserAction" method="executeFindUserByAuthId">
+      <result name="success">/WEB-INF/pages/user/searchUser.ftl</result>
+      <result name="input">/WEB-INF/pages/user/searchUser.ftl</result>
+    </action>
+
+    <action name="findUserByEmailAddress" class="org.plos.user.action.SearchUserAction" method="executeFindUserByEmailAddress">
+      <result name="success">/WEB-INF/pages/user/searchUser.ftl</result>
+      <result name="input">/WEB-INF/pages/user/searchUser.ftl</result>
+    </action>
+
+    <action name="editProfileByAdmin" class="org.plos.user.action.AdminUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/user/user.ftl</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/user/user.ftl</param>
+      </result>
+    </action>
+
+    <action name="saveProfileByAdmin" class="org.plos.user.action.AdminUserProfileAction" method="executeSaveUser">
+      <result name="success" type="chain">
+        <param name="actionName">editProfileByAdmin</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/user/user.ftl</param>
+      </result>
+    </action>
+
+    <action name="retrieveUserAlertsByAdmin" class="org.plos.user.action.AdminUserAlertsAction" method="retrieveAlerts">
+      <result name="success" type="plosOneFreemarker">
+        <param name="templateFile">/user/alerts.ftl</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/user/alerts.ftl</param>
+      </result>
+    </action>
+
+    <action name="saveAlertsByAdmin" class="org.plos.user.action.AdminUserAlertsAction" method="saveAlerts">
+      <result name="success" type="chain">
+        <param name="actionName">retrieveUserAlertsByAdmin</param>
+      </result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/user/alerts.ftl</param>
+      </result>
+    </action>
+
+    <action name="editAnnotation" class="org.plos.admin.action.EditAnnotationAction">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/WEB-INF/pages/admin/editAnnotation.ftl</param>
+      </result>
+    </action>
+
+    <action name="editAnnotationLoad" class="org.plos.admin.action.EditAnnotationAction"
+      method="loadAnnotation">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/WEB-INF/pages/admin/editAnnotation.ftl</param>
+      </result>
+    </action>
+
+    <action name="editAnnotationSave" class="org.plos.admin.action.EditAnnotationAction"
+      method="saveAnnotation">
+      <result name="success" type="plosOneFreemarker">
+        <param name="location">/WEB-INF/pages/admin/editAnnotation.ftl</param>
+      </result>
+    </action>
+
+    <action name="manageVirtualJournals" class="org.plos.admin.action.ManageVirtualJournalsAction">
+      <result name="success">/WEB-INF/pages/admin/manageVirtualJournals.ftl</result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/WEB-INF/pages/admin/manageVirtualJournals.ftl</param>
+      </result>
+    </action>
+
+    <action name="manageVolumesIssues" class="org.plos.admin.action.ManageVolumesIssuesAction">
+      <result name="success">/WEB-INF/pages/admin/manageVolumesIssues.ftl</result>
+      <result name="input" type="plosOneFreemarker">
+        <param name="templateFile">/WEB-INF/pages/admin/manageVolumesIssues.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <!-- make Clinical Trial Actions and configs available  -->
+  <include file="struts-clinicalTrials.xml" />
+
+  <!-- make NTD Actions and configs available  -->
+  <include file="struts-ntd.xml" />
+</struts>

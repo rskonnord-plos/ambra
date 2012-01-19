@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>plosone-install</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>plosone-install</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Install tomcat locally
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>plosone-webapp</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>TOMCAT_URL</name>
+          <property>TOMCAT_URL</property>
+          <expression>${TOMCAT_URL}</expression>
+          <description>The location to download tomcat 5.x from.</description>
+        </parameter>
+
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>plosone-start</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>plosone-start</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Deploy the plosone webapp and start the plosone tomcat server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>plosone-webapp</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>PORT</name>
+          <property>PORT</property>
+          <required>true</required>
+          <expression>${PORT}</expression>
+          <defaultValue>8080</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>SHUTDOWN_PORT</name>
+          <property>SHUTDOWN_PORT</property>
+          <required>true</required>
+          <expression>${SHUTDOWN_PORT}</expression>
+          <defaultValue>8005</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>SPAWN</name>
+          <property>SPAWN</property>
+          <required>true</required>
+          <expression>${SPAWN}</expression>
+          <defaultValue>false</defaultValue>
+          <description>Whether we should spawn or not</description>
+        </parameter>
+
+        <parameter>
+          <name>TOMCAT_HOME</name>
+          <property>TOMCAT_HOME</property>
+          <expression>${TOMCAT_HOME}</expression>
+          <description>The location of the tomcat 5.x installation</description>
+        </parameter>
+
+        <parameter>
+          <name>webappVersion</name>
+          <property>webappVersion</property>
+          <required>true</required>
+          <expression>${plosone-version}</expression>
+          <defaultValue>${project.version}</defaultValue>
+          <description>The version of the plosone webapp to run.</description>
+        </parameter>
+
+        <parameter>
+          <name>jvmargs</name>
+          <property>jvmargs</property>
+          <required>false</required>
+          <expression>${jvmargs}</expression>
+          <defaultValue>-server -Xmx200m</defaultValue>
+          <description>The jvm arguments to pass to the tomcat container.</description>
+        </parameter>
+
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>plosone-stop</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>plosone-stop</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Stop the plosone tomcat server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>plosone-webapp</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>TOMCAT_HOME</name>
+          <property>TOMCAT_HOME</property>
+          <expression>${TOMCAT_HOME}</expression>
+          <description>The location of the tomcat 5.x installation. Must be the same as what
+              was given in the plosone-start command.</description>
+        </parameter>
+
+        <parameter>
+          <name>SHUTDOWN_PORT</name>
+          <property>SHUTDOWN_PORT</property>
+          <required>true</required>
+          <expression>${SHUTDOWN_PORT}</expression>
+          <defaultValue>9291</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>plosone-uninstall</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>plosone-uninstall</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Uninstall plosone from local machine
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>plosone-webapp</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+  </mojos>
+</pluginMetadata>

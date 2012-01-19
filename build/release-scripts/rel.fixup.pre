@@ -1,0 +1,17 @@
+#!/bin/sh
+
+p5="0\\.8\\.1-SNAPSHOT"
+r5="0.8.1"
+pt="-t00801-SNAPSHOT"
+rt="-t00801"
+rel="1"
+
+
+# edit these
+#    plosone/search/ws-server-impl/pom.xml
+#    packages/cas/pom.xml \
+
+
+for f in packages/*/pom.xml ; do
+  perl -p -i -e "s/<release>.*?<\/release>/<release>$rel<\/release>/g" "$f"
+done
