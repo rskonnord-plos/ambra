@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <import resource="nonWebApplicationContext.xml"/>
+
+  <!--Sets up embedded http server-->
+  <bean class="java.lang.String" id="httpEndpointUrl">
+    <constructor-arg value="http://localhost:1234/select"/>
+  </bean>
+
+  <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+    <template id="producerTemplate"/>
+    <consumerTemplate id="consumerTemplate"/>
+    <route>
+      <from uri="jetty:http://localhost:1234/select"/>
+      <to uri="mock:end"/>
+    </route>
+  </camelContext>
+
+  <!--bean definitions-->
+
+  <bean class="org.topazproject.ambra.solr.SolrHttpServiceImpl" id="solrHttpService">
+    <property name="solrUrl" ref="httpEndpointUrl"/>
+  </bean>
+
+  <bean class="org.topazproject.ambra.solr.SolrMostViewedArticleService" id="mostViewedArticleService" >
+    <property name="solrHttpService" ref="solrHttpService"/>
+    <property name="solrFieldConverter" ref="solrFieldConverter"/>
+  </bean>
+
+</beans>

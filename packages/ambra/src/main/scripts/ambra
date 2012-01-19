@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# $HeadURL::                                                                   $
+# $Id$
+#
+# Tomcat init script
+# Copyright (c) 2006-2008 by Topaz, Inc.
+# http://topazproject.org
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# chkconfig: 2345 96 10
+# description: ambra container
+
+# Validate valid configuration files
+[ -e /etc/topaz/ambra.xml ] && ! xmllint --noout /etc/topaz/ambra.xml && exit 1
+[ -e /etc/topaz/doiResolver.xml ] && ! xmllint --noout /etc/topaz/doiResolver.xml && exit 1
+
+# Source function library (not really used but seems standard on redhat)
+. /etc/init.d/functions
+
+# Read our configuration from sysconfig (a redhat convention)
+[ -e /etc/sysconfig/topaz-common ] && . /etc/sysconfig/topaz-common
+[ -e /etc/sysconfig/ambra ] && . /etc/sysconfig/ambra
+
+# If our system is setup incorrectly somehow, minimal attempt to clean up
+[ -n "$JAVA_HOME" ] && [ ! -d "$JAVA_HOME" ] && export JAVA_HOME=/opt/java
+[ -z "$JAVA_HOME" ] && export JAVA_HOME=/opt/java
+[ ! -d "$JAVA_HOME" ] && echo "JAVA_HOME not set or invalid. Exiting" && exit 1
+
+# Multicast
+/usr/local/ambra/bin/multicast
+
+# Start/stop/etc tomcat
+/usr/local/ambra/bin/tomcat --basename $(basename `readlink -f $0`) "$@"

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  $HeadURL::                                                                                     $
+  $Id$
+
+  Copyright (c) 2007-2010 by Public Library of Science
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Ambra Configuration file -->
+<config>
+  <ambra>
+    <network>
+      <hosts>
+        <!-- Set hosts.default to FQHN (not localhost) if installing all components on one host
+          (or to webhead FQHN for multiple host installation) -->
+        <default>localhost</default>
+        <mailhost>localhost</mailhost>
+        <!-- For multibox install, change the following entires to the appropriate FQHNs -->
+        <cas>${ambra.network.hosts.default}</cas>
+        <registration>${ambra.network.hosts.cas}</registration>
+        <fedora>${ambra.network.hosts.default}</fedora>
+        <mulgara>${ambra.network.hosts.default}</mulgara>
+        <ambra>${ambra.network.hosts.default}</ambra>
+      </hosts>
+
+      <!-- Ports for the various components. Default for HTTP and HTTPS can be left out -->
+      <ports>
+        <default>${ambra.network.ports.ambra}</default>
+        <cas-ssl></cas-ssl>
+      </ports>
+    </network>
+
+    <platform>
+      <appContext></appContext>
+      <!-- common display constants -->
+      <name>Ambra</name>
+      <email>
+        <general>webmaster@example.org</general>
+        <feedback>webmaster@example.org</feedback>
+      </email>
+      <copyright>
+        This work is licensed under a Creative Commons Attribution-Share Alike 3.0 License\,
+        http://creativecommons.org/licenses/by-sa/3.0/
+      </copyright>
+      <!--
+        This is the competing interest start date
+        Any comments made before this date will not display
+        "I have no competing interest" text
+        This must be in the dd/mm/yyyy format
+      -->
+      <cisStartDate>3/20/2009</cisStartDate>
+    </platform>
+
+    <!-- 
+      URI aliases. eg. id:annotation/... can be used in place of info:doi/10.1371/ 
+      The main use for this is to define aliases that are used by id generators
+      and such that are configured with OTM. But could be used in other config
+      file sections to consolidate identifier prefix usages.
+    -->
+    <aliases>
+      <doiPrefix>info:doi</doiPrefix>
+      <id>${ambra.aliases.doiPrefix}/10.1371/</id>
+      <annoteaBodyId>info:fedora/</annoteaBodyId>
+    </aliases>
+
+    <!-- Overlay journal config -->
+    <virtualJournals>
+      <templateDir>/usr/local/ambra/templates</templateDir>
+      <default>AmbraJournal</default>
+      <journals>AmbraJournal,OverlayJournal</journals>
+    </virtualJournals>
+
+    <topaz>
+      <blobStore>
+        <fedora>
+          <userName>fedoraAdmin</userName>
+          <password>fedoraAdmin</password>
+          <blobTypes>
+            <representation>
+              <pidNs>doi</pidNs> <!-- must be configured in "retainPIDs" of fedora.fcfg -->
+              <uriPrefix>${ambra.aliases.doiPrefix}/</uriPrefix>
+            </representation>
+            <annotation>
+              <pidNs>Ambra</pidNs> <!-- must be configured in "retainPIDs" of fedora.fcfg -->
+              <uriPrefix>${ambra.aliases.annoteaBodyId}</uriPrefix>
+            </annotation>
+          </blobTypes>
+        </fedora>
+      </blobStore>
+    </topaz>
+
+    <services>
+      <search>
+        <!-- Number of results per page -->
+        <pageSize>10</pageSize>
+      </search>
+
+      <registration>
+        <!-- Default assumption is that the registration application is running on ambra-cas. If the
+        configuration is different, please set here -->
+        <appContext>/ambra-registration</appContext>
+      </registration>
+
+      <!-- defaults for generating an Atom Feed -->
+      <feed>
+        <title>Ambra Journal</title>
+        <tagline>Publishing science, accelerating research</tagline>
+        <icon>images/favicon.ico</icon>
+        <!-- Unique id. Should change for different criteria -->
+        <id>info:doi/12.3456/feed.ambra</id>
+        <extended>
+          <!-- namespace prefix for custom elements -->
+          <prefix>ambra</prefix>
+          <!-- custom element namespace -->
+          <namespace>http://www.ambraproject.org/atom/ns#ambra</namespace>
+        </extended>
+        <!-- Path to feeds after journal context -->
+        <basePath>/article/</basePath>
+        <!-- Default feed if none other specified -->
+        <defaultFile>feed</defaultFile>
+        <!-- File prefix for a specific category -->
+        <categoryPrefix>feed?category=</categoryPrefix>
+        <!-- Name of default feed (prefixed by journal) -->
+        <defaultName>New Articles</defaultName>
+        <!-- Default duration in months -->
+        <defaultDuration>3</defaultDuration>
+      </feed>
+
+      <documentManagement>
+        <imageMagick>
+          <executablePath>/usr/bin/convert</executablePath>
+          <tempDirectory>/tmp</tempDirectory>
+          <imageSetConfigs>
+            <imageSet name="#default">
+              <small width="70" quality="80" />
+              <medium maxDimension="600" quality="80" />
+              <large quality="80" />
+            </imageSet>
+          </imageSetConfigs>
+        </imageMagick>
+      </documentManagement>
+
+      <!-- crossref information - set parameters and sendToXref to true to turn on -->
+      <crossref>
+        <plos>
+          <xsl>crossref.xsl</xsl>
+          <doiurl>
+            http://${ambra.network.hosts.default}:${ambra.network.ports.default}/ambra-doi-resolver/
+          </doiurl>
+          <!-- email address to send info to -->
+          <email>webmaster@example.org</email>
+        </plos>
+        <!-- crossref login -->
+        <login>crossref-username</login>
+        <!-- crossref password -->
+        <password>your-password</password>
+        <area>test</area>
+        <!-- Set to true to turn on crossref posting -->
+        <sendToXref>false</sendToXref>
+      </crossref>
+
+      <!-- Determines if the browse page data is going to be cached or not -->
+      <browse>
+        <cache>true</cache>
+        <!-- Determines how long the browse page data will live in cache (in minutes) -->
+        <time>15</time>
+      </browse>
+    </services>
+
+    <articleTypeList>
+      <articleType>
+        <typeUri>http://rdf.ambraproject.org/RDF/articleType/1</typeUri>
+        <typeHeading>Unclassified</typeHeading>
+        <default>true</default>
+        <typeCode>unclassified</typeCode>
+      </articleType>
+      <articleType>
+        <typeUri>http://rdf.ambraproject.org/RDF/articleType/Research%20Article</typeUri>
+        <typeHeading>Research Article</typeHeading>
+        <typeCode>research_article</typeCode>
+      </articleType>
+    </articleTypeList>
+
+    <userAlerts>
+      <categories>
+        <category key="ambra">Ambra Journal</category>
+        <category key="overlay">Overlay Journal</category>
+      </categories>
+      <monthly>ambra, overlay</monthly>
+      <weekly>ambra, overlay</weekly>
+    </userAlerts>
+    
+  </ambra>
+</config>
