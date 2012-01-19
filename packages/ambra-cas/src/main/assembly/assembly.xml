@@ -1,0 +1,86 @@
+<!--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<assembly>
+  <id>tomcat</id>
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.build.directory}/${ecqs-tomcat}/webapps/cas</directory>
+      <outputDirectory>/webapps/cas</outputDirectory>
+      <excludes>
+        <exclude>WEB-INF/LoggerConf.xml</exclude>
+        <exclude>WEB-INF/classes/log4j.xml</exclude>
+        <exclude>WEB-INF/lib/log4j-1.2.8.jar</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <!-- Copy over webapp specific server.xml file -->
+    <file>
+      <source>src/main/resources/server.xml</source>
+      <outputDirectory>conf</outputDirectory>
+      <destName>server.xml</destName>
+    </file>
+    <!-- Copy over webapp specific context.xml file -->
+    <file>
+      <source>src/main/resources/context.xml</source>
+      <outputDirectory>conf</outputDirectory>
+    </file>
+    <!-- Copy over webapp specific log4j.xml file -->
+    <file>
+      <source>src/main/resources/LoggerConf.xml</source>
+      <outputDirectory>webapps/cas/WEB-INF</outputDirectory>
+      <destName>LoggerConf.xml</destName>
+    </file>
+    <!-- Copy over webapp specific log4j.properties file -->
+    <file>
+      <source>src/main/resources/log4j.xml</source>
+      <outputDirectory>common/classes</outputDirectory>
+      <destName>log4j.xml</destName>
+    </file>
+  </files>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/webapps/ambra-registration</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.topazproject:ambra-registration-webapp</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.topazproject.packages:*</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
