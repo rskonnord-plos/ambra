@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+    
+  <groupId>org.topazproject.plugins</groupId>
+  <artifactId>ant-tasks</artifactId>
+  <version>0.9.3.1</version>
+    
+  <packaging>maven-plugin</packaging>
+  
+  <name>Topaz Ant Tasks</name>
+  <description>Maven plugins based on ant scripts.</description>
+  
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>build-helpers</artifactId>
+    <version>0.9.3.1</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-script-ant</artifactId>
+      <version>2.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-ant-factory</artifactId>
+      <version>1.0-alpha-2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant-trax</artifactId>
+      <version>1.6.5</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- The following three targets used by antlib: http://maven.apache.org/ant-tasks.html -->
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.6.5</version>
+    </dependency>
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant-launcher</artifactId>
+      <version>1.6.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-ant</artifactId>
+      <version>2.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant-optional</artifactId>
+      <version>1.5.3-1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <!-- The documentation for this plugin is in the Maven guide
+	     "Developing Ant Plugins for Maven 2.x"
+             (http://maven.apache.org/guides/plugin/guide-ant-plugin-development.html)
+        -->
+        <!-- NOTE: We don't need groupId if the plugin's groupId is
+             org.apache.maven.plugins OR org.codehaus.mojo.
+             We also don't have to specify a version, since Maven can
+             automatically resolve the newest one.
+        -->
+        <artifactId>maven-plugin-plugin</artifactId>
+
+        <!-- Add the Ant plugin tools -->
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-tools-ant</artifactId>
+            <version>2.1</version>
+          </dependency>
+        </dependencies>
+        
+        <!-- Tell the plugin-plugin which prefix we will use.-->
+        <configuration>
+          <goalPrefix>ant-tasks</goalPrefix>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

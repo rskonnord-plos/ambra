@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>fedora-blobstore</artifactId>
+  <packaging>jar</packaging>
+  <version>0.9.3.1</version>
+  <name>Fedora as an OTM blobstore</name>
+  <description>A wrapper around Fedora so it can be used as an OTM blobstore.</description>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>fedora-libs</artifactId>
+    <version>0.9.3.1</version>
+  </parent>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>otm</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>fedora-client</artifactId>
+      <version>${version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <classifier>jdk15</classifier>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <!-- 
+         Note setting up the integration-tests-plugin and skipping tests
+         may seem surprising. However even if folks forget to run these
+         tests, it'll at least be compiled as part of the builds.
+     -->
+    <plugins>
+      <plugin>
+        <groupId>org.topazproject.plugins</groupId>
+        <artifactId>integration-tests-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>true</skip> 
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <!-- Run integration tests. Requires fedora server running -->
+      <id>it</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skip>false</skip> 
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

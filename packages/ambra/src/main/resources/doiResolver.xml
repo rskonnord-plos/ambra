@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                     $
+  $Id$
+
+  Copyright (c) 2007-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  This file contains most of the defaults for the doi-resolver. However, there may be additional
+  defaults in the conf-helper library's global-defaults.xml.
+
+  See also libs/conf-helper/src/main/resources/global-defaults.xml
+-->
+<config>
+  <ambra>
+    <network>
+      <hosts>
+        <mulgara>localhost</mulgara>
+      </hosts>
+    </network>
+
+    <platform>
+      <webserverUrl>http://www.plosone.org/</webserverUrl>
+      <errorPage>static/pageNotFound.action</errorPage> 
+    </platform>
+
+    <aliases>
+      <doiPrefix>info:doi</doiPrefix>
+    </aliases>
+
+    <services>
+      <doiResolver>
+        <!-- 
+          This is used to define which DOI regular expression maps to which URL in the DOI  resolver.
+          The rules are applied sequentially from top to bottom and the first matching one will execute.
+          If an error is encountered, or the article is not found, it will send out the 
+          ambra.platform.errorPage from ambra.platform.webserverUrl.
+        -->
+        <mappings>
+          <journalMapping>
+            <url>http://www.plosone.org/</url>
+            <regex>10\.1371/journal\.pone\.\d{7}</regex>
+            <figureRegex>10\.1371/journal\.pone\.\d{7}\.[gt]\d{3}</figureRegex>
+          </journalMapping>
+          <journalMapping>
+            <url>http://clinicaltrials.ploshubs.org/</url>
+            <regex>10\.1371/(journal|image)\.pctr\.(\d{7}|v\d\d\.i\d\d)</regex>
+            <figureRegex>10\.1371/(journal|image)\.pctr\.(\d{7}|v\d\d\.i\d\d)\.[gt]\d{3}</figureRegex>
+          </journalMapping>
+          <journalMapping>
+            <url>http://www.ploscompbiol.org/</url>
+            <regex>10\.1371/(journal|image)\.pcbi\.(\d{7}|v\d\d\.i\d\d)</regex>
+            <figureRegex>10\.1371/(journal|image)\.pcbi\.(\d{7}|v\d\d\.i\d\d)\.[gt]\d{3}</figureRegex>
+          </journalMapping>
+          <journalMapping>
+            <url>http://www.plosgenetics.org/</url>
+            <regex>10\.1371/(journal|image)\.pgen\.(\d{7}|v\d\d\.i\d\d)</regex>
+            <figureRegex>10\.1371/(journal|image)\.pgen\.(\d{7}|v\d\d\.i\d\d)\.[gt]\d{3}</figureRegex>
+          </journalMapping>
+          <journalMapping>
+            <url>http://www.plosntds.org/</url>
+            <regex>10\.1371/(journal|image)\.pntd\.(\d{7}|v\d\d\.i\d\d)</regex>
+            <figureRegex>10\.1371/(journal|image)\.pntd\.(\d{7}|v\d\d\.i\d\d)\.[gt]\d{3}</figureRegex>
+          </journalMapping>
+          <journalMapping>
+            <url>http://www.plospathogens.org/</url>
+            <regex>10\.1371/(journal|image)\.ppat\.(\d{7}|v\d\d\.i\d\d)</regex>
+            <figureRegex>10\.1371/(journal|image)\.ppat\.(\d{7}|v\d\d\.i\d\d)\.[gt]\d{3}</figureRegex>
+          </journalMapping>
+        </mappings>
+      </doiResolver>
+    </services>
+  </ambra>
+</config>

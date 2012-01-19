@@ -1,0 +1,481 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>${pom.parent.groupId}</groupId>
+  <artifactId>ambra-webapp</artifactId>
+  <packaging>war</packaging>
+  <version>0.9.3.1</version>
+  <name>Ambra Web Application</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>ambra</artifactId>
+    <version>0.9.3.1</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.googlecode.jsonplugin</groupId>
+      <artifactId>jsonplugin</artifactId>
+      <version>0.30</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>all-journals</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>trackback-util</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>ambra-emailer</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>entity-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>it.unibo.cs</groupId>
+      <artifactId>unibo-xpointer</artifactId>
+      <version>1.2-t1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>dom-ranges-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>conf-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>uk.ltd.getahead</groupId>
+      <artifactId>dwr</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>cas</groupId>
+      <artifactId>casclient</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>otm</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.groovy</groupId>
+          <artifactId>groovy-all</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>otm-extras</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>mulgara-driver</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.9.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-mock</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.5.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-core</artifactId>
+      <version>2.0.11.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>freemarker</groupId>
+          <artifactId>freemarker</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-spring-plugin</artifactId>
+      <version>2.0.11.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>opensymphony</groupId>
+      <artifactId>oscore</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon-dom</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+
+    <!-- required by the xsl transformation using translets -->
+    <dependency>
+      <groupId>org.apache.bcel</groupId>
+      <artifactId>bcel</artifactId>
+      <version>5.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>oro</groupId>
+      <artifactId>oro</artifactId>
+      <version>2.0.8</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <version>1.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>xacml</groupId>
+      <artifactId>sunxacml</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>ambra-otm-models</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>2.4.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-highlighter</artifactId>
+      <version>2.4.0</version>
+    </dependency>
+
+    <!-- Please keep the scope 'provided' to avoid packaging in the war -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.tuckey</groupId>
+      <artifactId>urlrewritefilter</artifactId>
+      <version>3.0.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>ambra-js</artifactId>
+      <version>${pom.parent.version}</version>
+      <type>zip</type>
+      <classifier>js</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <scope>test</scope>
+      <classifier>jdk15</classifier>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymockclassextension</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib</artifactId>
+      <version>2.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>3.1</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>ambra</finalName>
+    <plugins>
+      <!--
+        mvn clean jetty:run to run the webapp.
+
+        To enable remote debug on port 4000
+        export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE \
+                            -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
+
+        If you supply suspend=n instead of suspend=y you can start immediately without running the
+        debugger and launch the debugger at anytime you really wish to debug.
+        -->
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>8080</port>
+              <maxIdleTime>3000000</maxIdleTime>
+              <acceptors>10</acceptors>
+            </connector>
+          </connectors>
+          <systemProperties>
+            <systemProperty>
+              <name>java.net.preferIPv4Stack</name>
+              <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <name>log4j.configuration</name>
+              <value>file:///etc/topaz/log4j.xml</value>
+            </systemProperty>
+            <systemProperty>
+              <!-- Turn on dev mode configuration -->
+              <name>ambra.configuration.overrides</name>
+              <value>defaults-dev.xml</value>
+            </systemProperty>
+            <systemProperty>
+              <!-- In case there is something in /etc, override here, not defaults-dev.xml -->
+              <name>ambra.platform.appContext</name>
+              <value>/ambra-webapp</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.apache.commons.logging.Log</name>
+              <value>org.apache.commons.logging.impl.Log4JLogger</value>
+            </systemProperty>
+          </systemProperties>
+          <scanIntervalSeconds>5</scanIntervalSeconds>
+          <webDefaultXml>src/main/resources/webdefault.xml</webDefaultXml>
+          <webAppConfig>
+            <contextPath>/ambra-webapp</contextPath>
+            <baseResource implementation="org.mortbay.resource.ResourceCollection">
+              <resourcesAsCSV>${project.build.sourceDirectory}/../webapp,jar:file:${settings.localRepository}/org/topazproject/ambra-js/${pom.parent.version}/ambra-js-${pom.parent.version}-js.zip!/</resourcesAsCSV>
+            </baseResource>
+          </webAppConfig>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <id>unpack dojo js and css</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.topazproject</groupId>
+                  <artifactId>ambra-js</artifactId>
+                  <version>${pom.parent.version}</version>
+                  <type>zip</type>
+                  <classifier>js</classifier>
+                  <outputDirectory>${project.build.directory}/ambra</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- config webapp to use embedded, local:, Mulgara -->
+    <profile>
+      <id>mulgara-local</id>
+      <activation>
+        <property>
+          <name>ambra.topaz.tripleStore.mulgara.baseuri</name>
+          <value>local:///topazproject</value>
+        </property>
+      </activation>
+      <dependencies>
+        <!-- Mulgara embedded-client -->
+        <dependency>
+          <groupId>org.topazproject</groupId>
+          <artifactId>mulgara-service</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>
