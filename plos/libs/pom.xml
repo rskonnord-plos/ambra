@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.plosone</groupId>
+  <artifactId>plosone-libs</artifactId>
+  <version>0.8.3</version>
+  <packaging>pom</packaging>
+  <name>PLOSOne Libs</name>
+  
+  <parent>
+    <groupId>org.plosone</groupId>
+    <artifactId>plosone</artifactId>
+    <version>0.8.3</version>
+  </parent>
+
+  <modules>
+    <module>otm-models</module>
+    <module>article-util</module>
+    <module>conf-helper</module>
+    <module>runscripts</module>
+    <module>util</module>
+    <module>scripts</module>
+    <module>trackback-util</module>
+    <module>dom-ranges-helper</module>
+    <module>entity-resolver</module>
+  </modules>
+
+</project>

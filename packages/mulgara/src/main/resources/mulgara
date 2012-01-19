@@ -1,0 +1,13 @@
+# You can set various options for mulgara here
+
+# Where to store the database.
+DATABASE_DIR="/var/lib/topaz/data/mulgara"
+
+# The RMI name of the server.
+SERVERNAME="topazproject"
+
+# Which log configuration file to use.
+LOG4J_CONFIG="/usr/local/topaz/mulgara/log4j.xml"
+
+# Arbitrary other parameters to pass to mulgara.
+#OPTIONS="--serverhost 10.0.1.42"

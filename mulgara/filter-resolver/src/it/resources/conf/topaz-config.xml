@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<config>
+  <topaz>
+    <fr>
+      <filterHandler>
+        <class_0>org.topazproject.mulgara.resolver.CacheInvalidator</class_0>
+      </filterHandler>
+
+      <cacheInvalidator>
+        <invalidationInterval>0</invalidationInterval>
+        <rulesFile>/conf/cache_invalidator.xml</rulesFile>
+      </cacheInvalidator>
+    </fr>
+  </topaz>
+</config>

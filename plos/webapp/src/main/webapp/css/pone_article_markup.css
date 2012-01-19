@@ -1,0 +1,24 @@
+/* pone_article_markup defines HTML selectors for the XML markup used in 
+ * article xml - specifically in the titles. 
+ */
+
+bold { font-weight: bolder }
+
+italic { font-style: italic }
+
+monospace { font-family: monospace }
+
+underline { text-decoration: underline }
+
+overline { text-decoration: overline }
+
+strike { text-decoration: line-through }
+
+sub { vertical-align: sub }
+
+sup { vertical-align: super }
+
+sc {
+ font-size: smaller;
+ text-transform: capitalize;
+}

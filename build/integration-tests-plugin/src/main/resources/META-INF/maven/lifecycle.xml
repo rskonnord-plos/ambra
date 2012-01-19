@@ -1,0 +1,27 @@
+<lifecycles>
+  <lifecycle>
+    <id>integration-tests</id>
+    <phases>
+      <phase>
+        <id>validate</id>
+        <executions>
+          <execution>
+            <goals>
+              <goal>note-it-running</goal>
+            </goals>
+          </execution>
+        </executions>
+      </phase>
+      <phase>
+        <id>generate-test-sources</id>
+        <executions>
+          <execution>
+            <goals>
+              <goal>setup-it-locations</goal>
+            </goals>
+          </execution>
+        </executions>
+      </phase>
+    </phases>
+  </lifecycle>
+</lifecycles>

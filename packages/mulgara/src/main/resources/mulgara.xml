@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <topaz>
+    <fr>
+      <transactionLogger>
+        <log>
+          <fileName>/var/lib/topaz/mulgara.tx.log</fileName>
+        </log>
+      </transactionLogger>
+    </fr>
+  </topaz>
+</config>

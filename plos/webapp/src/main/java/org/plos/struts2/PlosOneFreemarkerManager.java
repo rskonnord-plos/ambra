@@ -1,0 +1,50 @@
+/* $HeadURL::                                                                            $
+ * $Id$
+ *
+ * Copyright (c) 2006-2007 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Educational Community License version 1.0
+ * http://opensource.org/licenses/ecl1.php
+ */
+
+package org.plos.struts2;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.views.freemarker.ScopesHashModel;
+
+import com.opensymphony.xwork2.util.ValueStack;
+
+/**
+ * Custom Freemarker Manager to load up the configuration files for css, javascript, and titles of
+ * pages
+ * 
+ * @author Stephen Cheng
+ */
+public class PlosOneFreemarkerManager extends FreemarkerManager {
+  private PlosOneFreemarkerConfig fmConfig;
+
+  /**
+   * Sets the custom configuration object via Spring injection
+   * 
+   * @param fmConfig
+   */
+  public PlosOneFreemarkerManager(PlosOneFreemarkerConfig fmConfig) {
+    this.fmConfig = fmConfig;
+  }
+
+  /**
+   * Subclass from parent to add the freemarker configuratio object globally
+   * 
+   * @see org.apache.struts2.views.freemarker.FreemarkerManager
+   */
+
+  protected void populateContext(ScopesHashModel model, ValueStack stack, Object action, 
+                                 HttpServletRequest request, HttpServletResponse response) {
+    super.populateContext(model, stack, action, request, response);
+    model.put("freemarker_config", fmConfig);
+  }
+}

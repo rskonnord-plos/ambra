@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<config>
+  <topaz>
+    <fr>
+      <filterHandler>
+        <class_0>org.topazproject.mulgara.resolver.TransactionLogger</class_0>
+        <class_1>org.topazproject.mulgara.resolver.CacheInvalidator</class_1>
+      </filterHandler>
+
+      <transactionLogger>
+        <log>
+          <fileName>mulgara.backup.log</fileName>
+          <maxSize>20000000</maxSize>
+          <maxAge>86400</maxAge>
+        </log>
+        <writeBufferSize>33000</writeBufferSize>
+        <flushInterval>30000</flushInterval>
+      </transactionLogger>
+
+      <cacheInvalidator>
+        <invalidationInterval>100</invalidationInterval>
+        <rulesFile>/conf/cache_invalidator.xml</rulesFile>
+      </cacheInvalidator>
+    </fr>
+  </topaz>
+</config>

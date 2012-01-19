@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules [
+  <!ELEMENT rules ((rule | aliasMap)*)>
+  <!ELEMENT rule     (match, object)>
+  <!ELEMENT aliasMap (entry)*>
+
+  <!ELEMENT match    (s?, p?, o?, m?)>
+  <!ELEMENT s        (#PCDATA)>
+  <!ELEMENT p        (#PCDATA)>
+  <!ELEMENT o        (#PCDATA)>
+  <!ELEMENT m        (#PCDATA)>
+
+  <!ELEMENT object   (cache, (key | query))>
+  <!ELEMENT cache    (#PCDATA)>
+  <!ELEMENT key      (#PCDATA)>
+  <!ATTLIST key
+      field (s | p | o | m) #IMPLIED>
+  <!ELEMENT query    (#PCDATA)>
+    <!-- ${x} (where x = 's', 'p', 'o', or 'm') will be replaced with the corresponding
+       - value from the match.
+       -->
+
+  <!ELEMENT entry    (alias, value)>
+  <!ELEMENT alias    (#PCDATA)>
+  <!ELEMENT value    (#PCDATA)>
+    <!-- ${dbUri} will be replaced with the current database-uri -->
+]>
+<rules>
+  <aliasMap>
+    <entry>
+      <alias>topaz</alias>
+      <value>http://rdf.topazproject.org/RDF/</value>
+    </entry>
+    <entry>
+      <alias>dc</alias>
+      <value>http://purl.org/dc/elements/1.1/</value>
+    </entry>
+    <entry>
+      <alias>mulgara</alias>
+      <value>http://mulgara.org/mulgara#</value>
+    </entry>
+    <entry>
+      <alias>model</alias>
+      <value>${dbUri}#</value>
+    </entry>
+  </aliasMap>
+
+  <!-- query-based rules -->
+  <rule>
+    <match>
+      <p>topaz:articleState</p>
+      <m>model:test</m>
+    </match>
+    <object>
+      <cache>article-state</cache>
+      <query>
+        select $s $state from &lt;model:test&gt;
+            where (&lt;${s}&gt; &lt;topaz:articleState&gt; $state)
+            and ($s &lt;mulgara:is&gt; &lt;${s}&gt; or
+                 &lt;${s}&gt; &lt;topaz:propagate-permissions-to&gt; $s);
+      </query>
+    </object>
+  </rule>
+
+  <rule>
+    <match>
+      <p>topaz:foo</p>
+    </match>
+    <object>
+      <cache>article-state</cache>
+      <query>
+        select $s $o from &lt;model:test&gt; where $s &lt;topaz:foo&gt; $o;
+      </query>
+    </object>
+  </rule>
+
+  <!-- direct-key rules -->
+  <rule>
+    <match>
+      <p>topaz:pred</p>
+      <m>model:test</m>
+    </match>
+    <object>
+      <cache>article-state</cache>
+      <key field="s"/>
+    </object>
+  </rule>
+
+  <rule>
+    <match>
+      <s>topaz:subj</s>
+      <m>model:test</m>
+    </match>
+    <object>
+      <cache>article-state</cache>
+      <key field="o"/>
+    </object>
+  </rule>
+
+  <rule>
+    <match>
+      <o>topaz:obj</o>
+    </match>
+    <object>
+      <cache>article-state</cache>
+      <key field="p"/>
+    </object>
+  </rule>
+</rules>

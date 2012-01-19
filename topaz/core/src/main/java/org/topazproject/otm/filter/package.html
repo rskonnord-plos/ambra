@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+  $HeadURL::                                                                              $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>org.topazproject.otm.filter</title>
+  </head>
+  <body>
+    Provides classes for defining {@link org.topazproject.otm.Filter Filter}'s.
+
+    <p>
+    Filters are a mechanism to limit the objects returned by read operations, such as queries,
+    {@link org.topazproject.otm.Session#get(Class, String) Session.get},  and
+    {@link org.topazproject.otm.Session#load(Class, String) Session.load}. Filters are defined
+    via {@link org.topazproject.otm.filter.FilterDefinition FilterDefinition}'s and are set on
+    the {@link org.topazproject.otm.SessionFactory SessionFactory}; they can then be
+    {@link org.topazproject.otm.Session#enableFilter(String) enabled} and
+    {@link org.topazproject.otm.Session#disableFilter(String) disabled} on the session.
+    Alternatively a filter defintion can be {@link
+    org.topazproject.otm.Session#enableFilter(FilterDefinition) enabled} directly on a session.
+    </p>
+
+    <p>
+    Filters can be defined either via a {@link org.topazproject.otm.criterion.DetachedCriteria
+    DetachedCriteria} or via an OQL query using the {@link
+    org.topazproject.otm.filter.CriteriaFilterDefinition CriteriaFilterDefinition} and {@link
+    org.topazproject.otm.filter.OqlFilterDefinition OqlFilterDefinition}'s, respectively. In
+    addition, filter-definitions (and hence their respective filters) can be combined using
+    logical <code>or</code> and <code>and</code> with the {@link
+    org.topazproject.otm.filter.DisjunctiveFilterDefinition DisjunctiveFilterDefinition} and {@link
+    org.topazproject.otm.filter.ConjunctiveFilterDefinition ConjunctiveFilterDefinition}'s,
+    respectively.
+    </p>
+
+    <p>
+    Filters are tied to a specific class, i.e. are applied to objects of specific types. Whereever
+    an object occurs, being it the object loaded via Session.get() or Session.load(), be it
+    associations on an object, be it objects in a Criteria query, or be it anywhere in an OQL
+    expression, all filters for that object's type are applied (this means all filters defined for
+    a given class are implicitly <code>and</code>'d together). For example, given the following
+    criteria query
+    <pre>
+      session.createCriteria(Foo.class).createCriteria("hasBar")
+             .add(Restrictions.eq("name", "John"))
+    </pre>
+    and assuming <code>Foo.hasBar</code> has type <code>Bar</code>, then filters for both
+    <code>Foo</code> and <code>Bar</code> will be applied to the query. I.e. only those instances
+    of <code>Foo</code> would be returned which pass all filters on <code>Foo</code> and who have 
+    a <code>hasBar</code> value that both passes the filters on <code>Bar</code> as well as has
+    a name field with value "John". The same applies to the equivalent OQL query
+    <pre>
+      select f from Foo f where f.hasBar.name = 'John';
+    </pre>
+    </p>
+
+    <p>
+    Example filter definition and usage:
+    <pre>
+      FilterDefinition dates = new OqlFilterDefinition("dateFilter", "Article",
+                                                   "a where gt(a.date, :sd) and lt(a.date, :ed)");
+      sessFactory.addFilterDefinition(dates);
+
+      Session sess = sessFactory.openSession();
+      sess.enableFilter("dateFilter").setParameter("sd", startDate).setParameter("ed", endDate);
+
+      List articles = sess.createCriteria(Article.class).add(Restrictions.eq("hasAuthor", "Sally"))
+                          .list();
+    </pre>
+    </p>
+  </body>
+</html>

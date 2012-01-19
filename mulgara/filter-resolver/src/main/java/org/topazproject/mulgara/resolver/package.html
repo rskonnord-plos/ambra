@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+  $HeadURL::                                                                              $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>org.topazproject.mulgara.resolver</title>
+  </head>
+  <body>
+    A Mulgara resolver and associated plugins for reacting to updates.
+
+    <p>
+    The purpose of the {@link org.topazproject.mulgara.resolver.FilterResolver FilterResolver}
+    is to get notifications whenever updates to a model are made. The FilterResolver is
+    configured with a list of {@link org.topazproject.mulgara.resolver.FilterHandler
+    FilterHandler}'s which get notified on updates. The two main handlers currently are the 
+    {@link org.topazproject.mulgara.resolver.TransactionLogger TransactionLogger} and the
+    {@link org.topazproject.mulgara.resolver.CacheInvalidator CacheInvalidator}. The
+    TransactionLogger will log all inserts, deletes, model creates, and model drops to a log
+    file which can be replayed to re-generate the db in case of a catastrophic failure. The
+    CacheInvalidator is used to send out cache-invalidations when certain data are modified.
+    </p>
+  </body>
+</html>

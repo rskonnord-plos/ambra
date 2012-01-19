@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <!-- Define dependencies needed if we want to use <classpath refid="dependency.classpath" />
+       in a <java /> task. See antlib: http://maven.apache.org/ant-tasks.html -->
+  <artifact:dependencies pathId="dependency.classpath"
+      xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <dependency groupId="ant" artifactId="ant" version="1.6.5"/>
+    <dependency groupId="ant" artifactId="ant-launcher" version="1.6.5"/>
+  </artifact:dependencies>
+  
+  <artifact:dependencies filesetId="antcontrib.fileset" useScope="runtime">
+    <dependency groupId="ant-contrib" artifactId="ant-contrib" version="1.0b2"/>
+  </artifact:dependencies>
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset refid="antcontrib.fileset"/>
+    </classpath>
+  </taskdef>
+
+  <target name="exec-ext">
+    <condition property="ext" value="">
+      <os family="unix"/>
+    </condition>
+    <condition property="ext" value=".bat">
+      <os family="windows"/>
+    </condition>
+    <property name="ext" value=""/>
+  </target>
+
+  <target name="patch-keytool">
+    <condition property="patch-keytool-string"
+     value="jakarta-tomcat.keytool.path=${env.JAVA_HOME}/bin/keytool">
+       <os family="unix"/>
+    </condition>
+    <property name="patch-keytool-string" value=""/>
+  </target>
+
+  <target name="ecqs-package" depends="patch-keytool">
+    <!-- unzip the package -->
+    <propertyregex property="groupId" input="${SRC_ZIP}"
+      regexp="([^:]*)" select="\1" casesensitive="false" override="true"/>
+    <propertyregex property="artifactId" input="${SRC_ZIP}"
+      regexp="[^:]*:([^:]*)" select="\1" casesensitive="false" override="true"/>
+    <propertyregex property="version" input="${SRC_ZIP}"
+      regexp="[^:]*:[^:]*:(.*)" select="\1" casesensitive="false" override="true"/>
+
+    <artifact:dependencies filesetId="src.fileset" useScope="compile">
+      <dependency groupId="${groupId}" artifactId="${artifactId}" version="${version}" type="zip"/>
+      <remoteRepository url="${topaz_repository}" />
+    </artifact:dependencies>
+    <pathconvert property="src-zip" refid="src.fileset"/>
+    <unzip src="${src-zip}" dest="${DEST_DIR}"/>
+    
+    <!-- needed for cas-mod -->
+    <copy file="build-esup-cas-server.xml" 
+          todir="${DEST_DIR}/${ROOT}"
+          overwrite="true"
+    />
+
+    <!-- copy dependencies -->
+    <for list="${dependencies}" param="dependency">
+      <sequential>
+        <propertyregex property="groupId" input="@{dependency}"
+          regexp="([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="artifactId" input="@{dependency}"
+          regexp="[^:]*:([^:]*)" select="\1" casesensitive="false" override="true"/>
+        <propertyregex property="version" input="@{dependency}"
+          regexp="[^:]*:[^:]*:(.*)" select="\1" casesensitive="false" override="true"/>
+
+        <var name="fileSet" value="${artifactId}:${version}"/>
+        <artifact:dependencies filesetId="${fileSet}" useScope="runtime">
+          <dependency groupId="${groupId}" artifactId="${artifactId}"
+            version="${version}" type="jar"/>
+          <remoteRepository url="${topaz_repository}" />
+        </artifact:dependencies>
+
+        <copy todir="${DEST_DIR}/${ROOT}/${CAS_SERVER_LIB_PATH}" flatten="true">
+          <fileset refid="${fileSet}"/>
+        </copy>
+      </sequential>
+    </for>
+    <!-- end cas-mod -->
+
+    <!-- configure it -->
+    <copy file="properties/build.properties"
+      tofile="${DEST_DIR}/${ROOT}/properties/build.properties"
+      overwrite="true"/>
+    <echo file="${DEST_DIR}/${ROOT}/properties/build.properties"
+      append="yes" message="${patch-keytool-string}"/>
+    <copy todir="${DEST_DIR}/${ROOT}/custom">
+      <fileset dir="custom"/>
+    </copy>
+
+    <!-- Remove endorsed libs to avoid Java 1.5 and Tomcat 5.0
+    problem of not being able to pick up default TransformerFactory.
+    -->
+    <unzip src="${DEST_DIR}/${ROOT}/packages/jakarta-tomcat-5.0.28.zip"
+      dest = "${DEST_DIR}/${ROOT}/packages/tmp"/>
+    
+    <zip destfile="${DEST_DIR}/${ROOT}/packages/jakarta-tomcat-5.0.28.zip"
+      basedir="${DEST_DIR}/${ROOT}/packages/tmp"
+      excludes="jakarta-tomcat-5.0.28/common/endorsed/*.jar"/>
+
+    <delete dir="${DEST_DIR}/${ROOT}/packages/tmp"/>
+    
+  </target>
+  
+  <target name="ecqs-install" depends="exec-ext">
+    <artifact:dependencies filesetId="ecqs.fileset" useScope="runtime">
+      <dependency groupId="${ecqs-groupId}" artifactId="${ecqs-artifactId}"
+                  version="${ecqs-version}" type="jar"/>
+    </artifact:dependencies>
+    <pathconvert property="SRC_JAR" refid="ecqs.fileset"/>
+
+    <unjar src="${SRC_JAR}" dest="${ECQS_INSTALL_DIR}"/>
+    
+    <exec dir="${ECQS_INSTALL_DIR}/${ROOT}" executable="ant${ext}">
+      <arg line="install"/>
+    </exec>
+  </target>
+
+  <target name="ecqs-uninstall">
+    <delete dir="${ECQS_HOME}"/>
+  </target>
+
+  <target name="ecqs-start">
+    <echo>Starting CAS (spawn=${SPAWN})</echo>
+    <java classname="org.apache.tools.ant.Main"
+      dir="${ECQS_HOME}"
+          fork="true" spawn="${SPAWN}">
+      <classpath refid="dependency.classpath" />
+      <arg line="-f ${ECQS_HOME}/build.xml tomcat-start"/>
+    </java>
+  </target>
+
+  <target name="ecqs-stop" depends="exec-ext">
+    <exec dir="${ECQS_HOME}" executable="ant${ext}">
+      <arg line="tomcat-stop"/>
+    </exec>
+  </target>
+    
+</project>

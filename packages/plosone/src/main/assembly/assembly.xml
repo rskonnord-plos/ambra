@@ -1,0 +1,62 @@
+<!--
+WARNING: See overrides/defaults in parent common.xml (head/packages/src/main/assembly)
+-->
+<assembly>
+  <id>tomcat</id>
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <files>
+    <!-- Copy over webapp specific server.xml file -->
+    <file>
+      <source>src/main/resources/server.xml</source>
+      <outputDirectory>conf</outputDirectory>
+    </file>
+    <!-- Copy over webapp specific context.xml file -->
+    <file>
+      <source>src/main/resources/context.xml</source>
+      <outputDirectory>conf</outputDirectory>
+    </file>
+    <!-- Copy over webassp specific log4j.xml file -->
+    <file>
+      <source>src/main/resources/log4j.xml</source>
+      <outputDirectory>common/classes</outputDirectory>
+    </file>
+  </files>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/webapps/ROOT</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>*:plosone-webapp:war</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/webapps/${artifact.artifactId}</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>*:war</include>
+      </includes>
+      <excludes>
+        <exclude>*:plosone-webapp:war</exclude>
+      </excludes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.topazproject.packages:*</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

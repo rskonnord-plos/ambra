@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.topazproject.plugins</groupId>
+  <artifactId>reports-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
+  <version>0.8.3</version>
+  <name>Reports Helper Plugin</name>
+  <description>Maven plugin to set up the environment for the reporting plugins; this is mostly
+    related to the integration tests.</description>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>build-helpers</artifactId>
+    <version>0.8.3</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.codehaus.mojo.groovy</groupId>
+      <artifactId>groovy-mojo-support</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo.groovy</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

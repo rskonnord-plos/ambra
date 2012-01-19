@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+  <!-- Allow command-line overrides etc. (eg. -Dtopaz.bla=xxx) -->
+  <system/>
+  <!-- Allow administrator overrides -->
+  <xml fileName="file:///etc/topaz/mulgara.xml" optional="true"/>
+  <!-- App specific defaults if no admin overrides -->
+  <xml fileName="conf/topaz-config.xml"/>
+</configuration>
