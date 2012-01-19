@@ -1,0 +1,15 @@
+# $HeadURL::                                                                   $
+# $Id$
+
+PKG=ambra
+
+# Register the service
+/sbin/chkconfig --add $PKG
+
+# Create symbolic link in /usr/local/topaz
+LINK=/usr/local/topaz/$PKG
+rm -f $LINK
+DIR=`ls -td /usr/local/topaz/*"$PKG"-* 2>/dev/null | head -1`
+[ -n "$DIR" ] && ln -s `basename $DIR` $LINK
+
+exit 0

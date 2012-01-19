@@ -1,0 +1,1213 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!--
+  Copyright (c) 2006-2010 by Public Library of Science
+  http://plos.org
+  http://ambraproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<struts>
+
+  <constant name="struts.objectFactory"
+      value="org.apache.struts2.spring.StrutsSpringObjectFactory"/>
+  <constant name="struts.objectFactory.spring.autoWire" value="name"/>
+  <constant name="struts.devMode" value="false"/>
+  <constant name="struts.freemarker.manager.classname" value="ambraFreemarkerManager"/>
+  <constant name="struts.i18n.encoding" value="UTF-8"/>
+  <constant name="struts.ui.theme" value="ambra-theme"/>
+  <constant name="struts.ui.templateDir" value="template"/>
+  <constant name="struts.ui.templateSuffix" value="ftl"/>
+  <!--
+  allow the mapping of friendly URIs,
+  e.g. "/article/feed" v. requiring "/article/articleFeed.action?parms"
+  -->
+
+  <include file="struts-default.xml" />
+
+  <package name="default" extends="struts-default">
+    <result-types>
+      <result-type name="freemarker"
+        class="org.apache.struts2.views.freemarker.FreemarkerResult" default="true">
+      </result-type>
+      <result-type name="ambraFreemarker" class="org.topazproject.ambra.struts2.AmbraFreemarkerResult">
+        <param name="location">/templates/main_template.ftl</param>
+      </result-type>
+      <result-type name="ambraStaticFreemarker" class="org.topazproject.ambra.struts2.AmbraFreemarkerResult">
+        <param name="location">/templates/main_static_template.ftl</param>
+      </result-type>
+      <result-type name="headless" class="org.topazproject.ambra.struts2.AmbraFreemarkerResult">
+        <param name="location">/templates/headless_template.ftl</param>
+      </result-type>
+      <result-type name="naked" class="org.topazproject.ambra.struts2.AmbraFreemarkerResult">
+        <param name="location">/templates/naked_template.ftl</param>
+      </result-type>
+      <result-type name="user" class="org.topazproject.ambra.struts2.AmbraFreemarkerResult">
+        <param name="location">/templates/user_shared_template.ftl</param>
+      </result-type>
+      <result-type name="ambraStream" class="org.topazproject.ambra.struts2.AmbraStreamResult" />
+      <result-type name="json" class="org.topazproject.ambra.struts2.JsonResult">
+        <param name="excludeProperties">advisors, callbacks</param>
+        <param name="ignoreHierarchy">false</param>
+        <param name="noCache">true</param>
+        <param name="wrapWithComments">true</param>
+      </result-type>
+      <result-type name="feed" class="org.topazproject.ambra.struts2.AmbraFeedResult"/>
+      <result-type name="citation" class="org.topazproject.ambra.struts2.CitationResult"/>
+    </result-types>
+
+    <interceptors>
+      <interceptor name="otmTransactionInterceptor" class="org.topazproject.ambra.struts2.TransactionInterceptor"/>
+      <interceptor name="journalSessionSetup" class="org.topazproject.ambra.journal.SessionFiltersInterceptor"/>
+      <interceptor name="ensureUserAccount" class="org.topazproject.ambra.user.EnsureUserAccountInterceptor"/>
+      <interceptor name="ensureAdmin" class="org.topazproject.ambra.user.EnsureRoleInterceptor"/>
+      <interceptor name="ambraUserLookup" class="org.topazproject.ambra.user.UserAccountsInterceptor"/>
+      <interceptor name="json" class="com.googlecode.jsonplugin.JSONInterceptor"/>
+
+      <interceptor-stack name="strutsBaseStack">
+        <interceptor-ref name="exception">
+          <param name="logEnabled">true</param>
+          <param name="logCategory">org.topazproject.ambra.UnhandledException</param>
+          <param name="logLevel">ERROR</param>
+        </interceptor-ref>
+        <interceptor-ref name="timer" />
+        <interceptor-ref name="logger"/>
+        <interceptor-ref name="alias"/>
+        <interceptor-ref name="servletConfig"/>
+        <interceptor-ref name="prepare"/>
+        <interceptor-ref name="i18n"/>
+        <interceptor-ref name="debugging"/>
+        <interceptor-ref name="modelDriven"/>
+        <interceptor-ref name="fileUpload"/>
+        <interceptor-ref name="staticParams"/>
+        <interceptor-ref name="params">
+          <param name="excludeParams">ticket</param>
+        </interceptor-ref>
+        <interceptor-ref name="conversionError"/>
+        <interceptor-ref name="validation">
+          <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
+        <interceptor-ref name="workflow">
+           <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
+      </interceptor-stack>
+
+      <interceptor-stack name="ambraBaseStack">
+        <interceptor-ref name="strutsBaseStack"/>
+        <interceptor-ref name="journalSessionSetup"/>
+        <interceptor-ref name="ambraUserLookup"/>
+      </interceptor-stack>
+
+      <interceptor-stack name="ambraUserStack">
+        <interceptor-ref name="ambraBaseStack" />
+        <interceptor-ref name="ensureUserAccount" />
+        <interceptor-ref name="otmTransactionInterceptor"/>
+      </interceptor-stack>
+
+      <interceptor-stack name="ambraAdminStack">
+        <interceptor-ref name="ambraUserStack" />
+        <interceptor-ref name="ensureAdmin" />
+      </interceptor-stack>
+
+      <interceptor-stack name="minimalStack">
+        <interceptor-ref name="logger"/>
+        <interceptor-ref name="timer"/>
+        <interceptor-ref name="servletConfig"/>
+      </interceptor-stack>
+    </interceptors>
+
+    <default-interceptor-ref name="ambraUserStack" />
+
+    <global-results>
+      <result name="new-profile" type="redirect-action">
+        <param name="actionName">prePopulateNewUser</param>
+        <param name="namespace">/user</param>
+      </result>
+      <result name="update-profile" type="redirect-action">
+        <param name="actionName">prePopulateNewUser</param>
+        <param name="namespace">/user</param>
+      </result>
+      <result name="role-insufficient" type="ambraFreemarker">
+        <param name="templateFile">/user/inSufficientRole.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/static/error.ftl</param>
+      </result>
+    </global-results>
+
+    <global-exception-mappings >
+      <exception-mapping exception="java.lang.Exception" result="error"/>
+    </global-exception-mappings>
+
+    <action name="logout" class="org.topazproject.ambra.action.LogoutAction">
+      <result type="redirect">/</result>
+    </action>
+
+    <action name="trackback" class="org.topazproject.ambra.action.TrackbackAction">
+      <result name="success">
+        <param name="location">/trackback/success.ftl</param>
+        <param name="contentType">application/xml</param>
+      </result>
+      <result name="error">
+        <param name="location">/trackback/error.ftl</param>
+        <param name="contentType">application/xml</param>
+      </result>
+    </action>
+
+    <action name="pageNotFound" class="org.topazproject.ambra.action.PageNotFoundAction">
+      <interceptor-ref name="minimalStack"/>
+      <result name="success" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="home" class="org.topazproject.ambra.action.HomePageAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/index.ftl</param>
+      </result>
+    </action>
+
+    <action name="recentArticles" class="org.topazproject.ambra.action.HomePageAction">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/recentArticles.ftl</param>
+      </result>
+    </action>
+
+    <action name="mostCommented" class="org.topazproject.ambra.action.HomePageAction">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/mostCommented.ftl</param>
+      </result>
+    </action>
+
+    <action name="mostViewed" class="org.topazproject.ambra.action.HomePageAction">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/mostViewed.ftl</param>
+      </result>
+    </action>
+
+    <action name="feedbackCreate" class="org.topazproject.ambra.action.FeedbackAction" method="executeRender">
+      <result type="ambraFreemarker">
+        <param name="templateFile">/feedback/feedbackEntry.ftl</param>
+      </result>
+    </action>
+
+    <action name="feedback" class="org.topazproject.ambra.action.FeedbackAction" method="executeSend">
+      <result name="error" type="ambraFreemarker">
+        <param name="templateFile">/feedback/feedbackEntry.ftl</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/feedback/feedbackEntry.ftl</param>
+      </result>
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/feedback/feedbackSuccess.ftl</param>
+      </result>
+    </action>
+
+    <action name="selectList" class="org.topazproject.ambra.action.ListingAction"/>
+
+  </package>
+
+  <package name="search2" extends="default" namespace="/search">
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="searchStart" class="org.topazproject.ambra.action.NoOpAction">
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchResults.ftl</param>
+      </result>
+    </action>
+
+    <action name="simpleSearch" class="org.topazproject.ambra.search2.action.SearchAction" method="executeSimpleSearch">
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchResults.ftl</param>
+      </result>
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchResults.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/static/searchError.ftl</param>
+      </result>
+    </action>
+
+    <action name="advancedSearch" class="org.topazproject.ambra.search2.action.SearchAction" method="executeUnformattedSearch">
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchUnformatted.ftl</param>
+      </result>
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchResults.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/static/searchError.ftl</param>
+      </result>
+    </action>
+
+    <action name="findAnArticleSearch" class="org.topazproject.ambra.search2.action.SearchAction" method="executeFindAnArticleSearch">
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchUnformatted.ftl</param>
+      </result>
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchResults.ftl</param>
+      </result>
+      <result name="redirectToArticle" type="redirect">${journalURL}/article/fetchArticle.action?articleURI=${articleURI}</result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/static/searchError.ftl</param>
+      </result>
+    </action>
+
+    <action name="listFacet" class="org.topazproject.ambra.search2.action.ListFacetAction" method="listFacet">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/search2/searchFacet.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/static/searchError.ftl</param>
+      </result>
+    </action>
+
+    <action name="indexAllArticlesUnprotected" class="org.topazproject.ambra.admin.action.IndexArticlesAction" method="indexAll">
+      <result name="success">/admin/allIndexedArticles.ftl</result>
+      <result name="error">/admin/indexAllArticlesFailed.ftl</result>
+    </action>
+
+  </package>
+
+  <package name="static" extends="default" namespace="/static">
+    <action name="*" class="org.topazproject.ambra.action.NoOpAction">
+      <interceptor-ref name="minimalStack"/>
+      <result name="success" type="ambraStaticFreemarker">
+        <param name="templateFile">/static/{1}.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="rate" extends="default" namespace="/rate">
+
+    <default-action-ref name="pageNotFound" />
+    <action name="getAverageRatings" class="org.topazproject.ambra.rating.action.GetAverageRatingsAction">
+      <result name="success">/WEB-INF/pages/article/articleRatings.ftl</result>
+      <result name="error">/WEB-INF/pages/article/articleRatings.ftl</result>
+    </action>
+    <action name="getUpdatedRatings" class="org.topazproject.ambra.rating.action.GetAverageRatingsAction">
+     <result name="success" type="ambraFreemarker">
+        <param name="location">/article/article_rhc_rating.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+    <action name="getUpdatedRatingsOnArticleMetricsTab" class="org.topazproject.ambra.rating.action.GetAverageRatingsAction">
+     <result name="success" type="ambraFreemarker">
+       <param name="location">/article/article_metrics_rating.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+    <action name="getArticleRatings" class="org.topazproject.ambra.rating.action.GetArticleRatingsAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/rating/index.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="rate-secure" extends="default" namespace="/rate/secure">
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="rateArticle" class="org.topazproject.ambra.rating.action.RateAction" method="rateArticle">
+      <result name="input" type="json"/>
+      <result name="success" type="json"/>
+      <result name="error" type="json"/>
+    </action>
+
+    <action name="createRatingFlagSubmit" class="org.topazproject.ambra.annotation.action.CreateFlagAction">
+      <result name="input"   type="json"/>
+      <result name="error"   type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="getRatingsForUser" class="org.topazproject.ambra.rating.action.RateAction" method="retrieveRatingsForUser">
+      <result name="input" type="json"/>
+      <result name="success" type="json"/>
+      <result name="error" type="json"/>
+    </action>
+  </package>
+
+  <package name="article" extends="default" namespace="/article">
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="emailArticle" class="org.topazproject.ambra.article.action.EmailArticleAction" method="executeRender">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/emailArticle.ftl</param>
+      </result>
+    </action>
+
+    <action name="findArticle" class="org.topazproject.ambra.article.action.FindArticleAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/findArticle.ftl</param>
+      </result>
+    </action>
+
+    <action name="emailThisArticleCreate" class="org.topazproject.ambra.article.action.EmailArticleAction" method="executeRender">
+      <result name="success">/emailArticle/emailArticle.ftl</result>
+    </action>
+
+    <action name="emailThisArticleSubmit" class="org.topazproject.ambra.article.action.EmailArticleAction" method="executeSend">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/emailSuccess.ftl</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/article/emailArticle.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticle" class="org.topazproject.ambra.article.action.FetchArticleAction" method="fetchArticle">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/article_body.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleComments" class="org.topazproject.ambra.article.action.FetchArticleAction" method="fetchArticleComments">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/article_comments.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCorrections" class="org.topazproject.ambra.article.action.FetchArticleAction" method="fetchArticleCorrections">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/article_comments.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleMetrics" class="org.topazproject.ambra.article.action.FetchArticleAction" method="fetchArticleMetrics">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/article_metrics.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchRelatedArticle" class="org.topazproject.ambra.article.action.FetchArticleAction" method="fetchArticleRelated">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/article_related.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCrossRef" class="org.topazproject.ambra.article.action.FetchArticleAction" method="fetchArticleCrossRef">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/article_crossref.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="slideshow" class="org.topazproject.ambra.article.action.SlideshowAction">
+      <result name="success" type="headless">
+        <param name="templateFile">/article/imageWindow.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="showImageLarge" class="org.topazproject.ambra.action.NoOpAction">
+      <result name="success" type="headless">
+        <param name="templateFile">/article/imageWindowLarge.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchObjectAttachment" class="org.topazproject.ambra.article.action.FetchObjectAction">
+      <result name="success" type="ambraStream">
+        <param name="isAttachment">true</param>
+      </result>
+    </action>
+
+    <action name="fetchFullDOIXML" class="org.topazproject.ambra.article.action.FetchObjectAction">
+      <param name="fullDOI">true</param>
+      <param name="representation">XML</param>
+      <result name="success" type="ambraStream">
+        <param name="isAttachment">true</param>
+      </result>
+    </action>
+
+    <action name="fetchObject" class="org.topazproject.ambra.article.action.FetchObjectAction">
+      <result name="success" type="ambraStream">
+        <param name="isAttachment">false</param>
+      </result>
+    </action>
+
+    <action name="fetchSingleRepresentation" class="org.topazproject.ambra.article.action.FetchObjectAction" method="fetchSingleRepresentation">
+      <result name="success" type="ambraStream">
+        <param name="isAttachment">true</param>
+      </result>
+    </action>
+
+    <action name="fetchAnnotatedArticle" class="org.topazproject.ambra.article.action.FetchArticleAction" method="displayAnnotatedArticle">
+      <result name="success">/article/displayArticle.ftl</result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchBody" class="org.topazproject.ambra.article.action.FetchArticleAction" method="fetchArticle">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/article/article_content.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="browse" class="org.topazproject.ambra.article.action.BrowseArticlesAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/browse.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="browseIssue" class="org.topazproject.ambra.article.action.BrowseIssueAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/browseIssue.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="browseVolume" class="org.topazproject.ambra.article.action.BrowseVolumeAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/browseVolume.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="citationList" class="org.topazproject.ambra.article.action.CreateCitation">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/citationList.ftl</param>
+      </result>
+    </action>
+    <action name="getRisCitation" class="org.topazproject.ambra.article.action.CreateCitation">
+      <result name="success" type="citation">
+        <param name="location">/article/ris.ftl</param>
+        <param name="contentType">text/plain</param>
+        <param name="fileExtension">.ris</param>
+      </result>
+    </action>
+    <action name="getBibTexCitation" class="org.topazproject.ambra.article.action.CreateCitation">
+      <result name="success" type="citation">
+        <param name="location">/article/bibtex.ftl</param>
+        <param name="contentType">text/plain</param>
+        <param name="fileExtension">.bib</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="article-feed" extends="default" namespace="/article/feed">
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="getFeed" class="org.topazproject.ambra.feed.action.FeedAction">
+      <result name="success" type="feed"/>
+      <result name="input" type="httpheader">
+        <param name="status">400</param><!-- Http status: Bad Request-->
+      </result>
+    </action>
+  </package>
+
+  <package name="annotation" extends="default" namespace="/annotation">
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="listAnnotation" class="org.topazproject.ambra.annotation.action.ListAnnotationAction">
+      <result name="success">/annotation/listAnnotation.ftl</result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="getFormalCorrections" class="org.topazproject.ambra.annotation.action.ListAnnotationAction" method="fetchFormalCorrections">
+      <result name="success" type="json">
+      	<param name="excludeProperties">advisors, callbacks, annotations</param>
+      </result>
+    </action>
+
+    <action name="getRetractions" class="org.topazproject.ambra.annotation.action.ListAnnotationAction" method="fetchRetractions">
+      <result name="success" type="json">
+      	<param name="excludeProperties">advisors, callbacks, annotations</param>
+      </result>
+    </action>
+
+    <action name="getAnnotation" class="org.topazproject.ambra.annotation.action.GetAnnotationAction">
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="listReply" class="org.topazproject.ambra.annotation.action.ListReplyAction">
+      <result name="success">/annotation/listReply.ftl</result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="listAllReplies" class="org.topazproject.ambra.annotation.action.ListReplyAction"
+      method="listAllReplies">
+      <result name="success">/annotation/listReply.ftl</result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="listThreadedReplies" class="org.topazproject.ambra.annotation.action.ListReplyAction"
+      method="listAllReplies">
+      <result name="success">/annotation/listThreadedReply.ftl</result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="listThread" class="org.topazproject.ambra.annotation.action.ListReplyAction" method="listAllReplies">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/discussion/discussion.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="getCommentary" class="org.topazproject.ambra.annotation.action.GetCommentaryAction" method="listComments">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/discussion/commentary.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="getCorrectionsCommentary" class="org.topazproject.ambra.annotation.action.GetCommentaryAction" method="listCorrections">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/discussion/corrections.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="listThreadRefresh" class="org.topazproject.ambra.annotation.action.ListReplyAction" method="listAllReplies">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/discussion/threaded_replies.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="getReply" class="org.topazproject.ambra.annotation.action.GetReplyAction">
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="listFlags" class="org.topazproject.ambra.annotation.action.ListFlagAction">
+      <result name="success">/annotation/listFlag.ftl</result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="getFlag" class="org.topazproject.ambra.annotation.action.GetFlagAction">
+      <result name="success" type="json"/>
+    </action>
+  </package>
+
+  <package name="annotation-secure" extends="default" namespace="/annotation/secure">
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="createAnnotation">
+      <result>/annotation/createAnnotation.ftl</result>
+    </action>
+
+    <action name="startDiscussion" class="org.topazproject.ambra.annotation.action.GetCommentaryAction" method="getArticleMetaInfo">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/discussion/startDiscussion.ftl</param>
+      </result>
+    </action>
+
+    <action name="createAnnotationSubmit" class="org.topazproject.ambra.annotation.action.CreateAnnotationAction">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="createDiscussionSubmit" class="org.topazproject.ambra.annotation.action.CreateAnnotationAction">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="setAnnotationPublic" class="org.topazproject.ambra.annotation.action.SetAnnotationPublicAction" method="executeSetAnnotationPublic">
+      <result name="input">/annotation/listAnnotation.ftl</result>
+      <result name="error">/annotation/listAnnotation.ftl</result>
+      <result name="success">/annotation/listAnnotation.ftl</result>
+    </action>
+
+    <action name="deleteAnnotation" class="org.topazproject.ambra.annotation.action.DeleteAnnotationAction" method="deleteAnnotation">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <action name="createReplySubmit" class="org.topazproject.ambra.annotation.action.CreateReplyAction">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="deleteReply" class="org.topazproject.ambra.annotation.action.DeleteReplyAction" method="deleteReplyWithId">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+    <!--TODO: not needed ?? -->
+    <action name="createFlag">
+      <result>/annotation/createFlag.ftl</result>
+    </action>
+
+    <action name="createAnnotationFlagSubmit" class="org.topazproject.ambra.annotation.action.CreateFlagAction">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="createReplyFlagSubmit" class="org.topazproject.ambra.annotation.action.CreateFlagAction">
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+      <result name="success" type="json"/>
+    </action>
+
+    <action name="deleteFlag" class="org.topazproject.ambra.annotation.action.DeleteFlagAction">
+      <result name="success" type="redirect">/home.action</result>
+    </action>
+
+  </package>
+
+  <package name="user-secure" extends="default" namespace="/user/secure">
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="secureRedirect" class="org.topazproject.ambra.action.RedirectAction">
+      <result type="redirect">
+        <param name="location">${goTo}</param>
+        <param name="prependServletContext">false</param>
+      </result>
+    </action>
+
+    <action name="getUserProfilePrivateFields" class="org.topazproject.ambra.user.action.DisplayUserAction" method="fetchUserProfileWithPrivateVisibility">
+      <result name="success">/user/displayPrivateFieldNames.ftl</result>
+    </action>
+
+    <action name="editAjaxAlerts" class="org.topazproject.ambra.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+      <result name="success"  type="ambraFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="retrieveUserAlerts" class="org.topazproject.ambra.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+      <result name="success">/user/alerts.ftl</result>
+      <result name="input">/user/alerts.ftl</result>
+    </action>
+
+    <action name="saveAjaxAlerts" class="org.topazproject.ambra.user.action.MemberUserAlertsAction" method="saveAlerts">
+      <result name="success"  type="ambraFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="input">type="ambraFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error">type="ambraFreemarker">
+        <param name="location">/user/alerts.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+     </action>
+
+    <action name="editProfile" class="org.topazproject.ambra.user.action.MemberUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="user">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+      <result name="input" type="user">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="editPrefsAlerts" class="org.topazproject.ambra.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+      <result name="success" type="user">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+      <result name="input" type="user">
+        <param name="templateFile">/user/editUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="editAjaxProfile" class="org.topazproject.ambra.user.action.MemberUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="saveAjaxProfile" class="org.topazproject.ambra.user.action.MemberUserProfileAction" method="executeSaveUser">
+      <result name="success" type="redirect-action">editAjaxProfile.action</result>
+      <result name="input" type="ambraFreemarker">
+        <param name="location">/user/user.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">500</param>
+        <param name="location">/static/error.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="saveProfile" class="org.topazproject.ambra.user.action.MemberUserProfileAction" method="executeSaveUser">
+      <result name="success" type="redirect">/user/secure/retrieveUserProfile.action </result>
+      <result name="input" type="user">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="retrieveUserProfile" class="org.topazproject.ambra.user.action.MemberUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="user">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+      <result name="input">/user/newUser.ftl</result>
+      <result name="error" type="user">
+        <param name="templateFile">/user/newUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="profile" class="org.topazproject.ambra.action.NoOpAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/user/profile.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="user" extends="default" namespace="/user">
+    <default-interceptor-ref name="ambraBaseStack" />
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="prePopulateNewUser" class="org.topazproject.ambra.user.action.MemberUserProfileAction" method="prePopulateUserDetails">
+      <result name="new-profile" type="user">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+      <result name="update-profile" type="user">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+      <result name="success" type="redirect">/</result>
+    </action>
+
+    <action name="createNewUser" class="org.topazproject.ambra.user.action.MemberUserProfileAction" method="executeSaveUser">
+      <result name="success" type="redirect">/user/secure/editPrefsAlerts.action?tabId=alerts</result>
+      <result name="input" type="user">
+        <param name="templateFile">/user/createNewUser.ftl</param>
+      </result>
+    </action>
+
+    <!-- TODO: not needed ??? -->
+    <action name="newUser">
+      <result>/user/newUser.ftl</result>
+    </action>
+
+    <action name="displayUser" class="org.topazproject.ambra.user.action.DisplayUserAction">
+      <result name="success">/user/displayUser.ftl</result>
+    </action>
+
+    <action name="showUser" class="org.topazproject.ambra.user.action.DisplayUserAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/user/displayUser.ftl</param>
+      </result>
+    </action>
+
+    <action name="displayUserAJAX" class="org.topazproject.ambra.user.action.DisplayUserAction">
+      <result name="success">/widget/userProfileTooltip.ftl</result>
+    </action>
+
+  </package>
+
+  <package name="admin" extends="default" namespace="/admin">
+    <default-interceptor-ref name="ambraAdminStack" />
+
+    <default-action-ref name="pageNotFound" />
+
+    <action name="adminTop" class="org.topazproject.ambra.admin.action.AdminTopAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="articleSyndicationHistory" class="org.topazproject.ambra.admin.action.ArticleSyndicationHistory">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/articleSyndicationHistory.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="reSyndicateArticle" class="org.topazproject.ambra.admin.action.ArticleSyndicationHistory" method="resyndicate">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/articleSyndicationHistory.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/articleSyndicationHistory.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="markSyndicationAsFailed" class="org.topazproject.ambra.admin.action.ArticleSyndicationHistory" method="markSyndicationAsFailed">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/articleSyndicationHistory.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/articleSyndicationHistory.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="deleteArticle" class="org.topazproject.ambra.admin.action.AdminTopAction" method="delete">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="ingestArchives" class="org.topazproject.ambra.admin.action.AdminTopAction" method="ingest">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+      
+    <action name="autoIngest" class="org.topazproject.ambra.admin.action.AdminTopAction" method="auto_ingest">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="processArticles" class="org.topazproject.ambra.admin.action.AdminTopAction" method="processArticles">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="resyndicateFailedArticles" class="org.topazproject.ambra.admin.action.AdminTopAction" method="resyndicateFailedArticles">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <!-- stay in adminTop even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/adminTop.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <action name="viewRating" class="org.topazproject.ambra.admin.action.ViewRatingAction">
+        <result name="success">/admin/viewRating.ftl</result>
+    </action>
+
+    <action name="viewReply" class="org.topazproject.ambra.annotation.action.GetReplyAction">
+        <result name="success">/admin/viewReply.ftl</result>
+    </action>
+
+    <action name="findUser" class="org.topazproject.ambra.user.action.SearchUserAction">
+        <result>/user/searchUser.ftl</result>
+    </action>
+
+    <action name="findUserByAuthId" class="org.topazproject.ambra.user.action.SearchUserAction" method="executeFindUserByAuthId">
+      <result name="success">/user/searchUser.ftl</result>
+      <result name="input">/user/searchUser.ftl</result>
+    </action>
+
+    <action name="findUserByAccountId" class="org.topazproject.ambra.user.action.SearchUserAction" method="executeFindUserByAccountId">
+      <result name="success">/user/searchUser.ftl</result>
+      <result name="input">/user/searchUser.ftl</result>
+    </action>
+
+    <action name="findUserByEmailAddress" class="org.topazproject.ambra.user.action.SearchUserAction" method="executeFindUserByEmailAddress">
+      <result name="success">/user/searchUser.ftl</result>
+      <result name="input">/user/searchUser.ftl</result>
+    </action>
+
+    <action name="findUserByName" class="org.topazproject.ambra.user.action.SearchUserAction" method="executeFindUserByName">
+      <result name="success">/user/searchUser.ftl</result>
+      <result name="input">/user/searchUser.ftl</result>
+    </action>
+
+    <action name="assignAdminRole" class="org.topazproject.ambra.user.action.AssignAdminRoleAction">
+      <result name="success">/user/searchUser.ftl</result>
+      <result name="input">/user/searchUser.ftl</result>
+    </action>
+
+    <action name="editProfileByAdmin" class="org.topazproject.ambra.user.action.AdminUserProfileAction" method="executeRetrieveUserProfile">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/user/user.ftl</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/user/user.ftl</param>
+      </result>
+    </action>
+
+    <action name="saveProfileByAdmin" class="org.topazproject.ambra.user.action.AdminUserProfileAction" method="executeSaveUser">
+      <result name="success" type="chain">
+        <param name="actionName">editProfileByAdmin</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/user/user.ftl</param>
+      </result>
+    </action>
+
+    <action name="retrieveUserAlertsByAdmin" class="org.topazproject.ambra.user.action.AdminUserAlertsAction" method="retrieveAlerts">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/user/alerts.ftl</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/user/alerts.ftl</param>
+      </result>
+    </action>
+
+    <action name="saveAlertsByAdmin" class="org.topazproject.ambra.user.action.AdminUserAlertsAction" method="saveAlerts">
+      <result name="success" type="chain">
+        <param name="actionName">retrieveUserAlertsByAdmin</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/user/alerts.ftl</param>
+      </result>
+    </action>
+
+    <!-- Navigate to the Manage Flags page without doing any processing of those flags -->
+    <action name="manageFlags" class="org.topazproject.ambra.admin.action.ManageFlagsAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/manageFlags.ftl</param>
+      </result>
+      <!-- stay in manageFlags even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/manageFlags.ftl</param>
+      </result>
+    </action>
+
+    <!-- Process the changes made to the flags on the Manage Flags page -->
+    <action name="processFlags" class="org.topazproject.ambra.admin.action.ManageFlagsAction" method="processFlags">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/manageFlags.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+      <!-- stay in manageFlags even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/manageFlags.ftl</param>
+        <param name="noCache">true</param>
+      </result>
+    </action>
+
+    <!-- Navigate to the Manage Annotation page without querying or showing an Annotation -->
+    <action name="manageAnnotation" class="org.topazproject.ambra.admin.action.ManageAnnotationAction">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/manageAnnotation.ftl</param>
+      </result>
+      <!-- stay in manageAnnotation even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/manageAnnotation.ftl</param>
+      </result>
+    </action>
+
+    <!-- Navigate to the Manage Annotation page and query/show the Annotation indicated by annotationId -->
+    <action name="manageAnnotationLoad" class="org.topazproject.ambra.admin.action.ManageAnnotationAction"
+      method="loadAnnotation">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/manageAnnotation.ftl</param>
+      </result>
+      <!-- stay in manageAnnotation even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/manageAnnotation.ftl</param>
+      </result>
+    </action>
+
+    <action name="manageAnnotationSave" class="org.topazproject.ambra.admin.action.ManageAnnotationAction"
+      method="saveAnnotation">
+      <result name="success" type="ambraFreemarker">
+        <param name="location">/admin/manageAnnotation.ftl</param>
+      </result>
+      <!-- stay in manageAnnotation even on error -->
+      <result name="error" type="ambraFreemarker">
+        <param name="location">/admin/manageAnnotation.ftl</param>
+      </result>
+    </action>
+
+    <action name="manageVirtualJournals" class="org.topazproject.ambra.admin.action.ManageVirtualJournalsAction">
+      <result name="success">/admin/manageVirtualJournals.ftl</result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/admin/manageVirtualJournals.ftl</param>
+      </result>
+    </action>
+
+    <action name="issueManagement" class="org.topazproject.ambra.admin.action.IssueManagementAction">
+      <result name="success">/admin/issueManagement.ftl</result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/admin/issueManagement.ftl</param>
+      </result>
+    </action>
+
+    <action name="volumeManagement" class="org.topazproject.ambra.admin.action.VolumeManagementAction">
+      <result name="success">/admin/volumeManagement.ftl</result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/admin/volumeManagement.ftl</param>
+      </result>
+    </action>
+
+    <action name="crossPubManagement" class="org.topazproject.ambra.admin.action.CrossPubManagementAction">
+      <result name="success">/admin/crossPubManagement.ftl</result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/admin/crossPubManagement.ftl</param>
+      </result>
+    </action>
+
+    <action name="manageCaches" class="org.topazproject.ambra.admin.action.ManageCachesAction">
+        <result name="success">/admin/manageCaches.ftl</result>
+    </action>
+    <action name="clearCacheWithAssistance"
+            class="org.topazproject.ambra.admin.action.ManageCachesAction"
+            method="clearCacheWithAssistance">
+      <result name="success">/admin/manageCaches.ftl</result>
+      <result name="input">/admin/manageCaches.ftl</result>
+    </action>
+
+    <action name="manageSearchIndexing" class="org.topazproject.ambra.admin.action.IndexArticlesAction">
+      <result name="success">/admin/indexArticle.ftl</result>
+    </action>
+
+    <action name="indexArticle" class="org.topazproject.ambra.admin.action.IndexArticlesAction" method="indexOne">
+      <result name="success">/admin/indexArticle.ftl</result>
+    </action>
+
+    <action name="indexAllArticles" class="org.topazproject.ambra.admin.action.IndexArticlesAction" method="indexAll">
+      <result name="success">/admin/allIndexedArticles.ftl</result>
+      <result name="error">/admin/indexAllArticlesFailed.ftl</result>
+    </action>
+
+  </package>
+
+</struts>

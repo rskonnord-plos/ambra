@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2006-2010 by Public Library of Science
+  http://plos.org
+  http://ambraproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+  <!-- creating all actions with the right injections -->
+  <bean class="org.topazproject.ambra.article.action.FetchArticleAction" />
+
+  <bean class="org.topazproject.ambra.article.action.FetchObjectAction"/>
+
+  <bean class="org.topazproject.ambra.article.action.SlideshowAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.CreateAnnotationAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.DeleteAnnotationAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.ListAnnotationAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.GetAnnotationAction" />
+
+  <bean class="org.topazproject.ambra.annotation.action.CreateReplyAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.ListReplyAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.DeleteReplyAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.GetReplyAction"/>
+  
+  <bean class="org.topazproject.ambra.user.action.MemberUserProfileAction"/>
+
+  <bean class="org.topazproject.ambra.user.action.AdminUserProfileAction"/>
+
+  <bean class="org.topazproject.ambra.user.action.MemberUserAlertsAction"/>
+
+  <bean class="org.topazproject.ambra.user.action.AdminUserAlertsAction"/>
+
+  <bean class="org.topazproject.ambra.user.action.AssignAdminRoleAction"/>
+
+  <bean class="org.topazproject.ambra.user.action.DisplayUserAction"/>
+
+  <bean class="org.topazproject.ambra.annotation.action.CreateFlagAction" />
+
+  <bean class="org.topazproject.ambra.annotation.action.GetFlagAction" />
+
+  <bean class="org.topazproject.ambra.annotation.action.DeleteFlagAction" />
+
+  <bean class="org.topazproject.ambra.annotation.action.ListFlagAction" />
+
+  <bean class="org.topazproject.ambra.search.action.SearchAction" />
+
+  <bean class="org.topazproject.ambra.user.action.SearchUserAction" />
+
+</beans>
