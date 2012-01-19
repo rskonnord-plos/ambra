@@ -1,0 +1,14 @@
+# $HeadURL::                                                                   $
+# $Id$
+
+PKG=topaz-mulgara
+
+# Register the mulgara service
+/sbin/chkconfig --add topaz-mulgara
+
+# Create symbolic link in /usr/local/topaz
+LINK=/usr/local/topaz/$PKG
+rm -f $LINK
+DIR=`ls -td /usr/local/topaz/*"$PKG"-* 2>/dev/null | head -1`
+[ -n "$DIR" ] && ln -s `basename $DIR` $LINK
+exit 0

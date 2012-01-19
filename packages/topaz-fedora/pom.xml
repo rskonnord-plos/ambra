@@ -1,0 +1,214 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.ambraproject.packages</groupId>
+  <artifactId>topaz-fedora</artifactId>
+  <version>1.5</version>
+  <packaging>pom</packaging>
+  <name>topaz-fedora</name>
+
+  <parent>
+    <groupId>org.ambraproject.packages</groupId>
+    <artifactId>packages</artifactId>
+    <version>1.5</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.ambraproject</groupId>
+      <artifactId>fedora</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <!-- The following is tied to <id> and <format> in assembly.xml and to the fedora <version> -->
+    <fedora.home>${project.build.directory}/${project.build.finalName}-topaz-fedora.dir/${artifactId}-${version}/fedora-2.1.1</fedora.home>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+
+      <!-- stupid maven bug http://jira.codehaus.org/browse/MNG-2258, and the stupid
+           developers can't get their asses in gear and fix it!!! So can't do this.
+           Instead, the postinstall script does this.
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <chmod perm="755">
+                  <fileset dir="${fedora.home}">
+                    <include name="**/bin/*" />
+                  </fileset>
+                </chmod>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      -->
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>rpm</id>
+      <build>
+        <plugins>
+          
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions><execution><id>attach-rpm</id></execution></executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rpm-maven-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>rpm</goal>
+                </goals>
+              </execution>
+            </executions>
+
+            <configuration>
+              <mappings>
+                <mapping>
+                  <directory>/usr/local/topaz/${project.build.finalName}</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                  <sources>
+                    <source>
+                      <location>${fedora.home}</location>
+                      <excludes>
+                        <exclude>META-INF/**</exclude>
+                        <exclude>fedora-2.1.1/client/demo/**</exclude>
+                        <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/fop/**</exclude>
+                        <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/imagemanip/**</exclude>
+                        <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/saxon/**</exclude>
+                        <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/userdocs/**</exclude>
+                        <exclude>fedora-2.1.1/server/userdocs/**</exclude>
+                      </excludes>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/local/topaz/${project.build.finalName}/server/jakarta-tomcat-5.0.28/common/classes</directory>
+                  <filemode>644</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                  <sources>
+                    <source>
+                      <location>src/main/resources/log4j.xml</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/local/topaz/${project.build.finalName}/server/jakarta-tomcat-5.0.28/common/classes</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/etc/topaz</directory>
+                  <configuration>true</configuration>
+                  <filemode>644</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                  <sources>
+                    <source>
+                      <location>src/main/resources/fedora.fcfg</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/etc/topaz</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/etc/rc.d/init.d/</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>src/main/scripts/topaz-fedora</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/var/log/topaz</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/var/log/topaz/fedora</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/usr/share/doc/topaz</directory>
+                  <documentation>true</documentation>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/var/lib/topaz</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/var/lib/topaz/data</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/var/lib/topaz/data/fedora</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/usr/local/topaz</directory>
+                  <filemode>755</filemode>
+                  <username>topaz</username>
+                  <groupname>topaz</groupname>
+                </mapping>
+              </mappings>
+
+              <preinstallScript>src/main/scripts/preinstall</preinstallScript>
+              <postinstallScript>src/main/scripts/postinstall</postinstallScript>
+              <preremoveScript>src/main/scripts/preremove</preremoveScript>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
