@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicyId="deny-all"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+
+  <Description>
+    No permissions.
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <Rule RuleId="denyAll" Effect="Deny"/>
+  
+  <Obligations>
+    <Obligation ObligationId="log" FulfillOn="Deny">
+      <AttributeAssignment AttributeId="policy" 
+        DataType="http://www.w3.org/2001/XMLSchema#string">deny-all</AttributeAssignment>
+    </Obligation>
+  </Obligations>
+
+</Policy>

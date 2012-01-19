@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+  <packaging>war</packaging>
+  <name>Shared Topaz Webservice Webapp code</name>
+
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-common</artifactId>
+    <version>0.5-rc7</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-server</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>ws-permissions-impl</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>cas</groupId>
+      <artifactId>casclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

@@ -1,0 +1,171 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject.packages</groupId>
+  <artifactId>cas</artifactId>
+  <packaging>pom</packaging>
+  <name>cas</name>
+
+  <parent>
+    <groupId>org.topazproject.packages</groupId>
+    <artifactId>packages</artifactId>
+    <version>0.5-rc7</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.plos</groupId>
+      <artifactId>plos-registration-webapp</artifactId>
+      <version>${pom.version}</version>
+      <type>war</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>ecqs</artifactId>
+      <version>2.0.6-1-t7</version>
+      <type>jar</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject.packages</groupId>
+      <artifactId>packages</artifactId>
+      <version>${pom.version}</version>
+      <type>tar.gz</type>
+      <classifier>tomcat-common</classifier>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <!-- the ecqs tomcat. cas web-app is extracted from here -->
+    <ecqs-tomcat>esup-cas-quick-start-2.0.6-1/jakarta-tomcat-5.0.28</ecqs-tomcat>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.topazproject.plugins</groupId>
+        <artifactId>ant-tasks</artifactId>
+        <configuration>
+          <ECQS_INSTALL_DIR>${project.build.directory}</ECQS_INSTALL_DIR>
+          <ecqs-version>2.0.6-1-t7</ecqs-version>
+        </configuration>
+
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>ecqs-install</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rpm-maven-plugin</artifactId>
+
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>rpm</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <configuration>
+          <release>rc7</release>
+          <copyright>Educational Community License version 1.0</copyright>
+          <distribution>Topaz Repository Framework</distribution>
+          <group>Applications/Internet</group>
+
+          <mappings>
+            <mapping>
+              <directory>/usr/local/topaz</directory>
+              <filemode>755</filemode>
+              <username>topaz</username>
+              <groupname>topaz</groupname>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/topaz/${project.build.finalName}-tomcat</directory>
+              <filemode>755</filemode>
+              <username>topaz</username>
+              <groupname>topaz</groupname>
+              <sources>
+                <source>
+                  <!-- The following is tied to <id> and <format> in assembly.xml -->
+                  <location>${project.build.directory}/${project.build.finalName}-tomcat.dir</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/usr/share/doc/topaz</directory>
+              <documentation>true</documentation>
+              <filemode>755</filemode>
+              <username>topaz</username>
+              <groupname>topaz</groupname>
+            </mapping>
+            <mapping>
+              <directory>/etc/topaz</directory>
+              <configuration>true</configuration>
+              <filemode>644</filemode>
+              <username>topaz</username>
+              <groupname>topaz</groupname>
+              <sources>
+                <source>
+                  <location>src/main/resources/nonJmxApplicationContext.xml</location>
+                </source>
+              </sources>
+            </mapping>
+            <!-- warn: this should be after the file mapping -->
+            <mapping>
+              <directory>/etc/topaz</directory>
+              <configuration>true</configuration>
+              <filemode>755</filemode>
+              <username>topaz</username>
+              <groupname>topaz</groupname>
+            </mapping>
+            <mapping>
+              <directory>/var/log/topaz</directory>
+              <filemode>755</filemode>
+              <username>topaz</username>
+              <groupname>topaz</groupname>
+            </mapping>
+            <mapping>
+              <directory>/etc/rc.d/init.d/</directory>
+              <filemode>755</filemode>
+              <username>root</username>
+              <groupname>root</groupname>
+              <sources>
+                <source>
+                  <location>src/main/scripts/cas</location>
+                </source>
+              </sources>
+            </mapping>
+          </mappings>
+
+          <requires>
+            <require>topaz-tools</require>
+          </requires>
+
+          <preinstallScript>src/main/scripts/preinstall</preinstallScript>
+          <postinstallScript>src/main/scripts/postinstall</postinstallScript>
+          <preremoveScript>src/main/scripts/preremove</preremoveScript>
+          <postremoveScript>src/main/scripts/postremove</postremoveScript>
+          <verifyScript>src/main/scripts/verify</verifyScript>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </build>
+</project>

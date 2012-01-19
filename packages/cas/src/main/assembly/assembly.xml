@@ -1,0 +1,65 @@
+<assembly>
+  <id>tomcat</id>
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.bug_workaround.build.directory}/${ecqs-tomcat}/webapps/cas</directory>
+      <outputDirectory>/webapps/cas</outputDirectory>
+      <excludes>
+        <exclude>WEB-INF/LoggerConf.xml</exclude>
+        <exclude>WEB-INF/classes/log4j.xml</exclude>
+        <exclude>WEB-INF/lib/log4j-1.2.8.jar</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <!-- Copy over webapp specific server.xml file -->
+    <file>
+      <source>src/main/resources/server.xml</source>
+      <outputDirectory>conf</outputDirectory>
+      <destName>server.xml</destName>
+    </file>
+    <!-- Copy over webapp specific context.xml file -->
+    <file>
+      <source>src/main/resources/context.xml</source>
+      <outputDirectory>conf</outputDirectory>
+    </file>
+    <!-- Copy over webapp specific log4j.xml file -->
+    <file>
+      <source>src/main/resources/LoggerConf.xml</source>
+      <outputDirectory>webapps/cas/WEB-INF</outputDirectory>
+      <destName>LoggerConf.xml</destName>
+    </file>
+    <!-- Copy over webapp specific log4j.properties file -->
+    <file>
+      <source>src/main/resources/plos-registration-log4j.xml</source>
+      <outputDirectory>common/classes</outputDirectory>
+      <destName>log4j.xml</destName>
+    </file>
+  </files>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/webapps/</outputDirectory>
+      <outputFileNameMapping>plos-registration</outputFileNameMapping>
+      <unpack>true</unpack>
+      <includes>
+        <include>org.plos:plos-registration-webapp</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <includes>
+        <include>org.topazproject.packages:*</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

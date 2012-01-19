@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>topazproject-libs</artifactId>
+  <version>0.5-rc7</version>
+  <packaging>pom</packaging>
+  <name>TopazProject Libs</name>
+  
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>topazproject</artifactId>
+    <version>0.5-rc7</version>
+  </parent>
+
+  <modules>
+    <module>jetty-jaas-cas</module>
+    <module>tomcat-jaas-cas</module>
+    <module>filter-resolver</module>
+    <module>string-compare-resolver</module>
+    <module>conf-helper</module>
+    <module>auth-helper</module>
+    <module>mulgara-client</module>
+    <module>mulgara-service</module>
+    <module>resource-indexer</module>
+    <module>fedora-client</module>
+    <module>jdk2log4j-proxy</module>
+    <module>dom-ranges-helper</module>
+    <module>fedora-security</module>
+    <module>fedora-patches</module>
+    <module>entity-resolver</module>
+  </modules>
+</project>

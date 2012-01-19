@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  - Copyright (c) 2006 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<config>
+  <topaz>
+    <user-accounts>
+      <pdpName>_default_</pdpName>
+    </user-accounts>
+    <user-roles>
+      <pdpName>_default_</pdpName>
+    </user-roles>
+  </topaz>
+</config>

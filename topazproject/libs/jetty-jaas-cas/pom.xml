@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>jetty-jaas-cas</artifactId>
+  <packaging>jar</packaging>
+  <version>0.5-rc7</version>
+  <name>Jetty JAAS plugin for CAS</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>topazproject-libs</artifactId>
+    <version>0.5-rc7</version>
+  </parent>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>cas</groupId>
+      <artifactId>casclient</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>org.mortbay.jaas</artifactId>
+      <version>5.1.9</version>
+    </dependency>
+
+  </dependencies>
+
+</project>

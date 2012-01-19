@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-impl</artifactId>
+  <packaging>jar</packaging>
+  <name>Permissions Implementation</name>
+
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-permissions</artifactId>
+    <version>0.5-rc7</version>
+  </parent>
+
+  <licenses>
+    <license>
+      <name>Educational Community License version 1.0</name>
+      <url>http://opensource.org/licenses/ecl1.php</url>
+    </license>
+  </licenses>
+
+  <dependencies>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-api</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-common-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2</version>
+    </dependency>
+  </dependencies>
+
+</project>

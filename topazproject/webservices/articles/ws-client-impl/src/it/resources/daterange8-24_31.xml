@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<articles>
+  <article>
+    <uri>info:doi/10.1371/journal.pbio.0020317</uri>
+    <title>Submission of Microarray Data to Public Repositories</title>
+    <description><p>The Microarray Gene Expression Data Society believe that the time is right for journals to require that microarray data be deposited in public repositories, as a condition for publication</p></description>
+    <date>2004-08-31</date>
+    <authors>
+      <author>Alvis Brazma</author>
+      <author>Catherine A Ball</author>
+      <author>Chris Stoeckert</author>
+      <author>Gavin Sherlock</author>
+      <author>Helen Causton</author>
+      <author>Helen Parkinson</author>
+      <author>John C Matese</author>
+      <author>John Quackenbush</author>
+      <author>Joseph White</author>
+      <author>Martin Ringwald</author>
+      <author>Neil Winegarden</author>
+      <author>Pascal Hingamp</author>
+      <author>Paul Spellman</author>
+      <author>Ron Edgar</author>
+      <author>Ronald Taylor</author>
+      <author>Steve Chervitz</author>
+      <author>Susanna-Assunta Sansone</author>
+      <author>Yoshio Tateno</author>
+    </authors>
+    <categories>
+      <category>Bioinformatics</category>
+      <category>Genetics</category>
+    </categories>
+    <subjects>
+      <subject>Bioinformatics/Computational Biology</subject>
+      <subject>Genetics/Genomics/Gene Therapy</subject>
+    </subjects>
+  </article>
+  <article>
+    <uri>info:doi/10.1371/journal.pbio.0020294</uri>
+    <title>Regulation of Muscle Fiber Type and Running Endurance by PPAR </title>
+    <description>
+				<p>Engineered expression of the peroxisome proliferator-activated receptor   in skeletal muscle increases type I muscle fibers allowing the modified mice to run twice the distance of wild-type littermates</p>
+			</description>
+    <date>2004-08-24</date>
+    <authors>
+      <author>Chun-Li Zhang</author>
+      <author>Corinne R Bayuga-Ocampo</author>
+      <author>Helen K Cho</author>
+      <author>Heonjoong Kang</author>
+      <author>Jungyeob Ham</author>
+      <author>Michael C Nelson</author>
+      <author>Ronald M Evans</author>
+      <author>Ruth T Yu</author>
+      <author>Yong-Xu Wang</author>
+    </authors>
+    <categories>
+      <category>Bioengineering</category>
+      <category>Biotechnology</category>
+      <category>Cell Biology</category>
+      <category>Development</category>
+      <category>Molecular Biology</category>
+      <category>Physiology</category>
+    </categories>
+    <subjects>
+      <subject>Bioengineering</subject>
+      <subject>Biotechnology</subject>
+      <subject>Cell Biology</subject>
+      <subject>Development</subject>
+      <subject>Molecular Biology/Structural Biology</subject>
+      <subject>Physiology</subject>
+    </subjects>
+  </article>
+</articles>

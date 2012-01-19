@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+"http://java.sun.com/dtd/web-app_2_3.dtd">
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<web-app>
+  <display-name>Axis Archetype Web Service</display-name>
+  <filter>
+    <filter-name>CAS Filter</filter-name>
+    <!-- 
+    <filter-class>edu.yale.its.tp.cas.client.filter.CASValidateFilter</filter-class>
+    -->
+    <filter-class>org.topazproject.cas.client.filter.CASValidateFilterWrapper</filter-class>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
+      <param-value>https://localhost:7443/cas/proxyValidate</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.serverName</param-name>
+      <param-value>localhost:8080</param-value>
+    </init-param>
+    <!-- This will be unused if CAS is unused: -->
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.proxyCallbackUrl</param-name>
+      <param-value>/CasProxyServlet</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.wrapRequest</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>User Accounts Filter</filter-name>
+    <filter-class>org.topazproject.ws.users.filter.UserAccountsFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>CAS Filter</filter-name>
+    <url-pattern>/services/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>User Accounts Filter</filter-name>
+    <url-pattern>/services/*</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <listener-class>org.topazproject.bootstrap.MasterWebAppListener</listener-class>
+  </listener>
+  
+  <!-- Axis Web Service -->
+  <listener>
+    <listener-class>org.apache.axis.transport.http.AxisHTTPSessionListener</listener-class>
+  </listener>
+  
+  <servlet>
+    <servlet-name>AxisServlet</servlet-name>
+    <display-name>Apache-Axis Servlet</display-name>
+    <servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>ProxyTicketReceptor</servlet-name>
+    <!--
+    <servlet-class>edu.yale.its.tp.cas.proxy.ProxyTicketReceptor</servlet-class>
+    -->
+    <servlet-class>org.topazproject.cas.proxy.ProxyTicketReceptorWrapper</servlet-class>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.proxyUrl</param-name>
+      <param-value>https://localhost:7443/cas/proxy</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name> 
+    <url-pattern>/services/*</url-pattern> 
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ProxyTicketReceptor</servlet-name>
+    <url-pattern>/CasProxyServlet</url-pattern>
+  </servlet-mapping>
+  <!-- 
+  currently the W3C havent settled on a media type for WSDL;
+  http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
+  for now we go with the basic 'it's XML' response 
+  --> 
+  <mime-mapping>
+    <extension>wsdl</extension> 
+    <mime-type>text/xml</mime-type> 
+  </mime-mapping>
+  <mime-mapping>
+    <extension>xsd</extension> 
+    <mime-type>text/xml</mime-type> 
+  </mime-mapping>
+</web-app>
