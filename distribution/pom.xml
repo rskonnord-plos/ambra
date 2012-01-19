@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.ambraproject</groupId>
+  <artifactId>topaz-distribution</artifactId>
+  <version>0.9.5.0.1</version>
+  <packaging>pom</packaging>
+  <name>Topaz Distribution</name>
+  
+  <parent>
+    <groupId>org.ambraproject</groupId>
+    <artifactId>journal-publishing-system</artifactId>
+    <version>0.9.5.0.1</version>
+  </parent>
+
+  <!-- Dependencies here are specifically for building jar-with-dependencies.
+       So specify just enough to get everything transitively.
+  -->
+  <dependencies>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>otm-extras</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>string-compare-resolver</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>            
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>bin</id>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/main/assembly/assembly-bin.xml</descriptor>
+              </descriptors>
+              <finalName>topaz-${project.version}</finalName>
+              <workDirectory>${project.build.directory}/assembly/bin</workDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>src</id>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/main/assembly/assembly-src.xml</descriptor>
+              </descriptors>
+              <finalName>topaz-${project.version}</finalName>
+              <workDirectory>${project.build.directory}/assembly/src</workDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jar</id>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${basedir}/src/main/assembly/assembly-jar.xml</descriptor>
+              </descriptors>
+              <finalName>topaz-${project.version}</finalName>
+              <workDirectory>${project.build.directory}/assembly/jar</workDirectory>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>      
+</project>
