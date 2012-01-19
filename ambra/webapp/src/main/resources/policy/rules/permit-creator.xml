@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2007-2009 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicyId="permit-creator"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+
+  <Description>
+    Allow the dc:creator all permissions.
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <Rule RuleId="permitDcCreator" Effect="Permit">
+
+    <Target>
+      <AnyTarget/>
+    </Target>
+
+    <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+      <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+        AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"/>   
+      <Apply FunctionId ="urn:topazproject:names:tc:xacml:1.0:function:cached-bag">
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">permit-creator</AttributeValue>  
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only">
+          <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#anyURI"
+            AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>   
+        </Apply>
+        <Apply FunctionId ="urn:topazproject:names:tc:xacml:1.0:function:query:itql">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">topaz.services.itql</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">
+            <![CDATA[
+            select $s from <?>
+             where ($r <dc:creator> $s or $r <topaz:anonymousCreator> $s) 
+               and ($r <mulgara:is> <?>
+                or  $r <topaz:propagate-permissions-to> <?> in <?>);
+            ]]>
+          </AttributeValue>
+          <AttributeValue
+            DataType="http://www.w3.org/2001/XMLSchema#string">local:///topazproject#filter:graph=ri</AttributeValue>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only">
+            <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#anyURI"
+              AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>   
+          </Apply>
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only">
+            <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#anyURI"
+              AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"/>   
+          </Apply>
+          <AttributeValue
+            DataType="http://www.w3.org/2001/XMLSchema#string">local:///topazproject#filter:graph=pp</AttributeValue>
+        </Apply>
+      </Apply> 
+    </Condition>
+
+  </Rule>
+
+  <Obligations>
+    <Obligation ObligationId="log" FulfillOn="Permit">
+      <AttributeAssignment AttributeId="policy" 
+        DataType="http://www.w3.org/2001/XMLSchema#string">permit-creator</AttributeAssignment>
+    </Obligation>
+  </Obligations>
+
+</Policy>

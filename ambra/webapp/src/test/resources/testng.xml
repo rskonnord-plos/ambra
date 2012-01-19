@@ -1,0 +1,46 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Ambra Tests" parallel="tests" verbose="2">
+  <test name="Admin Tests">
+    <classes>
+      <class name="org.topazproject.ambra.admin.action.ProcessFlagsActionTest"/>
+      <class name="org.topazproject.ambra.admin.service.CitationServiceTest"/>
+      <class name="org.topazproject.ambra.admin.service.DocumentManagementServiceTest"/>
+    </classes>
+  </test>
+  <test name="Article Tests">
+    <classes>
+      <class name="org.topazproject.ambra.article.action.BrowseArticlesActionTest"/>
+      <class name="org.topazproject.ambra.article.service.BrowseServiceTest"/>
+      <class name="org.topazproject.ambra.article.action.CreateCitationTest"/>
+    </classes>
+  </test>
+  <test name="Annotation Tests">
+    <classes>
+      <class name="org.topazproject.ambra.annotation.service.AnnotationServiceTest"/>
+      <class name="org.topazproject.ambra.annotation.service.AnnotatorTest"/>
+    </classes>
+  </test>
+  <test name="Web Tests">
+    <classes>
+      <class name="org.topazproject.ambra.web.HttpResourceServerTest"/>
+    </classes>
+  </test>
+  <test name="Util Tests">
+    <classes>
+      <class name="org.topazproject.ambra.util.ArticleFormattingDirectiveTest"/>
+      <class name="org.topazproject.ambra.util.SimpleTextDirectiveTest"/>
+      <class name="org.topazproject.ambra.util.ProfanityCheckingServiceTest"/>
+      <class name="org.topazproject.ambra.util.TextUtilsTest"/>
+      <class name="org.topazproject.ambra.util.DateParserTest"/>
+      <class name="org.topazproject.ambra.util.FileUtilsTest"/>
+      <class name="org.topazproject.ambra.util.ArticleXMLUtilsTest"/>
+      <class name="org.topazproject.ambra.util.XPointerUtilsTest"/>
+    </classes>
+  </test>
+  <test name="Search Tests">
+    <classes>
+      <!-- <class name="org.topazproject.ambra.search.action.SearchActionTest"/> -->
+      <class name="org.topazproject.ambra.search.service.SearchServiceTest"/>
+    </classes>
+  </test>
+</suite>
