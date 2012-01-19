@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <!-- Define defaults for spring - must be redone soon -->
+  <hostname>${hosts.plosone}</hostname>
+  <mailhost>${hosts.mailhost}</mailhost>
+  <server>
+    <plosone>${hosts.plosone}:${ports.plosone}</plosone>
+    <cas>${hosts.cas}:${ports.cas-ssl}</cas>
+    <search>${hosts.plosone}:${ports.plosone}</search>
+    <mulgara>${hosts.mulgara}:${ports.mulgara}</mulgara>
+  </server>
+  <homesite>${hosts.default}</homesite>
+  <service>
+    <!-- This may need to be mucked with to be just one -->
+    <search>${topaz.fedoragsearch.urls.url}</search>
+  </service>
+  <ingest>
+    <source>/var/spool/plosone/ingestion-queue</source>
+    <destination>/var/spool/plosone/ingested</destination>
+  </ingest>
+  <crossref>
+    <plos>
+      <doiurl>http://dx.plos.org/</doiurl>
+      <email>deposit@plos.org</email>
+    </plos>
+    <login>one</login>
+    <!-- This is a dummy password -->
+    <password>xxxxx</password>
+    <area>test</area>
+    <sendToXref>false</sendToXref>
+    <post><url>http://doi.crossref.org/servlet/deposit?operation=doMDUpload&amp;login_id=${crossref.login}&amp;login_passwd=${crossref.password}&amp;area=${crossref.area}</url></post>
+  </crossref>
+  <itql><uri>http://${server.mulgara}/mulgara-service/services/ItqlBeanService</uri></itql>
+  <email><feedback>webmaster@plos.org</feedback></email>
+  <!-- Temporary default for /etc/topaz/plosone.xml -->
+  <hosts><mailhost>${hosts.default}</mailhost></hosts>
+
+  <single-box-hostname>localhost</single-box-hostname>
+  <cas>
+    <hostname>${single-box-hostname}</hostname>
+    <port>
+      <https>7443</https>
+    </port>
+    <url>
+      <base>https://${cas.hostname}:${cas.port.https}/cas</base>
+      <login>${cas.url.base}/login</login>
+      <logout>${cas.url.base}/logout</logout>
+      <proxy-receptor>${cas.url.base}/proxy</proxy-receptor>
+      <proxy-validate>${cas.url.base}/proxyValidate</proxy-validate>
+    </url>
+  </cas>
+  <plosone>
+    <hostname>${single-box-hostname}</hostname>
+    <port>
+      <http>8080</http>
+      <https>10443</https>
+    </port>
+    <app-context>/plosone-webapp</app-context>
+    <resource-sub-dir></resource-sub-dir>
+    <host>${plosone.hostname}:${plosone.port.http}</host>
+    <url>               
+      <proxy-callback>https://${plosone.hostname}:${plosone.port.https}${plosone.app-context}/CasProxyServlet</proxy-callback>
+    </url>              
+  </plosone>
+  <plos-registration>
+    <hostname>${cas.hostname}</hostname>
+    <app-context>/plos-registration</app-context>
+    <url>
+      <base>https://${plos-registration.hostname}:${cas.port.https}${plos-registration.app-context}</base>
+      <registration>${plos-registration.url.base}/register.action</registration>
+      <change-password>${plos-registration.url.base}/changePassword.action</change-password>
+      <change-email>${plos-registration.url.base}/changeEmail.action</change-email>
+    </url>
+  </plos-registration>
+</config>

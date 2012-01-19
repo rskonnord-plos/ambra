@@ -1,0 +1,50 @@
+.rating{ background: #fff url(../images/pone_ratings_bg2.gif) repeat-x bottom; }
+
+#ratingAverages { display: none; }
+
+.pone_rating { width:100px; height:15px; left: 8em; top: -1.25em; font-weight: normal; overflow:hidden; }
+.pone_rating,
+.pone_rating a:hover,
+.pone_rating a:active,
+.pone_rating a:focus,
+.pone_rating .current-rating { background-image: url(../images/pone_rating.gif);	line-height: 15px;	height: 15px; }
+.pone_rating .current-rating { background-position: left bottom; display: block; }
+.pone_rating .average-rating { left: -20px; }
+.pone_rating .overall-rating { left: -20px; padding-left: 0; }
+.pone_rating .pct0 { width: 0%;	}
+.pone_rating .pct10 { width: 10%;	}
+.pone_rating .pct20 { width: 20%;	}
+.pone_rating .pct30 { width: 30%;	}
+.pone_rating .pct40 { width: 40%;	}
+.pone_rating .pct50 { width: 50%;	}
+.pone_rating .pct60 { width: 60%;	}
+.pone_rating .pct70 { width: 70%;	}
+.pone_rating .pct80 { width: 80%;	}
+.pone_rating .pct90 { width: 90%;	}
+.pone_rating .pct100 { width: 100%;	}
+span.inlineRatingEnd { left: 0; top: 0; }
+
+/* apply class original to the original posting of either a discussio or annotation on the directory page */
+div.ratingComment	{ margin: 20px 0 5px 0!important; border-top-width: 1px; margin-top:20px!important; }
+div.ratingComment div.hd { background: url(../images/pone_toolbar_bg.gif) repeat-x bottom; }
+div.ratingComment div.toolbar a { cursor: pointer; }
+div.ratingComment div.ratingDetail	{ background: #fff; margin: 0; padding: 5px 10px 0 10px; font-style: normal; border: 1px solid #ccc; border-width: 1px 0 1px 2px;  }
+
+div.hd ol.ratingAvgs { margin: 0 }
+div.hd ol.ratingAvgs li { padding-left: 0; }
+div.hd ol.ratingAvgs label { font-size: 90%; }
+div.hd ol.ratingAvgs li ul { top: -17px; left: 20px; }
+div.hd span.detail { padding-left: 5px; font-weight: normal; font-size: 95%; }
+div.hd span.detail a { font-weight: bold; }
+
+div.ratingDetail ol.ratingAvgs li { padding-left: 0; }
+div.ratingDetail ol.ratingAvgs label { font-size: 90%; }
+div.ratingDetail ol.ratingAvgs li ul { top: -17px; left: 7em; }
+div.ratingDetail blockquote { background: none!important; border: 0!important; padding: 0!important; margin: 0!important; }
+
+div.rsep { margin-top: 10px;  margin-right: -5px; padding: 0; border: none; background: #fff; }
+
+
+.inline-rating { margin: 11px 85px -11px -85px; }
+/* This is a hack for Safari.  This needs to go last because any instruction after this next line will be ignored  */
+.inline-rating { margin: auto;# }

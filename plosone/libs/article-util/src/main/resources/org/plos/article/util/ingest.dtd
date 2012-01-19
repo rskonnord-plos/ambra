@@ -1,0 +1,114 @@
+<!--
+  - This is the DTD for describing actions for the ingester to take. This includes the fedora
+  - objects (and their datastreams) to create, the RDF statements to insert, and permissions to
+  - create. The result of processing the zip description (see zip.dtd) must generate a document
+  - conforming to this; because DTD's are not namespace aware, and because arbitrary child
+  - elements are allowed in DC, RELS-EXT, and RDF elements, the result is not expected to
+  - actually validate against this DTD.
+  -->
+
+<!ELEMENT ObjectList (Object | RDF)* >
+<!ATTLIST ObjectList
+    articleId   CDATA  #REQUIRED
+    logMessage  CDATA  #IMPLIED >
+
+<!ELEMENT Object (DC?, RELS-EXT?, Datastream*) >
+<!ATTLIST Object
+    pid            CDATA          #REQUIRED
+    cModel         CDATA          #IMPLIED
+    label          CDATA          #IMPLIED
+    doIndex        CDATA          #IMPLIED
+    state          (Active | Inactive | Deleted) "Active" >
+
+<!ELEMENT DC ANY >
+<!-- Each child describes a dublic-core attribute, with the child's name being the attribute's
+     name and the child's text being the attribute's value. Children must in be in the
+     http://www.openarchives.org/OAI/2.0/oai_dc/ or http://purl.org/dc/elements/1.1/ namespace.
+     Examples:
+
+       <!ATTLIST DC  xmlns:dc CDATA #FIXED "http://purl.org/dc/elements/1.1/">
+       <!ELEMENT dc:title   (#PCDATA) >
+       <!ELEMENT dc:creator (#PCDATA) >
+  -->
+
+<!ELEMENT RELS-EXT ANY >
+<!-- Each child describes an RDF statement, with the child's name being the predicate and
+     the child's text being the object (basic XML serialization of RDF). Children must NOT
+     in be in the http://www.openarchives.org/OAI/2.0/oai_dc/ or http://purl.org/dc/elements/1.1/
+     namespace. Examples:
+
+       <!ATTLIST RELS-EXT
+           xmlns:rdf   CDATA #FIXED "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           xmlns:topaz CDATA #FIXED "http://rdf.topazproject.org/RDF/">
+
+       <!ELEMENT rdf:type      (EMPTY) >
+       <!ATTLIST rdf:type rdf:resource CDATA #REQUIRED >
+       <!ELEMENT topaz:keyword (#PCDATA) >
+  -->
+
+<!ELEMENT rdf:RDF ANY >
+<!ATTLIST rdf:RDF
+    xmlns:rdf  CDATA  #FIXED "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    rdf:about  CDATA  #REQUIRED
+    model      (ri | articles | annotations | users | grants | revokes | pp | preferences | profiles | ratings | alerts | xsd | ANY) "ri" >
+<!-- This contains RDF/XML. Example:
+
+       <!ATTLIST rdf:RDF
+           xmlns:topaz CDATA #FIXED "http://rdf.topazproject.org/RDF/">
+
+       <!ELEMENT rdf:Description      (rdf:type) >
+       <!ATTLIST rdf:Description rdf:about CDATA #REQUIRED >
+       <!ELEMENT rdf:type      (EMPTY) >
+       <!ATTLIST rdf:type rdf:resource CDATA #REQUIRED >
+  -->
+
+<!ENTITY % dsattrs
+ "id           CDATA          #REQUIRED
+  state        (Active | Inactive | Deleted) 'Active'
+  controlGroup (External | Redirected | Managed | XML ) #REQUIRED
+  mimeType     CDATA          #REQUIRED
+  label        CDATA          #IMPLIED
+  altIds       CDATA          #IMPLIED
+  formatUri    CDATA          #IMPLIED
+ ">
+
+<!ELEMENT Datastream ANY >
+<!ATTLIST Datastream
+    contLoc  CDATA  #IMPLIED
+    %dsattrs; >
+<!-- Either a contLoc attribute OR a content must be provided, but not both. contLoc
+     is a URI, interpreted relative to the zip (input doc).
+  -->
+
+<!-- Example:
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ObjectList SYSTEM "fedora.dtd">
+<ObjectList>
+  <Object pid="doi:10.1371/journal.pbio.42.1"/>
+
+  <Object pid="doi:10.1371/journal.pbio.42" cModel="Journal">
+    <DC xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <dc:title>The mechanics of X</dc:title>
+      <dc:creator>Joe D. Maggio</dc:creator>
+    </DC>
+    <RELS-EXT xmlns:topaz="http://rdf.topazproject.org/RDF/">
+      <topaz:keyword>Yummy</topaz:keyword>
+      <topaz:keyword>Dummy</topaz:keyword>
+    </RELS-EXT>
+    <Datastream filename="pmc.xml" id="PMC" controlGroup="XML" mimeType="text/xml"
+                label="Article Definition"/>
+    <Datastream filename="10.1371/j42.pdf" id="PPDF" controlGroup="Managed"
+                mimeType="application/pdf" label="PDF rendered version"/>
+  </Object>
+
+  <RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about="doi:10.1371/journal.pbio.42" 
+        xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:topaz="http://rdf.topazproject.org/RDF/">
+      <topaz:keyword>Yummy</topaz:keyword>
+      <topaz:keyword>Dummy</topaz:keyword>
+      <dc:title>The mechanics of X</dc:title>
+      <dc:creator>Joe D. Maggio</dc:creator>
+    </rdf:Description>
+  </RDF>
+</ObjectList>
+-->

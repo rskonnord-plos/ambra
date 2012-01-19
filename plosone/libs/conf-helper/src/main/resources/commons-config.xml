@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+  <override> <!-- Configuration declarations with override semantics -->
+    <!-- Allow command-line overrides etc. (eg. -Dtopaz.services.fedora.uri=xxx) -->
+    <system/>
+    <!-- Allow administrator overrides -->
+    <xml fileName="file:///etc/topaz/plosone.xml" optional="true"/>
+  </override>
+  <additional> <!-- Configuration declarations that form a union configuration -->
+    <!-- Shared defaults if no admin overrides -->
+    <xml fileName="plosone-config-defaults.xml"/>
+    <!-- Web-app specific defaults if no admin overrides -->
+    <xml fileName="plosone-config.xml" optional="true"/>
+  </additional>
+</configuration>

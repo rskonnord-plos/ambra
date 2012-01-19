@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PolicySet xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicySetId="test-set"
+  PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:first-applicable">
+
+  <Description>
+    A policy that allows integration tests to go thru.
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <PolicyIdReference>deny-disabled</PolicyIdReference>
+
+  <PolicyIdReference>permit-admin</PolicyIdReference>
+
+  <!-- <PolicyIdReference>deny-inactive</PolicyIdReference> -->
+
+  <PolicyIdReference>deny-revokes</PolicyIdReference>
+
+  <PolicyIdReference>permit-grants</PolicyIdReference>
+
+  <PolicyIdReference>permit-creator</PolicyIdReference>
+
+  <PolicyIdReference>permit-self</PolicyIdReference>
+
+  <PolicyIdReference>permitted-anonymous-operations</PolicyIdReference>
+ 
+  <PolicyIdReference>permitted-user-operations</PolicyIdReference>
+
+  <PolicyIdReference>permit-bootstrap</PolicyIdReference>
+
+  <PolicyIdReference>permit-all</PolicyIdReference>
+
+</PolicySet>

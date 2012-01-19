@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <target name="get-svnext">
+    <!-- Define extension for svn -->
+    <condition property="svnext" value="">
+      <os family="unix"/>
+    </condition>
+    <condition property="svnext" value=".exe">
+      <os family="windows"/>
+    </condition>
+    <property name="svnext" value=""/>
+  </target>
+
+  <target name="svninfo" depends="get-svnext">
+    <dirname property="outputPath.dir" file="${outputPath}"/>
+    <mkdir dir="${outputPath.dir}"/>
+
+    <echo message="svnversion: " file="${outputPath}" append="false"/>
+    <exec dir="${directory}" executable="svnversion${svnext}" output="${outputPath}" append="true">
+      <arg line="."/>
+    </exec>
+    <exec dir="${directory}" executable="svn${svnext}" output="${outputPath}" append="true">
+      <arg line="info"/>
+    </exec>
+  </target>
+</project>

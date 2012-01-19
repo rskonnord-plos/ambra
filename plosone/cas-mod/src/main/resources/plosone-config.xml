@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  - Copyright (c) 2006 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<config>
+  <cas>
+    <db>
+      <driver>org.postgresql.Driver</driver>
+      <url>jdbc:postgresql://localhost/plosdb</url>
+      <user>plosone</user>
+      <password>loot2_debonAir</password>
+
+      <initialSize>2</initialSize>
+      <maxActive>10</maxActive>
+
+      <connectionValidationQuery>select 1</connectionValidationQuery>
+      <guidToUsernameSql>select loginname from plos_user where id=?</guidToUsernameSql>
+      <usernameToGuidSql>select id from plos_user where lower(loginname)=lower(?)</usernameToGuidSql>
+    </db>
+  </cas>
+</config>

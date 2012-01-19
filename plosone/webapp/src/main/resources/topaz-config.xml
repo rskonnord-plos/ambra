@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  - Copyright (c) 2006 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<config>
+  <topaz>
+    <life-cycle-listeners>
+      <listener name="init-permissions-model">org.plos.bootstrap.permissions.WebAppListenerInitPermissionsModel</listener>
+    </life-cycle-listeners>
+    <permissions>
+      <pdpName>_default_</pdpName>
+      <impliedPermissions>
+        <permission uri="annotations:getAnnotationInfo">
+          <implies uri="urn:fedora:names:fedora:2.1:action:id-getDatastreamDissemination"/>
+        </permission>
+        <permission uri="annotations:getReplyInfo">
+          <implies uri="urn:fedora:names:fedora:2.1:action:id-getDatastreamDissemination"/>
+        </permission>
+        <permission uri="annotations:deleteAnnotation">
+          <implies uri="urn:fedora:names:fedora:2.1:action:purgeObject"/>
+        </permission>
+        <permission uri="annotations:deleteReply">
+          <implies uri="urn:fedora:names:fedora:2.1:action:purgeObject"/>
+        </permission>
+      </impliedPermissions>
+    </permissions>
+    <ratings>
+      <pdpName>_default_</pdpName>
+    </ratings>
+    <users>
+      <pdpName>_default_</pdpName>
+    </users>
+    
+    <life-cycle-listeners>
+      <listener name="models">org.plos.bootstrap.WebAppListenerInitModels</listener>
+      <listener name="ehcache">net.sf.ehcache.constructs.web.ShutdownListener</listener>
+    </life-cycle-listeners>
+  </topaz>
+</config>

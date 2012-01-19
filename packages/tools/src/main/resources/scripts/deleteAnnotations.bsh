@@ -1,0 +1,57 @@
+// ***************************************************************************************
+// *************** Disable xacml on topaz (comment out the pdpName sections in /etc/topaz/topaz.xml)
+// ***************************************************************************************
+// ***************************************************************************************
+// *************** REPLACE /home/pradeep/.m2/repository WITH YOUR REPOSITORY PATH ********
+// ***************************************************************************************
+addClassPath("/usr/local/topaz/lib/axis-1.4.jar");
+addClassPath("/usr/local/topaz/lib/axis-jaxrpc-1.4.jar");
+addClassPath("/usr/local/topaz/lib/axis-wsdl4j-1.5.1.jar");
+addClassPath("/usr/local/topaz/lib/axis-saaj-1.4.jar");
+addClassPath("/usr/local/topaz/lib/commons-logging-1.0.jar");
+addClassPath("/usr/local/topaz/lib/commons-discovery-0.2.jar");
+addClassPath("/usr/local/topaz/lib/jrdf-0.3.4.jar");
+addClassPath("/usr/local/topaz/lib/mulgara-client-0.6.jar");
+addClassPath("/usr/local/topaz/lib/auth-helper-0.6.jar");
+addClassPath("/usr/local/topaz/lib/ws-common-api-0.6.jar");
+addClassPath("/usr/local/topaz/lib/ws-annotation-api-0.6.jar");
+addClassPath("/usr/local/topaz/lib/ws-annotation-client-impl-0.6.jar");
+addClassPath("/usr/local/topaz/lib/activation-1.0.2.jar");
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import java.rmi.RemoteException;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+
+import javax.xml.rpc.ServiceException;
+
+import org.topazproject.ws.annotation.AnnotationClientFactory;
+import org.topazproject.ws.annotation.Annotations;
+import org.apache.axis.client.Stub;
+
+
+// *********************** CONFIGURE THESE *****************
+String serviceUri = "http://plostopaz01.localdomain:8008/ws-annotation-webapp/services/AnnotationServicePort";
+//String articleUri = "doi://...";
+String articleUri = "info:doi/10.1371/journal.pone.0000000";
+// ********************************************************
+
+  Annotations service = AnnotationClientFactory.create(serviceUri);
+
+  Stub stub = (Stub) service;
+  stub.setTimeout(360000);
+
+  annotations = service.listAnnotations(null, articleUri, null);
+
+ for (int idx = 0; idx < annotations.length; idx++)
+      service.deleteAnnotation(annotations[idx].getId(),true);

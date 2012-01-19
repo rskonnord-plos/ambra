@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright (c) 2006 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<archetype>
+  <id>webservice</id>
+  <sources>
+    <source>api/src/main/java/XYZ.java</source>
+    <source>impl/src/main/java/XYZImpl.java</source>
+    <source>impl/src/main/java/XYZPEP.java</source>
+    <source>ws-server-impl/src/main/java/XYZServicePortSoapBindingImpl.java</source>
+    <source>ws-client-impl/src/main/java/XYZClientFactory.java</source>
+  </sources>
+  <testSources>
+    <source>ws-client-impl/src/it/java/XYZServiceTest.java</source>
+  </testSources>
+  <resources>
+    <resource>pom.xml</resource>
+    <resource>api/pom.xml</resource>
+    <resource>impl/pom.xml</resource>
+    <resource>ws-client-impl/pom.xml</resource>
+    <resource>ws-server-impl/pom.xml</resource>
+    <resource>ws-webapp/pom.xml</resource>
+    <resource>ws-webapp/src/main/webapp/WEB-INF/topaz-config.xml</resource>
+    <resource>ws-webapp/src/main/stylesheets/server-config.xslt</resource>
+  </resources>
+</archetype>
