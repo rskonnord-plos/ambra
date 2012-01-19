@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# This script needs to be run from head (or the top of a suitable branch)
+
+# These two variables are all that should be modified
+toVer="0.8.1-SNAPSHOT"
+toPatch="-t00801-SNAPSHOT"
+
+# Compute the current version strings
+fromVer=`groovy -e 'print new XmlSlurper().parse(new File("pom.xml")).version'`
+fromPatch=`groovy -e 'print new XmlSlurper().parse(new File("pom.xml")).profiles.profile.build.plugins.plugin.executions.execution.configuration."fedora-version".toString().replaceAll(/.*-t/, "-t")'`
+
+# Find all the poms we want to update
+declare -a poms
+poms=(`find . -name pom.xml -print -o -name target -prune -o -name install -prune`)
+declare -a topatch
+topatch=(
+    pom.xml
+    plosone/search/fedoragsearch-server/pom.xml
+    plosone/search/ws-server-impl/pom.xml
+    plosone/search/topaz-lucene-impl/pom.xml
+    build/ant-tasks-plugin/src/main/scripts/ecqs.mojos.xml
+    build/ant-tasks-plugin/src/main/scripts/fedora.mojos.xml
+    re-package/fedora/pom.xml
+    re-package/ecqs/pom.xml
+    packages/cas/pom.xml
+    packages/fedora/pom.xml
+)
+
+echo "Updating ${#poms[@]} poms from $fromVer to $toVer"
+echo "Updating/patching ${#topatch[@]} files from $fromPatch to $toPatch"
+
+# Verify user wants to continue
+read -p "Continue (y/n)? " ans
+[[ "$ans" != y* ]] && exit 1
+
+# Update all our poms
+for f in ${poms[@]}; do
+  echo "Updating $f to $toVer"
+  perl -p -i -e "s/$fromVer/$toVer/g" "$f"
+done
+
+# Change the patch versions in specific files
+for f in ${topatch[@]}; do
+  echo "Patching $f to $toPatch"
+  perl -p -i -e "s/$fromPatch/$toPatch/g" "$f"
+done

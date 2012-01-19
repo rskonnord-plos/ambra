@@ -1,0 +1,32 @@
+#!/bin/sh
+
+p5="0\\.8-SNAPSHOT"
+r5="0.8-rc1"
+pt="-t00800-SNAPSHOT"
+rt="-t00800"
+rel="1"
+
+for f in \
+    pom.xml \
+    plosone/search/fedoragsearch-server/pom.xml \
+    plosone/search/ws-server-impl/pom.xml \
+    plosone/search/topaz-lucene-impl/pom.xml \
+    build/ant-tasks-plugin/src/main/scripts/ecqs.mojos.xml \
+    build/ant-tasks-plugin/src/main/scripts/fedora.mojos.xml \
+    re-package/fedora/pom.xml \
+    re-package/ecqs/pom.xml \
+    packages/cas/pom.xml \
+    packages/fedora/pom.xml \
+  ; do
+  perl -p -i -e "s/$pt/$rt/g" "$f"
+done
+
+# edit these
+#    plosone/search/ws-server-impl/pom.xml
+#    packages/cas/pom.xml \
+
+perl -p -i -e "s/struts\.devMode=true/struts\.devMode=false/g" plosone/webapp/src/main/webapp/WEB-INF/classes/struts.properties
+
+for f in packages/*/pom.xml ; do
+  perl -p -i -e "s/<release>.*?<\/release>/<release>$rel<\/release>/g" "$f"
+done

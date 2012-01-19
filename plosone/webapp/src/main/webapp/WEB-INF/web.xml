@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+  <display-name>PLoS ONE</display-name>
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/propertyConfigurer.xml /WEB-INF/countryList.xml /WEB-INF/profaneWords.xml /WEB-INF/applicationContext.xml</param-value>
+  </context-param>
+
+  <filter>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+  </filter>
+
+  <filter>
+    <description>Sets the virtual journal context.
+Should be 1st in the chain as other Filters, e.g. caching, may rely on the journal context.</description>
+    <filter-name>VirtualJournalContextFilter</filter-name>
+    <filter-class>org.plos.web.VirtualJournalContextFilter</filter-class>
+  </filter>
+
+  <filter>
+    <description>Should immeadiately follow VirtualJournalContext in Filter chain.
+If a virtual journal context is set, check to see if requested resource has a virtual journal override.
+If so, wrap request with virtual journal override values in FilterChain.</description>
+    <filter-name>VirtualJournalMappingFilter</filter-name>
+    <filter-class>org.plos.web.VirtualJournalMappingFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>Member Session</filter-name>
+    <filter-class>org.plos.web.InitializeSessionOnLoginFilter</filter-class>
+  </filter>
+
+<!--
+  <filter>
+    <filter-name>DebuggingFilter</filter-name>
+    <filter-class>org.plos.web.DebuggingFilter</filter-class>
+  </filter>
+-->
+
+  <filter>
+    <filter-name>DummySSOFilter</filter-name>
+    <filter-class>org.plos.web.DummySSOFilter</filter-class>
+    <!-- uncomment these if you want to be logged in by default when you start the server
+    <init-param>
+      <param-name>auth.id</param-name>
+      <param-value>foo</param-value>
+    </init-param>
+    <init-param>
+      <param-name>email</param-name>
+      <param-value>foobar@b.com</param-value>
+    </init-param>
+    -->
+    <init-param>
+      <param-name>casUrl</param-name>
+      <param-value>https://localhost:7443/cas/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>wrapRequest</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>CAS Filter</filter-name>
+    <filter-class>org.plos.cas.client.filter.CASFilterWrapper</filter-class>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
+      <param-value>https://localhost:7443/cas/login</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
+      <param-value>https://localhost:7443/cas/proxyValidate</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.serverName</param-name>
+      <param-value>localhost:8080</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.proxyCallbackUrl</param-name>
+      <param-value>https://localhost:10443/plosone-webapp/CasProxyServlet</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.wrapRequest</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>struts2</filter-name>
+    <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>CacheFilter</filter-name>
+    <filter-class>com.opensymphony.oscache.web.filter.CacheFilter</filter-class>
+    <init-param>
+        <param-name>time</param-name>
+        <param-value>-1</param-value>
+    </init-param>
+    <init-param>
+        <param-name>scope</param-name>
+        <param-value>application</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>VirtualJournalContextFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>VirtualJournalMappingFilter</filter-name>
+    <url-pattern>/css/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>VirtualJournalMappingFilter</filter-name>
+    <url-pattern>/images/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>VirtualJournalMappingFilter</filter-name>
+    <url-pattern>/javascript/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>VirtualJournalMappingFilter</filter-name>
+    <url-pattern>/static/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+
+  <!--
+  <filter-mapping >
+    <filter-name>DebuggingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+-->
+  <filter-mapping >
+    <filter-name>DummySSOFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>CAS Filter</filter-name>
+<!-- <url-pattern>/*</url-pattern>-->
+    <url-pattern>/annotation/secure/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>CAS Filter</filter-name>
+    <url-pattern>/user/secure/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>CAS Filter</filter-name>
+    <url-pattern>/rate/secure/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>CAS Filter</filter-name>
+    <url-pattern>/admin/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Member Session</filter-name>
+    <url-pattern>/annotation/secure/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Member Session</filter-name>
+    <url-pattern>/user/secure/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Member Session</filter-name>
+    <url-pattern>/rate/secure/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Member Session</filter-name>
+    <url-pattern>/admin/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+
+  <filter-mapping>
+    <filter-name>CacheFilter</filter-name>
+    <url-pattern>/article/fetchAnnotatedArticle.action</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>CacheFilter</filter-name>
+    <url-pattern>/article/fetchObject.action</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>struts2</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+
+  <!-- The configuration WebAppListner to pull in the configuration stuff automatically. -->
+  <listener>
+    <listener-class>org.plos.configuration.WebAppListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.plos.bootstrap.WebAppListenerInitModels</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.plos.bootstrap.permissions.WebAppListenerInitPermissionsModel</listener-class>
+  </listener>
+
+  <!-- to hook in the spring container -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- to hook in the scope management system that provides scopes like session, request for Servlet 2.4 and Spring 2.0 above  -->
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>freemarker</servlet-name>
+    <servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class>
+
+    <!-- FreemarkerServlet settings: -->
+    <init-param>
+      <param-name>TemplatePath</param-name>
+      <param-value>/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>NoCache</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ContentType</param-name>
+      <param-value>text/html</param-value>
+    </init-param>
+
+    <!-- FreeMarker settings: -->
+    <init-param>
+      <param-name>template_update_delay</param-name>
+      <param-value>0</param-value><!-- 0 is for development only! Use higher value otherwise. -->
+    </init-param>
+    <init-param>
+      <param-name>default_encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>output_encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>number_format</param-name>
+      <param-value>0.##########</param-value>
+    </init-param>
+
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+
+  <servlet>
+    <servlet-name>ProxyTicketReceptor</servlet-name>
+    <servlet-class>org.plos.cas.proxy.ProxyTicketReceptorWrapper</servlet-class>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.proxyUrl</param-name>
+      <param-value>https://localhost:7443/cas/proxy</param-value>
+    </init-param>
+    <!--     <load-on-startup>1</load-on-startup>-->
+  </servlet>
+
+   <servlet-mapping>
+    <servlet-name>freemarker</servlet-name>
+    <url-pattern>*.ftl</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ProxyTicketReceptor</servlet-name>
+    <url-pattern>/CasProxyServlet</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <error-page>
+    <error-code>404</error-code>
+    <location>/static/pageNotFound.action</location>
+  </error-page>
+</web-app>

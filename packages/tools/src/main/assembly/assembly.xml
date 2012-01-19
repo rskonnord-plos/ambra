@@ -1,0 +1,32 @@
+<assembly>
+  <id>tools</id> <!-- This is really a classifier -->
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/lib</outputDirectory>
+      <includes>
+        <include>*:jar</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/scripts</outputDirectory>
+      <unpack>true</unpack>
+      <outputFileNameMapping></outputFileNameMapping>
+      <includes>
+        <include>org.plosone:plosone-scripts:jar:scripts</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

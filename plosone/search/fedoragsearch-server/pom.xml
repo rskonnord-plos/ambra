@@ -1,0 +1,144 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>info.fedora</groupId>
+  <artifactId>fedoragsearch-server</artifactId>
+  <packaging>jar</packaging>
+  <version>2.1.1-t00800</version>
+  <name>fedoragsearch server implementation</name>
+  <url>http://defxws2006.cvt.dk/fedoragsearch/</url>
+
+  <repositories>
+    <repository>
+      <id>topaz</id>
+      <name>Maven 2 Repository for Topaz</name>
+      <url>http://gandalf.topazproject.org/maven2</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>topaz</id>
+      <name>Maven 2 Repository for Topaz</name>
+      <url>http://gandalf.topazproject.org/maven2</url>
+    </pluginRepository>
+  </pluginRepositories>
+  
+  <distributionManagement>
+    <repository>
+      <id>topaz</id>
+      <url>http://gandalf.topazproject.org/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>logkit</groupId>
+          <artifactId>logkit</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>info.fedora</groupId>
+      <artifactId>fedora-client</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>lucene</groupId>
+      <artifactId>lucene-demos</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>0.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  
+  <properties>
+    <wsdl.filename>fedoragsearch-service.wsdl</wsdl.filename>
+  </properties>
+  
+  <build>
+    <plugins>
+
+      <!-- Generate wsdl -->
+      <plugin>
+<!--        <groupId>org.codehaus.mojo</groupId> -->
+        <groupId>org.topazproject.patch.plugin</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <version>1.1-t1</version>
+        <executions>
+          <execution>
+            <id>generate-wsdl</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>java2wsdl</goal>
+            </goals>
+            <configuration>
+              <implementationClassName>FedoraGenericSearchServiceImplementation</implementationClassName>
+              <filename>${wsdl.filename}</filename>
+              <all>true</all>
+              <namespace>server.fedoragsearch.defxws.dk</namespace>
+              <servicePortName>FedoraGenericSearchServicePort</servicePortName>
+              <location>http://localhost/service-location</location>
+              <classesDirectory>${project.build.directory}/classes</classesDirectory>
+              <classOfPortType>dk.defxws.fedoragsearch.server.Operations</classOfPortType>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Copy .wsdl so that it will end up in .jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <configuration>
+              <tasks>
+                <copy todir="${project.build.directory}/classes" file="${project.build.directory}/generated-sources/axistools/java2wsdl/${wsdl.filename}" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>

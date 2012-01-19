@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<pluginMetadata>
+  <mojos>
+    <mojo>
+      <goal>build-and-test</goal>
+
+      <call>build-and-test</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Builds and installs all of topaz. Designed for use by continuum.
+      </description>
+
+      <parameters>
+        <parameter>
+          <name>BASEDIR</name>
+          <property>BASEDIR</property>
+          <required>true</required>
+          <defaultValue>${basedir}</defaultValue>
+          <expression>${BASEDIR}</expression>
+          <type>java.lang.String</type>
+          <description>Project basedir</description>
+        </parameter>
+        <parameter>
+          <name>topazproject.install.dir</name>
+          <property>topazproject.install.dir</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+          <expression>${topazproject.install.dir}</expression>
+          <type>java.lang.String</type>
+          <description>Project install dir</description>
+        </parameter>
+      </parameters>
+
+    </mojo>
+  </mojos>
+</pluginMetadata>

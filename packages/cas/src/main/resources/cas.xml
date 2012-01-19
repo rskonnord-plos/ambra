@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  This file is a template. It contains many configuration parameters you may want to change.
+  However, there are even more configuration parameters that can be tuned. To get a list of
+  all of these, see documentation. (Or, failing that, most defaults are configured in
+  webapps at WEB-INF/classes/defaults.xml. Though it is possible that there are
+  even more - see ConfigurationStore documentation.)
+-->
+<config>
+  <network>
+    <!-- This network section defines the hosts and ports used to talk to the services
+         the publishing system uses.
+
+         Note to developers: Please do not use anything from the network section directly
+         in code. Instead define something in your own namespace and reference that. Doing
+         so allows more flexibility if re-factoring the network topology later.
+
+         With the exception of the "webhead", most services run as web-applications within
+         a J2EE container (usually tomcat). Multiple containers can run on the same host
+         by listening on different ports. In fact, the default configuration is to run
+         each container on different ports regardless so that additional configuration
+         change is not required when running containers separately or on the same host.
+         The publishing system uses the following web-applications:
+          * cas          - Handles user authentication for the publishing system
+          * default      - This is the webhead that runs apache. See wiki for more info.
+          * mailhost     - The machine to send mail via. Usually just localhost if a
+                           mail server is running.
+    -->
+    <hosts>
+      <!-- Set hosts.default to FQHN (not localhost) for a singleboxinstall
+           (or to webhead FQHN for multibox install) -->
+      <cas>localhost</cas> <!-- could set <default> instead, but this is more specific -->
+      <mailhost>localhost</mailhost>
+      <default>localhost</default> <!-- Address of webhead (or plosone if no webhead) -->
+    </hosts>
+    <ports>
+      <!-- There are 4 protocols that the publishing system uses:
+            * http    - The default protocol
+            * TLS/SSL - When communication needs to be secure
+            * RMI     - An java specific RPC protocol (to be uses soon)
+            * mail    - The SMTP protocol
+
+          Ports are defined as either "host-protocol" or just "host" if the protocol is http.
+          If defining a port that is http, if the value would be 80, leave it blank.
+          If defining a port that is https, if the value would be 443, leave it blank.
+      -->
+      <!-- If using port 443, set cas-ssl to empty -->
+      <cas-ssl>7443</cas-ssl>
+      <!-- If 80, set default to empty (and/or update registration.plosone.url below) -->
+      <default>8080</default>
+    </ports>
+  </network>
+
+  <cas>
+    <!-- The following entries defnine how the java webapp talk to the database.
+         For example, talking to postgresql, you need the database name at the end of the url
+         The user and password are for the database as well. -->
+    <db>
+      <user>casuser</user>                         <!-- database user name -->
+      <password>caspass</password>                 <!-- database user password -->
+      <url>jdbc:postgresql://localhost/casdb</url> <!-- jdbc url - VERIFY DB NAME at end -->
+      <driver>org.postgresql.Driver</driver>       <!-- jdbc driver to use -->
+    </db>
+  </cas>
+
+  <registration>
+    <from-email>registration@your-org</from-email> <!-- From address in registration emails -->
+    <from-name>My Org Registration</from-name>     <!-- Name of from user in reg emails -->
+    <context>/plos-registration</context>          <!-- Directory of webapp -->
+    <plosone> <!-- Location of publishing app so links in registration work -->
+      <context></context> <!-- directory of publishing app -->
+      <!-- URL of publicly accessible publishing app (webhead if there is one) -->
+      <url>http://${network.hosts.default}:${network.ports.default}</url>
+    </plosone>
+  </registration>
+</config>
