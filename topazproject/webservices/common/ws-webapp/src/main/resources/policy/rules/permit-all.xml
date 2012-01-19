@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicyId="permit-all"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+
+  <Description>
+    All permissions.
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <Rule RuleId="permitAll" Effect="Permit"/>
+  
+  <Obligations>
+    <Obligation ObligationId="log" FulfillOn="Permit">
+      <AttributeAssignment AttributeId="policy" 
+        DataType="http://www.w3.org/2001/XMLSchema#string">permit-all</AttributeAssignment>
+    </Obligation>
+  </Obligations>
+
+</Policy>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<authentication debug="on">
+  <handler>
+    <classname>org.plos.auth.handler.PlosAuthDatabaseHandler</classname>
+    <config>
+      <table>${esup-casgeneric.auth.plos.table}</table>
+      <login_column>${esup-casgeneric.auth.plos.login-column}</login_column>
+      <password_column>${esup-casgeneric.auth.plos.password-column}</password_column>
+      <verify_column>${esup-casgeneric.auth.plos.verify-column}</verify_column>
+      <encryption>${esup-casgeneric.auth.plos.encryption}</encryption>
+      <encoding_charset>${esup-casgeneric.auth.plos.encoding-charset}</encoding_charset>
+    </config>
+  </handler>
+</authentication>
