@@ -1,0 +1,173 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>ambra-article-util</artifactId>
+  <packaging>jar</packaging>
+  <name>Ambra Article Utilities</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>ambra-libs</artifactId>
+    <version>0.9</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon-dom</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>entity-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>conf-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>ambra-util</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo.groovy</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>add-manifest</id>
+      <build>
+        <defaultGoal>groovy:execute</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo.groovy</groupId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <configuration>
+              <source>
+                import org.topazproject.ambra.article.util.AddManifest
+                AddManifest.main "${args}"
+              </source>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>fix-article</id>
+      <build>
+        <defaultGoal>groovy:execute</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo.groovy</groupId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <configuration>
+              <source>
+                import org.topazproject.ambra.article.util.FixArticle
+                FixArticle.main "${args}"
+              </source>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>process-images</id>
+      <build>
+        <defaultGoal>groovy:execute</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo.groovy</groupId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <configuration>
+              <source>
+                import org.topazproject.ambra.article.util.ProcessImages
+                ProcessImages.main "${args}"
+              </source>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>validate</id>
+      <build>
+        <defaultGoal>groovy:execute</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo.groovy</groupId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <configuration>
+              <source>
+                import org.topazproject.ambra.article.util.ValidateSIP
+                ValidateSIP.main "${args}"
+              </source>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>prepare-sip</id>
+      <build>
+        <defaultGoal>groovy:execute</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo.groovy</groupId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <configuration>
+              <source>
+                import org.topazproject.ambra.article.util.PrepareSIP
+                PrepareSIP.main "${args}"
+              </source>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>FedoraArticle</id>
+      <dependencies>
+        <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <defaultGoal>exec:java</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.0.2</version>
+            <configuration>
+              <mainClass>org.topazproject.ambra.article.util.FedoraArticle</mainClass>
+              <arguments>
+                <argument>${args}</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

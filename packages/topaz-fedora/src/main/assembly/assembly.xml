@@ -1,0 +1,51 @@
+<!--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<assembly>
+  <id>topaz-fedora</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <outputFileNameMapping></outputFileNameMapping>
+      <unpack>true</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.topazproject:fedora</include>
+      </includes>
+      <excludes>
+        <exclude>info.fedora:*</exclude>
+      </excludes>
+      <unpackOptions>
+        <excludes>
+          <exclude>META-INF/**</exclude>
+          <exclude>fedora-2.1.1/client/demo/**</exclude>
+          <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/fop/**</exclude>
+          <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/imagemanip/**</exclude>
+          <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/saxon/**</exclude>
+          <exclude>fedora-2.1.1/server/jakarta-tomcat-5.0.28/webapps/userdocs/**</exclude>
+          <exclude>fedora-2.1.1/server/userdocs/**</exclude>
+        </excludes>
+      </unpackOptions>
+    </dependencySet>
+  </dependencySets>
+</assembly>

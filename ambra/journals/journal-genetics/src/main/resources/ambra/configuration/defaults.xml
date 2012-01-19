@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  This file is the Ambra template for the Public Library of Science site. 
+-->
+<config>
+  <ambra>
+    <!-- virtual journal config -->
+    <virtualJournals>
+      <PLoSGenetics>
+        <journal>PLoSGenetics</journal>
+        <eIssn>1553-7404</eIssn>
+        <description>PLoS Genetics</description>
+        <mappingPrefix>/journals/genetics</mappingPrefix>
+        <rules>
+          <host>.*plosgenetics.*</host>
+        </rules>
+        <url>http://www.plosgenetics.org</url>
+        <ambra>
+          <services>
+            <feed>
+              <title>PLoS Genetics</title>
+              <id>info:doi/10.1371/feed.pgen</id>
+            </feed>
+          </services>
+        </ambra>
+      </PLoSGenetics>
+    </virtualJournals>
+
+    <freemarker>
+      <!--
+        # This section defines the various journals and the css and javascript files which should be
+        # included on each page as well as the page title.  The values within the <default> tag are used
+        # if any of the values are missing in the <page> definitions.  Note, that the title, css, and
+        # javascript level values are entirely replaced, they are not additive.  Override config files
+        # may define values for each of those three variables and they will supsercede values present
+        # in subsequent config values.  The lookup for values is as follows:
+        # 1. Page defined in journal
+        # 2. Default value defined in journal
+        # 3. Page defined in default journal
+        # 4. Default value in default journal
+        # To define an empty value for a certain page so that it doesn't use defaults, just put the
+        # element tag with no value, e.g. <javascript></javascript>
+      -->
+      <!--PLoSGenetics-->
+      <journal>
+        <name>PLoSGenetics</name>
+        <metaKeywords>
+          plos genetics, plosgenetics, plos genetic, public library of science genetics, plos genet,
+          plos, public library of science, open access, open-access, online science journal, plos
+          journal, genetics, genetic, genomics, genomic, gene, genes, human, analysis, expression,
+          association mapping, mouse, mice, genome, arabidopsis, dna, drosophila, cell, mapping,
+          population, disease, chromosome, yeast, heritability
+        </metaKeywords>
+        <metaDescription>
+          PLoS Genetics is an open-access, peer-reviewed journal that reflects the full breadth and
+          interdisciplinary nature of genetics and genomics research by publishing outstanding
+          original contributions in all areas of biology.
+        </metaDescription>
+        <articleTitlePrefix>PLoS Genetics:</articleTitlePrefix>
+        <displayName>PLoS Genetics</displayName>
+        <default>
+          <title>PLoS Genetics: A Peer-Reviewed Open-Access Journal</title>
+        </default>
+        <page>
+          <name>/journals/genetics/index.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/home.css</file>
+            <file>/css/article_markup.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_home.js</file>
+          </javascript>
+        </page>
+        <page>
+          <name>/journals/plosJournals/article/article_body.ftl</name>
+          <title>CODE_ARTICLE_TITLE</title>
+        </page>
+        <page>
+          <name>/journals/genetics/static/about.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/ae_checklist.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/authors.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/browse.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+            <file>/css/article_markup.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/checklist.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/contact.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/edboard.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/eic.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/guidelines.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/information.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/policies.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/reviewer_guidelines.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/revised_checklist.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/rssFeeds.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/sitemap.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/journals/genetics/static/users.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+      </journal>
+    </freemarker>
+  </ambra>
+</config>

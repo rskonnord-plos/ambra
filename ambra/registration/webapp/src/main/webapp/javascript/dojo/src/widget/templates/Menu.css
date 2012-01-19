@@ -1,0 +1,79 @@
+/*
+ * $HeadURL::                                                                            $
+ * $Id$
+ *
+ * Copyright (c) 2006-2008 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.dojoMenu {
+	border:1px solid #000000;
+	list-style-type:none;
+	margin:0;
+	padding:0;
+	padding-bottom: 1px;
+	background-color:#f4f4f4;
+	font-size: 8pt;
+}
+
+.dojoMenuSeparator {
+	list-style-type:none;
+	margin:0;
+	padding:1px 0;
+	border-bottom:1px solid #000000;
+	line-height:1px;
+	height:1px;
+}
+
+li:hover.dojoMenuSeparator {
+	background-color:#e5e5e5;
+	cursor:default;
+}
+
+
+
+
+.dojoContextMenu {
+	position: absolute;
+	display: none;
+	border: 2px solid;
+	border-color: ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight;
+	list-style-type: none;
+	margin: 0;
+	padding: 1px;
+	background-color: ThreeDFace;
+	font-size: 8pt;
+}
+
+.dojoMenuItem {
+	white-space: nowrap;
+	padding: 2px;
+	font: menu;
+	color: WindowText;
+}
+
+.dojoMenuItem a {
+	text-decoration: none;
+	color: WindowText;
+	font: inherit;
+}
+
+.dojoMenuItemHover {
+	padding: 2px;
+	background-color: blue;
+	cursor: pointer;
+	_cursor: hand;
+	background-color: Highlight;
+	color: HighlightText;
+}

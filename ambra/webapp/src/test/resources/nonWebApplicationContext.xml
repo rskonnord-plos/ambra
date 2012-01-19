@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- EXACT COPY OF NON-JMX-APPLICATION-CONTEXT.XML AS WEB CONTEXT IS NOT SUPPORTED IN UNIT TESTS -->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+  <!--<aop:aspectj-autoproxy/>-->
+
+  <!--Ambra developer beans here -->
+  <bean id="fetchArticleService" class="org.topazproject.ambra.article.service.FetchArticleService" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <!-- Note: remember to prefix the filename with a "/" -->
+    <property name="secondaryObjectXslTemplate" value="/objInfo.xsl"/>
+    <property name="xslTemplate" value="webapp/src/main/resources/viewnlm-v2.xsl"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="articleService" ref="articleWebService"/>
+    <property name="articleAnnotationService" ref="articleAnnotationService"/>
+    <property name="useTranslet" value="true"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+  </bean>
+
+  <util:map id="xmlFactoryProperties">
+<!--       <entry key="javax.xml.transform.TransformerFactory"
+           value="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"/>-->
+    <entry key="javax.xml.transform.TransformerFactory"
+               value="net.sf.saxon.TransformerFactoryImpl"/>
+    <entry key="javax.xml.transform.Transformer"
+            value="net.sf.saxon.Controller"/>
+  </util:map>
+
+  <!-- TODO: Update the servicePort url's automatically using maven build process itself-->
+  <bean id="articleWebService" class="org.topazproject.ambra.article.service.ArticleWebService">
+    <property name="userContext" ref="userContext"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${ambra.spring.service.article}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+    <property name="smallImageRep" value="TIF"/>
+    <property name="mediumImageRep" value="TIF"/>
+    <property name="largeImageRep" value="TIF"/>
+<!--
+    <property name="smallImageRep" value="PNG-S"/>
+    <property name="mediumImageRep" value="PNG-M"/>
+    <property name="largeImageRep" value="PNG-L"/>
+    -->
+  </bean>
+
+  <bean id="defaultEncodingCharset" class="java.lang.String">
+    <constructor-arg value="UTF-8"/>
+  </bean>
+
+  <bean id="applicationId" class="java.lang.String">
+    <constructor-arg value="topaz-ambra"/>
+  </bean>
+
+  <bean id="auth-method" class="java.lang.String">
+    <!--<constructor-arg value="CAS"/>-->
+    <constructor-arg value="TEST"/>
+  </bean>
+
+  <bean id="userContext" class="org.topazproject.ambra.web.MockUserContext"/>
+
+  <bean id="permissionsService" class="org.topazproject.ambra.permission.service.PermissionsService">
+    <property name="userContext" ref="userContext"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${ambra.spring.service.permission}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="lazyLoaderFactory" class="org.topazproject.ambra.annotation.service.AnnotationLazyLoaderFactory"/>
+
+  <bean id="annotationConverter" class="org.topazproject.ambra.annotation.service.AnnotationConverter">
+    <property name="lazyLoaderFactory" ref="lazyLoaderFactory"/>
+  </bean>
+
+  <bean id="replyService" class="org.topazproject.ambra.annotation.service.ReplyService">
+    <property name="userContext" ref="userContext"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="defaultType" value="http://www.w3.org/2001/12/replyType#Comment"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${ambra.spring.service.reply}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="articleAnnotationService" class="org.topazproject.ambra.annotation.service.ArticleAnnotationService">
+    <property name="userContext" ref="userContext"/>
+    <property name="articleAnnotationCache" ref="articleAnnotationCache"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="defaultType" value="http://www.w3.org/2000/10/annotationType#Annotation"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${ambra.spring.service.annotation}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="annotationService" class="org.topazproject.ambra.annotation.service.AnnotationService">
+    <property name="userContext" ref="userContext"/>
+    <property name="converter" ref="annotationConverter"/>
+    <property name="articleAnnotationService" ref="articleAnnotationService"/>
+    <property name="replyService" ref="replyService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+  </bean>
+
+  <bean id="userWebService" class="org.topazproject.ambra.user.service.UserWebService">
+    <property name="userContext" ref="userContext"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${service.user-account}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="userRoleWebService" class="org.topazproject.ambra.user.service.UserRoleWebService">
+    <property name="userContext" ref="userContext"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${service.user-role}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="preferencesWebService" class="org.topazproject.ambra.user.service.PreferencesWebService">
+    <property name="userContext" ref="userContext"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${service.preference}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="profileWebService" class="org.topazproject.ambra.user.service.ProfileWebService" >
+    <property name="userContext" ref="userContext"/>
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${service.profile}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="userService" class="org.topazproject.ambra.user.service.UserService">
+    <property name="userContext" ref="userContext"/>
+    <property name="userWebService" ref="userWebService"/>
+    <property name="userRoleWebService" ref="userRoleWebService"/>
+    <property name="profileWebService" ref="profileWebService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="preferencesWebService" ref="preferencesWebService"/>
+    <property name="userCache" ref="userCache"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="emailAddressUrl" value="${ambra.services.cas.url.base}/email?guid="/>
+    <property name="weeklyCategories">
+      <list>
+        <value>plosone</value>
+        <value>biology</value>
+        <value>clinical_trials</value>
+        <value>computational_biology</value>
+        <value>genetics</value>
+        <value>medicine</value>
+        <value>pathogens</value>
+      </list>
+    </property>
+    <property name="monthlyCategories">
+      <list>
+        <value>plosone</value>
+        <value>biology</value>
+        <value>clinical_trials</value>
+        <value>computational_biology</value>
+        <value>genetics</value>
+        <value>medicine</value>
+        <value>pathogens</value>
+      </list>
+    </property>
+    <property name="categoryNames">
+      <map>
+        <entry key="plosone" value="PLoS One"/>
+        <entry key="biology" value="PLoS Biology"/>
+        <entry key="computational_biology" value="PLoS Computational Biology"/>
+        <entry key="clinical_trials" value="PLoS Clinical Trials"/>
+        <entry key="genetics" value="PLoS Genetics"/>
+        <entry key="medicine" value="PLoS Medicine"/>
+        <entry key="pathogens" value="PLoS Pathogens"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="profanityCheckingService" class="org.topazproject.ambra.util.ProfanityCheckingService">
+    <property name="profaneWords">
+      <list>
+        <value>bush</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="searchService" class="org.topazproject.ambra.search.service.SearchService">
+    <property name="snippetsMax" value="3"/>
+    <property name="fieldMaxLength" value="50"/>
+    <property name="indexName" value="TopazIndex"/>
+    <property name="resultPageXslt" value="copyXml"/>
+    <property name="searchWebService" ref="searchWebService"/>
+  </bean>
+
+  <bean id="searchWebService" class="org.topazproject.ambra.search.service.SearchWebService">
+    <property name="configurationMap">
+      <map>
+        <entry key="uri" value="${ambra.spring.service.search}"/>
+        <entry key="auth-method" value-ref="auth-method"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="simplePageCachingFilter" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>SimplePageCachingFilter</value>
+    </property>
+  </bean>
+
+  <bean id="articleAnnotationCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>ArticleAnnotationCache</value>
+    </property>
+  </bean>
+
+  <bean id="userCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>UserCache</value>
+    </property>
+  </bean>
+
+  <!-- email configuration -->
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${ambra.network.hosts.mailhost}"/>
+  </bean>
+
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPath" value="/WEB-INF/emailTemplates/"/>
+    <property name="defaultEncoding" ref="defaultEncodingCharset"/>
+  </bean>
+
+  <bean id="ambraMailer" class="org.topazproject.ambra.service.AmbraMailer">
+    <property name="mailSender" ref="mailSender"/>
+    <property name="fromEmailAddress" value="application@plosone.org"/>
+    <property name="freeMarkerConfigurer" ref="freemarkerConfig"/>
+    <property name="feedbackEmailMap">
+      <map>
+        <entry key="text" value="feedback-text.ftl"/>
+        <entry key="html" value="feedback-html.ftl"/>
+        <entry key="subject" value="My feedback for PLoS ONE"/>
+        <entry key="toEmailAddress" value="${ambra.platform.email.feedback}"/>
+      </map>
+    </property>
+    <property name="emailThisArticleMap">
+      <map>
+        <entry key="text" value="emailThisArticle-text.ftl"/>
+        <entry key="html" value="emailThisArticle-html.ftl"/>
+        <entry key="url" value="http://${ambra.network.hosts.ambra}:${ambra.network.ports.ambra}/${ambra.platform.appContext}/article/fetchArticle.action?articleURI"/>
+        <entry key="subject" value="An Article from PLoS ONE"/>
+      </map>
+    </property>
+  </bean>
+
+  <!--
+    <aop:config>
+      <aop:aspect ref="helloFromSpringAOP">
+        <aop:pointcut id="setMethod" expression="execution(* set*(..))"/>
+        <aop:after-returning pointcut-ref="setMethod" method="sayHello"/>
+       </aop:aspect>
+    </aop:config>
+
+    <bean id="helloFromSpringAOP" class="org.topazproject.ambra.BeforeLogAspect"/>
+  -->
+
+</beans>

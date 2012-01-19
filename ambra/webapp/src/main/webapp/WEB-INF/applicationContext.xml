@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+  <!--Ambra developer beans here -->
+  <bean id="fetchArticleService" class="org.topazproject.ambra.article.service.FetchArticleService">
+    <property name="articleAnnotationService" ref="articleAnnotationService"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="articleXmlUtils" ref="articleXmlUtils"/>
+  </bean>
+
+  <bean id="articleXmlUtils" class="org.topazproject.ambra.util.ArticleXMLUtils" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <property name="xslTemplate" value="/viewnlm-v2.xsl"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="articleService" ref="articleOtmService"/>
+  </bean>
+
+  <bean id="citationService" class="org.topazproject.ambra.util.ArticleXMLUtils" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <property name="xslTemplate" value="/citation.xsl"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="articleService" ref="articleOtmService"/>
+  </bean>
+
+  <bean id="secondaryObjectService" class="org.topazproject.ambra.util.ArticleXMLUtils" init-method="init">
+    <property name="articleRep" value="XML"/>
+    <property name="xslTemplate" value="/objInfo.xsl"/>
+    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="articleService" ref="articleOtmService"/>
+  </bean>
+
+
+  <util:map id="xmlFactoryProperties">
+<!--       <entry key="javax.xml.transform.TransformerFactory"
+           value="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"/>-->
+    <entry key="javax.xml.transform.TransformerFactory"
+               value="net.sf.saxon.TransformerFactoryImpl"/>
+    <entry key="javax.xml.transform.Transformer"
+            value="net.sf.saxon.Controller"/>
+  </util:map>
+
+  <!-- TODO: Update the servicePort url's automatically using maven build process itself-->
+  <bean id="articleOtmService" class="org.topazproject.ambra.article.service.ArticleOtmService">
+ <!--   <property name="smallImageRep" value="TIF"/>
+    <property name="mediumImageRep" value="TIF"/>
+    <property name="largeImageRep" value="TIF"/>
+    -->
+    <property name="smallImageRep" value="PNG_S"/>
+    <property name="mediumImageRep" value="PNG_M"/>
+    <property name="largeImageRep" value="PNG_L"/>
+   </bean>
+
+   <bean id="crossRefPosterService" class="org.topazproject.ambra.admin.service.CrossRefPosterService">
+    <!-- following is the URL for the CrossRef service. The three parameters which should be set are
+        * area=  test or live. Decides if the cross ref is actually 'posted'. area=test for testing, area=live for deployment
+        * login_id=crossref user name
+        * login_passwd=crossref user password
+    -->
+    <property name="doiXrefUrl" value="${ambra.services.crossref.post.url}"/>
+  </bean>
+
+  <bean id="flagManagementService" class="org.topazproject.ambra.admin.service.FlagManagementService"/>
+
+  <bean id="documentManagementService" class="org.topazproject.ambra.admin.service.DocumentManagementService">
+    <!-- These pathnames are absolute -->
+    <property name="documentDirectory" value="${ambra.services.documentManagement.ingestSourceDir}"/>
+    <property name="ingestedDocumentDirectory" value="${ambra.services.documentManagement.ingestDestinationDir}"/>
+    <property name="documentPrefix" value="${ambra.services.documentManagement.documentPrefix}"/>
+    <!-- Whereas this is relative to webapp/src/main/resources  -->
+    <property name="xslTemplate" value="/crossref.xsl"/>
+    <property name="plosDoiUrl" value="${ambra.services.crossref.plos.doiurl}"/>
+    <property name="plosEmail" value="${ambra.services.crossref.plos.email}"/>
+    <property name="sendToXref" value="${ambra.services.crossref.sendToXref}"/>
+  </bean>
+
+  <bean id="defaultEncodingCharset" class="java.lang.String">
+    <constructor-arg value="UTF-8"/>
+  </bean>
+
+  <bean id="applicationId" class="java.lang.String">
+    <constructor-arg value="topaz-ambra"/>
+  </bean>
+
+  <bean id="userContext" class="org.topazproject.ambra.web.UserContext"/>
+
+  <bean id="permissionsService" class="org.topazproject.ambra.permission.service.PermissionsService"/>
+
+  <bean id="annotationConverter" class="org.topazproject.ambra.annotation.service.AnnotationConverter"/>
+
+  <bean id="replyService" class="org.topazproject.ambra.annotation.service.ReplyService">
+    <property name="applicationId" ref="applicationId"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="defaultType" value="http://www.w3.org/2001/12/replyType#Comment"/>
+    <property name="permissionsService" ref="permissionsService"/>
+  </bean>
+
+  <bean id="articleAnnotationService" class="org.topazproject.ambra.annotation.service.ArticleAnnotationService">
+    <property name="articleAnnotationCache" ref="articleAnnotationCache"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="encodingCharset" ref="defaultEncodingCharset"/>
+    <property name="defaultType" value="http://www.w3.org/2000/10/annotationType#Comment"/>
+    <property name="permissionsService" ref="permissionsService"/>
+  </bean>
+
+  <bean id="ratingsService" class="org.topazproject.ambra.rating.service.RatingsService">
+    <property name="applicationId" ref="applicationId"/>
+  </bean>
+
+  <bean id="annotationService" class="org.topazproject.ambra.annotation.service.AnnotationService">
+    <property name="converter" ref="annotationConverter"/>
+    <property name="replyService" ref="replyService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+  </bean>
+
+  <bean id="userService" class="org.topazproject.ambra.user.service.UserService">
+    <property name="userContext" ref="userContext"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="userCache" ref="userCache"/>
+    <property name="applicationId" ref="applicationId"/>
+    <property name="emailAddressUrl" value="${ambra.services.cas.url.base}/email?guid="/>
+  </bean>
+
+  <bean id="profanityCheckingService" class="org.topazproject.ambra.util.ProfanityCheckingService">
+    <property name="profaneWords" ref="profaneWords"/>
+  </bean>
+
+  <bean id="browseService" class="org.topazproject.ambra.article.service.BrowseService">
+    <property name="browseCache" ref="browseCache"/>
+  </bean>
+
+  <!-- Add all your constants to the map with a key and a value/ref -->
+  <util:map id="otherConstants" map-class="java.util.HashMap">
+    <entry key="countries" value-ref="countries"/>
+  </util:map>
+
+  <bean id="searchService" class="org.topazproject.ambra.search.service.SearchService">
+    <property name="searchWebService" ref="searchWebService"/>
+    <property name="searchCache" ref="searchCache"/>
+  </bean>
+
+  <bean id="searchWebService" class="org.topazproject.ambra.search.service.SearchWebService"/>
+
+  <bean id="journalService" class="org.topazproject.ambra.journal.JournalService" init-method="init"/>
+
+  <!-- OTM setups -->
+  <bean name="fedoraBlobStore" class="org.topazproject.fedora.otm.FedoraBlobStore">
+    <constructor-arg index="0" value="${ambra.topaz.blobStore.fedora.uri}"/>
+    <constructor-arg index="1" value="${ambra.topaz.blobStore.fedora.userName}"/>
+    <constructor-arg index="2" value="${ambra.topaz.blobStore.fedora.password}"/>
+  </bean>
+  <bean name="simpleBlobStore" class="org.topazproject.otm.stores.SimpleBlobStore">
+    <constructor-arg index="0" value="${java.io.tmpdir}/blob-store"/>
+  </bean>
+  <bean id="otmFactory" class="org.topazproject.ambra.configuration.OtmConfiguration">
+    <constructor-arg index="0" value="${ambra.topaz.tripleStore.mulgara.itql.uri}" />
+    <constructor-arg index="1">
+     <!-- must be one of fedoraBlobStore or simpleBlobStore -->
+       <ref bean="${ambra.topaz.blobStore.beanName}"/>
+    </constructor-arg>
+    <property name="fedoraBlobFactories">
+      <list>
+        <bean name="annotationFedoraBlobFactory" 
+            class="org.topazproject.ambra.models.support.fedora.AnnotationFedoraBlobFactory">
+          <constructor-arg index="0" value="${ambra.topaz.blobStore.fedora.blobTypes.annotation.pidNs}"/>
+          <constructor-arg index="1" value="${ambra.topaz.blobStore.fedora.blobTypes.annotation.uriPrefix}"/>
+        </bean>
+        <bean name="representationFedoraBlobFactory" 
+            class="org.topazproject.ambra.models.support.fedora.RepresentationFedoraBlobFactory">
+          <constructor-arg index="0" value="${ambra.topaz.blobStore.fedora.blobTypes.representation.pidNs}"/>
+          <constructor-arg index="1" value="${ambra.topaz.blobStore.fedora.blobTypes.representation.uriPrefix}"/>
+        </bean>
+      </list>
+    </property>
+    <property name="models">
+      <list>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="ri" />
+          <constructor-arg index="1" value="${ambra.models.ri}"/>
+          <constructor-arg index="2" value="${ambra.models.ri[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="annotations" />
+          <constructor-arg index="1" value="${ambra.models.annotations}"/>
+          <constructor-arg index="2" value="${ambra.models.annotations[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="users" />
+          <constructor-arg index="1" value="${ambra.models.users}"/>
+          <constructor-arg index="2" value="${ambra.models.users[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="grants" />
+          <constructor-arg index="1" value="${ambra.models.grants}"/>
+          <constructor-arg index="2" value="${ambra.models.grants[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="revokes" />
+          <constructor-arg index="1" value="${ambra.models.revokes}"/>
+          <constructor-arg index="2" value="${ambra.models.revokes[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="pp" />
+          <constructor-arg index="1" value="${ambra.models.pp}"/>
+          <constructor-arg index="2" value="${ambra.models.pp[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="preferences" />
+          <constructor-arg index="1" value="${ambra.models.preferences}"/>
+          <constructor-arg index="2" value="${ambra.models.preferences[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="profiles" />
+          <constructor-arg index="1" value="${ambra.models.profiles}"/>
+          <constructor-arg index="2" value="${ambra.models.profiles[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="ratings" />
+          <constructor-arg index="1" value="${ambra.models.ratings}"/>
+          <constructor-arg index="2" value="${ambra.models.ratings[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="alerts" />
+          <constructor-arg index="1" value="${ambra.models.alerts}"/>
+          <constructor-arg index="2" value="${ambra.models.alerts[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="criteria" />
+          <constructor-arg index="1" value="${ambra.models.criteria}"/>
+          <constructor-arg index="2" value="${ambra.models.criteria[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="str" />
+          <constructor-arg index="1" value="${ambra.models.str}"/>
+          <constructor-arg index="2" value="${ambra.models.str[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="xsd" />
+          <constructor-arg index="1" value="${ambra.models.xsd}"/>
+          <constructor-arg index="2" value="${ambra.models.xsd[@type]}"/>
+        </bean>
+        <bean class="org.topazproject.otm.ModelConfig">
+          <constructor-arg index="0" value="prefix" />
+          <constructor-arg index="1" value="${ambra.models.prefix}"/>
+          <constructor-arg index="2" value="${ambra.models.prefix[@type]}"/>
+        </bean>
+      </list>
+    </property>
+
+    <property name="aliases">
+      <map>
+        <entry key="id" value="${ambra.aliases.id}"/>
+        <entry key="annoteaBodyId" value="${ambra.aliases.annoteaBodyId}"/>
+      </map>
+    </property>
+
+    <property name="preloadClasses">
+      <list>
+        <value>org.topazproject.ambra.models.Aggregation</value>
+        <value>org.topazproject.ambra.models.Annotation</value>
+        <value>org.topazproject.ambra.models.Annotea</value>
+        <value>org.topazproject.ambra.models.Article</value>
+        <value>org.topazproject.ambra.models.AuthenticationId</value>
+        <value>org.topazproject.ambra.models.Category</value>
+        <value>org.topazproject.ambra.models.Citation</value>
+        <value>org.topazproject.ambra.models.Comment</value>
+        <value>org.topazproject.ambra.models.Correction</value>
+        <value>org.topazproject.ambra.models.FormalCorrection</value>
+        <value>org.topazproject.ambra.models.MinorCorrection</value>
+        <value>org.topazproject.ambra.models.DublinCore</value>
+        <value>org.topazproject.ambra.models.EditorialBoard</value>
+        <value>org.topazproject.ambra.models.FoafPerson</value>
+        <value>org.topazproject.ambra.models.Issue</value>
+        <value>org.topazproject.ambra.models.Journal</value>
+        <value>org.topazproject.ambra.models.License</value>
+        <value>org.topazproject.ambra.models.ObjectInfo</value>
+        <value>org.topazproject.ambra.models.PermissionsPropagator</value>
+        <value>org.topazproject.ambra.models.Rating</value>
+        <value>org.topazproject.ambra.models.RatingContent</value>
+        <value>org.topazproject.ambra.models.RatingSummary</value>
+        <value>org.topazproject.ambra.models.RatingSummaryContent</value>
+        <value>org.topazproject.ambra.models.RelatedArticle</value>
+        <value>org.topazproject.ambra.models.Reply</value>
+        <value>org.topazproject.ambra.models.ReplyThread</value>
+        <value>org.topazproject.ambra.models.Representation</value>
+        <value>org.topazproject.ambra.models.Trackback</value>
+        <value>org.topazproject.ambra.models.TrackbackContent</value>
+        <value>org.topazproject.ambra.models.UserAccount</value>
+        <value>org.topazproject.ambra.models.UserPreference</value>
+        <value>org.topazproject.ambra.models.UserPreferences</value>
+        <value>org.topazproject.ambra.models.UserProfile</value>
+        <value>org.topazproject.ambra.models.UserRole</value>
+        <value>org.topazproject.ambra.models.Volume</value>
+        <value>org.topazproject.ambra.models.Blob</value>
+        <value>org.topazproject.ambra.models.AnnotationBlob</value>
+        <value>org.topazproject.ambra.models.ReplyBlob</value>
+        <value>org.topazproject.ambra.model.article.CitationInfo</value>
+        <value>org.topazproject.ambra.model.UserProfileInfo</value>
+        <value>org.topazproject.ambra.model.article.ArticleInfo</value>
+        <value>org.topazproject.ambra.model.article.NewArtInfo</value>
+        <value>org.topazproject.ambra.model.article.RelatedArticleInfo</value>
+        <value>org.topazproject.otm.criterion.Conjunction</value>
+        <value>org.topazproject.otm.criterion.Criterion</value>
+        <value>org.topazproject.otm.criterion.DetachedCriteria</value>
+        <value>org.topazproject.otm.criterion.Disjunction</value>
+        <value>org.topazproject.otm.criterion.EQCriterion</value>
+        <value>org.topazproject.otm.criterion.ExistsCriterion</value>
+        <value>org.topazproject.otm.criterion.GECriterion</value>
+        <value>org.topazproject.otm.criterion.GTCriterion</value>
+        <value>org.topazproject.otm.criterion.LECriterion</value>
+        <value>org.topazproject.otm.criterion.LTCriterion</value>
+        <value>org.topazproject.otm.criterion.MinusCriterion</value>
+        <value>org.topazproject.otm.criterion.NECriterion</value>
+        <value>org.topazproject.otm.criterion.NotCriterion</value>
+        <value>org.topazproject.otm.criterion.NotExistsCriterion</value>
+        <value>org.topazproject.otm.criterion.Order</value>
+        <value>org.topazproject.otm.criterion.Parameter</value>
+        <value>org.topazproject.otm.criterion.TransCriterion</value>
+        <value>org.topazproject.otm.criterion.WalkCriterion</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="otmSessionFactory" factory-bean="otmFactory" factory-method="getFactory"/>
+
+  <bean id="otmSession" factory-bean="otmSessionFactory" factory-method="openSession"
+      destroy-method="close" scope="request">
+    <constructor-arg index="0">
+       <ref bean="otmInterceptor"/>
+    </constructor-arg>
+    <aop:scoped-proxy proxy-target-class="false"/>
+  </bean>
+
+  <!-- Set up Transaction-Manager stuff -->
+  <bean id="txManager" class="org.topazproject.otm.spring.OtmTransactionManager">
+    <property name="otmSession" ref="otmSession"/>
+    <property name="defaultTimeout" value="600"/>
+    <property name="clearSessionOnRollback" value="true"/>
+    <property name="skipFlushOnReadonlyTx" value="true"/>
+  </bean>
+
+  <tx:annotation-driven transaction-manager="txManager" proxy-target-class="true"/>
+
+  <!-- cache manager configs -->
+  <bean id="txCacheManagerFactory" class="org.topazproject.ambra.cache.CacheManagerFactory">
+    <constructor-arg index="0">
+       <ref bean="otmSessionFactory"/>
+    </constructor-arg>
+  </bean>
+  <bean id="txCacheManager"
+      factory-bean="txCacheManagerFactory" factory-method="createCacheManager">
+    <constructor-arg index="0" value="20"/> <!-- seconds to wait for the write lock -->
+  </bean>
+  <bean id="objectCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="objectEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="repCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="repEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="otmInterceptor" class="org.topazproject.ambra.cache.OtmInterceptor">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="objectCache"/>
+    </constructor-arg>
+    <constructor-arg index="2">
+       <ref bean="repCache"/>
+    </constructor-arg>
+    <constructor-arg index="3">
+       <ref bean="journalService"/>
+    </constructor-arg>
+  </bean>
+  <bean id="browseCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="browseEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="userCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="userEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="feedCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="feedEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="searchCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="searchEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="articleAnnotationCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="articleAnnotationEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="journalCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="journalEhcache"/>
+    </constructor-arg>
+  </bean>
+  <bean id="carrierCache" class="org.topazproject.ambra.cache.EhcacheProvider">
+    <constructor-arg index="0">
+       <ref bean="txCacheManager"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+       <ref bean="carrierEhcache"/>
+    </constructor-arg>
+  </bean>
+  
+  <!-- freemarker configs -->
+  <bean id="ambraFreemarkerManager" class="org.topazproject.ambra.struts2.AmbraFreemarkerManager">
+    <constructor-arg index="0">
+      <ref bean="ambraFreemarkerConfig" />
+    </constructor-arg>
+  </bean>
+
+  <bean id="ambraFreemarkerConfig" class="org.topazproject.ambra.struts2.AmbraFreemarkerConfig" />
+
+  <!-- Caches -->
+  <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <property name="configLocation" value="classpath:ehcache.xml"/>
+    <property name="shared" value="true"/>
+  </bean>
+
+  <bean id="journalEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="Journals"/>
+  </bean>
+
+  <bean id="carrierEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="ArticleCarriers"/>
+  </bean>
+
+  <bean id="articleAnnotationEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>ArticleAnnotationCache</value>
+    </property>
+  </bean>
+
+  <bean id="userEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>UserCache</value>
+    </property>
+  </bean>
+
+  <bean id="browseEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="BrowseCache"/>
+  </bean>
+
+  <bean id="feedEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="FeedCache"/>
+  </bean>
+
+  <bean id="searchEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="SearchCache"/>
+  </bean>
+
+  <bean id="objectEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="ObjectCache"/>
+  </bean>
+
+  <bean id="repEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="RepresentationCache"/>
+  </bean>
+
+  <bean id="virtualJournalMappingFilterCache"
+    class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName">
+      <value>VirtualJournalMappingFilter</value>
+    </property>
+  </bean>
+
+  <!-- JMX exporting -->
+  <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
+    <property name="locateExistingServerIfPossible" value="true"/>
+  </bean>
+
+  <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="staticMethod"
+        value="net.sf.ehcache.management.ManagementService.registerMBeans"/>
+    <property name="arguments">
+      <list>
+        <ref bean="cacheManager"/>
+        <ref bean="mbeanServer"/>
+        <value>true</value>
+        <value>true</value>
+        <value>true</value>
+        <value>true</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+    <property name="autodetect" value="true"/>
+  </bean>
+
+  <bean name="org.topazproject.ambra.logging:name=log4j" class="org.apache.log4j.jmx.HierarchyDynamicMBean"/>
+
+  <!-- email configuration -->
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${ambra.network.hosts.mailhost}"/>
+  </bean>
+
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPath" value="/WEB-INF/emailTemplates/"/>
+    <property name="defaultEncoding" ref="defaultEncodingCharset"/>
+  </bean>
+
+  <bean id="ambraMailer" class="org.topazproject.ambra.service.AmbraMailer">
+    <property name="mailSender" ref="mailSender"/>
+    <property name="fromEmailAddress" value="application@plosone.org"/>
+    <property name="freeMarkerConfigurer" ref="freemarkerConfig"/>
+    <property name="feedbackEmailMap">
+      <map>
+        <entry key="text" value="feedback-text.ftl"/>
+        <entry key="html" value="feedback-html.ftl"/>
+        <entry key="subject" value="My feedback for PLoS ONE"/>
+        <entry key="toEmailAddress" value="${ambra.platform.email.feedback}"/>
+      </map>
+    </property>
+    <property name="emailThisArticleMap">
+      <map>
+        <entry key="text" value="emailThisArticle-text.ftl"/>
+        <entry key="html" value="emailThisArticle-html.ftl"/>
+        <entry key="url" value="${ambra.services.crossref.plos.doiurl}"/>
+        <entry key="subject" value="An Article from "/>
+      </map>
+    </property>
+  </bean>
+
+</beans>

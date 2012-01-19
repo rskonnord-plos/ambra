@@ -1,0 +1,198 @@
+/* $HeadURL::                                                                            $
+ * $Id$
+ *
+ * Copyright (c) 2006-2007 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.topazproject.ambra.journal;
+
+import java.net.URI;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.topazproject.ambra.cache.Cache;
+import org.topazproject.ambra.models.Journal;
+import org.topazproject.otm.Session;
+import org.topazproject.otm.SessionFactory;
+
+
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * This service manages journal definitions and associated info. All retrievals and modifications
+ * should go through here so it can keep the cache up-to-date.
+ *
+ * <p>There should be exactly one instance of this class per {@link
+ * org.topazproject.otm.SessionFactory SessionFactory} instance. Also, the instance must be created
+ * before any {@link org.topazproject.otm.Session Session} instance is created as it needs to
+ * register the filter-definition with the session-factory.
+ *
+ * <p>This services does extensive caching of journal objects, the filters associated with each
+ * journal, and the list of journals each object (article) belongs to (according to the filters).
+ * For this reason it must be notified any time a journal or article is added, removed, or changed.
+ *
+ * @author Ronald Tschalär
+ */
+public class JournalService {
+  private static final Log    log = LogFactory.getLog(JournalService.class);
+  private static final String RI_MODEL = "ri";
+
+  private SessionFactory         sf;
+  private Cache                  journalCache;          // key    -> Journal
+  private Cache                  objectCarriers;        // obj-id -> Set<journal-key>
+
+  private JournalKeyService      journalKeyService;
+  private JournalFilterService   journalFilterService;
+  private JournalCarrierService  journalCarrierService;
+
+  private Session                session;
+
+  /**
+   * Create a new journal-service instance. One and only one of these should be created for every
+   * session-factory instance, and this must be done before the first session instance is created.
+   */
+  public JournalService() {
+  }
+
+  /**
+   * Initialize this service. Must be called after all properties are set.
+   */
+  public void init() {
+    journalKeyService = new JournalKeyService(journalCache, "KEY-");
+    journalFilterService = new JournalFilterService(sf, journalCache, "FILTER-", journalKeyService);
+    journalCarrierService = new JournalCarrierService(sf, objectCarriers, 
+                                                      journalKeyService, journalFilterService);
+  }
+
+  /**
+   * Get the names of the {@link org.topazproject.otm.Filter session filters} associated with the
+   * specified journal.
+   *
+   * @param jName the journal's name (key)
+   * @return the list of filters (which may be empty), or null if no journal by the given name is
+   *         known
+   */
+  @Transactional(readOnly = true)
+  public Set<String> getFilters(String jName) {
+    return journalFilterService.getFilters(jName, session);
+  }
+
+  /**
+   * Get the specified journal. This assumes an active transaction on the session.
+   *
+   * @param jName  the journal's name
+   * @return the journal, or null if no found
+   */
+  @Transactional(readOnly = true)
+  public Journal getJournal(String jName) {
+    return journalKeyService.getJournal(jName, session);
+  }
+
+  @Transactional(readOnly = true)
+  public Journal getJournal() {
+    return journalKeyService.getCurrentJournal(session);
+  }
+
+  /**
+   * Get the current journal. This assumes an active transaction on the session.
+   *
+   * @return the journal, or null if none found.
+   * @see #getJournal(String jName).
+   */
+  @Transactional(readOnly = true)
+  public Journal getCurrentJournal(Session session) {
+    return journalKeyService.getCurrentJournal(session);
+  }
+
+  /**
+   * Get the set of all the known journals. This assumes an active transaction on the session.
+   *
+   * @return all the journals, or the empty set if there are none
+   */
+  @Transactional(readOnly = true)
+  public Set<Journal> getAllJournals() {
+    return journalKeyService.getAllJournals(session);
+  }
+
+  @Transactional(readOnly = true)
+  public Set<String> getAllJournalKeys() {
+    return journalKeyService.getAllJournalKeys(session);
+  }
+
+  public String getCurrentJournalKey() {
+    return journalKeyService.getCurrentJournalKey();
+  }
+
+
+  /**
+   * Get the list of journals which carry the given object (e.g. article).
+   *
+   * @param oid the info:&lt;oid&gt; uri of the object
+   * @return the list of journals which carry this object; will be empty if this object
+   *         doesn't belong to any journal
+   */
+  @Transactional(readOnly = true)
+  public Set<Journal> getJournalsForObject(URI oid) {
+    return journalCarrierService.getJournalsForObject(oid, session);
+  }
+
+  /**
+   * Set the OTM session-facctory. Called by spring's bean wiring.
+   *
+   * @param sf the otm session-facctory
+   */
+  @Required
+  public void setOtmSessionFactory(SessionFactory sf) {
+    this.sf = sf;
+  }
+
+  /**
+   * Set the journal cache. Called by spring's bean wiring.
+   *
+   * @param journalCache the journal cache
+   */
+  @Required
+  public void setJournalCache(Cache journalCache) {
+    this.journalCache = journalCache;
+  }
+
+  /**
+   * Set the carrier cache. Called by spring's bean wiring.
+   *
+   * @param objectCache the carrier cache
+   */
+  @Required
+  public void setCarrierCache(Cache objectCache) {
+    this.objectCarriers = objectCache;
+  }
+
+  /**
+   * Set the OTM session. Called by spring's bean wiring.
+   *
+   * @param session the otm session
+   */
+  @Required
+  public void setOtmSession(Session session) {
+    this.session = session;
+  }
+
+  public JournalCarrierService getJournalCarrierService() {
+    return journalCarrierService;
+  }
+}
