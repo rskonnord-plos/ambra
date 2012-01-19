@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>${pom.parent.groupId}</groupId>
+  <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+  <packaging>war</packaging>
+  <version>0.8.2.2_rc1</version>
+  <name>PLoS ONE Web Application</name>
+
+  <parent>
+    <groupId>org.plosone</groupId>
+    <artifactId>plosone</artifactId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.8.2.2_rc1</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.googlecode.jsonplugin</groupId>
+      <artifactId>jsonplugin</artifactId>
+      <version>0.14</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>trackback-util</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>plosone-emailer</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-search-client-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>entity-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>it.unibo.cs</groupId>
+      <artifactId>unibo-xpointer</artifactId>
+      <version>1.2-t1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>dom-ranges-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>conf-helper</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jetty</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>uk.ltd.getahead</groupId>
+      <artifactId>dwr</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>cas</groupId>
+      <artifactId>casclient</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>otm</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.groovy</groupId>
+          <artifactId>groovy-all</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>otm-extras</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-mock</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring</artifactId>
+    </dependency>
+
+    <!-- needed for scoping support in spring IOC -->
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib</artifactId>
+      <version>2.1_3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-core</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-spring-plugin</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+
+    <dependency>
+      <groupId>opensymphony</groupId>
+      <artifactId>oscore</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>opensymphony</groupId>
+      <artifactId>oscache</artifactId>
+      <version>2.3.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>concurrent</groupId> 
+      <artifactId>concurrent</artifactId> 
+      <version>1.3.4</version> 
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>0.9</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+
+    <!-- required by the xsl transformation using translets -->
+    <dependency>
+      <groupId>org.apache.bcel</groupId>
+      <artifactId>bcel</artifactId>
+      <version>5.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>oro</groupId>
+      <artifactId>oro</artifactId>
+      <version>2.0.8</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId> 
+      <artifactId>xstream</artifactId> 
+      <version>1.2.2</version> 
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>xacml</groupId>
+      <artifactId>sunxacml</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>otm-models</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>article-util</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+
+    <!-- Please keep the scope 'provided' to avoid packaging in the war -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.tuckey</groupId>
+      <artifactId>urlrewritefilter</artifactId>
+      <version>3.0.4</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>plosone</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <locales>en</locales>
+        </configuration>
+      </plugin>
+
+      <!--
+        mvn clean jetty:run to run the webapp.
+        ecqs should also be installed and running first
+        
+        To enable remote debug on port 4000
+        export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
+        
+        If you supply suspend=n instead of suspend=y you can start immediately without running the debugger and launch the debugger at anytime you really wish to debug.
+      -->
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+              <port>10443</port>
+              <maxIdleTime>300000</maxIdleTime>
+              <!-- 
+                Using the cert generated by p-cas-quick-start for localhost here.
+                Change the keystore and passwords if using a different machine for CAS or if you 
+                want to generate your own certificate.  The cert needs to be imported into the 
+                local machine's trusted store first (e.g. keytool -import -trustcacerts \
+                -alias jakarta-tomcat -storepass changeit \
+                -file ~/topazproject-install/esup-cas-quick-start-2.0.6-1/tmp/cert.pkcs7 \
+                -keystore $JAVA_HOME/jre/lib/security/cacerts) Path to cacerts depends if you 
+                are using JDK or JRE
+              -->
+	      <keystore>
+ 	      	${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1/jakarta-tomcat-5.0.28/conf/server.ks
+ 	      </keystore>
+ 	      <password>secret</password>
+ 	      <keyPassword>secret</keyPassword>
+	    </connector>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>8080</port>
+              <maxIdleTime>3000000</maxIdleTime>
+              <acceptors>10</acceptors>
+            </connector>
+          </connectors>
+
+          <systemProperties>
+            <systemProperty>
+              <name>java.net.preferIPv4Stack</name>
+              <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <name>log4j.configuration</name>
+              <value>file:///etc/topaz/log4j.xml</value>
+            </systemProperty>
+            <systemProperty>
+              <!-- Turn on dev mode configuration -->
+              <name>org.plos.configuration.overrides</name>
+              <value>defaults-dev.xml</value>
+            </systemProperty>
+            <systemProperty>
+              <!-- In case there is something in /etc, override here, not defaults-dev.xml -->
+              <name>plosone.app-context</name>
+              <value>/plosone-webapp</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.apache.commons.logging.Log</name>
+              <value>org.apache.commons.logging.impl.Log4JLogger</value>
+            </systemProperty>
+          </systemProperties>
+          <scanIntervalSeconds>5</scanIntervalSeconds>
+          <webDefaultXml>src/main/resources/webdefault.xml</webDefaultXml>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>true</skip><!-- disable tests by default until we get a DB up or mock objects -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>RELEASE</version>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::$
+  $Id:$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>get-tomcat</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>get-tomcat</call>
+      <requiresProject>true</requiresProject>
+
+      <description>Fetch Tomcat and unzip it in the specified directory</description>
+
+      <parameters>
+
+        <!-- Name of Tomcat location -->
+        <parameter>
+          <name>tomcatLocation</name>
+          <property>tomcatLocation</property>
+          <required>true</required>
+        </parameter>
+
+        <!-- Name of Tomcat file -->
+        <parameter>
+          <name>tomcatFile</name>
+          <property>tomcatFile</property>
+          <required>true</required>
+        </parameter>
+
+        <!-- Pass the root directory in as Ant task cannot access it -->
+        <parameter>
+          <name>root</name>
+          <property>root</property>
+          <required>true</required>
+          <defaultValue>${project.build.directory}</defaultValue>
+        </parameter>
+
+      </parameters>
+
+    </mojo>
+  </mojos>
+</pluginMetadata>

@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>fedora</artifactId>
+  <packaging>jar</packaging>
+  <version>2.1.1-t0080202_rc1</version>
+  <name>Fedora with Topaz config</name>
+  <url>http://gandalf.topazproject.org/</url>
+  <inceptionYear>2006</inceptionYear>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>fedora-libs</artifactId>
+    <version>0.8.2.2_rc1</version>
+  </parent>
+
+  <properties>
+    <fedoraVersion>2.1.1</fedoraVersion>
+  </properties>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.topazproject.plugins</groupId>
+        <artifactId>ant-tasks</artifactId>
+        <configuration>
+          <VERSION>${fedoraVersion}</VERSION>
+          <DEST_DIR>${project.build.directory}/classes</DEST_DIR>
+          <SRC_CLIENT_TAR>${settings.localRepository}/info/fedora/client-distribution/${fedoraVersion}/client-distribution-${fedoraVersion}.tar</SRC_CLIENT_TAR>
+          <SRC_SERVER_TAR>${settings.localRepository}/info/fedora/server-distribution/${fedoraVersion}/server-distribution-${fedoraVersion}.tar</SRC_SERVER_TAR>
+          <TOMCAT>jakarta-tomcat-5.0.28</TOMCAT>
+          <FEDORA_PATCHES>${settings.localRepository}/org/topazproject/fedora-patches/${pom.parent.version}/fedora-patches-${pom.parent.version}.jar</FEDORA_PATCHES>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>fedora-package</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>info.fedora</groupId>
+            <artifactId>server-distribution</artifactId>
+            <version>${fedoraVersion}</version>
+            <type>tar</type>
+          </dependency>
+          <dependency>
+            <groupId>info.fedora</groupId>
+            <artifactId>client-distribution</artifactId>
+            <version>${fedoraVersion}</version>
+            <type>tar</type>
+          </dependency>
+          <dependency>
+            <groupId>org.topazproject</groupId>
+            <artifactId>fedora-patches</artifactId>
+            <version>${pom.parent.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,14 @@
+# $HeadURL::                                                                   $
+# $Id$
+
+# Remove/recreate symbolic link in /usr/local/topaz
+PKG=plosone
+LINK=/usr/local/topaz/$PKG
+# Remove it if it points to nowhere
+[ ! -e $LINK ] && [ -L $LINK ] && rm -f $LINK
+# Recreate it (presumably to some other older/newer version of same package)
+if [ ! -L $LINK ]; then
+  DIR=`ls -td /usr/local/topaz/*"$PKG"-* 2>/dev/null | head -1`
+  [ -n "$DIR" ] && ln -s `basename $DIR` $LINK
+fi
+exit 0

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  This config file is used for testing purposes only
+-->
+<config>
+  <pub>
+	  <articleTypeList>
+	    <articleType>
+	      <typeUri>http://rdf.plos.org/RDF/articleType/Interview</typeUri>
+	      <typeHeading>Interview</typeHeading>
+	    </articleType>
+	    <articleType>
+	      <typeUri>http://rdf.plos.org/RDF/articleType/Issue%20Image</typeUri>
+	      <typeHeading>Issue Image</typeHeading>
+	      <imageSetConfigName>issueImage</imageSetConfigName>
+	    </articleType>
+	    <articleType>
+	      <typeUri>http://rdf.plos.org/RDF/articleType/Research%20Article</typeUri>
+	      <typeHeading>DefaultHeading</typeHeading>
+	      <imageSetConfigName>MyImageSet</imageSetConfigName>
+	      <default>true</default>
+	    </articleType>
+	  </articleTypeList>
+  </pub>
+  <topaz>
+    <utilities>
+      <image-magick>
+        <executable-path>C:/Program Files/ImageMagick-6.3.7-Q16/convert.exe</executable-path>
+        <temp-directory>C:/TEMP</temp-directory>
+        <imageSetConfigs>
+          <imageSet name="#default">
+            <small width="70" quality="80"/>
+            <medium maxDimension="600" quality="80"/>
+            <large quality="80"/>
+          </imageSet>
+          <imageSet name="issueImage">
+            <small width="120"/>
+          </imageSet>
+        </imageSetConfigs>
+      </image-magick>
+    </utilities>
+  </topaz>
+</config>

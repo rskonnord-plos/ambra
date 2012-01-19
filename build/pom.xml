@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>build-helpers</artifactId>
+  <version>0.8.2.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Build Helpers</name>
+  <description>Scripts, plugins, etc for building Topaz.</description>
+  
+  <!--
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>the-whole-shebang</artifactId>
+    <version>0.8.2.1-SNAPSHOT</version>
+  </parent>
+  -->
+
+  <properties>
+    <topazproject.install.dir>${user.home}/topazproject-install</topazproject.install.dir>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+    <aggregate>true</aggregate>
+    <topazproject.site.url>file://${topazproject.install.dir}/topazdocs</topazproject.site.url>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>topaz</id>
+      <url>http://www.topazproject.org/maven2/</url>
+    </repository>
+    <site>
+      <id>topaz-docs</id>
+      <url>${topazproject.site.url}/${pom.artifactId}</url>
+    </site>
+  </distributionManagement>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.codehaus.mojo.groovy</groupId>
+        <artifactId>groovy-mojo-support</artifactId>
+        <version>1.0-beta-3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo.groovy</groupId>
+          <artifactId>groovy-maven-plugin</artifactId>
+          <version>1.0-beta-3</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>generateStubs</goal>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.3</version>
+          <configuration>
+            <trimStackTrace>false</trimStackTrace>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <defaultGoal>install</defaultGoal>
+  </build>
+
+  <modules>
+    <module>ant-tasks-plugin</module>
+    <module>integration-tests-plugin</module>
+    <module>reports-plugin</module>
+    <module>topaz-skin</module>
+  </modules>
+</project>

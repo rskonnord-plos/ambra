@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!--
+  - Copyright (c) 2006-2007 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<struts>
+    <include file="struts-default.xml"/>
+
+    <package name="default" extends="struts-default">
+      <result-types>
+        <result-type name="freemarker"
+          class="org.apache.struts2.views.freemarker.FreemarkerResult" default="true" />
+      </result-types>
+
+      <interceptors>
+        <interceptor-stack name="defaultPlosStack">
+          <interceptor-ref name="exception">
+            <param name="logEnabled">true</param>
+            <param name="logCategory">org.plos.UnhandledException</param>
+            <param name="logLevel">WARN</param>                               
+          </interceptor-ref>
+          <interceptor-ref name="alias"/>
+          <interceptor-ref name="servlet-config"/>
+          <interceptor-ref name="prepare"/>
+          <interceptor-ref name="i18n"/>
+          <interceptor-ref name="chain"/>
+          <interceptor-ref name="model-driven"/>
+          <interceptor-ref name="static-params"/>
+          <interceptor-ref name="params"/>
+          <interceptor-ref name="conversionError"/>
+          <interceptor-ref name="validation">
+              <param name="excludeMethods">input,back,cancel,browse</param>
+          </interceptor-ref>
+          <interceptor-ref name="workflow">
+              <param name="excludeMethods">input,back,cancel,browse</param>
+          </interceptor-ref>
+        </interceptor-stack>
+      
+      
+        <interceptor-stack name="plosRegistrationStack">
+          <interceptor-ref name="timer" />
+          <!--<interceptor-ref name="logger"/>-->
+          <interceptor-ref name="defaultPlosStack" />
+        </interceptor-stack>
+      </interceptors>
+      <default-interceptor-ref name="plosRegistrationStack" />
+
+      <default-action-ref name="register" />
+
+      <global-results>
+        <result name="error">/pages/serverError.ftl</result>
+      </global-results>
+
+      <global-exception-mappings >
+        <exception-mapping exception="java.lang.Exception" result="error"/>
+      </global-exception-mappings>
+
+      <action name="home">
+        <result>/WEB-INF/pages/home.ftl</result>
+      </action>
+
+      <action name="register">
+        <result>/pages/registration.ftl</result>
+      </action>
+
+      <action name="registerSubmit" class="org.plos.web.RegisterAction">
+        <result name="input">/pages/registration.ftl</result>
+        <result name="success">/pages/registrationSuccess.ftl</result>
+      </action>
+
+      <action name="emailVerification" class="org.plos.web.ConfirmationAction">
+        <result name="success">/pages/emailConfirmationSuccess.ftl</result>
+      </action>
+
+      <action name="changeEmail">
+        <result name="success">/pages/changeEmail.ftl</result>
+      </action>
+
+      <action name="changeEmailSubmit" class="org.plos.web.ChangeEmailAction">
+        <result name="success">/pages/changeEmailSuccess.ftl</result>
+        <result name="input">/pages/changeEmail.ftl</result>
+      </action>
+
+      <action name="changeEmailVerification" class="org.plos.web.ChangeEmailConfirmAction">
+        <result name="success">/pages/changeEmailConfirmationSuccess.ftl</result>
+      </action>
+
+      <action name="forgotPassword">
+        <result>/pages/forgotPassword.ftl</result>
+      </action>
+
+      <action name="forgotPasswordSubmit" class="org.plos.web.ForgotPasswordAction">
+        <result name="input">/pages/forgotPassword.ftl</result>
+        <result name="success">/pages/forgotPasswordSuccess.ftl</result>
+      </action>
+
+      <action name="forgotPasswordVerify" class="org.plos.web.ForgotPasswordChangePasswordAction" method="validateResetPasswordRequest">
+        <result name="input">/pages/forgotPasswordChange.ftl</result>
+        <result name="success">/pages/forgotPasswordChange.ftl</result>
+      </action>
+
+      <action name="forgotPasswordChangeSubmit" class="org.plos.web.ForgotPasswordChangePasswordAction">
+        <result name="input">/pages/forgotPasswordChange.ftl</result>
+        <result name="success">/pages/changePasswordSuccess.ftl</result>
+      </action>
+ 
+      <action name="changePassword">
+        <result>/pages/changePassword.ftl</result>
+      </action>
+
+      <action name="changePasswordSubmit" class="org.plos.web.ChangePasswordAction">
+        <result name="input">/pages/changePassword.ftl</result>
+        <result name="success">/pages/changePasswordSuccess.ftl</result>
+      </action>
+
+      <action name="resendRegistration">
+        <result>/pages/resendRegistration.ftl</result>
+      </action>
+
+      <action name="resendRegistrationSubmit" class="org.plos.web.ResendRegistrationAction">
+        <result name="input">/pages/resendRegistration.ftl</result>
+        <result name="success">/pages/registrationSuccess.ftl</result>
+      </action>
+
+    </package>
+</struts>

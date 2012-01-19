@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>topaz-lucene-impl</artifactId>
+  <packaging>jar</packaging>
+  <version>0.8.2.2_rc1</version>
+  <name>Fedoragsearch topaz search implementation</name>
+  
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-search</artifactId>
+    <version>0.8.2.2_rc1</version>
+  </parent>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>info.fedora</groupId>
+      <artifactId>fedoragsearch-server</artifactId>
+      <version>2.1.1-t0080202_rc1</version>
+    </dependency>
+    <dependency>
+      <groupId>lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>lucene</groupId>
+      <artifactId>lucene-highlighter</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>entity-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>mulgara-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.plosone</groupId>
+      <artifactId>conf-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon-dom</artifactId>
+    </dependency>
+    
+  </dependencies>
+
+</project>

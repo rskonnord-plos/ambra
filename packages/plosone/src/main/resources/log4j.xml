@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <appender name="console" class="org.apache.log4j.ConsoleAppender">
+    <param name="Target" value="System.out"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} %-5p %c{1}(%x)&gt; %m%n"/>
+    </layout>
+  </appender>
+
+  <appender name="rolling" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="File" value="/var/log/topaz/plosone.log"/>
+    <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} %-5p %c{1}(%x)&gt; %m [%t %c]%n"/>
+    </layout>
+  </appender>
+
+  <logger name="org.apache">
+    <level value="warn" />
+  </logger>
+
+  <logger name="tomcat">
+    <level value="warn" />
+  </logger>
+
+  <logger name="com.opensymphony.xwork.interceptor.TimerInterceptor">
+    <level value="info"/>
+  </logger>
+
+  <!-- set to debug for troubleshooting and uncomment loggers below to avoid terminal verbosity -->
+  <logger name="org.plos">
+    <level value="info"/> 
+  </logger>
+
+  <!-- logs mapping of virtual journal action mapping, every Request -->
+  <!--logger name="org.plos.struts2.PlosOneActionMapper">
+    <level value="info"/>
+  </logger-->
+
+  <!-- logs setting of virtual journal context, every Request -->
+  <!--logger name="org.plos.web.VirtualJournalContextFilter">
+    <level value="info"/>
+  </logger-->
+
+  <!-- logs mapping of virtual journal resources, every resource -->
+  <!--logger name="org.plos.web.VirtualJournalMappingFilter">
+    <level value="info"/>
+  </logger-->
+
+  <logger name="edu.yale">
+    <level value="info"/>
+  </logger>
+  
+  <logger name="org.topazproject">
+    <level value="info"/>
+  </logger>
+
+  <!-- uncomment for cache debugging -->
+  <!--logger name="net.sf.ehcache">
+    <level value="debug"/>
+  </logger-->
+
+  <!-- uncomment for mulgara transaction debugging -->
+  <!--logger name="org.topazproject.mulgara.itql.ItqlHelper">
+    <level value="debug"/>
+  </logger-->
+
+  <root>
+    <priority value ="info" />
+    <appender-ref ref="rolling" />
+  </root>
+    
+</log4j:configuration>
