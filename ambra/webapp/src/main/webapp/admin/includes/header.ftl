@@ -1,0 +1,2 @@
+    <style type="text/css" media="all"> @import "${freemarker_config.context}/admin/css/admin.css";</style>
+    <script type="text/javascript" src="${freemarker_config.context}/javascript/dojo/dojo/dojo.js"></script>

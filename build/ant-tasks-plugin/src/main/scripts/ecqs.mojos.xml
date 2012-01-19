@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>ecqs-package</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-package</call>
+      <requiresProject>true</requiresProject>
+      
+      <description>
+        Package esup-cas-quick-start with Topaz configuration files
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>SRC_ZIP</name>
+          <property>SRC_ZIP</property>
+          <required>true</required>
+          <description>esup-cas-quick-start artifact (group-id:artifact-id:version)</description>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <defaultValue>esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>CAS_SERVER_LIB_PATH</name>
+          <property>CAS_SERVER_LIB_PATH</property>
+          <required>true</required>
+          <defaultValue>custom/cas-server-patch/web/WEB-INF/lib</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>topaz_repository</name>
+          <property>topaz_repository</property>
+          <required>false</required>
+          <description>the url of the topaz maven repository in which to search for dependencies</description>
+        </parameter>
+
+        <parameter>
+          <name>dependencies</name>
+          <property>dependencies</property>
+          <expression>${dependencies}</expression>
+          <required>false</required>
+          <description>comma-separated list of artifacts (group-id:artifact-id:version)</description>
+        </parameter>
+        
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-install</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-install</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Install the esup-cas-quick-start locally
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_INSTALL_DIR</name>
+          <property>ECQS_INSTALL_DIR</property>
+          <required>true</required>
+          <expression>${ECQS_INSTALL_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <defaultValue>esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+        
+        <parameter>
+          <name>ecqs-groupId</name>
+          <property>ecqs-groupId</property>
+          <required>true</required>
+          <defaultValue>org.ambraproject</defaultValue>
+          <type>java.lang.String</type>
+          <description>groupId for ecqs.</description>
+        </parameter>
+
+        <parameter>
+          <name>ecqs-artifactId</name>
+          <property>ecqs-artifactId</property>
+          <required>true</required>
+          <defaultValue>ecqs</defaultValue>
+          <type>java.lang.String</type>
+          <description>artifactId of ecqs.</description>
+        </parameter>
+
+        <parameter>
+          <name>ecqs-version</name>
+          <property>ecqs-version</property>
+          <required>true</required>
+          <defaultValue>${project.version}</defaultValue>
+          <expression>${ecqs-version}</expression>
+        </parameter>
+
+
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-start</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-start</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Start the esup-cas-quick-start tomcat server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_HOME</name>
+          <property>ECQS_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>SPAWN</name>
+          <property>SPAWN</property>
+          <required>true</required>
+          <expression>${SPAWN}</expression>
+          <defaultValue>false</defaultValue>
+          <description>Whether we should spawn or not</description>
+        </parameter>
+
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-stop</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-stop</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Stop the esup-cas-quick-start tomcat server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_HOME</name>
+          <property>ECQS_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-uninstall</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-uninstall</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Uninstall esup-cas-quick-start from local machine
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_HOME</name>
+          <property>ECQS_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+  </mojos>
+</pluginMetadata>
