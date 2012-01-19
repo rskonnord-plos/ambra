@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.plosone</groupId>
+  <artifactId>plosone-libs</artifactId>
+  <version>0.8_rc3</version>
+  <packaging>pom</packaging>
+  <name>PLOSOne Libs</name>
+  
+  <parent>
+    <groupId>org.plosone</groupId>
+    <artifactId>plosone</artifactId>
+    <version>0.8_rc3</version>
+  </parent>
+
+  <modules>
+    <module>otm-models</module>
+    <module>article-util</module>
+    <module>conf-helper</module>
+    <module>runscripts</module>
+    <module>util</module>
+    <module>scripts</module>
+    <module>trackback-util</module>
+  </modules>
+
+  <!-- TODO: Move this up one level - be sure to test! -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.0.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>1.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>axis</groupId>
+        <artifactId>axis</artifactId>
+        <version>1.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>avalon-framework</groupId>
+            <artifactId>avalon-framework</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>logkit</groupId>
+            <artifactId>logkit</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-configuration</groupId>
+        <artifactId>commons-configuration</artifactId>
+        <version>1.3</version>
+        <exclusions>
+          <!-- These aren't needed, as the jdk 1.4 provided parsers work fine -->
+          <exclusion>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xerces</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+          </exclusion>
+          <!-- jxpath declares these, but they're not needed for runtime -->
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>ant</groupId>
+            <artifactId>ant-optional</artifactId>
+          </exclusion>
+          <!-- jxpath declares these, but we don't use that part -->
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>cas</groupId>
+        <artifactId>casclient</artifactId>
+        <version>2.1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>saxon</artifactId>
+        <version>8.7</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>saxon-dom</artifactId>
+        <version>8.7</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mulgara</groupId>
+        <artifactId>mulgara</artifactId>
+        <version>1.0.1-t1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mulgara</groupId>
+        <artifactId>mulgara-lite</artifactId>
+        <version>1.0.1-t1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>info.fedora</groupId>
+        <artifactId>fedora-client</artifactId>
+        <version>2.1.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>info.fedora</groupId>
+        <artifactId>fedora-server</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>5.1</version>
+        <scope>test</scope>
+        <classifier>jdk15</classifier>
+      </dependency>
+
+      <!-- Topaz Dependencies -->
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>auth-helper</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>conf-helper</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>fedora-client</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>filter-resolver</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>string-compare-resolver</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>jetty-jaas-cas</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>tomcat-jaas-cas</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>mulgara-client</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>resource-indexer</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>dom-ranges-helper</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>entity-resolver</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>otm</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>object-collections</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
+</project>

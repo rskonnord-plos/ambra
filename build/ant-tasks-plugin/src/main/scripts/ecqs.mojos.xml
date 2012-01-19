@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>ecqs-package</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-package</call>
+      <requiresProject>true</requiresProject>
+      
+      <description>
+        Package esup-cas-quick-start with Topaz configuration files
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>SRC_ZIP</name>
+          <property>SRC_ZIP</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <defaultValue>esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>CAS_SERVER_LIB_PATH</name>
+          <property>CAS_SERVER_LIB_PATH</property>
+          <required>true</required>
+          <defaultValue>custom/cas-server-patch/web/WEB-INF/lib</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>CAS_MOD</name>
+          <property>CAS_MOD</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>CONF_HELPER</name>
+          <property>CONF_HELPER</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>PASSWORD_MOD</name>
+          <property>PASSWORD_MOD</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>DATABASE_DRIVER</name>
+          <property>DATABASE_DRIVER</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>COMMONS_LOGGING</name>
+          <property>COMMONS_LOGGING</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>COMMONS_DBCP</name>
+          <property>COMMONS_DBCP</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>COMMONS_POOL</name>
+          <property>COMMONS_POOL</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>COMMONS_COLLECTIONS</name>
+          <property>COMMONS_COLLECTIONS</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>COMMONS_CONFIG</name>
+          <property>COMMONS_CONFIG</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>COMMONS_LANG</name>
+          <property>COMMONS_LANG</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>COMMONS_DIGESTER</name>
+          <property>COMMONS_DIGESTER</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>COMMONS_BEANUTILS</name>
+          <property>COMMONS_BEANUTILS</property>
+          <required>true</required>
+        </parameter>
+        
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-install</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-install</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Install the esup-cas-quick-start locally
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_INSTALL_DIR</name>
+          <property>ECQS_INSTALL_DIR</property>
+          <required>true</required>
+          <expression>${ECQS_INSTALL_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <defaultValue>esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+        
+        <parameter>
+          <name>localRepository</name>
+          <property>localRepository</property>
+          <required>true</required>
+          <defaultValue>${settings.localRepository}</defaultValue>
+          <type>java.lang.String</type>
+          <description>Maven local repository.</description>
+        </parameter>
+
+        <parameter>
+          <name>ecqs-groupId</name>
+          <property>ecqs-groupId</property>
+          <required>true</required>
+          <defaultValue>org/topazproject</defaultValue>
+          <type>java.lang.String</type>
+          <description>groupId for ecqs.</description>
+        </parameter>
+
+        <parameter>
+          <name>ecqs-artifactId</name>
+          <property>ecqs-artifactId</property>
+          <required>true</required>
+          <defaultValue>ecqs</defaultValue>
+          <type>java.lang.String</type>
+          <description>artifactId of ecqs.</description>
+        </parameter>
+
+        <parameter>
+          <name>ecqs-version</name>
+          <property>ecqs-version</property>
+          <required>true</required>
+          <defaultValue>2.0.6-1-t00800_rc3</defaultValue>
+          <expression>${ecqs-version}</expression>
+        </parameter>
+
+
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-start</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-start</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Start the esup-cas-quick-start tomcat server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_HOME</name>
+          <property>ECQS_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>SPAWN</name>
+          <property>SPAWN</property>
+          <required>true</required>
+          <expression>${SPAWN}</expression>
+          <defaultValue>false</defaultValue>
+          <description>Whether we should spawn or not</description>
+        </parameter>
+
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-stop</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-stop</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Stop the esup-cas-quick-start tomcat server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_HOME</name>
+          <property>ECQS_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+    
+    <mojo>
+      <goal>ecqs-uninstall</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>ecqs-uninstall</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Uninstall esup-cas-quick-start from local machine
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>ECQS_HOME</name>
+          <property>ECQS_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+  </mojos>
+</pluginMetadata>

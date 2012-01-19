@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# $HeadURL::                                                                   $
+# $Id$
+#
+# Copyright (c) 2006 by Topaz, Inc.
+# http://topazproject.org
+#
+# Licensed under the Educational Community License version 1.0
+# http://opensource.org/licenses/ecl1.php
+
+# Load the common functions
+. /usr/local/topaz/bin/tools
+
+java -cp `getJars` RunGroovy "$@"
