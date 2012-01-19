@@ -1,0 +1,11 @@
+#!/bin/sh
+
+p5="0\\.8\\.1"
+r5="0.8.2-SNAPSHOT"
+pt="-t00801"
+rt="-t00802-SNAPSHOT"
+rel=SNAPSHOT
+
+for f in packages/*/pom.xml ; do
+  perl -p -i -e "s/<release>.*?<\/release>/<release>$rel<\/release>/g" "$f"
+done

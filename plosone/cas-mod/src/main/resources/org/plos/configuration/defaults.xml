@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  - Copyright (c) 2006 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<config>
+  <cas>
+    <db>
+    <!-- The following entries defnine how the java webapp talk to the database.
+         For example, talking to postgresql, you need the database name at the end of the url
+         The user and password are for the database as well. -->
+
+      <user>casuser</user>                         <!-- database user name -->
+      <password>caspass</password>                 <!-- database user password -->
+      <url>jdbc:postgresql://localhost/casdb</url> <!-- jdbc url - VERIFY DB NAME at end -->
+      <driver>org.postgresql.Driver</driver>       <!-- jdbc driver to use -->
+
+      <initialSize>2</initialSize> <!-- Initial number of db connections in pool -->
+      <maxActive>10</maxActive>    <!-- Maximum number of db connections in pool -->
+
+      <!-- Queries used by cas to get and set user data in database -->
+      <connectionValidationQuery>select 1</connectionValidationQuery>
+      <guidToUsernameSql>select loginname from plos_user where id=?</guidToUsernameSql>
+      <usernameToGuidSql>select id from plos_user where lower(loginname)=lower(?)</usernameToGuidSql>
+    </db>
+  </cas>
+</config>

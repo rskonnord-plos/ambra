@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+<!--
+    Configuration file for UrlRewriteFilter
+    http://tuckey.org/urlrewrite/
+-->
+<urlrewrite>
+  <rule>
+    <note>
+      re-write incoming trackbacks URIs.
+     /article/doi/trackback -> /trackback.action?trackbackId=doi
+    </note>
+    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/trackback$</from>
+    <to>$1/trackback.action?trackbackId=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound trackbacks URIs.
+      /trackback.action?trackbackId=doi -> /article/doi/trackback
+    </note>
+    <from>^(/.+)?/trackback.action\?trackbackId=(info%3Adoi%2F10\.1371%2F.+)$</from>
+    <to>$1/article/$2/trackback</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming Article URIs.
+     /article/doi -> /article/fetchArticle.action?articleURI=doi
+    </note>
+    <from>^(/.+)?/article/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticle.action?articleURI=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound Article URIs.
+     /article/fetchArticle.action?articleURI=doi -> /article/doi
+    </note>
+    <from>^(/.+)?/article/fetchArticle.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <to>$1/article/$2</to>
+  </outbound-rule>
+
+</urlrewrite>

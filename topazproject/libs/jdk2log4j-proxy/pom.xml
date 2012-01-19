@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>jdk2log4j-proxy</artifactId>
+  <packaging>jar</packaging>
+  <version>0.8.1_rc2</version>
+  <name>Proxy jdk LogManager to log4j</name>
+  
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>topazproject-libs</artifactId>
+    <version>0.8.1_rc2</version>
+  </parent>
+  
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
+    </dependency>
+
+    <!-- For testing: -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <!-- Configure surefire to use our LogManager -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>java.util.logging.manager</name>
+              <value>org.topazproject.logging.jdk2log4j.LogManager</value>
+            </property>
+            <property>
+              <name>java.util.logging.manager.altclassloader</name>
+              <value>true</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>org.topazproject.mulgara.resolver.stringcompare</title>
+  </head>
+  <body>
+    <p>Mulgara resolver to implement string-comparisons models.</p>
+    <p>Example:
+      <pre>
+      create &lt;local:///topazproject#str&gt; &lt;http://topazproject.org/models#StringCompare&gt;;
+      select $s $p $o from &lt;local:///topazproject#foo&gt;
+        where $s $p $o
+        and $o &lt;topaz:equalsIgnoreCase&gt; 'Jane Bar' in &lt;local:///topazproject#str&gt;;
+      </pre>
+    </p>
+  </body>
+</html>

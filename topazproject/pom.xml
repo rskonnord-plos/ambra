@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>topazproject</artifactId>
+  <version>0.8.1_rc2</version>
+  <packaging>pom</packaging>
+  <name>All Topaz Project stuff</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>the-whole-shebang</artifactId>
+    <version>0.8.1_rc2</version>
+  </parent>
+
+  <modules>
+    <module>libs</module>
+  </modules>
+</project>

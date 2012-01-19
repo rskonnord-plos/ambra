@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                     $
+  $Id$
+
+  Copyright (c) 2007 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+
+  This file contains most of the defaults for the doi-resolver. However, there may be additional
+  defaults in the conf-helper library's global-defaults.xml.
+
+  See also libs/conf-helper/src/main/resources/global-defaults.xml
+-->
+<config>
+  <pub>
+    <hosts>
+      <!-- Set hosts.default to FQHN (not localhost) if installing all components on one host
+           (or to webhead FQHN for multiple host installation) -->
+      <default>localhost</default>
+    </hosts>
+    <ports>
+      <!-- If using port 80, set default to empty (not 80) -->
+      <default>${network.ports.plosone}</default>
+      <plosone>8080</plosone>
+    </ports>
+
+    <app-context></app-context> <!-- web application context; leave empty if deployed in root directory  -->
+
+    <!-- Stuff used by doi-resolver -->
+    <webserver-url>http://${network.hosts.default}:${network.ports.default}${pub.app-context}/</webserver-url>  <!-- pub app url -->
+    <article-action>article/</article-action> <!-- action to which doi resolvers forwards to display an article -->
+    <figure-action1>article/slideshow.action?uri=</figure-action1> <!-- with figure-action2, constructs url for graphics and table display -->
+    <figure-action2>&amp;imageURI=</figure-action2>
+    <error-page>static/pageNotFound.action</error-page> <!-- error page to redirect to in pub app if article not found -->
+
+    <!--
+      This is used to define which DOI regular expression maps to which URL in the DOI  resolver.
+      The rules are applied sequentially from top to bottom and the first matching one will execute.
+      If an error is encountered, or the article is not found, it will use the network.hosts.default,
+      network.ports.default, and pub.app-context to construct the page not found url.
+    <doi-journals>
+      <journal>
+        <url>http://clinicaltrials.plos.org/${pub.app-context}/</url>
+        <regex>10\.1371/journal\.pctr\.\d{7}</regex>
+      </journal>
+      <journal>
+        <url>http://${network.hosts.default}:${network.ports.default}${pub.app-context}/</url>
+        <regex>10\.1371/journal\.pone\.\d{7}</regex>
+      </journal>
+    </doi-journals>
+    -->
+  </pub>
+</config>

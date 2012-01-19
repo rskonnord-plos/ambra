@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>topazproject-integrationtests</artifactId>
+  <version>0.8.1_rc2</version>
+  <packaging>pom</packaging>
+  <name>Topaz integrationtests sub-module</name>
+  
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>topazproject</artifactId>
+    <version>0.8.1_rc2</version>
+  </parent>
+
+  <repositories>
+    <!-- maventrac integration
+    <repository>
+      <id>rectang</id>
+      <name>Retang repository</name>
+      <url>http://maven.rectang.com/snapshot/</url>
+    </repository>
+    -->
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <classifier>jdk15</classifier>
+    </dependency>
+
+    <!-- dependencies for building javadocs (or they fail) -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xacml</groupId>
+      <artifactId>sunxacml</artifactId>
+      <version>1.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>quartz</groupId>
+      <artifactId>quartz</artifactId>
+      <version>1.5.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>2.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+      <version>0.7.1</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- topazproject/libs -->
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>auth-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>conf-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>fedora-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>filter-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>tomcat-jaas-cas</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>mulgara-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>otm</artifactId>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>object-collections</artifactId>
+    </dependency>
+    -->
+    <!-- topazproject/webservices -->
+    <!-- Get IOUtil -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <!-- search -->
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-search-client-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-search-webapp</artifactId>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <!-- This is where the site-deploy phase will put the documentation -->
+    <topazproject.site.url>file://${topazproject.install.dir}/topazdocs</topazproject.site.url>
+  </properties>
+  
+  <distributionManagement>
+    <site>
+      <id>gandalf-docs</id>
+      <url>${topazproject.site.url}</url>
+    </site>
+  </distributionManagement>
+  
+  <reporting>
+    <plugins>
+      
+      <!-- TODO: This plugin seems to generate 0-data. Needs investigation -->
+      <!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <rulesets>
+            <ruleset>/rulesets/basic.xml</ruleset>
+          </rulesets>
+        </configuration>
+      </plugin> -->
+      
+      <!-- Java Cross-References (very nice!) -->
+      <plugin>
+        <artifactId>maven-jxr-plugin</artifactId>
+      </plugin>
+      
+      <!-- Finds specific keywords in Java sources -->
+      <!-- <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+        <configuration>
+          <tags>
+            <tag>TODO</tag>
+            <tag>@todo</tag>
+            <tag>@deprecated</tag>
+            <tag>FIXME</tag>
+            <tag>XXX</tag>
+          </tags>
+        </configuration>
+      </plugin> -->
+      
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <!-- <sourcepath>${project.build.directory}/generated-sources</sourcepath> -->
+          <linksource>true</linksource>
+          <stylesheet>maven</stylesheet>
+          <show>package</show>
+          <encoding>UTF-8</encoding>
+          <charset>UTF-8</charset>
+          <use>false</use>
+          <header>&lt;a href='http://gandalf.topazproject.org/trac/log/head?rev=${svnversion}&amp;verbose=on' target='_top'>r${svnversion}&lt;/a></header>
+          <links>
+            <link>http://java.sun.com/j2se/1.4.2/docs/api</link>
+            <link>http://www.fedora.info/download/2.1.1/userdocs/server/serverdocs</link>
+            <link>http://jakarta.apache.org/commons/configuration/apidocs</link>
+            <link>http://tomcat.apache.org/tomcat-5.0-doc/catalina/docs/api</link>
+            <link>http://sunxacml.sourceforge.net/javadoc</link>
+            <link>http://gandalf.topazproject.org/kowari/api</link>
+            <link>http://ws.apache.org/axis/java/apiDocs</link>
+            <link>http://jakarta.apache.org/commons/logging/apidocs</link>
+            <link>http://jrdf.sourceforge.net/0.3/doc/javadoc</link>
+            <link>http://java.sun.com/j2ee/1.4/docs/api</link>
+            <link>http://excalibur.apache.org/apidocs</link>
+            <link>http://jakarta.apache.org/commons/email/api-release</link>
+            <link>http://java.sun.com/products/javamail/javadocs</link>
+            <link>http://quintanasoft.com/dumbster/javadoc</link>
+            <link>http://logging.apache.org/log4j/docs/api</link>
+          </links>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId> 
+        <artifactId>surefire-report-maven-plugin</artifactId> 
+      </plugin>
+
+      <!-- TODO: surefire report moved to apache.org, but borken?
+      <plugin> 
+        <groupId>org.apache.maven.plugins</groupId> 
+        <artifactId>maven-surefire-report-plugin</artifactId> 
+      </plugin> -->
+      
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+      
+      <!-- TODO: Neeed to use our own style.xml - see target/checkstyle*.xml for ex -->
+      <!-- <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin> -->
+
+      <!-- changelog for past 2 weeks -->
+      <!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changelog-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <id>dual-report</id>
+            <configuration>
+              <type>range</type>
+              <range>14</range>
+            </configuration>
+            <reports>
+              <report>changelog</report>
+              <report>file-activity</report>
+              <report>dev-activity</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin> -->
+      
+    </plugins>
+  </reporting>
+  
+  <build>
+    
+    <testResources>
+      <!-- Resources from src/it/resources in entire project -->
+      <testResource>
+        <directory>target/generated-sources/src/it/resources</directory>
+      </testResource>
+      <!-- Resources from our src/it/resources -->
+      <testResource>
+        <directory>src/it/resources</directory>
+      </testResource>
+    </testResources>
+    
+    <plugins>
+
+      <!-- Copy src/java so we can generate docs -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>pre-site</phase>
+            <configuration>
+              <tasks>
+                <!-- todir should be ${project.build.directory}/generated-sources, but the
+                     jxr, taglist (and probably other report modules) either ignore these,
+                     ignore their sourcedir configuration option or don't have an option!
+                     I've created a post-site phase to remove this directory. Ugly!
+                     TODO: Fix once all reporting modules are fixed -->
+                <copy todir="${basedir}">
+                  <fileset dir="..">
+                    <include name="**/*.java"/>
+                    <include name="**/*.html"/>
+                    <exclude name="**/samples/**"/>
+                    <exclude name="**/*Test*"/>
+                    <exclude name="**/target/**"/>
+                  </fileset>
+                  <regexpmapper from="^(.*)/src/main/(java|axis)/(.*)" to="src/main/java/\3"/>
+                </copy>
+                <!-- Hack to build javadocs for generated-sources for client APIs
+                     Note this ONLY works if target/generated-sources directories already exist
+                     from mvn install in ..
+                     There is another hacky solution of re-running mvn in an exec task, but
+                     doesn't seem worth it at this point -->
+                <copy todir="${basedir}">
+                  <fileset dir="..">
+                    <include name="**/*client*/target/generated-sources/**"/>
+                    <exclude name="**/alerts/**"/> <!-- Stuff I'm playing with right now -->
+                  </fileset>
+                  <regexpmapper from="^(.*)/target/generated-sources/(.*)" to="src/main/java/\2"/>
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>clean-src</id>
+            <!-- Should this be "clean" or "post-site"? -->
+            <phase>clean</phase>
+            <configuration>
+              <tasks>
+                <delete dir="${basedir}/src/main/java"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>post-site-remove-src</id>
+            <!-- Should this be "clean" or "post-site"? -->
+            <phase>post-site</phase>
+            <configuration>
+              <tasks>
+                <delete dir="${basedir}/src/main/java"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+        
+        <dependencies>
+          <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-apache-regexp</artifactId>
+            <version>1.6.5</version>
+            <scope>runtime</scope>
+          </dependency>
+          <dependency>
+            <groupId>jakarta-regexp</groupId>
+            <artifactId>jakarta-regexp</artifactId>
+            <version>1.4</version>
+          </dependency>
+        </dependencies>
+        
+      </plugin>
+      
+      <!-- Copy head/topazproject/**/src/it/* to generated-sources/src/it
+           (java test code and associated resources. beware of resource name collisions) -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <!-- May be better in pre-integration-test if plugins were executed in order -->
+            <phase>generate-test-sources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              
+              <tasks>
+                <copy todir="${project.build.directory}/generated-sources">
+                  <fileset dir=".." excludes="**/ws-client-it/**, **/object-collections/**"/>
+                  <compositemapper>
+                    <regexpmapper from="^(.*)/src/it/(.*)" to="src/it/\2"/>
+                    <regexpmapper
+                      from="^(.*)/src/test/(java/org/topazproject/otm/samples/.*)" to="src/it/\2"/>
+                  </compositemapper>
+                </copy>
+              </tasks>
+              
+              <!-- Add generated-sources/src/it/java to the list of folders
+                   containing sources to be compiled for testing. Use if ant
+                   script generates test source code. -->
+              <testSourceRoot>
+                ${project.build.directory}/generated-sources/src/it/java
+              </testSourceRoot>
+              
+            </configuration>
+          </execution>
+        </executions>
+
+        <!-- Dependencies for antrun plugin -->
+        <dependencies>
+          <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-apache-regexp</artifactId>
+            <version>1.6.5</version>
+            <scope>runtime</scope>
+          </dependency>
+          <!-- Required dependency for ant's copy's task use of regexpmapper -->
+          <dependency>
+            <groupId>jakarta-regexp</groupId>
+            <artifactId>jakarta-regexp</artifactId>
+            <version>1.4</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <!-- Add src/it/java to source to be compiled -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-test-sources</phase>
+            <goals><goal>add-test-source</goal></goals>
+            <configuration>
+              <sources><source>src/it/java</source></sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <!-- Since our packaging type is "pom", we have to add compiling specifically -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>test-compile</phase>
+            <goals><goal>testCompile</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- handle our test resources -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-test-resources</phase>
+            <goals><goal>testResources</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Load up our web-apps via cargo/jetty -->
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>0.3.1</version>
+        <configuration>
+          <wait>false</wait>
+          <container>
+            <containerId>jetty4x</containerId>
+            <type>embedded</type>
+            <dependencies>
+              <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+              </dependency>
+              <dependency>
+                <location>${user.home}/.m2/topaz/container-classes</location>
+              </dependency>
+              <dependency>
+                <location>${basedir}/src/it/container-classes</location>
+              </dependency>
+            </dependencies>
+          </container>
+          <configuration> 
+            <home>${project.build.directory}/jetty</home>
+            <properties>
+              <cargo.servlet.port>9997</cargo.servlet.port>
+              <cargo.logging>high</cargo.logging>
+            </properties>
+            <deployables>
+              <deployable>
+                <groupId>org.topazproject.ws</groupId>
+                <artifactId>ws-search-webapp</artifactId>
+                <type>war</type>
+                <properties>
+                  <context>ws-search</context>
+                </properties>
+              </deployable>
+            </deployables>
+          </configuration> 
+        </configuration> 
+        <executions>
+          <execution>
+            <id>jetty-start</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>start</goal></goals>
+          </execution>
+          <!-- doesn't work properly (yet)
+          <execution>
+          <id>jetty-stop</id>
+          <phase>post-integration-test</phase>
+          <goals><goal>stop</goal></goals>
+        </execution>
+          -->
+        </executions>
+      </plugin>
+      
+      <!-- Use surefire to run integration tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <goals><goal>test</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+    </plugins>
+  </build>
+  
+</project>
