@@ -1,0 +1,12 @@
+<project>
+  <target name="rdfs2html">
+    <xslt in="${input}" out="${output}" style="${sheet}">
+      <!--
+      <outputproperty name="method" value="xml"/>
+      <outputproperty name="standalone" value="yes"/>
+      <outputproperty name="encoding" value="iso8859_1"/>
+      <outputproperty name="indent" value="yes"/>
+      -->
+    </xslt>
+  </target>
+</project>

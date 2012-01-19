@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+  <topaz>
+	<services>
+	  <fedora>
+		<uri>http://localhost:9090/fedora</uri>
+		<auth-method>CAS</auth-method>
+		<!--
+		<auth-method>BASIC</auth-method>
+		<userName>fedoraAdmin</userName>
+		<password>fedoraAdmin</password>
+		-->
+	  </fedora>
+	  <itql>
+		<uri>http://localhost:9090/fedora/services/itql</uri>
+		<auth-method>CAS</auth-method>
+	  </itql>
+	</services>
+  </topaz>
+</configuration>

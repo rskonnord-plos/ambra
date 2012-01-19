@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <plosconf>
+    <def>override</def>
+  </plosconf>
+  <defaults>value</defaults>
+  <network>
+    <hosts>
+      <default>test1</default>
+    </hosts>
+  </network>
+  <exptest>
+    <overrides>
+      <item>http://${network.hosts.plosone}:${network.ports.plosone}/</item>
+      <item>http://test2:${network.ports.plosone}/</item>
+      <item>http://${network.hosts.default}:${network.ports.plosone}/</item>
+    </overrides>
+  </exptest>
+</config>

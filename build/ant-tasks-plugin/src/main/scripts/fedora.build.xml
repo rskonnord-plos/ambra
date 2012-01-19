@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <artifact:dependencies filesetId="antcontrib.fileset" useScope="runtime">
+    <dependency groupId="ant-contrib" artifactId="ant-contrib" version="1.0b2"/>
+  </artifact:dependencies>
+
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset refid="antcontrib.fileset"/>
+    </classpath>
+  </taskdef>
+
+  <property environment="env"/>
+
+  <target name="exec-ext">
+    <!-- Define extension desired by fedora's scripts -->
+    <condition property="ext" value=".sh">
+      <os family="unix"/>
+    </condition>
+    <condition property="ext" value=".bat">
+      <os family="windows"/>
+    </condition>
+    <property name="ext" value=""/>
+    <!-- Now find an extension for ant/mvn -->
+    <condition property="antext" value="">
+      <os family="unix"/>
+    </condition>
+    <condition property="antext" value=".bat">
+      <os family="windows"/>
+    </condition>
+    <property name="antext" value=""/>
+  </target>
+
+  <target name="fedora-install" depends="exec-ext">
+    <property name="FEDORA_JAR"
+      value="${localRepository}/${fedora-groupId}/${fedora-artifactId}/${fedora-version}/${fedora-artifactId}-${fedora-version}.jar"/>
+
+    <property name="FEDORA_HOME"
+      value="${FEDORA_INSTALL_DIR}/${FEDORA_ROOT}"/>
+
+    <mkdir dir="${FEDORA_INSTALL_DIR}"/>
+    <unjar src="${FEDORA_JAR}" dest="${FEDORA_INSTALL_DIR}"/>
+    <echo>FEDORA_HOME=${FEDORA_HOME}</echo>
+    <chmod perm="u+x">
+      <fileset dir="${FEDORA_HOME}">
+        <include name="**/bin/*"/>
+      </fileset>
+    </chmod>
+    <if>
+      <equals arg1="${DB}" arg2="mckoi" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Starting mckoi: FEDORA_HOME = ${FEDORA_HOME}</echo>
+        <exec dir="${FEDORA_HOME}"
+          executable="${FEDORA_HOME}/server/bin/mckoi-init${ext}">
+          <arg line="fedoraAdmin fedoraAdmin"/>
+          <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+        </exec>
+      </then>
+    </if>
+    
+  </target>
+
+  <target name="fedora-start" depends="mckoi-start">
+    <property name="FEDORA_HOME"
+      value="${FEDORA_INSTALL_DIR}/${FEDORA_ROOT}"/>
+    <echo>Starting fedora: FEDORA_HOME = ${FEDORA_HOME}</echo>
+    <exec dir="${FEDORA_HOME}"
+      executable="${FEDORA_HOME}/server/bin/fedora-start${ext}"
+      spawn="${SPAWN}">
+      <arg line="${DB}"/>
+      <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+    </exec>
+    <if>
+      <equals arg1="${SPAWN}" arg2="true" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Spawned off fedora; sleeping a bit to give it time to really start...</echo>
+        <sleep seconds="10"/>
+        <echo>Sleep done.</echo>
+      </then>
+    </if>
+  </target>
+
+  <target name="mckoi-start" depends="exec-ext">
+    <property name="FEDORA_HOME"
+      value="${FEDORA_INSTALL_DIR}/${FEDORA_ROOT}"/>
+    <if>
+      <equals arg1="${DB}" arg2="mckoi" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Starting mckoi: FEDORA_HOME = ${FEDORA_HOME}</echo>
+        <exec dir="${FEDORA_HOME}" 
+          executable="${FEDORA_HOME}/server/bin/mckoi-start${ext}"
+          spawn="true">
+          <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+        </exec>
+
+        <echo>Spawned off mckoi</echo>
+        <!-- <sleep seconds="2"/> -->
+      </then>
+    </if>
+  </target>
+
+  <target name="fedora-stop" depends="mckoi-stop"/>
+
+  <target name="--stop-fedora--" depends="exec-ext">
+    <property name="FEDORA_HOME"
+      value="${FEDORA_INSTALL_DIR}/${FEDORA_ROOT}"/>
+    <echo>Stopping fedora: FEDORA_HOME = ${FEDORA_HOME}</echo>
+    <exec dir="${FEDORA_HOME}" 
+      executable="${FEDORA_HOME}/server/bin/fedora-stop${ext}">
+      <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+    </exec>
+  </target>
+
+  <target name="mckoi-stop" depends="--stop-fedora--">
+    <property name="FEDORA_HOME"
+      value="${FEDORA_INSTALL_DIR}/${FEDORA_ROOT}"/>
+    <if>
+      <equals arg1="${DB}" arg2="mckoi" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Stopping mckoi: FEDORA_HOME = ${FEDORA_HOME}</echo>
+        <exec dir="${FEDORA_HOME}" executable="${FEDORA_HOME}/server/bin/mckoi-stop${ext}">
+          <arg line="fedoraAdmin fedoraAdmin"/>
+          <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+        </exec>
+      </then>
+    </if>
+  </target>
+  
+  <target name="fedora-rebuild" depends="mckoi-start">
+    <property name="FEDORA_HOME"
+      value="${FEDORA_INSTALL_DIR}/${FEDORA_ROOT}"/>
+    <if>
+      <equals arg1="${FEDORA_REBUILD_FROM}" arg2="${FEDORA_HOME}/data" casesensitive="false" trim="true"/>
+      <then>
+        <echo>Rebuilding fedora: FEDORA_HOME = ${FEDORA_HOME}</echo>
+      </then>
+      <else>
+        <echo>Replacing objects and datastreams with those from ${FEDORA_REBUILD_FROM}</echo>
+        <delete dir="${FEDORA_HOME}/data/datastreams"/>
+        <delete dir="${FEDORA_HOME}/data/objects"/>
+        <copy todir="${FEDORA_HOME}/data">
+          <fileset dir="${FEDORA_REBUILD_FROM}"/>
+        </copy>
+        <echo>Rebuilding fedora: FEDORA_HOME = ${FEDORA_HOME}</echo>
+      </else>
+    </if>
+    <exec dir="${FEDORA_HOME}" 
+      executable="${FEDORA_HOME}/server/bin/fedora-rebuild${ext}"
+      input="${FEDORA_REBUILD_STDIN}">
+      <arg line="${DB}"/>
+      <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+    </exec>
+  </target>
+
+  <target name="fedora-package" depends="exec-ext">
+    <!-- fail if JAVA_HOME is not set -->
+    <fail unless="env.JAVA_HOME" message="JAVA_HOME is not set"/>
+            
+    <!-- untar fedora server distribution -->
+    <untar src="${SRC_SERVER_TAR}" dest="${DEST_DIR}"/>
+
+    <!-- untar fedora client distribution -->
+    <untar src="${SRC_CLIENT_TAR}" dest="${DEST_DIR}"/>
+
+    <!-- setup execute permissions for bin/* -->
+    <chmod perm="u+x">
+      <fileset dir="${DEST_DIR}">
+        <include name="**/bin/*"/>
+      </fileset>
+    </chmod>
+
+    <property name="FEDORA_HOME"
+      value="${DEST_DIR}/fedora-${VERSION}"/>
+
+    <property name="TOMCAT_HOME"
+      value="${FEDORA_HOME}/server/${TOMCAT}"/>
+
+    <!-- execute fedora-setup with no-ssl-authenticate-apim -->
+    <exec
+      dir="${FEDORA_HOME}"
+      executable="${FEDORA_HOME}/server/bin/fedora-setup${ext}">
+      <arg line="no-ssl-authenticate-apim"/>
+      <env key="FEDORA_HOME" file="${FEDORA_HOME}"/>
+    </exec>
+
+    <!-- configure fedora (overwrite with our local copy) -->
+    <copy file="server/fedora.fcfg"
+      tofile="${FEDORA_HOME}/server/config/fedora.fcfg"
+      overwrite="true"/>
+
+    <copy file="server/fedora.sh"
+      tofile="${FEDORA_HOME}/server/bin/fedora.sh"
+      overwrite="true"/>
+
+    <!-- configure mckoi (overwrite with our local copy) -->
+    <copy file="mckoi1.0.3/db.conf"
+      tofile="${FEDORA_HOME}/server/mckoi1.0.3/db.conf"
+      overwrite="true"/>
+    
+    <!-- Get rid of log4j.xml file -->
+    <delete file="${TOMCAT_HOME}/common/classes/log4j.xml"/>
+
+    <!-- copy fedora patches -->
+    <unjar src="${FEDORA_PATCHES}" 
+      dest="${TOMCAT_HOME}/webapps/fedora/WEB-INF/classes" overwrite="true">
+      <patternset>
+        <exclude name="META-INF/**/*"/>
+      </patternset>
+    </unjar> 
+    
+  </target>
+</project>

@@ -1,0 +1,5 @@
+# Cleanup on upgrade
+# Make sure these files get deleted from 0.7...
+rm -f /usr/local/topaz/bin/articles
+rm -f /usr/local/topaz/bin/alertscli
+rm -f /usr/local/topaz/bin/rss

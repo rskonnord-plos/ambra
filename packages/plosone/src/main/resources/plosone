@@ -1,0 +1,5 @@
+# tomcat settings for plosone
+#
+MEM=`free -mo | grep Mem | awk '{print $2-128}'`
+export plosone_TOMCAT_OPTS="-Xmx${MEM}m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+export TOMCAT_START_OPTS="-Dcom.sun.management.jmxremote.port=21212 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"

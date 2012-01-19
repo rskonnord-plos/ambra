@@ -1,0 +1,10 @@
+<!DOCTYPE doc [<!ELEMENT testid (testid)*>
+<!ATTLIST testid id ID #REQUIRED > ] > 
+<doc> 
+	<chapter> <title>Chapter I</title>
+		<para>Hello world, indeed, <em>wonderful</em> world</para>
+	</chapter>
+	<something>
+	http://localhost:9080/existingArticle/test.xml
+	</something>
+</doc>

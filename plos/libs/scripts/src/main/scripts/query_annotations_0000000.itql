@@ -1,0 +1,10 @@
+# Define the aliases we need
+#alias <http://xmlns.com/foaf/0.1/> as foaf;
+#alias <http://rdf.topazproject.org/RDF/> as topaz;
+
+# Put it into csv mode
+#@mode = csv
+
+# Get a list of email, alias values
+select $s from <local:///topazproject#ri>
+where $s <http://www.w3.org/2000/10/annotation-ns#annotates> <info:doi/10.1371/journal.pone.0000000>;
