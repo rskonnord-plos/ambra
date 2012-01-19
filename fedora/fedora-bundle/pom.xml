@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.ambraproject</groupId>
+  <artifactId>fedora</artifactId>
+  <version>2.1</version>
+  <packaging>jar</packaging>
+  <name>Fedora with Topaz config</name>
+  <inceptionYear>2006</inceptionYear>
+  <description>A re-packaging of Fedora with Topaz-specific configuration and patches.</description>
+
+  <parent>
+    <groupId>org.ambraproject</groupId>
+    <artifactId>fedora-libs</artifactId>
+    <version>2.1</version>
+  </parent>
+
+  <properties>
+    <fedoraVersion>2.1.1</fedoraVersion>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>info.fedora</groupId>
+      <artifactId>server-distribution</artifactId>
+      <version>${fedoraVersion}</version>
+      <type>tar</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.fedora</groupId>
+      <artifactId>client-distribution</artifactId>
+      <version>${fedoraVersion}</version>
+      <type>tar</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>fedora-patches</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.ambraproject.plugins</groupId>
+        <artifactId>ant-tasks</artifactId>
+        <configuration>
+          <SRC_CLIENT_TAR>info.fedora:client-distribution:${fedoraVersion}</SRC_CLIENT_TAR>
+          <SRC_SERVER_TAR>info.fedora:server-distribution:${fedoraVersion}</SRC_SERVER_TAR>
+          <TOMCAT>jakarta-tomcat-5.0.28</TOMCAT>
+          <FEDORA_PATCHES>${project.groupId}:fedora-patches:${project.parent.version}</FEDORA_PATCHES>
+          <topaz_repository>http://maven.ambraproject.org/maven2/release/</topaz_repository>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>fedora-package</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
