@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<attributes version="1.0">
+   <fileobject name="PrefixResolverImpl.java">
+      <attr name="class_dependency_it.unibo.cs.org.apache.xml.utils.PrefixResolver" stringvalue="PrefixResolverImpl"/>
+   </fileobject>
+</attributes>
