@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>string-compare-resolver</artifactId>
+  <packaging>jar</packaging>
+  <version>0.5-rc4</version>
+  <name>Mulgara string-comparison resolver</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>topazproject-libs</artifactId>
+    <version>0.5-rc4</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mulgara</groupId>
+      <artifactId>mulgara</artifactId>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+  </properties>
+</project>

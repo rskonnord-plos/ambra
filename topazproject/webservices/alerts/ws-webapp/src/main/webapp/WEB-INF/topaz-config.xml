@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  - $HeadURL::                                                                                    $
+  - $Id$
+  -
+  - Copyright (c) 2006 by Topaz, Inc.
+  - http://topazproject.org
+  -
+  - Licensed under the Educational Community License version 1.0
+  - http://opensource.org/licenses/ecl1.php
+  -->
+<config>
+  <topaz>
+    <alerts>
+      <pdpName>_default_</pdpName>
+    </alerts>
+
+    <life-cycle-listeners>
+      <listener name="scheduler">org.topazproject.bootstrap.WebAppListenerInitScheduler</listener>
+    </life-cycle-listeners>
+
+    <scheduler>
+      <config>
+        <property>org.quartz.scheduler.instanceName = TestScheduler</property>
+        <property>org.quartz.scheduler.instanceId   = one</property>
+        
+        <property>org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool</property>
+        <property>org.quartz.threadPool.threadCount    = 5</property>
+        <property>org.quartz.threadPool.threadPriority = 4</property>
+        
+        <property>org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore</property>
+        <property>org.quartz.jobStore.misfireThreshold = 5000</property>
+      </config>
+      
+      <!-- Example: 2am Fridays: 0 0 2 ? * FRI - OR, for testing, once per min: 0 * * * * ? -->
+      <jobs>
+        <job name="sendalerts" group="topaz">
+          <class>org.topazproject.ws.alerts.impl.SendAlertsJob</class>
+          <cron>0 0 2 ? * FRI</cron>
+        </job>
+      </jobs>
+      -->
+      
+    </scheduler>
+
+  </topaz>
+</config>

@@ -1,0 +1,344 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>the-whole-shebang</artifactId>
+  <version>0.5-rc4</version>
+  <packaging>pom</packaging>
+  <name>All Plos and Topaz stuff</name>
+  <!-- description is encouraged to take HTML embeded in CDATA -->
+  <!-- Long descriptions break maven-jar-plugin and maven-war-plugin! MJAR-39.
+  <description><![CDATA[
+    Topaz is a new Open Source software applications
+    development project to create an innovative, end-to-end electronic
+    publishing system that will become a powerful driver of the Open
+    Access movement.
+
+    As an Open Source publishing framework, TOPAZ will serve the rapidly
+    growing demand for sophisticated tools and resources to read and use the
+    scientific and medical literature, allowing scholarly publishers, societies,
+    universities, and research communities to publish open access journals
+    economically and efficiently.
+
+    TOPAZ will provide an incomparable resource for open access publishing
+    generally and for the emerging open science movement enabling the
+    transformation of scholarly publishing to an Open Access model in which
+    the literature is freely and immediately available to anyone, anywhere, via
+    the Internet, for innovative and creative uses, unfettered by financial or
+    legal barriers.
+  ]]></description>
+  -->
+  <description>PlosOne and Topaz Project</description>
+  <url>http://www.topazproject.org</url>
+  <organization>
+    <name>Topaz</name>
+    <url>http://www.topazproject.org</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>Educational Community License version 1.0</name>
+      <url>http://opensource.org/licenses/ecl1.php</url>
+      <comments>Copyright (c) 2006 by Topaz, Inc.</comments>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <issueManagement>
+    <system>trac</system>
+    <url>http://gandalf.topazproject.org/trac</url>
+  </issueManagement>
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://gandalf.topazproject.org/continuum</url>
+  </ciManagement>
+
+  <repositories>
+    <repository>
+      <id>topaz</id>
+      <name>Maven 2 Repository for Topaz</name>
+      <url>http://gandalf.topazproject.org/maven2</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>topaz</id>
+      <name>Maven 2 Repository for Topaz</name>
+      <url>http://gandalf.topazproject.org/maven2</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <scm>
+    <developerConnection>scm:svn:http://gandalf.topazproject.org/svn/tags/the-whole-shebang-0.5-rc4</developerConnection>
+    <connection>scm:svn:http://gandalf.topazproject.org/svn/tags/the-whole-shebang-0.5-rc4</connection>
+    <url>http://gandalf.topazproject.org/svn/tags/the-whole-shebang-0.5-rc4</url>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>topaz</id>
+      <url>http://gandalf.topazproject.org/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <modules>
+    <module>build/ant-tasks-plugin</module>
+    <module>build/archetypes/webservice</module>
+    <module>topazproject</module>
+    <module>plosone</module>
+    <module>plos-registration</module>
+    <module>re-package</module>
+    <module>packages</module>
+  </modules>
+
+  <properties>
+    <topazproject.install.dir>${user.home}/topazproject-install</topazproject.install.dir>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+    <!-- aggregate some documentation - javadocs & jxr -->
+    <aggregate>true</aggregate>
+  </properties>
+
+  <!-- Profiles Section: Define custom profiles here -->
+  
+  <profiles>
+
+    <!-- it-helper: Integration-test helper - Turn on integration testing within modules -->
+
+    <profile>
+      <id>it-helper</id>
+
+      <dependencies>
+        <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <version>1.2.13</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+      
+      <build>
+        <!-- We're doing integration testing, so get test resources from appropriate location. -->
+        <!-- XXX: Ideally we'd do this via configuration/resources in the maven-resourses-plugin,
+             but there is a jira ticket open that this is broken, so we're mashing up resources
+             for unit and integration testing. Be warned not to use different resources with
+             identical names but differnt content in it/resources and test/resources! -->
+        <testResources>
+          <testResource>
+            <directory>src/it/resources</directory>
+          </testResource>
+          <testResource>
+            <directory>src/test/resources</directory>
+          </testResource>
+        </testResources>
+
+        <!-- This doesn't work in profiles (yet) - using build-helper-maven-plugin instead
+        <testSourceDirectory>src/it/java</testSourceDirectory> -->
+
+        <!-- XXX: Should some/all of this be inside the <pluginManagement> section?
+             That would allow us to more easily modify integration-testing options in
+             sub-modules (assuming integration testing is ever run directly in the
+             sub-modules themselves).
+             If we start running this profile across all sub-modules, this may give
+             less trouble but will require entries in modules that want to run
+             integration tests. -->
+        
+        <plugins>
+          
+          <!-- Add src/it/java to test-sources since <testSourceDirectory> does not work
+               within profiles and because maven-compiler-plugin's testCompile goal ignores
+               configuration/compileSourceRoots configuration -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>generate-test-sources</phase>
+                <goals><goal>add-test-source</goal></goals>
+                <configuration>
+                  <sources><source>src/it/java</source></sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Use surefire to run integration tests -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>     <!-- don't run the tests in the test phase -->
+            </configuration>
+            <executions>
+              <execution>
+                <id>it-test</id>
+                <phase>integration-test</phase>
+                <goals><goal>test</goal></goals>
+                <configuration>
+                  <skip>false</skip><!-- instead, run the tests in the integration-test phase -->
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Blow away the target/test-classes directory so non it-helper builds don't
+               get confused. (Would be better to build in it-classes (or move classes there
+               when testing, but maven is so f**king broken as to make that impossible). -->
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>post-integration-test</phase>
+                <goals><goal>run</goal></goals>
+                <configuration>
+                  <tasks>
+                    <delete dir="${project.build.directory}/test-classes" />
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          
+        </plugins>
+
+        <!-- pluginManagement: Default plugin information to be made available for
+             reference by modules derived from this one. This plugin configuration
+             will not be resolved or bound to the lifecycle unless referenced. Any
+             local configuration for a given plugin will override the plugin's
+             entire definition here. -->
+        
+        <pluginManagement>
+          <plugins>
+            
+            <!-- deploy for integration testing -->
+            <plugin>
+              <groupId>org.topazproject.patch.cargo</groupId>
+<!--            <groupId>org.codehaus.cargo</groupId> -->
+              <artifactId>cargo-maven2-plugin</artifactId>
+              <version>0.2</version>
+              <configuration>
+                <wait>false</wait>
+                <container>
+                  <containerId>jetty4x</containerId>
+                  <type>embedded</type>
+                  <output>${project.build.directory}/jetty.log</output>
+                  <log>${project.build.directory}/cargo.log</log>
+                  <dependencies>
+                    <dependency>
+                      <groupId>log4j</groupId>
+                      <artifactId>log4j</artifactId>
+                    </dependency>
+                    <dependency>
+                      <location>${user.home}/.m2/topaz/container-classes</location>
+                    </dependency>
+                    <dependency>
+                      <location>${basedir}/src/it/container-classes</location>
+                    </dependency>
+                  </dependencies>
+                </container>
+                <configuration> 
+                  <home>${project.build.directory}/jetty</home>
+                  <properties>
+                    <cargo.servlet.port>9997</cargo.servlet.port>
+                    <cargo.logging>high</cargo.logging>
+                  </properties>
+                  <deployables>
+                    <deployable>
+                      <groupId>${pom.parent.groupId}</groupId>
+                      <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+                      <type>war</type>
+                      <properties>
+                        <context>${pom.parent.artifactId}</context>
+                      </properties>
+                    </deployable>
+                  </deployables>
+                </configuration>
+              </configuration> 
+              <executions>
+                <execution>
+                  <id>jetty-start</id>
+                  <phase>pre-integration-test</phase>
+                  <goals><goal>start</goal></goals>
+                </execution>
+                <!-- doesn't work properly (yet)
+                <execution>
+                  <id>jetty-stop</id>
+                  <phase>post-integration-test</phase>
+                  <goals><goal>stop</goal></goals>
+                </execution>
+                -->
+              </executions>
+            </plugin>
+          
+          </plugins>
+        </pluginManagement>
+        
+      </build>
+
+    </profile>
+
+    <!-- it-startenv: Start and stop fedora/ecqs/mulgara before and after integration testing -->
+    
+    <profile>
+      <id>it-startenv</id>
+
+      <build>
+        <plugins>
+          <!-- Run ant-tasks:ecqs/fedora/mulgara-start/stop around integration tests -->
+          <plugin>
+            <groupId>org.topazproject.plugins</groupId>
+            <artifactId>ant-tasks</artifactId>
+            <executions>
+              <execution>
+                <id>it-startenv-exe</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>ecqs-install</goal>
+                  <goal>mulgara-install</goal>
+                  <goal>fedora-install</goal>
+                  <goal>search-install</goal>
+                  <goal>ecqs-start</goal>
+                  <goal>mulgara-start</goal>
+                  <goal>fedora-start</goal>
+                  <goal>search-start</goal>
+                </goals>
+                <configuration>
+                  <SPAWN>true</SPAWN>      <!-- Spawn the start command -->
+                  <fedora-version>2.1.1-t4</fedora-version>
+                  <ecqs-version>2.0.6-1-t4</ecqs-version>
+                </configuration>
+              </execution>
+              <execution>
+                <id>it-stopenv-exe</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>ecqs-stop</goal>
+                  <goal>fedora-stop</goal>
+                  <goal>mulgara-stop</goal>
+                  <goal>search-stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+  </profiles>
+        
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <goals>deploy</goals>                           <!-- disable site deploy -->
+          <useReleaseProfile>false</useReleaseProfile>    <!-- no javadoc and source jars -->
+          <tagBase>http://gandalf.topazproject.org/svn/tags</tagBase>
+          <preparationGoals>clean install</preparationGoals>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <defaultGoal>install</defaultGoal>
+  </build>
+</project>

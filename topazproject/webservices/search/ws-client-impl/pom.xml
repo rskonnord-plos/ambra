@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-client-impl</artifactId>
+  <packaging>jar</packaging>
+  <version>0.5-rc4</version>
+  <name>Fedoragsearch client API</name>
+  
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-search</artifactId>
+    <version>0.5-rc4</version>
+  </parent>
+  
+  <dependencies>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+
+        <executions>
+          
+          <execution>
+            <id>generate-fedoragsearch-client</id>
+            <phase>generate-sources</phase>
+            <goals><goal>wsdl2java</goal></goals>
+            <configuration>
+              <packageSpace>org.topazproject.fedoragsearch.service</packageSpace>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin>
+      
+    </plugins>
+  </build>
+
+</project>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules [
+  <!ELEMENT rules ((rule | aliasMap)*)>
+  <!ELEMENT rule     (match, object)>
+  <!ELEMENT aliasMap (entry)*>
+
+  <!ELEMENT match    (s?, p?, o?, m?)>
+  <!ELEMENT s        (#PCDATA)>
+  <!ELEMENT p        (#PCDATA)>
+  <!ELEMENT o        (#PCDATA)>
+  <!ELEMENT m        (#PCDATA)>
+
+  <!ELEMENT object   (cache, (key | query))>
+  <!ELEMENT cache    (#PCDATA)>
+  <!ELEMENT key      (#PCDATA)>
+  <!ATTLIST key
+      field (s | p | o | m) #IMPLIED>
+  <!ELEMENT query    (#PCDATA)>
+    <!-- ${x} (where x = 's', 'p', 'o', or 'm') will be replaced with the corresponding
+       - value from the match.
+       -->
+
+  <!ELEMENT entry    (alias, value)>
+  <!ELEMENT alias    (#PCDATA)>
+  <!ELEMENT value    (#PCDATA)>
+    <!-- ${dbUri} will be replaced with the current database-uri -->
+]>
+<rules>
+  <aliasMap>
+    <entry>
+      <alias>topaz</alias>
+      <value>http://rdf.topazproject.org/RDF/</value>
+    </entry>
+    <entry>
+      <alias>dc</alias>
+      <value>http://purl.org/dc/elements/1.1/</value>
+    </entry>
+    <entry>
+      <alias>mulgara</alias>
+      <value>http://mulgara.org/mulgara#</value>
+    </entry>
+    <entry>
+      <alias>model</alias>
+      <value>${dbUri}#</value>
+    </entry>
+  </aliasMap>
+
+  <!-- deny-inactive -->
+  <rule>
+    <match>
+      <p>topaz:articleState</p>
+      <m>model:ri</m>
+    </match>
+    <object>
+      <cache>article-state</cache>
+      <query>
+        select $s $state from &lt;model:ri&gt;
+            where (&lt;${s}&gt; &lt;topaz:articleState&gt; $state)
+            and ($s &lt;mulgara:is&gt; &lt;${s}&gt; or
+                 &lt;${s}&gt; &lt;topaz:propagate-permissions-to&gt; $s in &lt;model:pp&gt;);
+      </query>
+    </object>
+  </rule>
+  <rule>
+    <match>
+      <p>topaz:propagate-permissions-to</p>
+      <m>model:pp</m>
+    </match>
+    <object>
+      <cache>article-state</cache>
+      <query>
+        select $s $state from &lt;model:ri&gt;
+            where (&lt;${s}&gt; &lt;topaz:articleState&gt; $state)
+            and (&lt;${s}&gt; &lt;topaz:propagate-permissions-to&gt; $s in &lt;model:pp&gt;);
+      </query>
+    </object>
+  </rule>
+
+  <!-- permit-admin -->
+  <rule>
+    <match>
+      <p>topaz:hasRoles</p>
+      <m>model:users</m>
+    </match>
+    <object>
+      <cache>permit-admin</cache>
+      <key field="s"/>
+    </object>
+  </rule>
+
+  <!-- permit-bootstrap -->
+  <rule>
+    <match>
+      <p>topaz:role</p>
+      <o>admin</o>
+      <m>model:users</m>
+    </match>
+    <object>
+      <cache>permit-bootstrap</cache>
+      <key>admins</key>
+    </object>
+  </rule>
+
+  <!-- permit-creator -->
+  <rule>
+    <match>
+      <p>dc:creator</p>
+      <m>model:ri</m>
+    </match>
+    <object>
+      <cache>permit-creator</cache>
+      <query>
+        select $r $s from &lt;model:ri&gt;
+        where ($r &lt;dc:creator&gt; $s or $r &lt;topaz:anonymousCreator&gt; $s)
+        and ($r &lt;mulgara:is&gt; &lt;${s}&gt; or
+             &lt;${s}&gt; &lt;topaz:propagate-permissions-to&gt; $r in &lt;model:pp&gt;);
+      </query>
+    </object>
+  </rule>
+  <rule>
+    <match>
+      <p>topaz:anonymousCreator</p>
+      <m>model:ri</m>
+    </match>
+    <object>
+      <cache>permit-creator</cache>
+      <query>
+        select $r $s from &lt;model:ri&gt;
+        where ($r &lt;dc:creator&gt; $s or $r &lt;topaz:anonymousCreator&gt; $s)
+        and ($r &lt;mulgara:is&gt; &lt;${s}&gt; or
+             &lt;${s}&gt; &lt;topaz:propagate-permissions-to&gt; $r in &lt;model:pp&gt;);
+      </query>
+    </object>
+  </rule>
+  <rule>
+    <match>
+      <p>topaz:propagate-permissions-to</p>
+      <m>model:pp</m>
+    </match>
+    <object>
+      <cache>permit-creator</cache>
+      <query>
+        select $r $s from &lt;model:ri&gt;
+        where ($r &lt;dc:creator&gt; $s or $r &lt;topaz:anonymousCreator&gt; $s)
+        and (&lt;${s}&gt; &lt;topaz:propagate-permissions-to&gt; $r in &lt;model:pp&gt;);
+      </query>
+    </object>
+  </rule>
+</rules>

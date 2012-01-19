@@ -1,0 +1,149 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-client-impl</artifactId>
+  <packaging>jar</packaging>
+  <name>Ratings Webservice Client</name>
+
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-ratings</artifactId>
+    <version>0.5-rc4</version>
+  </parent>
+
+  <licenses>
+    <license>
+      <name>Educational Community License version 1.0</name>
+      <url>http://opensource.org/licenses/ecl1.php</url>
+    </license>
+  </licenses>
+
+  <dependencies>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-api</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+      <type>war</type>
+      <version>${pom.parent.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>auth-helper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>    
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-users-client-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-users-webapp</artifactId>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- wsdl2java plugin -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>wsdl2java</goal></goals>
+            <configuration>
+              <sourceDependencies>
+                <sourceDependency>${pom.parent.groupId}:${pom.parent.artifactId}-api:${pom.parent.version}:/${wsdl.filename}</sourceDependency>
+              </sourceDependencies>
+              <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>DeleteNonSoap</id>
+            <phase>process-sources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <tasks>
+                <delete>
+                  <fileset dir="${project.build.directory}/generated-sources/org/topazproject" excludes="**/*Service*.java" />
+                </delete>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Profiles Section: Define custom profiles here -->
+  
+  <profiles>
+    <!-- it-helper: Integration-test helper - Turn on integration testing within modules -->
+    <profile>
+      <id>it-helper</id>
+      
+      <build>
+        <plugins>
+
+          <!-- deploy for integration testing -->
+          <!-- This just steals the configuration from our super-pom -->
+          <plugin>
+            <groupId>org.topazproject.patch.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <configuration>
+              <configuration>
+                <deployables>
+                  <deployable>
+                    <groupId>${pom.parent.groupId}</groupId>
+                    <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+                    <type>war</type>
+                    <properties>
+                      <context>${pom.parent.artifactId}</context>
+                    </properties>
+                  </deployable>
+                  <deployable>
+                    <groupId>org.topazproject.ws</groupId>
+                    <artifactId>ws-users-webapp</artifactId>
+                    <type>war</type>
+                    <properties>
+                      <context>ws-users</context>
+                    </properties>
+                  </deployable>
+                </deployables>
+              </configuration>
+            </configuration>
+            <executions>
+              <execution>
+                <id>jetty-start</id>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+</project>

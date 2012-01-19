@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>fedora-install</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>fedora-install</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Installs Fedora on the local machine at FEDORA_HOME.
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>FEDORA_INSTALL_DIR</name>
+          <property>FEDORA_INSTALL_DIR</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+          <type>java.lang.String</type>
+          <description>The name of the input file.</description>
+        </parameter>
+        
+        <parameter>
+          <name>FEDORA_HOME</name>
+          <property>FEDORA_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/fedora-2.1.1</defaultValue>
+          <type>java.lang.String</type>
+          <description>Fedora Home directory</description>
+        </parameter>
+
+        <parameter>
+          <name>localRepository</name>
+          <property>localRepository</property>
+          <required>true</required>
+          <defaultValue>${settings.localRepository}</defaultValue>
+          <type>java.lang.String</type>
+          <description>Maven local repository.</description>
+        </parameter>
+
+        <parameter>
+          <name>fedora-groupId</name>
+          <property>fedora-groupId</property>
+          <required>true</required>
+          <defaultValue>org/topazproject</defaultValue>
+          <type>java.lang.String</type>
+          <description>groupId for fedora.</description>
+        </parameter>
+
+        <parameter>
+          <name>fedora-artifactId</name>
+          <property>fedora-artifactId</property>
+          <required>true</required>
+          <defaultValue>fedora</defaultValue>
+          <type>java.lang.String</type>
+          <description>artifactId of fedora.</description>
+        </parameter>
+
+        <parameter>
+          <name>fedora-version</name>
+          <property>fedora-version</property>
+          <required>true</required>
+          <expression>${fedora-version}</expression>
+          <defaultValue>2.1.1-t4-SNAPSHOT-SNAPSHOT-SNAPSHOT</defaultValue>
+          <type>java.lang.String</type>
+          <description>version of fedora.</description>
+        </parameter>
+        
+        <parameter>
+          <name>ECQS_KEYSTORE</name>
+          <property>ECQS_KEYSTORE</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/esup-cas-quick-start-2.0.6-1/jakarta-tomcat-5.0.28/conf/cacert.ks</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>TOMCAT</name>
+          <property>TOMCAT</property>
+          <required>true</required>
+          <defaultValue>jakarta-tomcat-5.0.28</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>DB</name>
+          <property>DB</property>
+          <required>true</required>
+          <expression>${DB}</expression>
+          <defaultValue>mckoi</defaultValue>
+          <description>Which database to use</description>
+        </parameter>
+        
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>fedora-start</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>fedora-start</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Start fedora on the local machine..
+      </description>
+
+      <parameters>
+        <parameter>
+          <name>FEDORA_HOME</name>
+          <property>FEDORA_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/fedora-2.1.1</defaultValue>
+          <type>java.lang.String</type>
+          <description>Fedora Home directory</description>
+        </parameter>
+        
+        <parameter>
+          <name>SPAWN</name>
+          <property>SPAWN</property>
+          <required>true</required>
+          <expression>${SPAWN}</expression>
+          <defaultValue>false</defaultValue>
+          <description>Whether we should spawn or not</description>
+        </parameter>
+
+        <parameter>
+          <name>DB</name>
+          <property>DB</property>
+          <required>true</required>
+          <expression>${DB}</expression>
+          <defaultValue>mckoi</defaultValue>
+          <description>Which database to use</description>
+        </parameter>
+        
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>fedora-stop</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>fedora-stop</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Stop fedora on the local machine..
+      </description>
+
+      <parameters>
+        <parameter>
+          <name>FEDORA_HOME</name>
+          <property>FEDORA_HOME</property>
+          <required>true</required>
+          <defaultValue>${topazproject.install.dir}/fedora-2.1.1</defaultValue>
+          <type>java.lang.String</type>
+          <description>Fedora Home directory</description>
+        </parameter>
+
+        <parameter>
+          <name>DB</name>
+          <property>DB</property>
+          <required>true</required>
+          <expression>${DB}</expression>
+          <defaultValue>mckoi</defaultValue>
+          <description>Which database to use</description>
+        </parameter>
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>fedora-package</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>fedora-package</call>
+      <requiresProject>true</requiresProject>
+
+      <description>
+        Package fedora with Topaz configuration files
+      </description>
+
+      <parameters>
+        <parameter>
+          <name>VERSION</name>
+          <property>VERSION</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>SRC_CLIENT_TAR</name>
+          <property>SRC_CLIENT_TAR</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>SRC_SERVER_TAR</name>
+          <property>SRC_SERVER_TAR</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>TOMCAT</name>
+          <property>TOMCAT</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>CAS_AUTHENTICATOR</name>
+          <property>CAS_AUTHENTICATOR</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>CAS_CLIENT</name>
+          <property>CAS_CLIENT</property>
+          <required>true</required>
+        </parameter>
+
+        <parameter>
+          <name>WS_ACCESS_CLIENT</name>
+          <property>WS_ACCESS_CLIENT</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>WS_ACCESS_API</name>
+          <property>WS_ACCESS_API</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>WS_COMMON_API</name>
+          <property>WS_COMMON_API</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>AUTH_HELPER</name>
+          <property>AUTH_HELPER</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>CONF_HELPER</name>
+          <property>CONF_HELPER</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>FEDORA_SECURITY</name>
+          <property>FEDORA_SECURITY</property>
+          <required>true</required>
+        </parameter>
+        
+        <parameter>
+          <name>ACCESS_WAR</name>
+          <property>ACCESS_WAR</property>
+          <required>true</required>
+        </parameter>
+      
+        <parameter>
+          <name>FEDORA_PATCHES</name>
+          <property>FEDORA_PATCHES</property>
+          <required>true</required>
+        </parameter>
+        
+      </parameters>
+
+    </mojo>
+  </mojos>
+</pluginMetadata>

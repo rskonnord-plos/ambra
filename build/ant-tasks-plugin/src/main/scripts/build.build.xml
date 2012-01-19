@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+  
+  <!-- Define dependencies needed if we want to use <classpath refid="dependency.classpath" />
+       in a <java /> task. See antlib: http://maven.apache.org/ant-tasks.html -->
+  <artifact:dependencies pathId="dependency.classpath"
+      xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <dependency groupId="ant" artifactId="ant" version="1.6.5"/>
+    <dependency groupId="ant" artifactId="ant-launcher" version="1.6.5"/>
+  </artifact:dependencies>
+
+  <target name="exec-ext">
+    <condition property="ext" value="">
+      <os family="unix"/>
+    </condition>
+    <condition property="ext" value=".bat">
+      <os family="windows"/>
+    </condition>
+    <property name="ext" value=""/>
+  </target>
+  
+  <!-- Build and test our entire tree -->
+  <target name="build-and-test" depends="exec-ext">
+    <!-- Clean install location (wipes DBs and any side-effects) -->
+    <delete dir="${topazproject.install.dir}"/>
+    <!-- Fire "clean install -batch" -->
+    <exec executable="mvn${ext}" failonerror="true">
+      <arg line="clean install --batch-mode"/>
+    </exec>
+    <!-- Fire "-Pit-startenv integration-test" from topazproject/integrationtests -->
+    <exec executable="mvn${ext}" failonerror="true"
+          dir="${BASEDIR}/topazproject/integrationtests">
+      <arg line="clean -Pit-startenv install --batch-mode"/>
+    </exec>
+  </target>
+    
+</project>

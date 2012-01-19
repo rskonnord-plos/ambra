@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-server</artifactId>
+  <packaging>jar</packaging>
+  <name>Journal-Admin Webservice Server</name>
+
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-journal-admin</artifactId>
+    <version>0.5-rc4</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-core</artifactId>
+      <version>${pom.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>CopyServiceImplementation</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <tasks>
+                <copy todir="${project.build.directory}/generated-sources">
+                  <fileset dir="src/main/axis" includes="**/*.java" />
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>CopyServiceDeploymentDescriptors</id>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <copy todir="${project.build.directory}/classes" flatten="true">
+                  <fileset dir="${project.build.directory}/generated-sources" includes="**/*.wsdd" />
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <goals><goal>wsdl2java</goal></goals>
+            <configuration>
+              <sourceDependencies>
+                <sourceDependency>${pom.parent.groupId}:${pom.parent.artifactId}-core:${pom.parent.version}:/${wsdl.filename}</sourceDependency>
+              </sourceDependencies>
+              <serverSide>true</serverSide>
+              <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
