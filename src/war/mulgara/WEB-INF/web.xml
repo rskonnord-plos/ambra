@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+
+<web-app>
+
+  <!-- ==================================================================== -->
+  <!-- Project settings                                                     -->
+  <!-- ==================================================================== -->
+  <display-name>Mulgara Semantic Store</display-name>
+  <description>
+    WAR wrapper for a Mulgara server.
+  </description>
+
+
+  <!-- ==================================================================== -->
+  <!-- Parameters                                                           -->
+  <!-- ==================================================================== -->
+  <context-param>
+    <param-name>mulgara.security.policy</param-name>
+    <param-value>/WEB-INF/conf/mulgara.policy</param-value>
+  </context-param>
+  <context-param>
+    <param-name>mulgara.security.ldap</param-name>
+    <param-value>/WEB-INF/conf/ldap.conf</param-value>
+  </context-param>
+  <context-param>
+    <param-name>mulgara.log4j.config</param-name>
+    <param-value>/WEB-INF/conf/log4j-mulgara-war.properties</param-value>
+  </context-param>
+  <context-param>
+    <param-name>mulgara.config.servername</param-name>
+    <param-value>server1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>mulgara.config.persistencepath</param-name>
+    <param-value>/spare/mulgara</param-value>
+  </context-param>
+  <context-param>
+    <param-name>lucene.index.dir</param-name>
+    <param-value>/spare/mulgara/text_index</param-value>
+  </context-param>
+
+
+  <!-- ==================================================================== -->
+  <!-- Kowar servlets                                                       -->
+  <!-- ==================================================================== -->
+  <servlet>
+    <servlet-name>Mulgara</servlet-name>
+    <servlet-class>org.mulgara.server.ServletMulgaraServer</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+
+  <!-- ==================================================================== -->
+  <!-- Servlet container settings                                           -->
+  <!-- ==================================================================== -->
+  <session-config>
+    <session-timeout>15</session-timeout>
+  </session-config>
+
+  
+</web-app>

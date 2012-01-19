@@ -1,0 +1,17 @@
+<?xml version="1.0"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.mulgara</groupId>
+  <artifactId>mulgara</artifactId>
+  <name>Mulgara package</name>
+  <version>1.0.1-t1</version>
+  <description>The Mulgara package.</description>
+  <licenses>
+    <license>
+      <name>Open Software License ("OSL") v. 3.0</name>
+      <url>http://opensource.org/licenses/osl-3.0.php</url>
+    </license>
+  </licenses>
+  <distributionManagement>
+    <status>deployed</status>
+  </distributionManagement>
+</project>
