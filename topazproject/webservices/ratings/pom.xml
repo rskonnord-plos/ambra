@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject.ws</groupId>
+  <artifactId>ws-ratings</artifactId>
+  <packaging>pom</packaging>
+  <name>Ratings Webservice</name>
+  <version>0.6</version>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>webservices</artifactId>
+    <version>0.6</version>
+  </parent>
+
+  <licenses>
+    <license>
+      <name>Educational Community License version 1.0</name>
+      <url>http://opensource.org/licenses/ecl1.php</url>
+    </license>
+  </licenses>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <modules>
+      <module>api</module>
+      <module>impl</module>
+      <module>ws-client-impl</module>
+      <module>ws-server-impl</module>
+      <module>ws-webapp</module>
+  </modules>
+
+  <properties>
+    <wsdl.filename>ratings-service.wsdl</wsdl.filename>
+  </properties>
+</project>

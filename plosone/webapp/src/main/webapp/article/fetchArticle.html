@@ -1,0 +1,1015 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>PLoS ONE</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="keywords" content=""/>
+
+<meta name="description" content="" />
+
+<link rel="shortcut icon" href="/plosone-webapp/images/pone_favicon.ico" type="image/x-icon" />
+<link rel="home" title="home" href="http://www.plosone.org"></link>
+
+<!-- global_css.ftl -->
+
+<style type="text/css" media="all"> @import "/plosone-webapp/css/pone_screen.css";</style>
+<style type="text/css" media="all"> @import "/plosone-webapp/css/pone_iepc.css";</style>
+<script type="text/javascript">
+  var namespace="/plosone-webapp";
+  	var loggedIn = false;
+</script>
+<script type="text/javascript" src="/plosone-webapp/javascript/prototype.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/browserDetection.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/config_article.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/dojo/dojo.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/topaz/topaz.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/topaz/annotation.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/topaz/displayComment.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/topaz/formUtil.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/topaz/domUtil.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/topaz/floatingMenu.js"></script>	
+<script type="text/javascript">
+	dojo.registerModulePath("topaz", "../topaz");
+	dojo.require("topaz.topaz");
+	dojo.require("dojo.widget.Dialog");
+	dojo.require("dojo.widget.RegionalDialog");
+	dojo.require("dojo.lfx.*");
+  dojo.require("dojo.io.*");
+  dojo.require("dojo.event.*");
+  dojo.require("dojo.json");
+
+ </script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/formSetup_article.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/topaz/errorConsole.js"></script>	
+<script type="text/javascript" src="/plosone-webapp/javascript/init_article.js"></script>	
+
+<meta name="description" content="PLoS ONE: an inclusive, peer-reviewed, open-access resource from the PUBLIC LIBRARY OF SCIENCE. Reports of well-performed scientific studies from all disciplines freely available to the whole world. " />
+
+<meta name="keywords" content="PLoS, Public Library of Science, Open Access, Open-Access, Science, Medicine, Biology, Research, Peer-review, Inclusive, Interdisciplinary, Ante-disciplinary, Physics, Chemistry, Engineering" />
+
+<!--
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="http://www.plosone.org">
+   <license rdf:resource="http://creativecommons.org/licenses/by/2.5/" />
+</Work>
+<License rdf:about="http://creativecommons.org/licenses/by/2.5/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+</License>
+</rdf:RDF>
+-->
+</head>
+<body>
+<!-- begin : container -->
+<div id="container">
+	
+	<!-- begin : top banner external ad space -->
+	<div id="topBanner">
+	<!-- begin : left banner slot -->
+	<div class="left">
+<script type="text/javascript"><!--
+google_ad_client = "pub-3431511166307937";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_type = "text";
+google_ad_channel ="";
+google_color_border = "7F7F7F";
+google_color_bg = "4C4C4C";
+google_color_link = "FFFFFF";
+google_color_text = "E6E6E6";
+google_color_url = "FFFFFF";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+	</div>
+	<!-- end : left banner slot -->
+	<!-- begin : right banner slot -->
+	<div class="right">
+		<img src="/plosone-webapp/images/temp_pone_banner.gif" />
+	</div>
+	<!-- end : right banner slot -->	</div>
+	<!-- end : top banner external ad space -->
+	
+	<!-- begin : header -->
+	<div id="hdr">
+	<!-- begin : logo -->
+	<div id="logo" title="PLoS ONE: Publishing science, acclerating research"><a href="http://www.plosone.org" title="PLoS ONE: Publishing science, accelerating research"><span>PLoS ONE</span></a></div>
+	<!-- end : logo -->
+	<!-- begin : user controls -->
+		
+	<div id="user" class="login">
+		<div>
+			<ul>
+				<li><a href="#">Create Account</a></li>
+				<li><a href="/plosone-webapp/user/secure/secureRedirect.action?goTo=%2Fplosone-webapp%2Farticle%2FfetchArticle.action%3FannotationId%3Dinfo%253Adoi%252F10.1371%252Fannotation%252F23%26articleURI%3Dinfo%253Adoi%252F10.1371%252Fjournal.pone.0000008" class="feedback">Login</a></li>
+			</ul>
+		</div>
+	</div>
+
+	
+	<!-- end : user controls -->
+	<!-- begin search links -->
+	<ul id="links">
+			<li><a href="#" title="Search PLoS ONE with advanced criteria" class="icon advanced">Advanced Search</a></li>
+			<li><a href="#" title="PLoS ONE RSS Feeds" class="icon rss">RSS</a></li>
+			<li><a href="#" title="Send us your feedback" class="feedback">Feedback</a></li>
+	</ul>
+	<!-- end : search links -->
+	<!-- begin : dashboard -->
+	<div id="db">
+		<form>
+		<fieldset>
+		<legend>Search PLoS ONE</legend>
+			<label for="search">Search</label>
+			<div class="wrap"><input type="text" value="Search PLoS ONE..." onfocus="if(this.value=='Search PLoS ONE...')value='';" onblur="if(this.value=='')value='Search PLoS ONE...';" class="searchField" alt="Search PLoS ONE..." /></div>
+			<input src="../images/pone_searchinput_btn.gif" value="ftsearch" alt="SEARCH" tabindex="3" class="button" type="image" />
+		</fieldset>
+		</form>
+	</div>
+	<!-- end : dashboard -->
+	<!-- begin : navigation -->
+	<ul id="nav">
+		<li><a href="#">Home</a></li>
+		<li><a href="#" class="drop">Articles</a>
+			<table><tr><td>
+				<ul>
+					<li><a href="#" title="Browse: Current Issue">Current Issue</a></li>
+
+					<li><a href="#" title="Browse: Past Issues">Past Issues</a></li>
+					<li><a href="#" title="Browse: By Publication Date">By Publication Date</a></li>
+					<li><a href="#" title="Browse: By Subject">By Subject</a></li>
+				</ul>
+			</li>
+			</td></tr></table><!--[if lte IE 6]></a><![endif]-->
+		<li><a href="#" class="drop">Authors</a></a>
+			<table><tr><td>
+				<ul>
+					<li><a href="#" title="For Authors: Why Publish With Us?">Why Publish With Us?</a></li>
+
+					<li><a href="#" title="For Authors: Editorial Policies">Editorial and Publishing Policies</a></li>
+					<li><a href="#" title="For Authors: Author Guidelines">Author Guidelines</a></li>
+					<li><a href="#" title="For Authors: Figure Guidelines">Figure Guidelines</a></li>
+					<li><a href="#" title="For Authors: Submit Your Paper">Submit Your Paper</a></li>
+				</ul>
+			</li>
+			</td></tr></table><!--[if lte IE 6]></a><![endif]-->
+		<li><a href="#">Users</a></li>
+		<li><a href="#" class="drop">About</a>
+			<table><tr><td>
+				<ul>
+					<li><a href="#" title="About: Journal Information">Journal Information</a></li>
+					<li><a href="#" title="About: Editorial Board">Editorial Board</a></li>
+					<li><a href="#" title="About: Editor-in-Chief">Editor-in-Chief</a></li>
+					<li><a href="#" title="About: Media Inquiries">Media Inquiries</a></li>
+					<li><a href="#" title="About: PLoS in Print">PLoS in Print</a></li>
+				</ul>
+			</li>
+			</td></tr></table><!--[if lte IE 6]></a><![endif]-->
+			<li class="journalnav"><a href="http://www.plos.org" title="Public Library of Science" tabindex="10">PLoS.org</a></li>
+
+			<li class="journalnav"><a href="http://www.plosjournals.org" title="PLoS Journals" tabindex="9" class="drop">PLoS Journals</a>
+			<table><tr><td>
+				<ul>
+					<li><a href="http://biology.plosjournals.org" title="PLoSBiology.org">PLoS Biology</a></li>
+					<li><a href="http://medicine.plosjournals.org" title="PLoSMedicine.org">PLoS Medicine</a></li>
+					<li><a href="http://clinicaltrials.plosjournals.org" title="PLoSClinicalTrials.org">PLoS Clinical Trials</a></li>
+
+					<li><a href="http://compbiol.plosjournals.org" title="PLoSCompBiol.org">PLoS Computational Biology</a></li>
+					<li><a href="http://genetics.plosjournals.org" title="PLoSGenetics.org">PLoS Genetics</a></li>
+					<li><a href="http://pathogens.plosjournals.org" title="PLoSPathogens.org">PLoS Pathogens</a></li>
+					<li><a href="http://www.plosntd.org/" title="PLoSNTD.org">PLoS Neglected Tropical Diseases</a></li>
+					<li><a href="http://www.plosone.org/" title="PLoSONE.org">PLoS ONE</a></li>
+				</ul>
+			</li>
+
+			</td></tr></table><!--[if lte IE 6]></a><![endif]-->
+		</ul>
+	<!-- end : navigation -->	</div>
+	<!-- end : header -->
+<!-- begin : main content -->
+<div id="content" class="article">
+	<!-- begin : right hand column -->
+<div id="rhc">
+
+<div id="sideNav">
+	<div class="links">
+		<ul>
+	    			<li><a href="/plosone-webapp/article/fetchObjectAttachment.action?representation=XML&amp;uri=info%3Adoi%2F10.1371%2Fjournal.pone.0000008" class="xml" title="Download XML">Download Article XML</a></li>
+			<li><a href="/plosone-webapp/article/fetchObjectAttachment.action?representation=PDF&amp;uri=info%3Adoi%2F10.1371%2Fjournal.pone.0000008" class="pdf" title="Download PDF">Download Article PDF</a></li>
+			<li><a href="#" class="email" title="Email This Article to a Friend or Colleague">Email This Article</a></li>
+  		<li><a href="#" class="print last" title="Go to a Printer Ready Version">Print This Article</a></li>
+		</ul>
+	</div>
+<!--
+	<div class="links">
+		<ul>
+			<li><a href="#" class="plos" title="View Related PLoS Articles">Related PLoS Articles</a></li>
+			<li><a href="#" class="article" title="Find Articles Citing this Article">Articles Citing This Article</a></li>
+			<li><a href="#" class="ncbi" title="View PubMed Record">PubMed Record</a></li>
+			<li><a href="#" class="google last" title="View Google Scholar Citation">Google Scholar Citation</a></li>
+		</ul>
+	</div>-->
+<!--	<div class="tools">
+		<h3>Overall Rating</h3>
+		<img src="/plosone-webapp/images/temp_tools_rating.gif" />
+		<a href="#">Rate this article</a>
+		<h3>My Rating</h3>
+	</div> -->
+	<div id="floatMarker"></div>
+	<div id="postcomment">
+		<div class="commentview">
+			<h6>Commentary</h6>
+			<ol>
+						<li><a href="/plosone-webapp/user/secure/secureRedirect.action?goTo=%2Fplosone-webapp%2Farticle%2FfetchArticle.action%3FannotationId%3Dinfo%253Adoi%252F10.1371%252Fannotation%252F23%26articleURI%3Dinfo%253Adoi%252F10.1371%252Fjournal.pone.0000008" id="addAnnotation" class="addannotation tooltip">Add your annotation</a>
+				<li><a href="#" onclick="toggleAnnotation('public'); return false;" class="expand tooltip" title="Click to turn annotations on/off">Turn annotations on/off</a>
+				<!--<li><a href="#" onclick="return topaz.domUtil.swapDisplayMode('toggleAnnotations');" class="expand tooltip" title="Click to turn annotations on/off">Turn annotations on/off</a>-->
+				<!-- begin : expanded block -->
+				<!--	<fieldset>
+						<form>
+						<ol id="toggleAnnotations">
+							<li>Yours  <div><input class="input" type="radio" title="Choose from one of the options" name="yours" value="On" checked>
+										<label for="yours">On</label>
+										<input class="input" type="radio" title="Choose from one of the options" name="yours" value="Off">
+										<label for="yours">Off</label></div>
+							</li>
+							<li>Authors	<div><input class="input" type="radio" title="Choose from one of the options" name="authors" value="On" checked>
+										<label for="authors">On</label>
+										<input class="input" type="radio" title="Choose from one of the options" name="authors" value="Off">
+										<label for="authors">Off</label></div>
+							</li>
+							<li>All Public
+										<div><input class="input" type="radio" title="Choose from one of the options" name="public" value="On" checked>
+										<label for="public">On</label>
+										<input class="input" type="radio" title="Choose from one of the options" name="public" value="Off">
+										<label for="public">Off</label></div>
+							</li>
+						</ol>
+						</form>
+					</fieldset>-->
+				<!-- end : expanded block -->
+				</li>
+
+				<li><a href="/plosone-webapp/annotation/secure/startDiscussion.action?target=info%3Adoi%2F10.1371%2Fjournal.pone.0000008" class="discuss icon">Start a discussion</a> about this article</li>
+
+				<li><a href="/plosone-webapp/annotation/getCommentary.action?target=info%3Adoi%2F10.1371%2Fjournal.pone.0000008" class="commentary icon">See all commentary</a> on this article</li>
+			</ol>
+		</div> 
+		<div id="sectionNavTop" class="tools">
+					<ul>
+					<li><a href="#s0">Top</a></li>
+					<li><a href="#s1">Introduction</a></li>
+					<li><a href="#s2">Results</a></li>
+	
+					<li><a href="#s3">Discussion</a></li>
+					<li><a href="#s4">Materials and Methods</a></li>
+					<li><a href="#s5">Supporting Information</a></li>
+					<li><a href="#s6">Acknowledgments</a></li>
+					<li><a href="#s7" class="last">References</a></li>
+				</ul>
+	
+		</div>
+		<div id="dojoDebug"></div>
+	</div>
+	
+	
+</div>
+
+
+</div>
+<!-- end : right hand column -->
+
+	<!-- begin : research article -->
+	<form name="articleInfo" id="articleInfo" method="" action="">
+		<input type="hidden" name="isAuthor" value="true" />
+		<input type="hidden" name="authorIdList" value="" />
+		<input type="hidden" name="userIdList" value="" />
+		<input type="hidden" name="otherIdList" value="" />
+		<input type="hidden" name="annotationId" value="info:doi/10.1371/annotation/23" />
+	</form>
+
+	<div id="articleContainer">
+
+<div xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:aml="http://topazproject.org/aml/" id="researchArticle" class="content" xpathLocation="/">
+   <div class="beta">We are still in beta! Help us make the site better and <a href="#" title="Submit your feedback">report bugs</a>.
+   </div>
+   
+   
+   
+   
+   <h1 xpathLocation="/article[1]/front[1]/article-meta[1]/title-group[1]/article-title[1]">Molecular Adaptation during Adaptive Radiation in the Hawaiian Endemic Genus <i>Schiedea</i>
+      
+   </h1>
+   
+   <p class="authors" xpathLocation="noSelect">Maxim V. Kapralov, Dmitry A. Filatov<sup><a href="#n101" class="fnoteref">*</a></sup></p>
+   <p class="affiliations" xpathLocation="noSelect"><a name="aff1" id="aff1"></a> School of Biosciences, University of Birmingham, Birmingham, United Kingdom, 
+   </p>
+   <div class="info abstract" xpathLocation="/article[1]/front[1]/article-meta[1]/abstract[1]">
+      
+      <h3 xpathLocation="/article[1]/front[1]/article-meta[1]/abstract[1]/sec[1]/title[1]">Background</h3>
+      
+      <p xpathLocation="/article[1]/front[1]/article-meta[1]/abstract[1]/sec[1]/p[1]"><span class="note public" title="User Annotation" annotationId="info:doi/10.1371/annotation/11,info:doi/10.1371/annotation/10"><a href="#" class="bug public" id="annAnchor1" displayId="info:doi/10.1371/annotation/11,info:doi/10.1371/annotation/10" onclick="return(topaz.displayComment.show(this));" onmouseover="topaz.displayComment.mouseoverComment(this);" onmouseout="topaz.displayComment.mouseoutComment(this);" title="Click to preview this annotation"></a>“Explo</span><span class="note public" title="User Annotation" annotationId="info:doi/10.1371/annotation/10">sive” adaptive radiations on islands remain one of the most puzzling evolutionary phenomena. The rate of phenotypic and ecological
+            adaptations is extremely fast during such events, suggesting that many genes may be under fairly strong selection. However,
+            no evidence for adaptation at the level of protein coding genes was found, so it has been suggested that selection may work
+            mainly on regulatory elements. Here we report the first evidence that positive selecti</span><span class="note public" title="User Annotation" annotationId="info:doi/10.1371/annotation/9,info:doi/10.1371/annotation/10"><a href="#" class="bug public" id="annAnchor3" displayId="info:doi/10.1371/annotation/9" onclick="return(topaz.displayComment.show(this));" onmouseover="topaz.displayComment.mouseoverComment(this);" onmouseout="topaz.displayComment.mouseoutComment(this);" title="Click to preview this annotation"></a>on does operate at the level of protein coding genes during rapid adaptive radiations. We studied molecular ada</span><span class="note public" title="User Annotation" annotationId="info:doi/10.1371/annotation/10">ptation in Hawaiian endemic plant genus <i>Schiedea</i> (<i>Caryophyllaceae</i>), which includes closely related species with a striking r</span>ange of morphological and ecological forms, varying from rainforest vines to woody shrubs growing in desert-like conditions
+         on cliffs. Given the remarkable difference in photosynthetic performance between <i>Schiedea</i> species from different habitats, we focused on the “photosynthetic” Rubisco enzyme, the efficiency of which is known to be
+         a limiting step in plant photosynthesis.
+      </p>
+      
+      
+      
+      <h3 xpathLocation="/article[1]/front[1]/article-meta[1]/abstract[1]/sec[2]/title[1]">Results</h3>
+      
+      <p xpathLocation="/article[1]/front[1]/article-meta[1]/abstract[1]/sec[2]/p[1]">We demonstrate that the chloroplast <i>rbcL</i> gene, encoding the large subunit of Rubisco enzyme, evolved under strong positive selection in <i>Schiedea</i>. Adaptive amino acid changes occurred in functionally important regions of Rubisco that interact with Rubisco activase, a
+         chaperone which promotes and maintains the catalytic activity of Rubisco. Interestingly, positive selection acting on the
+         <i>rbcL</i> might have caused favorable cytotypes to spread across several <i>Schiedea</i> species.
+      </p>
+      
+      
+      
+      <h3 xpathLocation="/article[1]/front[1]/article-meta[1]/abstract[1]/sec[3]/title[1]">Significance</h3>
+      
+      <p xpathLocation="/article[1]/front[1]/article-meta[1]/abstract[1]/sec[3]/p[1]">We report the first evidence for adaptive changes at the DNA and protein sequence level that may have been associated with
+         the evolution of photosynthetic performance and colonization of new habitats during a recent adaptive radiation in an island
+         plant genus. This illustrates how small changes at the molecular level may change ecological species performance and helps
+         us to understand the molecular bases of extremely fast rate of adaptation during island adaptive radiations.
+      </p>
+      
+      
+      
+      
+   </div>
+   
+   
+   
+   <div class="articleinfo" xpathLocation="noSelect">
+      <p><strong>Funding:</strong> This work was funded by a grant from the BBSRC.
+      </p>
+      <p><strong>Competing interests:</strong> The authors have declared that no competing interests exist.
+      </p>
+      <p><strong>Academic Editor:</strong> Konrad Scheffler,
+         				  University of Cape Town, South Africa
+      </p>
+      <p><strong>Citation: </strong>Kapralov MV, Filatov DA (2006) Molecular Adaptation during Adaptive Radiation in the Hawaiian Endemic Genus Schiedea
+         . PLoS One1(1):
+         			.
+         			doi:10.1371/journal.pone.0000008
+      </p>
+      <p><strong>Received:</strong> August 7, 2006; <strong>Accepted:</strong> September 6, 2006; <strong>Published:</strong> November 2006
+      </p>
+      <p><strong>Copyright:</strong>  © 2006
+         Kapralov and Filatov. This is an open-access article distributed under the terms of the Creative Commons Attribution License,
+         which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are
+         credited.
+         
+      </p>
+      <p><a name="n101"></a>* To whom correspondence should be addressed. E-mail: <a href="mailto:D.Filatov@bham.ac.uk">D.Filatov@bham.ac.uk</a>
+         
+      </p>
+   </div>
+   
+   
+   
+   
+   
+   
+   <div id="section1" xpathLocation="/article[1]/body[1]/sec[1]"><a id="s1" name="s1"></a><h3 xpathLocation="/article[1]/body[1]/sec[1]/title[1]">INTRODUCTION</h3>
+      <p xpathLocation="/article[1]/body[1]/sec[1]/p[1]">The most dramatic “bursts” of adaptive radiation often occur within confined geographical regions (e.g. oceanic islands or
+         inland freshwater lakes; e.g. <a href="#pone.0000008-Schluter1">1</a>). Although island adaptive radiations may be viewed as extreme examples of evolutionary diversification, it is thought that
+         major adaptive radiations in the history of our planet have been following the same evolutionary processes as island endemic
+         radiations. Thus, islands may be viewed as evolutionary laboratories one can use to understand general processes of adaptation
+         and speciation <a href="#pone.0000008-Schluter1">1</a>,<a href="#pone.0000008-Seehausen1">2</a>.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[1]/p[2]">“Explosive” island adaptive radiations are accompanied by tremendous phenotypical and ecological changes that suggest many
+         genes might be under fairly strong positive selection. However, we do not know how natural selection works at the molecular
+         level during adaptive radiation events. Island habitats are always limited in area, so island populations are limited in size.
+         In addition, many island species are thought to evolve via colonization of new islands or habitats (“island hopping speciation”,
+         <a href="#pone.0000008-Hollocher1">3</a>). Such colonization events should lead to a drastic reduction in population size. As the efficacy of selection is proportional
+         to the product of the selective coefficient and the effective population size <a href="#pone.0000008-Kimura1">4</a>, the relat<span class="note public" title="User Annotation" annotationId="info:doi/10.1371/annotation/13"><a href="#" class="bug public" id="annAnchor5" displayId="info:doi/10.1371/annotation/13" onclick="return(topaz.displayComment.show(this));" onmouseover="topaz.displayComment.mouseoverComment(this);" onmouseout="topaz.displayComment.mouseoutComment(this);" title="Click to preview this annotation"></a>ively small effective population size of island species should result in a reduced efficacy of natural select</span>ion. In small populations (e.g. in endemic island species), the dynamics of non-synonymous mutations is dominated by drift
+         and the fixation probabilities of deleterious and advantageous mutations are expected to be approximately equal <a href="#pone.0000008-Ohta1">5</a>. Few studies have investigated the action of selection at the molecular level during island adaptive radiations <a href="#pone.0000008-Barrier1">6</a>,<a href="#pone.0000008-Remington1">7</a>. These studies indicated some increase in non-synonymous (d<i>N</i>) to synonymous (d<i>S</i>) substitution rates in the Hawaiian silversword alliance, which may reflect slight relaxation of purifying selection in small
+         island populations, but no convincing evidence of positive selection has been reported.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[1]/p[3]">The small size of island populations may also limit the genetic variability required for natural selection to work, so the
+         fast rate of phenotypic diversification on islands is quite surprising. Interspecific hybridization may be a possible source
+         of additional genetic variation within species <a href="#pone.0000008-Seehausen1">2</a>,<a href="#pone.0000008-Stebbins1">8</a>,<a href="#pone.0000008-Morjan1">9</a>. Closely related species are often cross-compatible and there are numerous examples of interspecific hybridization in plants
+         and animals <a href="#pone.0000008-Arnold1">10</a>. Even with low rates of introgression positively selected alleles can spread across several species <a href="#pone.0000008-Slatkin1">11</a>. Occasional events of interspecific hybridization allow adaptive radiations to be considered as metapopulations, where adaptive
+         mutations may spread across several species significantly accelerating the adaptation process <a href="#pone.0000008-Lewontin1">12</a>. However, it is not known how common such sharing of adaptive mutations by several species might be.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[1]/p[4]">In this paper we report the analysis of positive selection at the molecular level and the spread of adaptive alleles across
+         several species in Hawaiian endemic plant genus <i>Schiedea</i> (<i>Caryophyllaceae</i>), which represents one of the largest plant adaptive radiations on Hawaii. <i>Schiedea</i> comprises 32 living (and at least two extinct) species adapted to a wide range of habitats from wet rainforest to dry desert-like
+         conditions of coastal cliffs <a href="#pone.0000008-Wagner1">13</a>. Among <i>Schiedea</i>'s most prominent evolutionary transitions have been remarkable changes in its growth habit, ranging from rainforest vines
+         and perennial herbs through mesic and dry forest subshrubs and shrubs to cliff-dwelling shrubs <a href="#pone.0000008-Wagner1">13</a> (see Table S1). The latter are particularly notable for a lineage within the <i>Caryophyllaceae</i> family which contains mainly herbaceous annuals and perennials.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[1]/p[5]">
+         <i>Schiedea</i> species from contrasting environments (e.g. rainforest vs. coastal cliffs) are dramatically different from each other in
+         many physiological traits <a href="#pone.0000008-Wagner1">13</a>. In particular, there are substantial differences in photosynthetic performance in <i>Schiedea</i>, suggesting that some of the protein coding genes involved in photosynthesis could be under positive selection. This motivated
+         us to choose two chloroplast “photosynthetic” genes, <i>psbA</i> and <i>rbcL</i>, for phylogeny-based analysis of positive selection. The first gene, <i>psbA</i>, encodes photosystem II reaction center protein D1. Photosystem II is the first link in the chain of photosynthesis, it captures
+         photons and uses the energy to extract electrons from water molecules <a href="#pone.0000008-Ferreira1">14</a>. The second gene, <i>rbcL</i>, encodes large subunits of Ribulose-1,5-bisphospate (RuBP) carboxylase/oxigenase (Rubisco; EC 4.1.1.39) which catalyzes the
+         first step in net photosynthetic CO<sub>2</sub> assimilation and photorespiratory carbon oxidation <a href="#pone.0000008-Spreitzer1">15</a>. “The most abundant protein in the world”, Rubisco comprises about 40–50% of all soluble proteins in green plant tissues
+         and is responsible for almost all carbon fixation on Earth. Despite its critical importance for life on our planet, this protein
+         is notoriously inefficient in its function, creating a bottleneck, which limits plant growth <a href="#pone.0000008-Spreitzer1">15</a>. This makes <i>rbcL</i> a likely target of positive selection, as any improvements in its function may drastically change plant growth rate. For
+         comparison we also studied a non-photosyntetic chloroplast gene, <i>matK</i>, that encodes a protein of unknown function which is hypothesized to be involved in splicing in the chloroplast genome <a href="#pone.0000008-Neuhaus1">16</a>,<a href="#pone.0000008-Vogel1">17</a>.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[1]/p[6]">Below we demonstrate that one of the studied photosynthetic genes, <i>rbcL</i>, evolved under positive selection during adaptive radiation in <i>Schiedea</i>. The differences in amino acid sequence among different <i>Schiedea</i> species could possibly account for the observed differences in photosynthetic performance and may have helped the genus to
+         colonise a new habitat–dry sunny slopes and cliffs. Interestingly, the positive selection at <i>Schiedea rbcL</i> may have caused adaptive chloroplast haplotypes to spread across several <i>Schiedea</i> species, which are known to occasionally form hybrids in the wild <a href="#pone.0000008-Wagner1">13</a>. This supports the view that sharing of adaptive mutations by several species may play a significant role in plant adaptive
+         evolution <a href="#pone.0000008-Seehausen1">2</a>,<a href="#pone.0000008-Morjan1">9</a>,<a href="#pone.0000008-Lewontin1">12</a>.
+      </p>
+      
+   </div>
+   
+   
+   <div id="section2" xpathLocation="/article[1]/body[1]/sec[2]"><a id="s2" name="s2"></a><h3 xpathLocation="/article[1]/body[1]/sec[2]/title[1]">RESULTS</h3>
+      
+      <h4 xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/title[1]">Positive Selection in <i>Schiedea rbcL</i>
+         
+      </h4>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/p[1]">Phylogenetic maximum likelihood analysis of selection at the molecular level assumes that the phylogeny of an analyzed gene
+         is correct <a href="#pone.0000008-Yang1">18</a>. The published phy<span class="note public" title="User Annotation" annotationId="info:doi/10.1371/annotation/14"><a href="#" class="bug public" id="annAnchor6" displayId="info:doi/10.1371/annotation/14" onclick="return(topaz.displayComment.show(this));" onmouseover="topaz.displayComment.mouseoverComment(this);" onmouseout="topaz.displayComment.mouseoutComment(this);" title="Click to preview this annotation"></a>logeny of the genus <i>Schiedea</i> is based on morphology and ITS and ETS sequences and is relatively well</span> established <a href="#pone.0000008-Wagner1">13</a>. However, individual genes may have gene trees that differ from the species tree due to horizontal gene transfer and lineage
+         sorting <a href="#pone.0000008-Seehausen1">2</a>,<a href="#pone.0000008-Maddison1">19</a>,<a href="#pone.0000008-Machado1">20</a>. Thus, in order to conduct phylogenetic maximum likelihood analysis of selection in chloroplast genes it was essential to
+         construct a robust gene tree of the <i>Schiedea</i> chloroplast DNA. For this purpose we sequenced fragments of <i>psbA, rbcL</i> and <i>matK</i> protein coding genes, as well as noncoding <i>trnL</i> intron, <i>psbA-trnK</i> and <i>trnL-trnF</i> intergenic spacers and <i>trnS-trnG</i> region (in total, 5.3 kb per individual, <a href="#pone.0000008-t01">Table 1</a>) from all 27 <i>Schiedea</i> species used in this study (<a href="#pone.0000008-f01">Fig. 1</a> and supplementary table S1). As expected for a non-recombining chloroplast genome, the phylogenies based on individual chloroplast
+         regions were consistent with each other, allowing us to concatenate the datasets, which resulted in a fairly well resolved
+         phylogeny with high bootstrap support (25 haplotypes for concatenated dataset, <a href="#pone.0000008-f01">Fig. 1</a>). Interestingly, the <i>Schiedea</i> chloroplast gene tree (<a href="#pone.0000008-f01">Fig. 1</a>) substantially differed from the accepted ITS+ETS+morphology based phylogeny of the genus <a href="#pone.0000008-Wagner1">13</a>. The plausible explanation for the observed discordance of the phylogenies as well as for rather “shallow” clades III and
+         IV in the cpDNA tree (<a href="#pone.0000008-f01">Fig. 1</a>) could be the transition of cytotypes via interspecific hybridization and further fixation of favorable haplotypes within
+         multiple species. Indeed, all the <i>Schiedea</i> species from cpDNA clade III live on the same island, Kaua'i, while the species from cpDNA clade IV inhabit several younger
+         islands (O'ahu, Maui, Moloka'i, Lana'i, Hawai'i) that were connected to each other at various points in history of the archipelago.
+         Thus, it seems likely that the cpDNA clades III and IV represent chloroplast hapoltypes that have spread across several species
+         in Kaua'i, or younger islands. Strong positive selection in the <i>Schiedea</i> photosynthetic gene <i>rbcL</i> described below may have caused the cytotypes to spread across several species.
+      </p>
+      
+      <div class="figure" xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]" id="pone.0000008-f01">
+        <a title="Click for larger image " href="#" onclick="" name="pone.0000008-f01">
+          <img border="1" src="pone.0000008-f01-S.png" align="left" alt="thumbnail" class="thumbnail" />
+        </a>
+        <h5 xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]">
+          <a href="somehrefhere"><strong><span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]">Figure 1. </span></strong></a>
+          <span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]">Neighbor joining tree of 27 <i>Schiedea</i> species constructed using three coding and four non-coding cpDNA regions.</span>
+          
+        </h5>
+          
+        <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]/caption[1]/p[1]">Neighbor joining tree of 27 <i>Schiedea</i> species constructed using three coding and four non-coding cpDNA regions.</p>
+        <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]/caption[1]/p[2]">Numbers above branches are bootstrap support values (%).</p>
+       
+        <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]/caption[1]/p[3]">Non-synonymous (diamonds) and synonymous (circles) substitutions are shown for <i>rbcL</i> (black filled symbols) and <i>matK</i> (white symbols).
+        </p>
+       
+        <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]/caption[1]/p[4]">The four clades are marked by Roman numbers.</p>
+       
+        <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/fig[1]/caption[1]/p[5]">10.1371/journal.pone.0000008.g001</p>
+         
+      </div>
+      <div class="table" xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[1]"><a name="pone.0000008-t01" id="pone.0000008-t01"></a><a title="Click for larger image " href="someHrefHere"><img border="1" src="info:doi/10.1371/journal.pone.0000008.t001" align="left" alt="thumbnail" class="thumbnail"></a><h5 xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[1]"><a href="somehrefhere"><strong><span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[1]">Table 1. </span></strong></a><span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[1]">Investigated Chloroplast DNA Regions of 27 <i>Schiedea</i> Species</span></h5>Investigated Chloroplast DNA Regions of 27 <i>Schiedea</i> Species
+      </div>
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/p[2]">One out of the three investigated protein coding genes–<i>psbA</i>–appeared to be under strong purifying selection in <i>Schiedea</i>, showing no non-synonymous and only eight synonymous substitutions (<a href="#pone.0000008-t02">Table 2</a>). Moreover, when we compared <i>Schiedea</i>'s <i>psbA</i> with homologs from <i>Silene latifolia</i> (<i>Caryophyllaceae, Caryophyllales</i>; GenBank AB189069) and <i>Chenopodium rubrum</i> (<i>Chenopodiaceae, Caryophyllales</i>; GenBank Y14732) all 47 observed mutations again appeared to be synonymous.
+      </p>
+      
+      <div class="table" xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[2]"><a name="pone.0000008-t02" id="pone.0000008-t02"></a><a title="Click for larger image " href="someHrefHere"><img border="1" src="info:doi/10.1371/journal.pone.0000008.t002" align="left" alt="thumbnail" class="thumbnail"></a><h5 xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[2]"><a href="somehrefhere"><strong><span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[2]">Table 2. </span></strong></a><span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[2]">Non-synonymous and Synonymous Substitutions Rates in Three Investigated Chloroplast Genes of 27 <i>Schiedea</i> Species</span></h5>Non-synonymous and Synonymous Substitutions Rates in Three Investigated Chloroplast Genes of 27 <i>Schiedea</i> Species
+      </div>
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/p[3]">Both <i>matK</i> and <i>rbcL</i> showed relatively high d<i>N</i>/d<i>S</i> averaged across the whole <i>Schiedea</i> phylogeny–0.72 and 0.50 respectively (<a href="#pone.0000008-t02">Table 2</a>). However, the distribution of non-synonymous substitutions on the phylogenetic tree for <i>rbcL</i> and all other regions was remarkably different (<a href="#pone.0000008-t02">Table 2</a>). While all ten non-synonymous substitutions in <i>rbcL</i> occurred in the internal branches, non-synonymous substitutions in <i>matK</i> as well as synonymous mutations in <i>rbcL, matK</i> and <i>psbA</i> and mutations in all non-coding regions appeared mainly in the terminal branches (<a href="#pone.0000008-t02">Table 2</a>; <a href="#pone.0000008-f01">Fig 1</a>). 2×2 contingency tests demonstrate that an unusually large number of amino acid replacements in the <i>Schiedea rbcL</i> occurred on the internal branches of the tree in comparison to synonymous mutations in <i>rbcL</i> as well as to non-synonymous and synonymous mutations in <i>matK</i> and <i>psbA</i> and mutations in non-coding regions (<a href="#pone.0000008-t03">Table 3</a>).
+      </p>
+      
+      <div class="table" xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[3]"><a name="pone.0000008-t03" id="pone.0000008-t03"></a><a title="Click for larger image " href="someHrefHere"><img border="1" src="info:doi/10.1371/journal.pone.0000008.t003" align="left" alt="thumbnail" class="thumbnail"></a><h5 xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[3]"><a href="somehrefhere"><strong><span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[3]">Table 3. </span></strong></a><span xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/table-wrap[3]">Comparisons of Mutation Numbers on Internal and External Branches of the <i>Schiedea</i> Chloroplast Gene Tree</span></h5>Comparisons of Mutation Numbers on Internal and External Branches of the <i>Schiedea</i> Chloroplast Gene Tree
+      </div>
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[1]/p[4]">To test for the presence of codons under positive selection in <i>matK</i> and <i>rbcL</i> we used likelihood ratio tests (LRTs) to compare the nested models allowing for variation in d<i>N</i>/d<i>S</i> ratio across codons <a href="#pone.0000008-Yang2">21</a>. In this analysis we compared the following pairs of models implemented in codeml program <a href="#pone.0000008-Yang1">18</a>: M1a/M2a <a href="#pone.0000008-Wong1">22</a>, M7/M8 <a href="#pone.0000008-Yang2">21</a> and M8a/M8 <a href="#pone.0000008-Swanson1">23</a>. Model M1a allows two classes of sites: one class with d<i>N</i>/d<i>S</i> varying freely between 0 and 1, and another one with d<i>N</i>/d<i>S</i> = 1 <a href="#pone.0000008-Wong1">22</a>. Model 2a has an additional class of sites, which can accommodate codons with d<i>N</i>/d<i>S</i>&gt;1 <a href="#pone.0000008-Yang2">21</a>. The model M2a fits <i>rbcL</i> data significantly better than model M1a (χ<sup>2</sup> = 12.88, <i>P</i> = 0.0016, df = 2), while there is no significant difference in fit of the two models to <i>matK</i> data (χ<sup>2</sup> = 1.82, <i>P</i> = 0.4025, df = 2). In another nested pair of models M7 assumes that all codons have d<i>N</i>/d<i>S</i> distributed according to discrete beta distribution between 0 and 1, while model M8 allows for an additional class of codons
+         with d<i>N</i>/d<i>S</i>&gt;1 <a href="#pone.0000008-Yang2">21</a>. The comparison of these two models in a LRT is a test for the presence of a class of codons with d<i>N</i>/d<i>S</i>&gt;1 <a href="#pone.0000008-Yang2">21</a>. The model M8 fits <i>rbcL</i> data significantly better than model M7 (χ<sup>2</sup> = 13.25, <i>P</i> = 0.0013, df = 2), while there is no significant difference in fit of the two models for <i>matK</i> data (χ<sup>2</sup> = 1.87, <i>P</i> = 0.3926, df = 2). Under the model M8 about 4% of codons in <i>rbcL</i> fall into the positively selected class, which had d<i>N</i>/d<i>S</i> = 13.92. A more stringent test for positive selection compares models M8 and M8a, which is the same as model M8, but the
+         class of codons with d<i>N</i>/d<i>S</i>&gt;1 in M8 is forced to have d<i>N</i>/d<i>S</i> = 1 in M8a. This LRT specifically tests whether the d<i>N</i>/d<i>S</i> for codons falling into this class is significantly larger than unity <a href="#pone.0000008-Swanson1">23</a>. While in M8-M8a comparison there was no significant difference in fit for <i>matK</i> data (χ<sup>2</sup> = 1.82, <i>P</i> = 0.1773, df = 1), application of this test to <i>Schiedea rbcL</i> demonstrated that this gene does have codons with d<i>N</i>/d<i>S</i> significantly larger than unity (χ<sup>2</sup> = 12.87, <i>P</i> = 0.0003, df = 1), providing strong evidence for positive selection.
+      </p>
+      
+      
+      
+      <h4 xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/title[1]">Amino Acid Substitutions in <i>Schiedea RbcL</i>
+         
+      </h4>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/p[1]">The summary of the amino acid substitutions in <i>Schiedea rbcL</i> and their possible effects is presented in <a href="#pone.0000008-t04">Table 4</a>. Throughout the text amino acid positions are numbered according to spinach <i>rbcL</i> for which protein cristal structure is available <a href="#pone.0000008-Knight1">24</a>. Nine out of ten amino acid substitutions occurred on the branches of the phylogeny predating the split of the clades III
+         and IV or leading to the clades III and IV (<a href="#pone.0000008-f01">Fig. 1</a>).
+      </p>
+      
+      <div class="table" xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/table-wrap[1]"><a name="pone.0000008-t04" id="pone.0000008-t04"></a><a title="Click for larger image " href="someHrefHere"><img border="1" src="info:doi/10.1371/journal.pone.0000008.t004" align="left" alt="thumbnail" class="thumbnail"></a><h5 xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/table-wrap[1]"><a href="somehrefhere"><strong><span xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/table-wrap[1]">Table 4. </span></strong></a><span xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/table-wrap[1]">Physical Properties of Amino Acid Substitutions in <i>Schiedea</i>'s <i>RbcL</i>
+               </span></h5>Physical Properties of Amino Acid Substitutions in <i>Schiedea</i>'s <i>RbcL</i>
+         
+      </div>
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/p[2]">For four out of ten amino acid substitutions in <i>Schiedea rbcL</i> (residues 86, 230, 326 and 449) a Bayesian posterior probability of positive selection larger than 0.99 was shown by the
+         Bayes Empirical Bayes analysis implemented in the PAML package <a href="#pone.0000008-Yang3">25</a>. Three of these residues (positions 230, 326 and 86) reside in regions that play key role in the functioning of Rubisco enzyme.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/p[3]">Replacement Ala230⇒Thr230 occurred on the branch leading to the clades III and IV of the <i>Schiedea</i> chloroplast gene tree (<a href="#pone.0000008-f01">Fig. 1</a>). Residue 230 interacts with the βA-βB loop of small subunit <a href="#pone.0000008-Kellogg1">26</a>. This residue 230 is highly solvent accessible (about 60% of total surface area; <a href="#pone.0000008-t04">Table 4</a>) and has a hydrogen bond with residue 10 of the small subunit of Rubisco. Replacement Ala230⇒Thr230 significantly decreases
+         hydrophobicity of the residue that has a stabilizing effect in this position (<a href="#pone.0000008-t04">Table 4</a>).
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/p[4]">Replacement Ile326⇒Val326 happened on the branch leading to the clades III and IV of the gene tree (<a href="#pone.0000008-f01">Fig. 1</a>). Residue 326 has six internal contacts and located inside of the protein molecule in the β-strand flanking loop 6, a flexible
+         element that folds over substrate during catalysis and plays a key role in discriminating between CO<sub>2</sub> and O<sub>2</sub> in competing RuBP carboxylation and oxygenation reactions of Rubisco <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Kellogg1">26</a>. Although Ile and Val have similar properties, Val is smaller and such replacement should increase the overall molecule stability
+         (<a href="#pone.0000008-t04">Table 4</a>).
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/p[5]">Interestingly, replacement His86⇒Tyr86 happened twice independently in <i>Schiedea</i> phylogeny–on the branches leading to the clade II and to the clade III (<a href="#pone.0000008-f01">Fig. 1</a>). Residue 86 is highly solvent accessible (about 50% of total surface area; <a href="#pone.0000008-t04">Table 4</a>) and may be a part of the Rubisco activase recognition region located in the N-terminal domain <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Portis1">27</a>. The activase recognition region provides a physical contact between Rubisco and Rubisco activase, an ATP-dependent enzyme
+         that releases tight-binding sugar phosphates from the Rubisco active site and facilitates conversion of Rubisco from the closed
+         to the open conformation. Rubisco activase plays a vital role in the response of photosynthesis to temperature <a href="#pone.0000008-Portis1">27</a>. Properties of His and Tyr are very different: after His86⇒Tyr86 replacement hydrophobicy and volume of residue increased
+         and polarity decreased dramatically making the molecule more tight while less soluble (<a href="#pone.0000008-t04">Table 4</a>). Although this is predicted to decrease stability of the molecule (<a href="#pone.0000008-t04">Table 4</a>), this analysis was done without taking interaction with Rubisco activase into account (for which no protein structure is
+         available). Decreased polarity and increased hydrophobicy of the residue interacting with Rubisco activase may result in tighter
+         binding. Thus, His86⇒Tyr86 replacement is likely to affect physical interaction of Rubisco with Rubisco activase. Although
+         residue 86 is one of the most variable positions in the large subunit (up to 11 different amino acids across the 499 plant
+         species; <a href="#pone.0000008-Kellogg1">26</a>), His86⇒Tyr86 replacement is very rare, considering that about 76% from 491 flowering species have His86, but only two species
+         (&lt;1%) have Tyr86 <a href="#pone.0000008-Spreitzer1">15</a>.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/p[6]">Furthermore, residue 86 is not the only one of <i>Schiedea rbcL</i> replacements that may be involved into Rubisco-Rubisco activase interactions. The critical residues for these interactions
+         identified so far are immediately adjacent to the active site (<a href="#pone.0000008-f02">Fig. 2</a>, <a href="#pone.0000008-Portis1">27</a>), as well as residues in strand G (particularly strand 6)–strand H region and carboxyl terminus <a href="#pone.0000008-Spreitzer1">15</a>. Based on published data <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Portis1">27</a> and structural modelling we found that apart from residue 86 six other residues out of ten replacements in <i>Schiedea rbcL</i> could be involved in Rubisco-Rubisco activase interactions (residues 23 and 326 are close to the active site; residues 354,
+         363, 367 belong to strand G–strand H region and residue 470 is close to the carboxyl terminus). Six out of ten detected amino
+         acid mutations while residing far from each other in the amino acid sequence appeared relatively close in the tertiary structure
+         and could potentially influence each other: in the tertiary structure the average distance between the residues 86, 145, 326,
+         354, 363 and 367 is 15.1Å; between the residues 145, 326, 354 and 363 is 12.2Å; and between the residues 145, 354 and 363
+         is 9.2Å). The proximity of these replacements in the tertiary protein structure suggests that several mutations may have a
+         cumulative effect that affects overall properties of Rubisco activase interaction region in <i>Schiedea</i>'s Rubisco (<a href="#pone.0000008-f02">Fig. 2</a>).
+      </p>
+      
+      <div class="figure" xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/fig[1]"><a name="pone.0000008-f02" id="pone.0000008-f02"></a><a title="Click for larger image " href="someHrefHere"><img border="1" src="pone.0000008-f02-S.png" align="left" alt="thumbnail" class="thumbnail"></a><h5 xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/fig[1]"><a href="somehrefhere"><strong><span xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/fig[1]">Figure 2. </span></strong></a><span xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/fig[1]">The structure of Rubisco enzyme in two projections (A, B) and (C) the residues that belong to active site (coloured red) and
+               that are involved in interactions with Rubisco activase (coloured green; after <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Knight1">24</a>,<a href="#pone.0000008-Kellogg1">26</a>,<a href="#pone.0000008-Portis1">27</a>).</span></h5>The structure of Rubisco enzyme in two projections (A, B) and (C) the residues that belong to active site (coloured red) and
+         that are involved in interactions with Rubisco activase (coloured green; after <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Knight1">24</a>,<a href="#pone.0000008-Kellogg1">26</a>,<a href="#pone.0000008-Portis1">27</a>).
+         <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/fig[1]/caption[1]/p[1]">Eight residues replaced in <i>Schiedea</i> (positions 23, 86, 145, 326, 354, 363, 367, 470) are coloured yellow.
+         </p>
+         
+         <p xpathLocation="/article[1]/body[1]/sec[2]/sec[2]/fig[1]/caption[1]/p[2]">10.1371/journal.pone.0000008.g002</p>
+         
+      </div>
+      
+   </div>
+   
+   
+   <div id="section3" xpathLocation="/article[1]/body[1]/sec[3]"><a id="s3" name="s3"></a><h3 xpathLocation="/article[1]/body[1]/sec[3]/title[1]">DISCUSSION</h3>
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[1]">We demonstrated that the <i>rbcL</i> gene, encoding the large subunit of Rubisco enzyme, might have been under strong positive selection during recent adaptive
+         radiation in Hawaiian <i>Schiedea</i>. Rubisco catalyzes the first step in net photosynthetic CO<sub>2</sub> assimilation and photorespiratory carbon oxidation. The enzyme is subject to competitive inhibition by O<sub>2</sub>, inactivation by loss of carbamylation, and dead-end inhibition by RuBP, that makes Rubisco inefficient as a catalyst for
+         the carboxylation of RuBP and limiting for photosynthesis and plant growth <a href="#pone.0000008-Spreitzer1">15</a>. Thus, even small improvements in efficiency of this enzyme may provide significant physiological advantage.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[2]">In land plants Rubisco is composed of eight large subunits (LSUs) encoded by the chloroplast <i>rbcL</i> gene and eight small subunits (SSUs) encoded by a family of <i>rbcS</i> nuclear genes <a href="#pone.0000008-Dean1">28</a>,<a href="#pone.0000008-Roy1">29</a>. By directed mutagenesis in <i>Rhodospirillum rubrum, Synechococcus, Chlamydomonas</i>, and tobacco it has been shown that even single mutations can positively or negatively change stability or substrate specificity
+         of Rubisco <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Satagopan1">30</a>. The most dramatic changes in Rubisco performance are inducted by replacements in the active site and in the regions providing
+         interactions between LSUs and SSUs, and between Rubisco and Rubisco activase <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Satagopan1">30</a>.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[3]">Most amino acid replacements in <i>Schiedea rbcL</i> (residues 23, 86, 326, 354, 363, 367 and 470) reside in regions influencing interactions with Rubisco activase, a chaperone
+         which promotes and maintains the catalytic activity of Rubisco <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Portis1">27</a>. Rubisco activase plays a vital role in the response of photosynthesis to temperature <a href="#pone.0000008-Portis1">27</a>, thus molecular adaptation of Rubisco-Rubisco activase interactions may have played an important role in adaptation of <i>Schiedea</i> species to dry sunny conditions. Furthermore, five of the replaced residues (86, 326, 354, 363 and 367) are close to each
+         other (distances&lt;20Å) in the Rubisco tertiary structure, suggesting possible cumulative effect. Sequencing and investigation
+         of <i>Schiedea</i>'s Rubisco activase might be of considerable interest for future studies of possible coevolution of Rubisco and Rubisco activase
+         in <i>Schiedea</i>.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[4]">The distribution of <i>rbcL</i> amino acid replacements in the <i>Schiedea</i> cpDNA phylogeny corroborates their possible functional importance. Non-synonymous mutations favored by positive selection
+         are expected to be more common at the internal branches relative to terminal branches <a href="#pone.0000008-RuizPesini1">31</a>. Indeed all amino acid replacements in <i>Schiedea</i> appeared in the internal branches (<a href="#pone.0000008-f01">Fig. 1</a>), a pattern significally different from ones of <i>rbcL</i> synonymous substitutions as well as from non-synonymous and synonymous mutations in other investigated cpDNA regions (<a href="#pone.0000008-t03">Table 3</a>).
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[5]">The possible changes of Rubisco properties in <i>Schiedea</i> predicted from structural modeling match well with the observed difference in rates of photosynthesis <a href="#pone.0000008-Wagner1">13</a> between “basal” and “advanced” species (roughly corresponding to clades I+II and III+IV, respectively) as well as with wide
+         distribution of “advanced” <i>rbcL</i> haplotypes within <i>Schiedea</i>. The “basal” <i>Schiedea</i> species inhabit mesic or wet shady forests, while most species in the “advanced” clades (section <i>Schiedea</i>) colonised dry sunny habitats, such as coastal cliffs. Given the importance of Rubisco enzyme performance for plant growth
+         and the significant effect of mutations affecting the contacts with Rubisco activase <a href="#pone.0000008-Spreitzer1">15</a>,<a href="#pone.0000008-Satagopan1">30</a>, the His86⇒Tyr86 and other replacements in <i>Schiedea rbcL</i> may have played an important role in colonisation of dry habitats during recent adaptive radiation in <i>Schiedea</i>. Molecular adaptation in photosynthetic Rubisco enzyme represents the first known case of adaptation at the protein level
+         during a recent adaptive radiation and reveals molecular bases of physiological and ecological evolution during rapid radiations
+         in island endemics.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[6]">Positive selection on <i>rbcL</i> may possibly be the cause of fixation of two chloroplast haplotypes in virtually all species of <i>Schiedea</i> 
+         <i>sensu stricto</i> (clades III and IV on <a href="#pone.0000008-f01">Fig. 1</a>) and hence the main reason for cytonuclear discordance. This hypothesis is corroborated by the geographical pattern of <i>Schiedea</i> cpDNA haplotype distribution, where clades represent islands, rather than recognized <i>Schiedea</i> sections (<a href="#pone.0000008-f01">Fig. 1</a>).
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[7]">Despite remarkable morphological and ecological divergence, natural interspecific hybrids have been found for many <i>Schiedea</i> species and the ability to cross-hybridize with each other has been shown for virtually all <i>Schiedea</i> species in green-house experiments <a href="#pone.0000008-Wagner1">13</a>. However, strong geographical isolation between and within the islands makes interspecies contacts quite rare. Indeed, a
+         previous DNA diversity study has demonstrated that isolation between the populations of <i>S. globosa</i> from different islands is much stronger than one between the populations from the same island <a href="#pone.0000008-Filatov1">32</a>. Thus, it is quite likely that only genes under strong positive selection can spread across <i>Schiedea</i> species.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[3]/p[8]">Positive selection on non-recombining chloroplast DNA is expected to lead to a spread of the selected chloroplast haplotype
+         across several species, causing phylogenetic cytonuclear discordance. Cytonuclear discordance promoted by interspecific hybridization
+         has been found in many adaptive radiations including Darwin's finches, African cichlids, Lake Baikal sculpins and Hawaiian
+         silversword alliance (reviewed in <a href="#pone.0000008-Seehausen1">2</a>). Complete plastom and mitochondrion replacements via interspecific introgression have been documented for various plant
+         and animal groups (reviewed in <a href="#pone.0000008-Avise1">33</a>). Most authors typically attribute the occurrence of introgression to demographic events and chance fixation, whereas relatively
+         few suggest positive selection as a possible cause <a href="#pone.0000008-Ballard1">34</a>,<a href="#pone.0000008-Doiron1">35</a>. The adaptive amino acid replacements in <i>Schiedea rbcL</i> occurred on the branches leading to the clades III and IV of the chloroplast gene tree. The spread of advantageous <i>rbcL</i> alleles across many <i>Schiedea</i> species inhabiting the same island (or a group of previously connected islands) argues in favor of positive selection as
+         a main cause of cytonuclear discordance and suggests that sharing of adaptive mutations by several closely related species
+         may be an important factor in adaptive evolution in small populations within confined geographical regions, such as oceanic
+         islands or big lakes.
+      </p>
+      
+   </div>
+   
+   
+   <div id="section4" xpathLocation="/article[1]/body[1]/sec[4]"><a id="s4" name="s4"></a><h3 xpathLocation="/article[1]/body[1]/sec[4]/title[1]">MATERIALS AND METHODS</h3>
+      
+      <h4 xpathLocation="/article[1]/body[1]/sec[4]/sec[1]/title[1]">Isolation and sequencing of <i>Schiedea</i> genes
+      </h4>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[4]/sec[1]/p[1]">Morphology, ecology and origin of <i>Schiedea</i> species used in this study are presented in Table S1. Genomic DNA was isolated from fresh leaf material using magnetic beads-based
+         Plant DNA Charge Switch Kit (Invitrogen) in accordance with manufacturer protocol. The primers used for amplification and
+         sequencing are listed in Table S2. For PCR amplification of all regions except <i>trnS-trnG</i> we used BioMix Red (Bioline) with the following PCR conditions: one cycle of 95°C, 2 min, 55°C, 30 s, 72°C, 4 min followed
+         by 36 cycles of 93°C, 30 s, 53°C, 30 s, 72°C, 3.5 min. For PCR amplification of <i>trnS-trnG</i> region we used Protocol 1 from <a href="#pone.0000008-Shaw1">36</a>. The PCR products were extracted from the agarose gels using the Qiagen gel extraction kit. Sequencing was performed using
+         ABI BigDye v3.1 system on an ABI3700 automated sequencing machine. Sequence chromatograms were checked and corrected, and
+         the contigs were assembled and aligned using ProSeq3 software <a href="#pone.0000008-Filatov2">37</a>. All polymorphic sites were checked against original sequence chromatograms and doubtful regions were resequenced; obtained
+         sequences were compared with homologues from GenBank and ORFs integrity was confirmed for protein coding sequences; all indels
+         were removed before further analyses. Novel sequences have been submitted to GenBank under accession numbers DQ907721-DQ907909.
+      </p>
+      
+      
+      
+      <h4 xpathLocation="/article[1]/body[1]/sec[4]/sec[2]/title[1]">Statistical Tests for Positive Selection</h4>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[4]/sec[2]/p[1]">The neighbor-joining trees for every investigated chloroplast region as well as for three concatenated datasets (noncoding
+         regions, coding regions, all regions) were created using MEGA v3.1 <a href="#pone.0000008-Kumar1">38</a>. The topologies of all obtained trees were similar and for further phylogenetic analyses of positive selection in <i>Schiedea</i>'s chloroplast protein coding genes we used the unrooted tree based on concatenated dataset of all regions.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[4]/sec[2]/p[2]">We used the codeml program in the PAML v.3.14 <a href="#pone.0000008-Yang1">18</a> package to estimate the non-synonymous divergence (d<i>N</i>), synonymous divergence (d<i>S</i>), and their ratio (d<i>N</i>/d<i>S</i>) in model 0, that allows for a single d<i>N</i>/d<i>S</i> value throughout the whole phylogenetic tree. Further, codeml was used to perform likelihood ratio tests (LRTs) for rate
+         heterogeneity and positive selection among amino acid sites. We applied models of codon evolution which allow for variation
+         in d<i>N</i>/d<i>S</i> among codons but assume the same distribution in all branches of the phylogeny. We performed three LRTs for positive selection:
+         M1a–M2a LRT, M7–M8 LRT and M8a–M8 LRT <a href="#pone.0000008-Yang2">21</a>–<a href="#pone.0000008-Swanson1">23</a>. For all LRTs, the first model is a simplified version of the second, with fewer parameters, and is thus expected to provide
+         a poorer fit to the data (lower maximum likelihood). The M1, M7 and M8a models are the null models without positive selection
+         (no codons with d<i>N</i>/d<i>S</i>&gt;1) and the M2 and M8 models are the alternative models with positive selection. The significance of the LRTs was calculated
+         assuming that twice the difference in the log of maximum likelihood between the two models is distributed as a chi-square
+         distribution with the degrees of freedom (df) given by the difference in the numbers of parameters in the two nested models.
+         For both M1a–M2a and M7–M8 comparisons we used df = 2 <a href="#pone.0000008-Yang2">21</a>,<a href="#pone.0000008-Wong1">22</a>. It was argued that for M8a–M8 comparisons the appropriate test would use a 50∶50 mixture of df = 0 and df = 1 <a href="#pone.0000008-Swanson1">23</a>, however we assumed df = 1 for this test, which is conservative <a href="#pone.0000008-Wong1">22</a>.
+      </p>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[4]/sec[2]/p[3]">To identify amino acid sites potentially under positive selection, the parameter estimates from M8 model were used to calculate
+         the posterior probabilities that an amino acid belongs to a class with d<i>N</i>/d<i>S</i>&gt;1 using the Bayes Empirical Bayes approaches implemented in PAML <a href="#pone.0000008-Yang3">25</a>.
+      </p>
+      
+      
+      
+      <h4 xpathLocation="/article[1]/body[1]/sec[4]/sec[3]/title[1]">Structural Analysis of Rubisco</h4>
+      
+      <p xpathLocation="/article[1]/body[1]/sec[4]/sec[3]/p[1]">We used spinach Rubisco protein structure <a href="#pone.0000008-Knight1">24</a> to infer the possible effect(s) of mutations at the residues identified as being under positive selection in <i>Schiedea</i>. The divergence between <i>rbcL</i>s of spinach and <i>Schiedea</i> at the amino acid level is between 3.2% and 4.4%, depending on the <i>Schiedea</i> species. Furthermore, the ancestral states of eight out of ten replacements found in <i>Schiedea rbcL</i> are identical to corresponding residues in spinach, making it appropriate to use protein structure obtained for spinach.
+         Rubisco structural data for spinach (1RBO) were obtained from the RCB Protein Data Bank (<a src="http://www.rcsb.org/pdb">http://www.rcsb.org/pdb</a>). The solvent accessible surface areas for individual amino acids in the structure and the impact of single replacements
+         on overall structural stability were analyzed using CUPSAT software [39; <a src="http://cupsat.uni-koeln.de">http://cupsat.uni-koeln.de</a>]. The structural contacts for individual amino acids in the structure were analyzed using DeepView–Swiss-PdbViewer v. 3.7
+         [40; <a src="http://www.expasy.org/spdbv/">http://www.expasy.org/spdbv/</a>] and STING Report [41; <a src="http://trantor.bioc.columbia.edu/SMS/">http://trantor.bioc.columbia.edu/SMS/</a>].
+      </p>
+      
+      
+   </div>
+   
+   
+   <div id="section5" xpathLocation="/article[1]/body[1]/sec[5]"><a id="s6" name="s6"></a><h3 xpathLocation="/article[1]/body[1]/sec[5]/title[1]">SUPPORTING INFORMATION</h3><span class="tl-default"><a src="info:doi/10.1371/journal.pone.0000008.s001" id="pone.0000008.s001">Table S1</a></span><span class="capture-id">Habit, Habitat and Distribution of Investigated 27 Schiedea Species (after [13]).
+         <p xpathLocation="/article[1]/body[1]/sec[5]/supplementary-material[1]/caption[1]/p[1]">(0.06 MB DOC)</p>
+         </span><br><span class="tl-default"><a src="info:doi/10.1371/journal.pone.0000008.s002" id="pone.0000008.s002">Table S2</a></span><span class="capture-id">Investigated Chloroplast DNA Regions and Used Primers.
+         <p xpathLocation="/article[1]/body[1]/sec[5]/supplementary-material[2]/caption[1]/p[1]">(0.04 MB DOC)</p>
+         </span><br></div>
+   
+   
+   
+   
+   
+   
+   <div>
+      <h3 xpathLocation="noSelect">Acknowledgments</h3>
+      
+      <p xpathLocation="/article[1]/back[1]/ack[1]/p[1]">We are grateful to Dr S. Weller for providing us <i>Schiedea</i> leaf material, to Dr Z. Yang and Dr M. Anisimova for advice on PAML, to Dr K. Futterrer for help and advice with protein
+         structure analysis and to Dr G. Muir for suggestions and correction of the manuscript.
+      </p>
+      
+   </div>
+   <h4>Author Contributions</h4><span class="capture-id">Conceived and designed the experiments: DF. Performed the experiments: MK. Analyzed the data: MK. Wrote the paper: DF MK</span><div>
+      
+      <h3>REFERENCES</h3>
+      
+      <ol class="references" xpathLocation="noSelect">
+         <li xpathLocation="noSelect"><a name="pone.0000008-Schluter1" id="pone.0000008-Schluter1"></a><span class="authors">Schluter D</span>
+            						(2000)
+            					 The ecology of adaptive radiation : 296
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Seehausen1" id="pone.0000008-Seehausen1"></a><span class="authors">Seehausen O</span>
+            						(2004)
+            					Hybridization and adaptive radiation. Trends Ecol Evol 19: 198–207.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Hollocher1" id="pone.0000008-Hollocher1"></a><span class="authors">Hollocher H</span>
+            						(1996)
+            					Island hopping in <i>Drosophila</i>: patterns and processes. Philos Trans R Soc Lond B Biol Sci 351: 735–743.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Kimura1" id="pone.0000008-Kimura1"></a><span class="authors">Kimura M</span>
+            						(1983)
+            					 The neutral theory of molecular evolution : 367
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Ohta1" id="pone.0000008-Ohta1"></a><span class="authors">Ohta T</span>
+            						(1992)
+            					The nearly neutral theory of molecular evolution. Annu Rev Ecol Syst 23: 263–286.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Barrier1" id="pone.0000008-Barrier1"></a><span class="authors">Barrier M, Robichaux RH, Purugganan MD</span>
+            						(2001)
+            					Accelerated regulatory gene evolution in an adaptive radiation. Proc Natl Acad Sci USA 98: 10208–10213.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Remington1" id="pone.0000008-Remington1"></a><span class="authors">Remington DL, Purugganan MD</span>
+            						(2002)
+            					GAI Homologues in the Hawaiian Silversword Alliance (Asteraceae-Madiinae): molecular evolution of growth regulators in a rapidly
+            diversifying plant lineage. Mol Biol Evol 19: 1563–1574.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Stebbins1" id="pone.0000008-Stebbins1"></a><span class="authors">Stebbins GL</span>
+            						(1959)
+            					The role of hybridisation in evolution. Proc Am Philos Soc 103: 231–251.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Morjan1" id="pone.0000008-Morjan1"></a><span class="authors">Morjan CL, Riesberg LH</span>
+            						(2004)
+            					How species evolve collectively: implications of gene flow and selection for the spread of advantageous alleles. Mol Ecol 13: 1341–1356.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Arnold1" id="pone.0000008-Arnold1"></a><span class="authors">Arnold ML</span>
+            						(1997)
+            					 Natural hybridisation and evolution : 215
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Slatkin1" id="pone.0000008-Slatkin1"></a><span class="authors">Slatkin M</span>
+            						(1976)
+            					The rate of spread of advantageous alleles in a subdivided population. Population Genetics and Ecology : 767–780.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Lewontin1" id="pone.0000008-Lewontin1"></a><span class="authors">Lewontin RC, Birch LC</span>
+            						(1966)
+            					Hybridization as a source of variation for adaptation to new environments. Evolution 20: 315–336.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Wagner1" id="pone.0000008-Wagner1"></a><span class="authors">Wagner WL, Weller SG, Sakai A</span>
+            						(2005)
+            					Monograph of <i>Schiedea</i> (<i>Caryophyllaceae</i> subfam. <i>Alsinoideae</i>). Syst Bot Monographs 72: 1–169.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Ferreira1" id="pone.0000008-Ferreira1"></a><span class="authors">Ferreira KN, Iverson TM, Maghlaoui K, Barber J, Iwata S</span>
+            						(2004)
+            					Architecture of the photosynthetic oxygen-evolving center. Science 303: 1831–1838.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Spreitzer1" id="pone.0000008-Spreitzer1"></a><span class="authors">Spreitzer RJ, Salvucci ME</span>
+            						(2002)
+            					RUBISCO: structure, regulatory interactions, and possibilities for a better enzyme. Annu Rev Plant Biol 53: 449–475.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Neuhaus1" id="pone.0000008-Neuhaus1"></a><span class="authors">Neuhaus H, Link G</span>
+            						(1987)
+            					The chloroplast tRNALys (UUU) gene from mustard (<i>Sinapsis alba</i>) contains a class II intron potentially coding for a maturase related polypeptide. Current Genetics 11: 251–257.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Vogel1" id="pone.0000008-Vogel1"></a><span class="authors">Vogel J, Hübschmann T, Börner T, Hess WR</span>
+            						(1997)
+            					Splicing and intron-internal RNA editing of <i>trnK-matK</i> transcripts in barley plastids: support for <i>matK</i> as an essential splice factor. J Mol Biol 270: 179–187.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Yang1" id="pone.0000008-Yang1"></a><span class="authors">Yang Z</span>
+            						(1997)
+            					PAML: a program package for phylogenetic analysis by maximum likelihood. Comput Appl Biosci 13: 555–556.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Maddison1" id="pone.0000008-Maddison1"></a><span class="authors">Maddison WP</span>
+            						(1997)
+            					Gene trees in species trees. Syst Biol 46: 523–536.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Machado1" id="pone.0000008-Machado1"></a><span class="authors">Machado CA, Hey J</span>
+            						(2003)
+            					The causes of phylogenetic conflict in a classic <i>Drosophila</i> species group. Proc Biol Sci 270: 1193–1202.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Yang2" id="pone.0000008-Yang2"></a><span class="authors">Yang Z, Nielsen R, Goldman N, Pedersen AM</span>
+            						(2000)
+            					Codon-substitution models for heterogeneous selection pressure at amino acid sites. Genetics 155: 431–449.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Wong1" id="pone.0000008-Wong1"></a><span class="authors">Wong WSW, Yang Z, Goldman N, Nielsen R</span>
+            						(2004)
+            					Accuracy and power of statistical methods for detecting adaptive evolution in protein coding sequences and for identifying
+            positively selected sites. Genetics 168: 1041–1051.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Swanson1" id="pone.0000008-Swanson1"></a><span class="authors">Swanson WJ, Nielsen R, Yang Q</span>
+            						(2003)
+            					Pervasive adaptive evolution in mammalian fertilization proteins. Mol Biol Evol 20: 18–20.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Knight1" id="pone.0000008-Knight1"></a><span class="authors">Knight S, Andersson I, Branden CI</span>
+            						(1990)
+            					Crystallographic analysis of ribulose 1,5-bisphosphate carboxylase from spinach at 2.4Å resolution. J Mol Biol 215: 113–160.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Yang3" id="pone.0000008-Yang3"></a><span class="authors">Yang Z, Wong WS, Nielsen R</span>
+            						(2005)
+            					Bayes empirical Bayes inference of amino acid sites under positive selection. Mol Biol Evol 22: 1107–1118.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Kellogg1" id="pone.0000008-Kellogg1"></a><span class="authors">Kellogg EA, Juliano ND</span>
+            						(1997)
+            					The structure and function of RuBisCO and their implications for systematic studies. Am J Bot 84: 413–428.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Portis1" id="pone.0000008-Portis1"></a><span class="authors">Portis AR</span>
+            						(2003)
+            					Rubisco activase–Rubisco's catalytic chaperone. Photosynthesis Res 75: 11–27.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Dean1" id="pone.0000008-Dean1"></a><span class="authors">Dean C, Pichersky E, Dunsmuir P</span>
+            						(1989)
+            					Structure, evolution, and regulation of <i>RbcS</i> genes in higher plants. Annu Rev Plant Physiol Plant Mol Biol 40: 415–439.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Roy1" id="pone.0000008-Roy1"></a><span class="authors">Roy H, Andrews TJ</span>
+            						(2000)
+            					Rubisco: assembly and mechanism. Photosynthesis: Physiology and Metabolism : 53–83.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Satagopan1" id="pone.0000008-Satagopan1"></a><span class="authors">Satagopan S, Spreitzer RJ</span>
+            						(2004)
+            					Substitutions at the Asp-473 latch residue of <i>Chlamydomonas</i> ribulosebisphosphate carboxylase/oxygenase cause decreases in carboxylation efficiency and CO<sub>2</sub>/O<sub>2</sub> specificity. J Biol Chem 279: 14240–14244.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-RuizPesini1" id="pone.0000008-RuizPesini1"></a><span class="authors">Ruiz-Pesini E, Mishmar D, Brandon M, Procaccio V, Wallace DC</span>
+            						(2004)
+            					Effects of purifying and adaptive selection on regional variation in human mtDNA. Science 303: 223–226.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Filatov1" id="pone.0000008-Filatov1"></a><span class="authors">Filatov DA, Burke S</span>
+            						(2004)
+            					DNA diversity in Hawaiian endemic plant <i>Schiedea globosa</i>. Heredity 92: 452–458.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Avise1" id="pone.0000008-Avise1"></a><span class="authors">Avise JC</span>
+            						(2004)
+            					 Molecular markers, natural history, and evolution. : 684
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Ballard1" id="pone.0000008-Ballard1"></a><span class="authors">Ballard JWO, Kreitman M</span>
+            						(1995)
+            					Is mitochondrial DNA a strictly neutral marker? Trends Ecol Evol 10: 485–488.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Doiron1" id="pone.0000008-Doiron1"></a><span class="authors">Doiron S, Bernatchez L, Blier PU</span>
+            						(2002)
+            					A comparative mitogenomic analysis of the potential adaptive value of arctic charr mtDNA introgression in Brook charr populations
+            (<i>Salvelinus fontinalis</i> Mitchill). Mol Biol Evol 19: 1902–1909.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Shaw1" id="pone.0000008-Shaw1"></a><span class="authors">Shaw J, Lickey EB, Beck JT, Farmer SB, Liu W</span>
+            						(2005)
+            					The tortoise and the hare II: relative utility of 21 noncoding chloroplast sequences for phylogenetic analysis. Amer J Bot 92: 142–166.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Filatov2" id="pone.0000008-Filatov2"></a><span class="authors">Filatov DA</span>
+            						(2002)
+            					PROSEQ: A software for preparation and evolutionary analysis of DNA sequence data sets. Mol Ecol Notes 2: 621–624.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Kumar1" id="pone.0000008-Kumar1"></a><span class="authors">Kumar S, Tamura K, Nei M</span>
+            						(2004)
+            					MEGA3: Integrated software for molecular evolutionary genetics analysis and sequence alignment. Briefings Bioinformatics 5: 150–163.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Parthiban1" id="pone.0000008-Parthiban1"></a><span class="authors">Parthiban V, Gromiha MM, Schomburg D</span>
+            						(2006)
+            					CUPSAT: prediction of protein stability upon point mutations. Nucleic Acids Res 34: W239–242.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Guex1" id="pone.0000008-Guex1"></a><span class="authors">Guex N, Peitsch MC</span>
+            						(1997)
+            					SWISS-MODEL and the Swiss-PdbViewer: An environment for comparative protein modeling. Electrophoresis 18: 2714–2723.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Neshich1" id="pone.0000008-Neshich1"></a><span class="authors">Neshich G, Mancini AL, Yamagishi ME, Kuser PR, Fileto R</span>
+            						(2005)
+            					STING Report: convenient web-based application for graphic and tabular presentations of protein sequence, structure and function
+            descriptors from the STING database. Nucleic Acids Res 33: 269–274.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Nelson1" id="pone.0000008-Nelson1"></a><span class="authors">Nelson DL, Cox MM</span>
+            						(2005)
+            					 Lehninger principles of biochemistry : 1119
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Kyte1" id="pone.0000008-Kyte1"></a><span class="authors">Kyte J, Doolittle RF</span>
+            						(1982)
+            					A simple method for displaying the hydropathic character of a protein. J Mol Biol 157: 105–132.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Grantham1" id="pone.0000008-Grantham1"></a><span class="authors">Grantham R</span>
+            						(1974)
+            					Amino acid difference formula to help explain protein evolution. Science 185: 862–864.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Cunoud1" id="pone.0000008-Cunoud1"></a><span class="authors">Cuénoud P, Savolainen V, Chatrou LW, Powell M, Grayer RJ</span>
+            						(2002)
+            					Molecular phylogenetics of <i>Caryophyllales</i> based on nuclear 18S rDNA and plastid <i>rbcL, atpB</i>, and <i>matK</i> DNA sequences. Amer J Bot 89: 132–144.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Kadereit1" id="pone.0000008-Kadereit1"></a><span class="authors">Kadereit G, Borsch T, Weising K, Freitag H</span>
+            						(2003)
+            					Phylogeny of <i>Amaranthaceae</i> and <i>Chenopodiaceae</i> and the evolution of C<sub>4</sub> photosynthesis. Int J Plant Sci 164: 959–986.
+         </li>
+         <li xpathLocation="noSelect"><a name="pone.0000008-Taberlet1" id="pone.0000008-Taberlet1"></a><span class="authors">Taberlet P, Gielly L, Pautou G, Bouvet J</span>
+            						(1991)
+            					Universal primers for amplification of three non-coding regions of chloroplast DNA. Plant Mol Biol 17: 1105–1109.
+         </li>
+      </ol>
+   </div>
+   
+   
+</div>	</div>
+	
+<!-- end : research article -->
+
+
+<div dojoType="regionalDialog" id="AnnotationDialog" bgColor="#333333" bgOpacity="0.6" toggle="fade" toggleDuration="250" style="padding:0;margin:0;">
+	<div class="dialog annotate">
+		<div class="tipu" id="dTipu"></div>
+		<div class="btn close" title="Click to close and cancel">
+			<a id="btn_cancel" title="Click to close and cancel">Cancel</a>
+		</div>
+		<div class="comment">
+			<h5><span class="commentPrivate">Add Your Annotation (For Private Viewing)</span><span class="commentPublic">Post Your Annotation (For Public Viewing)</span></h5>
+			<div class="posting pane">
+				<form name="createAnnotation" id="createAnnotation" method="post" action="">
+					<input type="hidden" name="target" value="info:doi/10.1371/journal.pone.0000008" />	
+					<input type="hidden" name="startPath" value="" />
+					<input type="hidden" name="startOffset" value="" />
+					<input type="hidden" name="endPath" value="" />
+					<input type="hidden" name="endOffset" value="" />
+					<input type="hidden" name="commentTitle" id="commentTitle" value="" />
+					<input type="hidden" name="comment" id="commentArea" value="" />
+					<fieldset>
+						<legend>Compose Your Annotation</legend>
+
+						<div id="submitMsg" class="error"></div>
+					
+						<label for="cTitle" class="commentPublic"><span class="none">Enter your annotation title</span><!-- error message text <em>A title is required for all public annotations</em>--></label>
+						<input type="text" name="cTitle" id="cTitle" value="Enter your annotation title..." class="title commentPublic" alt="Enter your annotation title..." />
+						
+						<label for="cArea"><span class="none">Enter your annotation</span><!-- error message text <em>Please enter your annotation</em>--></label>
+						<textarea name="cArea" id="cArea" value="Enter your annotation..." alt="Enter your annotation...">Enter your annotation...</textarea>
+						
+						<input type="hidden" name="isPublic" value="true" />
+						<!--
+						<div><input type="radio" id="privateFlag" class="radio" title="Choose from one of the options" name="public" value="false" disabled="true" /><label for="Private">Private</label></div>
+						<div><input type="radio" id="publicFlag" class="radio" title="Choose from one of the options" name="public" value="true" checked="true" /><label for="Public">Public</label></div>
+						-->
+						<div class="btnwrap commentPrivate"><input type="button" value="Save" class="commentPrivate" title="Click to save your annotation privately" id="btn_save"/></div>
+						<div class="btnwrap commentPublic"><input type="button" value="Post" class="commentPublic" title="Click to post your annotation publicly" id="btn_post"/></div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		<div class="tip" id="dTip"></div>
+	</div>
+</div>
+
+
+
+<div dojoType="regionalDialog" id="CommentDialog" bgColor="white" bgOpacity="0" toggle="fade" toggleDuration="250" style="padding:0;margin:0;">
+	<!-- begin : annotation preview view (wireframe page 12) [SIMPLE] -->
+	<div class="dialog preview">
+		<div class="tipu" id="cTipu"></div>
+		<div class="btn close" id="btn_close" title="Click to close">
+			<a title="Click to close">Close</a>
+		</div>
+		<div class="comment">
+			<h6 id="viewCmtTitle"></h6>
+			<div class="detail" id="viewCmtDetail"></div>
+			<div class="contentwrap" id="viewComment"></div>
+			<div class="detail" id="viewLink">
+				<!--<a href="#" class="commentary icon" title="Click to view full thread and respond">View all responses</a>
+				<a href="#" class="respond tooltip" title="Click to respond to this posting">Respond to this</a>-->
+			</div>
+		</div>
+		<div class="tip" id="cTip"></div>
+	</div>
+	<!-- end : annotation preview view -->
+</div>
+
+<!-- begin : annotation preview view (wireframe page 12) [MULTIPLE] -->
+
+<div dojoType="regionalDialog" id="CommentDialogMultiple" bgColor="white" bgOpacity="0" toggle="fade" toggleDuration="250" style="padding:0;margin:0;">
+	<div class="dialog multiple preview">
+		<div class="tipu" id="mTipu"></div>
+		<div class="btn close" id="btn_close_multi" title="Click to close">
+			<a title="Click to close">Close</a>
+		</div>
+		<ol id="multilist">
+		</ol>
+		<br/>
+		<!-- display the following div only if there are more than four annotations in the same point -->
+		<div class="tip" id="mTip"></div>
+	</div>
+</div>
+<!-- end : annotation preview view -->
+
+
+<div class="figure-popup" id="imagePreview">
+  <div class="figure-popup-header">
+    <a target="_blank" title="Click for larger image" href=""><img border="1" src="" width="" height="" title="" class="medium" id="figImg" /></a>
+    
+    <h5 id="figTitle"></h5>
+  </div>
+  <div class="figure-popup-description" id="figCaption">
+  </div>
+</div>
+
+
+	
+<div dojoType="dialog" id="LoadingCycle" bgColor="#333333" bgOpacity="0.75" toggle="fade" toggleDuration="250" class="loadingCycler">
+	<img src="/plosone-webapp/images/pone_loading.gif" width="58" height="58" title="Loading..." />
+</div>	
+<div dojoType="dialog" id="ErrorConsole" bgColor="#333333" bgOpacity="0.75" toggle="fade" toggleDuration="250">
+	<div class="dialog preview">
+		<div class="comment">
+			<h6>
+				ERROR
+			</h6>
+			<div class="contentwrap" id="errorMsg">
+			</div>
+			<div class="detail">
+				<input type="button" name="ok" id="btn_ok" value="OK" />
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+
+<!-- end : main contents -->
+
+</div>
+<!-- end : container -->	
+
+<!-- begin : footer -->
+<div id="ftr">
+	<p><span>All site content, except where otherwise noted, is licensed under a <a href="http://creativecommons.org/licenses/by/2.5/" title="Creative Commons Attribution License 2.5">Creative Commons Attribution License</a>.</span></p>
+	<ul>
+		<li><a href="http://redesign-dev.plos.org/plosbiology/privacy.php" title="PLoS ONE Statement">Privacy Statement</a></li>
+		<li><a href="http://redesign-dev.plos.org/plosbiology/terms.php" title="PLoS ONE Terms of Use">Terms of Use</a></li>
+		<li><a href="http://www.plos.org/advertise/" title="Advertise With PLoS">Advertise</a></li>
+		<li><a href="http://redesign-dev.plos.org/plosbiology/sitemap.php" title="PLoS Biology Site Map">Site Map</a></li>
+		<li><a href="http://www.plos.org" title="PLoS.org">PLoS.org</a></li>
+	</ul></div>
+<!-- end : footer -->
+</body>
+</html>

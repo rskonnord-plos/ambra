@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-client-it</artifactId>
+  <packaging>jar</packaging>
+  <version>0.6</version>
+  <name>Fedoragsearch client API</name>
+  
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-search</artifactId>
+    <version>0.6</version>
+  </parent>
+  
+  <dependencies>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis-jaxrpc</artifactId>
+      <version>1.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-client-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${pom.parent.groupId}</groupId>
+      <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+      <type>war</type>
+      <version>${pom.parent.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>    
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.2</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- Only needed for it-helper profile, but no way to turn it on only for profile -->
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-articles-client-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-articles-webapp</artifactId>
+      <type>war</type>
+    </dependency>
+
+    <!-- Probably needs to be somewhere else -->
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+  </dependencies>
+  
+  <!-- Profiles Section: Define custom profiles here -->
+  
+  <profiles>
+    <!-- it-helper: Integration-test helper - Turn on integration testing within modules -->
+    <profile>
+      <id>it-helper</id>
+      
+      <build>
+        <plugins>
+
+          <!-- deploy for integration testing -->
+          <!-- This just steals the configuration from our super-pom -->
+          <plugin>
+            <groupId>org.topazproject.patch.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <configuration>
+              <configuration>
+                <deployables>
+                  <deployable>
+                    <groupId>${pom.parent.groupId}</groupId>
+                    <artifactId>${pom.parent.artifactId}-webapp</artifactId>
+                    <type>war</type>
+                    <properties>
+                      <context>${pom.parent.artifactId}</context>
+                    </properties>
+                  </deployable>
+                  <!-- We need the articles, users and preferences webapps too -->
+                  <deployable>
+                    <groupId>org.topazproject.ws</groupId>
+                    <artifactId>ws-articles-webapp</artifactId>
+                    <type>war</type>
+                    <properties>
+                      <context>ws-articles</context>
+                    </properties>
+                  </deployable>
+                </deployables>
+              </configuration>
+            </configuration>
+            <executions>
+              <execution>
+                <id>jetty-start</id>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+    
+  </profiles>
+</project>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<articles>
+  <article>
+    <uri>info:doi/10.1371/journal.pbio.0020382</uri>
+    <title>Correction: Nicotine's Defensive Function in Nature</title>
+    <description><p>July correction</p></description>
+    <date>2004-10-12</date>
+    
+    <categories>
+      <category>Biotechnology</category>
+      <category>Ecology</category>
+      <category>Genetics</category>
+      <category>Plant Science</category>
+    </categories>
+    <subjects>
+      <subject>Biotechnology</subject>
+      <subject>Ecology</subject>
+      <subject>Genetics/Genomics/Gene Therapy</subject>
+      <subject>Plant Science</subject>
+    </subjects>
+  </article>
+  <article>
+    <uri>info:doi/10.1371/journal.pbio.0020294</uri>
+    <title>Regulation of Muscle Fiber Type and Running Endurance by PPAR </title>
+    <description>
+				<p>Engineered expression of the peroxisome proliferator-activated receptor   in skeletal muscle increases type I muscle fibers allowing the modified mice to run twice the distance of wild-type littermates</p>
+			</description>
+    <date>2004-08-24</date>
+    <authors>
+      <author>Yong-Xu Wang</author>
+      <author>Chun-Li Zhang</author>
+      <author>Ruth T Yu</author>
+      <author>Helen K Cho</author>
+      <author>Michael C Nelson</author>
+      <author>Corinne R Bayuga-Ocampo</author>
+      <author>Jungyeob Ham</author>
+      <author>Heonjoong Kang</author>
+      <author>Ronald M Evans</author>
+    </authors>
+    <categories>
+      <category>Bioengineering</category>
+      <category>Biotechnology</category>
+      <category>Cell Biology</category>
+      <category>Development</category>
+      <category>Molecular Biology</category>
+      <category>Physiology</category>
+    </categories>
+    <subjects>
+      <subject>Bioengineering</subject>
+      <subject>Biotechnology</subject>
+      <subject>Cell Biology</subject>
+      <subject>Development</subject>
+      <subject>Molecular Biology/Structural Biology</subject>
+      <subject>Physiology</subject>
+    </subjects>
+  </article>
+</articles>

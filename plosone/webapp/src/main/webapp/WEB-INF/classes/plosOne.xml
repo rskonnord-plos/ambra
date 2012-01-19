@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+	<single-box-hostname>localhost</single-box-hostname>
+	<cas>
+		<hostname>${single-box-hostname}</hostname>
+		<port>
+			<https>7443</https>
+		</port>
+		<url>
+			<base>https://${cas.hostname}:${cas.port.https}/cas</base>
+			<login>${cas.url.base}/login</login>
+			<logout>${cas.url.base}/logout</logout>
+			<proxy-receptor>${cas.url.base}/proxy</proxy-receptor>
+			<proxy-validate>${cas.url.base}/proxyValidate</proxy-validate>
+		</url>
+	</cas>
+	<plosone>
+		<hostname>${single-box-hostname}</hostname>
+		<port>
+			<http>8080</http>
+			<https>10443</https>
+		</port>
+		<app-context>/plosone-webapp</app-context>
+		<resource-sub-dir></resource-sub-dir>
+		<host>${plosone.hostname}:${plosone.port.http}</host>
+		<url> 		
+			<proxy-callback>https://${plosone.hostname}:${plosone.port.https}${plosone.app-context}/CasProxyServlet</proxy-callback>
+		</url> 		
+	</plosone>
+	<plos-registration>
+    <hostname>${cas.hostname}</hostname>
+		<app-context>/plos-registration</app-context>
+		<url>
+			<base>https://${plos-registration.hostname}:${cas.port.https}${plos-registration.app-context}</base>
+			<registration>${plos-registration.url.base}/register.action</registration>
+			<change-password>${plos-registration.url.base}/changePassword.action</change-password>
+			<change-email>${plos-registration.url.base}/changeEmail.action</change-email>
+		</url>
+	</plos-registration>
+</config>

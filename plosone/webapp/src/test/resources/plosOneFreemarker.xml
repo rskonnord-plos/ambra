@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pages>
+  <webapp-dir>/plosone-webapp</webapp-dir>
+  <webapp-subdir></webapp-subdir>
+  <default>
+    <title>PLoS ONE</title>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+    </css>
+    <javascript>
+      <file>/javascript/js1.js</file>
+      <file>/javascript/js2.js</file>
+      <file>/js3.js</file>      
+    </javascript>
+  </default>
+
+  <page>
+    <name>/WEB-INF/pages/include.ftl</name>
+    <title>Title Goes Here</title>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+    </css>
+    <javascript>
+      <file>/javascript/js1.js</file>
+      <file>/javascript/js2.js</file>
+      <file>/js3.js</file>      
+    </javascript>
+  </page>
+  <page>
+    <name>test2</name>
+    <title>Title2 Goes Here</title>
+    <css>
+      <file>css0</file>
+    </css>
+    <javascript>
+      <file>javascript0</file>
+    </javascript>
+  </page>
+</pages>

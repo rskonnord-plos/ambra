@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>mulgara-client</artifactId>
+  <packaging>jar</packaging>
+  <version>0.6</version>
+  <name>Mulgara Webservice Client</name>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>topazproject-libs</artifactId>
+    <version>0.6</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jrdf</groupId>
+      <artifactId>jrdf</artifactId>
+      <version>0.3.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject</groupId>
+      <artifactId>auth-helper</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <!-- Generate org.topazproject.mulgara.itql.service client stubs -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+
+        <dependencies>
+          <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
+          </dependency>
+          <dependency>
+            <groupId>org.mulgara</groupId>
+            <artifactId>mulgara</artifactId>
+            <version>1.0.1-t1</version>
+            <scope>provided</scope>
+          </dependency>
+          <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.8</version>
+            <scope>provided</scope>
+          </dependency>
+        </dependencies>
+
+        <executions>
+          <execution>
+            <id>generate-mulgara-wsdl</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java2wsdl</goal>
+            </goals>
+            <configuration>
+              <classOfPortType>org.mulgara.itql.ItqlInterpreterBean</classOfPortType>
+              <methods>
+                <method>executeQueryToString, executeUpdate, setServerURI, beginTransaction, commit, rollback, close</method>
+              </methods>
+              <servicePortName>ItqlInterpreterBeanServicePort</servicePortName>
+              <location>http://localhost/service-location</location>
+              <namespace>http://tucana.org/</namespace>
+              <filename>itql-bean-service.wsdl</filename>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-mulgara-client</id>
+            <phase>generate-sources</phase>
+            <goals><goal>wsdl2java</goal></goals>
+            <configuration>
+              <sourceDirectory>${project.build.directory}/generated-sources/axistools/java2wsdl</sourceDirectory>
+              <serverSide>false</serverSide>
+              <packageSpace>org.topazproject.mulgara.itql.service</packageSpace>
+              <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicyId="permitted-anonymous-operations"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+
+  <Description>
+    Allow anyone to perform the actions listed in here.
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <Rule RuleId="permitListedOperations" Effect="Permit">
+
+    <Target>
+      <AnyTarget/>
+    </Target>
+
+    <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+      <ActionAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+        AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"/>
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">annotations:listAnnotations</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">replies:listReplies</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">replies:listAllReplies</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">articles:getObjectURL</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">articles:readMetaData</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">articles:listSecondaryObjects</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">articles:getObjectInfo</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">userAccounts:createUser</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">userAccounts:lookUpUser</AttributeValue>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">profiles:findUsersByProfile</AttributeValue>
+      </Apply>
+    </Condition>
+
+  </Rule>
+
+  <Obligations>
+    <Obligation ObligationId="log" FulfillOn="Permit">
+      <AttributeAssignment AttributeId="policy" 
+        DataType="http://www.w3.org/2001/XMLSchema#string">permitted-anonymous-operations</AttributeAssignment>
+    </Obligation>
+  </Obligations>
+
+</Policy>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicyId="deny-anonymous"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+
+  <Description>
+    Deny all access to anonymous users. 
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <Rule RuleId="deny-anonymous" Effect="Deny">
+    <Target>
+      <AnyTarget/>
+    </Target>
+    
+    <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:regexp-string-match">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">anonymous:*</AttributeValue> 
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+        <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+          AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"/>   
+      </Apply>
+    </Condition>
+
+  </Rule>
+
+  <Obligations>
+    <Obligation ObligationId="log" FulfillOn="Deny">
+      <AttributeAssignment AttributeId="policy" 
+        DataType="http://www.w3.org/2001/XMLSchema#string">deny-anonymous</AttributeAssignment>
+    </Obligation>
+  </Obligations>
+
+</Policy>
