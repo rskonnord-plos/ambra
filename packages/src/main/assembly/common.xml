@@ -1,0 +1,41 @@
+<assembly>
+  <id>tomcat-common</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <!-- Do not include default server.xml -->
+  <fileSets>
+    <fileSet>
+      <!--
+      Stupid bug requires us to insert bug_workaround and we cannot seem to put
+      this in the components.xml
+      -->
+      <directory>${project.bug_workaround.build.directory}/${tomcatFile}</directory>
+      <outputDirectory>/</outputDirectory>
+      <excludes>
+        <exclude>conf/server.xml</exclude>
+        <exclude>webapps/**</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
+      <outputDirectory>/webapps/</outputDirectory>
+      <excludes>
+        <exclude>log4j:*</exclude>
+      </excludes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/common/lib</outputDirectory>
+      <includes>
+        <include>log4j:*</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

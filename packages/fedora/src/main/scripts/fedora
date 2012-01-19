@@ -1,0 +1,79 @@
+#!/bin/bash
+# $HeadURL::                                                                   $
+# $Id$
+#
+# fedora        
+#
+# chkconfig: 345 93 13
+# description:  Start up the fedora app.
+
+# Validate fedora.fcfg
+FEDORA_FCFG=/usr/local/topaz/fedora/server/config/fedora.fcfg
+[ -e $FEDORA_FCFG ] && ! xmllint --noout $FEDORA_FCFG && exit 1
+LOG_XML=/usr/local/topaz/fedora/server/jakarta-tomcat-5.0.28/common/classes/log4j.xml
+[ -e $LOG_XML ] && ! xmllint --noout $LOG_XML && exit 1
+
+# Chown keystore
+TRUST_STORE=/etc/topaz/keystore.jks
+[ -e "$TRUST_STORE" ] && chown topaz.topaz $TRUST_STORE
+
+# Source function library.
+. /etc/init.d/functions
+
+# Read our configuration from sysconfig (a redhat convention)
+[ -e /etc/sysconfig/topaz-common ] && . /etc/sysconfig/topaz-common
+[ -e /etc/sysconfig/fedora ] && . /etc/sysconfig/fedora
+
+# Start multicast for ecache
+/usr/local/topaz/bin/multicast
+
+# Try to set JAVA_HOME if not set
+[ -z "$JAVA_HOME" ] && JAVA_HOME=`find /opt -name 'jdk*' -maxdepth 1 | head -1`
+export JAVA_HOME
+
+# Verify that JAVA_HOME is set and exists
+[ -z "$JAVA_HOME" ] && echo "JAVA_HOME must be set" && exit 1
+[ ! -d "$JAVA_HOME" ] && echo "JAVA_HOME ($JAVA_HOME) invalid" && exit 1
+
+FEDORA_HOME="/usr/local/topaz/fedora"
+export FEDORA_HOME
+
+FEDORA_SH="$FEDORA_HOME/server/bin/fedora.sh"
+if [ ! -f "$FEDORA_SH" ] ; then
+    echo "Fedora script not found: $FEDORA_SH"
+    exit 1
+fi
+
+RETVAL=0
+
+case "$1" in
+    start)
+        echo "Starting Fedora"
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" start mysql \"$@\""
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/fedora
+        ;;
+
+    stop)
+        echo "Stopping Fedora"
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" stop mysql \"$@\""
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/fedora
+        ;;
+
+    restart)
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" restart \"$@\""
+        ;;
+
+    status)
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" status \"$@\""
+        RETVAL=$?
+        ;;
+
+    *)
+        echo $"Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL

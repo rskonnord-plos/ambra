@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project>
+  <!-- Page title -->
+
+  <skin>
+    <groupId>com.rectang.maventrac</groupId>
+    <artifactId>maventrac-skin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </skin>
+ 
+  <body>
+    <!-- Links defined across the top right side -->
+    <links>
+<!--      <item name="Trac" href="http://gandalf.topazproject.org/trac" /> -->
+      <item name="Continuum" href="http://gandalf.topazproject.org/continuum" />
+    </links>
+
+    <!-- Menu in left navigation -->
+    <!-- Development: Trac, Continuum, Repository -->
+    <menu name="Development Tools">
+      <item name="Javadocs" href="apidocs/" />
+      <item name="Xref" href="xref/" />
+      <item name="Continuum" href="http://gandalf.topazproject.org/continuum" />
+      <item name="Mvn Repository" href="http://gandalf.topazproject.org/maven2" />
+    </menu>
+
+    <menu ref="modules" />
+    
+    ${reports}
+    
+    <!-- Community: -->
+    
+    <!-- External Docs: Fedora, Kowari -->
+    <menu name="External Documenation">
+      <item name="Fedora" href="http://fedora.info" />
+      <item name="Kowari" href="http://kowari.org" />
+      <item name="Maven" href="http://maven.apache.org/"/>
+    </menu>
+
+    <!-- PLOS: Plos, Plosone, blogs, etc. -->
+    <menu name="PLOS Sites">
+      <item name="PLOS" href="http://www.plos.org"/>
+      <item name="PLOSOne" href="http://www.plosone.org"/>
+      <item name="Publishg Blog" href="http://www.plos.org/cms/pub"/>
+    </menu>
+  </body>
+</project>
