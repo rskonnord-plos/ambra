@@ -1,0 +1,91 @@
+/*
+ * $HeadURL::                                                                            $
+ * $Id$
+ *
+ * Copyright (c) 2006-2008 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.WizardContainer {
+	background: #EEEEEE;
+	border: #798EC5 1px solid;
+	padding: 2px;
+}
+
+.WizardTitle {
+	color: #003366;
+	padding: 8px 5px 15px 2px;
+	font-weight: bold;
+	font-size: x-small;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica;
+	text-align: left;
+}
+
+.WizardText {
+	color: #000033;
+	font-weight: normal;
+	font-size: xx-small;
+	font-family: Verdana, Arial, Helvetica;
+	padding: 2 50; text-align: justify;
+}
+
+.WizardLightText {
+	color: #666666;
+	font-weight: normal;
+	font-size: xx-small;
+	font-family: verdana, arial, helvetica;
+	padding: 2px 50px;
+	text-align: justify;
+}
+
+.WizardButtonHolder {
+	text-align: right;
+	padding: 10px 5px;
+}
+
+.WizardButton {
+	color: #ffffff;
+	background: #798EC5;
+	font-size: xx-small;
+	font-family: verdana, arial, helvetica, sans-serif;
+	border-right: #000000 1px solid;
+	border-bottom: #000000 1px solid;
+	border-left: #666666 1px solid;
+	border-top: #666666 1px solid;
+	padding-right: 4px;
+	padding-left: 4px;
+	text-decoration: none; height: 18px;
+}
+
+.WizardButton:hover {
+	cursor: pointer;
+}
+
+.WizardButtonDisabled {
+	color: #eeeeee;
+	background-color: #999999;
+	font-size: xx-small;
+	FONT-FAMILY: verdana, arial, helvetica, sans-serif;
+	border-right: #000000 1px solid;
+	border-bottom: #000000 1px solid;
+	border-left: #798EC5 1px solid;
+	border-top: #798EC5 1px solid;
+	padding-right: 4px;
+	padding-left: 4px;
+	text-decoration: none;
+	height: 18px;
+}
+
+

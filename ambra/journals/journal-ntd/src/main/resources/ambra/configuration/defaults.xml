@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  This file is the Ambra template for the Public Library of Science site. 
+-->
+<config>
+  <ambra>
+    <!-- virtual journal config -->
+    <virtualJournals>
+      <PLoSNTD>
+        <journal>PLoSNTD</journal>
+        <eIssn>1935-2735</eIssn>
+        <description>PLoS Neglected Tropical Diseases</description>
+        <mappingPrefix>/journals/ntd</mappingPrefix>
+        <rules>
+          <host>.*plosntds.*</host>
+        </rules>
+        <url>http://www.plosntds.org</url>
+        <ambra>
+          <services>
+            <feed>
+              <title>PLoS Neglected Tropical Diseases</title>
+              <id>info:doi/10.1371/feed.pntd</id>
+            </feed>
+          </services>
+        </ambra>
+      </PLoSNTD>
+    </virtualJournals>
+
+    <freemarker>
+      <!--
+        # This section defines the various journals and the css and javascript files which should be
+        # included on each page as well as the page title.  The values within the <default> tag are used
+        # if any of the values are missing in the <page> definitions.  Note, that the title, css, and
+        # javascript level values are entirely replaced, they are not additive.  Override config files
+        # may define values for each of those three variables and they will supsercede values present
+        # in subsequent config values.  The lookup for values is as follows:
+        # 1. Page defined in journal
+        # 2. Default value defined in journal
+        # 3. Page defined in default journal
+        # 4. Default value in default journal
+        # To define an empty value for a certain page so that it doesn't use defaults, just put the
+        # element tag with no value, e.g. <javascript></javascript>
+      -->
+      <!--PLoSNTD-->
+      <journal>
+        <name>PLoSNTD</name>
+        <metaKeywords>
+          plos neglected tropical diseases\, plos ntds\, plos ntd\, plos\, public library of
+          science\, open access\, open-access\, online science journal\, plos journal\, neglected
+          tropical diseases\, infectious diseases\, tropical diseases\, scientific\, medical\,
+          public health\, pathology\, epidemiology\, treatment\, control\, prevention\, public
+          policy
+        </metaKeywords>
+        <metaDescription>
+          PLoS Neglected Tropical Diseases is an open-access journal publishing peer-reviewed
+          research on the world\'s most neglected tropical diseases\, such as elephantiasis\, river
+          blindness\, leprosy\, hookworm\, schistosomiasis\, and African sleeping sickness
+        </metaDescription>
+        <articleTitlePrefix>PLoS Neglected Tropical Diseases:</articleTitlePrefix>
+        <displayName>PLoS Neglected Tropical Diseases</displayName>
+        <default>
+          <title>PLoS Neglected Tropical Diseases: A Peer-Reviewed Open-Access Journal</title>
+        </default>
+        <page>
+          <name>/article/article_body.ftl</name>
+          <title>CODE_ARTICLE_TITLE</title>
+          <css>
+            <file>dojo.css</file>
+            <file>/css/star_rating.css</file>
+            <file>/css/rating.css</file>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_article.js</file>
+          </javascript>
+        </page>
+
+        <page>
+          <name>/static/aeChecklist.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/static/developing.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/static/downloads.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/static/hotezWho.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/static/revisedChecklist.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/static/scope.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+      </journal>
+    </freemarker>
+  </ambra>
+</config>

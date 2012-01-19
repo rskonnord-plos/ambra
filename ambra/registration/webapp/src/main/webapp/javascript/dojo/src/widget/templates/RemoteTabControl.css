@@ -1,0 +1,80 @@
+/*
+ * $HeadURL::                                                                            $
+ * $Id$
+ *
+ * Copyright (c) 2006-2008 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.dojoRemoteTabController {
+	position: relative;
+}
+
+.dojoRemoteTab {
+	position : relative;
+	float : left;
+	padding-left : 9px;
+	border-bottom : 1px solid #6290d2;
+	background : url(images/tab_left.gif) no-repeat left top;
+	cursor: pointer;
+	white-space: nowrap;
+	z-index: 3;
+}
+
+.dojoRemoteTab div {
+	display : block;
+	padding : 4px 15px 4px 6px;
+	background : url(images/tab_top_right.gif) no-repeat right top;
+	color : #333;
+	font-size : 90%;
+}
+
+.dojoRemoteTabPaneClose {
+	position : absolute;
+	bottom : 0px;
+	right : 6px;
+	height : 12px;
+	width : 12px;
+	background : url(images/tab_close.gif) no-repeat right top;
+}
+
+.dojoRemoteTabPaneCloseHover {
+	background-image : url(images/tab_close_h.gif);
+}
+
+.dojoRemoteTabClose {
+	display : inline-block;
+	height : 12px;
+	width : 12px;
+	padding : 0 12px 0 0;
+	margin : 0 -10px 0 10px;
+	background : url(images/tab_close.gif) no-repeat right top;
+	cursor : default;
+}
+
+.dojoRemoteTabCloseHover {
+	background-image : url(images/tab_close_h.gif);
+}
+
+.dojoRemoteTab.current {
+	padding-bottom : 1px;
+	border-bottom : 0;
+	background-position : 0 -150px;
+}
+
+.dojoRemoteTab.current div {
+	padding-bottom : 5px;
+	margin-bottom : -1px;
+	background-position : 100% -150px;
+}

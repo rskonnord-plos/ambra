@@ -1,0 +1,38 @@
+/*
+ * $HeadURL::                                                                            $
+ * $Id$
+ *
+ * Copyright (c) 2006-2008 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/* For tables with the "border" attribute set to "0" */
+table[border="0"], 
+table[border="0"] > tr > td, table[border="0"] > tr > th, 
+table[border="0"] > tbody > tr > td, table[border="0"] > tbody > tr > th, 
+table[border="0"] > thead > tr > td, table[border="0"] > thead > tr > th, 
+table[border="0"] > tfoot > tr > td, table[border="0"] > tfoot > tr > th
+{
+	border: #d3d3d3 1px dotted ;
+}
+
+/* For tables with no "border" attribute set */
+table:not([border]), 
+table:not([border]) > tr > td, table:not([border]) > tr > th,
+table:not([border]) > tbody > tr > td, table:not([border]) > tbody > tr > th,
+table:not([border]) > thead > tr > td, table:not([border]) > thead > tr > th,
+table:not([border]) > tfoot > tr > td, table:not([border]) > tfoot > tr > th
+{
+	border: #d3d3d3 1px dotted ;
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  This file is the Ambra template for the Public Library of Science site. 
+-->
+<config>
+  <ambra>
+    <!-- virtual journal config -->
+    <virtualJournals>
+      <PLoSONE>
+        <journal>PLoSONE</journal>
+        <eIssn>1932-6203</eIssn>
+        <description>PLoS ONE</description>
+        <mappingPrefix>/journals/plosone</mappingPrefix>
+        <rules>
+          <host>.*plosone.*</host>
+        </rules>
+        <url>http://www.plosone.org</url>
+        <ambra>
+          <services>
+            <feed>
+              <title>PLoS ONE</title>
+              <id>info:doi/10.1371/feed.pone</id>
+            </feed>
+          </services>
+        </ambra>
+        <!-- Configuration keys for displaying recent articles tab widget on home page -->
+        <recentArticles>
+          <numDaysInPast>7</numDaysInPast>
+          <numArticlesToShow>5</numArticlesToShow>
+        </recentArticles>
+      </PLoSONE>
+    </virtualJournals>
+
+    <freemarker>
+      <!--
+        # This section defines the various journals and the css and javascript files which should be
+        # included on each page as well as the page title.  The values within the <default> tag are used
+        # if any of the values are missing in the <page> definitions.  Note, that the title, css, and
+        # javascript level values are entirely replaced, they are not additive.  Override config files
+        # may define values for each of those three variables and they will supsercede values present
+        # in subsequent config values.  The lookup for values is as follows:
+        # 1. Page defined in journal
+        # 2. Default value defined in journal
+        # 3. Page defined in default journal
+        # 4. Default value in default journal
+        # To define an empty value for a certain page so that it doesn't use defaults, just put the
+        # element tag with no value, e.g. <javascript></javascript>
+      -->
+      <!--PLoSONE-->
+      <journal>
+        <name>PLoSONE</name>
+        <metaKeywords>
+          PLoS\, Public Library of Science\, Open Access\, Open-Access\, Science\, Medicine\,
+          Biology\, Research\, Peer-review\, Inclusive\, Interdisciplinary\, Ante-disciplinary\,
+          Physics\, Chemistry\, Engineering
+        </metaKeywords>
+        <metaDescription>
+          PLoS ONE: an inclusive\, peer-reviewed\, open-access resource from the PUBLIC LIBRARY OF
+          SCIENCE. Reports of well-performed scientific studies from all disciplines freely
+          available to the whole world.
+        </metaDescription>
+        <articleTitlePrefix>PLoS ONE:</articleTitlePrefix>
+        <displayName>PLoS ONE</displayName>
+        <default>
+          <title>PLoS ONE : Publishing science\, accelerating research</title>
+        </default>
+        <page>
+          <name>/article/article_body.ftl</name>
+          <title>CODE_ARTICLE_TITLE</title>
+          <css>
+            <file>dojo.css</file>
+            <file>/css/star_rating.css</file>
+            <file>/css/rating.css</file>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+          </css>
+          <javascript>
+            <file>/javascript/dojo/dojo/dojo.js</file>
+            <file>/javascript/dojo/dojo/ambra.js</file>
+            <file>/javascript/init_global.js</file>
+            <file>/javascript/init_article.js</file>
+          </javascript>
+        </page>
+
+        <page>
+          <name>/static/journalClub.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+        <page>
+          <name>/static/latex.ftl</name>
+          <css>
+            <file>/css/screen.css</file>
+            <file>/css/iepc.css</file>
+            <file>/css/static.css</file>
+          </css>
+        </page>
+      </journal>
+    </freemarker>
+  </ambra>
+</config>

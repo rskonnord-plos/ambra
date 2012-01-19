@@ -1,0 +1,3 @@
+# Add the topaz user
+/usr/sbin/groupadd -f -r topaz 2> /dev/null
+/usr/sbin/useradd -c "Topaz user" -g topaz -s /sbin/nologin -d /usr/local/topaz -r topaz 2> /dev/null || :

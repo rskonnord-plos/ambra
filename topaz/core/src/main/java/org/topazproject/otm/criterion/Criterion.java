@@ -1,0 +1,298 @@
+/* $HeadURL::                                                                            $
+ * $Id$
+ *
+ * Copyright (c) 2007-2008 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.topazproject.otm.criterion;
+
+import java.net.URI;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import org.topazproject.otm.ClassMetadata;
+import org.topazproject.otm.Criteria;
+import org.topazproject.otm.GraphConfig;
+import org.topazproject.otm.OtmException;
+import org.topazproject.otm.Rdf;
+import org.topazproject.otm.RdfUtil;
+import org.topazproject.otm.Session;
+import org.topazproject.otm.annotations.Entity;
+import org.topazproject.otm.annotations.GeneratedValue;
+import org.topazproject.otm.annotations.Id;
+import org.topazproject.otm.annotations.UriPrefix;
+import org.topazproject.otm.mapping.PropertyBinder;
+import org.topazproject.otm.mapping.Mapper;
+import org.topazproject.otm.mapping.RdfMapper;
+import org.topazproject.otm.serializer.Serializer;
+
+/**
+ * An abstract base for all query criterion used as restrictions in a  {@link
+ * org.topazproject.otm.Criteria}.<p>Subclasses must either override both {@link #toItql
+ * toItql()} and {@link #toOql toOql()}, or they must override {@link #toQuery toQuery()}; the
+ * default implementation for these is to invoke each other.</p>
+ *
+ * @author Pradeep Krishnan
+ *
+ * @see Restrictions
+ */
+@Entity(types = {Criterion.RDF_TYPE}, graph = Criterion.GRAPH)
+@UriPrefix(Criterion.NS)
+public abstract class Criterion {
+  private static final URI PFX_GRAPH = URI.create("http://mulgara.org/mulgara#PrefixGraph");
+
+  /**
+   * The graph alias for persistence. Unused otherwise.
+   */
+  public static final String GRAPH = "criteria";
+
+  /**
+   * Namespace for all URIs for persistence. Unused otherwise.
+   */
+  public static final String NS = Rdf.topaz + "otm/";
+
+  /**
+   * The base rdf:type and also the namespace for sub-class types for persistence. Unused
+   * otherwise/
+   */
+  public static final String RDF_TYPE = NS + "Criterion";
+
+  /**
+   * The constants indicating the query language.
+   */
+  public static enum QL {ITQL, OQL;};
+
+  /**
+   * The id field used for persistence. Ignored otherwise.
+   */
+  private URI criterionId;
+
+  /**
+   * Creates an ITQL query 'where clause' fragment. The default implementation calls {@link
+   * #toQuery toQuery()}.
+   *
+   * @param criteria the Criteria
+   * @param subjectVar the subject designator variable (eg. $s etc.)
+   * @param varPrefix namespace for internal variables (ie. not visible on select list)
+   *
+   * @return the itql query fragment
+   *
+   * @throws OtmException if an error occurred
+   */
+  public String toItql(Criteria criteria, String subjectVar, String varPrefix)
+                throws OtmException {
+    return toQuery(criteria, subjectVar, varPrefix, QL.ITQL);
+  }
+
+  /**
+   * Creates an OQL query 'where clause' fragment. The default implementation calls {@link
+   * #toQuery toQuery()}.
+   *
+   * @param criteria the Criteria
+   * @param subjectVar the subject designator variable (eg. $s etc.)
+   * @param varPrefix namespace for internal variables (ie. not visible on select list)
+   *
+   * @return the oql query fragment
+   *
+   * @throws OtmException if an error occurred
+   */
+  public String toOql(Criteria criteria, String subjectVar, String varPrefix)
+               throws OtmException {
+    return toQuery(criteria, subjectVar, varPrefix, QL.OQL);
+  }
+
+  /**
+   * Creates a query 'where clause' fragment. The default implementation calls {@link #toItql
+   * toItql} or {@link #toOql toOql} depending on the specified query-language.
+   *
+   * @param criteria the Criteria
+   * @param subjectVar the subject designator variable (eg. $s etc.)
+   * @param varPrefix namespace for internal variables (ie. not visible on select list)
+   * @param ql the query language to generate the fragment for
+   *
+   * @return the query fragment
+   *
+   * @throws OtmException if an error occurred
+   */
+  public String toQuery(Criteria criteria, String subjectVar, String varPrefix, QL ql)
+                 throws OtmException {
+    switch (ql) {
+    case ITQL:
+      return toItql(criteria, subjectVar, varPrefix);
+
+    case OQL:
+      return toOql(criteria, subjectVar, varPrefix);
+
+    default:
+      throw new OtmException("unknown query language '" + ql + "'");
+    }
+  }
+
+  /**
+   * Serialize the given value into standard rdf form, i.e "&lt;...&gt;" for URI's and
+   * single-quoted strings with optional datatype uri for literals.
+   *
+   * @param value the value to serialize
+   * @param criteria the criteria object this criterion belongs to
+   * @param field the name of the field whose value is being serialized
+   *
+   * @return the serialized value
+   *
+   * @throws OtmException if the field is not valid or an error occurred getting the string
+   *         representation of the value
+   */
+  protected static String serializeValue(Object value, Criteria criteria, String field)
+                                  throws OtmException {
+    ClassMetadata cm                 = criteria.getClassMetadata();
+    RdfMapper     m                  = getMapper(cm, field);
+
+    String        val;
+
+    if (value instanceof Parameter)
+      val = criteria.resolveParameter(((Parameter) value).getParameterName(), field);
+    else {
+      try {
+        PropertyBinder     l                 = m.getBinder(criteria.getSession());
+        Serializer ser               = l.getSerializer();
+
+        val                          = (ser != null) ? ser.serialize(value) : value.toString();
+      } catch (Exception e) {
+        throw new OtmException("Serializer exception", e);
+      }
+    }
+
+    if (m.typeIsUri())
+      val = "<" + RdfUtil.validateUri(val, field) + ">";
+    else {
+      val = "'" + RdfUtil.escapeLiteral(val) + "'";
+
+      if (m.getDataType() != null)
+        val += (("^^<" + m.getDataType()) + ">");
+    }
+
+    return val;
+  }
+
+  /**
+   * Gets the parameter names that is set on this Criterion. The default implementation
+   * always returns an emptySet. Sub-classes must override this and return a set if they are
+   * parameterizable.
+   *
+   * @return the parameter names as a set; never null
+   */
+  public Set<String> getParamNames() {
+    return Collections.emptySet();
+  }
+
+  /**
+   * Do any pre-insert processing. eg. converting field names to predicate-uri
+   *
+   * @param ses the Session that is generating this event
+   * @param dc the detached criteria that is being persisted
+   * @param cm the class metadata to use to resolve fields
+   */
+  public abstract void onPreInsert(Session ses, DetachedCriteria dc, ClassMetadata cm);
+
+  /**
+   * Do any post-load processing. eg. converting predicate-uri to field name
+   *
+   * @param ses the Session that is generating this event
+   * @param dc the detached criteria that is being loaded
+   * @param cm the class metadata to use to resolve fields
+   */
+  public abstract void onPostLoad(Session ses, DetachedCriteria dc, ClassMetadata cm);
+
+  /**
+   * Gets the URI for the mulgara prefix graph used in rdf collection queries.
+   *
+   * @param criteria the criteria context to use
+   *
+   * @return the prefix graph URI
+   *
+   * @throws OtmException when the graph is not configured in the SessionFactory
+   */
+  protected URI getPrefixGraph(Criteria criteria) throws OtmException {
+    List<GraphConfig> l = criteria.getSession().getSessionFactory().getGraphs(PFX_GRAPH);
+
+    if ((l == null) || (l.size() == 0))
+      throw new OtmException("A graph of type " + PFX_GRAPH
+                             + " must be configured in SessionFactory to execute queries on"
+                             + " rdf collections");
+
+    return l.get(0).getUri();
+  }
+
+  /**
+   * Gets the URI for the given graph name.
+   *
+   * @param criteria the criteria context to use
+   * @param graph the name of the graph
+   *
+   * @return the graph URI
+   *
+   * @throws OtmException when the graph is not configured in the SessionFactory
+   */
+  protected URI getGraphUri(Criteria criteria, String graph)
+                     throws OtmException {
+    GraphConfig conf = criteria.getSession().getSessionFactory().getGraph(graph);
+
+    if (conf == null)
+      throw new OtmException("Graph '" + graph + "' is not configured in SessionFactory");
+
+    return conf.getUri();
+  }
+
+  /**
+   * Gets the Mapper for the given property name.
+   *
+   * @param cm the Class metadata to look-up the property in
+   * @param name of the property
+   *
+   * @return the mapper
+   *
+   * @throws OtmException when a mapper is not found
+   */
+  protected static RdfMapper getMapper(ClassMetadata cm, String name)
+                                throws OtmException {
+    Mapper r = cm.getMapperByName(name);
+
+    if (!(r instanceof RdfMapper))
+      throw new OtmException("'" + name + "' does not exist in " + cm);
+
+    return (RdfMapper) r;
+  }
+
+  /**
+   * Get criterionId. Id field used for persistence. Ignored otherwise.
+   *
+   * @return criterionId as URI.
+   */
+  public URI getCriterionId() {
+    return criterionId;
+  }
+
+  /**
+   * Set criterionId. Id field used for persistence. Ignored otherwise.
+   *
+   * @param criterionId the value to set.
+   */
+  @Id
+  @GeneratedValue(uriPrefix = NS + "Criterion/Id/")
+  public void setCriterionId(URI criterionId) {
+    this.criterionId = criterionId;
+  }
+}

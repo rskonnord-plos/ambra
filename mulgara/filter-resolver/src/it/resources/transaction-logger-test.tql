@@ -1,0 +1,5 @@
+create <local:///topazproject#filter:graph=foo> <http://topazproject.org/graphs#filter>;
+insert <a:1> <b:2> '42' into <local:///topazproject#filter:graph=foo>;
+select $s $p $o from <local:///topazproject#filter:graph=foo> where $s $p $o;
+delete <a:1> <b:2> '42' from <local:///topazproject#filter:graph=foo>;
+drop <local:///topazproject#filter:graph=foo>;
