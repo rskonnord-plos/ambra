@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <topaz>
+
+    <!-- Configure the host and container where topaz is running -->
+    <server>
+      <hostname>FQHN</hostname>
+      <https-port>8443</https-port>
+      <http-port>8008</http-port>
+    </server>
+
+    <!-- Configuration to talk to CAS -->
+    <cas-server>
+      <base-url>https://FQHN:7443/cas</base-url>
+    </cas-server>
+    
+    <services>
+      <!-- Configuration to talk to Fedora -->
+      <fedora>
+        <base-url>http://FQHN:9090/fedora/</base-url>
+        <uri>${topaz.services.fedora.base-url}services/management</uri>
+        <auth-method>BASIC</auth-method>
+        <userName>fedoraAdmin</userName>
+        <password>fedoraAdmin</password>
+      </fedora>
+      <fedoraUploader>
+        <uri>${topaz.services.fedora.base-url}management/upload</uri>
+        <auth-method>BASIC</auth-method>
+        <userName>fedoraAdmin</userName>
+        <password>fedoraAdmin</password>
+      </fedoraUploader>
+
+      <!-- Configuration to talk to Mulgara -->
+      <itql>
+        <uri>http://FQHN:9091/mulgara-service/services/ItqlBeanService</uri>
+        <auth-method>NONE</auth-method>
+      </itql>
+      <itql-admin>
+        <uri>${topaz.services.itql.uri}</uri>
+        <auth-method>NONE</auth-method>
+      </itql-admin>
+    </services>
+
+    <search>
+      <indexpath>/var/lib/topaz/data/lucene</indexpath>
+      <defaultfields>description,title,body,creator</defaultfields>
+    </search>
+    
+    <fedoragsearch>
+      <url>http://${topaz.server.hostname}:${topaz.server.http-port}/ws-search-webapp/services/FedoraGenericSearchServicePort</url>
+      <repository>Topaz</repository>
+      <index>TopazIndex</index>
+      <indexDocXslt>topazFoxmlToLucene</indexDocXslt>
+      <resultPageXslt>copyXml</resultPageXslt>
+      <fgsrepository>
+        <fedoraSoap>${topaz.services.fedora.base-url}services</fedoraSoap>
+        <fedoraUser>fedoraAdmin</fedoraUser>
+        <fedoraPass>fedoraAdmin</fedoraPass>
+      </fgsrepository>
+    </fedoragsearch>
+
+    <!-- Set host and port of smtp relay -->
+    <alerts>
+      <relayhost>localhost</relayhost>
+      <relayport>25</relayport>
+    </alerts>
+    
+    <!-- Schedule alerts -->
+    <scheduler>
+      <jobs>
+        <job name="sendalerts" group="topaz">
+          <class>org.topazproject.ws.alerts.impl.SendAlertsJob</class>
+          <!-- See http://www.opensymphony.com/quartz/api/org/quartz/CronExpression.html -->
+          <!-- The 4th of every month -->
+          <cron>0 0 2 4 * ?</cron>
+        </job>
+      </jobs>
+    </scheduler>
+
+    <articles>
+      <pdpName>standard-pdp</pdpName>
+    </articles>
+    <annotations>
+      <pdpName>standard-pdp</pdpName>
+    </annotations>
+    <replies>
+      <pdpName>standard-pdp</pdpName>
+    </replies>
+    <permissions>
+      <pdpName>standard-pdp</pdpName>
+    </permissions>
+    <profiles>
+      <pdpName>standard-pdp</pdpName>
+    </profiles>
+    <preferences>
+      <pdpName>standard-pdp</pdpName>
+    </preferences>
+    <user-accounts>
+      <pdpName>standard-pdp</pdpName>
+    </user-accounts>
+    <user-roles>
+      <pdpName>standard-pdp</pdpName>
+    </user-roles>
+    <ratings>
+      <pdpName>standard-pdp</pdpName>
+    </ratings>
+    <alerts>
+      <pdpName>standard-pdp</pdpName>
+    </alerts>
+    <search>
+      <pdpName>standard-pdp</pdpName>
+    </search>
+    <access>
+      <pdpName>standard-pdp</pdpName>
+    </access>
+  </topaz>
+</config>

@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pages>
+
+  <default>
+    <title>PLoS ONE : Publishing science\, accelerating research</title>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+    </css>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/config_default.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/dojoRequire_default.ftl</file>
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>  
+    </javascript>
+  </default>
+
+  <page>
+    <name>/article/article_body.ftl</name>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/config_article.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/annotation.js</file>      
+      <file>/javascript/topaz/displayComment.js</file>
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/topaz/floatingMenu.js</file>
+     	<file>/javascript/topaz/navigationUtil.js</file>
+     	<!-- <file>/javascript/topaz/tooltipExtend.js</file> -->
+      <file>/javascript/dojoRequire_article.ftl</file>
+      <file>/javascript/formSetup_article.js</file>   
+      <!-- <file>/javascript/topaz/errorConsole.js</file>    -->  
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+      <file>/javascript/init_article.js</file>   
+    </javascript>
+  </page>
+
+  <page>
+    <name>/discussion/discussion.ftl</name>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/config_discussion.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/dojoRequire_discussion.ftl</file>
+      <file>/javascript/topaz/responsePanel.js</file>   
+      <!-- <file>/javascript/topaz/errorConsole.js</file>    --> 
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+      <file>/javascript/init_discussion.js</file>   
+    </javascript>
+  </page>
+
+  <page>
+    <name>/discussion/startDiscussion.ftl</name>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/config_discussion.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/dojoRequire_discussion.ftl</file>
+      <file>/javascript/topaz/responsePanel.js</file>   
+      <!-- <file>/javascript/topaz/errorConsole.js</file>    -->
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+      <file>/javascript/init_newDiscussion.js</file>   
+    </javascript>
+  </page>
+
+  <page>
+    <name>/article/imageWindow.ftl</name>
+    <css>
+      <file>/css/pone_images.css</file>
+    </css>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/config_slideshow.js</file>
+      <file>/javascript/slideshowReference.ftl</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/dojoRequire_slideshow.ftl</file>
+      <file>/javascript/topaz/slideshow.js</file>   
+   <!-- <file>/javascript/topaz/errorConsole.js</file>    -->  
+      <file>/javascript/init_slideshow.js</file>   
+    </javascript>
+  </page>
+
+  <page>
+    <name>/article/imageWindowLarge.ftl</name>
+    <css>
+      <file>/css/pone_images.css</file>
+    </css>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/dojoRequire_slideshow.ftl</file>
+    </javascript>
+  </page>
+
+  <page>
+    <name>/article/emailArticle.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_forms.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/article/emailSuccess.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_forms.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/feedback/feedbackEntry.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_forms.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/feedback/feedbackSuccess.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_forms.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/user/alerts.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_forms.css</file>
+      <file>/css/pone_static.css</file>      
+    </css>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+       <!-- <file>/javascript/topaz/errorConsole.js</file>    --> 
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+    </javascript>
+  </page>
+
+  <page>
+    <name>/user/createNewUser.ftl</name>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/topaz/htmlUtil.js</file>
+      <file>/javascript/dojoRequire_profile.ftl</file>
+      <!-- <file>/javascript/topaz/errorConsole.js</file>    --> 
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+      <file>/javascript/init_newProfile.js</file>
+    </javascript>
+  </page>
+
+  <page>
+    <name>/user/editPlosAlerts.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_forms.css</file>
+      <file>/css/pone_static.css</file>      
+    </css>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/topaz/htmlUtil.js</file>
+      <file>/javascript/dojoRequire_profile.ftl</file>
+      <!-- <file>/javascript/topaz/errorConsole.js</file>    -->   
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+      <file>/javascript/init_plosAlerts.js</file>
+    </javascript>
+  </page>
+
+  <page>
+    <name>/user/editUser.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_forms.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/formUtil.js</file>   
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/topaz/htmlUtil.js</file>
+      <file>/javascript/dojoRequire_profile.ftl</file>
+      <file>/javascript/config_profile.js</file>
+      <file>/javascript/topaz/horizontalTabs.js</file>
+      <!-- <file>/javascript/topaz/errorConsole.js</file>    -->   
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+      <file>/javascript/init_profile.js</file>
+    </javascript>
+  </page>
+
+  <page>
+    <name>/static/comment_guidelines.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/static/competing.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/static/contact.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/edboard.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/faq.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/figure_guidelines.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/guidelines.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/static/help.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/static/information.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/license.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/media.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/policies.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/privacy.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/static/policies.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/static/reviwer_guidelines.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/static/rss_feeds.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/rss_info.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/serverError.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/sitemap.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/terms.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+
+  <page>
+    <name>/static/whypublish.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_static.css</file>
+    </css>
+  </page>
+  
+  <page>
+    <name>/index.ftl</name>
+    <css>
+      <file>/css/pone_screen.css</file>
+      <file>/css/pone_iepc.css</file>
+      <file>/css/pone_home.css</file>
+    </css>
+    <javascript>
+      <file>/javascript/prototype.js</file>
+      <file>/javascript/browserDetection.js</file>
+      <file>/javascript/dojo/dojo.js</file>
+      <file>/javascript/topaz/topaz.js</file>      
+      <file>/javascript/topaz/domUtil.js</file>
+      <file>/javascript/topaz/htmlUtil.js</file>
+      <file>/javascript/dojoRequire_profile.ftl</file>
+      <file>/javascript/config_home.js</file>
+      <file>/javascript/topaz/horizontalTabs.js</file>
+      <!-- <file>/javascript/topaz/errorConsole.js</file>    -->   
+      <file>/javascript/init_global.js</file>  
+      <file>/javascript/init_navigation.js</file>   
+      <file>/javascript/init_home.js</file>
+    </javascript>
+  </page>
+
+</pages>

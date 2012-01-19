@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://sunxacml.sourceforge.net/schema/config-0.3"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  defaultPDP="test-pdp" defaultAttributeFactory="attr"
+  defaultCombiningAlgFactory="comb" defaultFunctionFactory="func">
+  <pdp name="standard-pdp">
+    <attributeFinderModule class="com.sun.xacml.finder.impl.CurrentEnvModule"/>
+    <attributeFinderModule
+      class="org.topazproject.xacml.finder.ConfigurationAttributeFinderModule"/>
+    <attributeFinderModule
+      class="org.topazproject.xacml.ws.ServletEndpointContextAttributeFinderModule"/>
+    <policyFinderModule class="org.topazproject.xacml.finder.ResourcePolicyModule"
+      name="standard-policy-finder">
+      <list>
+        <string>policy/sets/standard-set.xml</string>
+      </list>
+    </policyFinderModule>
+    <policyFinderModule class="org.topazproject.xacml.finder.ResourceReferencePolicyModule">
+      <list>
+        <string>policy/rules/deny-revokes.xml</string>
+        <string>policy/rules/deny-anonymous.xml</string>
+        <string>policy/rules/deny-all.xml</string>
+        <string>policy/rules/deny-disabled.xml</string>
+        <string>policy/rules/deny-inactive.xml</string>
+        <string>policy/rules/permit-creator.xml</string>
+        <string>policy/rules/permit-self.xml</string>
+        <string>policy/rules/permit-grants.xml</string>
+        <string>policy/rules/permit-admin.xml</string>
+        <string>policy/rules/permit-all.xml</string>
+        <string>policy/rules/permit-bootstrap.xml</string>
+        <string>policy/rules/permitted-anonymous-operations.xml</string>
+        <string>policy/rules/permitted-user-operations.xml</string>
+      </list>
+    </policyFinderModule>
+  </pdp>
+  <pdp name="test-pdp">
+    <attributeFinderModule class="com.sun.xacml.finder.impl.CurrentEnvModule"/>
+    <attributeFinderModule
+      class="org.topazproject.xacml.finder.ConfigurationAttributeFinderModule"/>
+    <attributeFinderModule
+      class="org.topazproject.xacml.ws.ServletEndpointContextAttributeFinderModule"/>
+    <policyFinderModule class="org.topazproject.xacml.finder.ResourcePolicyModule"
+      name="test-policy-finder">
+      <list>
+        <string>policy/sets/test-set.xml</string>
+      </list>
+    </policyFinderModule>
+    <policyFinderModule class="org.topazproject.xacml.finder.ResourceReferencePolicyModule">
+      <list>
+        <string>policy/rules/deny-revokes.xml</string>
+        <string>policy/rules/deny-anonymous.xml</string>
+        <string>policy/rules/deny-all.xml</string>
+        <string>policy/rules/deny-disabled.xml</string>
+        <string>policy/rules/deny-inactive.xml</string>
+        <string>policy/rules/permit-creator.xml</string>
+        <string>policy/rules/permit-self.xml</string>
+        <string>policy/rules/permit-grants.xml</string>
+        <string>policy/rules/permit-admin.xml</string>
+        <string>policy/rules/permit-all.xml</string>
+        <string>policy/rules/permit-bootstrap.xml</string>
+        <string>policy/rules/permitted-anonymous-operations.xml</string>
+        <string>policy/rules/permitted-user-operations.xml</string>
+      </list>
+    </policyFinderModule>
+  </pdp>
+  <attributeFactory name="attr" useStandardDatatypes="true"/>
+  <combiningAlgFactory name="comb" useStandardAlgorithms="true"/>
+  <functionFactory name="func" useStandardFunctions="true">
+    <condition>
+      <function class="org.topazproject.xacml.cond.ItqlQueryFunction"/>
+      <function class="org.topazproject.xacml.cond.PermissionFunction$IsGranted"/>
+      <function class="org.topazproject.xacml.cond.PermissionFunction$IsRevoked"/>
+      <function class="org.topazproject.xacml.cond.CachedBagFunction"/>
+      <function class="org.topazproject.xacml.cond.StringToIntegerFunction"/>
+    </condition>
+  </functionFactory>
+</config>
+
