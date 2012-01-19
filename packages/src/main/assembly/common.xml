@@ -1,0 +1,70 @@
+<!--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2006-2009 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0">
+  <id>tomcat-common</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <!-- Do not include default server.xml -->
+  <fileSets>
+    <fileSet>
+      <!--
+      Stupid bug requires us to insert bug_workaround and we cannot seem to put
+      this in the components.xml
+      -->
+      <directory>${project.build.directory}/${tomcatFile}</directory>
+      <outputDirectory>/</outputDirectory>
+      <excludes>
+        <exclude>conf/server.xml</exclude>
+        <exclude>conf/context.xml</exclude>
+        <exclude>webapps/**</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
+      <outputDirectory>/webapps/</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <excludes>
+        <exclude>log4j:*</exclude>
+        <exclude>org.slf4j:*</exclude>
+        <exclude>net.sf.ehcache:*</exclude>
+      </excludes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/common/lib</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>log4j:*</include>
+        <include>org.slf4j:*</include>
+        <include>net.sf.ehcache:*</include>
+      </includes>
+      <excludes>
+        <exclude>commons-logging:*</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
