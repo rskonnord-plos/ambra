@@ -1,0 +1,60 @@
+<#--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2007-2008 by Topaz, Inc.
+  http://topazproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- begin : main content -->
+<div id="content" class="static"><h1><em>PLoS ONE</em> Journal Information</h1>
+
+<div class="intro">
+<p><em>PLoS ONE</em> (eISSN-1932-6203) is an international, peer-reviewed, open-access, online publication. <em>PLoS ONE</em> welcomes reports on primary research from any scientific discipline.  It provides: </p> 
+
+<ul>
+	<li>Open-access&mdash;freely accessible online, authors retain copyright</li>
+	<li>Fast publication&mdash;acceptance to publication in an average of 14 working days</li>
+	<li>Peer reviewed by an international editorial board of over 400 experts</li>
+	<li>Post-publication tools to indicate quality and impact</li>
+	<li>Community-based dialogue on articles</li>
+	<li>Worldwide media coverage</li>
+</ul>
+
+<p><em>PLoS ONE</em> is published by the Public Library of Science (PLoS), a nonprofit organization. <em>PLoS ONE's</em> start-up phase is supported by a grant from the <a href="http://www.opensocietyinstitute.org/" title="Open Society Institute">Open Society Institute</a>.</p>
+</div>
+
+<p><em>PLoS ONE</em> is run as a partnership between its in-house PLoS staff and international <a href="edboard.action" title="PLoS ONE | Advisory and Editorial Boards">Advisory and Editorial Boards</a>, ensuring fast, fair, and professional peer review. To contact the Managing Editor, <a href="http://www.plos.org/about/people/one.html#csurridge" title="PLoS.org | Chris Surridge's Bio">Christopher Surridge</a>, or the Publications Assistants, <a href="http://www.plos.org/about/people/one.html#lking" title="PLoS.org | Lindsay King's Bio">Lindsay King</a> and <a href="http://www.plos.org/about/people/one.html#rwalton" title="PLoS.org | Rebecca Walton's Bio">Rebecca Walton</a>, please e-mail <strong>plosone [at] plos.org</strong>. </p>
+
+<h2>Scope</h2>
+<p><em>PLoS ONE</em> features reports of primary research from all disciplines within science and medicine. By not excluding papers on the basis of subject area, <em>PLoS ONE</em> facilitates the discovery of the connections between papers whether within or between disciplines. </p>
+
+<h2>Peer Review</h2>
+<p>Each submission will be assessed by a member of the <em>PLoS ONE</em> Editorial Board before publication. This pre-publication peer review will concentrate on technical rather than subjective concerns and may involve discussion with other members of the Editorial Board and/or the solicitation of formal reports from independent referees. If published, papers will be made available for community-based open peer review involving the addition of online Notes, Comments, and Ratings.</p>
+
+<h2>Open Access</h2>
+<p>The Public Library of Science (PLoS) applies the <a href="license.action" title="PLoS ONE | Open Access and Creative Commons Attribution License">Creative Commons Attribution License</a> (CCAL) to all works we publish. Under the CCAL, authors retain ownership of the copyright for their article, but authors allow anyone to download, reuse, reprint, modify, distribute, and/or copy articles in PLoS journals, so long as the original authors and source are cited. No permission is required from the authors or the publishers.</p>
+
+<h2>Publication Charges</h2>
+
+<p>To provide open access, PLoS journals use a business model in which our expenses&#8212;including those of peer review, journal production, and online hosting and archiving&#8212;are recovered in part by charging a publication fee to the authors or research sponsors for each article they publish. For <em>PLoS ONE</em> the publication fee is US$1250.  Authors who are affiliated with one of our <a href="http://www.plos.org/support/instmembers.html" title="PLoS.org | Institutional Members">Institutional Members</a> are eligible for a discount on this fee.</p>
+
+<p>We offer a complete or partial fee waiver for authors who do not have funds to cover publication fees. Editors and reviewers have no access to payment information, and hence inability to pay will not influence the decision to publish a paper.</p> 
+
+<h2>About the Public Library of Science</h2>
+
+<p>The Public Library of Science (PLoS) is a non-profit organization of scientists and physicians committed to making the world's scientific and medical literature a freely available public resource. For more information about PLoS, visit <a href="http://www.plos.org" title="Visit us at PLoS.org">www.plos.org</a>.</p>
+
+</div>
+<!-- end : main contents -->
