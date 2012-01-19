@@ -1,0 +1,85 @@
+<?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>fedora-libs</artifactId>
+    <groupId>org.topazproject</groupId>
+    <version>0.9.1_rc1</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>fedora-client</artifactId>
+  <name>Fedora client stub</name>
+  <version>0.9.1_rc1</version>
+  <description>A client library for accessing Fedora.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>info.fedora</groupId>
+      <artifactId>fedora-server</artifactId>
+      <version>2.1.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.0.1</version>
+
+      <exclusions>
+        <!-- junit depedency has wrong scope -->
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals><goal>wsdl2java</goal></goals>
+            <configuration>
+              <packageSpace>org.topazproject.fedora.client</packageSpace>
+              <sourceDependencies>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/fedora-types.xsd</sourceDependency>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/fedora-auditing.xsd</sourceDependency>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/Fedora-API-M.wsdl</sourceDependency>
+                <sourceDependency>info.fedora:fedora-server:2.1.1:/wsdl/Fedora-API-A.wsdl</sourceDependency>
+              </sourceDependencies>
+              <serverSide>false</serverSide>
+              <deployScope>session</deployScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.topazproject.plugins</groupId>
+        <artifactId>integration-tests-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>true</skip> <!-- set to false for testing -->
+        </configuration>
+      </plugin>
+    </plugins> 
+  </build>
+</project>

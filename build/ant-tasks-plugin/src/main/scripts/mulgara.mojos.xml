@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                             $
+  $Id$
+
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>mulgara-install</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>mulgara-install</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Install the mulgara-service locally
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>mulgara-service</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>mulgara-start</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>mulgara-start</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Start the mulgara server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>mulgara-service</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>PORT</name>
+          <property>PORT</property>
+          <required>true</required>
+          <expression>${PORT}</expression>
+          <defaultValue>8111</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>SPAWN</name>
+          <property>SPAWN</property>
+          <required>true</required>
+          <expression>${SPAWN}</expression>
+          <defaultValue>false</defaultValue>
+          <description>Whether we should spawn or not</description>
+        </parameter>
+
+        <parameter>
+          <name>jarVersion</name>
+          <property>jarVersion</property>
+          <required>true</required>
+          <expression>${mulgara-version}</expression>
+          <defaultValue>${project.version}</defaultValue>
+          <description>The version of the mulgara jar to run.</description>
+        </parameter>
+
+        <parameter>
+          <name>jvmargs</name>
+          <property>jvmargs</property>
+          <required>false</required>
+          <expression>${jvmargs}</expression>
+          <defaultValue>-server -Xmx200m</defaultValue>
+          <description>The jvm arguments to pass to java.</description>
+        </parameter>
+
+        <parameter>
+          <name>log4j.conf</name>
+          <property>log4j.conf</property>
+          <required>false</required>
+          <expression>${log4j.configuration}</expression>
+          <description>The log4j configuration file to use.</description>
+        </parameter>
+
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>mulgara-stop</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>mulgara-stop</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Stop the mulgara server
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>mulgara-service</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>jarVersion</name>
+          <property>jarVersion</property>
+          <required>true</required>
+          <expression>${mulgara-version}</expression>
+          <defaultValue>${project.version}</defaultValue>
+          <description>The version of the mulgara jar to run.</description>
+        </parameter>
+
+      </parameters>
+    </mojo>
+
+    <mojo>
+      <goal>mulgara-uninstall</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>mulgara-uninstall</call>
+      <requiresProject>false</requiresProject>
+
+      <description>
+        Uninstall mulgara from local machine
+      </description>
+
+      <parameters>
+
+        <parameter>
+          <name>DEST_DIR</name>
+          <property>DEST_DIR</property>
+          <required>true</required>
+          <expression>${DEST_DIR}</expression>
+          <defaultValue>${topazproject.install.dir}</defaultValue>
+        </parameter>
+
+        <parameter>
+          <name>ROOT</name>
+          <property>ROOT</property>
+          <required>true</required>
+          <expression>${ROOT}</expression>
+          <defaultValue>mulgara-service</defaultValue>
+        </parameter>
+
+      </parameters>
+    </mojo>
+  </mojos>
+</pluginMetadata>

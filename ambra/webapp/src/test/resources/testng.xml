@@ -1,0 +1,22 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Ambra Tests" parallel="true" verbose="2">
+  <test name="Article Tests">
+    <classes>
+      <class name="org.topazproject.ambra.article.action.BrowseArticlesActionTest"/>
+      <class name="org.topazproject.ambra.article.service.BrowseServiceTest"/>
+    </classes>
+  </test>
+  <test name="Web Tests">
+    <classes>
+      <class name="org.topazproject.ambra.web.HttpResourceServerTest"/>
+    </classes>
+  </test>
+  <test name="Util Tests">
+    <classes>
+      <class name="org.topazproject.ambra.util.ArticleFormattingDirectiveTest"/>
+      <class name="org.topazproject.ambra.util.ProfanityCheckingServiceTest"/>
+      <class name="org.topazproject.ambra.util.TextUtilsTest"/>
+      <class name="org.topazproject.ambra.util.FileUtilsTest"/>
+    </classes>
+  </test>
+</suite>

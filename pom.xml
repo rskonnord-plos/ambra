@@ -1,0 +1,965 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>the-whole-shebang</artifactId>
+  <version>0.9.1_rc1</version>
+  <packaging>pom</packaging>
+  <name>Topaz Project</name>
+  <!-- description is encouraged to take HTML embeded in CDATA -->
+  <!-- Long descriptions break maven-jar-plugin and maven-war-plugin! MJAR-39.
+  <description><![CDATA[
+    Topaz is a nonprofit organization of focused on developing open source
+    software around collaborative creation, management and sharing of
+    information.
+
+    Our goals are to:
+
+    * Develop software framework to allow easy and rapid development of data driven applications
+    * Facilitate research and collaboration of data/content models in various knowledge fields
+    * Enable users to develop innovative ways to explore, use and share data
+  ]]></description>
+  -->
+  <description>Topaz software projects</description>
+  <url>http://www.topazproject.org</url>
+  <organization>
+    <name>Topaz</name>
+    <url>http://www.topazproject.org</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <comments>Copyright (c) 2006-2008 by Topaz, Inc.</comments>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <issueManagement>
+    <system>trac</system>
+    <url>http://www.topazproject.org/trac</url>
+  </issueManagement>
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://www.topazproject.org/continuum</url>
+  </ciManagement>
+
+  <mailingLists>
+    <mailingList>
+      <name>Topaz project general users mailing list</name>
+      <subscribe>topaz-general-subscribe@topazproject.org</subscribe>
+      <unsubscribe>topaz-general-unsubscribe@topazproject.org</unsubscribe>
+      <post>topaz-general@topazproject.org</post>
+      <archive>http://lists.topazproject.org/pipermail/topaz-general/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Topaz project developer mailing list</name>
+      <subscribe>topaz-dev-subscribe@topazproject.org</subscribe>
+      <unsubscribe>topaz-dev-unsubscribe@topazproject.org</unsubscribe>
+      <post>topaz-dev@topazproject.org</post>
+      <archive>http://lists.topazproject.org/pipermail/topaz-dev/</archive>
+    </mailingList>
+  </mailingLists>
+
+  <repositories>
+    <repository>
+      <id>topaz</id>
+      <name>Maven 2 Repository for Topaz</name>
+      <url>http://maven.topazproject.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>central</id>
+      <name>Maven Repository Switchboard</name>
+      <layout>default</layout>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>java.net</id>
+      <url>http://download.java.net/maven/1</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>topaz</id>
+      <name>Maven 2 Repository for Topaz</name>
+      <url>http://maven.topazproject.org/maven2/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <scm>
+    <developerConnection>scm:svn:http://svn.topazproject.org/svn/tags/the-whole-shebang-0.9.1_rc1</developerConnection>
+    <connection>scm:svn:http://svn.topazproject.org/svn/tags/the-whole-shebang-0.9.1_rc1</connection>
+    <url>http://www.topazproject.org/trac/browser/tags/the-whole-shebang-0.9.1_rc1</url>
+  </scm>
+
+  <modules>
+    <module>build</module>
+    <module>mulgara</module>
+    <module>fedora</module>
+    <module>topaz</module>
+    <module>ambra</module> 
+  </modules>
+
+  <properties>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+    <!-- aggregate some documentation - javadocs & jxr -->
+    <aggregate>true</aggregate>
+    <spring.version>2.0.6</spring.version>
+    <!-- This is where the site-deploy phase will put the documentation -->
+    <topazproject.site.url>file://${topazproject.install.dir}/topazdocs</topazproject.site.url>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>topaz</id>
+      <url>http://maven.topazproject.org/maven2/</url>
+    </repository>
+    <site>
+      <id>topaz-docs</id>
+      <url>${topazproject.site.url}</url>
+    </site>
+  </distributionManagement>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>1.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>axis</groupId>
+        <artifactId>axis</artifactId>
+        <version>1.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>1.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>avalon-framework</groupId>
+            <artifactId>avalon-framework</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>logkit</groupId>
+            <artifactId>logkit</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>1.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-configuration</groupId>
+        <artifactId>commons-configuration</artifactId>
+        <version>1.5</version>
+      </dependency>
+
+      <dependency> <!-- It is important we get version 3.x to match commons-configuration -->
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy-all</artifactId>
+        <version>1.5.7</version>
+      </dependency>
+
+      <!--
+      <dependency>
+        <groupId>org.codehaus.groovy.maven.runtime</groupId>
+        <artifactId>gmaven-runtime-default</artifactId>
+        <version>1.0-rc-3</version>
+      </dependency>
+      -->
+
+      <dependency>
+        <groupId>cas</groupId>
+        <artifactId>casclient</artifactId>
+        <version>2.1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>saxon</artifactId>
+        <version>8.7</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>saxon-dom</artifactId>
+        <version>8.7</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>1.5.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mulgara</groupId>
+        <artifactId>mulgara</artifactId>
+        <version>2.0.8-beta-t1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mulgara</groupId>
+        <artifactId>driver</artifactId>
+        <version>2.0.8-beta-t1</version>
+      </dependency>
+      <dependency>
+        <groupId>info.fedora</groupId>
+        <artifactId>fedora-client</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>info.fedora</groupId>
+        <artifactId>fedora-server</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>info.fedora</groupId>
+        <artifactId>cos</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty</artifactId>
+        <version>6.1.14</version>
+        <scope>provided</scope>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-util</artifactId>
+        <version>6.1.14</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.freemarker</groupId>
+        <artifactId>freemarker</artifactId>
+        <version>2.3.14</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-dao</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-mock</artifactId>
+        <version>${spring.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.2</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>5.8</version>
+        <scope>test</scope>
+        <classifier>jdk15</classifier>
+        <exclusions>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+     <dependency>
+       <groupId>ant</groupId>
+       <artifactId>ant-launcher</artifactId>
+       <version>1.6.5</version>
+     </dependency>
+
+     <dependency>
+       <groupId>ant</groupId>
+       <artifactId>ant</artifactId>
+       <version>1.6.5</version>
+     </dependency>
+
+     <dependency>
+       <groupId>commons-cli</groupId>
+       <artifactId>commons-cli</artifactId>
+       <version>1.1</version>
+     </dependency>
+
+     <dependency>
+       <groupId>jline</groupId>
+       <artifactId>jline</artifactId>
+       <version>0.9.94</version>
+     </dependency>
+
+     <dependency>
+       <groupId>it.unibo.cs</groupId>
+       <artifactId>unibo-xpointer</artifactId>
+       <version>1.2-t1</version>
+     </dependency>
+
+     <dependency>
+       <groupId>org.apache.commons</groupId>
+       <artifactId>commons-compress</artifactId>
+       <version>1.0-t1</version>
+     </dependency>
+
+     <dependency>
+       <groupId>ant-contrib</groupId>
+       <artifactId>ant-contrib</artifactId>
+       <version>1.0b2</version>
+     </dependency>
+
+     <dependency>
+       <groupId>org.codehaus.cargo</groupId>
+       <artifactId>cargo-core-uberjar</artifactId>
+       <version>0.9</version>
+     </dependency>
+
+     <dependency>
+       <groupId>htmlunit</groupId>
+       <artifactId>htmlunit</artifactId>
+       <version>1.14</version>
+       <scope>test</scope>
+     </dependency>
+
+     <dependency>
+       <groupId>net.sourceforge.jwebunit</groupId>
+       <artifactId>jwebunit-htmlunit-plugin</artifactId>
+       <version>1.5</version>
+       <scope>test</scope>
+     </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-ant</artifactId>
+      <version>2.0.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>tomcat</groupId>
+      <artifactId>apache-tomcat</artifactId>
+      <version>5.5.23</version>
+      <type>zip</type>
+    </dependency>
+
+      <!-- Topaz Dependencies -->
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>auth-helper</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>conf-helper</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>conf-helper</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>fedora-client</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>filter-resolver</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>string-compare-resolver</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>tomcat-jaas-cas</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>mulgara-client</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>mulgara-service</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>dom-ranges-helper</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>entity-resolver</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>otm</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>otm-extras</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.topazproject</groupId>
+        <artifactId>fedora-blobstore</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <reporting>
+    <plugins>
+      <!-- Java Cross-References (very nice!) -->
+      <plugin>
+        <artifactId>maven-jxr-plugin</artifactId>
+      </plugin>
+
+      <!-- code style checks -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <sourceEncoding>UTF-8</sourceEncoding>
+          <targetJdk>1.5</targetJdk>
+          <failOnViolation>false</failOnViolation>
+          <includes>
+            <include>**/*.java</include>
+            <include>**/*.groovy</include>
+          </includes>
+          <excludes>
+            <exclude>dk/defxws/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>1.2</version>
+      </plugin>
+
+      <!-- Finds specific keywords in Java sources -->
+      <!-- Hmm, seems to very slow and use a lot of mem - need to investigate
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <tags>
+            <tag>TODO</tag>
+            <tag>FIXME</tag>
+            <tag>XXX</tag>
+            <tag>@deprecated</tag>
+          </tags>
+        </configuration>
+      </plugin>
+      -->
+
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <!-- <sourcepath>${project.build.directory}/generated-sources</sourcepath> -->
+          <linksource>true</linksource>
+          <stylesheet>maven</stylesheet>
+          <show>package</show>
+          <encoding>UTF-8</encoding>
+          <charset>UTF-8</charset>
+          <use>false</use>
+          <header>&lt;a href='http://www.topazproject.org/trac/log/head?rev=${svnversion}&amp;verbose=on' target='_top'&gt;r${svnversion}&lt;/a&gt;</header>
+          <groups>
+            <group>
+              <title>Core OTM Packages</title>
+              <packages>org.topazproject.otm*</packages>
+            </group>
+            <group>
+              <title>Core Support Packages</title>
+              <packages>org.topazproject.mulgara*:org.topazproject.fedora*:fedora.server*:org.topazproject.configuration:org.topazproject.logging*</packages>
+            </group>
+            <group>
+              <title>PubApp Packages</title>
+              <packages>org.plos*:dk.defxws*:org.apache*:org.topazproject.dom.ranges:org.topazproject.fedoragsarch*:org.topazproject.ws*:org.topazproject.xml*</packages>
+            </group>
+          </groups>
+          <links>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+            <link>http://www.fedora.info/download/2.1.1/userdocs/server/serverdocs</link>
+            <link>http://jakarta.apache.org/commons/configuration/apidocs</link>
+            <link>http://tomcat.apache.org/tomcat-5.5-doc/catalina/docs/api</link>
+            <link>http://sunxacml.sourceforge.net/javadoc</link>
+            <link>http://www.topazproject.org/mulgara/api</link>
+            <link>http://ws.apache.org/axis/java/apiDocs</link>
+            <link>http://jakarta.apache.org/commons/logging/apidocs</link>
+            <link>http://jrdf.sourceforge.net/0.3.4/doc/javadoc</link>
+            <link>http://java.sun.com/j2ee/1.4/docs/api</link>
+            <link>http://jakarta.apache.org/commons/email/api-release</link>
+            <link>http://java.sun.com/products/javamail/javadocs</link>
+            <link>http://quintanasoft.com/dumbster/javadoc</link>
+            <link>http://logging.apache.org/log4j/docs/api</link>
+            <link>http://www.hibernate.org/hib_docs/v3/api</link>
+            <link>http://ehcache.sourceforge.net/javadoc</link>
+            <link>http://static.springframework.org/spring/docs/2.0.x/api</link>
+            <link>http://hc.apache.org/httpclient-3.x/apidocs</link>
+          </links>
+        </configuration>
+      </plugin>
+
+      <plugin> 
+        <artifactId>maven-surefire-report-plugin</artifactId> 
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report-only</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <inherited>true</inherited>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>index</report>
+              <report>dependencies</report>
+              <report>dependency-convergence</report>
+              <report>mailing-list</report>
+              <report>license</report>
+              <report>scm</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <!-- TODO: Neeed to use our own style.xml - see target/checkstyle*.xml for ex -->
+      <!--
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      -->
+
+      <!-- changelog for past 2 weeks -->
+      <!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changelog-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <id>dual-report</id>
+            <configuration>
+              <type>range</type>
+              <range>14</range>
+            </configuration>
+            <reports>
+              <report>changelog</report>
+              <report>file-activity</report>
+              <report>dev-activity</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin> -->
+
+    </plugins>
+  </reporting>
+
+  <!-- Profiles Section: Define custom profiles here -->
+
+  <profiles>
+
+    <!-- it-startenv: Start and stop fedora/ecqs/mulgara before and after integration testing -->
+
+    <profile>
+      <id>it-startenv</id>
+      <dependencies>
+        <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <!-- Run ant-tasks:ecqs/fedora/mulgara-start/stop around integration tests -->
+          <plugin>
+            <groupId>org.topazproject.plugins</groupId>
+            <artifactId>ant-tasks</artifactId>
+            <version>${pom.version}</version>
+            <executions>
+              <execution>
+                <id>it-startenv-exe</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>ecqs-install</goal>
+                  <goal>mulgara-install</goal>
+                  <goal>fedora-install</goal>
+                  <goal>ecqs-start</goal>
+                  <goal>mulgara-start</goal>
+                  <goal>fedora-start</goal>
+                </goals>
+                <configuration>
+                  <SPAWN>true</SPAWN>      <!-- Spawn the start command -->
+                </configuration>
+              </execution>
+              <execution>
+                <id>it-stopenv-exe</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>ecqs-stop</goal>
+                  <goal>fedora-stop</goal>
+                  <goal>mulgara-stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- Enable this profile when running the reports -->
+      <id>reports</id>
+      <build>
+        <plugins>
+          <!-- Set up the extra sources and resources, and run everything in it's own directory -->
+          <plugin>
+            <groupId>org.topazproject.plugins</groupId>
+            <artifactId>reports-plugin</artifactId>
+            <version>${pom.version}</version>
+            <executions>
+              <execution>
+                <goals><goal>configure-directories</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- config cobertura plugin -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>2.2</version>
+            <configuration>
+              <instrumentation>
+                <ignores>
+                  <ignore>org.apache.commons.logging.Log</ignore>
+                </ignores>
+              </instrumentation>
+            </configuration>
+          </plugin>
+
+          <!-- Run all groovy tests too -->
+          <plugin>
+            <groupId>org.codehaus.groovy.maven</groupId>
+            <artifactId>gmaven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>compile-all-groovy-tests</id>
+                <goals>
+                  <goal>testCompile</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <fileset>
+                      <directory>${pom.basedir}/src/test/groovy</directory>
+                      <includes>
+                        <include>**/*.groovy</include>
+                      </includes>
+                    </fileset>
+                    <fileset>
+                      <directory>${pom.basedir}/src/it/groovy</directory>
+                      <includes>
+                        <include>**/*.groovy</include>
+                      </includes>
+                    </fileset>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>packages</id>
+      <modules>
+        <module>packages</module> 
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distribution</id>
+      <modules>
+        <module>distribution</module> 
+      </modules>
+    </profile>
+  </profiles>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>maven-jetty-plugin</artifactId>
+          <version>6.1.14</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.topazproject.patch.plugin</groupId>
+          <artifactId>axistools-maven-plugin</artifactId>
+          <version>1.1-t1</version>
+          <dependencies>
+            <dependency>
+              <groupId>javax.mail</groupId>
+              <artifactId>mail</artifactId>
+              <version>1.4</version>
+            </dependency>
+            <dependency>
+              <groupId>javax.activation</groupId>
+              <artifactId>activation</artifactId>
+              <version>1.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>axistools-maven-plugin</artifactId>
+          <version>1.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>javax.mail</groupId>
+              <artifactId>mail</artifactId>
+              <version>1.4</version>
+            </dependency>
+            <dependency>
+              <groupId>javax.activation</groupId>
+              <artifactId>activation</artifactId>
+              <version>1.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.groovy.maven</groupId>
+          <artifactId>gmaven-plugin</artifactId>
+          <version>1.0-rc-4</version>
+          <executions>
+            <execution>
+              <id>compile</id>
+              <goals>
+                <!-- <goal>generateStubs</goal> -->
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>copy-test-sources</id>
+              <phase>generate-test-sources</phase>
+              <goals><goal>execute</goal></goals>
+              <configuration>
+                <source>
+                  String s = File.separator
+                  File runDir = new File(project.build.directory, "groovy-test-sources")
+                  File srcDir = project.properties['running-integration-tests'] ?
+                                    new File(pom.basedir, "src${s}it${s}groovy") :
+                                    new File(pom.basedir, "src${s}test${s}groovy")
+
+                  ant.delete(dir: runDir, quiet: true)
+                  if (srcDir.exists()) {
+                    ant.copy(toDir: runDir) {
+                      fileset(dir: srcDir)
+                    }
+                  }
+                </source>
+              </configuration>
+            </execution>
+            <execution>
+              <id>compile-tests</id>
+              <goals><goal>testCompile</goal></goals>
+              <configuration>
+                <sources>
+                  <fileset>
+                    <directory>${project.build.directory}/groovy-test-sources</directory>
+                    <includes>
+                      <include>**/*.groovy</include>
+                    </includes>
+                  </fileset>
+                </sources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.topazproject.plugins</groupId>
+          <artifactId>integration-tests-plugin</artifactId>
+          <version>${pom.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>run-it</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2-beta-2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-7</version>
+        <configuration>
+          <goals>deploy</goals>                           <!-- disable site deploy -->
+          <useReleaseProfile>false</useReleaseProfile>    <!-- no javadoc and source jars -->
+          <tagBase>http://svn.topazproject.org/svn/tags</tagBase>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <preparationGoals>clean install</preparationGoals>
+          <arguments>-Ppackages,rpm,distribution,release</arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <trimStackTrace>false</trimStackTrace>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <defaultGoal>install</defaultGoal>
+  </build>
+</project>

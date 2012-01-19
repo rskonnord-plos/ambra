@@ -1,0 +1,19 @@
+# You can set various options for mulgara here
+
+# Where to store the database.
+DATABASE_DIR="/var/lib/topaz/data/mulgara"
+
+# The RMI name of the server.
+SERVERNAME="topazproject"
+
+# The RMI port to use.
+PORT="8111"
+
+# Which log configuration file to use.
+LOG4J_CONFIG="/usr/local/topaz/topaz-mulgara/log4j.xml"
+
+# Lower the rmi lease-timeout for quicker aborted client detection
+JAVA_OPTS="-Xmx400m -XX:MaxPermSize=256m -Djava.rmi.dgc.leaseValue=30000"
+
+# Arbitrary other parameters to pass to mulgara.
+OPTIONS="--nohttp"

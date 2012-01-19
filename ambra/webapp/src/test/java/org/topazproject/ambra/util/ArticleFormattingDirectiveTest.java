@@ -1,0 +1,53 @@
+/* $HeadURL$
+ * $Id$
+ *
+ * Copyright (c) 2006-2009 by Topaz, Inc.
+ * http://topazproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.topazproject.ambra.util;
+
+import org.testng.annotations.Test;
+import org.testng.annotations.DataProvider;
+import static org.testng.Assert.assertEquals;
+
+/**
+ * @author Dragisa Krsmanovic
+ */
+public class ArticleFormattingDirectiveTest {
+
+  @DataProvider(name = "content")
+  public String[][] createContent() {
+    return new String[][]{
+        {"foo<italic>bar</italic>", "foo<i>bar</i>"},
+        {"foo&lt;italic&gt;bar&lt;/italic&gt;", "foo<i>bar</i>"},
+        {"foo<bold>bar</bold>", "foo<b>bar</b>"},
+        {"foo<monospace>bar</monospace>", "foo<span class=\"monospace\">bar</span>"},
+        {"foo<overline>bar</overline>", "foo<span class=\"overline\">bar</span>"},
+        {"foo<sc>bar</sc>", "foo<small>bar</small>"},
+        {"foo<strike>bar</strike>", "foo<s>bar</s>"},
+        {"foo<underline>bar</underline>", "foo<u>bar</u>"},
+        {"foo<named-content xmlns:xlink= \"http://www.w3.org/1999/xlink\" " +
+            "content-type=\"genus-species\" xlink:type=\"simple\">bar</named-content>",
+            "foo<i>bar</i>"}
+    };
+  }
+
+  @Test(dataProvider = "content")
+  public void testFormatting(String content, String expected) throws Exception {
+    assertEquals(ArticleFormattingDirective.format(content), expected);
+  }
+
+}

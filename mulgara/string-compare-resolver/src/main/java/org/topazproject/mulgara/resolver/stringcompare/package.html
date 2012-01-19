@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006-2008 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>org.topazproject.mulgara.resolver.stringcompare</title>
+  </head>
+  <body>
+    <p>Mulgara resolver to implement string-comparisons graphs.</p>
+    <p>Example:
+      <pre>
+      create &lt;local:///topazproject#str&gt; &lt;http://topazproject.org/graphs#StringCompare&gt;;
+      select $s $p $o from &lt;local:///topazproject#foo&gt;
+        where $s $p $o
+        and $o &lt;topaz:equalsIgnoreCase&gt; 'Jane Bar' in &lt;local:///topazproject#str&gt;;
+      </pre>
+    </p>
+    <p>Currently supported operations are:
+    <dl>
+      <dt>topaz:equalsIgnoreCase</dt>
+      <dd>case-insensitive equality comparison</dd>
+      <dt>topaz:lt</dt>
+      <dd>less than</dd>
+      <dt>topaz:le</dt>
+      <dd>less-or-equal than</dd>
+      <dt>topaz:gt</dt>
+      <dd>greater than</dd>
+      <dt>topaz:ge</dt>
+      <dd>greater-or-equal than</dd>
+    </dl>
+    (where 'topaz' is an alias for 'http://rdf.topazproject.org/RDF/'). Comparisons can be
+    made on literals or URI's.
+    </p>
+  </body>
+</html>

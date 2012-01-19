@@ -1,0 +1,118 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>mulgara-client</artifactId>
+  <packaging>jar</packaging>
+  <version>0.9.1_rc1</version>
+  <name>Topaz Mulgara Client Library</name>
+  <description>A Mulgara client library to provide a common, consistent API for accessing
+    Mulgara remotely over various transports or running an embedded instance.</description>
+
+  <parent>
+    <groupId>org.topazproject</groupId>
+    <artifactId>mulgara</artifactId>
+    <version>0.9.1_rc1</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <!-- only needed if you use soap-client -->
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <!-- only needed if you use rmi-client but mulgara is not included -->
+      <groupId>org.mulgara</groupId>
+      <artifactId>driver</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <!-- only needed if you use embedded-client -->
+      <groupId>org.mulgara</groupId>
+      <artifactId>mulgara</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <!-- only needed if you use embedded-client -->
+      <groupId>org.topazproject</groupId>
+      <artifactId>string-compare-resolver</artifactId>
+      <version>${pom.version}</version>
+      <scope>runtime</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <!-- Generate org.topazproject.mulgara.itql.service client stubs -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+
+        <dependencies>
+          <dependency>
+            <groupId>org.mulgara</groupId>
+            <artifactId>mulgara</artifactId>
+            <version>2.0.8-beta-t1</version>
+            <scope>provided</scope>
+          </dependency>
+        </dependencies>
+
+        <executions>
+          <execution>
+            <id>generate-mulgara-wsdl</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java2wsdl</goal>
+            </goals>
+            <configuration>
+              <classOfPortType>org.mulgara.itql.ItqlInterpreterBean</classOfPortType>
+              <methods>
+                <method>executeQueryToString, executeUpdate, setServerURI, beginTransaction, commit, rollback, close</method>
+              </methods>
+              <servicePortName>ItqlInterpreterBeanServicePort</servicePortName>
+              <location>http://localhost/service-location</location>
+              <namespace>http://tucana.org/</namespace>
+              <filename>itql-bean-service.wsdl</filename>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-mulgara-client</id>
+            <goals><goal>wsdl2java</goal></goals>
+            <configuration>
+              <sourceDirectory>${project.build.directory}/generated-sources/axistools/java2wsdl</sourceDirectory>
+              <serverSide>false</serverSide>
+              <packageSpace>org.topazproject.mulgara.itql.service</packageSpace>
+              <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>
