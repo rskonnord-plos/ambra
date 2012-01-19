@@ -1,0 +1,103 @@
+#!/bin/bash
+# $HeadURL::                                                                            $
+# $Id$
+# 
+# Copyright (c) 2006-2010 by Public Library of Science
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# fedora        
+#
+# chkconfig: 345 93 13
+# description:  Start up the fedora app.
+
+# Validate fedora.fcfg
+FEDORA_FCFG=/usr/local/topaz/topaz-fedora/server/config/fedora.fcfg
+[ -e $FEDORA_FCFG ] && ! xmllint --noout $FEDORA_FCFG && exit 1
+LOG_XML=/usr/local/topaz/topaz-fedora/server/jakarta-tomcat-5.0.28/common/classes/log4j.xml
+[ -e $LOG_XML ] && ! xmllint --noout $LOG_XML && exit 1
+
+# Chown keystore
+TRUST_STORE=/etc/topaz/keystore.jks
+[ -e "$TRUST_STORE" ] && chown topaz.topaz $TRUST_STORE
+
+# Source function library.
+. /etc/init.d/functions
+
+# Read our configuration from sysconfig (a redhat convention)
+[ -e /etc/sysconfig/topaz-common ] && . /etc/sysconfig/topaz-common
+[ -e /etc/sysconfig/topaz-fedora ] && . /etc/sysconfig/topaz-fedora
+
+# If our system is setup incorrectly somehow, minimal attempt to clean up
+[ -n "$JAVA_HOME" ] && [ ! -d "$JAVA_HOME" ] && export JAVA_HOME=/opt/java
+[ -z "$JAVA_HOME" ] && export JAVA_HOME=/opt/java
+[ ! -d "$JAVA_HOME" ] && echo "JAVA_HOME not set or invalid. Exiting" && exit 1
+
+FEDORA_HOME="/usr/local/topaz/topaz-fedora"
+export FEDORA_HOME
+
+FEDORA_SH="$FEDORA_HOME/server/bin/fedora.sh"
+if [ ! -f "$FEDORA_SH" ] ; then
+    echo "Fedora script not found: $FEDORA_SH"
+    exit 1
+fi
+
+RETVAL=0
+
+LOCKFILE=/var/lock/subsys/topaz-fedora
+PIDFILE=/var/run/topaz/topaz-fedora.pid
+STATUSFILE=/usr/local/topaz/topaz-fedora/server/status
+
+case "$1" in
+    start)
+        if [ -e $PIDFILE ] ; then
+            echo "pid file exists, checking if fedora is running"
+            PID=`cat $PIDFILE`
+            echo "pid is $PID"
+            if [[ ! `kill -0 $PID` ]]; then
+                echo "pid file exists, but topaz-fedora is not running"
+                echo "removing pid file and status file"
+                rm $PIDFILE
+                rm $STATUSFILE
+            fi
+        fi
+
+        echo "Starting Fedora"
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" start mysql \"$@\""
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && touch $LOCKFILE
+        ;;
+
+    stop)
+        echo "Stopping Fedora"
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" stop mysql \"$@\""
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && rm -f $LOCKFILE $PIDFILE
+        ;;
+
+    restart)
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" restart \"$@\""
+        ;;
+
+    status)
+        /bin/su topaz -s /bin/sh -c "\"$FEDORA_SH\" status \"$@\""
+        RETVAL=$?
+        ;;
+
+    *)
+        echo $"Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL

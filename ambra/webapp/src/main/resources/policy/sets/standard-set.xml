@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                            $
+  $Id$
+  
+  Copyright (c) 2007-2010 by Public Library of Science
+  http://plos.org
+  http://ambraproject.org
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<PolicySet xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicySetId="standard-set"
+  PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:first-applicable">
+
+  <Description>
+    A basic policy set. First rule that applies is the effective result of this set.
+  </Description>
+
+  <Target>
+      <AnyTarget/>
+  </Target>
+
+  <PolicyIdReference>deny-disabled</PolicyIdReference>
+
+  <PolicyIdReference>permit-admin</PolicyIdReference>
+
+  <PolicyIdReference>permit-bootstrap</PolicyIdReference>
+
+  <PolicyIdReference>deny-inactive</PolicyIdReference>
+
+  <PolicyIdReference>permit-irrevokables</PolicyIdReference>
+
+  <PolicyIdReference>deny-revokes</PolicyIdReference>
+
+  <PolicyIdReference>permitted-anonymous-operations</PolicyIdReference>
+
+  <PolicyIdReference>permit-creator</PolicyIdReference>
+  
+  <PolicyIdReference>permit-self</PolicyIdReference>
+
+  <PolicyIdReference>permit-grants</PolicyIdReference>
+
+  <PolicyIdReference>deny-anonymous</PolicyIdReference>
+  
+  <PolicyIdReference>permitted-user-operations</PolicyIdReference>
+  
+  <PolicyIdReference>deny-all</PolicyIdReference>
+
+</PolicySet>
