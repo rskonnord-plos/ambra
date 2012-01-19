@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-compress</artifactId>
+  <version>1.0-t1</version>
+  <name>Commons Compress (Sandbox)</name>
+  <url>http://commons.apache.org/sandbox/compress/</url>
+  <description>Commons Compress is a component that contains Tar, Zip and BZip2 packages</description>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <developers>
+    <developer>
+      <!-- In that I moved them to their new location -->
+      <name>Henri Yandell</name>
+      <id>bayard</id>
+      <email>bayard@apache.org</email>
+      <organization />
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Dirk Verbeeck</name>
+      <id>dirkv</id>
+      <email />
+      <organization />
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <scm>
+    <developerConnection>scm:svn:http://svn.topazproject.org/svn/tags/commons-compress-1.0-t1</developerConnection>
+    <connection>scm:svn:http://svn.topazproject.org/svn/tags/commons-compress-1.0-t1</connection>
+    <url>http://www.topazproject.org/trac/tags/commons-compress-1.0-t1</url>
+  </scm>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-7</version>
+        <configuration>
+          <goals>deploy</goals>                           <!-- disable site deploy -->
+          <useReleaseProfile>false</useReleaseProfile>    <!-- no javadoc and source jars -->
+          <tagBase>http://svn.topazproject.org/svn/tags</tagBase>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <preparationGoals>clean install</preparationGoals>
+          <arguments>-Prelease</arguments>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+	   
+</project>
