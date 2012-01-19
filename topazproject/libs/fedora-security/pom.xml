@@ -1,0 +1,30 @@
+<?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <artifactId>topazproject-libs</artifactId>
+    <groupId>org.topazproject</groupId>
+    <version>0.5</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.topazproject</groupId>
+  <artifactId>fedora-security</artifactId>
+  <name>Fedora security module</name>
+  <version>0.5</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>info.fedora</groupId>
+      <artifactId>fedora-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-access-client-impl</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

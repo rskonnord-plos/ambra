@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <topaz>
+    <services>
+      <itql>
+        <uri>http://FQHN:9091/mulgara-service/services/ItqlBeanService</uri>
+      </itql>
+    </services>
+  </topaz>
+
+  <plosone>
+    <webserver-url>http://FQHN:9080/plosone-webapp/</webserver-url>
+    <article-action>article/fetchArticle.action?articleURI=</article-action>
+    <figure-action1>article/slideshow.action?uri=</figure-action1>
+    <figure-action2>&amp;imageURI=</figure-action2>
+    <error-page>static/pageNotFound.action</error-page>
+  </plosone>
+</config>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:1.0:policy"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  PolicyId="permit-admin"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+
+  <Description>
+    A policy that permits all operations to users with role 'admin'.
+  </Description>
+
+  <Target>
+    <AnyTarget/>
+  </Target>
+
+  <Rule RuleId="permitAdmin" Effect="Permit">
+
+    <Target>
+      <AnyTarget/>
+    </Target>
+
+    <Condition FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag-size">
+        <Apply FunctionId ="urn:topazproject:names:tc:xacml:1.0:function:cached-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">permit-admin</AttributeValue>  
+          <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only">
+            <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#anyURI"
+              AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"/>   
+          </Apply>
+          <Apply FunctionId ="urn:topazproject:names:tc:xacml:1.0:function:query:itql">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">topaz.services.itql-admin</AttributeValue>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">
+              select $s from &lt;?&gt;
+              where $s &lt;topaz:hasRoles&gt; $roles and $roles &lt;topaz:role&gt; 'admin' 
+              and $s &lt;tucana:is&gt; &lt;?&gt;;
+            </AttributeValue>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+              <EnvironmentAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+                AttributeId="topaz.models.users"/>   
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only">
+              <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#anyURI"
+                AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"/>   
+            </Apply>
+          </Apply> 
+        </Apply> 
+      </Apply>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">0</AttributeValue>  
+    </Condition>
+
+  </Rule>
+
+  <Obligations>
+    <Obligation ObligationId="log" FulfillOn="Permit">
+      <AttributeAssignment AttributeId="policy" 
+        DataType="http://www.w3.org/2001/XMLSchema#string">permit-admin</AttributeAssignment>
+    </Obligation>
+  </Obligations>
+
+</Policy>

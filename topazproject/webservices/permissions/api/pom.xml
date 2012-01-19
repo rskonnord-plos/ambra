@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL::                                                                                      $
+  $Id$
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${pom.parent.artifactId}-api</artifactId>
+  <packaging>jar</packaging>
+  <name>Permissions API</name>
+
+  <parent>
+    <groupId>org.topazproject.ws</groupId>
+    <artifactId>ws-permissions</artifactId>
+    <version>0.5</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.topazproject.ws</groupId>
+      <artifactId>ws-common-api</artifactId>
+    </dependency>
+  </dependencies>
+
+  <licenses>
+    <license>
+      <name>Educational Community License version 1.0</name>
+      <url>http://opensource.org/licenses/ecl1.php</url>
+    </license>
+  </licenses>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>axistools-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-wsdl-permissions</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>java2wsdl</goal>
+            </goals>
+            <configuration>
+              <implementationClassName>PermissionsServiceImplementation</implementationClassName>
+              <filename>${wsdl.filename}</filename>
+              <all>true</all>
+              <namespace>permissions.ws.topazproject.org</namespace>
+              <servicePortName>PermissionsServicePort</servicePortName>
+              <location>http://localhost/service-location</location>
+              <classesDirectory>${project.build.directory}/classes</classesDirectory>
+              <classOfPortType>org.topazproject.ws.permissions.Permissions</classOfPortType>
+              <outputDirectory>${project.build.directory}/classes</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin> 
+    </plugins>
+  </build>
+</project>

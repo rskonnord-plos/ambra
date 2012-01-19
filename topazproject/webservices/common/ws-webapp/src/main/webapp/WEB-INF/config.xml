@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+  <!-- Allow command-line overrides etc. (eg. -Dtopaz.services.fedora.uri=xxx) -->
+  <system/>
+  <!-- Allow administrator overrides -->
+  <xml fileName="file:///etc/topaz/topaz.xml" optional="true"/>
+
+  <additional>
+    <!-- Shared defaults if no admin overrides -->
+    <xml fileName="topaz-common-config.xml"/>
+    <!-- Web-app specific defaults if no admin overrides -->
+    <xml fileName="topaz-config.xml"/>
+  </additional>
+</configuration>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<articles>
+  <article>
+    <uri>info:doi/10.1371/journal.pbio.0020382</uri>
+    <title>Correction: Nicotine's Defensive Function in Nature</title>
+    <description><p>July correction</p></description>
+    <date>2004-10-12</date>
+    
+    <categories>
+      <category>Biotechnology</category>
+      <category>Ecology</category>
+      <category>Genetics</category>
+      <category>Plant Science</category>
+    </categories>
+    <subjects>
+      <subject>Biotechnology</subject>
+      <subject>Ecology</subject>
+      <subject>Genetics/Genomics/Gene Therapy</subject>
+      <subject>Plant Science</subject>
+    </subjects>
+  </article>
+  <article>
+    <uri>info:doi/10.1371/journal.pbio.0020317</uri>
+    <title>Submission of Microarray Data to Public Repositories</title>
+    <description><p>The Microarray Gene Expression Data Society believe that the time is right for journals to require that microarray data be deposited in public repositories, as a condition for publication</p></description>
+    <date>2004-08-31</date>
+    <authors>
+      <author>Catherine A Ball</author>
+      <author>Alvis Brazma</author>
+      <author>Helen Causton</author>
+      <author>Steve Chervitz</author>
+      <author>Ron Edgar</author>
+      <author>Pascal Hingamp</author>
+      <author>John C Matese</author>
+      <author>Helen Parkinson</author>
+      <author>John Quackenbush</author>
+      <author>Martin Ringwald</author>
+      <author>Susanna-Assunta Sansone</author>
+      <author>Gavin Sherlock</author>
+      <author>Paul Spellman</author>
+      <author>Chris Stoeckert</author>
+      <author>Yoshio Tateno</author>
+      <author>Ronald Taylor</author>
+      <author>Joseph White</author>
+      <author>Neil Winegarden</author>
+    </authors>
+    <categories>
+      <category>Bioinformatics</category>
+      <category>Genetics</category>
+    </categories>
+    <subjects>
+      <subject>Bioinformatics/Computational Biology</subject>
+      <subject>Genetics/Genomics/Gene Therapy</subject>
+    </subjects>
+  </article>
+</articles>

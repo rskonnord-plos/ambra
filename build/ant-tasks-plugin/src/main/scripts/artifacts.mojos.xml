@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL:: $
+  $Id: $
+
+  Copyright (c) 2006 by Topaz, Inc.
+  http://topazproject.org
+
+  Licensed under the Educational Community License version 1.0
+  http://opensource.org/licenses/ecl1.php
+-->
+<pluginMetadata>
+  <mojos>
+
+    <mojo>
+      <goal>get-artifacts</goal>
+
+      <!-- this element refers to the Ant target we'll invoke -->
+      <call>get-artifacts</call>
+      <requiresProject>true</requiresProject>
+
+      <description>
+        Fetch the list of artifacts
+      </description>
+
+      <parameters>
+        <!-- List of artifacts separated by "," -->
+        <parameter>
+          <name>dependencies</name>
+          <property>dependencies</property>
+          <required>true</required>
+        </parameter>
+
+        <!-- Type of artifact -->
+        <parameter>
+          <name>type</name>
+          <property>type</property>
+          <required>true</required>
+          <defaultValue>jar</defaultValue>
+        </parameter>
+
+        <!-- Pass the location directory in as Ant task cannot access it -->
+        <parameter>
+          <name>location</name>
+          <property>location</property>
+          <required>true</required>
+          <defaultValue>${project.build.directory}</defaultValue>
+        </parameter>
+      </parameters>
+    </mojo>
+  </mojos>
+</pluginMetadata>
