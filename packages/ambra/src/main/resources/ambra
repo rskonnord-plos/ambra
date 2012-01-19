@@ -1,0 +1,18 @@
+# tomcat settings for ambra
+#
+
+MEM=`free -mo | grep Mem | awk '{print $2-128}'`
+
+export ambra_TOMCAT_OPTS="-Xmx${MEM}m\
+  -XX:MaxPermSize=256m\
+  -Djava.net.preferIPv4Stack=true\
+  -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+
+export TOMCAT_START_OPTS="-Dcom.sun.management.jmxremote.port=21212\
+  -Dcom.sun.management.jmxremote.authenticate=false\
+  -Dcom.sun.management.jmxremote.ssl=false"
+#  -Xdebug\
+#  -XX:CompileCommand=exclude,it/unibo/cs/org/apache/xpath/functions/FuncStringRange,execute\
+#  -XX:CompileCommand=exclude,com/googlecode/jsonplugin/JSONWriter,bean\
+#  -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=n"
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ $HeadURL$
+  ~ $Id$
+  ~
+  ~ Copyright (c) 2006-2011 by Public Library of Science
+  ~     http://plos.org
+  ~     http://ambraproject.org
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean class="org.easymock.classextension.internal.MocksClassControl" id="mockBuilder">
+    <constructor-arg type="org.easymock.internal.MocksControl$MockType" value="DEFAULT"/>
+  </bean>
+
+
+  <!--Don't worry if intelliJ complains about these beans, it's because the createMock() method in
+MocksClassControl is parameterized, so intelliJ doesn't know the correct type-->
+  <bean id="pdp" class="com.sun.xacml.PDP" factory-bean="mockBuilder" factory-method="createMock">
+    <constructor-arg type="java.lang.Class" value="com.sun.xacml.PDP"/>
+  </bean>
+
+  <bean id="topazSession" class="org.topazproject.otm.Session" factory-bean="mockBuilder" factory-method="createMock">
+    <constructor-arg type="java.lang.Class" value="org.topazproject.otm.Session"/>
+  </bean>
+
+  <bean id="cacheManager" class="org.topazproject.ambra.cache.CacheManager">
+    <constructor-arg>
+      <bean class="javax.transaction.TransactionManager" factory-bean="mockBuilder" factory-method="createMock">
+        <constructor-arg value="javax.transaction.TransactionManager"/>
+      </bean>
+    </constructor-arg>
+  </bean>
+
+  <bean id="permissionsService" class="org.topazproject.ambra.permission.service.PermissionsService"
+        factory-bean="mockBuilder" factory-method="createMock">
+    <constructor-arg value="org.topazproject.ambra.permission.service.PermissionsService"/>
+  </bean>
+
+  <bean id="cache" class="org.topazproject.ambra.cache.MockCache">
+    <property name="cacheManager" ref="cacheManager"/>
+  </bean>
+
+  <bean id="annotationService" class="org.topazproject.ambra.annotation.service.TopazAnnotationService">
+    <property name="articleAnnotationCache" ref="cache"/>
+    <property name="applicationId" value="test-app"/>
+    <property name="otmSession" ref="topazSession"/>
+    <property name="annotationsPdp" ref="pdp"/>
+    <property name="permissionsService" ref="permissionsService"/>
+  </bean>
+</beans>

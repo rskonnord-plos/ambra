@@ -1,0 +1,6 @@
+# tomcat settings for ambra-cas
+#
+
+export TOMCAT_START_OPTS="-Dcom.sun.management.jmxremote.port=21213\
+  -Dcom.sun.management.jmxremote.authenticate=false\
+  -Dcom.sun.management.jmxremote.ssl=false"
