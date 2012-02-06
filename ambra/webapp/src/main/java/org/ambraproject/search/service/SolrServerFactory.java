@@ -22,6 +22,8 @@
 package org.ambraproject.search.service;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.slf4j.Logger;
@@ -47,7 +49,8 @@ public class SolrServerFactory {
     String serverUrl = configuration.getString(URL_CONFIG_PARAM, null);
     if (serverUrl != null) {
       log.info("Creating SolrServer instance at " + serverUrl);
-      server = new CommonsHttpSolrServer(serverUrl);
+      final HttpClient httpClient = new HttpClient(new SimpleHttpConnectionManager(true));
+      server = new CommonsHttpSolrServer(serverUrl, httpClient);
     } else {
       log.warn(URL_CONFIG_PARAM + " not set. SolrServer instance will not be created.");
     }
