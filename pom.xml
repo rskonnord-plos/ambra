@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-cas</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Ambra CAS Server Application</name>
   
@@ -55,9 +55,9 @@
   </repositories>
 
   <scm>
-    <developerConnection>scm:svn:http://ambraproject.org/svn/ambra/ambra-cas/head/tags/ambra-cas-1.0</developerConnection>
-    <connection>scm:svn:http://ambraproject.org/svn/ambra/ambra-cas/head/tags/ambra-cas-1.0</connection>
-    <url>http://www.ambraproject.org/trac/browser/ambra/head/tags/ambra-cas-1.0</url>
+    <developerConnection>scm:svn:http://ambraproject.org/svn/ambra/ambra-cas/head/</developerConnection>
+    <connection>scm:svn:http://ambraproject.org/svn/ambra/ambra-cas/head/</connection>
+    <url>http://www.ambraproject.org/trac/browser/ambra/head/</url>
   </scm>
 
   <properties>
@@ -182,6 +182,20 @@
           <source>1.5</source>
           <target>1.5</target>
 
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.2.2</version>
+        <configuration>
+          <goals>deploy</goals>                           <!-- disable site deploy -->
+          <useReleaseProfile>false</useReleaseProfile>    <!-- no javadoc and source jars -->
+          <tagBase>http://ambraproject.org/svn/ambra/ambra-cas/tags</tagBase>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <preparationGoals>clean install</preparationGoals>
+          <arguments>-Ppackages,distribution,release</arguments>
         </configuration>
       </plugin>
     </plugins>
