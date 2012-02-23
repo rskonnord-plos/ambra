@@ -1,8 +1,10 @@
+
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-cas</artifactId>
-  <version>2.2.2-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>war</packaging>
   <name>Ambra CAS Server Application</name>
   
@@ -53,9 +55,9 @@
   </repositories>
 
   <scm>
-    <developerConnection>scm:svn:http://svn.ambraproject.org/svn/ambra/ambra-cas/head/</developerConnection>
-    <connection>scm:svn:http://svn.ambraproject.org/svn/ambra/ambra-cas/head/</connection>
-    <url>http://www.ambraproject.org/trac/browser/ambra/head/</url>
+    <developerConnection>scm:svn:http://ambraproject.org/svn/ambra/ambra-cas/head/tags/ambra-cas-1.0</developerConnection>
+    <connection>scm:svn:http://ambraproject.org/svn/ambra/ambra-cas/head/tags/ambra-cas-1.0</connection>
+    <url>http://www.ambraproject.org/trac/browser/ambra/head/tags/ambra-cas-1.0</url>
   </scm>
 
   <properties>
