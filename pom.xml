@@ -5,13 +5,58 @@
   <version>2.2.2-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Ambra CAS Server Application</name>
+  
+  <description>Ambra publishing system</description>
+  <url>http://www.ambraproject.org</url>
+
+  <organization>
+    <name>Ambra</name>
+    <url>http://www.ambraproject.org</url>
+  </organization>
 
   <repositories>
     <repository>
       <id>ja-sig</id>
       <url>http://developer.ja-sig.org/maven2</url>
     </repository>
+    <repository>
+      <id>ambra</id>
+      <name>Maven 2 Release Repository for Ambra</name>
+      <url>http://maven.ambraproject.org/maven2/release/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>ambra.snapshot</id>
+      <name>Maven 2 Snapshot Repository for Ambra</name>
+      <url>http://maven.ambraproject.org/maven2/snapshot/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>central</id>
+      <name>Maven Repository Switchboard</name>
+      <layout>default</layout>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
   </repositories>
+
+  <scm>
+    <developerConnection>scm:svn:http://svn.ambraproject.org/svn/ambra/ambra-cas/head/</developerConnection>
+    <connection>scm:svn:http://svn.ambraproject.org/svn/ambra/ambra-cas/head/</connection>
+    <url>http://www.ambraproject.org/trac/browser/ambra/head/</url>
+  </scm>
 
   <properties>
     <cas.version>3.4.7</cas.version>
