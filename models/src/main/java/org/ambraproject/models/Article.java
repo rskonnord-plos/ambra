@@ -20,7 +20,6 @@
  */
 package org.ambraproject.models;
 
-import java.io.StringWriter;
 import java.lang.String;
 import java.util.Date;
 import java.util.List;
@@ -75,9 +74,32 @@ public class Article extends AmbraEntity{
   private List<ArticleRelationship> relatedArticles;
   private List<ArticleAuthor> authors;
   private List<ArticleEditor> editors;
+  private Set<Journal> journals;
 
-  public Article() {
+
+  /**
+   *  The class constructor.  It calls the super class.
+   *
+   * @return  An instance of Article
+   */
+  public Article(){
     super();
+  }
+
+  public Set<Journal> getJournals() {
+    return journals;
+  }
+
+  public void setJournals(Set<Journal> journals) {
+    this.journals = journals;
+  }
+
+  public void addJournal(Journal j){
+     journals.add(j);
+  }
+
+  public void removeJournal(Journal j){
+    journals.remove(j);
   }
 
   public Article(String doi) {

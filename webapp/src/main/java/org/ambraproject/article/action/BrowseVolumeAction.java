@@ -21,7 +21,6 @@
 package org.ambraproject.article.action;
 
 import java.util.List;
-import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +33,9 @@ import org.ambraproject.service.XMLService;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.article.service.BrowseService;
 import org.ambraproject.journal.JournalService;
-import org.ambraproject.model.IssueInfo;
-import org.ambraproject.model.VolumeInfo;
-import org.topazproject.ambra.models.Journal;
+import org.ambraproject.views.IssueInfo;
+import org.ambraproject.views.VolumeInfo;
+import org.ambraproject.models.Journal;
 
 public class BrowseVolumeAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(BrowseArticlesAction.class);
@@ -65,13 +64,13 @@ public class BrowseVolumeAction extends BaseActionSupport {
     volumeInfos = browseService.getVolumeInfosForJournal(currentJournal);
 
     if (currentJournal.getCurrentIssue() != null) {
-      currentIssue = browseService.getIssueInfo(currentJournal.getCurrentIssue());
+      currentIssue = browseService.getIssueInfo(currentJournal.getCurrentIssue().toString());
     }
     // The Current Issue field may not map to an actual Issue.
     if (currentIssue == null) {
       // Current Issue has not been set for this Journal,
       // so get the most recent issue from the most recent volume.
-      URI mostRecentIssueUri = browseService.getLatestIssueFromLatestVolume(currentJournal);
+      String mostRecentIssueUri = browseService.getLatestIssueFromLatestVolume(currentJournal);
       if (mostRecentIssueUri != null) {
         currentIssue = browseService.getIssueInfo(mostRecentIssueUri);
       }
@@ -80,7 +79,7 @@ public class BrowseVolumeAction extends BaseActionSupport {
       if (currentIssue.getParentVolume() != null) {
         currentVolume = null;
         for (VolumeInfo vol : volumeInfos) {
-          if (vol.getId().equals(currentIssue.getParentVolume())) {
+          if (vol.getVolumeUri().equals(currentIssue.getParentVolume())) {
             currentVolume = vol;
             break;
           }
@@ -88,7 +87,7 @@ public class BrowseVolumeAction extends BaseActionSupport {
 
         int issueNum = 1;
         for (IssueInfo issue : currentVolume.getIssueInfos()) {
-          if (issue.getId().equals(currentIssue.getId())) {
+          if (issue.getIssueURI().equals(currentIssue.getIssueURI())) {
             currentIssueNumber = issueNum;
             break;
           }
@@ -99,7 +98,7 @@ public class BrowseVolumeAction extends BaseActionSupport {
         for (VolumeInfo vol : volumeInfos) {
           int issueNum = 1;
           for (IssueInfo issue : vol.getIssueInfos()) {
-            if (issue.getId().equals(currentIssue.getId())) {
+            if (issue.getIssueURI().equals(currentIssue.getIssueURI())) {
               currentIssueNumber = issueNum;
               currentVolume = vol;  //  Display the Volume that contains the Issue being shown.
               break;
@@ -120,7 +119,7 @@ public class BrowseVolumeAction extends BaseActionSupport {
           currentIssueDescription = currentIssue.getDescription();
         }
       } else {
-        log.error("The currentIssue description was null. Issue DOI='"+currentIssue.getId()+"'");
+        log.error("The currentIssue description was null. Issue DOI='" + currentIssue.getIssueURI() + "'");
         currentIssueDescription = "No description found for this issue";
       }
     }

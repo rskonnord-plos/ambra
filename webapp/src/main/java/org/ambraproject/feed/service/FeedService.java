@@ -20,6 +20,7 @@
 package org.ambraproject.feed.service;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.TrackbackView;
@@ -30,9 +31,10 @@ import java.text.ParseException;
 import java.util.List;
 
 /**
- * The <code>FeedService</code> supplies the API for querying and caching feed request. <code>FeedService</code> is a
- * Spring injected singleton which coordinates access to the <code>annotationService, articleService</code> and
- * <code>feedCache</code>.
+ * The <code>FeedService</code> supplies the API for querying feed requests. <code>FeedService</code> is a
+ * Spring injected singleton which coordinates access to the <code>annotationService</code>, and
+ * <code></code>articleService</code>
+ *
  */
 public interface FeedService {
 
@@ -71,54 +73,52 @@ public interface FeedService {
 
 
   /**
-   * Creates and returns a new <code>Key</code> for clients of FeedService.
+   * Creates and returns a new <code>FeedSearchParameters</code> for clients of FeedService.
    *
-   * @return Key a new cache key to be used as a data model for the FeedAction.
+   * @return Key a new FeedSearchParameters to be used as a data model for the FeedAction.
    */
-  public ArticleFeedCacheKey newCacheKey();
+  public FeedSearchParameters newSearchParameters();
 
   /**
-   * Queries for a list of articles from solr using the parameters set in cacheKey
+   * Queries for a list of articles from solr using the parameters set in searchParams
    *
-   * @param cacheKey
+   * @param searchParameters
    *
    * @return solr search result that contains list of articles
    */
-  public Document getArticles(final ArticleFeedCacheKey cacheKey);
+  public Document getArticles(final FeedSearchParameters searchParameters);
 
   /**
-   * @param cacheKey is both the feedAction data model and cache key.
+   * @param searchParams input parameters
    * @param journal Current journal
    * @parem authId the current user authId
    * @return List&lt;String&gt; if article Ids.
    * @throws ApplicationException ApplicationException
    * @throws URISyntaxException   URISyntaxException
-   * TODO: We should really stop using this pattern of getting lists of IDs and then getting the actual objects
    */
-  @Deprecated
-  public List<String> getIssueArticleIds(final ArticleFeedCacheKey cacheKey, String journal, String authId) throws
-      URISyntaxException, ApplicationException;
+  public List<ArticleInfo> getIssueArticles(final FeedSearchParameters searchParams, String journal, String authId) throws
+    URISyntaxException, ApplicationException;
 
   /**
-   * Returns a list of annotationViews based on parameters contained in the cache key. If a start date is not specified
-   * then a default date is used but not stored in the key.
+   * Returns a list of annotationViews based on parameters contained in searchParams. If a start date is not specified
+   * then a default date is used but not stored in searchParams.
    *
-   * @param cacheKey cache key.
+   * @param searchParams input parameters.
    * @return <code>List&lt;String&gt;</code> a list of annotation Ids
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
-  public List<AnnotationView> getAnnotations(final AnnotationSearchParameters cacheKey)
+  public List<AnnotationView> getAnnotations(final AnnotationFeedSearchParameters searchParams)
       throws ParseException, URISyntaxException;
 
   /**
-   * Returns a list of trackbackViews based on parameters contained in the cache key. If a start date is not specified
-   * then a default date is used but not stored in the key.
+   * Returns a list of trackbackViews based on parameters contained in the searchParams. If a start date is not specified
+   * then a default date is used but not stored in searchParams.
    *
-   * @param cacheKey cache key.
+   * @param searchParams search parameters
    * @return <code>List&lt;String&gt;</code> a list of annotation Ids
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
-  public List<TrackbackView> getTrackbacks(final AnnotationSearchParameters cacheKey)
+  public List<TrackbackView> getTrackbacks(final AnnotationFeedSearchParameters searchParams)
       throws ParseException, URISyntaxException;
 
 }

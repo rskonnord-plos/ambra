@@ -4,19 +4,19 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-libs</artifactId>
-  <version>2.3.3-SNAPSHOT</version>
+  <version>2.3.4-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Ambra Libs</name>
   
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-    <version>2.3.3-SNAPSHOT</version>
+    <version>2.3.4-SNAPSHOT</version>
   </parent>
 
   <modules>
     <module>ambra-emailer</module>
-    <module>otm-models</module>
+    <module>entity-resolver</module>
     <module>conf-helper</module>
     <module>dom-ranges-helper</module>
     <module>js</module>

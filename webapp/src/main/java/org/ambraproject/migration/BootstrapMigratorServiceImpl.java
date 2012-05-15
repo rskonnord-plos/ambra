@@ -91,6 +91,47 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     if(dbVersion < 232) {
       migrate230();
     }
+
+    if(dbVersion < 234) {
+      migrate232();
+    }
+  }
+
+  /*
+  * Run the migration from 232 to 234
+  **/
+  private void migrate232() {
+    log.info("Migration from 232 starting");
+
+    hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        v.setName("Ambra 2.34");
+        v.setVersion(234);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        log.debug("Creating new tables.");
+
+        execSQLScript(session, "migrate_ambra_2_3_4_part1.sql");
+
+        log.debug("Tables created, now migrating data.");
+
+        execSQLScript(session, "migrate_ambra_2_3_4_part2.sql");
+
+        log.debug("Migrated data, now dropping tables");
+
+        execSQLScript(session, "migrate_ambra_2_3_4_part3.sql");
+
+        v.setUpdateInProcess(false);
+        session.update(v);
+
+        return null;
+      }
+    });
+
+    log.info("Migration from 232 complete");
   }
 
   /*
@@ -334,20 +375,9 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
       this.isSnapshot = true;
     }
 
-    Double dVersion;
-
-    //  If the version has multiple dots, then it cannot be directly parsed as a Double.
-    String[] versionArray = sVersion.split("\\.");
-    if (versionArray.length < 3) {  //  example version numbers: 2 and 2.2 and 2.46 and 3.65
-      dVersion = Double.parseDouble(sVersion) * 100;  //         200   220     246      365
-    } else {  //  example version numbers: 2.1.1 and 2.2.5.3 and
-      dVersion = Double.parseDouble(versionArray[0] + "." + versionArray[1]) * 100;
-      for (int i=2; i < versionArray.length ; i++) {
-        dVersion = dVersion + Math.pow((new Double(versionArray[i])).doubleValue(), (new Double(1-i)).doubleValue());
-      }
-    }
-
-    this.binaryVersion = dVersion.intValue();
+    //Collapse pom version into an integer
+    //Assume it is always three digits
+    this.binaryVersion = Integer.parseInt(sVersion.replace(".",""));
   }
 
   /*

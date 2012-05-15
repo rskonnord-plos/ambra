@@ -33,10 +33,6 @@ import java.util.List;
  */
 
 public interface ArticleService {
-  public static final String ORDER_BY_FIELD_DATE_CREATED = "created";
-  public static final String ORDER_BY_FIELD_ARTICLE_DOI = "doi";
-  public static final String ORDER_BY_FIELD_DATE_PUBLISHED = "date";
-
   /**
    * Determines if the articleURI is of type researchArticle
    *
@@ -62,21 +58,6 @@ public interface ArticleService {
    */
   public boolean isResearchArticle(final ArticleInfo articleInfo, final String authId)
       throws NoSuchArticleIdException, ApplicationException;
-
-  /**
-   * Returns a Map of publishable articles in the order indicated.  The key of each element is the DOI (URI) of the
-   * Article.  The value of each element is the Article itself.
-   *
-   * @param eIssn            eIssn of the Journal that this Article belongs to (no filter if null or empty)
-   * @param orderField       field on which to sort the results (no sort if null or empty) Should be one of the
-   *                         ORDER_BY_FIELD_ constants from this class
-   * @param isOrderAscending controls the sort order (default is "false" so default order is descending)
-   * @return Map of publishable articles sorted as indicated
-   * @throws org.ambraproject.ApplicationException
-   *
-   */
-  public List<ArticleInfo> getPublishableArticles(String eIssn, String orderField,
-                                              boolean isOrderAscending) throws ApplicationException;
 
   /**
    * Get a List of all of the Journal/Volume/Issue combinations that contain the <code>articleURI</code> which was
@@ -150,15 +131,13 @@ public interface ArticleService {
   /**
    * Get articles based on a list of Article id's.
    *
+   * If an article is requested that the user does not have access to, it will not be returned
+   *
    * @param articleDois list of article id's
    * @param authId the authorization ID of the current user
    * @return <code>List&lt;Article&gt;</code> of articles requested
-   * @throws java.text.ParseException when article ids are invalid
-   * @throws NoSuchArticleIdException NoSuchArticleIdException
    */
-  public List<Article> getArticles(final List<String> articleDois, final String authId)
-    throws ParseException, NoSuchArticleIdException;
-
+  public List<Article> getArticles(final List<String> articleDois, final String authId);
 
   /**
    * Get the articleInfo object for an article
@@ -167,6 +146,14 @@ public interface ArticleService {
    * @return articleInfo
    */
   public ArticleInfo getArticleInfo(final String articleDoi, final String authId) throws NoSuchArticleIdException;
+
+  /**
+   * Get the articleInfo objects for the list of articles
+   * @param articleDois the IDs of the articles
+   * @param authId the authorization ID of the current user
+   * @return articleInfos
+   */
+  public List<ArticleInfo> getArticleInfos(final List<String> articleDois, final String authId);
 
   /**
    * Get a basic view object for the article with the corresponding id

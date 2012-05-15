@@ -53,12 +53,12 @@
 
 <#assign publisher = "">
 <#list journalList as jour>
-  <#if jour.key != journalContext && articleInfoX.eIssn == jour.eIssn>
-    <#assign publisher = "Published in <em><a href=\"" + freemarker_config.getJournalUrl(jour.key) + "\">" + jour.title + "</a></em>">
+  <#if jour.journalKey != journalContext && articleInfoX.eIssn == jour.eIssn>
+    <#assign publisher = "Published in <em><a href=\"" + freemarker_config.getJournalUrl(jour.journalKey) + "\">" + jour.title + "</a></em>">
     <#break/>
   <#else>
-    <#if jour.key != journalContext>
-      <#assign jourAnchor = "<a href=\"" + freemarker_config.getJournalUrl(jour.key) + "\">"/>
+    <#if jour.journalKey != journalContext>
+      <#assign jourAnchor = "<a href=\"" + freemarker_config.getJournalUrl(jour.journalKey) + "\">"/>
       <#if (publisher?length > 0)>
         <#assign publisher = publisher + ", " + jourAnchor + jour.title + "</a>" />
       <#else>

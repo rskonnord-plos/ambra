@@ -32,18 +32,16 @@ import org.ambraproject.models.Category;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.models.CitedArticleEditor;
+import org.ambraproject.models.Issue;
+import org.ambraproject.models.Journal;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.models.Volume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.topazproject.ambra.models.Issue;
-import org.topazproject.ambra.models.Journal;
-import org.topazproject.ambra.models.Volume;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -522,69 +520,72 @@ public class ArticleServiceTest extends BaseTest {
   }
 
   @DataProvider(name = "journalVolumeIssue")
-  public Object[][] journalVolumeIssue() throws URISyntaxException {
+  public Object[][] journalVolumeIssue() {
     log.debug("data-journalVolumeIssue");
 
-    List<URI> articleDoisBoth = new LinkedList<URI>();
-    articleDoisBoth.add(new URI(getArticle1().getDoi()));
-    articleDoisBoth.add(new URI(getArticle2().getDoi()));
+    List<String> articleDoisBoth = new LinkedList<String>();
+    articleDoisBoth.add(getArticle1().getDoi());
+    articleDoisBoth.add(getArticle2().getDoi());
 
-    List<URI> articleDoisOne = new LinkedList<URI>();
-    articleDoisOne.add(new URI(getArticle1().getDoi()));
+    List<String> articleDoisOne = new LinkedList<String>();
+    articleDoisOne.add(getArticle1().getDoi());
 
     //Issues
     Issue bothArticleIssue = new Issue(); //Contains both articles
-    bothArticleIssue.setSimpleCollection(articleDoisBoth);
+    bothArticleIssue.setArticleDois(articleDoisBoth);
     bothArticleIssue.setDisplayName("issue with TWO articles");
-    String issueId = dummyDataStore.store(bothArticleIssue);
+    bothArticleIssue.setIssueUri("info:doi/articleServiceTest/issue/1");
+    dummyDataStore.store(bothArticleIssue);
 
     Issue oneArticleIssue = new Issue(); //contains only the first article
-    oneArticleIssue.setSimpleCollection(articleDoisOne);
+    oneArticleIssue.setArticleDois(articleDoisOne);
     oneArticleIssue.setDisplayName("issue with ONE article");
-    String issue2Id = dummyDataStore.store(oneArticleIssue);
+    oneArticleIssue.setIssueUri("info:doi/articleServiceTest/issue/2");
+    dummyDataStore.store(oneArticleIssue);
 
-    List<URI> issueListOne = new LinkedList<URI>();
-    issueListOne.add(URI.create(issueId));
+    List<Issue> issueListOne = new LinkedList<Issue>();
+    issueListOne.add(bothArticleIssue);
 
-    List<URI> issueListTwo = new LinkedList<URI>();
-    issueListTwo.add(URI.create(issue2Id));
+    List<Issue> issueListTwo = new LinkedList<Issue>();
+    issueListTwo.add(oneArticleIssue);
 
     //Volumes - each issue can only be in one volume
     Volume volume1 = new Volume();
-    volume1.setIssueList(issueListOne);
+    volume1.setIssues(issueListOne);
     volume1.setDisplayName("volume with both issues");
-    String volumeId = dummyDataStore.store(volume1);
+    volume1.setVolumeUri("info:doi/articleServiceTest/volume/1");
+    dummyDataStore.store(volume1);
 
     Volume volume2 = new Volume();
-    volume2.setIssueList(issueListTwo);
+    volume2.setIssues(issueListTwo);
     volume2.setDisplayName("volume with one issue");
-    String volume2Id = dummyDataStore.store(volume2);
+    volume2.setVolumeUri("info:doi/articleServiceTest/volume/2");
+    dummyDataStore.store(volume2);
 
-
-    List<URI> volumeList = new LinkedList<URI>();
-    volumeList.add(URI.create(volumeId));
-    volumeList.add(URI.create(volume2Id));
+    List<Volume> volumeList = new LinkedList<Volume>();
+    volumeList.add(volume1);
+    volumeList.add(volume2);
 
     Journal journal = new Journal();
     journal.setVolumes(volumeList);
-    journal.setKey("journal-key");
-    String journalId = dummyDataStore.store(journal);
+    journal.setJournalKey("articleServiceTest-journal-key");
+    dummyDataStore.store(journal);
 
     List<String> possibleJournalIds = new ArrayList<String>(1);
-    possibleJournalIds.add(journalId);
+    possibleJournalIds.add(journal.getID().toString());
     List<String> possibleJournalKeys = new ArrayList<String>(1);
-    possibleJournalKeys.add(journal.getKey());
+    possibleJournalKeys.add(journal.getJournalKey());
 
     List<String> possibleVolumeIds = new ArrayList<String>(2);
-    possibleVolumeIds.add(volumeId);
-    possibleVolumeIds.add(volume2Id);
+    possibleVolumeIds.add(volume1.getVolumeUri());
+    possibleVolumeIds.add(volume2.getVolumeUri());
     List<String> possibleVolumeNames = new ArrayList<String>(2);
     possibleVolumeNames.add(volume1.getDisplayName());
     possibleVolumeNames.add(volume2.getDisplayName());
 
     List<String> possibleIssueIds = new ArrayList<String>(2);
-    possibleIssueIds.add(issueId);
-    possibleIssueIds.add(issue2Id);
+    possibleIssueIds.add(bothArticleIssue.getIssueUri());
+    possibleIssueIds.add(oneArticleIssue.getIssueUri());
     List<String> possibleIssueNames = new ArrayList<String>(2);
     possibleIssueNames.add(bothArticleIssue.getDisplayName());
     possibleIssueNames.add(oneArticleIssue.getDisplayName());
@@ -697,7 +698,7 @@ public class ArticleServiceTest extends BaseTest {
     unpubbedArticle.setState(Article.STATE_UNPUBLISHED);
     unpubbedArticle.setRights("article rights");
     unpubbedArticle.setTitle("foo");
-    
+
     ArticleRelationship unpubbedRelationship = new ArticleRelationship();
     unpubbedRelationship.setParentArticle(article);
     unpubbedRelationship.setOtherArticleID(Long.valueOf(dummyDataStore.store(unpubbedArticle)));
@@ -717,7 +718,7 @@ public class ArticleServiceTest extends BaseTest {
     pubbedRelationship.setType("foo2");
     pubbedRelationship.setOtherArticleDoi(pubbedArticle.getDoi());
     articleRelationships.add(pubbedRelationship);
-    
+
     //regression test for PDEV-215: if you have multiple relationships to same 'other' article (different types,
     //e.g. correction and companion) the other article will show up twice on the article page
     ArticleRelationship duplicatePubbedRelationship = new ArticleRelationship();
@@ -726,7 +727,7 @@ public class ArticleServiceTest extends BaseTest {
     duplicatePubbedRelationship.setType("foo 49 thousand");
     duplicatePubbedRelationship.setOtherArticleDoi(pubbedArticle.getDoi());
     articleRelationships.add(duplicatePubbedRelationship);
-    
+
     //even admins shouldn't see this related article
     Article disabledArticle = new Article();
     disabledArticle.setDoi("id:doi-disabled-related-article");
@@ -757,12 +758,12 @@ public class ArticleServiceTest extends BaseTest {
   }
 
   @Test(dataProvider = "articleInfoDataProvider", dependsOnMethods = {"testGetArticle"})
-  public void testGetArticleInfo(String id, Article expectedArticle, String authId, 
+  public void testGetArticleInfo(String id, Article expectedArticle, String authId,
                                  Article[] expectedRelatedArticles) throws NoSuchArticleIdException {
     ArticleInfo result = articleService.getArticleInfo(id, authId);
     assertNotNull(result, "returned null article info");
 
-    checkArticleInfo(result, 
+    checkArticleInfo(result,
         expectedArticle,
         expectedRelatedArticles);
 

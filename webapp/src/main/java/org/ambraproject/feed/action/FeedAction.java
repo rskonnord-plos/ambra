@@ -22,7 +22,9 @@ package org.ambraproject.feed.action;
 
 import java.util.List;
 
-import org.ambraproject.feed.service.AnnotationSearchParameters;
+import org.ambraproject.feed.service.AnnotationFeedSearchParameters;
+import org.ambraproject.feed.service.FeedSearchParameters;
+import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.TrackbackView;
 import org.slf4j.Logger;
@@ -33,39 +35,33 @@ import org.springframework.beans.factory.annotation.Required;
 
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.feed.service.FeedService;
-import org.ambraproject.feed.service.ArticleFeedCacheKey;
 import org.ambraproject.feed.service.FeedService.FEED_TYPES;
 
 import com.opensymphony.xwork2.ModelDriven;
 import org.w3c.dom.Document;
 
 /**
- * The <code>class ArticleFeed</code> provides an API for criteria based retrieval of articles and
- * article information. The <code>class ArticleFeed</code> implements the Struts ModelDrive
- * interface. The data model used for <code>ArticleFeed</code> is <code>class Key</code>. The the
- * field <code>ArticleFeed.cacheKey</code> is accessible to Struts through the
- * <code>ArticleFeed.getModel</code> and <code>ArticleFeed.getCacheKey</code> bean getter. The
+ * The <code>class FeedAction</code> provides an API for criteria based retrieval of articles and
+ * article information. The <code>class FeedAction</code> implements the Struts ModelDrive
+ * interface. The data model used for <code>FeedAction</code> is <code>FeedSearchParameters</code>. The
+ * field <code>FeedAction.searchParameters</code> is accessible to Struts through the
+ * <code>FeedAction.getModel</code> and <code>FeedAction.getSearchParameters</code> bean getter. The
  * ModelDriven Interceptor parses the input parameters, converts them to the appropriate Java types
  * then assigns them to fields in the data model.
  *
  * <p>
- * The <code>ArticleFeed.cacheKey</code> serves the following purposes:
+ * The <code>FeedAction.SearchParameters</code> serves the following purposes:
  * <ul>
  * <li> Receives and validates the parameters passed in during a Post/Get.
- * <li> Uses these parameters to compute a hashcode for cache lookups.
  * <li> Used to pass these parameters to AmbraFeedResult via the ValueStack.
- * <li> Registers a cache Invalidator as a cache listner.
  * </ul>
  * <p>
  *
- * ArticleFeed implements the <code>ArticleFeed.execute</code> and <code>ArticleFeed.validate
- * </code> Struts entry points. The <code>ArticleFeed.validate</code> method assigns default values
+ * ArticleFeed implements the <code>FeedAction.execute</code> and <code>FeedSearchParameters.validate
+ * </code> Struts entry points. The <code>FeedSearchParameters.validate</code> method assigns default values
  * to fields not provided by user input and checks parameters that are provided by the user. By the
- * time Struts invokes the <code>ArticleFeed.execute</code> all model data variables should be in a
- * known and acceptable state for execution. <code>ArticleFeed.execute</code> first checks the feed
- * cache for identical queries or calls <code>ArticleFeed.getFeedData</code> if there is a miss. A
- * list of article ID's is the result. It is up to the result handler to fetch the articles and
- * serialize the output.
+ * time Struts invokes the <code>FeedAction.execute</code> all model data variables should be in a
+ * known and acceptable state for execution.
  *
  * <p>
  * <ul>
@@ -100,22 +96,23 @@ import org.w3c.dom.Document;
  *
  * </pre>
  *
- * @see       org.ambraproject.feed.service.ArticleFeedCacheKey
+ * @see       org.ambraproject.feed.service.FeedSearchParameters
  * @see       org.ambraproject.struts2.AmbraFeedResult
  *
  * @author Jeff Suttor
  * @author Eric Brown
+ * @author Joe Osowski
  */
  @SuppressWarnings("UnusedDeclaration")
 public class FeedAction extends BaseActionSupport implements ModelDriven {
   private static final Logger log = LoggerFactory.getLogger(FeedAction.class);
 
-  private FeedService          feedService;     // Feed Service Spring injected.
-  private ArticleFeedCacheKey  cacheKey;        // The cache key and action data model
-  private List<String>         articleIds;      // List of Article IDs; result of search
-  private List<AnnotationView> annotations;     // List of Annotations; result of search
-  private List<TrackbackView>  trackbacks;      // List of tracks; results of search
-  private Document             resultFromSolr;  // list of articles for the rss feed
+  private FeedService             feedService;     // Feed Service Spring injected.
+  private FeedSearchParameters    searchParams;    // The action data model
+  private List<ArticleInfo>       articles;        // List of Article IDs; result of search
+  private List<AnnotationView>    annotations;     // List of Annotations; result of search
+  private List<TrackbackView>     trackbacks;      // List of tracks; results of search
+  private Document                resultFromSolr;  // list of articles for the rss feed
 
   /**
    * Try and find the query in the feed cache or query the Article OTM Service if nothing
@@ -125,8 +122,7 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
    */
   @Transactional(readOnly = true)
   public String execute() throws Exception {
-    //TODO: Rename the cacheKey param to be something more logical once we no longer use cache here
-    FEED_TYPES t = cacheKey.feedType();
+    FEED_TYPES t = searchParams.feedType();
 
     String status = SUCCESS;
     
@@ -134,7 +130,7 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
       case Annotation:
         //Trackbacks are (logically but not physically) a form of annotation, if this type of feed is selected
         //We wanted it included
-        trackbacks = feedService.getTrackbacks(new AnnotationSearchParameters(cacheKey));
+        trackbacks = feedService.getTrackbacks(new AnnotationFeedSearchParameters(searchParams));
       case FormalCorrection:
       case MinorCorrection:
       case Retraction:
@@ -143,24 +139,22 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
       case Rating:
       case Reply:
         //The getAnnotations method performs filters for all of the above types.
-        //(Or not if Annotation is selected) AnnotationSearchParameters will not populate the annotationTypes property
+        //(Or not if Annotation is selected) AnnotationFeedSearchParameters will not populate the annotationTypes property
         //If the type specified is Annotation.  It's also worth noting here, while annotationTypes is a collection
         //We never allow more then one value to be specified currently though a lot of the code supports it
-        annotations = feedService.getAnnotations(new AnnotationSearchParameters(cacheKey));
+        annotations = feedService.getAnnotations(new AnnotationFeedSearchParameters(searchParams));
         break;
       case Trackback:
-        trackbacks = feedService.getTrackbacks(new AnnotationSearchParameters(cacheKey));
+        trackbacks = feedService.getTrackbacks(new AnnotationFeedSearchParameters(searchParams));
         break;
       case Article:
-        resultFromSolr = feedService.getArticles(cacheKey);
+        resultFromSolr = feedService.getArticles(searchParams);
         if (resultFromSolr == null) {
           status = ERROR;
         }
         break;
       case Issue:
-        //TODO: We should stop using IDs, and put the actual issues on the stack for
-        // the AmbraFeedResult class to consume
-        articleIds = feedService.getIssueArticleIds(cacheKey, getCurrentJournal(), getAuthId());
+        articles = feedService.getIssueArticles(searchParams, getCurrentJournal(), getAuthId());
         break;
     }
 
@@ -176,16 +170,17 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
   @Override
   public void validate () {
     /*
-     * The cacheKey must have both the current Journal and start date.  Current Journal is set here
+     * The searchParams must have both the current Journal and start date.  Current Journal is set here
      * and startDate will be set in the data model validator.
      */
-    cacheKey.setJournal(getCurrentJournal());
-    cacheKey.validate(this);
+    searchParams.setJournal(getCurrentJournal());
+    searchParams.validate(this);
+
     if (log.isErrorEnabled()) {
 
       for (Object key : getFieldErrors().keySet()) {
         log.error("Validate error: " + getFieldErrors().get(key) + " on " + key +
-            " for cache key: " + cacheKey);
+            " for searchParams: " + searchParams);
       }
     }
   }
@@ -205,8 +200,8 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
    *
    * @return the list of article/annotation ID's returned from the query.
    */
-  public List<String> getIds() {
-    return articleIds;
+  public List<ArticleInfo> getArticles() {
+    return articles;
   }
 
   /**
@@ -228,25 +223,25 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
   }
 
   /**
-   * Return the cache key being used by this action.
+   * Return the search parameters being used by this action.
    *
    * @return  Key to the cache which is also the data model of the action
    */
-  public ArticleFeedCacheKey getCacheKey() {
-    return this.cacheKey;
+  public FeedSearchParameters getSearchParameters() {
+    return this.searchParams;
   }
 
   /**
-   * Return the a cache key which is also the data model for the model driven interface.
+   * Return the search parameters which is also the data model for the model driven interface.
    *
-   * @return Key to the cache which is also the data model of the action
+   * @return searchParams which is also the data model of the action
    */
   public Object getModel() {
     /*
      * getModel is invoked several times by different interceptors
      * Make sure caheKey is not created twice.
      */
-    return (cacheKey == null) ? cacheKey = feedService.newCacheKey() : cacheKey;
+    return (searchParams == null) ? searchParams = feedService.newSearchParameters() : searchParams;
   }
 
   /**

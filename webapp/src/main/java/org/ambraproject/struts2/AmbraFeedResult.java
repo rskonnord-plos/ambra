@@ -29,18 +29,13 @@ import com.sun.syndication.feed.atom.Link;
 import com.sun.syndication.feed.atom.Person;
 import com.sun.syndication.io.WireFeedOutput;
 import org.ambraproject.ApplicationException;
-import org.ambraproject.annotation.service.AnnotationService;
-import org.ambraproject.article.service.ArticleAssetService;
-import org.ambraproject.article.service.ArticleService;
 import org.ambraproject.article.service.NoSuchObjectIdException;
-import org.ambraproject.feed.service.ArticleFeedCacheKey;
+import org.ambraproject.feed.service.FeedSearchParameters;
 import org.ambraproject.feed.service.FeedService;
 import org.ambraproject.feed.service.FeedService.FEED_TYPES;
 import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.model.article.ArticleType;
 import org.ambraproject.models.AnnotationType;
-import org.ambraproject.models.Article;
-import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.rating.service.RatingsService;
 import org.ambraproject.service.XMLService;
 import org.ambraproject.util.TextUtils;
@@ -64,7 +59,6 @@ import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sound.sampled.LineListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -81,39 +75,19 @@ import java.util.TreeMap;
 
 /**
  * The <code>class AmbraFeedResult</code> creates and serializes the query results from the
- * <code>ArticleFeedAction</code> query. Article ID's are the <code>feedcache</code> cache key
- * are accessed via the Struts value stack. The result uses the Article ID's to fetch the relevant
- * articles from the datastore. The cache key contains parameters that were used for the query
- * as well as parameters (title, extend etc) that affect the format of the resulting feed.
+ * <code>ArticleFeedAction</code> query. Values are accessed via the Struts value stack.
  *
- * <h4>Action URI</h4>
- *
- * <h4>Parameters Past via Value Stack</h4>
- * <pre>
- * <strong>
- * Param                                                Description </strong>
- * List&lt;String&gt; IDs      List of article IDs that resulted from the the query.
- *                             Set via the ValueStack <code>ai.getStack().findValue("Ids")</code>
- *                             call
- *
- * ArticleFeed.Key cacheKey    The cache key with input parameters of the request. Some of which
- *                             affect the format of the output. Set via
- *                             <code>ai.getStack().findValue("cacheKey")</code> call
- *
- * </pre>
- *
- * @see       org.ambraproject.feed.service.ArticleFeedCacheKey
+ * @see       org.ambraproject.feed.service.FeedSearchParameters
  * @see       org.ambraproject.feed.action.FeedAction
  *
  * @author jsuttor
  * @author russ
+ * @author Joe Osowski
  */
 public class AmbraFeedResult extends Feed implements Result {
   private FeedService feedService;
   private RatingsService ratingsService;
   private XMLService secondaryObjectService;
-  private ArticleAssetService articleAssetService;
-  private ArticleService articleService;
 
   private boolean includeformatting = false;
 
@@ -227,15 +201,15 @@ public class AmbraFeedResult extends Feed implements Result {
     setXmlBase(JRNL_URI());
 
     // Get the article IDs that were cached by the feed.
-    ArticleFeedCacheKey cacheKey = (ArticleFeedCacheKey)ai.getStack().findValue("cacheKey");
+    FeedSearchParameters searchParams = (FeedSearchParameters)ai.getStack().findValue("searchParameters");
 
     List<Link> otherLinks = new ArrayList<Link>();
 
     // Add the self link
-    otherLinks.add(newLink(cacheKey, uri.toString() ));
+    otherLinks.add(newLink(searchParams, uri.toString() ));
     setOtherLinks(otherLinks);
-    setId(newFeedID(cacheKey));
-    setTitle(newFeedTitle(cacheKey));
+    setId(newFeedID(searchParams));
+    setTitle(newFeedTitle(searchParams));
 
     Content tagline = new Content();
     tagline.setValue(FEED_TAGLINE());
@@ -251,11 +225,11 @@ public class AmbraFeedResult extends Feed implements Result {
     feedAuthors.add(plosPerson());
     setAuthors(feedAuthors);
 
-    String xmlBase = (cacheKey.getRelativeLinks() ? "" : JOURNAL_URI);
+    String xmlBase = (searchParams.getRelativeLinks() ? "" : JOURNAL_URI);
 
-    FEED_TYPES t =  cacheKey.feedType();
+    FEED_TYPES t =  searchParams.feedType();
 
-    List<String> articleIds = (List<String>) ai.getStack().findValue("Ids");
+    List<ArticleInfo> articles = (List<ArticleInfo>) ai.getStack().findValue("Articles");
 
     // Add each Article or Annotations as a Feed Entry
     List<Entry> entries = null;
@@ -272,27 +246,22 @@ public class AmbraFeedResult extends Feed implements Result {
       case Rating:
       case Reply:
         List<AnnotationView> annotations = (List<AnnotationView>) ai.getStack().findValue("annotations");
-        entries = buildAnnotationFeed(xmlBase, annotations, trackbacks, cacheKey.getMaxResults(),
-            cacheKey.getFormatting());
+        entries = buildAnnotationFeed(xmlBase, annotations, trackbacks, searchParams.getMaxResults(),
+          searchParams.getFormatting());
         break;
       case Trackback:
         trackbacks = (List<TrackbackView>) ai.getStack().findValue("trackbacks");
-        entries = buildAnnotationFeed(xmlBase, null, trackbacks, cacheKey.getMaxResults(), cacheKey.getFormatting());
+        entries = buildAnnotationFeed(xmlBase, null, trackbacks, searchParams.getMaxResults(), searchParams.getFormatting());
         break;
       case Article :
         Document solrResult = (Document) ai.getStack().findValue("ResultFromSolr");
-        entries = buildArticleFeed(cacheKey, xmlBase, solrResult);
+        entries = buildArticleFeed(searchParams, xmlBase, solrResult);
         break;
       case Issue :
         //I assume here the feed is anonymous and unpublished articles will never be
         //included, If this isn't correct, a method needs to be added to fetch the
         //current user ID from the session
-        //TODO: Figure out if this is necessary, it's pretty heavyweight
-        List<ArticleInfo> articles = new ArrayList<ArticleInfo>(articleIds.size());
-        for (String doi : articleIds) {
-          articles.add(articleService.getArticleInfo(doi, ""));
-        }
-        entries = buildIssueFeed(cacheKey, xmlBase, articles);
+        entries = buildIssueFeed(searchParams, xmlBase, articles);
         break;
     }
 
@@ -359,13 +328,13 @@ public class AmbraFeedResult extends Feed implements Result {
    * Build a <code>List&lt;Entry&gt;</code> from the Article Ids found
    * by the query action.
    *
-   * @param cacheKey    cache/data model
-   * @param xmlBase     xml base url
-   * @param articles    list of articles
+   * @param searchParams cache/data model
+   * @param xmlBase      xml base url
+   * @param articles     list of articles
    * @return List of entries for feed.
    * @throws NoSuchObjectIdException When an article does not exist
    */
-  private List<Entry> buildIssueFeed(ArticleFeedCacheKey cacheKey, String xmlBase, List<ArticleInfo> articles)
+  private List<Entry> buildIssueFeed(FeedSearchParameters searchParams, String xmlBase, List<ArticleInfo> articles)
       throws NoSuchObjectIdException {
     // Add each Article as a Feed Entry
     List<Entry> entries = new ArrayList<Entry>();
@@ -384,21 +353,13 @@ public class AmbraFeedResult extends Feed implements Result {
       List<Link> altLinks = new ArrayList<Link>();
 
       // Link to article via xmlbase
-      Link selfLink = newArticleLink(article.getId().toString(), article.getTitle(), xmlBase);
+      Link selfLink = newArticleLink(article.getDoi(), article.getTitle(), xmlBase);
       altLinks.add(selfLink);
 
-      //Get a list of alternative representations of the article
-      //We make an assumption here that all feeds are anonymous
-      List<ArticleAsset> representations =
-        articleAssetService.getArticleXmlAndPdf(article.getId().toString(), "");
+      //Assume here that each article has an XML and PDF representation
+      altLinks.add(newAltLink(article, "XML", xmlBase));
+      altLinks.add(newAltLink(article, "PDF", xmlBase));
 
-      // Add alternate links for each representation of the article
-      if (representations != null) {
-        for (ArticleAsset rep : representations) {
-          Link altLink = newAltLink(article, rep, xmlBase);
-          altLinks.add(altLink);
-        }
-      }
       // Add alternative links to this entry
       entry.setAlternateLinks(altLinks);
 
@@ -406,11 +367,11 @@ public class AmbraFeedResult extends Feed implements Result {
       List<Person> authors = new ArrayList<Person>();
 
       // Returns Comma delimited string of author names and Adds People to the authors list.
-      String authorNames = newAuthorsList(cacheKey.isExtended(), article, authors);
+      String authorNames = newAuthorsList(searchParams.isExtended(), article, authors);
       entry.setAuthors(authors);
 
       // Add foreign markup
-      if (cacheKey.isExtended()) {
+      if (searchParams.isExtended()) {
         // All our foreign markup
         List<Element> foreignMarkup = newForeignMarkUp(article);
 
@@ -419,7 +380,7 @@ public class AmbraFeedResult extends Feed implements Result {
         }
       }
 
-      List <Content> contents = newContentsList(cacheKey, article, authorNames, authors.size());
+      List <Content> contents = newContentsList(searchParams, article, authorNames);
       entry.setContents(contents);
 
       // Add completed Entry to List
@@ -431,12 +392,12 @@ public class AmbraFeedResult extends Feed implements Result {
   /**
    * Build a <code>List&lt;Entry&gt;</code> from the articles found from solr
    *
-   * @param cacheKey cache/data model
+   * @param searchParams data model
    * @param xmlBase xml base url
    * @param result list of articles
    * @return List of entries for the feed
    */
-  private List<Entry> buildArticleFeed(ArticleFeedCacheKey cacheKey, String xmlBase, Document result) {
+  private List<Entry> buildArticleFeed(FeedSearchParameters searchParams, String xmlBase, Document result) {
     // Add each Article as a Feed Entry
     List<Entry> entries = new ArrayList<Entry>();
 
@@ -529,7 +490,7 @@ public class AmbraFeedResult extends Feed implements Result {
         } else if (attrName.equals("author_without_collab_display")) {
 
           // authors (without the collaborative authors)
-          ArrayList<Person> authors = newAuthorsList(cacheKey, field);
+          ArrayList<Person> authors = newAuthorsList(searchParams, field);
           entry.setAuthors(authors);
 
         } else if (attrName.equals("author_collab_only_display")) {
@@ -571,7 +532,7 @@ public class AmbraFeedResult extends Feed implements Result {
       }
 
       // foreign markup
-      if (cacheKey.isExtended()) {
+      if (searchParams.isExtended()) {
         List<Element> foreignMarkup = newForeignMarkUp(subjectHierarchyNode, volume, issue, articleType);
         if (foreignMarkup.size() > 0) {
           entry.setForeignMarkup(foreignMarkup);
@@ -584,7 +545,7 @@ public class AmbraFeedResult extends Feed implements Result {
       entry.setAlternateLinks(altLinks);
 
       // contents 
-      List<Content> contents = newContentsList(cacheKey, authorsForContent, abstractText);
+      List<Content> contents = newContentsList(searchParams, authorsForContent, abstractText);
       entry.setContents(contents);
 
       // rights
@@ -877,14 +838,12 @@ public class AmbraFeedResult extends Feed implements Result {
    * Creates a description of article contents in HTML format. Currently the description consists of
    * the Author (or Authors if extended format) and the DublinCore description of the article.
    *
-   * @param cacheKey    cache key and input parameters
-   * @param article     the article
-   * @param authorNames string concatenated list of author names
-   * @param numAuthors  author count
+   * @param searchParams input parameters
+   * @param article      the article
+   * @param authorNames  string concatenated list of author names
    * @return List<Content> consisting of HTML descriptions of the article and author
    */
-  private List<Content>newContentsList(ArticleFeedCacheKey cacheKey, ArticleInfo article, String authorNames,
-      int numAuthors) {
+  private List<Content>newContentsList(FeedSearchParameters searchParams, ArticleInfo article, String authorNames) {
     List<Content> contents = new ArrayList<Content>();
     Content description = new Content();
 
@@ -893,13 +852,14 @@ public class AmbraFeedResult extends Feed implements Result {
     try {
       StringBuilder text = new StringBuilder();
 
-      // If this is a normal feed (not extended) and there's more than one author, add to content
-      if ((!cacheKey.isExtended()) && numAuthors > 1) {
+      if (!searchParams.isExtended()) {
         text.append("<p>by ").append(authorNames).append("</p>\n");
       }
 
       if (article.getDescription() != null) {
-        text.append(secondaryObjectService.getTransformedDescription(article.getDescription()));
+        String content = secondaryObjectService.getTransformedDescription(article.getDescription());
+        content = TextUtils.simpleStripAllTags(content);
+        text.append(content);
       }
       description.setValue(text.toString());
 
@@ -915,12 +875,12 @@ public class AmbraFeedResult extends Feed implements Result {
   /**
    * Creates a description of article contents in HTML format.  It contains abstract and authors
    *
-   * @param cacheKey cache key and input parameters
+   * @param searchParams input parameters
    * @param authorsForContent list of authors
    * @param abstractText abstract
    * @return List<Content> consisting of HTML descriptions of the article and author
    */
-  private List<Content> newContentsList(ArticleFeedCacheKey cacheKey, NodeList authorsForContent, String abstractText) {
+  private List<Content> newContentsList(FeedSearchParameters searchParams, NodeList authorsForContent, String abstractText) {
     // contents
     List<Content> contents = new ArrayList<Content>();
     Content description = new Content();
@@ -930,7 +890,7 @@ public class AmbraFeedResult extends Feed implements Result {
 
     // If this is a normal feed (not extended), add to content
     if (authorsForContent != null) {
-      if (!cacheKey.isExtended()) {
+      if (!searchParams.isExtended()) {
         StringBuilder authorNames = new StringBuilder();
         for (int k = 0; k < authorsForContent.getLength(); k++) {
           if (authorNames.length() > 0) {
@@ -1069,15 +1029,15 @@ public class AmbraFeedResult extends Feed implements Result {
   /**
    * Get the list of authors for an entry
    *
-   * @param cacheKey cache key and input parameters
+   * @param searchParams input parameters
    * @param field author node
    * @return list of authors
    */
-  private ArrayList<Person> newAuthorsList(ArticleFeedCacheKey cacheKey, Node field) {
+  private ArrayList<Person> newAuthorsList(FeedSearchParameters searchParams, Node field) {
     ArrayList<Person> authors = new ArrayList<Person>();
 
     NodeList children = field.getChildNodes();
-    if (cacheKey.isExtended()) {
+    if (searchParams.isExtended()) {
       // If extended then create a list of persons containing all the authors.
       for (int i = 0; i < children.getLength(); i++) {
         Node node = children.item(i);
@@ -1102,23 +1062,23 @@ public class AmbraFeedResult extends Feed implements Result {
    * Create alternate link for the different representaions of the article.
    *
    * @param article the article
-   * @param rep a respresentation of the article
+   * @param representation a respresentation of the article
    * @param xmlBase XML base
    * @return  Link  an alternate link to the article
    */
-  private Link newAltLink(ArticleInfo article, ArticleAsset rep, String xmlBase) {
+  private Link newAltLink(ArticleInfo article, String representation, String xmlBase) {
     Link altLink = new Link();
 
-    altLink.setHref(xmlBase + fetchObjectAttachmentAction + "?uri=" + article.getId() +
-        "&representation=" + rep.getExtension());
+    altLink.setHref(xmlBase + fetchObjectAttachmentAction + "?uri=" + article.getDoi() +
+        "&representation=" + representation);
     altLink.setRel("related");
 
     if(includeformatting) {
-      altLink.setTitle("(" + rep.getExtension() + ") " + article.getTitle());
+      altLink.setTitle("(" + representation + ") " + article.getTitle());
     } else {
-      altLink.setTitle("(" + rep.getExtension() + ") " + TextUtils.simpleStripAllTags(article.getTitle()));
+      altLink.setTitle("(" + representation + ") " + TextUtils.simpleStripAllTags(article.getTitle()));
     }
-    altLink.setType(rep.getContentType());
+    altLink.setType(representation);
 
     return altLink;
   }
@@ -1270,7 +1230,7 @@ public class AmbraFeedResult extends Feed implements Result {
   private Entry newEntry(ArticleInfo article) {
     Entry entry = new Entry();
 
-    entry.setId(article.getId().toString());
+    entry.setId(article.getDoi());
 
     // Respect Article specific rights
     String rights = article.getRights();
@@ -1309,25 +1269,25 @@ public class AmbraFeedResult extends Feed implements Result {
 
   /**
    * If a self link was provided by the user create a <code>Link</code> based on the user input
-   * information contained in the cachekey.
+   * information contained in the searchParams.
    *
-   * @param cacheKey cache and data model
-   * @param uri      uri of regquest
+   * @param searchParams data model
+   * @param uri          uri of regquest
    *
    * @return <code>Link</code> user provide link.
    */
-  private Link newLink(ArticleFeedCacheKey cacheKey, String uri) {
-    if (cacheKey.getSelfLink() == null || cacheKey.getSelfLink().equals("")) {
+  private Link newLink(FeedSearchParameters searchParams, String uri) {
+    if (searchParams.getSelfLink() == null || searchParams.getSelfLink().equals("")) {
       if (uri.startsWith("/")) {
-        cacheKey.setSelfLink(JRNL_URI().substring(0, JRNL_URI().length() - 1) + uri);
+        searchParams.setSelfLink(JRNL_URI().substring(0, JRNL_URI().length() - 1) + uri);
       } else {
-        cacheKey.setSelfLink(JRNL_URI() + uri);
+        searchParams.setSelfLink(JRNL_URI() + uri);
       }
     }
 
     Link newLink = new Link();
     newLink.setRel("self");
-    newLink.setHref(cacheKey.getSelfLink());
+    newLink.setHref(searchParams.getSelfLink());
     newLink.setTitle(FEED_TITLE());
 
     return newLink;
@@ -1354,13 +1314,13 @@ public class AmbraFeedResult extends Feed implements Result {
   /**
    * Creates a Feed ID from the Config File value + key.Category + key.Author
    *
-   * @param cacheKey cache key and input parameters
+   * @param searchParams input parameters
    *
    * @return String identifier generated for this feed
    */
-  private String newFeedID(ArticleFeedCacheKey cacheKey) {
+  private String newFeedID(FeedSearchParameters searchParams) {
     String id = FEED_ID();
-    String[] categories = cacheKey.getCategories();
+    String[] categories = searchParams.getCategories();
     if (categories != null && categories.length > 0) {
       String categoryId = "";
       for (String category : categories) {
@@ -1368,32 +1328,32 @@ public class AmbraFeedResult extends Feed implements Result {
       }
       id += "?" + categoryId.substring(0, categoryId.length() - 1);
     }
-    if (cacheKey.getAuthor() != null)
-      id += "?author=" + cacheKey.getAuthor();
+    if (searchParams.getAuthor() != null)
+      id += "?author=" + searchParams.getAuthor();
 
     return id;
   }
 
   /**
-   * Create a feed Title string from the the key.Category and key.Author fields in the cache entry.
+   * Create a feed Title string from the the key.Category and key.Author fields
    *
-   * @param cacheKey cache key and input parameters
+   * @param searchParams input parameters
    * @return String feed title.
    */
-  private String newFeedTitle(ArticleFeedCacheKey cacheKey) {
-    String feedTitle = cacheKey.getTitle();
+  private String newFeedTitle(FeedSearchParameters searchParams) {
+    String feedTitle = searchParams.getTitle();
 
     if (feedTitle == null) {
       feedTitle = FEED_TITLE();
 
-      String[] categories = cacheKey.getCategories();
+      String[] categories = searchParams.getCategories();
       if (categories != null && categories.length > 0) {
         String categoryTitle = StringUtils.join(categories, ", ");
         feedTitle += " - Category " + categoryTitle;
       }
       
-      if (cacheKey.getAuthor() != null)
-        feedTitle += " - Author " + cacheKey.getAuthor();
+      if (searchParams.getAuthor() != null)
+        feedTitle += " - Author " + searchParams.getAuthor();
     }
     return  feedTitle;
   }
@@ -1483,16 +1443,6 @@ public class AmbraFeedResult extends Feed implements Result {
   @Required
   public void setRatingsService(RatingsService ratingsService) {
     this.ratingsService = ratingsService;
-  }
-
-  @Required
-  public void setArticleAssetService(ArticleAssetService articleAssetService) {
-    this.articleAssetService = articleAssetService;
-  }
-
-  @Required
-  public void setArticleService(ArticleService articleService) {
-    this.articleService = articleService;
   }
 }
 

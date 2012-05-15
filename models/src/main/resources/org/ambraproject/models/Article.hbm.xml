@@ -107,6 +107,11 @@
       <one-to-many class="ArticleEditor"/>
     </list>
 
+    <set name="journals" table="articlePublishedJournals" cascade="none" lazy="true">
+      <key column="articleID"/>
+      <many-to-many class="Journal" column="journalID"/>
+    </set>
+
   </class>
 
 </hibernate-mapping>

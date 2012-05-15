@@ -19,13 +19,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.ambraproject.BaseTest;
-import org.topazproject.ambra.models.Journal;
-import org.topazproject.otm.criterion.Criterion;
-import org.topazproject.otm.criterion.DetachedCriteria;
-import org.topazproject.otm.criterion.EQCriterion;
+import org.ambraproject.models.Journal;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,29 +46,9 @@ public class JournalServiceTest extends BaseTest {
       hasInsertedData = true;
       for (Object[] row : journalData()) {
         Journal j = new Journal();
-        j.setKey((String) row[0]);
+        j.setJournalKey((String) row[0]);
         j.seteIssn((String) row[1]);
         j.setTitle((String) row[2]);
-
-        //Setup smart collection for the journal
-        EQCriterion eQCriterion = new EQCriterion();
-        eQCriterion.setFieldName("eIssn");
-        eQCriterion.setValue(j.geteIssn());
-
-        dummyDataStore.store(eQCriterion);
-
-        List<Criterion> cList = new ArrayList<Criterion>();
-        cList.add(eQCriterion);
-
-        DetachedCriteria detachedCriteria = new DetachedCriteria();
-        detachedCriteria.setCriterionList(cList);
-
-        dummyDataStore.store(detachedCriteria);
-
-        List<DetachedCriteria> dcList = new ArrayList<DetachedCriteria>();
-        dcList.add(detachedCriteria);
-
-        j.setSmartCollectionRules(dcList);
 
         dummyDataStore.store(j);
       }
@@ -90,7 +68,7 @@ public class JournalServiceTest extends BaseTest {
   public void getJournalTest(final String journalKey, final String eIssn, final String title) {
     Journal j = journalService.getJournal(journalKey);
 
-    assertEquals(j.getKey(), journalKey, "incorrect journal key");
+    assertEquals(j.getJournalKey(), journalKey, "incorrect journal key");
     assertEquals(j.geteIssn(), eIssn, "incorrect journal eIssn");
     assertEquals(j.getTitle(), title, "incorrect journal title");
   }
@@ -99,7 +77,7 @@ public class JournalServiceTest extends BaseTest {
   public void getJournalByEissn(final String journalKey, final String eIssn, final String title) {
     Journal j = journalService.getJournalByEissn(eIssn);
 
-    assertEquals(j.getKey(), journalKey, "incorrect journal key");
+    assertEquals(j.getJournalKey(), journalKey, "incorrect journal key");
     assertEquals(j.geteIssn(), eIssn, "incorrect journal eIssn");
     assertEquals(j.getTitle(), title, "incorrect journal title");
   }
@@ -115,13 +93,26 @@ public class JournalServiceTest extends BaseTest {
   @DataProvider(name = "articles")
   public Object[][] articles() {
     Journal journal = journalService.getJournal("journal-test");
-    journal.getSimpleCollection().add(URI.create("info:doi/1"));
-    dummyDataStore.update(journal);
 
+    Set<Journal> journals = new HashSet<Journal>();
+    journals.add(journal);
 
     Article article = new Article();
+    article.setDoi("info:doi/1");
+    article.seteIssn("1100-0000"); //eIssn for the second journal
+    article.setJournals(journals);
+
+    dummyDataStore.store(article);
+
+    journal = journalService.getJournal("journal-test1");
+    journals = new HashSet<Journal>();
+    journals.add(journal);
+
+    article = new Article();
     article.setDoi("info:doi/2");
     article.seteIssn("1100-0001"); //eIssn for the second journal
+    article.setJournals(journals);
+
     dummyDataStore.store(article);
 
     return new Object[][]{
@@ -135,6 +126,6 @@ public class JournalServiceTest extends BaseTest {
     Set<Journal> journals = journalService.getJournalsForObject(doi);
     assertNotNull(journals, "returned null set of journals");
     assertEquals(journals.size(), 1, "incorrect number of journals");
-    assertEquals(((Journal) journals.toArray()[0]).getKey(), journalKey, "returned incorrect journal");
+    assertEquals(((Journal) journals.toArray()[0]).getJournalKey(), journalKey, "returned incorrect journal");
   }
 }

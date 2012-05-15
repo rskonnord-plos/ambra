@@ -22,7 +22,6 @@
 package org.ambraproject.article.service;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.journal.JournalService;
 import org.ambraproject.model.UserProfileInfo;
 import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.model.article.ArticleType;
@@ -33,9 +32,13 @@ import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.Category;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.models.Issue;
+import org.ambraproject.models.Journal;
+import org.ambraproject.models.Volume;
 import org.ambraproject.permission.service.PermissionsService;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.views.ArticleCategory;
+import org.ambraproject.views.JournalView;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -48,10 +51,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-import org.topazproject.ambra.models.Issue;
-import org.topazproject.ambra.models.Journal;
-import org.topazproject.ambra.models.Volume;
-
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -70,7 +69,6 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
   private PermissionsService permissionsService;
-  private JournalService journalService;
 
   /**
    * Determines if the articleURI is of type researchArticle
@@ -127,42 +125,6 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     return ArticleType.isResearchArticle(articleType);
-  }
-
-
-  /**
-   * Returns a Map of publishable articles in the order indicated.  The key of each element is the DOI (URI) of the
-   * Article.  The value of each element is the Article itself.
-   *
-   * @param eIssn            eIssn of the Journal that this Article belongs to (no filter if null or empty)
-   * @param orderField       field on which to sort the results (no sort if null or empty) Should be one of the
-   *                         ORDER_BY_FIELD_ constants from this class
-   * @param isOrderAscending controls the sort order (default is "false" so default order is descending)
-   * @return Map of publishable articles sorted as indicated
-   * @throws org.ambraproject.ApplicationException
-   *
-   */
-  public List<ArticleInfo> getPublishableArticles(String eIssn, String orderField,
-                                              boolean isOrderAscending) throws ApplicationException {
-
-    List<ArticleInfo> articlesInfo = new ArrayList<ArticleInfo>();
-    Order order = isOrderAscending ? Order.asc(orderField) : Order.desc(orderField);
-    List<Object[]> results = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
-        .add(Restrictions.eq("eIssn", eIssn))
-        .add(Restrictions.eq("state",Article.STATE_UNPUBLISHED))
-        .addOrder(order)
-        .setProjection(Projections.projectionList()
-            .add(Projections.property("doi"))
-            .add(Projections.property("date"))));
-
-    for(Object[] rows : results) {
-      ArticleInfo articleInfo = new ArticleInfo();
-      articleInfo.setDoi(rows[0].toString());
-      articleInfo.setDate((Date)rows[1]);
-      articlesInfo.add(articleInfo);
-    }
-
-    return articlesInfo;
   }
 
   /**
@@ -334,12 +296,13 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * @throws NoSuchArticleIdException NoSuchArticleIdException
    */
   @Transactional(readOnly = true, noRollbackFor = {SecurityException.class})
+  @SuppressWarnings("unchecked")
   public Article getArticle(final String articleDoi, final String authId) throws NoSuchArticleIdException {
     // sanity check parms
     if (articleDoi == null)
       throw new IllegalArgumentException("articleDoi == null");
 
-    List articles = hibernateTemplate.findByCriteria(
+    List<Article> articles = hibernateTemplate.findByCriteria(
         DetachedCriteria.forClass(Article.class)
             .add(Restrictions.eq("doi", articleDoi)));
 
@@ -347,11 +310,11 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       throw new NoSuchArticleIdException(articleDoi);
     }
 
-    checkArticleState((Article)articles.get(0), authId);
+    checkArticleState(articles.get(0), authId);
 
-    return (Article)articles.get(0);
+    return articles.get(0);
   }
-  
+
   private void checkArticleState(Article article, String authId) throws NoSuchArticleIdException {
     //If the article is unpublished, it should not be returned if the user is not an admin
     if (article.getState() == Article.STATE_UNPUBLISHED) {
@@ -371,21 +334,44 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   /**
    * Get articles based on a list of Article id's.
    *
-   * @param articleDois list of article id's
+   * If an article is requested that the user does not have access to, it will not be returned
+   *
+   * @param articleDois list of article doi's
    * @param authId the authorization ID of the current user
    * @return <code>List&lt;Article&gt;</code> of articles requested
-   * @throws java.text.ParseException when article ids are invalid
    * @throws NoSuchArticleIdException NoSuchArticleIdException
    */
   @Transactional(readOnly = true)
-  public List<Article> getArticles(List<String> articleDois, final String authId) throws ParseException, NoSuchArticleIdException
-  {
-    List<Article> articleList = new ArrayList<Article>();
+  @SuppressWarnings("unchecked")
+  public List<Article> getArticles(List<String> articleDois, final String authId) {
+    // sanity check parms
+    if (articleDois == null)
+      throw new IllegalArgumentException("articleDois == null");
 
-    for (String articleDoi : articleDois)
-      articleList.add(getArticle(articleDoi, authId));
+    List<Article> articles = hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Article.class)
+        .add(Restrictions.in("doi", articleDois)));
 
-    return articleList;
+    for(int a = 0; a < articles.size(); a++) {
+      try {
+        checkArticleState(articles.get(a), authId);
+      } catch(NoSuchArticleIdException ex) {
+        articles.remove(a);
+      }
+    }
+
+    //Make sure the list of returned articles is in the same order as the requesting list.
+    List<Article> articlesSorted = new ArrayList<Article>();
+
+    for(String doi : articleDois) {
+      for(Article article : articles) {
+        if(article.getDoi().equals(doi)) {
+          articlesSorted.add(article);
+        }
+      }
+    }
+
+    return articlesSorted;
   }
 
   /**
@@ -405,18 +391,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   public List<List<String>> getArticleIssues(final String articleDoi) {
     return (List<List<String>>) hibernateTemplate.execute(new HibernateCallback() {
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
-
         List<Object[]> articleIssues = session.createSQLQuery(
             "select {j.*}, {v.*}, {i.*} " +
-                "from AggregationSimpleCollection ial, VolumeIssueList vil, JournalVolumeList jvl, Issue i, Volume v, " +
-                     "Journal j " +
-                "where ial.uri = :articleURI " +
-                "and vil.issueUri = ial.aggregationArticleUri " +
-                "and jvl.volumeUri = vil.aggregationUri " +
-                "and i.aggregationUri = ial.aggregationArticleUri " +
-                "and v.aggregationUri = vil.aggregationUri " +
-                "and j.aggregationUri = jvl.aggregationUri " +
-                "order by i.created desc ")
+              "from issueArticleList ial " +
+              "join issue i on ial.issueID = i.issueID " +
+              "join volume v on i.volumeID = v.volumeID " +
+              "join journal j on v.journalID = j.journalID " +
+              "where ial.doi = :articleURI " +
+              "order by i.created desc ")
             .addEntity("j", Journal.class)
             .addEntity("v", Volume.class)
             .addEntity("i", Issue.class)
@@ -430,11 +412,11 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           Issue issue = (Issue) row[2];
 
           List<String> secondaryList = new ArrayList<String>();
-          secondaryList.add(journal.getId().toString());  // Journal URI
-          secondaryList.add(journal.getKey());            // Journal Key
-          secondaryList.add(volume.getId().toString());   // Volume URI
+          secondaryList.add(journal.getID().toString());  // Journal ID
+          secondaryList.add(journal.getJournalKey());     // Journal Key
+          secondaryList.add(volume.getVolumeUri());       // Volume URI
           secondaryList.add(volume.getDisplayName());     // Volume name
-          secondaryList.add(issue.getId().toString());    // Issue URI
+          secondaryList.add(issue.getIssueUri());         // Issue URI
           secondaryList.add(issue.getDisplayName());      // Issue name
           finalResults.add(secondaryList);
         }
@@ -455,7 +437,34 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @SuppressWarnings("unchecked")
   public ArticleInfo getArticleInfo(final String articleDoi, final String authId) throws NoSuchArticleIdException {
     final Article article;
+
     article = getArticle(articleDoi, authId);
+
+    return createArticleInfo(article, authId);
+  }
+
+  /**
+   * Get the articleInfo object for an article
+   * @param articleDois the ID of the article
+   * @param authId the authorization ID of the current user
+   * @return articleInfo
+   */
+  @Transactional(readOnly = true)
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<ArticleInfo> getArticleInfos(final List<String> articleDois, final String authId) {
+
+    final List<Article> articles = getArticles(articleDois, authId);
+    List<ArticleInfo> articleInfos = new ArrayList<ArticleInfo>();
+
+    for(Article article : articles) {
+      articleInfos.add(createArticleInfo(article, authId));
+    }
+
+    return articleInfos;
+  }
+
+  private ArticleInfo createArticleInfo(Article article, final String authId) {
     final ArticleInfo articleInfo = new ArticleInfo();
 
     articleInfo.setId(article.getID());
@@ -488,7 +497,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
     articleInfo.setCategories(catViews);
 
-    
+
     //authors (list of UserProfileInfo)
     //TODO: Refactor ArticleInfo and CitationInfo objects
     //there's no reason why authors need to be attached to the citation
@@ -506,9 +515,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       articleInfo.setAt(article.getTypes());
     }
 
-    //set journals
-    /*fixed for NHOPE-103 */
-    articleInfo.setJournals(journalService.getJournalNameForObject(URI.create(article.getDoi())));
+    Set<org.ambraproject.models.Journal> journals = article.getJournals();
+    Set<JournalView> journalViews = new HashSet<JournalView>(journals.size());
+
+    for(org.ambraproject.models.Journal journal : journals) {
+      journalViews.add(new JournalView(journal));
+    }
+
+    articleInfo.setJournals(journalViews);
 
     //get related articles
     //this results in more queries than doing a join, but getArticle() already has security logic built in to it
@@ -531,10 +545,10 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     log.debug("loaded ArticleInfo: id={}, articleTypes={}, " +
-        "date={}, title={}, authors={}, related-articles={}", 
-        new Object[] {articleInfo.getDoi(), articleInfo.getArticleTypeForDisplay(), articleInfo.getDate(),
-            articleInfo.getTitle(), Arrays.toString(articleInfo.getAuthors().toArray()), 
-            Arrays.toString(articleInfo.getRelatedArticles().toArray())});
+      "date={}, title={}, authors={}, related-articles={}",
+      new Object[] {articleInfo.getDoi(), articleInfo.getArticleTypeForDisplay(), articleInfo.getDate(),
+        articleInfo.getTitle(), Arrays.toString(articleInfo.getAuthors().toArray()),
+        Arrays.toString(articleInfo.getRelatedArticles().toArray())});
     return articleInfo;
   }
 
@@ -648,10 +662,5 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Required
   public void setPermissionsService(PermissionsService permissionsService) {
     this.permissionsService = permissionsService;
-  }
-
-  @Required
-  public void setJournalService(JournalService journalService) {
-    this.journalService = journalService;
   }
 }

@@ -72,9 +72,13 @@
       <journals>journal,journal1</journals>
       <journal>
         <url>http://journal.org</url>
+        <eIssn>1234</eIssn>
+        <description>A test journal</description>
       </journal>
       <journal1>
         <url>http://journal1.org</url>
+        <eIssn>5678</eIssn>
+        <description>Another test journal</description>
       </journal1>
     </virtualJournals>
 

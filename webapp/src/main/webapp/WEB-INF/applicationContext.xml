@@ -123,7 +123,6 @@
   <bean id="articleService" class="org.ambraproject.article.service.ArticleServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
-    <property name="journalService" ref="journalService" />
   </bean>
 
   <bean id="feedService" class="org.ambraproject.feed.service.FeedServiceImpl">
@@ -266,13 +265,6 @@
     <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration" /-->
     <property name="mappingLocations">
       <list>
-        <value>WEB-INF/hibernateMappings/CustomTypes.hbm.xml</value>
-
-        <value>WEB-INF/hibernateMappings/Aggregations.hbm.xml</value>
-        <value>WEB-INF/hibernateMappings/CitedPerson.hbm.xml</value>
-        <value>WEB-INF/hibernateMappings/ArticleContributor.hbm.xml</value>
-
-        <!--NEW HBMS-->
         <value>classpath:org/ambraproject/models/*.hbm.xml</value>
       </list>
     </property>

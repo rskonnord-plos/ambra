@@ -30,12 +30,12 @@
         <div id="thumbnail">
 
           <@s.url id="currentIssueURL" action="browseIssue" namespace="/article"
-                  issue="${currentIssue.id}" includeParams="none"/>
-  <#if currentIssue.imageArticle?exists>
-          <@s.url id="currentIssueImgURL" action="fetchObject" namespace="/article"
+                  issue="${currentIssue.issueURI}" includeParams="none"/>
+          <#if currentIssue.imageArticle?exists>
+            <@s.url id="currentIssueImgURL" action="fetchObject" namespace="/article"
                   uri="${currentIssue.imageArticle}.g001" representation="PNG_S" includeParams="none"/>
-          <a href="${currentIssueURL}"><img alt="Issue Image" src="${currentIssueImgURL}" width="120" height="120" /></a>
-  </#if>
+            <a href="${currentIssueURL}"><img alt="Issue Image" src="${currentIssueImgURL}" width="120" height="120" /></a>
+          </#if>
           <a href="${currentIssueURL}">${currentIssue.displayName}</a>
           <p>${currentVolume.displayName}</p>
         </div>
@@ -51,13 +51,13 @@
       <#list volumeInfos as volumeInfo>
       <div dojoType="dijit.layout.ContentPane" title="${volumeInfo.displayName}" id="${volumeInfo.displayName}">
         <#list volumeInfo.issueInfos as issueInfo>
-        <@s.url id="issueURL" action="browseIssue" namespace="/article" issue="${issueInfo.id}" includeParams="none"/>
+        <@s.url id="issueURL" action="browseIssue" namespace="/article" issue="${issueInfo.issueURI}" includeParams="none"/>
         <div class="thumbnail">
-<#if issueInfo.imageArticle?exists>
-          <@s.url id="issueImgURL" action="fetchObject" namespace="/article" 
+          <#if issueInfo.imageArticle?exists>
+            <@s.url id="issueImgURL" action="fetchObject" namespace="/article"
                   uri="${issueInfo.imageArticle}.g001" representation="PNG_S" includeParams="none"/>
-          <a href="${issueURL}"><img alt="Issue Image" src="${issueImgURL}" width="120" height="120"/></a>
-</#if>
+             <a href="${issueURL}"><img alt="Issue Image" src="${issueImgURL}" width="120" height="120"/></a>
+          </#if>
           <a href="${issueURL}">${issueInfo.displayName}</a>
         </div>
         </#list>

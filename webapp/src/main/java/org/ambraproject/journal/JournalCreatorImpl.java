@@ -20,24 +20,20 @@
  */
 package org.ambraproject.journal;
 
+import org.ambraproject.ApplicationException;
+import org.ambraproject.models.Journal;
+import org.ambraproject.service.HibernateServiceImpl;
 import org.apache.commons.configuration.Configuration;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.topazproject.ambra.models.Journal;
-import org.ambraproject.service.HibernateServiceImpl;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
- * A listener class for creating journals on startup. This is equivalent of executing the
- * createJournal.groovy script.
+ * A listener class for creating journals on startup. This is equivalent of executing the createJournal.groovy script.
  *
  * @author Joe Osowski
  */
@@ -51,93 +47,68 @@ public class JournalCreatorImpl extends HibernateServiceImpl implements JournalC
    *
    * @throws Error to abort
    */
-  public void createJournals() {
-    try {
-      createJournals(hibernateTemplate);
-    } catch (Exception e) {
-      throw new Error("A journal creation operation failed. Aborting ...", e);
-    }
-  }
-
-  /**
-   * Create all configured journals.
-   *
-   * @param template the hibernate template to use
-   * @return the number of journals created/updated
-   *
-   * @throws org.topazproject.otm.OtmException on an error
-   */
-  private int createJournals(HibernateTemplate template) {
-    @SuppressWarnings("unchecked")
-    List<String> keys = configuration.getList("ambra.virtualJournals.journals");
+  @Override
+  @SuppressWarnings("unchecked")
+  public void createJournals() throws ApplicationException {
+    List<String> keys = configuration.getList(JOURNAL_CONFIG_KEY);
 
     if ((keys == null) || (keys.size() == 0)) {
       log.info("No journals to create");
-
-      return 0;
+      return;
     }
 
-    for (String key : keys)
-      createJournal(template, key);
+    for (final String key : keys) {
+        log.debug("Attempting create/update journal with key '" + key + "'");
 
-    return keys.size();
-  }
+        String configurationKey = "ambra.virtualJournals." + key + ".eIssn";
+        String eIssn = configuration.getString(configurationKey);
 
-  /**
-   * Journal create the journal
-   *
-   * @param template the hibernate template to use
-   * @param key the journal key
-   * @throws org.topazproject.otm.OtmException on an error
-   * @throws Error on a fatal error
-   */
-  private void createJournal(HibernateTemplate template, final String key) {
-
-    template.execute(new HibernateCallback() {
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
-        log.info("Attempting create/update journal with key '" + key + "'");
-
-        String cKey = "ambra.virtualJournals." + key + ".eIssn";
-        String eIssn = configuration.getString(cKey);
-
-        if (eIssn == null)
-          throw new Error("Missing config entry '" + cKey + "'");
+        if (eIssn == null) {
+          throw new ApplicationException("Missing config entry '" + configurationKey + "'");
+        }
 
         String title = configuration.getString("ambra.virtualJournals." + key + ".description");
 
-        @SuppressWarnings("unchecked")
-        List<Journal> journals = session.createCriteria(Journal.class)
-            .add(Restrictions.eq("key", key)).list();
+      try {
+        List<Journal> journals = hibernateTemplate.findByCriteria(
+            DetachedCriteria.forClass(Journal.class)
+                .add(Restrictions.eq("journalKey", key)));
 
         Journal journal;
 
         if (journals.size() != 0) {
+          //journal already exists
           journal = journals.get(0);
         } else {
+          //need to make a journal
           journal = new Journal();
-          journal.setKey(key);
+          journal.setJournalKey(key);
         }
 
         if (title != null) {
+          //don't want to update a title to null if the journal already exists and we lost the config element
           journal.setTitle(title);
         }
         journal.seteIssn(eIssn);
 
         //Generate the journal Id first so the dublin core can have a matching identifier
-        session.saveOrUpdate(journal);
+        hibernateTemplate.saveOrUpdate(journal);
 
-        if (journals.size() != 0)
+        if (journals.size() != 0) {
           log.info("Updated journal with key '" + key + "'");
-        else
+        } else {
           log.info("Created journal with key '" + key + "'");
+        }
 
-        return null;
+      } catch (Exception e) {
+        throw new ApplicationException("Failed to create/update journal with key: " + key, e);
       }
-    });
+    }
   }
 
   /**
    * Setter method for configuration. Injected through Spring.
+   *
    * @param configuration Ambra configuration
    */
   @Required

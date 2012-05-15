@@ -22,6 +22,7 @@
 package org.ambraproject.trackback;
 
 import org.ambraproject.models.Article;
+import org.ambraproject.models.Journal;
 import org.ambraproject.models.Trackback;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.views.TrackbackView;
@@ -41,7 +42,6 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.topazproject.ambra.models.Journal;
 
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
@@ -351,7 +351,7 @@ public class TrackbackServiceImpl extends HibernateServiceImpl implements Trackb
       String journalName = (String) hibernateTemplate.findByCriteria(
           DetachedCriteria.forClass(Journal.class)
               .add(Restrictions.eq("eIssn", eIssn))
-              .setProjection(Projections.property("key")),
+              .setProjection(Projections.property("journalKey")),
           0, 1).get(0);
       String journalUrl = configuration.getString("ambra.virtualJournals." + journalName + ".url");
       journalUrl += '/' + configuration.getString("ambra.platform.articleAction");

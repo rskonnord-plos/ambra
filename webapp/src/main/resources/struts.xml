@@ -389,7 +389,7 @@
       </result>
     </action>
 
-    <action name="fetchArticle" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticle">
+    <action name="fetchArticle" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticle">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_body.ftl</param>
       </result>
@@ -404,7 +404,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleComments" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleComments">
+    <action name="fetchArticleComments" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticleComments">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
@@ -414,7 +414,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleCorrections" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleCorrections">
+    <action name="fetchArticleCorrections" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticleCorrections">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
@@ -424,7 +424,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleMetrics" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleMetrics">
+    <action name="fetchArticleMetrics" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticleMetrics">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_metrics.ftl</param>
       </result>
@@ -434,7 +434,7 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticle" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleRelated">
+    <action name="fetchRelatedArticle" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticleRelated">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_related.ftl</param>
       </result>
@@ -444,9 +444,19 @@
       </result>
     </action>
 
-    <action name="fetchArticleCrossRef" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleCrossRef">
+    <action name="fetchArticleCrossRef" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_crossref.ftl</param>
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleTwitter" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleInfo">
+      <result name="success" type="ambraFreemarker">
+        <param name="templateFile">/article/article_twitter.ftl</param>
       </result>
       <result name="error" type="ambraFreemarker">
         <param name="status">404</param>
@@ -520,7 +530,7 @@
       </result>
     </action>
 
-    <action name="fetchAnnotatedArticle" class="org.ambraproject.article.action.FetchArticleAction" method="displayAnnotatedArticle">
+    <action name="fetchAnnotatedArticle" class="org.ambraproject.article.action.FetchArticleTabsAction" method="displayAnnotatedArticle">
       <result name="success">/article/displayArticle.ftl</result>
       <result name="error" type="ambraFreemarker">
         <param name="status">404</param>
@@ -528,7 +538,7 @@
       </result>
     </action>
 
-    <action name="fetchBody" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticle">
+    <action name="fetchBody" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticle">
       <result name="success" type="ambraFreemarker">
         <param name="location">/article/article_content.ftl</param>
         <param name="noCache">true</param>

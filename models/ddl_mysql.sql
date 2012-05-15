@@ -132,6 +132,12 @@
         primary key (articlePersonID)
     );
 
+    create table articlePublishedJournals (
+        articleID bigint not null,
+        journalID bigint not null,
+        primary key (articleID, journalID)
+    );
+
     create table articleRelationship (
         articleRelationshipID bigint not null auto_increment,
         lastModified datetime not null,
@@ -208,6 +214,41 @@
         primary key (citedPersonID)
     );
 
+    create table issue (
+        issueID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        issueUri varchar(255) not null unique,
+        displayName varchar(255),
+        respectOrder bit,
+        imageUri varchar(255),
+        title varchar(255),
+        description longtext,
+        volumeID bigint,
+        volumeSortOrder integer,
+        primary key (issueID)
+    );
+
+    create table issueArticleList (
+        issueID bigint not null,
+        doi varchar(255),
+        sortOrder integer not null,
+        primary key (issueID, sortOrder)
+    );
+
+    create table journal (
+        journalID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        journalKey varchar(255),
+        eIssn varchar(255),
+        imageUri varchar(255),
+        title varchar(255),
+        description longtext,
+        currentIssueID bigint,
+        primary key (journalID)
+    );
+
     create table rating (
         annotationID bigint not null,
         insight integer not null,
@@ -253,11 +294,12 @@
         lastModified datetime not null,
         created datetime not null,
         articleID bigint not null,
-        url varchar(255),
+        url varchar(255) not null,
         title varchar(255),
-        blogName varchar(255),
-        excerpt varchar(255),
-        primary key (trackbackID)
+        blogName varchar(255) not null,
+        excerpt varchar(255) not null,
+        primary key (trackbackID),
+        unique (articleID, url)
     );
 
     create table userArticleView (
@@ -345,6 +387,20 @@
         primary key (versionID)
     );
 
+    create table volume (
+        volumeID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        volumeUri varchar(255) not null unique,
+        displayName varchar(255),
+        imageUri varchar(255),
+        title varchar(255),
+        description longtext,
+        journalID bigint,
+        journalSortOrder integer,
+        primary key (volumeID)
+    );
+
     alter table annotation 
         add index FKA34FEB2F78B0DAE3 (userProfileID), 
         add constraint FKA34FEB2F78B0DAE3 
@@ -411,6 +467,18 @@
         foreign key (articleID) 
         references article (articleID);
 
+    alter table articlePublishedJournals 
+        add index FK5D8BADD4DFD5CDF3 (articleID), 
+        add constraint FK5D8BADD4DFD5CDF3 
+        foreign key (articleID) 
+        references article (articleID);
+
+    alter table articlePublishedJournals 
+        add index FK5D8BADD4FA7E0635 (journalID), 
+        add constraint FK5D8BADD4FA7E0635 
+        foreign key (journalID) 
+        references journal (journalID);
+
     alter table articleRelationship 
         add index FKA59ED64EAFD8E489 (parentArticleID), 
         add constraint FKA59ED64EAFD8E489 
@@ -441,6 +509,24 @@
         foreign key (citedArticleID) 
         references citedArticle (citedArticleID);
 
+    alter table issue 
+        add index FK5FDA8D93E7BB2E3 (volumeID), 
+        add constraint FK5FDA8D93E7BB2E3 
+        foreign key (volumeID) 
+        references volume (volumeID);
+
+    alter table issueArticleList 
+        add index FKF829B41BAB6843F9 (issueID), 
+        add constraint FKF829B41BAB6843F9 
+        foreign key (issueID) 
+        references issue (issueID);
+
+    alter table journal 
+        add index FKAB64AF37E96C1C60 (currentIssueID), 
+        add constraint FKAB64AF37E96C1C60 
+        foreign key (currentIssueID) 
+        references issue (issueID);
+
     alter table rating 
         add index FKC815B19DB123DFCD (annotationID), 
         add constraint FKC815B19DB123DFCD 
@@ -458,3 +544,9 @@
         add constraint FK57F48A30DDEDF391 
         foreign key (userRoleID) 
         references userRole (userRoleID);
+
+    alter table volume 
+        add index FKCFAAE71AFA7E0635 (journalID), 
+        add constraint FKCFAAE71AFA7E0635 
+        foreign key (journalID) 
+        references journal (journalID);

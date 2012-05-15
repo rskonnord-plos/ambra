@@ -22,7 +22,7 @@ package org.ambraproject.feed.service;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.annotation.service.AnnotationService;
-import org.ambraproject.article.action.TOCArticleGroup;
+import org.ambraproject.views.TOCArticleGroup;
 import org.ambraproject.article.service.BrowseService;
 import org.ambraproject.journal.JournalService;
 import org.ambraproject.model.article.ArticleInfo;
@@ -37,10 +37,8 @@ import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.topazproject.ambra.models.Journal;
+import org.ambraproject.models.Journal;
 import org.w3c.dom.Document;
-
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,10 +48,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The <code>FeedService</code> supplies the API for querying and caching
- * feed request. <code>FeedService</code> is a Spring injected singleton
- * which coordinates access to the <code>annotationService, articleService</code>
- * and <code>feedCache</code>.
+ * The <code>FeedService</code> supplies the API for querying feed requests.
+ * <code>FeedService</code> is a Spring injected singleton
+ * which coordinates access to the <code>annotationService and articleService</code>
  */
 public class FeedServiceImpl extends HibernateServiceImpl implements FeedService {
   private static final Logger log = LoggerFactory.getLogger(FeedServiceImpl.class);
@@ -66,7 +63,6 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   private Configuration       configuration;
   private SolrFieldConversion solrFieldConverter;
 
-
   /**
    * Constructor - currently does nothing.
    */
@@ -76,21 +72,21 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   /**
    * Creates and returns a new <code>Key</code> for clients of FeedService.
    *
-   * @return Key a new cache key to be used as a data model for the FeedAction.
+   * @return Key a new FeedSearchParameters to be used as a data model for the FeedAction.
    */
   @Override
-  public ArticleFeedCacheKey newCacheKey() {
-    return new ArticleFeedCacheKey();
+  public FeedSearchParameters newSearchParameters() {
+    return new FeedSearchParameters();
   }
 
   /**
-   * Queries for a list of articles from solr using the parameters set in cacheKey
+   * Queries for a list of articles from solr using the parameters set in searchParams
    *
-   * @param cacheKey
+   * @param searchParameters
    * @return solr search result that contains list of articles
    */
   @Override
-  public Document getArticles(final ArticleFeedCacheKey cacheKey) {
+  public Document getArticles(final FeedSearchParameters searchParameters) {
     Map<String, String> params = new HashMap<String, String>();
     // result format
     params.put("wt", "xml");
@@ -101,9 +97,9 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
     // filters
     String fq = "doc_type:full " +
       "AND !article_type_facet:\"Issue Image\" " +
-      "AND cross_published_journal_key:" + cacheKey.getJournal();
+      "AND cross_published_journal_key:" + searchParameters.getJournal();
 
-    String[] categories = cacheKey.getCategories();
+    String[] categories = searchParameters.getCategories();
     if (categories != null && categories.length > 0) {
       StringBuffer sb = new StringBuffer();
       for (String category : categories) {
@@ -112,21 +108,21 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
       params.put("q", "subject_level_1:(" + sb.substring(0, sb.length() - 5) + ")");
     }
 
-    if (cacheKey.getAuthor() != null) {
-      fq = fq + " AND author:\"" + cacheKey.getAuthor() + "\"";
+    if (searchParameters.getAuthor() != null) {
+      fq = fq + " AND author:\"" + searchParameters.getAuthor() + "\"";
     }
 
     String startDate = "*";
     String endDate = "*";
     boolean addDateRange = false;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    if (cacheKey.getSDate() != null) {
-      startDate = sdf.format(cacheKey.getSDate().getTime());
+    if (searchParameters.getSDate() != null) {
+      startDate = sdf.format(searchParameters.getSDate().getTime());
       startDate = startDate + "T00:00:00Z";
       addDateRange = true;
     }
-    if (cacheKey.getEDate() != null) {
-      endDate = sdf.format(cacheKey.getEDate().getTime());
+    if (searchParameters.getEDate() != null) {
+      endDate = sdf.format(searchParameters.getEDate().getTime());
       endDate = endDate + "T00:00:00Z";
       addDateRange = true;
     }
@@ -138,11 +134,11 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
     params.put("fq", fq);
 
     // number of results
-    params.put("rows", Integer.toString(cacheKey.getMaxResults()));
+    params.put("rows", Integer.toString(searchParameters.getMaxResults()));
 
     // sort the result
 
-    if (cacheKey.isMostViewed())  {
+    if (searchParameters.isMostViewed())  {
       // Sorts RSS Feed for the most viewed articles linked from the most viewed tab.
       String mostViewedKey = "ambra.virtualJournals." + journalService.getCurrentJournalName() + ".mostViewedArticles";
       Integer days = configuration.getInt(mostViewedKey + ".timeFrame");
@@ -165,63 +161,69 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
 
   /**
    *
-   * @param cacheKey is both the feedAction data model and cache key.
+   * @param searchParameters the feedAction data model
    * @param journal Current journal
    * @return List&lt;String&gt; if article Ids.
    * @throws ApplicationException ApplicationException
    * @throws java.net.URISyntaxException URISyntaxException
    */
   @Override
-  public List<String> getIssueArticleIds(final ArticleFeedCacheKey cacheKey, String journal, String authId) throws
-      URISyntaxException, ApplicationException {
-    List<String> articleList  = new ArrayList<String>();
-    URI issurURI = (cacheKey.getIssueURI() != null) ? URI.create(cacheKey.getIssueURI()) : null;
+  public List<ArticleInfo> getIssueArticles(final FeedSearchParameters searchParameters, String journal, String authId) throws
+    URISyntaxException, ApplicationException {
+    List<ArticleInfo> articleList  = new ArrayList<ArticleInfo>();
+
+    String issurURI = (searchParameters.getIssueURI() != null) ? searchParameters.getIssueURI() : null;
 
     if (issurURI == null) {
       Journal curJrnl = journalService.getJournal(journal);
-      issurURI = curJrnl.getCurrentIssue();
+
+      //There is no current issue, return empty result
+      if(curJrnl.getCurrentIssue() == null) {
+        return articleList;
+      }
+
+      issurURI = curJrnl.getCurrentIssue().getIssueUri();
     }
 
     List<TOCArticleGroup> articleGroups = browseService.getArticleGrpList(issurURI, authId);
 
     for(TOCArticleGroup ag : articleGroups)
-      for(ArticleInfo article : ag.articles)
-        articleList.add( article.doi);
+      articleList.addAll(ag.articles);
 
     return articleList;
   }
 
   /**
-   * Returns a list of annotationViews based on parameters contained in the cache key. If a start date is not specified
-   * then a default date is used but not stored in the key.
+   * Returns a list of annotationViews based on parameters contained in the searchParams.
+   * If a start date is not specified then a default date is used but not stored in the searchParams.
    *
-   * @param cacheKey cache key.
+   * @param searchParams input parameters.
    * @return <code>List&lt;String&gt;</code> a list of annotation Ids
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
   @Override
-  public List<AnnotationView> getAnnotations(final AnnotationSearchParameters cacheKey)
+  public List<AnnotationView> getAnnotations(final AnnotationFeedSearchParameters searchParams)
       throws ParseException, URISyntaxException
   {
     return annotationService.getAnnotations(
-        cacheKey.getStartDate(), cacheKey.getEndDate(), cacheKey.getAnnotationTypes(),
-        cacheKey.getMaxResults(), cacheKey.getJournal());
+      searchParams.getStartDate(), searchParams.getEndDate(), searchParams.getAnnotationTypes(),
+      searchParams.getMaxResults(), searchParams.getJournal());
   }
 
   /**
-   * Returns a list of trackbackViews based on parameters contained in the cache key. If a start date is not specified
+   * Returns a list of trackbackViews based on the parameters. If a start date is not specified
    * then a default date is used but not stored in the key.
    *
-   * @param cacheKey cache key.
+   * @param searchParams input params.
    * @return <code>List&lt;String&gt;</code> a list of annotation Ids
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
   @Override
-  public List<TrackbackView> getTrackbacks(final AnnotationSearchParameters cacheKey)
+  public List<TrackbackView> getTrackbacks(final AnnotationFeedSearchParameters searchParams)
       throws ParseException, URISyntaxException
   {
     return trackbackService.getTrackbacks(
-        cacheKey.getStartDate(), cacheKey.getEndDate(), cacheKey.getMaxResults(), cacheKey.getJournal());
+      searchParams.getStartDate(), searchParams.getEndDate(), searchParams.getMaxResults(), searchParams.getJournal());
   }
 
 

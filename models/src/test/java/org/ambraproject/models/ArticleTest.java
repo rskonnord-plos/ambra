@@ -20,17 +20,26 @@
  */
 package org.ambraproject.models;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Basic test for hibernate mappings of article
@@ -109,7 +118,7 @@ public class ArticleTest extends BaseHibernateTest {
     Article article = new Article();
     article.setDoi("doi3");
     List<ArticleAsset> assets = new ArrayList<ArticleAsset>(3);
-    for (int i = 0; i < 3 ; i++) {
+    for (int i = 0; i < 3; i++) {
       ArticleAsset asset = new ArticleAsset();
       asset.setDoi("articleTestdoi-" + i);
       asset.setExtension("articleTestExtension-" + i);
@@ -181,6 +190,74 @@ public class ArticleTest extends BaseHibernateTest {
     assertNotNull(article, "couldn't retrieve article");
     assertEquals(article.getTypes().size(), 2, "incorrect number of types");
 
+  }
+
+  /**
+   * @author Juan Peralta
+   */
+  @Test
+  public void testJournalPublishing() {
+
+    //create Journals
+    final Journal j1 = new Journal();
+    j1.setJournalKey("j1");
+    final Journal j2 = new Journal();
+    j2.setJournalKey("j2");
+    final Journal j3 = new Journal();
+    j3.setJournalKey("j3");
+
+
+    final Serializable j1ID = hibernateTemplate.save(j1);
+    final Serializable j2ID = hibernateTemplate.save(j2);
+    final Serializable j3ID = hibernateTemplate.save(j3);
+
+    //publish this article in some journals
+    Article a = new Article();
+    a.setDoi("id:testJournalPubDOI");
+
+    Set<Journal> jSet = new HashSet<Journal>(6);
+    jSet.add(j1);
+    jSet.add(j2);
+    jSet.add(j3);
+
+    a.setJournals(jSet);
+
+    final Serializable id = hibernateTemplate.save(a);
+    //Have to pull up journals with a session open since they're lazy
+    hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Article savedArticle = (Article) session.get(Article.class, id);
+
+        assertNotNull(savedArticle, "Article not saved to database.");
+
+        assertEquals(savedArticle.getJournals().size(), 3, "Incorrect number of Journals found");
+        assertTrue(savedArticle.getJournals().contains(session.get(Journal.class, j1ID)), "Journal failed to save");
+        assertTrue(savedArticle.getJournals().contains(session.get(Journal.class, j2ID)), "Journal failed to save");
+        assertTrue(savedArticle.getJournals().contains(session.get(Journal.class, j3ID)), "Journal failed to save");
+
+        //remove this article from some journals
+        savedArticle.removeJournal(j1);
+        session.update(savedArticle);
+        savedArticle = (Article) session.get(Article.class, id);
+        assertFalse(savedArticle.getJournals().contains(j1), "failed to remove Journal");
+        savedArticle.removeJournal(j2);
+        savedArticle.removeJournal(j3);
+        session.update(savedArticle);
+        savedArticle = (Article) session.get(Article.class, id);
+        assertFalse(savedArticle.getJournals().contains(j2), "failed to remove Journal");
+        assertFalse(savedArticle.getJournals().contains(j3), "failed to remove Journal");
+        assertEquals(savedArticle.getJournals().size(), 0, "wrong number of Journals stored");
+
+        savedArticle.addJournal(j1);
+        savedArticle.addJournal(j2);
+        savedArticle.addJournal(j3);
+        session.update(savedArticle);
+        savedArticle = (Article) session.get(Article.class, id);
+        assertEquals(savedArticle.getJournals().size(), 3, "Incorrect number of Journals saved");
+        return null;
+      }
+    });
   }
 
 

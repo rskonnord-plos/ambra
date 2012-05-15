@@ -98,6 +98,24 @@
 
   <rule>
     <note>
+      re-write incoming Article Twitter page URIs.
+      /article/twitter/doi -> /article/fetchArticleTwitter.action?articleURI=doi
+    </note>
+    <from>^(/.+)?/article/twitter/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleTwitter.action?articleURI=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound Article Twitter page URIs.
+      /article/fetchArticleTwitter.action?articleURI=doi -> /article/twitter/doi
+    </note>
+    <from>^(/.+)?/article/fetchArticleTwitter.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <to>$1/article/twitter/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
       re-write incoming article comment URIs.
      /article/comments/doi -> /article/fetchArticleComments.action?articleURI=doi
     </note>

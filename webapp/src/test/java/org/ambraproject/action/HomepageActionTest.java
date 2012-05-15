@@ -15,6 +15,7 @@ package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
 import org.ambraproject.BaseWebTest;
+import org.ambraproject.models.Journal;
 import org.ambraproject.search.SearchHit;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.Pair;
@@ -23,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.topazproject.ambra.models.Journal;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -66,7 +66,7 @@ public class HomepageActionTest extends BaseWebTest {
     //make sure to use a journal for this test, so we don't get 'recent' articles that were added by other unit tests
     Journal journal = new Journal();
     journal.seteIssn("8675-309");
-    journal.setKey("HomePageActionTestJournal");
+    journal.setJournalKey("HomePageActionTestJournal");
     dummyDataStore.store(journal);
 
     Calendar recentDate = Calendar.getInstance();
@@ -88,7 +88,7 @@ public class HomepageActionTest extends BaseWebTest {
           {"subject_level_1", "Biology"},
           {"article_type_facet", "article"},
           {"doc_type", "full"},
-          {"cross_published_journal_key", journal.getKey()}
+          {"cross_published_journal_key", journal.getJournalKey()}
       });
       recentArticles.add(new Pair<String, String>("test-id-" + i, "title for article " + i));
     }
@@ -99,7 +99,7 @@ public class HomepageActionTest extends BaseWebTest {
         {"subject_level_1", "Chemistry"},
         {"article_type_facet", "article"},
         {"doc_type", "full"},
-        {"cross_published_journal_key", journal.getKey()}
+        {"cross_published_journal_key", journal.getJournalKey()}
     });
     solr.addDocument(new String[][]{
         {"id", "article-in-other-journal"},
@@ -125,7 +125,7 @@ public class HomepageActionTest extends BaseWebTest {
     //make sure to use a journal for this test, so we don't get 'recent' articles that were added by other unit tests
     final Map<String, Object> request = getDefaultRequestAttributes();
     request.put(VirtualJournalContext.PUB_VIRTUALJOURNAL_CONTEXT, new VirtualJournalContext(
-        journal.getKey(),
+        journal.getJournalKey(),
         "dfltJournal",
         "http",
         80,

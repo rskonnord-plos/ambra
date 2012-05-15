@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * Base class for {@link FetchArticleActionTest} and {@link FetchObjectActionTest} since those both need to use the same doi, and we need
+ * Base class for {@link FetchArticleTabsActionTest} and {@link FetchObjectActionTest} since those both need to use the same doi, and we need
  * to make sure we store the same information for that article
  *
  * @author Alex Kudlick 2/16/12

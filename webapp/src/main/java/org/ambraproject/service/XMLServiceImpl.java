@@ -267,10 +267,9 @@ public class XMLServiceImpl implements XMLService {
    * path and then as a URI.
    *
    * @param xslTemplateMap The xslTemplate to set.
-   * @throws java.net.URISyntaxException
    */
   @Required
-  public void setXslTemplateMap(Map<String, String> xslTemplateMap)  throws URISyntaxException {
+  public void setXslTemplateMap(Map<String, String> xslTemplateMap) {
     this.xslTemplateMap = xslTemplateMap;
   }
 

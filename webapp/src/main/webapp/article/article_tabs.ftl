@@ -23,9 +23,11 @@
 <@s.url id="relatedTabURL" namespace="/article" action="fetchRelatedArticle" includeParams="all" />
 <@s.url id="commentsTabURL" namespace="/article" action="fetchArticleComments" includeParams="all" />
 <@s.url id="crossRefPageURL"  namespace="/article" action="fetchArticleCrossRef" includeParams="none" articleURI="${articleURI}" />
+<@s.url id="twitterPageURL"  namespace="/article" action="fetchArticleTwitter" includeParams="none" articleURI="${articleURI}" />
 <form action="">
   <input type="hidden" name="journalDisplayName" id="journalDisplayName" value="${freemarker_config.getDisplayName(journalContext)}" />
   <input type="hidden" name="crossRefPageURL" id="crossRefPageURL" value="${crossRefPageURL}" />
+  <input type="hidden" name="twitterPageURL" id="twitterPageURL" value="${twitterPageURL}" />
   <input type="hidden" name="metricsTabURL" id="metricsTabURL" value="${metricsTabURL}" />
   <input type="hidden" name="doi" id="doi" value="${articleURI}" />
   <input type="hidden" name="articleTitleUnformatted" id="articleTitleUnformatted" value="${articleInfoX.unformattedTitle?url}" />

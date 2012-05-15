@@ -1,4 +1,3 @@
-
 /* $HeadURL::                                                                            $
  * $Id$
  *
@@ -24,18 +23,14 @@ package org.ambraproject.article.service;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.article.BrowseParameters;
 import org.ambraproject.article.BrowseResult;
-import org.ambraproject.article.action.TOCArticleGroup;
-import org.ambraproject.model.IssueInfo;
-import org.ambraproject.model.VolumeInfo;
-import org.ambraproject.model.article.ArticleInfo;
+import org.ambraproject.views.TOCArticleGroup;
+import org.ambraproject.views.IssueInfo;
+import org.ambraproject.views.VolumeInfo;
 import org.ambraproject.model.article.Years;
 import org.apache.commons.configuration.Configuration;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.topazproject.ambra.models.Issue;
-import org.topazproject.ambra.models.Journal;
-
+import org.ambraproject.models.Journal;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -107,10 +102,10 @@ public interface BrowseService {
   /**
    * Get Issue information.
    *
-   * @param issueDoi DOI of Issue.
+   * @param issueUri DOI of Issue.
    * @return the Issue information.
    */
-  public IssueInfo getIssueInfo(final URI issueDoi);
+  public IssueInfo getIssueInfo(final String issueUri);
 
   /**
    * Return the ID of the latest issue from the latest volume.
@@ -121,26 +116,16 @@ public interface BrowseService {
    * @param journal The journal in which to seek the most recent Issue
    * @return The most recent Issue from the most recent Volume, or null if there are no Issues
    */
-  public URI getLatestIssueFromLatestVolume(Journal journal);
-
-  /**
-   * Returns the list of ArticleInfos contained in this Issue. The list will contain only
-   * ArticleInfos for Articles that the current user has permission to view.
-   *
-   * @param issueDOI Issue ID
-   * @param authId the AuthId of the current user
-   * @return List of ArticleInfo objects.
-   */
-  public List<ArticleInfo> getArticleInfosForIssue(final URI issueDOI, String authId);
+  public String getLatestIssueFromLatestVolume(Journal journal);
 
   /**
    * Get a VolumeInfo for the given id. This only works if the volume is in the current journal.
    *
-   * @param id Volume ID
+   * @param volumeUri Volume ID
    * @param journalKey the current journal
    * @return VolumeInfo
    */
-  public VolumeInfo getVolumeInfo(URI id, String journalKey);
+  public VolumeInfo getVolumeInfo(String volumeUri, String journalKey);
 
   /**
    * Returns a list of VolumeInfos for the given Journal. VolumeInfos are sorted in reverse order
@@ -164,24 +149,16 @@ public interface BrowseService {
   /**
    *
    */
-  public List<TOCArticleGroup> getArticleGrpList(URI issueURI, String authId);
+  public List<TOCArticleGroup> getArticleGrpList(String issueURI, String authId);
 
   /**
    *
    */
-  public List<TOCArticleGroup> getArticleGrpList(Issue issue, String authId);
+  public List<TOCArticleGroup> getArticleGrpList(IssueInfo issue, String authId);
   /**
    *
    */
-  public List<TOCArticleGroup> buildArticleGroups(Issue issue, List<TOCArticleGroup> articleGroups, String authId);
-
-  /**
-   * Get ordered list of articles. Either from articleList or from
-   * simpleCollection if articleList is empty.
-   * @param issue
-   * @return List of article URI's
-   */
-  public List<URI> getArticleList(Issue issue);
+  public List<TOCArticleGroup> buildArticleGroups(IssueInfo issue, List<TOCArticleGroup> articleGroups, String authId);
 
   /**
    * Set the configuration class

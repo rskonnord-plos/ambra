@@ -24,11 +24,11 @@ package org.ambraproject.article.service;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.article.BrowseParameters;
 import org.ambraproject.article.BrowseResult;
-import org.ambraproject.article.action.TOCArticleGroup;
+import org.ambraproject.views.TOCArticleGroup;
 import org.ambraproject.cache.Cache;
 import org.ambraproject.journal.JournalService;
-import org.ambraproject.model.IssueInfo;
-import org.ambraproject.model.VolumeInfo;
+import org.ambraproject.views.IssueInfo;
+import org.ambraproject.views.VolumeInfo;
 import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.model.article.ArticleType;
 import org.ambraproject.model.article.Years;
@@ -45,20 +45,20 @@ import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-import org.topazproject.ambra.models.Issue;
-import org.topazproject.ambra.models.Journal;
-import org.topazproject.ambra.models.Volume;
-
+import org.ambraproject.models.Issue;
+import org.ambraproject.models.Journal;
+import org.ambraproject.models.Volume;
 import java.io.IOException;
 import java.net.URI;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -297,59 +297,86 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   }
 
   /**
-   * Get Issue information.
+   * Get Issue information from the new data model
    *
-   * @param issueDoi DOI of Issue.
+   * @param issueUri DOI of Issue.
    * @return the Issue information.
    */
-  @Transactional(readOnly = true)
-  public IssueInfo getIssueInfo(final URI issueDoi) {
-    return (IssueInfo)hibernateTemplate.execute(new HibernateCallback() {
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
-        // get the Issue
-        final Issue issue = (Issue) hibernateTemplate.get(Issue.class, issueDoi);
-        if (issue == null) {
-          log.error("Failed to retrieve Issue for doi='" + issueDoi.toString() + "'");
-          return null;
-        }
+  @SuppressWarnings("unchecked")
+  public IssueInfo getIssueInfo(final String issueUri)
+  {
+    final Issue issue = getIssue(issueUri);
 
-        // get the image Article
-        URI imageArticle = null;
-        String description = issue.getDescription();
-        if ((issue.getImage() != null)
-            && (issue.getImage().toString().length() != 0)) {
-          imageArticle = issue.getImage();
-        }
+    if (issue == null) {
+      log.error("Failed to retrieve Issue for doi='" + issueUri + "'");
+      return null;
+    }
 
-        // derive prev/next Issue, "parent" Volume
-        URI prevIssueURI = null;
-        URI nextIssueURI = null;
-        Volume parentVolume = null;
+    Volume parentVolume = null;
 
-        List<String> results = session
-            .createSQLQuery("select aggregationUri from VolumeIssueList where issueUri = :doi")
-            .setParameter("doi", issueDoi.toString()).list();
-        if (results.size() > 0) {
-          URI volumeURI = URI.create(results.get(0));
-          parentVolume = (Volume)session.load(Volume.class,  volumeURI);
-        }
-        if (parentVolume != null) {
-          final List<URI> issues = parentVolume.getIssueList();
-          final int issuePos = issues.indexOf(issueDoi);
-          prevIssueURI = (issuePos == 0) ? null : issues.get(issuePos - 1);
-          nextIssueURI = (issuePos == issues.size() - 1) ? null : issues.get(issuePos + 1);
-        } else {
-          log.warn("Issue: " + issue.getId() + ", not contained in any Volumes");
-        }
+    List<Long> results = hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Volume.class)
+        .createAlias("issues","i")
+        .add(Restrictions.eq("i.id", issue.getID()))
+        .setProjection(Projections.property("ID"))
+        ,0,1);
 
-        IssueInfo issueInfo = new IssueInfo(issue.getId(), issue.getDisplayName(), prevIssueURI,
-            nextIssueURI, imageArticle, description,
-            parentVolume == null ? null : parentVolume.getId());
-        issueInfo.setArticleUriList(getArticleList(issue));
-        return issueInfo;
+    if (results.size() != 0) {
+      parentVolume = (Volume)hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(Volume.class)
+          .add(Restrictions.eq("ID", results.get(0)))
+          .setFetchMode("issues", FetchMode.JOIN)
+          .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+        ).get(0);
+    }
 
-      }
-    });
+    return createIssueInfo(issue, parentVolume);
+  }
+
+  private IssueInfo createIssueInfo(Issue issue, Volume parentVolume) {
+    // derive prev/next Issue, "parent" Volume
+    String prevIssueURI = null;
+    String nextIssueURI = null;
+
+    if (parentVolume != null) {
+      final java.util.List<Issue> parentIssues = parentVolume.getIssues();
+      final int issuePos = parentIssues.indexOf(issue);
+
+      prevIssueURI = (issuePos == 0) ? null : parentIssues.get(issuePos - 1).getIssueUri();
+      nextIssueURI = (issuePos == parentIssues.size() - 1) ? null : parentIssues.get(issuePos + 1).getIssueUri();
+    } else {
+      log.warn("Issue: " + issue.getID() + ", not contained in any Volumes");
+    }
+
+    IssueInfo issueInfo = new IssueInfo(issue.getIssueUri(), issue.getDisplayName(), prevIssueURI,
+      nextIssueURI, issue.getImageUri(), issue.getDescription(),
+      parentVolume == null ? null : parentVolume.getVolumeUri(), issue.isRespectOrder());
+
+    issueInfo.setArticleUriList(issue.getArticleDois());
+
+    return issueInfo;
+  }
+
+
+  /**
+   * Get issue by issue URI
+   * @param issueUri
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  private Issue getIssue(final String issueUri)
+  {
+    // get the Issue
+    final java.util.List<Issue> issues =
+      hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Issue.class)
+        .add(Restrictions.eq("issueUri", issueUri))
+        .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY));
+
+    if (issues.size() == 0) {
+      return null;
+    } else {
+      return issues.get(0);
+    }
   }
 
   /**
@@ -360,7 +387,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    * @param journal The journal in which to seek the most recent Issue
    * @return The most recent Issue from the most recent Volume, or null if there are no Issues
    */
-  public URI getLatestIssueFromLatestVolume(Journal journal) {
+  public String getLatestIssueFromLatestVolume(Journal journal) {
     List<VolumeInfo> vols = getVolumeInfosForJournal(journal);
     if (vols.size() > 0) {
       for (VolumeInfo volInfo : vols) {
@@ -370,7 +397,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
           latestIssue = issuesInVol.get(issuesInVol.size() - 1);
         }
         if (latestIssue != null) {
-          return latestIssue.getId();
+          return latestIssue.getIssueURI();
         }
       }
     }
@@ -378,56 +405,21 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   }
 
   /**
-   * Returns the list of ArticleInfos contained in this Issue. The list will contain only ArticleInfos for Articles that
-   * the current user has permission to view.
-   *
-   * @param issueDOI Issue ID
-   * @param authId the AuthId of the current user
-   * @return List of ArticleInfo objects.
-   */
-  @Transactional(readOnly = true)
-  public List<ArticleInfo> getArticleInfosForIssue(final URI issueDOI, String authId){
-
-    IssueInfo iInfo = getIssueInfo(issueDOI);
-    List<ArticleInfo> aInfos = new ArrayList<ArticleInfo>();
-
-    for (URI articleDoi : iInfo.getArticleUriList()) {
-      try{
-        ArticleInfo ai = articleService.getArticleInfo(articleDoi.toString(), authId);
-        aInfos.add(ai);
-      }catch (NoSuchArticleIdException ex){
-        log.warn("Article " + articleDoi + " missing; member of Issue " + issueDOI);
-      }
-    }
-    return aInfos;
-  }
-
-  /**
    * Get a VolumeInfo for the given id. This only works if the volume is in the current journal.
    *
-   * @param id Volume ID
+   * @param volumeUri Volume ID
    * @return VolumeInfo
    */
   @Transactional(readOnly = true)
-  public VolumeInfo getVolumeInfo(URI id, String journalKey) {
-    // Attempt to get the volume infos from the cached journal list...
+  public VolumeInfo getVolumeInfo(String volumeUri, String journalKey) {
     List<VolumeInfo> volumes = getVolumeInfosForJournal(journalService.getJournal(journalKey));
+
     for (VolumeInfo vol : volumes) {
-      if (id.equals(vol.getId())) {
+      if (volumeUri.equals(vol.getVolumeUri())) {
         return vol;
       }
     }
 
-    /*
-     * If we have no luck with the cached journal list, attempt to load the volume re-using
-     * loadVolumeInfos();
-     */
-    List<URI> l = new ArrayList<URI>();
-    l.add(id);
-    List<VolumeInfo> vols = loadVolumeInfos(l);
-    if ((vols != null) && (vols.size() > 0)) {
-      return vols.get(0);
-    }
     return null;
   }
 
@@ -440,9 +432,10 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    */
   @Transactional(readOnly = true)
   public List<VolumeInfo> getVolumeInfosForJournal(final Journal journal) {
-    final List<URI> volumeDois = journal.getVolumes();
-    List<VolumeInfo> volumeInfos = loadVolumeInfos(volumeDois);
+    List<VolumeInfo> volumeInfos = loadVolumeInfos(journal.getVolumes());
+
     Collections.reverse(volumeInfos);
+
     return volumeInfos;
   }
 
@@ -450,32 +443,32 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    * Get VolumeInfos. Note that the IssueInfos contained in the volumes have not been instantiated with the
    * ArticleInfos.
    *
-   * @param volumeDois to look up.
+   * @param volumes to look up.
    * @return volumeInfos.
    */
-  private List<VolumeInfo> loadVolumeInfos(final List<URI> volumeDois) {
+  private List<VolumeInfo> loadVolumeInfos(final List<Volume> volumes) {
     List<VolumeInfo> volumeInfos = new ArrayList<VolumeInfo>();
 
     // get the Volumes
-    for (int onVolumeDoi = 0; onVolumeDoi < volumeDois.size(); onVolumeDoi++) {
-      final URI volumeDoi = volumeDois.get(onVolumeDoi);
-      final Volume volume = (Volume) hibernateTemplate.get(Volume.class, volumeDoi);
-      if (volume == null) {
-        log.error("unable to load Volume: " + volumeDoi);
-        continue;
-      }
+    for (int curVolume = 0; curVolume < volumes.size(); curVolume++) {
+      final Volume volume = volumes.get(curVolume);
 
       List<IssueInfo> issueInfos = new ArrayList<IssueInfo>();
-      for (final URI issueDoi : volume.getIssueList()) {
-        issueInfos.add(getIssueInfo(issueDoi));
+
+      if(volume.getIssues() != null) {
+        for (final Issue issue : volume.getIssues()) {
+          issueInfos.add(createIssueInfo(issue, volume));
+        }
       }
 
       // calculate prev/next
-      final URI prevVolumeDoi = (onVolumeDoi == 0) ? null : volumeDois.get(onVolumeDoi - 1);
-      final URI nextVolumeDoi = (onVolumeDoi == volumeDois.size() - 1) ? null
-          : volumeDois.get(onVolumeDoi + 1);
-      final VolumeInfo volumeInfo = new VolumeInfo(volume.getId(), volume.getDisplayName(),
-          prevVolumeDoi, nextVolumeDoi, volume.getImage(), volume.getDescription(), issueInfos);
+      final String prevVolumeDoi = (curVolume == 0) ? null : volumes.get(curVolume - 1).getVolumeUri();
+      final String nextVolumeDoi = (curVolume == volumes.size() - 1) ? null
+          : volumes.get(curVolume + 1).getVolumeUri();
+
+      final VolumeInfo volumeInfo = new VolumeInfo(volume.getVolumeUri(), volume.getDisplayName(),
+          prevVolumeDoi, nextVolumeDoi, volume.getImageUri(), volume.getDescription(), issueInfos);
+
       volumeInfos.add(volumeInfo);
     }
 
@@ -545,20 +538,20 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   /**
    *
    */
-  public List<TOCArticleGroup> getArticleGrpList(URI issueURI, String authId) {
-    Issue issue = (Issue) hibernateTemplate.get(Issue.class, issueURI);
+  public List<TOCArticleGroup> getArticleGrpList(String issueURI, String authId) {
+    IssueInfo issueInfo = getIssueInfo(issueURI);
 
     // If the issue does not exist then return an empty list
-    if (issue == null)
+    if (issueInfo == null)
       return new ArrayList<TOCArticleGroup>();
 
-    return getArticleGrpList(issue, authId);
+    return getArticleGrpList(issueInfo, authId);
   }
 
   /**
    *
    */
-  public List<TOCArticleGroup> getArticleGrpList(Issue issue, String authId){
+  public List<TOCArticleGroup> getArticleGrpList(IssueInfo issue, String authId){
     List<TOCArticleGroup> groupList = new ArrayList<TOCArticleGroup>();
 
     for (ArticleType at : ArticleType.getOrderedListForDisplay()) {
@@ -572,9 +565,14 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   /**
    *
    */
-  public List<TOCArticleGroup> buildArticleGroups(Issue issue, List<TOCArticleGroup> articleGroups,
-                                                  String authId){
-    List<ArticleInfo> articlesInIssue = getArticleInfosForIssue(issue.getId(), authId);
+  public List<TOCArticleGroup> buildArticleGroups(IssueInfo issue, List<TOCArticleGroup> articleGroups,
+                                                  String authId) {
+
+    //There are some pretty big inefficiencies here.  We load up complete article classes when
+    //we only need doi/title/authors.  A new TOCArticle class should probably be created once article lazy
+    //loading is working correctly
+    List<ArticleInfo> articlesInIssue = articleService.getArticleInfos(issue.getArticleUriList(), authId);
+
     /*
      * For every article that is of the same ArticleType as a TOCArticleGroup, add it to that group.
      * Articles can appear in multiple TOCArticleGroups.
@@ -598,26 +596,13 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
         continue;
       }
       // If we respect order then don't sort.
-      if (!issue.getRespectOrder()) {
+      if (!issue.isRespectOrder()) {
         ag.setId("tocGrp_" + (i++));
         ag.sortArticles();
       }
     }
+
     return articleGroups;
-  }
-
-  /**
-   * Get ordered list of articles. Either from articleList or from simpleCollection if articleList is empty.
-   *
-   * @param issue
-   * @return List of article URI's
-   */
-  public List<URI> getArticleList(Issue issue) {
-    List<URI> articleList = issue.getArticleList();
-    if (articleList.isEmpty() && !issue.getSimpleCollection().isEmpty())
-      return new ArrayList<URI>(issue.getSimpleCollection());
-
-    return articleList;
   }
 
   /**
@@ -626,6 +611,20 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    */
   public void setServerFactory(SolrServerFactory serverFactory) {
     this.serverFactory = serverFactory;
+  }
+
+  @SuppressWarnings("unchecked")
+  private Volume getVolume(String volumeUri) {
+    List<Volume> volumes = hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Volume.class)
+        .add(Restrictions.eq("volumeUri", volumeUri)
+        ) ,0,1);
+
+    if(volumes.size() == 0) {
+      return null;
+    } else {
+      return volumes.get(0);
+    }
   }
 
   /**

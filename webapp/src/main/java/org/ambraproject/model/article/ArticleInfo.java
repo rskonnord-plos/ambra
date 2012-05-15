@@ -21,7 +21,7 @@ package org.ambraproject.model.article;
 
 import org.ambraproject.model.UserProfileInfo;
 import org.ambraproject.views.ArticleCategory;
-import org.topazproject.otm.annotations.Id;
+import org.ambraproject.views.JournalView;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -47,7 +47,7 @@ public class ArticleInfo implements Serializable {
   public List<String>            authors = new ArrayList<String>();
   public List<String>            collaborativeAuthors = new ArrayList<String>();
   public Set<ArticleType>        articleTypes = new HashSet<ArticleType>();
-  public Set<String>             journals = new HashSet<String>();
+  public Set<JournalView>        journals = new HashSet<JournalView>();
   private String                 publisher;
   private String                 rights;
   private String                 description;
@@ -67,7 +67,6 @@ public class ArticleInfo implements Serializable {
    * 
    * @param doi Article ID.
    */
-  @Id
   public void setDoi(String doi) {
     this.doi = doi;
   }
@@ -183,7 +182,7 @@ public class ArticleInfo implements Serializable {
    * get the journals that this article is cross published in
    * @return a list of journals
    */
-  public Set<String> getJournals() {
+  public Set<JournalView> getJournals() {
     return journals;
   }
 
@@ -191,7 +190,7 @@ public class ArticleInfo implements Serializable {
    * set the journals that this article is cross published in
    * @param journals a set of journals
    */
-  public void setJournals(Set<String> journals) {
+  public void setJournals(Set<JournalView> journals) {
     this.journals = journals;
   }
 

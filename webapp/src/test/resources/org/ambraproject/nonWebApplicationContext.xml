@@ -84,7 +84,6 @@
   <bean id="articleService" class="org.ambraproject.article.service.ArticleServiceImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
-    <property name="journalService" ref="journalService"/>
   </bean>
 
   <bean id="trackbackService" class="org.ambraproject.trackback.TrackbackServiceImpl">
@@ -99,6 +98,11 @@
   </bean>
 
   <bean id="journalService" class="org.ambraproject.journal.JournalServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="configuration" ref="ambraConfiguration"/>
+  </bean>
+
+  <bean id="journalCreator" class="org.ambraproject.journal.JournalCreatorImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>

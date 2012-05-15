@@ -21,9 +21,9 @@
 package org.ambraproject.article.service;
 
 import org.ambraproject.BaseTest;
-import org.ambraproject.article.action.TOCArticleGroup;
-import org.ambraproject.model.IssueInfo;
-import org.ambraproject.model.VolumeInfo;
+import org.ambraproject.views.TOCArticleGroup;
+import org.ambraproject.views.IssueInfo;
+import org.ambraproject.views.VolumeInfo;
 import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.model.article.ArticleType;
 import org.ambraproject.models.Article;
@@ -32,12 +32,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.topazproject.ambra.models.Issue;
-import org.topazproject.ambra.models.Journal;
-import org.topazproject.ambra.models.Volume;
+import org.ambraproject.models.Issue;
+import org.ambraproject.models.Journal;
+import org.ambraproject.models.Volume;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,8 +57,8 @@ import static org.testng.Assert.assertTrue;
  * either the new hope home directory or the ambra webapp home
  *
  * @author Alex Kudlick Date: 5/16/11
- *         <p/>
- *         org.topazproject.ambra.testutils
+ * @author Joe Osowski
+ *
  */
 public class BrowseServiceTest extends BaseTest {
 
@@ -95,30 +96,33 @@ public class BrowseServiceTest extends BaseTest {
 
     Issue testIssue = new Issue();
     testIssue.setDisplayName("Display name of test issue number 1");
-    testIssue.setImage(URI.create(imageArticle.getDoi()));
+    testIssue.setImageUri(imageArticle.getDoi());
     testIssue.setRespectOrder(true);
     testIssue.setTitle(imageArticle.getTitle());
     testIssue.setDescription(imageArticle.getDescription());
+    testIssue.setIssueUri("info:doi/issue/1");
 
-    URI issueId = URI.create(dummyDataStore.store(testIssue));
+    dummyDataStore.store(testIssue);
 
     return new Object[][]{
-        {issueId, testIssue}
+        { testIssue.getIssueUri(), testIssue }
     };
   }
 
+
   @Test(dataProvider = "issueIds")
-  public void testGetIssueInfo(URI issueDoi, Issue expectedIssue) {
+  public void testGetIssueInfo(String issueDoi, Issue expectedIssue) {
     IssueInfo issueInfo = browseService.getIssueInfo(issueDoi);
     assertNotNull(issueInfo, "returned null issue info");
-    assertEquals(issueInfo.getId(), issueDoi, "returned issue info with incorrect id");
+    assertEquals(issueInfo.getIssueURI(), issueDoi, "returned issue info with incorrect id");
     assertEquals(issueInfo.getDisplayName(), expectedIssue.getDisplayName(),
         "returned issue info with incorrect display name");
-    assertEquals(issueInfo.getImageArticle(), expectedIssue.getImage(),
+    assertEquals(issueInfo.getImageArticle(), expectedIssue.getImageUri(),
         "returned issue info with incorrect issue uri");
     assertEquals(issueInfo.getDescription(), expectedIssue.getDescription(),
         "returned issue info with incorrect description");
   }
+
 
   @DataProvider(name = "issueArticles")
   public Object[][] getIssueArticles() {
@@ -135,41 +139,29 @@ public class BrowseServiceTest extends BaseTest {
     dummyDataStore.store(article2);
     dummyDataStore.store(article3);
 
-    List<URI> articleIds = new ArrayList<URI>(3);
-    articleIds.add(URI.create(article1.getDoi()));
-    articleIds.add(URI.create(article2.getDoi()));
-    articleIds.add(URI.create(article3.getDoi()));
+    List<String> articleIds = new ArrayList<String>(3);
+    articleIds.add(article1.getDoi());
+    articleIds.add(article2.getDoi());
+    articleIds.add(article3.getDoi());
 
     Issue issue = new Issue();
-    issue.setArticleList(articleIds);
-    issue.setId(URI.create(dummyDataStore.store(issue)));
+    issue.setArticleDois(articleIds);
+    issue.setIssueUri("id://issueUri.one/");
+    dummyDataStore.store(issue);
 
     return new Object[][]{
-        {issue, articleIds}
+      { issue.getIssueUri(), articleIds }
     };
   }
 
   @Test(dataProvider = "issueArticles")
-  public void testGetArticleList(Issue issue, List<URI> expectedArticleURIs) {
-    List<URI> results = browseService.getArticleList(issue);
+  public void testGetArticleList(String issueUri, List<String> expectedArticleURIs) {
+    IssueInfo issueInfo = browseService.getIssueInfo(issueUri);
+    List<String> results = issueInfo.getArticleUriList();
     assertNotNull(results, "returned null list of article ids");
     assertEquals(results.size(), expectedArticleURIs.size(), "returned incorrect number of article ids");
     assertEqualsNoOrder(results.toArray(), expectedArticleURIs.toArray(), "returned incorrect article ids");
   }
-
-  @Test(dataProvider = "issueArticles")
-  public void testGetArticleInfosForIssue(Issue issue, List<URI> expectedArticleURIs) {
-    List<ArticleInfo> results = browseService.getArticleInfosForIssue(issue.getId(), DEFAULT_ADMIN_AUTHID);
-    assertNotNull(results, "returned null list of article infos");
-    assertEquals(results.size(), expectedArticleURIs.size(), "returned incorrect number of results");
-    List<URI> actualArticleURIs = new ArrayList<URI>(results.size());
-    for (ArticleInfo articleInfo : results) {
-      actualArticleURIs.add(URI.create(articleInfo.getDoi()));
-    }
-    assertEqualsNoOrder(actualArticleURIs.toArray(), expectedArticleURIs.toArray(),
-        "returned incorrect list of articles");
-  }
-
 
   @DataProvider(name = "volumes")
   public Object[][] getVolumes() {
@@ -183,35 +175,35 @@ public class BrowseServiceTest extends BaseTest {
 
     Volume volume1 = new Volume();
     volume1.setDisplayName("Volume 1");
-    volume1.setImage(URI.create(imageArticle1.getDoi()));
-    URI volume1Id = URI.create(dummyDataStore.store(volume1));
+    volume1.setVolumeUri("id://volume1");
+    volume1.setImageUri(imageArticle1.getDoi());
 
     Volume volume2 = new Volume();
     volume2.setDisplayName("Volume 2");
-    volume2.setImage(URI.create(imageArticle2.getDoi()));
-    URI volume2Id = URI.create(dummyDataStore.store(volume2));
+    volume2.setVolumeUri("id://volume2");
+    volume2.setImageUri(imageArticle2.getDoi());
 
-    List<URI> volumeIds = new ArrayList<URI>();
-    volumeIds.add(volume1Id);
-    volumeIds.add(volume2Id);
+    List<Volume> volumes = new ArrayList<Volume>();
+    volumes.add(volume1);
+    volumes.add(volume2);
 
     Journal journal = new Journal();
-    journal.setKey("test-journal-key");
-    journal.setVolumes(volumeIds);
+    journal.setJournalKey("test-journal-key");
+    journal.setVolumes(volumes);
     dummyDataStore.store(journal);
 
     return new Object[][]{
-        {volume1Id, journal.getKey(), volume1},
-        {volume2Id, journal.getKey(), volume2}
+        { volume1.getVolumeUri(), journal.getJournalKey(), volume1 },
+        { volume2.getVolumeUri(), journal.getJournalKey(), volume2 }
     };
   }
 
   @Test(dataProvider = "volumes")
-  public void testGetVolumeInfo(URI volumeId, String journalKey, Volume expectedVolume) {
-    VolumeInfo volumeInfo = browseService.getVolumeInfo(volumeId, journalKey);
+  public void testGetVolumeInfo(String volumeUri, String journalKey, Volume expectedVolume) {
+    VolumeInfo volumeInfo = browseService.getVolumeInfo(volumeUri, journalKey);
     assertNotNull(volumeInfo, "returned null volume info");
-    assertEquals(volumeInfo.getId(), volumeId, "returned volume info with incorrect id");
-    assertEquals(volumeInfo.getImageArticle(), expectedVolume.getImage(),
+    assertEquals(volumeInfo.getVolumeUri(), volumeUri, "returned volume info with incorrect id");
+    assertEquals(volumeInfo.getImageArticle(), expectedVolume.getImageUri(),
         "returned volume with incorrect image article");
     assertEquals(volumeInfo.getDisplayName(), expectedVolume.getDisplayName(),
         "returned volume info with incorrect display name");
@@ -251,35 +243,37 @@ public class BrowseServiceTest extends BaseTest {
   public Object[][] getVolumeList() {
     Volume volume1 = new Volume();
     volume1.setDisplayName("Volume 1");
-    volume1.setImage(URI.create("id://volume-1-image"));
-    URI volume1Id = URI.create(dummyDataStore.store(volume1));
+    volume1.setVolumeUri("id://volume-1-uri");
+    volume1.setImageUri("id://volume-1-image");
+    dummyDataStore.store(volume1);
 
     Volume volume2 = new Volume();
     volume2.setDisplayName("Volume 2");
-    volume2.setImage(URI.create("id://volume-2-image"));
-    URI volume2Id = URI.create(dummyDataStore.store(volume2));
+    volume2.setImageUri("id://volume-2-uri");
+    volume2.setImageUri("id://volume-2-image");
+    dummyDataStore.store(volume2);
 
-    List<URI> volumeIds = new ArrayList<URI>();
-    volumeIds.add(volume1Id);
-    volumeIds.add(volume2Id);
+    List<String> volumeIds = new ArrayList<String>();
+    volumeIds.add(volume1.getVolumeUri());
+    volumeIds.add(volume2.getVolumeUri());
 
     Journal journal = new Journal();
-    journal.setKey("test-journal");
-    journal.setVolumes(volumeIds);
+    journal.setJournalKey("test-journal");
+    journal.setVolumes(Arrays.asList(volume1, volume2));
 
     return new Object[][]{
-        {journal, volumeIds}
+        { journal, volumeIds }
     };
   }
 
   @Test(dataProvider = "volumeList")
-  public void testGetVolumeInfosForJournal(Journal journal, List<URI> expectedIds) {
+  public void testGetVolumeInfosForJournal(Journal journal, List<String> expectedIds) {
     List<VolumeInfo> volumeInfos = browseService.getVolumeInfosForJournal(journal);
     assertNotNull(volumeInfos, "returned null list of volume infos");
     assertEquals(volumeInfos.size(), expectedIds.size(), "returned incorrect number of volume infos");
-    List<URI> actualIds = new ArrayList<URI>(volumeInfos.size());
+    List<String> actualIds = new ArrayList<String>(volumeInfos.size());
     for (VolumeInfo volumeInfo : volumeInfos) {
-      actualIds.add(volumeInfo.getId());
+      actualIds.add(volumeInfo.getVolumeUri());
     }
     assertEqualsNoOrder(actualIds.toArray(), expectedIds.toArray(), "Didn't return expected volumes");
   }
@@ -321,29 +315,36 @@ public class BrowseServiceTest extends BaseTest {
     dummyDataStore.store(articleWithSecondType);
     dummyDataStore.store(articleWithSecondType2);
 
-    List<URI> articleList = new ArrayList<URI>();
-    articleList.add(URI.create(articleWithBothTypes.getDoi()));
-    articleList.add(URI.create(articleWithFirstType.getDoi()));
-    articleList.add(URI.create(articleWithSecondType.getDoi()));
-    articleList.add(URI.create(articleWithSecondType2.getDoi()));
+    List<String> articleList = new ArrayList<String>();
+    articleList.add(articleWithBothTypes.getDoi());
+    articleList.add(articleWithFirstType.getDoi());
+    articleList.add(articleWithSecondType.getDoi());
+    articleList.add(articleWithSecondType2.getDoi());
 
     Issue issue = new Issue();
-    issue.setArticleList(articleList);
-    issue.setSimpleCollection(articleList);
-    issue.setId(URI.create(dummyDataStore.store(issue)));
+    issue.setArticleDois(articleList);
+    issue.setIssueUri("id://issue1/");
+    dummyDataStore.store(issue);
+
+    Volume volume = new Volume();
+    volume.setVolumeUri("id://volume.test.one");
+    volume.setTitle("volume test one title");
+    volume.setDescription("volume test one description");
+    volume.setIssues(Arrays.asList(issue));
+    dummyDataStore.store(volume);
 
     Map<String, Integer> numExpectedPerGroup = new HashMap<String, Integer>(2);
     numExpectedPerGroup.put(articleType1, 2);
     numExpectedPerGroup.put(articleType2, 3);
 
     return new Object[][]{
-        {issue, numExpectedPerGroup}
+      { issue.getIssueUri(), numExpectedPerGroup }
     };
   }
 
   @Test(dataProvider = "articleGroupList")
-  public void testGetArticleGroupList(Issue issue, Map<URI, Integer> numExpectedPerGroup) {
-    List<TOCArticleGroup> results = browseService.getArticleGrpList(issue, DEFAULT_ADMIN_AUTHID);
+  public void testGetArticleGroupList(String issueUri, Map<URI, Integer> numExpectedPerGroup) {
+    List<TOCArticleGroup> results = browseService.getArticleGrpList(issueUri, DEFAULT_ADMIN_AUTHID);
     assertNotNull(results, "returned null article group list");
     assertEquals(results.size(), numExpectedPerGroup.size(), "returned incorrect number of groups");
     for (TOCArticleGroup articleGroup : results) {
@@ -357,16 +358,16 @@ public class BrowseServiceTest extends BaseTest {
 
   @DataProvider(name = "articleGroupListWithIssueId")
   public Object[][] getArticleGroupListWithIssueId() {
-    Issue issue = (Issue) getArticleGroupList()[0][0];
+    String issueUri = (String) getArticleGroupList()[0][0];
     Map<URI, Integer> numExpectedPerGroup = (Map<URI, Integer>) getArticleGroupList()[0][1];
     return new Object[][]{
-        {issue.getId(), numExpectedPerGroup}
+        { issueUri, numExpectedPerGroup}
     };
   }
 
   @Test(dataProvider = "articleGroupListWithIssueId")
-  public void testGetArticleGroupListByIssueId(URI issueId, Map<URI, Integer> numExpectedPerGroup) {
-    List<TOCArticleGroup> results = browseService.getArticleGrpList(issueId, DEFAULT_ADMIN_AUTHID);
+  public void testGetArticleGroupListByIssueId(String issueUri, Map<URI, Integer> numExpectedPerGroup) {
+    List<TOCArticleGroup> results = browseService.getArticleGrpList(issueUri, DEFAULT_ADMIN_AUTHID);
     assertNotNull(results, "returned null article group list");
     assertEquals(results.size(), numExpectedPerGroup.size(), "returned incorrect number of groups");
     for (TOCArticleGroup articleGroup : results) {
@@ -381,10 +382,11 @@ public class BrowseServiceTest extends BaseTest {
   @Test(dataProvider = "articleGroupList",
       dependsOnMethods = {"testGetArticleGroupListByIssueId", "testGetArticleGroupList"},
       alwaysRun = true, ignoreMissingDependencies = true)
-  public void testBuildArticleGroups(Issue issue, Map<URI, Integer> notUsedInThisTest) {
-    List<TOCArticleGroup> articleGroups = browseService.getArticleGrpList(issue, DEFAULT_ADMIN_AUTHID);
-
-    List<TOCArticleGroup> builtArticleGroups = browseService.buildArticleGroups(issue, articleGroups, DEFAULT_ADMIN_AUTHID);
+  public void testBuildArticleGroups(String issueUri, Map<URI, Integer> notUsedInThisTest) {
+    IssueInfo issueInfo = browseService.getIssueInfo(issueUri);
+    List<TOCArticleGroup> articleGroups = browseService.getArticleGrpList(issueInfo, DEFAULT_ADMIN_AUTHID);
+    List<TOCArticleGroup> builtArticleGroups = browseService.buildArticleGroups(issueInfo,
+      articleGroups, DEFAULT_ADMIN_AUTHID);
 
     assertNotNull(builtArticleGroups, "returned null list of built article groups");
     assertEquals(builtArticleGroups.size(), articleGroups.size(), "returned incorrect number of article groups");
@@ -401,8 +403,9 @@ public class BrowseServiceTest extends BaseTest {
   @Test(dataProvider = "articleGroupList",
       dependsOnMethods = {"testGetArticleGroupListByIssueId", "testGetArticleGroupList"},
       alwaysRun = true, ignoreMissingDependencies = true)
-  public void testGetArticleGrpListToCsv(Issue issue, Map<URI, Integer> notUsedInThisTest) {
-    List<TOCArticleGroup> articleGroups = browseService.getArticleGrpList(issue, DEFAULT_ADMIN_AUTHID);
+  public void testGetArticleGrpListToCsv(String issueUri, Map<URI, Integer> notUsedInThisTest) {
+    IssueInfo issueInfo = browseService.getIssueInfo(issueUri);
+    List<TOCArticleGroup> articleGroups = browseService.getArticleGrpList(issueInfo, DEFAULT_ADMIN_AUTHID);
 
     String csv = browseService.articleGrpListToCSV(articleGroups);
     assertNotNull(csv, "returned null csv");
@@ -423,45 +426,40 @@ public class BrowseServiceTest extends BaseTest {
 
     Issue olderIssue = new Issue();
     olderIssue.setCreated(yesterday.getTime());
-    olderIssue.setId(URI.create("info:doi/old.issue"));
+    olderIssue.setIssueUri("info:doi/old.issue");
+    dummyDataStore.store(olderIssue);
 
     Issue newerIssue = new Issue();
     newerIssue.setCreated(new Date());
-    newerIssue.setId(URI.create("info:doi/new.issue"));
-
-    List<URI> issues = new ArrayList<URI>(2);
-    issues.add(URI.create(dummyDataStore.store(olderIssue)));
-    issues.add(URI.create(dummyDataStore.store(newerIssue)));
+    newerIssue.setIssueUri("info:doi/new.issue");
+    dummyDataStore.store(newerIssue);
 
     Volume olderVolume = new Volume();
     olderVolume.setCreated(yesterday.getTime());
-    olderVolume.setId(URI.create("info:doi/old.volume"));
-    olderVolume.setIssueList(issues);
+    olderVolume.setVolumeUri("info:doi/old.volume");
+    olderVolume.setIssues(Arrays.asList(olderIssue, newerIssue));
+    dummyDataStore.store(olderVolume);
 
     Volume newerVolume = new Volume();
     newerVolume.setCreated(new Date());
-    newerVolume.setId(URI.create("info:doi/new.volume"));
-    newerVolume.setIssueList(issues);
-
-    List<URI> volumes = new ArrayList<URI>(2);
-    volumes.add(URI.create(dummyDataStore.store(newerVolume)));
-    volumes.add(URI.create(dummyDataStore.store(olderVolume)));
+    newerVolume.setVolumeUri("info:doi/new.volume");
+    newerVolume.setIssues(Arrays.asList(olderIssue, newerIssue));
+    dummyDataStore.store(newerVolume);
 
     Journal journal = new Journal();
-    journal.setVolumes(volumes);
-    journal.setId(URI.create(dummyDataStore.store(journal)));
+    journal.setVolumes(Arrays.asList(olderVolume, newerVolume));
+    journal.setJournalKey("id://journal.one");
+    dummyDataStore.store(journal);
 
     return new Object[][]{
-        {journal, newerIssue.getId()}
+        { journal, newerIssue.getIssueUri() }
     };
   }
 
   @Test(dataProvider = "latestIssue")
-  public void testGetLatestIssueFromLatestVolume(Journal journal, URI expectedURI) {
-    URI result = browseService.getLatestIssueFromLatestVolume(journal);
+  public void testGetLatestIssueFromLatestVolume(Journal journal, String expectedURI) {
+    String result = browseService.getLatestIssueFromLatestVolume(journal);
     assertNotNull(result, "returned null URI");
     assertEquals(result, expectedURI, "returned incorrect URI");
   }
-
-
 }

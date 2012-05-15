@@ -18,6 +18,7 @@
  */
 package org.ambraproject.journal;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.service.HibernateService;
 
 /**
@@ -28,11 +29,13 @@ import org.ambraproject.service.HibernateService;
  */
 public interface JournalCreator {
 
+  public static final String JOURNAL_CONFIG_KEY = "ambra.virtualJournals.journals";
+
   /**
-   * Create all configured journals.
+   * Create / Update all journals defined in the {@link #JOURNAL_CONFIG_KEY} configuration element.
    *
-   * @throws Error to abort
+   * @throws ApplicationException if there is an error creating / updating journals to abort ambra startup
    */
-  public void createJournals();
+  public void createJournals() throws ApplicationException;
 
 }

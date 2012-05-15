@@ -167,6 +167,11 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
 
   @Transactional(readOnly = true)
   public ArticleAssetWrapper[] listFiguresTables(final String articleDoi, final String authId) throws NoSuchArticleIdException {
+    //TODO:
+    // Do we have to get the article here to get the assets?  We can't we just get a list of assets
+    // after we check to see if the article is published?  Also, can we not do a select distinct instead of
+    // getting back a large set of assets and then filtering the list via java code below?
+
     Article article = articleService.getArticle(articleDoi, authId);
     //keep track of dois we've added to the list so we don't duplicate assets for the same image
     Set<String> dois = new HashSet<String>(article.getAssets().size());

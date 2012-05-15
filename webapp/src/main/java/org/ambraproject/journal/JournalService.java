@@ -22,12 +22,8 @@ package org.ambraproject.journal;
 
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Required;
-import org.topazproject.ambra.models.Journal;
+import org.ambraproject.models.Journal;
 import org.ambraproject.service.HibernateService;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -88,12 +84,12 @@ public interface JournalService extends HibernateService {
   public Set<Journal> getJournalsForObject(String doi);
 
 /**
-   * Get the list of journal Name which carry the given object (e.g. article).
+   * Get the list of journal keys which carry the given object (e.g. article).
    *
-   * @param oid the info:&lt;oid&gt; uri of the object
+   * @param doi the info:&lt;oid&gt; uri of the object
    * @return the list of journal Name which carry this object;
    */
-  public Set<String> getJournalNameForObject(URI oid);
+  public Set<String> getJournalKeysForObject(String doi);
 
 
   /**

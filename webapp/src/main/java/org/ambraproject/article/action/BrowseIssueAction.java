@@ -23,16 +23,15 @@ import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.article.service.BrowseService;
 import org.ambraproject.journal.JournalService;
-import org.ambraproject.model.IssueInfo;
-import org.ambraproject.model.VolumeInfo;
+import org.ambraproject.models.Journal;
+import org.ambraproject.views.IssueInfo;
+import org.ambraproject.views.TOCArticleGroup;
+import org.ambraproject.views.VolumeInfo;
 import org.ambraproject.service.XMLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
-import org.topazproject.ambra.models.Journal;
-
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -40,6 +39,7 @@ import java.util.List;
  * contained in the issue are grouped into article types.
  *
  * @author Alex Worden
+ * @author Joe Osowski
  *
  */
 public class BrowseIssueAction extends BaseActionSupport{
@@ -61,14 +61,18 @@ public class BrowseIssueAction extends BaseActionSupport{
   public String execute() {
     // Was Issue specified?  If not, then use Current Issue.
     // If no Current Issue, then use most recent Issue from the most recent Volume.
+
+    //There are some pretty big inefficiencies here.  We load up complete article classes when
+    //we only need doi/title/authors
+
     if (issue == null || issue.length() == 0) {
       // JournalService, OTM usage wants to be in a Transaction
       Journal currentJournal = journalService.getJournal(getCurrentJournal());
 
       if (currentJournal != null) {
-        URI currentIssueUri = currentJournal.getCurrentIssue();
+        String currentIssueUri = currentJournal.getCurrentIssue().toString();
         if (currentIssueUri != null) {
-          issue = currentIssueUri.toString().trim();
+          issue = currentIssueUri.trim();
           issueInfo = browseService.getIssueInfo(currentIssueUri); // Get data on this Issue.
         }
         if (issueInfo == null) {
@@ -76,13 +80,13 @@ public class BrowseIssueAction extends BaseActionSupport{
           // so get the most recent issue from the most recent volume.
           currentIssueUri = browseService.getLatestIssueFromLatestVolume(currentJournal);
           if (currentIssueUri != null) {
-            issue = currentIssueUri.toString();
+            issue = currentIssueUri;
             issueInfo = browseService.getIssueInfo(currentIssueUri); // Get data on this Issue.
           }
         }
       }
     } else {  //  An Issue was specified.
-      issueInfo = browseService.getIssueInfo(URI.create(issue)); // Get data on this Issue.
+      issueInfo = browseService.getIssueInfo(issue); // Get data on this Issue.
     }
 
     //If no issue is found, return 404
@@ -94,7 +98,7 @@ public class BrowseIssueAction extends BaseActionSupport{
     }
 
     //  Issue should always have a parent Volume.
-    volumeInfo  = browseService.getVolumeInfo(issueInfo.getParentVolume(), this.getCurrentJournal());
+    volumeInfo = browseService.getVolumeInfo(issueInfo.getParentVolume(), this.getCurrentJournal());
 
     // Translate the currentIssue description to HTML
     if (issueInfo.getDescription() != null) {
@@ -106,10 +110,11 @@ public class BrowseIssueAction extends BaseActionSupport{
         issueDescription = issueInfo.getDescription();
       }
     } else {
-      log.error("The currentIssue description was null. Issue DOI='"+issueInfo.getId()+"'");
+      log.error("The currentIssue description was null. Issue DOI='" + issueInfo.getIssueURI() + "'");
       issueDescription = "No description found for this issue";
     }
-      articleGroups = browseService.getArticleGrpList(URI.create(issue), getAuthId());
+
+    articleGroups = browseService.getArticleGrpList(issueInfo, getAuthId());
 
     return SUCCESS;
   }

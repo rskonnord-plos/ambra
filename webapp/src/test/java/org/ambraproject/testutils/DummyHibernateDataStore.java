@@ -25,9 +25,12 @@ import org.ambraproject.models.Annotation;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.Category;
+import org.ambraproject.models.Issue;
+import org.ambraproject.models.Journal;
 import org.ambraproject.models.Trackback;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
+import org.ambraproject.models.Volume;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -152,6 +155,27 @@ public class DummyHibernateDataStore implements DummyDataStore {
             DetachedCriteria.forClass(Trackback.class)
                 .add(Restrictions.eq("articleID", ((Trackback) object).getArticleID()))
                 .add(Restrictions.eq("url", ((Trackback) object).getUrl()))
+                .setProjection(Projections.id()))
+            .get(0);
+      } else if (object instanceof Journal) {
+        return (Serializable) hibernateTemplate.findByCriteria(
+            DetachedCriteria.forClass(Journal.class)
+                .add(Restrictions.or(
+                    Restrictions.eq("journalKey", ((Journal) object).getJournalKey()),
+                    Restrictions.eq("eIssn", ((Journal) object).geteIssn())
+                ))
+                .setProjection(Projections.id()))
+            .get(0);
+      } else if (object instanceof Volume) {
+        return (Serializable) hibernateTemplate.findByCriteria(
+            DetachedCriteria.forClass(Volume.class)
+                .add(Restrictions.eq("volumeUri", ((Volume) object).getVolumeUri()))
+                .setProjection(Projections.id()))
+            .get(0);
+      } else if (object instanceof Issue) {
+        return (Serializable) hibernateTemplate.findByCriteria(
+            DetachedCriteria.forClass(Issue.class)
+                .add(Restrictions.eq("issueUri", ((Issue) object).getIssueUri()))
                 .setProjection(Projections.id()))
             .get(0);
       } else {

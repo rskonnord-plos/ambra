@@ -20,22 +20,21 @@
  */
 package org.ambraproject.journal;
 
+import org.ambraproject.models.Article;
 import org.apache.commons.configuration.Configuration;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-import org.topazproject.ambra.models.Journal;
+import org.ambraproject.models.Journal;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.web.VirtualJournalContext;
-
-import java.net.URI;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -65,19 +64,16 @@ public class JournalServiceImpl extends HibernateServiceImpl implements JournalS
    * @return the journal, or null if not found
    */
   @Transactional(readOnly = true)
+  @SuppressWarnings("unchecked")
   public Journal getJournal(final String journalKey) {
-    return (Journal) hibernateTemplate.execute(new HibernateCallback() {
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
-        List l = session.createCriteria(Journal.class)
-            .add(Restrictions.eq("key", journalKey))
-            .list();
+    List<Journal> journals = hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Journal.class)
+        .add(Restrictions.eq("journalKey", journalKey)),0, 1);
 
-        if (l.size() == 0)
-          return null;
+    if(journals.size() == 0)
+      return null;
 
-        return l.get(0);
-      }
-    });
+    return journals.get(0);
   }
 
   /**
@@ -87,19 +83,16 @@ public class JournalServiceImpl extends HibernateServiceImpl implements JournalS
    * @return the journal, or null if not found
    */
   @Transactional(readOnly = true)
+  @SuppressWarnings("unchecked")
   public synchronized Journal getJournalByEissn(final String eIssn) {
-    return (Journal) hibernateTemplate.execute(new HibernateCallback() {
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
-        List l = session.createCriteria(Journal.class)
-            .add(Restrictions.eq("eIssn", eIssn))
-            .list();
+    List<Journal> journals = hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Journal.class)
+        .add(Restrictions.eq("eIssn", eIssn)),0, 1);
 
-        if (l.size() == 0)
-          return null;
+    if(journals.size() == 0)
+      return null;
 
-        return l.get(0);
-      }
-    });
+    return journals.get(0);
   }
 
   /**
@@ -123,6 +116,7 @@ public class JournalServiceImpl extends HibernateServiceImpl implements JournalS
    * @return the list of names; may be empty if there are no known journals
    */
   @Transactional(readOnly = true)
+  @SuppressWarnings("unchecked")
   public Set<String> getAllJournalNames() {
     return new HashSet<String>(configuration.getList("ambra.virtualJournals.journals"));
   }
@@ -136,6 +130,7 @@ public class JournalServiceImpl extends HibernateServiceImpl implements JournalS
    * @return the name of the current journal, or null if there is no current journal
    */
   @Deprecated
+
   public String getCurrentJournalName() {
     VirtualJournalContext vjc = (VirtualJournalContext) ServletActionContext.getRequest()
         .getAttribute(VirtualJournalContext.PUB_VIRTUALJOURNAL_CONTEXT);
@@ -147,94 +142,55 @@ public class JournalServiceImpl extends HibernateServiceImpl implements JournalS
   @SuppressWarnings("unchecked")
   public Set<Journal> getJournalsForObject(final String doi) {
     Set<Journal> journals = new HashSet<Journal>(2); //probably only going to be one journal
-    //get articles published in the journal
-    journals.addAll(hibernateTemplate.executeFind(new HibernateCallback() {
-      @Override
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
-        return session.createSQLQuery(
-            "SELECT {j.*} from Journal j" +
-                " join article a" +
-                " on j.eIssn = a.eIssn" +
-                " where a.doi = :doi")
-            .addEntity("j", Journal.class)
-            .setParameter("doi", doi)
-            .list();
-      }
-    }));
 
-    // this is for cross published objects
-    journals.addAll(hibernateTemplate.executeFind(new HibernateCallback() {
-      @Override
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
-        return session.createSQLQuery(
-            "SELECT {j.*} FROM Journal j" +
-                " Join Criteria c on j.eIssn = c.value and c.fieldName = 'eIssn'" +
-                " join CriteriaList cl on cl.eqCriterionUri = c.criteriaUri" +
-                " join AggregationDetachedCriteria agdc on cl.criteriaUri = agdc.detachedCriteriaUri" +
-                " join AggregationSimpleCollection agsc on agsc.aggregationArticleUri = agdc.aggregationUri" +
-                " WHERE agsc.uri = :uri")
-            .addEntity("j", Journal.class)
-            .setParameter("uri", doi)
-            .list();
-      }
-    }));
+    //Is there a more efficient way to do this without using inline SQL?
+    List<Article> articles = hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Article.class)
+        .add(Restrictions.eq("doi", doi)));
+
+    if(articles.size() > 0) {
+      journals.addAll(articles.get(0).getJournals());
+    }
 
     return journals;
+
+//    // this is for cross published objects
+//    journals.addAll(hibernateTemplate.executeFind(new HibernateCallback() {
+//      @Override
+//      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+//      return session.createSQLQuery(
+//        "SELECT {j.*} FROM journal j" +
+//          " join articlePublishedJournals apj on apj.journalID = j.journalID" +
+//          " join article a on a.articleID = apj.articleID" +
+//          " WHERE a.doi = :doi")
+//        .addEntity("j", Journal.class)
+//        .setParameter("doi", doi)
+//        .list();
+//      }
+//    }));
+//
+//    return journals;
   }
 
 
   /**
-   * Get the list of journalName which carry the given object (e.g. article).
+   * Get the list of journalNames which carry the given object (e.g. article).
    *
-   * @param oid the info:&lt;oid&gt; uri of the object
+   * @param doi the info:&lt;oid&gt; uri of the object
    * @return the list of journal Name which carry this object; will be empty if this object
    *         doesn't belong to any journal
    */
   @Transactional(readOnly = true)
   @SuppressWarnings("unchecked")
-  public Set<String> getJournalNameForObject(final URI oid) {
+  public Set<String> getJournalKeysForObject(final String doi) {
+    Set<String> journalNames = new HashSet();
+    Set<Journal> journals = getJournalsForObject(doi);
 
-    return (Set<String>) hibernateTemplate.execute(new HibernateCallback() {
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+    for(Journal j : journals) {
+      journalNames.add(j.getJournalKey());
+    }
 
-        // this is for cross published objects
-        Query q = session.createSQLQuery("SELECT j.journalKey" +
-            " FROM" +
-            " Journal j" +
-            " Join Criteria c on j.eIssn = c.value and c.fieldName = 'eIssn'" +
-            " join CriteriaList cl on cl.eqCriterionUri = c.criteriaUri" +
-            " join AggregationDetachedCriteria agdc on cl.criteriaUri = agdc.detachedCriteriaUri" +
-            " join AggregationSimpleCollection agsc on agsc.aggregationArticleUri = agdc.aggregationUri" +
-            " WHERE" +
-            " agsc.uri = :uri");
-
-        q.setParameter("uri", oid.toString());
-
-        Set<String> journals = new HashSet<String>();
-        List<String> result = q.list();
-
-        for (String journalName : result) {
-          journals.add(journalName);
-        }
-
-        q = session.createSQLQuery("SELECT j.journalKey" +
-            " FROM" +
-            " Journal j" +
-            " Join article a on j.eIssn = a.eIssn" +
-            " WHERE" +
-            " a.doi = :uri");
-
-        q.setParameter("uri", oid.toString());
-
-        result = q.list();
-
-        for (String journalName : result) {
-          journals.add(journalName);
-        }
-
-        return journals;
-      }
-    });
+    return journalNames;
   }
 
   /**

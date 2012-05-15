@@ -70,8 +70,12 @@
   </bean>
 
   <bean id="fetchArticleAction" class="org.ambraproject.article.action.FetchArticleAction">
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="articleService" ref="articleService"/>
+  </bean>
+
+  <bean id="fetchArticleTabAction" class="org.ambraproject.article.action.FetchArticleTabsAction">
     <property name="ratingsService" ref="ratingsService"/>
-    <property name="journalService" ref="journalService"/>
     <property name="userService" ref="userService"/>
     <property name="trackBackService" ref="trackbackService"/>
     <property name="ambraFreemarkerConfig" ref="ambraFreemarkerConfig"/>

@@ -35,6 +35,7 @@ import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.models.CitedArticleEditor;
 import org.ambraproject.models.CorrectedAuthor;
+import org.ambraproject.models.Journal;
 import org.ambraproject.testutils.DummyDataStore;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
@@ -44,9 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
-import org.topazproject.ambra.models.Journal;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -84,11 +83,11 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
   protected DummyDataStore dummyDataStore;
   public static final String DEFAULT_ADMIN_AUTHID = "AdminAuthorizationID";
   public static final String DEFUALT_USER_AUTHID = "DummyTestUserAuthorizationID";
+
   public static final Journal defaultJournal = new Journal();
 
   static {
-    defaultJournal.setId(URI.create("id:base-journal"));
-    defaultJournal.setKey("journal");
+    defaultJournal.setJournalKey("journal");
     defaultJournal.seteIssn("defaultEIssn");
   }
 
