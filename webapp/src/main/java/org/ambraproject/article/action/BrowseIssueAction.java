@@ -66,19 +66,16 @@ public class BrowseIssueAction extends BaseActionSupport{
     //we only need doi/title/authors
 
     if (issue == null || issue.length() == 0) {
-      // JournalService, OTM usage wants to be in a Transaction
       Journal currentJournal = journalService.getJournal(getCurrentJournal());
 
       if (currentJournal != null) {
-        String currentIssueUri = currentJournal.getCurrentIssue().toString();
-        if (currentIssueUri != null) {
-          issue = currentIssueUri.trim();
-          issueInfo = browseService.getIssueInfo(currentIssueUri); // Get data on this Issue.
-        }
-        if (issueInfo == null) {
+        if (currentJournal.getCurrentIssue() != null) {
+          issue = currentJournal.getCurrentIssue().getIssueUri().trim();
+          issueInfo = browseService.createIssueInfo(currentJournal.getCurrentIssue());
+        } else {
           // Current Issue has not been set for this Journal,
           // so get the most recent issue from the most recent volume.
-          currentIssueUri = browseService.getLatestIssueFromLatestVolume(currentJournal);
+          String currentIssueUri = browseService.getLatestIssueFromLatestVolume(currentJournal);
           if (currentIssueUri != null) {
             issue = currentIssueUri;
             issueInfo = browseService.getIssueInfo(currentIssueUri); // Get data on this Issue.

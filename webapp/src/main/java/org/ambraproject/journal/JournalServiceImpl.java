@@ -23,6 +23,7 @@ package org.ambraproject.journal;
 import org.ambraproject.models.Article;
 import org.apache.commons.configuration.Configuration;
 import org.apache.struts2.ServletActionContext;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -67,8 +68,10 @@ public class JournalServiceImpl extends HibernateServiceImpl implements JournalS
   @SuppressWarnings("unchecked")
   public Journal getJournal(final String journalKey) {
     List<Journal> journals = hibernateTemplate.findByCriteria(
-      DetachedCriteria.forClass(Journal.class)
-        .add(Restrictions.eq("journalKey", journalKey)),0, 1);
+        DetachedCriteria.forClass(Journal.class)
+            .add(Restrictions.eq("journalKey", journalKey))
+            .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+    );
 
     if(journals.size() == 0)
       return null;

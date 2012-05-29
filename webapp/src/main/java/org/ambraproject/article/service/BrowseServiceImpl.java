@@ -302,7 +302,6 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    * @param issueUri DOI of Issue.
    * @return the Issue information.
    */
-  @SuppressWarnings("unchecked")
   public IssueInfo getIssueInfo(final String issueUri)
   {
     final Issue issue = getIssue(issueUri);
@@ -312,6 +311,12 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
       return null;
     }
 
+    return createIssueInfo(issue);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public IssueInfo createIssueInfo(Issue issue) {
     Volume parentVolume = null;
 
     List<Long> results = hibernateTemplate.findByCriteria(

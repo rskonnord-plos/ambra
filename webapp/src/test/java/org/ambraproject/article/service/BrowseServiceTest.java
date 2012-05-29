@@ -101,17 +101,34 @@ public class BrowseServiceTest extends BaseTest {
     testIssue.setTitle(imageArticle.getTitle());
     testIssue.setDescription(imageArticle.getDescription());
     testIssue.setIssueUri("info:doi/issue/1");
-
+    testIssue.setArticleDois(Arrays.asList(
+        "id:test-doi-issue1",
+        "id:test-doi-issue2",
+        "id:test-doi-issue3",
+        "id:test-doi-issue4"
+    ));
     dummyDataStore.store(testIssue);
+    Issue prevIssue = new Issue("info:doi/issue/previous");
+    dummyDataStore.store(prevIssue);
+    Issue nextIssue = new Issue("info:doi/issue/next");
+    dummyDataStore.store(nextIssue);
+
+    Volume parentVolume = new Volume("info:doi/test-parent-for-get-issue-info");
+    parentVolume.setIssues(Arrays.asList(
+        dummyDataStore.get(Issue.class, prevIssue.getID()),
+        dummyDataStore.get(Issue.class, testIssue.getID()),
+        dummyDataStore.get(Issue.class, nextIssue.getID())
+    ));
+    dummyDataStore.store(parentVolume);
 
     return new Object[][]{
-        { testIssue.getIssueUri(), testIssue }
+        { testIssue.getIssueUri(), testIssue, parentVolume.getVolumeUri(), prevIssue.getIssueUri(), nextIssue.getIssueUri() }
     };
   }
 
 
   @Test(dataProvider = "issueIds")
-  public void testGetIssueInfo(String issueDoi, Issue expectedIssue) {
+  public void testGetIssueInfo(String issueDoi, Issue expectedIssue, String parentVolume, String prevIssue, String nextIssue) {
     IssueInfo issueInfo = browseService.getIssueInfo(issueDoi);
     assertNotNull(issueInfo, "returned null issue info");
     assertEquals(issueInfo.getIssueURI(), issueDoi, "returned issue info with incorrect id");
@@ -121,8 +138,30 @@ public class BrowseServiceTest extends BaseTest {
         "returned issue info with incorrect issue uri");
     assertEquals(issueInfo.getDescription(), expectedIssue.getDescription(),
         "returned issue info with incorrect description");
+    assertEqualsNoOrder(issueInfo.getArticleUriList().toArray(), expectedIssue.getArticleDois().toArray(),
+        "returned issue info with incorrect article dois");
+    assertEquals(issueInfo.getPrevIssue(), prevIssue, "Returned issue with incorrect previous issue uri");
+    assertEquals(issueInfo.getNextIssue(), nextIssue, "Returned issue with incorrect next issue uri");
+    assertEquals(issueInfo.getParentVolume(), parentVolume, "Returned issue with incorrect parent volume uri");
   }
 
+  @Test(dataProvider = "issueIds")
+  public void testCreateIssueInfo(String issueDoi, Issue expectedIssue, String parentVolume, String prevIssue, String nextIssue) {
+    IssueInfo issueInfo = browseService.createIssueInfo(expectedIssue);
+    assertNotNull(issueInfo, "returned null issue info");
+    assertEquals(issueInfo.getIssueURI(), issueDoi, "returned issue info with incorrect id");
+    assertEquals(issueInfo.getDisplayName(), expectedIssue.getDisplayName(),
+        "returned issue info with incorrect display name");
+    assertEquals(issueInfo.getImageArticle(), expectedIssue.getImageUri(),
+        "returned issue info with incorrect issue uri");
+    assertEquals(issueInfo.getDescription(), expectedIssue.getDescription(),
+        "returned issue info with incorrect description");
+    assertEqualsNoOrder(issueInfo.getArticleUriList().toArray(), expectedIssue.getArticleDois().toArray(),
+        "returned issue info with incorrect article dois");
+    assertEquals(issueInfo.getPrevIssue(), prevIssue, "Returned issue with incorrect previous issue uri");
+    assertEquals(issueInfo.getNextIssue(), nextIssue, "Returned issue with incorrect next issue uri");
+    assertEquals(issueInfo.getParentVolume(), parentVolume, "Returned issue with incorrect parent volume uri");
+  }
 
   @DataProvider(name = "issueArticles")
   public Object[][] getIssueArticles() {
