@@ -83,6 +83,7 @@
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="articleService" ref="articleService"/>
     <property name="fetchArticleService" ref="fetchArticleService"/>
+    <property name="articleAssetService" ref="articleAssetService"/>
   </bean>
 
   <bean id="fetchObjectAction" class="org.ambraproject.article.action.FetchObjectAction">
@@ -115,5 +116,10 @@
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="annotationService" ref="annotationService"/>
+  </bean>
+
+  <bean id="fetchPowerPointAction" class="org.ambraproject.article.action.FetchPowerPointAction">
+    <property name="articleAssetService" ref="articleAssetService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
   </bean>
 </beans>

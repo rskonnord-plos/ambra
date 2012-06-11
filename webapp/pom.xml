@@ -316,6 +316,12 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-scratchpad</artifactId>
+      <version>3.8</version>
+    </dependency>
+
     <!--Test Dependencies-->
     <dependency>
       <artifactId>solr-core</artifactId>
@@ -483,6 +489,14 @@
           <artifactId>commons-logging</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <!--Using tika to test powerpoints-->
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
     </dependency>
 
 <!--Using the camel dependencies to create http servers during testing-->

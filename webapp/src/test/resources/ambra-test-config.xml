@@ -74,6 +74,9 @@
         <url>http://journal.org</url>
         <eIssn>1234</eIssn>
         <description>A test journal</description>
+        <mostViewedArticles>
+          <limit>10</limit>
+        </mostViewedArticles>
       </journal>
       <journal1>
         <url>http://journal1.org</url>

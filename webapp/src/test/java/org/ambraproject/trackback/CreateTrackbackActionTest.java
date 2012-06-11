@@ -66,7 +66,7 @@ public class CreateTrackbackActionTest extends BaseHttpTest {
     action.setRequest(BaseWebTest.getDefaultRequestAttributes());
   }
 
-  @Test(groups = {"usesDefaultJournal"})
+  @Test
   @DirtiesContext
   public void testExecuteWithValidBlog() throws Exception {
     final Article article = new Article("id:article-for-createTrackbackActionTest");
@@ -116,7 +116,7 @@ public class CreateTrackbackActionTest extends BaseHttpTest {
 
   }
 
-  @Test(groups = {"usesDefaultJournal"})
+  @Test
   @DirtiesContext
   public void testExecuteWithInValidBlog() throws Exception {
     final Article article = new Article("id:article-for-createTrackbackActionTestWithInvalidBlog");

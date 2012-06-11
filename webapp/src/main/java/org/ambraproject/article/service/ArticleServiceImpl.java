@@ -22,6 +22,7 @@
 package org.ambraproject.article.service;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.model.UserProfileInfo;
 import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.model.article.ArticleType;
@@ -38,6 +39,7 @@ import org.ambraproject.models.Volume;
 import org.ambraproject.permission.service.PermissionsService;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.views.ArticleCategory;
+import org.ambraproject.views.AssetView;
 import org.ambraproject.views.JournalView;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -280,13 +282,13 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     if (article == null) {
       throw new NoSuchArticleIdException(String.valueOf(articleID));
     }
-    
+
     checkArticleState(article, authId);
-    
+
     return article;
   }
-    
-    
+
+
   /**
    * Get an Article by URI.
    *
@@ -488,6 +490,13 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     CitationInfo citationInfo = new CitationInfo();
     citationInfo.setId(URI.create(article.getDoi()));
     citationInfo.setCollaborativeAuthors(article.getCollaborativeAuthors());
+
+    //set article asset views
+    List<AssetView> aViews = new ArrayList<AssetView>();
+    for (ArticleAsset asset : article.getAssets()) {
+      aViews.add(new AssetView(asset.getDoi(), asset.getSize(), asset.getExtension()));
+    }
+    articleInfo.setArticleAssets(aViews);
 
     Set<Category> categories = article.getCategories();
     Set<ArticleCategory> catViews = new HashSet<ArticleCategory>(categories.size());

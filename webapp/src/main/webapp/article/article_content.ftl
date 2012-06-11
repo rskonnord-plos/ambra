@@ -21,6 +21,10 @@
 
 <#import "article_variables.ftl" as article>
 <#import "/global/global_variables.ftl" as global>
+
+<#if articleInfoX??>
+  <#assign targetURI = articleInfoX.doi />
+</#if>
 <@s.url id="createDiscussionURL" namespace="/annotation/secure" action="startDiscussion" includeParams="none" articleURI="${articleURI}" />
 <div id="researchArticle" class="content">
   <span rel="dc:publisher" href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}"></span>
@@ -59,23 +63,29 @@
     </ol>
   </div>
   </#if>
-  <div id="articleMenu" xpathLocation="noSelect">
-    <div class="wrap">
-      <ul>
-        <li class="annotation icon">To <strong>add a note</strong>, highlight some text. <a href="#" onclick="toggleAnnotation(this, 'public'); return false;" title="Click to turn notes on/off">Hide notes</a></li>
-        <li class="discuss icon">
-          <#if Session?exists && Session[freemarker_config.userAttributeKey]?exists>
-            <a href="${createDiscussionURL}">Make a general comment</a>
-          <#else>
-            <a href="${freemarker_config.context}/user/secure/secureRedirect.action?goTo=${global.thisPage}">Make a general comment</a>
-          </#if>
-        </li>
-      </ul>
-      <div id="sectionNavTopBox" style="display:none;">
-        <p><strong>Jump to</strong></p>
-        <div id="sectionNavTop" class="tools"></div>
+  <div id="articleMenuBox" xpathLocation="noSelect">
+    <div id="articleMenu">
+      <div class="wrap">
+        <ul>
+          <li class="annotation icon">To <strong>add a note</strong>, highlight some text. <a href="#" onclick="toggleAnnotation(this, 'public'); return false;" title="Click to turn notes on/off">Hide notes</a></li>
+          <li class="discuss icon">
+            <#if Session?exists && Session[freemarker_config.userAttributeKey]?exists>
+              <a href="${createDiscussionURL}">Make a general comment</a>
+            <#else>
+              <a href="${freemarker_config.context}/user/secure/secureRedirect.action?goTo=${global.thisPage}">Make a general comment</a>
+            </#if>
+          </li>
+        </ul>
+        <div id="sectionNavTopBox" style="display:none;">
+          <p><strong>Jump to</strong></p>
+          <div id="sectionNavTop" class="tools"></div>
+        </div>
       </div>
     </div>
+    <#if articleAssetWrapper?size gt 0>
+      <div id="lightBox" xpathLocation="noDialog" onclick="return ambra.lightBox.show('${targetURI}')">
+      </div>
+    </#if>
   </div>
   <@s.property value="transformedArticle" escape="false"/>
 </div>

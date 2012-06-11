@@ -552,7 +552,7 @@ div.buttons a.print		{ list-style-image: url(../images/jour_sidenav_print.gif); 
 div.buttons a.print:hover{ background-position: -120px 0; }
 
 
-div.figure				{ background-color: #fcd3b8; padding: 10px; font-size: .85em; margin: 10px 0;}
+div.figure				{ background-color: #fcd3b8; padding: 10px; font-size: .85em; margin: 10px 0;padding-bottom: 5px}
 div.figure:after		{ content: ".";  display: block;  height: 0; clear: both; visibility: hidden; }
 div.figure h5			{ float:none; margin: 0; color: #000;}
 div.figure p			{ margin: 5px 0; }
@@ -877,3 +877,19 @@ div.fullBanner span.body { display: block; }
 span.gene i,
 span.gene u,
 span.gene b { display:inline-block; }
+
+/* inline figure download iconography */
+div.figure-inline-download div{
+  display: inline;
+  margin: 0pt 0px;
+}
+div.figure-inline-download ul {
+  color: #330;
+  margin:5px 0pt 0px 0px !important;
+}
+div.figure-inline-download ul li{
+  padding-left: 18px;
+  font-size: 11px;
+  background: url(../images/icon_download.gif) no-repeat;
+  background-position: left center;
+}

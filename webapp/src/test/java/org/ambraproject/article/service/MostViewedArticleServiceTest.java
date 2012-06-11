@@ -28,7 +28,9 @@ import org.ambraproject.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -50,76 +52,32 @@ public class MostViewedArticleServiceTest extends BaseHttpTest {
   private static final int NUM_DAYS = 14;
   private static final String VIEW_FIELD = "two_week_field";
 
-  @DataProvider(name = "mostViewed")
-  public Object[][] mostViewedDataProvider() throws IOException {
-    List<Pair<String, String>> expectedResults = new ArrayList<Pair<String, String>>(10);
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010001",
-        "Ab Initio Prediction of Transcription Factor Targets Using Structural Knowledge"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010002",
-        "What Makes Ribosome-Mediated Transcriptional Attenuation Sensitive to Amino Acid Limitation?"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010003",
-        "Predicting Functional Gene Links from Phylogenetic-Statistical Analyses of Whole Genomes"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010004",
-        "<i>PLoS Computational Biology:</i> A New Community Journal"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010005",
-        "An Open Forum for Computational Biology"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010006",
-        "“Antedisciplinary” Science"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010007",
-        "Susceptibility to Superhelically Driven DNA Duplex Destabilization: A Highly Conserved Property of Yeast Replication Origins"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010008",
-        "Combinatorial Pattern Discovery Approach for the Folding Trajectory Analysis of a <i>β</i>-Hairpin"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010009",
-        "Improving the Precision of the Structure–Function Relationship by Considering Phylogenetic Context"));
-
-    expectedResults.add(new Pair<String, String>(
-        "10.1371/journal.pcbi.0010010",
-        "Extraction of Transcript Diversity from Scientific Literature"));
-
-    return new Object[][]{
-        {expectedResults}
-    };
-  }
-
-  @Test(dataProvider = "mostViewed")
-  public void testGetMostViewed(List<Pair<String, String>> expectedResults) throws SolrException {
+  @Test
+  public void testGetMostViewed() throws SolrException {
+    final Map<String, String> headers = new HashMap<String, String>(3);
     httpEndpoint.whenAnyExchangeReceived(new Processor() {
       @Override
       public void process(Exchange exchange) throws Exception {
         Message in = exchange.getIn();
-        assertEquals(in.getHeader("sort", String.class), VIEW_FIELD + " desc", "solr request didn't have correct sort field");
-        assertEquals(in.getHeader("fq", String.class), EXPECTED_FQ_PARAM, "solr request didn't have correct fq param");
-
+        headers.put("sort", in.getHeader("sort", String.class));
+        headers.put("fq", in.getHeader("fq", String.class));
         exchange.getOut().setBody(testSolrXml);
       }
     });
 
-    //Check that the solr xml was parsed correctly
     List<Pair<String, String>> mostViewedArticles = mostViewedArticleService.getMostViewedArticles(JOURNAL, 10, NUM_DAYS);
+    //check the headers
+    assertEquals(headers.get("sort"), VIEW_FIELD + " desc", "solr request didn't have correct sort field");
+    assertEquals(headers.get("fq"), EXPECTED_FQ_PARAM, "solr request didn't have correct fq param");
+
+    //Check that the solr xml was parsed correctly
     assertNotNull(mostViewedArticles, "returned null list of most viewed articles");
-    assertEquals(mostViewedArticles.size(), expectedResults.size(), "returned incorrect number of articles");
+    assertEquals(mostViewedArticles.size(), articlesFromSolrXml.size(), "returned incorrect number of articles");
     for (int i = 0; i < mostViewedArticles.size(); i++) {
       Pair<String, String> actual = mostViewedArticles.get(i);
-      Pair<String, String> expected = expectedResults.get(i);
-      assertEquals(actual.getFirst(),expected.getFirst(),"Didn't have correct doi for entry " + i);
-      assertEquals(actual.getSecond(),expected.getSecond(),"Didn't have correct title for entry " + i);
+      Pair<String, String> expected = articlesFromSolrXml.get(i);
+      assertEquals(actual.getFirst(), expected.getFirst(), "Didn't have correct doi for entry " + i);
+      assertEquals(actual.getSecond(), expected.getSecond(), "Didn't have correct title for entry " + i);
     }
   }
 }

@@ -39,7 +39,7 @@ public class JournalCreatorTest extends BaseTest {
   protected Configuration configuration;
 
 
-  @Test(dependsOnGroups = {"usesDefaultJournal"})
+  @Test
   @SuppressWarnings("unchecked")
   public void testCreateJournals() throws ApplicationException {
     //there should be journals configured, otherwise we'll have nothing to do
@@ -72,7 +72,7 @@ public class JournalCreatorTest extends BaseTest {
     }
   }
 
-  @Test(dependsOnMethods = {"testCreateJournals"}, dependsOnGroups = {"usesDefaultJournal"})
+  @Test(dependsOnMethods = {"testCreateJournals"})
   public void testUpdateJournals() throws ApplicationException {
     //Journals will have been created now, let's change properties and update them
 
@@ -89,6 +89,14 @@ public class JournalCreatorTest extends BaseTest {
     for (Journal journal : storedJournals) {
       assertTrue(journal.geteIssn().endsWith("-new"), "Didn't update eIssn for journal " + journal.getJournalKey());
       assertTrue(journal.getTitle().endsWith("-new"), "Didn't update title for journal " + journal.getJournalKey());
+    }
+  }
+  @AfterClass
+  public void revertJournalChanges() {
+    for (Journal journal : dummyDataStore.getAll(Journal.class)) {
+      journal.setTitle(journal.getTitle().replaceAll("-new", ""));
+      journal.seteIssn(journal.geteIssn().replaceAll("-new", ""));
+      dummyDataStore.update(journal);
     }
   }
 }

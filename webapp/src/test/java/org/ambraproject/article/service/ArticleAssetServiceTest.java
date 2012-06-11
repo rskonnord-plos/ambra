@@ -13,14 +13,24 @@
 
 package org.ambraproject.article.service;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
+import org.ambraproject.models.ArticleAuthor;
+import org.apache.commons.io.IOUtils;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -278,5 +288,25 @@ public class ArticleAssetServiceTest extends BaseTest {
     Long articleID = Long.valueOf(dummyDataStore.store(article));
     Long result = articleAssetService.getArticleID(article.getAssets().get(0));
     assertEquals(result, articleID, "Article Asset service returned incorrect id");
+  }
+
+  //This is a difficult method to have expected results for, but at least we can check that the output is a ppt file
+  @Test
+  public void testGetPowerpointSlide() throws IOException, NoSuchObjectIdException, NoSuchArticleIdException, ApplicationException {
+    //save the article first
+    setUpArticleForImageFromFilestore();
+
+    InputStream inputStream = null;
+    Tika tika = new Tika();
+    try {
+      inputStream = articleAssetService.getPowerPointSlide(IMAGE_DOI_IN_FILESTORE, DEFAULT_ADMIN_AUTHID);
+      assertNotNull(inputStream, "Returned null input stream");
+      //read the content type from the bytes of the input stream
+      assertEquals(tika.detect(inputStream), "application/x-tika-msoffice", "powerpoint file had incorrect type");
+    } finally {
+      if (inputStream != null) {
+        IOUtils.closeQuietly(inputStream);
+      }
+    }
   }
 }

@@ -185,9 +185,7 @@
   <modules>
     <module>models</module>
     <module>webapp</module>
-    <!--module>cas-mod</module-->
     <module>libs</module>
-    <!--module>ecqs-bundle</module-->
     <module>journals</module>
   </modules>
 
@@ -792,6 +790,11 @@
         <excludes>
           <exclude>*.zip</exclude>
           <exclude>**/*.zip</exclude>
+          <exclude>**/*.png_s</exclude>
+          <exclude>**/*.png_m</exclude>
+          <exclude>**/*.png_l</exclude>
+          <exclude>**/*.png</exclude>
+          <exclude>**/*.tif</exclude>
         </excludes>
       </testResource>
 
@@ -801,6 +804,11 @@
         <includes>
           <include>*.zip</include>
           <include>**/*.zip</include>
+          <include>**/*.png_s</include>
+          <include>**/*.png_m</include>
+          <include>**/*.png_l</include>
+          <include>**/*.png</include>
+          <include>**/*.tif</include>
         </includes>
       </testResource>
 

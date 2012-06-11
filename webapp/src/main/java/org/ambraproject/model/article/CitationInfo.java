@@ -19,21 +19,16 @@
  */
 package org.ambraproject.model.article;
 
-import java.io.Serializable;
+import org.ambraproject.model.UserProfileInfo;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ambraproject.model.UserProfileInfo;
-import org.topazproject.otm.annotations.Entity;
-import org.topazproject.otm.annotations.Id;
-import org.topazproject.otm.annotations.Predicate;
-
 /**
  * Just the list of authors.
  */
-@Entity(types = {"bibtex:Entry"}, graph = "ri")
 public class CitationInfo implements Serializable {
   private URI id;
   private List<UserProfileInfo> authors = new ArrayList<UserProfileInfo>();
@@ -53,7 +48,6 @@ public class CitationInfo implements Serializable {
    *
    * @param id the value to set.
    */
-  @Id
   public void setId(URI id) {
     this.id = id;
   }
@@ -70,7 +64,6 @@ public class CitationInfo implements Serializable {
    * Set authors
    * @param authors
    */
-  @Predicate(ref = "Citation:authors")
   public void setAuthors(List<UserProfileInfo> authors) {
     this.authors = authors;
   }
@@ -87,7 +80,6 @@ public class CitationInfo implements Serializable {
    * Set collaborative authors
    * @param collaborativeAuthors
    */
-  @Predicate(ref = "Citation:collaborativeAuthors")
   public void setCollaborativeAuthors(List<String> collaborativeAuthors) {
     this.collaborativeAuthors = collaborativeAuthors;
   }

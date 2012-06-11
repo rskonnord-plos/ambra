@@ -79,6 +79,9 @@
     <property name="smallImageRep" value="png_s"/>
     <property name="mediumImageRep" value="png_m"/>
     <property name="largeImageRep" value="png_l"/>
+    <property name="fileStoreService" ref="fileStoreService"/>
+    <property name="secondaryObjectService" ref="xmlService"/>
+    <property name="templatesDirectory" value="${project.basedir}/src/test/resources/templates"/>
   </bean>
 
   <bean id="articleService" class="org.ambraproject.article.service.ArticleServiceImpl">

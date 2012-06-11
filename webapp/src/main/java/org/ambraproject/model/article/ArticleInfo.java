@@ -22,6 +22,7 @@ package org.ambraproject.model.article;
 import org.ambraproject.model.UserProfileInfo;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.JournalView;
+import org.ambraproject.views.AssetView;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -59,6 +60,7 @@ public class ArticleInfo implements Serializable {
   private String                 eLocationId;
   private String                 volume;
   private String                 issue;
+  private List<AssetView>        articleAssets;
 
   private transient String unformattedTitle;
 
@@ -208,6 +210,10 @@ public class ArticleInfo implements Serializable {
     }
   }
 
+  public void setArticleAssets(List<AssetView> articleAssets) {
+    this.articleAssets = articleAssets;
+  }
+
   public void setAt(Set<String> at) {
     articleTypes.clear();
     for (String a : at)
@@ -216,6 +222,10 @@ public class ArticleInfo implements Serializable {
 
   public void setRelatedArticles(List<RelatedArticleInfo> relatedArticles) {
     this.relatedArticles = relatedArticles;
+  }
+  
+  public List<AssetView> getArticleAssets(){
+    return articleAssets;
   }
 
   public String getPublisher() {

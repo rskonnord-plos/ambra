@@ -38,11 +38,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -399,6 +404,86 @@ public class AnnotationServiceTest extends BaseTest {
     assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Stored annotation had incorrect type");
     assertNull(storedAnnotation.getXpath(), "Stored annotation had an xpath associated with it");
     assertNotNull(storedAnnotation.getAnnotationUri(), "Service didn't generate an annotation uri");
+  }
+
+  @DataProvider(name = "annotationsByDate")
+  public Object[][] getAnnotationsByDate() {
+    Calendar lastYear = Calendar.getInstance();
+    lastYear.add(Calendar.YEAR, -1);
+
+    Calendar twoMonthsAgo = Calendar.getInstance();
+    twoMonthsAgo.add(Calendar.MONTH, -2);
+
+    Calendar oneMonthAgo = Calendar.getInstance();
+    oneMonthAgo.add(Calendar.MONTH, -1);
+
+    Calendar yesterday = Calendar.getInstance();
+    yesterday.add(Calendar.DAY_OF_MONTH, -1);
+
+    UserProfile creator = new UserProfile(
+        "authIdForTestGetAnnotationsByDate",
+        "email@getAnnotationsByDate.org",
+        "displayNameForTestGetAnnotationsByDate");
+    dummyDataStore.store(creator);
+
+    Article article1 = new Article("id:doi-for-get-annotations-by-date1");
+    article1.setTitle("Article title for testGetAnnotations1");
+    article1.seteIssn(defaultJournal.geteIssn());
+    dummyDataStore.store(article1);
+
+    Article article2 = new Article("id:doi-for-get-annotations-by-date2");
+    article2.setTitle("Article title for testGetAnnotations2");
+    article2.seteIssn(defaultJournal.geteIssn());
+    dummyDataStore.store(article2);
+
+    List<AnnotationView> results1 = new ArrayList<AnnotationView>(4);
+    for (int i = 1; i <= 3; i++) {
+      Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, article1.getID());
+      annotation.setTitle("comment on " + article1.getDoi() + i);
+      annotation.setBody("comment on " + article1.getDoi() + i);
+      annotation.setCreated(twoMonthsAgo.getTime());
+      dummyDataStore.store(annotation);
+      results1.add(new AnnotationView(annotation, article1.getDoi(), article1.getTitle(), null));
+    }
+
+    List<AnnotationView> results2 = new ArrayList<AnnotationView>(7);
+    results2.addAll(results1);
+    for (int i = 1; i <= 3; i++) {
+      Annotation annotation = new Annotation(creator, AnnotationType.NOTE, article2.getID());
+      annotation.setTitle("note on " + article2.getDoi() + i);
+      annotation.setBody("note on " + article2.getDoi() + i);
+      annotation.setXpath("xpath" + article2.getDoi() + i);
+      annotation.setCreated(twoMonthsAgo.getTime());
+      dummyDataStore.store(annotation);
+      results2.add(new AnnotationView(annotation, article2.getDoi(), article2.getTitle(), null));
+    }
+
+    List<AnnotationView> results3 = new ArrayList<AnnotationView>(7);
+    results3.addAll(results2);
+    for (int i = 1; i <= 3; i++) {
+      Annotation annotation = new Annotation(creator, AnnotationType.NOTE, article2.getID());
+      annotation.setTitle("more recent note on " + article2.getDoi() + i);
+      annotation.setBody("more recent note on " + article2.getDoi() + i);
+      annotation.setXpath("xpath2" + article2.getDoi() + i);
+      annotation.setCreated(oneMonthAgo.getTime());
+      dummyDataStore.store(annotation);
+      results3.add(new AnnotationView(annotation, article2.getDoi(), article2.getTitle(), null));
+    }
+
+    return new Object[][]{
+        {lastYear.getTime(), oneMonthAgo.getTime(), Arrays.asList("Comment"), 100, defaultJournal.getJournalKey(), results1},
+        {lastYear.getTime(), oneMonthAgo.getTime(), Arrays.asList("Comment", "Note"), 100, defaultJournal.getJournalKey(), results2},
+        {lastYear.getTime(), yesterday.getTime(), Arrays.asList("Comment", "Note"), 100, defaultJournal.getJournalKey(), results3}
+    };
+  }
+
+  @Test(dataProvider = "annotationsByDate")
+  public void testGetAnnotations(Date startDate, Date endDate, Collection<String> annotationTypes,
+                                 int maxResults, String journal, List<AnnotationView> expectedResults) throws URISyntaxException, ParseException {
+    List<AnnotationView> results = annotationService.getAnnotations(
+        startDate, endDate, new HashSet<String>(annotationTypes), maxResults, journal);
+    assertNotNull(results, "returned null results");
+    assertEqualsNoOrder(results.toArray(), expectedResults.toArray(), "returned incorrect results");
   }
 
   @Test

@@ -230,15 +230,35 @@
         <xsl:variable name="apos">'</xsl:variable>
         <xsl:variable name="imageURI"><xsl:value-of select="graphic/@xlink:href"/></xsl:variable>
         <xsl:variable name="slideshowURL">
-            <xsl:value-of select="concat($pubAppContext, '/article/slideshow.action?uri=',
+            <xsl:value-of select="concat($pubAppContext, '/article/',
                 substring($imageURI, 1, (string-length($imageURI)-5)),
-                '&amp;imageURI=', $imageURI)"/>
+                '?imageURI=', $imageURI)"/>
+        </xsl:variable>
+
+      <xsl:variable name="pptURL">
+        <xsl:value-of select="concat('/article/fetchPowerPoint.action?uri=',$imageURI)"/>
+      </xsl:variable>
+
+      <xsl:variable name="bigImgURL">
+        <xsl:value-of
+            select="concat('/article/fetchObjectAttachment.action?uri=',$imageURI,'&amp;representation=PNG_L')"/>
+      </xsl:variable>
+      <xsl:variable name="bigImgDOI">
+        <xsl:value-of select="concat($imageURI,'.PNG_L')"/>
+      </xsl:variable>
+
+      <xsl:variable name="origImgURL">
+        <xsl:value-of select="concat('/article/fetchObjectAttachment.action?uri=',$imageURI,'&amp;representation=TIF')"/>
+      </xsl:variable>
+      <xsl:variable name="origImgDOI">
+        <xsl:value-of select="concat($imageURI,'.TIF')"/>
+      </xsl:variable>
+
+        <xsl:variable name="targetURI">
+          <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
         </xsl:variable>
         <xsl:variable name="jsWindow">
-            <xsl:value-of select="concat('window.open(this.href,',$apos,'plosSlideshow',$apos,',',$apos,
-                'directories=no,location=no,menubar=no,resizable=yes,status=no,',
-                'scrollbars=yes,toolbar=no,height=600,width=850', $apos,
-                ');return false;')"/>
+          <xsl:value-of select="concat('return ambra.lightBox.show(', $apos, $targetURI, $apos, ', ', $apos, $imageURI, $apos, ');')"/>
         </xsl:variable>
         <xsl:if test="graphic">
             <div class="figure">
@@ -249,13 +269,17 @@
                     <xsl:attribute name="title">Click for larger image </xsl:attribute>
                     <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
                     <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
+                    <xsl:element name="div">
+                      <xsl:attribute name="class">expand-link</xsl:attribute>
+                      <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
+                    </xsl:element>
                     <xsl:element name="img">
                         <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
                         <xsl:attribute name="border">1</xsl:attribute>
                         <xsl:attribute name="src">
                             <xsl:value-of select="concat($pubAppContext,
                                 '/article/fetchObject.action?uri=',
-                                $imageURI,'&amp;representation=PNG_S')"/>
+                                $imageURI,'&amp;representation=PNG_I')"/>
                         </xsl:attribute>
                         <xsl:attribute name="align">left</xsl:attribute>
                         <xsl:attribute name="alt">thumbnail</xsl:attribute>
@@ -289,6 +313,37 @@
                     <span xpathLocation="noSelect"><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
                 </xsl:if>
                 <div class="clearer" />
+              <!--start figure download-->
+              <div class="figure-inline-download">
+                <ul>
+                  <li><strong>Download: </strong>
+                    <xsl:element name="a">
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="$pptURL"/>
+                      </xsl:attribute>Powerpoint slide</xsl:element> |
+                    <xsl:element name="a">
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="$bigImgURL"/>
+                      </xsl:attribute>
+                      larger image (<xsl:element name="span">
+                      <xsl:attribute name="id">
+                        <xsl:value-of select="$bigImgDOI"/>
+                      </xsl:attribute>
+                    </xsl:element> PNG)</xsl:element> |
+                    <xsl:element name="a">
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="$origImgURL"/>
+                      </xsl:attribute>
+                      original image (<xsl:element name="span">
+                      <xsl:attribute name="id">
+                        <xsl:value-of select="$origImgDOI"/>
+                      </xsl:attribute>
+                    </xsl:element> TIFF)
+                    </xsl:element>
+                  </li>
+                </ul>
+              </div>
+              <!--end figure download-->
             </div>
         </xsl:if>
         <xsl:if test="not(graphic)">

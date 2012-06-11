@@ -528,3 +528,28 @@ dojo.addOnLoad(function() {
 
   markDirty(false);	// unset dirty flag
 });
+
+//load article asset sizes for inline figure download links
+dojo.query('input.assetSize').forEach(function (assetInput) {
+
+  if (dojo.byId(dojo.attr(assetInput, "name"))) {
+
+    val = dojo.attr(assetInput, "value");
+    if (val >= 1000000) {
+      val /= 1000000;
+      val = Math.round(val * 100) / 100;
+      val = String(val).concat("MB");
+    }
+    else if (val < 1000000 && val >= 1000) {
+      val /= 1000;
+      val = Math.round(val);
+      val = String(val).concat("KB");
+    }
+    else {
+      val = String(val).concat("Bytes");
+    }
+
+    dojo.byId(dojo.attr(assetInput, "name")).innerHTML = val;
+  }
+
+})

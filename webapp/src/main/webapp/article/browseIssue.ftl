@@ -75,15 +75,15 @@
   <h1>Table of Contents | ${issueInfo.displayName} ${volumeInfo.displayName}</h1>
     <#if issueInfo.imageArticle?has_content>
       <@s.url id="imageSmURL" action="fetchObject" namespace="/article" uri="${issueInfo.imageArticle}.g001" representation="PNG_S" includeParams="none"/>
-      <@s.url id="imageLgURL" action="slideshow" namespace="/article" uri="${issueInfo.imageArticle}" imageURI="${issueInfo.imageArticle}.g001" includeParams="none"/>
+      <@s.url id="imageURL" action="browseIssue" namespace="/article" issue="${issueInfo.issueURI}" imageURI="${issueInfo.imageArticle}.g001" includeParams="none"/>
       <div id="issueImage">
         <div id="thumbnail">
-  <a href="${imageLgURL}" onclick="window.open(this.href,'ambraSlideshow','directories=no,location=no,menubar=no,resizable=yes,status=no,scrollbars=yes,toolbar=no,height=600,width=850');return false;">
-      <img alt="Issue Image" src="${imageSmURL}"/>
-    </a>
-    <a href="${imageLgURL}" onclick="window.open(this.href,'ambraSlideshow','directories=no,location=no,menubar=no,resizable=yes,status=no,scrollbars=yes,toolbar=no,height=600,width=850');return false;">
-      View large image
-    </a>
+          <a href="${imageURL}" onclick="return ambra.lightBox.show('${issueInfo.imageArticle}','${issueInfo.imageArticle}.g001')">
+            <img alt="Issue Image" src="${imageSmURL}"/>
+          </a>
+          <a href="${imageURL}" onclick="return ambra.lightBox.show('${issueInfo.imageArticle}','${issueInfo.imageArticle}.g001')">
+            View large image
+          </a>
         </div>
         <h3>About This Image</h3>
         ${issueDescription}
@@ -114,5 +114,8 @@
     <!-- end : articleTypes -->
   </div>
 </div> <!-- end : toc content-->
+<div style="display:none">
+<#include "/widget/lightBoxDialog.ftl">
+</div>
 
 

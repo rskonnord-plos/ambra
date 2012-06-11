@@ -22,10 +22,6 @@ package org.ambraproject.model.article;
 import java.io.Serializable;
 import java.net.URI;
 
-import org.topazproject.otm.annotations.Projection;
-import org.topazproject.otm.annotations.SubView;
-
-@SubView()
 public class RelatedArticleInfo implements Serializable {
   public URI    uri;
   public String title;
@@ -39,7 +35,6 @@ public class RelatedArticleInfo implements Serializable {
     return uri;
   }
 
-  @Projection("rid")
   public void setUri(URI uri) {
     this.uri = uri;
   }
@@ -53,7 +48,6 @@ public class RelatedArticleInfo implements Serializable {
     return title;
   }
 
-  @Projection("rtitle")
   public void setTitle(String title) {
     this.title = title;
   }

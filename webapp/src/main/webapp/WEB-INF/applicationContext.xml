@@ -52,6 +52,7 @@
     <property name="smallImageRep" value="PNG_S"/>
     <property name="mediumImageRep" value="PNG_M"/>
     <property name="largeImageRep" value="PNG_L"/>
+    <property name="templatesDirectory" value="${ambra.virtualJournals.templateDir}"/>
   </bean>
 
   <bean id="trackBackService" class="org.ambraproject.trackback.TrackbackServiceImpl">

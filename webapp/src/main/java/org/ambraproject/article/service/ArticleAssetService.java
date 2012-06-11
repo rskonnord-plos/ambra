@@ -21,9 +21,12 @@
 
 package org.ambraproject.article.service;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.models.ArticleAsset;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public interface ArticleAssetService {
@@ -83,4 +86,13 @@ public interface ArticleAssetService {
    */
   public Long getArticleID(ArticleAsset articleAsset);
 
+  /**
+   * Get the data for powerpoint
+   * @param assetDoi
+   * @param authId
+   * @return
+   * @throws NoSuchArticleIdException
+   */
+  public InputStream getPowerPointSlide(String assetDoi, String authId) throws NoSuchArticleIdException,
+      NoSuchObjectIdException, ApplicationException, IOException;
 }

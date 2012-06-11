@@ -75,6 +75,7 @@ import static org.testng.Assert.assertEquals;
 @Test(singleThreaded = true)
 public abstract class BaseTest extends AbstractTestNGSpringContextTests {
 
+  protected static final String IMAGE_DOI_IN_FILESTORE = "info:doi/10.1371/journal.pntd.0001646.g001";
   /**
    * Instance provided so that tests can store dummy data in the same test database that the autowired beans are using.
    * Tests should use this to seed the database with data to test.
@@ -88,7 +89,7 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
 
   static {
     defaultJournal.setJournalKey("journal");
-    defaultJournal.seteIssn("defaultEIssn");
+    defaultJournal.seteIssn("1234");
   }
 
   /**
@@ -443,5 +444,25 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
       }
 
     }
+  }
+
+  protected void setUpArticleForImageFromFilestore() {
+    Article article = new Article(IMAGE_DOI_IN_FILESTORE.substring(0, IMAGE_DOI_IN_FILESTORE.lastIndexOf('.')));
+    article.seteIssn(defaultJournal.geteIssn());
+    article.setTitle("title");
+    article.setJournal("journal");
+    article.setDate(Calendar.getInstance().getTime());
+    article.setAssets(Arrays.asList(
+        new ArticleAsset(IMAGE_DOI_IN_FILESTORE, "PNG_S"),
+        new ArticleAsset(IMAGE_DOI_IN_FILESTORE, "PNG_M"),
+        new ArticleAsset(IMAGE_DOI_IN_FILESTORE, "PNG_L"),
+        new ArticleAsset(IMAGE_DOI_IN_FILESTORE, "TIF")
+    ));
+    article.setAuthors(Arrays.asList(
+        new ArticleAuthor("John","Smith","PhD"),
+        new ArticleAuthor("Harry","Potter","Dr."),
+        new ArticleAuthor("Emma","Swan","M.S.")
+    ));
+    dummyDataStore.store(article);
   }
 }

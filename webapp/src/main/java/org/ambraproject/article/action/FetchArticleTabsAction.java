@@ -1,17 +1,10 @@
-/* $HeadURL::                                                                            $
+/*
+ * $HeadURL$
  * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
- *
+ * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -25,6 +18,8 @@ import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.annotation.service.AnnotationService;
 import org.ambraproject.article.AuthorExtra;
 import org.ambraproject.article.CitationReference;
+import org.ambraproject.article.service.ArticleAssetService;
+import org.ambraproject.article.service.ArticleAssetWrapper;
 import org.ambraproject.article.service.ArticleService;
 import org.ambraproject.article.service.FetchArticleService;
 import org.ambraproject.article.service.NoSuchArticleIdException;
@@ -61,7 +56,7 @@ import java.util.Set;
 import static org.ambraproject.annotation.service.AnnotationService.AnnotationOrder;
 
 /**
- * This class fetches the information from the service tier for the artcle Tabs.  Common data is defined in the
+ * This class fetches the information from the service tier for the article Tabs.  Common data is defined in the
  * setCommonData.  One method is defined for each tab.
  * <p/>
  * Freemarker builds rest like URLs, inbound and outbound as defined in the /WEB-INF/urlrewrite.xml file. These URLS
@@ -119,6 +114,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private UserService userService;
   private Set<JournalView> journalList;
   private RatingSummaryView averageRatings;
+  private ArticleAssetWrapper[] articleAssetWrapper;
+  private ArticleAssetService articleAssetService;
 
   /**
    * Fetch common data the article HTML text
@@ -367,6 +364,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     authorExtras = this.fetchArticleService.getAuthorAffiliations(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
+    articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
 
     /**
      An article can be cross published, but we want the source journal.
@@ -427,6 +425,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   }
 
   /**
+   *
+   * @param articleAssetService the articleAssetService
+   */
+  public void setArticleAssetService(ArticleAssetService articleAssetService) {
+    this.articleAssetService = articleAssetService;
+  }
+
+  /**
    * @return articleURI
    */
   @RequiredStringValidator(message = "Article URI is required.")
@@ -458,6 +464,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    */
   public ArticleInfo getArticleInfoX() {
     return articleInfoX;
+  }
+
+  /**
+   *
+   * @return the articleAssetWrapper
+   */
+  public ArticleAssetWrapper[] getArticleAssetWrapper() {
+    return articleAssetWrapper;
   }
 
   /**

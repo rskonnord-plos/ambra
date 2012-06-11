@@ -16,6 +16,7 @@
 
 package org.ambraproject;
 
+import org.ambraproject.util.Pair;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.commons.io.IOUtils;
@@ -24,6 +25,9 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Base Test class for beans that make http requests.  Sets up an embedded http server for the beans to send requests
@@ -35,8 +39,8 @@ import java.io.StringWriter;
  * assertions about the content received and behaviour for the response.
  * <p/>
  * To check the received content inside of the processor, use {@link org.apache.camel.Exchange#getIn()}, and to set the
- * response, use {@link org.apache.camel.Exchange#getOut()}. See {@link org.ambraproject.solr.SolrHttpServiceTest}
- * for an example.
+ * response, use {@link org.apache.camel.Exchange#getOut()}. See {@link org.ambraproject.solr.SolrHttpServiceTest} for
+ * an example.
  * <p/>
  * If any of the {@link MockEndpoint} expectation methods are used, the test method will need to be annotated with
  * {@link org.springframework.test.annotation.DirtiesContext}
@@ -59,17 +63,38 @@ public abstract class BaseHttpTest extends BaseTest {
   /**
    * String of valid solr xml response for testing
    */
-  protected final String testSolrXml = getTestSolrResponse();
+  protected static final String testSolrXml;
 
-  private String getTestSolrResponse() {
-    InputStream inputStream = getClass().getClassLoader().getResourceAsStream("test-solr-response.xml");
+  protected static final List<Pair<String, String>> articlesFromSolrXml;
+
+  static {
+    InputStream inputStream = null;
     StringWriter writer = new StringWriter();
     try {
+      inputStream = BaseHttpTest.class.getClassLoader().getResourceAsStream("test-solr-response.xml");
       IOUtils.copy(inputStream, writer);
+      testSolrXml = writer.toString();
     } catch (IOException e) {
       throw new Error("Error loading test solr xml (should be included in test resources)");
+    } finally {
+      if (inputStream != null) {
+        IOUtils.closeQuietly(inputStream);
+      }
+      IOUtils.closeQuietly(writer);
     }
-    return writer.toString();
+
+    List<Pair<String, String>> tempList = new ArrayList<Pair<String, String>>(11);
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010001", "Ab Initio Prediction of Transcription Factor Targets Using Structural Knowledge"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010002", "What Makes Ribosome-Mediated Transcriptional Attenuation Sensitive to Amino Acid Limitation?"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010003", "Predicting Functional Gene Links from Phylogenetic-Statistical Analyses of Whole Genomes"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010004", "<i>PLoS Computational Biology:</i> A New Community Journal"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010005", "An Open Forum for Computational Biology"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010006", "“Antedisciplinary” Science"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010007", "Susceptibility to Superhelically Driven DNA Duplex Destabilization: A Highly Conserved Property of Yeast Replication Origins"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010008", "Combinatorial Pattern Discovery Approach for the Folding Trajectory Analysis of a <i>β</i>-Hairpin"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010009", "Improving the Precision of the Structure–Function Relationship by Considering Phylogenetic Context"));
+    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010010", "Extraction of Transcript Diversity from Scientific Literature"));
+    articlesFromSolrXml = Collections.unmodifiableList(tempList);
   }
 
 }

@@ -30,6 +30,9 @@
 <input type="hidden" name="annotationId" value="${annotationId}" />
 <input type="hidden" name="isResearchArticle" value="${isResearchArticle?string}" />
 </form>
+<#list articleInfoX.articleAssets as asset>
+  <input type="hidden" class="assetSize" name="${asset.doi}.${asset.extension}" value="${asset.size?c}"/>
+</#list>
 <div id="articleContainer"><#include "article_content.ftl"></div>
 <div style="display:none">
 <#include "/widget/annotation_add.ftl">
@@ -37,5 +40,6 @@
 <#include "/widget/commentDialog.ftl">
 <#include "/widget/ratingDialog.ftl">
 <#include "/widget/loadingCycle.ftl">
+<#include "/widget/lightBoxDialog.ftl">
 </div>
 </div>

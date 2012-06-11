@@ -38,7 +38,8 @@ dependencies = {
         "ambra.displayComment",
         "ambra.responsePanel",
         "ambra.rating",
-        "ambra.slideshow"
+        "ambra.slideshow",
+        "ambra.lightBox"
       ]
     }
   ],

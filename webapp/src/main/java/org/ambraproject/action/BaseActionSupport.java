@@ -166,4 +166,18 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
 
     return (String)httpSession.getAttribute(Constants.AUTH_KEY);
   }
+
+  /**
+   * get the URL info
+   * @return
+   */
+  public String getURL() {
+    HttpServletRequest request = ServletActionContext.getRequest();
+
+    if(request == null) {
+      throw new RuntimeException("HttpServletRequest is null");
+    }
+
+    return request.getParameter("uri");
+  }
 }

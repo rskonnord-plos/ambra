@@ -454,6 +454,18 @@
       </result>
     </action>
 
+    <action name="lightbox" class="org.ambraproject.article.action.SlideshowAction">
+      <result name="success" type="json">
+        <param name="excludeProperties">advisors, callbacks, annotations</param>
+      </result>
+      <result name="error" type="json">
+        <param name="excludeProperties">advisors, callbacks, annotations</param>
+      </result>
+      <result name="input" type="json">
+        <param name="excludeProperties">advisors, callbacks, annotations</param>
+      </result>
+    </action>
+
     <action name="fetchArticleTwitter" class="org.ambraproject.article.action.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_twitter.ftl</param>
@@ -511,6 +523,16 @@
     </action>
 
     <action name="fetchObject" class="org.ambraproject.article.action.FetchObjectAction" method="fetchObjectAction">
+      <result name="success" type="ambraStream">
+        <param name="isAttachment">false</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/static/articleNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchPowerPoint" class="org.ambraproject.article.action.FetchPowerPointAction">
       <result name="success" type="ambraStream">
         <param name="isAttachment">false</param>
       </result>

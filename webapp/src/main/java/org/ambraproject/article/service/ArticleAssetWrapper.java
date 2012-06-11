@@ -40,6 +40,8 @@ public class ArticleAssetWrapper implements Serializable {
   private String doi;
   private String contextElement;
   private String title;
+  private long sizeLarge;
+  private long sizeTiff;
 
   static final long serialVersionUID = 7439718780407844715L;
 
@@ -52,6 +54,8 @@ public class ArticleAssetWrapper implements Serializable {
     this.repSmall = repSmall;
     this.repMedium = repMedium;
     this.repLarge = repLarge;
+    this.sizeLarge = 0;
+    this.sizeTiff = 0;
   }
 
   /**
@@ -159,6 +163,22 @@ public class ArticleAssetWrapper implements Serializable {
    */
   public void setTransformedCaptionTitle(String transformedTitle) {
     this.transformedCaptionTitle = transformedTitle;
+  }
+
+  public long getSizeLarge() {
+    return sizeLarge;
+  }
+
+  public void setSizeLarge(long sizeLarge) {
+    this.sizeLarge = sizeLarge;
+  }
+
+  public long getSizeTiff() {
+    return sizeTiff;
+  }
+
+  public void setSizeTiff(long sizeTiff) {
+    this.sizeTiff = sizeTiff;
   }
 
   @Override
