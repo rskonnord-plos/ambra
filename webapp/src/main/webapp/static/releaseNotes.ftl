@@ -35,6 +35,14 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.35</h2>
+  <p>Released June 12, 2012</p>
+  <h3>Features Implemented in Ambra 2.35</h3>
+  <ul>
+    <li>New, larger, more readable inline images</li>
+    <li>A new image browser for article images</li>
+  </ul>
+
   <h2>Ambra 2.32</h2>
   <p>Released April 26, 2012</p>
   <h3>Features Implemented in Ambra 2.32</h3>
