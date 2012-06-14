@@ -28,9 +28,9 @@
     <fieldset>
         <legend>Reply details</legend>
 
-          id          =${reply.id}            <br/>
-          root        =${reply.root}          <br/>
-          inReplyTo   =${reply.inReplyTo}     <br/>
+          id          =${reply.id?c}            <br/>
+          root        =${reply.root?c}          <br/>
+          inReplyTo   =${reply.inReplyTo?c}     <br/>
           title       =${reply.commentTitle}         <br/>
           body        =${reply.comment}          <br/>
           created     =${reply.created}       <br/>
@@ -38,13 +38,13 @@
           mediator    =${reply.mediator}      <br/>
           type        =${reply.type}          <br/>
 
-          <@s.url id="createReplyURL" action="createReplySubmit" root="${reply.root}" inReplyTo="${reply.id}" namespace="/annotation/secure"/>
+          <@s.url id="createReplyURL" action="createReplySubmit" root="${reply.root?c}" inReplyTo="${reply.id?c}" namespace="/annotation/secure"/>
           <@s.a href="%{createReplyURL}">create reply</@s.a> <br/>
 
-          <@s.url id="listReplyURL" action="listAllReplies" root="${reply.root}" inReplyTo="${reply.id}"/>
+          <@s.url id="listReplyURL" action="listAllReplies" root="${reply.root?c}" inReplyTo="${reply.id?c}"/>
           <@s.a href="%{listReplyURL}">list all replies</@s.a> <br/>
 
-          <@s.url id="listFlagURL" action="listAllFlags" target="${reply.id}" />
+          <@s.url id="listFlagURL" action="listAllFlags" target="${reply.id?c}" />
           <@s.a href="%{listFlagURL}">list all flags</@s.a> <br/>
     </fieldset>
 
