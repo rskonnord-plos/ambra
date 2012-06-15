@@ -43,7 +43,7 @@
         </li>
 
         <li>
-          <@s.url id="listReplyURL" action="listAllReplies" root="${reply.root}" inReplyTo="${reply.id?c}"/>
+          <@s.url id="listReplyURL" action="listAllReplies" root="${reply.root?c}" inReplyTo="${reply.id?c}"/>
           <@s.a href="%{listReplyURL}">list all replies</@s.a>
         </li>
 
@@ -51,7 +51,7 @@
           <fieldset>
               <legend>Create an reply</legend>
               <@s.form name="createReplyForm" action="createReplySubmit" namespace="/annotation/secure">
-                <@s.textfield name="root" label="What is the root of this reply" value="${reply.root}" required="true" size="50"/>
+                <@s.textfield name="root" label="What is the root of this reply" value="${reply.root?c}" required="true" size="50"/>
                 <@s.textfield name="inReplyTo" label="What is it in reply to" value="${reply.id?c}" required="true" size="50"/>
                 <@s.textfield name="commentTitle" label="Title"/>
                 <@s.textarea name="comment" label="Reply text" rows="'3'" cols="'30'" required="true"/>
