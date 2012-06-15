@@ -44,7 +44,7 @@
         <div class="figure-window-download">
           <ul>
             <li class="download icon"><strong>Download:</strong>
-              <a id="figure-window-ppt" title="Click to download power point slide of this image">Powerpoint
+              <a id="figure-window-ppt" title="Click to download PowerPoint slide of this image">PowerPoint
                 slide</a> |
               <a id="figure-window-large" title="Click to download a larger version of this image">larger image
                 (<span id="figure-window-large-size"></span>)</a> |
