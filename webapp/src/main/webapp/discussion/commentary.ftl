@@ -42,8 +42,8 @@
         <#else>
           <#assign label = "response">
         </#if>
-        <@s.url namespace="/annotation" includeParams="none" id="listThreadURL" action="listThread" root="${comment.ID}"/>
-        <@s.url namespace="/user" includeParams="none" id="showUserURL" action="showUser" userId="${comment.creatorID}"/>
+        <@s.url namespace="/annotation" includeParams="none" id="listThreadURL" action="listThread" root="${comment.ID?c}"/>
+        <@s.url namespace="/user" includeParams="none" id="showUserURL" action="showUser" userId="${comment.creatorID?c}"/>
         <tr>
           <td class="replies">${comment.totalNumReplies} ${label}<br /></td>
           <td class="title"><a href="${listThreadURL}" title="View Full Discussion Thread" class="${class} icon">${comment.title}</a></td>

@@ -56,8 +56,8 @@
       <#if (commentary?size > 0)>
       <table class="directory" cellpadding="0" cellspacing="0">
         <#list commentary as comment>
-          <@s.url namespace="/annotation" includeParams="none" id="listThreadURL" action="listThread" root="${comment.ID}"/>
-          <@s.url namespace="/user" includeParams="none" id="showUserURL" action="showUser" userId="${comment.creatorID}"/>
+          <@s.url namespace="/annotation" includeParams="none" id="listThreadURL" action="listThread" root="${comment.ID?c}"/>
+          <@s.url namespace="/user" includeParams="none" id="showUserURL" action="showUser" userId="${comment.creatorID?c}"/>
 
           <#if ((comment.xpath)!"")?length == 0>
             <#assign class="discuss"/>

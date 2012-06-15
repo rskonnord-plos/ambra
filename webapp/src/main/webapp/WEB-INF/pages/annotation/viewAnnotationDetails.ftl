@@ -28,7 +28,7 @@
     <fieldset>
         <legend>Annotation details</legend>
 
-          id          =${annotation.id}            <br/>
+          id          =${annotation.ID?c}            <br/>
           annotates   =${annotation.annotates}     <br/>
           title       =${annotation.commentTitle}         <br/>
           body        =${annotation.comment}          <br/>
@@ -39,13 +39,13 @@
           mediator    =${annotation.mediator}      <br/>
           type        =${annotation.type}          <br/>
 
-          <@s.url id="createReplyURL" action="createReplySubmit" root="${annotation.id}" inReplyTo="${annotation.id}" namespace="/annotation/secure"/>
+          <@s.url id="createReplyURL" action="createReplySubmit" root="${annotation.ID?c}" inReplyTo="${annotation.ID?c}" namespace="/annotation/secure"/>
           <@s.a href="%{createReplyURL}">create reply</@s.a> <br/>
 
-          <@s.url id="listReplyURL" action="listAllReplies" root="${annotation.id}" inReplyTo="${annotation.id}"/>
+          <@s.url id="listReplyURL" action="listAllReplies" root="${annotation.ID?c}" inReplyTo="${annotation.ID?c}"/>
           <@s.a href="%{listReplyURL}">list all replies</@s.a> <br/>
 
-          <@s.url id="listFlagURL" action="listAllFlags" target="${annotation.id}" />
+          <@s.url id="listFlagURL" action="listAllFlags" target="${annotation.ID?c}" />
           <@s.a href="%{listFlagURL}">list all flags</@s.a> <br/>
 
     </fieldset>

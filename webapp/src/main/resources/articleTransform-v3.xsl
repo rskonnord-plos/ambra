@@ -1171,7 +1171,7 @@
                   <xsl:element name="a">
                     <xsl:attribute name="href">
                       <xsl:value-of select="$pptURL"/>
-                    </xsl:attribute>Powerpoint slide</xsl:element> |
+                    </xsl:attribute>PowerPoint slide</xsl:element> |
                   <xsl:element name="a">
                     <xsl:attribute name="href">
                       <xsl:value-of select="$bigImgURL"/>

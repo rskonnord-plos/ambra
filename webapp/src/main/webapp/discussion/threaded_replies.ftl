@@ -27,7 +27,7 @@
 </#if>
   <#macro writeReplyDetails reply replyToAuthorId replyToAuthorName>
     <@s.url namespace="/user" includeParams="none" id="showUserURL" action="showUser" userId="${reply.creatorID?c}"/>
-    <@s.url namespace="/user" includeParams="none" id="authorURL" action="showUser" userId="${replyToAuthorId}"/>
+    <@s.url namespace="/user" includeParams="none" id="authorURL" action="showUser" userId="${replyToAuthorId?c}"/>
       <div class="response">
         <div class="hd">
           <!-- begin response title -->

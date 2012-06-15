@@ -43,7 +43,7 @@
           <#assign label = "response">
         </#if>
 
-        <@s.url namespace="/annotation" includeParams="none" id="listThreadURL" action="listThread" root="${comment.annotation.id}" inReplyTo="${comment.annotation.id}"/>
+        <@s.url namespace="/annotation" includeParams="none" id="listThreadURL" action="listThread" root="${comment.annotation.id?c}" inReplyTo="${comment.annotation.id?c}"/>
         <@s.url namespace="/user" includeParams="none" id="showUserURL" action="showUser" userAccountUri="${comment.annotation.creator}"/>
         <tr>
           <td class="replies">${comment.totalNumReplies} ${label}<br /></td>
