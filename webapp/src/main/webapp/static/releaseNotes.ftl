@@ -35,6 +35,13 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.36</h2>
+  <p>Released June 21, 2012</p>
+  <h3>Features Implemented in Ambra 2.36</h3>
+  <ul>
+    <li>Upgrade to Struts 2.3.1.2 to fix a vulnerability that allows for a code injection attack.</li>
+  </ul>
+  
   <h2>Ambra 2.35</h2>
   <p>Released June 12, 2012</p>
   <h3>Features Implemented in Ambra 2.35</h3>
