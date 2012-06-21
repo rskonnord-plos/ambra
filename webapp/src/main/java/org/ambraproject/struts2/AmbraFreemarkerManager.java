@@ -97,7 +97,7 @@ public class AmbraFreemarkerManager extends FreemarkerManager {
   }
 
   @Override
-  protected TemplateLoader getTemplateLoader(final ServletContext context) {
+  protected TemplateLoader createTemplateLoader(final ServletContext context, String templatePath) {
 
     return new StatefulTemplateLoader() {
 

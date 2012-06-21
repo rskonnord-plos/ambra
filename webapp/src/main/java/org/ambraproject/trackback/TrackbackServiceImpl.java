@@ -27,7 +27,7 @@ import org.ambraproject.models.Trackback;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.views.TrackbackView;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.lang.xwork.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
