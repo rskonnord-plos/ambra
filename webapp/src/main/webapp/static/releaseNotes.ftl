@@ -35,52 +35,64 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.37</h2>
+  <p>Released July 5, 2012</p>
+  <h3>Features Implemented in Ambra 2.37</h3>
+  <ul>
+    <li>Completed support for <a href="http://dtd.nlm.nih.gov/3.0/">NLM 3.0 DTD</a>.</li>
+    <li>Upgrade to <a href="http://www.springsource.org/">Spring 3.</a></li> 
+  </ul>
+  
   <h2>Ambra 2.36</h2>
   <p>Released June 21, 2012</p>
   <h3>Features Implemented in Ambra 2.36</h3>
   <ul>
-    <li>Upgrade to Struts 2.3.1.2 to fix a vulnerability that allows for a code injection attack.</li>
+    <li>Upgrade to <a href="http://struts.apache.org/">Struts 2.3.1.2</a> to fix a vulnerability that allows for a code injection attack.</li>
   </ul>
   
   <h2>Ambra 2.35</h2>
   <p>Released June 12, 2012</p>
   <h3>Features Implemented in Ambra 2.35</h3>
   <ul>
-    <li>New, larger, more readable inline images</li>
-    <li>A new image browser for article images</li>
+    <li>Changes to <a href="http://blogs.plos.org/plos/2012/06/better-figures-to-enhance-your-reading-experience/">the presentation and layout of in-line figures</a>.</li>
+    <li>A new in-page figure viewer for improved figure viewing and navigation options.</li>
+    <li>Added capability to download figures as PowerPoint slides.</li>
   </ul>
 
   <h2>Ambra 2.32</h2>
   <p>Released April 26, 2012</p>
   <h3>Features Implemented in Ambra 2.32</h3>
   <ul>
-    <li>Refactored Annotation model</li>
-    <li>Performance improvements</li>
+    <li>Refactored the Annotation model.</li>
+    <li>Performance improvements:</li>
+    <ul>
+      <li>Improved performance of the AdminTop when displaying a large number of unpublished articels.</li>
+      <li>Reduced the number of database queries for FetchArticleAction.</li> 
+    </ul>
   </ul>
 
   <h2>Ambra 2.31</h2>
   <p>Released April 12, 2012</p>
   <h3>Features Implemented in Ambra 2.31</h3>
   <ul>
-    <li>Added partial support for NLM 3.0</li>
-    <li>Upgraded to Saxon 9.3</li>
-    <li>Performance improvements</li>
+    <li>Added partial support for <a href="http://dtd.nlm.nih.gov/3.0/">NLM 3.0 DTD</a>.</li>
+    <li>Upgraded to <a href="http://saxon.sourceforge.net/">Saxon 9.3</a>.</li>
+    <li>Performance improvements.</li>
   </ul>
 
   <h2>Ambra 2.22</h2>
   <p>Released March 8, 2012</p>
   <h3>Features Implemented in Ambra 2.22</h3>
   <ul>
-    <li>Refactored User Profile model</li>
-    <li>Updated ALM to call new Tomcat Version of Scopus</li>
+    <li>Refactored the User Profile model and underlying data.</li>
   </ul>
 
   <h2>Ambra 2.21</h2>
   <p>Released February 16, 2012</p>
   <h3>Features Implemented in Ambra 2.21</h3>
   <ul>
-    <li>Added PMC Data to ALM Metrics chart (Completely revamped the chart look and feel.)</li>
-    <li>Pulled out Administrative functions into a new stand alone web application</li>
+    <li>Added PMC Data to ALM Metrics chart (completely revamped the chart look and feel).</li>
+    <li>Pulled out the Administrative functions into a new stand alone web application.</li>
   </ul>
 
   <h2>Ambra 2.20</h2>
@@ -186,7 +198,7 @@
     <p>Released September 24, 2010</p>
     <h3>Features Implemented in Ambra 1.2</h3>
     <ul>
-        <li>XSL stylesheet improvements for NLM DTD 2.3.</li>  
+        <li>XSL stylesheet improvements for <a href="http://dtd.nlm.nih.gov/2.3/">NLM 2.3 DTD</a>.</li>  
         <li>Update Ambra to use Topaz 0.9.5.3.  This release of Topaz removes objects filters and improves query performance.</li>
    </ul>
 
@@ -194,7 +206,7 @@
     <p>Released July 22, 2010</p>
     <h3>Features Implemented in Ambra 1.1</h3>
     <ul>
-        <li>Support for NLM DTD 2.3 and new XSL stylesheets.  The single XSL stylesheet has been split into two stylesheets: a generic XSL stylesheet to handle NLM DTD 2.3 and an XSL stylesheet specifically for Ambra.</li>
+        <li>Support for <a href="http://dtd.nlm.nih.gov/2.3/">NLM 2.3 DTD</a> and new XSL stylesheets.  The single XSL stylesheet has been split into two stylesheets: a generic XSL stylesheet to handle <a href="http://dtd.nlm.nih.gov/2.3/">NLM 2.3 DTD</a> and an XSL stylesheet specifically for Ambra.</li>
         <li>Support for HTML iframes for advertising blocks.</li>  
         <li>Caching of CrossRef search results on the "Find this Article Online" page.</li>
         <li>Updates to the copyright information.</li>
