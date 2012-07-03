@@ -371,13 +371,12 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     String sVersion = (String)prop.get("version");
 
     if(sVersion.indexOf("-SNAPSHOT") > 0) {
-      sVersion = sVersion.substring(0, sVersion.indexOf("-SNAPSHOT"));
       this.isSnapshot = true;
     }
 
     //Collapse pom version into an integer
     //Assume it is always three digits
-    this.binaryVersion = Integer.parseInt(sVersion.replace(".",""));
+    this.binaryVersion = Integer.parseInt(sVersion.replace(".","").substring(0,3));
   }
 
   /*

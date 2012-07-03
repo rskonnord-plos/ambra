@@ -18,9 +18,9 @@
     <!-- 1/4/12: plos-specific instruction. import nlm -->
     <xsl:import href="jpub3-html.xsl"/>
 
-    <!-- 1/4/12: plos modifications -->
-    <!-- 1/4/12: nlm contains doctype-public and doctype-system attributes, need to upgrade saxon so we can override these -->
-    <xsl:output method="html"
+    <!-- 1/4/12: plos modifications, we output doctype statement via templates -->
+    <xsl:output doctype-public=" " doctype-system=" "
+        method="html"
         indent="no"
         encoding="UTF-8"
         omit-xml-declaration="yes"/>
@@ -840,7 +840,7 @@
                 <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
                 <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
               </a>
-              <xsl:variable name="cit" select="element-citation | mixed-citation"/>
+              <xsl:variable name="cit" select="element-citation | mixed-citation | nlm-citation"/>
               <xsl:apply-templates select="$cit"/>
               <xsl:text> </xsl:text>
               <xsl:if test="$cit[@publication-type='journal']">
@@ -861,7 +861,7 @@
                     $author, '&amp;title=', $artTitle)"/>
                 </xsl:variable>
                 <!-- only output 'find this article' link if there is no ext-link already in the citation -->
-                <xsl:if test="not(element-citation//ext-link | mixed-citation//ext-link)">
+                <xsl:if test="not(element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link)">
                   <xsl:element name="a">
                     <xsl:attribute name="class">find</xsl:attribute>
                     <xsl:attribute name="href"><xsl:value-of select="$findURL"/></xsl:attribute>
@@ -1117,8 +1117,9 @@
         <div class="figure">
           <xsl:call-template name="makeXpathLocation"/>
           <xsl:element name="a">
-            <xsl:attribute name="name"><xsl:value-of select="$figId"/></xsl:attribute>
-              <xsl:attribute name="id"><xsl:value-of select="$figId"/></xsl:attribute>
+            <!-- 6/13/12: added translate so names and ids have dash (for figure enhancement) -->
+            <xsl:attribute name="name"><xsl:value-of select="translate($figId, '.', '-')"/></xsl:attribute>
+              <xsl:attribute name="id"><xsl:value-of select="translate($figId, '.', '-')"/></xsl:attribute>
               <xsl:attribute name="title">Click for larger image </xsl:attribute>
               <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
               <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
@@ -1417,6 +1418,17 @@
 
     <!-- 1/4/12: plos-specific templates for legacy references (element-citation: journal/no citation, book/other, supporting templates -->
 
+    <!-- 6/8/12: plos-specific template: legacy nlm-citation references (need separate transform to account for different tag order) -->
+    <xsl:template match="nlm-citation">
+      <xsl:apply-templates select="person-group" mode="book"/>
+      <xsl:apply-templates select="collab" mode="book"/>
+      <xsl:apply-templates select="year" mode="none"/>
+      <xsl:apply-templates select="article-title" mode="none"/>
+      <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
+        and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
+      <xsl:call-template name="citationComment"/>
+    </xsl:template>
+
     <!-- 1/4/12: plos-specific template: legacy references (publication-type journal and no publication-type) -->
     <xsl:template match="element-citation">
       <xsl:apply-templates select="person-group" mode="book"/>
@@ -1426,7 +1438,9 @@
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-types book and other) -->
-    <xsl:template match="element-citation[@publication-type='book'] | element-citation[@publication-type='other']">
+    <!-- 6/23/12: add nlm-citation and page-count for nlm-citation-->
+    <xsl:template match="element-citation[@publication-type='book'] | element-citation[@publication-type='other'] |
+                         nlm-citation[@publication-type='book'] | nlm-citation[@publication-type='other']">
      <xsl:variable name="augroupcount" select="count(person-group) + count(collab)"/>
       <xsl:choose>
         <!-- chapter in edited book -->
@@ -1442,7 +1456,7 @@
           <xsl:apply-templates select="volume"  mode="book"/>
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
-          <xsl:apply-templates select="size" mode="book"/>
+          <xsl:apply-templates select="size | page-count" mode="book"/>
         </xsl:when>
         <!-- when person-group without pgtype exists -->
         <xsl:when test="person-group[not(@person-group-type)]">
@@ -1457,7 +1471,7 @@
           <xsl:apply-templates select="issue" mode="none"/>
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
-          <xsl:apply-templates select="size" mode="book"/>
+          <xsl:apply-templates select="size | page-count" mode="book"/>
         </xsl:when>
         <!-- when pgtype author exists but not chapter in edited book -->
         <xsl:when test="person-group[@person-group-type='author']">
@@ -1472,7 +1486,7 @@
           <xsl:apply-templates select="issue" mode="none"/>
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
-          <xsl:apply-templates select="size" mode="book"/>
+          <xsl:apply-templates select="size | page-count" mode="book"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- all others -->
@@ -1486,7 +1500,7 @@
           <xsl:apply-templates select="issue" mode="none"/>
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
-          <xsl:apply-templates select="size" mode="book"/>
+          <xsl:apply-templates select="size | page-count" mode="book"/>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:call-template name="citationComment" />
@@ -1508,9 +1522,10 @@
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
+    <!-- 6/8/12: comment out call-template: don't need? -->
     <xsl:template match="article-title" mode="none">
       <xsl:apply-templates/>
-      <xsl:call-template name="punctuation" />
+      <!--<xsl:call-template name="punctuation" />  -->
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
@@ -1605,6 +1620,24 @@
     <xsl:template match="publisher-name" mode="none">
       <xsl:apply-templates/>
       <xsl:text>. </xsl:text>
+    </xsl:template>
+
+    <!-- 6/8/12: plos-specific template (replicate mode book as mode none for citations without publication-type) -->
+    <xsl:template match="size" mode="none">
+      <xsl:apply-templates />
+      <xsl:text> p.</xsl:text>
+      <xsl:if test="following-sibling::*">
+        <xsl:text> </xsl:text>
+      </xsl:if>
+    </xsl:template>
+
+    <!-- 6/12/12: plos-specific template (replicate size but use page-count for nlm-citation) -->
+    <xsl:template match="page-count" mode="none">
+      <xsl:apply-templates select="@count" />
+      <xsl:text> p.</xsl:text>
+      <xsl:if test="following-sibling::*">
+        <xsl:text> </xsl:text>
+      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
@@ -1777,6 +1810,26 @@
       <xsl:text> p.</xsl:text>
       <xsl:if test="following-sibling::*">
         <xsl:text> </xsl:text>
+      </xsl:if>
+    </xsl:template>
+
+    <!-- 6/23/12: plos-specific template (replicate size but use page-count for nlm-citation types book/other) -->
+    <xsl:template match="page-count" mode="book">
+      <xsl:apply-templates select="@count" />
+      <xsl:text> p.</xsl:text>
+      <xsl:if test="following-sibling::*">
+        <xsl:text> </xsl:text>
+      </xsl:if>
+    </xsl:template>
+
+    <!-- 6/8/12: plos-specific template -->
+    <xsl:template match="comment">
+      <xsl:if test="not(self::node()='.')">
+        <xsl:text> </xsl:text>
+        <xsl:apply-templates/>
+        <xsl:if test="substring(.,string-length(.)) != '.'">
+          <xsl:text>. </xsl:text>
+        </xsl:if>
       </xsl:if>
     </xsl:template>
 
@@ -2041,8 +2094,9 @@
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
+    <!-- 6/13/12: added translate so names and ids of figs have dashes (for figure enhancement) -->
     <xsl:template match="xref[@ref-type='fig'] | xref[@ref-type='table']">
-      <a href="#{@rid}">
+      <a href="#{translate(@rid, '.', '-')}">
         <xsl:apply-templates/>
       </a>
     </xsl:template>

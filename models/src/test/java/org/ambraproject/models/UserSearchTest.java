@@ -13,7 +13,7 @@
 
 package org.ambraproject.models;
 
-import org.springframework.orm.hibernate3.HibernateSystemException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
@@ -41,7 +41,7 @@ public class UserSearchTest extends BaseHibernateTest {
     assertEquals(storedSearch.getSearchParams(), userSearch.getSearchParams());
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullUserProfileId() {
     hibernateTemplate.save(new UserSearch());
   }

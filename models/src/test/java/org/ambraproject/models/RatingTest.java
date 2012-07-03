@@ -13,15 +13,13 @@
 
 package org.ambraproject.models;
 
-import org.springframework.orm.hibernate3.HibernateSystemException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
 import java.util.Calendar;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Alex Kudlick 3/7/12
@@ -59,11 +57,11 @@ public class RatingTest extends BaseHibernateTest {
     assertTrue(storedRating.getCreated().getTime() >= testStart, "created date wasn't after test start");
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullCreator() {
     hibernateTemplate.save(new Rating(null, 123123l));
   }
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullArticle() {
     UserProfile creator = new UserProfile(
         "authIDForSavingRatingWithNoArticle",

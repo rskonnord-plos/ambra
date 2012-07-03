@@ -13,7 +13,7 @@
 
 package org.ambraproject.models;
 
-import org.springframework.orm.hibernate3.HibernateSystemException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
@@ -41,7 +41,7 @@ public class ArticleViewTest extends BaseHibernateTest {
     assertEquals(savedView.getType(), view.getType(), "saved view had incorrect type");
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullArticleID() {
     ArticleView view = new ArticleView();
     view.setUserID(2l);
@@ -49,7 +49,7 @@ public class ArticleViewTest extends BaseHibernateTest {
     hibernateTemplate.save(view);
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullUserID() {
     ArticleView view = new ArticleView();
     view.setArticleID(2l);
@@ -57,7 +57,7 @@ public class ArticleViewTest extends BaseHibernateTest {
     hibernateTemplate.save(view);
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullType() {
     ArticleView view = new ArticleView();
     view.setUserID(2l);

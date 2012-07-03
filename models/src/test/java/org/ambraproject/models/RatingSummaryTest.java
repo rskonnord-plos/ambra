@@ -15,16 +15,12 @@ package org.ambraproject.models;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
 import java.util.Calendar;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.testng.Assert.*;
 
 /**
  * @author Alex Kudlick 3/7/12
@@ -94,7 +90,7 @@ public class RatingSummaryTest extends BaseHibernateTest {
         "update changed article id");
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullArticleID() {
     hibernateTemplate.save(new RatingSummary());
   }

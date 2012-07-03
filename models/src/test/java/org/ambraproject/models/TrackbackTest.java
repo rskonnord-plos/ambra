@@ -15,16 +15,12 @@ package org.ambraproject.models;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
 import java.util.Calendar;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.testng.Assert.*;
 
 /**
  * @author Alex Kudlick 3/7/12
@@ -68,7 +64,7 @@ public class TrackbackTest extends BaseHibernateTest {
     assertTrue(storedTrackback.getLastModified().getTime() >= testStart, "last modified date wasn't after test start");
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullArticleID() {
     Trackback trackback = new Trackback(null, "url");
     trackback.setTitle("title");

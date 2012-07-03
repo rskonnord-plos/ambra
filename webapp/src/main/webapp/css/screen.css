@@ -438,6 +438,25 @@ div.box			{ color: #000; padding: 10px; background-color: #fcd3b8; margin: 10px 
 div.content div.box h3,
 div.content div.box h4 { margin:0; }
 span.genus-species { font-style:italic; }
+span.small-caps {
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+span.underline {
+  text-decoration: underline;
+}
+span.overline {
+  text-decoration: overline;
+}
+span.strike {
+  text-decoration: line-through;
+}
+/*TODO: what are these supposed to look like?*/
+/*
+span.list-label {
+  display: list-item;
+}
+*/
 
 /* Menu next to article title containing download links, print link, etc. */
 div.content div#articleMenu { float:right; width:200px; margin:18px 0 0 15px; padding-bottom:15px; background:#fcd3b8 url(../images/articleMenu_btm.gif) no-repeat bottom left; font-size:0.9em; zoom:1; }

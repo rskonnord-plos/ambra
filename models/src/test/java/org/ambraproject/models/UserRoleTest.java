@@ -14,7 +14,6 @@
 package org.ambraproject.models;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
@@ -36,7 +35,7 @@ public class UserRoleTest extends BaseHibernateTest {
     assertEquals(storedRole.getRoleName(), "admin", "stored role didn't have correct name");
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullRole() {
     hibernateTemplate.save(new UserRole());
   }

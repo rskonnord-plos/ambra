@@ -1,7 +1,6 @@
 package org.ambraproject.models;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
 import java.util.Date;
@@ -13,7 +12,7 @@ import static org.testng.Assert.*;
  */
 public class SyndicationTest extends BaseHibernateTest {
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testShouldFailOnNullDoi() {
     hibernateTemplate.save(new Syndication());
   }

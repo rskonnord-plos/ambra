@@ -48,7 +48,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class ArticleTest extends BaseHibernateTest {
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testShouldFailOnNullDoi() {
     hibernateTemplate.save(new Article());
   }

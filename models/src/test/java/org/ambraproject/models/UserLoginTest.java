@@ -13,6 +13,7 @@
 
 package org.ambraproject.models;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
@@ -42,7 +43,7 @@ public class UserLoginTest extends BaseHibernateTest {
     assertEquals(storedLogin.getSessionId(), login.getSessionId(), "stored login had incorrect sessionID");
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullUserProfileId() {
     hibernateTemplate.save(new UserLogin());
   }

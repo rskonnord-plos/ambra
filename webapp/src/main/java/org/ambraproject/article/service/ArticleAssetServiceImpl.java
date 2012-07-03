@@ -92,6 +92,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
   static {
     FIGURE_AND_TABLE_CONTEXT_ELEMENTS.add("fig");
     FIGURE_AND_TABLE_CONTEXT_ELEMENTS.add("table-wrap");
+    FIGURE_AND_TABLE_CONTEXT_ELEMENTS.add("alternatives");
   }
 
   /**

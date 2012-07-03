@@ -13,15 +13,13 @@
 
 package org.ambraproject.models;
 
-import org.springframework.orm.hibernate3.HibernateSystemException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
 import java.util.Calendar;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Alex Kudlick 3/7/12
@@ -61,7 +59,7 @@ public class FlagTest extends BaseHibernateTest {
     assertTrue(storedFlag.getCreated().getTime() >= testStart, "created date wasn't after test start");
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullCreator() {
     UserProfile creator = new UserProfile(
         "authIdForSavingFlagWithNoCreator",
@@ -75,7 +73,7 @@ public class FlagTest extends BaseHibernateTest {
     hibernateTemplate.save(new Flag(null, FlagReasonCode.SPAM, annotation));
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullAnnotation() {
     UserProfile creator = new UserProfile(
         "authIdForSavingFlagWithNoAnnotation",
@@ -87,7 +85,7 @@ public class FlagTest extends BaseHibernateTest {
     hibernateTemplate.save(new Flag(creator, FlagReasonCode.SPAM, null));
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullReason() {
     UserProfile creator = new UserProfile(
         "authIdForSavingFlagWithNoReason",

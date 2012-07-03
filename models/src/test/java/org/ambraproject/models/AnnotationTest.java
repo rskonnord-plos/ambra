@@ -16,8 +16,8 @@ package org.ambraproject.models;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.type.StandardBasicTypes;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
 import java.io.Serializable;
@@ -28,29 +28,26 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Alex Kudlick 3/7/12
  */
 public class AnnotationTest extends BaseHibernateTest {
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullCreator() {
     hibernateTemplate.save(new Annotation(null, AnnotationType.COMMENT, 12l));
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullType() {
     UserProfile creator = new UserProfile("authIdForNullType", "email@nullType.org", "displayNameForNullType");
     hibernateTemplate.save(creator);
     hibernateTemplate.save(new Annotation(creator, null, 12l));
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullArticleID() {
     UserProfile creator = new UserProfile("authIdForNullArticleId", "email@nullArticleID.org", "displayNameForNullArticleID");
     hibernateTemplate.save(creator);

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra</artifactId>
-  <version>2.3.7-SNAPSHOT</version>
+  <version>2.3.7-NLM-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Ambra application</name>
 
@@ -32,7 +32,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- aggregate some documentation - javadocs & jxr -->
     <aggregate>true</aggregate>
-    <spring.version>2.5.6.SEC01</spring.version>
+    <spring.version>3.1.1.RELEASE</spring.version>
     <struts.version>2.3.1.2</struts.version>
     <freemarker.version>2.3.15</freemarker.version>
     <log4j.version>1.2.16</log4j.version>
@@ -336,7 +336,7 @@
       <!-- Spring Framework -->
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring</artifactId>
+        <artifactId>spring-orm</artifactId>
         <version>${spring.version}</version>
       </dependency>
       <dependency>

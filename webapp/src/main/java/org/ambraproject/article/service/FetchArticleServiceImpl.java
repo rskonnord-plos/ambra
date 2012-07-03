@@ -342,7 +342,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
         refList = (NodeList) result;
       }
 
-      XPathExpression typeExpr = xpath.compile("//citation | //nlm-citation");
+      XPathExpression typeExpr = xpath.compile("//citation | //nlm-citation | //element-citation");
       XPathExpression titleExpr = xpath.compile("//article-title");
       XPathExpression authorsExpr = xpath.compile("//person-group[@person-group-type='author']/name");
       XPathExpression journalExpr = xpath.compile("//source");
@@ -367,6 +367,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
         if (resultNode != null) {
           NamedNodeMap nnm = resultNode.getAttributes();
           Node nnmNode = nnm.getNamedItem("citation-type");
+          //nlm 3.0 has this attribute listed as 'publication-type'
+          nnmNode = nnmNode == null ? nnm.getNamedItem("publication-type") : nnmNode;
           // some old articles do not have this attribute
           if (nnmNode != null) {
             citation.setCitationType(nnmNode.getTextContent());

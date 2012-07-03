@@ -59,7 +59,7 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
 
 
   @Override
-  public void afterPropertiesSet() throws IOException {
+  public void afterPropertiesSet() throws Exception {
     super.afterPropertiesSet();
     try {
       HibernateTemplate hibernateTemplate = new HibernateTemplate((SessionFactory) getObject());

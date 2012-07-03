@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick 2/9/12
@@ -40,7 +39,7 @@ public class UserProfileTest extends BaseHibernateTest {
   private static final Logger log = LoggerFactory.getLogger(UserProfileTest.class);
 
 /*
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullEmail() {
     UserProfile profile = new UserProfile();
     profile.setDisplayName("HarryPotter");
@@ -48,7 +47,7 @@ public class UserProfileTest extends BaseHibernateTest {
     hibernateTemplate.save(profile);
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullDisplayName() {
     UserProfile profile = new UserProfile();
     profile.setEmail("foo@bar.org");

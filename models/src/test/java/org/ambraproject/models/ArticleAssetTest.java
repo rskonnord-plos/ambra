@@ -21,12 +21,10 @@
 package org.ambraproject.models;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick 11/9/11
@@ -51,13 +49,13 @@ public class ArticleAssetTest extends BaseHibernateTest {
 
   }
 
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullDoi() {
     ArticleAsset articleAsset = new ArticleAsset();
     articleAsset.setExtension("foo1");
     hibernateTemplate.save(articleAsset);
   }
-  @Test(expectedExceptions = {HibernateSystemException.class})
+  @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullExtension() {
     ArticleAsset articleAsset = new ArticleAsset();
     articleAsset.setDoi("foo1");
