@@ -36,7 +36,7 @@
   </p>
 
   <h2>Ambra 2.37</h2>
-  <p>Released July 5, 2012</p>
+  <p>Released July 3, 2012</p>
   <h3>Features Implemented in Ambra 2.37</h3>
   <ul>
     <li>Completed support for <a href="http://dtd.nlm.nih.gov/3.0/">NLM 3.0 DTD</a>.</li>
@@ -99,16 +99,17 @@
     <p>Released January 13, 2012</p>
     <h3>Features Implemented in Ambra 2.20</h3>
     <ul>
-        <li>A refactor of the way that articles are stored in the database. 26 tables used to store article data were replaced with 13 tables.</strong></li>
-        <li>Updates to the annotation feed to allow for different formats of the feed.</li>
-        <li>Updates to Browse By functionality.<li>
+        <li>Refactored article data and associated objects.</li>
+        <li>Added new parameters to the annotation feed to display the entire annotation body and the competing interests statement.</li>
+        <li>Updated the Browse By functionality.<li>
     </ul>
     
     <h2>Ambra 2.10</h2>
     <p>Released December 6, 2011</p>
     <h3>Features Implemented in Ambra 2.10</h3>
     <ul>
-        <li>The dust has settled. It's time to clean up.<li>
+      <li>Cleanup of Ambra objects.</li>
+      <li>Updated scripts that generate reports on annotations.</li>
     </ul>
     
     <h2>Ambra 2.0</h2>
