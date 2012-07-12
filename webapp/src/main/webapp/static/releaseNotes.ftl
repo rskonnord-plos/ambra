@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.38</h2>
+  <p>Released July 12, 2012</p>
+  <h3>Features Implemented in Ambra 2.38</h3>
+  <ul>
+    <li>We now have the capability to add multiple roles per user and a set of permissions associated with those
+      roles. There are no functional changes to existing users/permissions. ie Everything works as it did before.
+    </li>
+  </ul>
+
   <h2>Ambra 2.37</h2>
   <p>Released July 3, 2012</p>
   <h3>Features Implemented in Ambra 2.37</h3>
