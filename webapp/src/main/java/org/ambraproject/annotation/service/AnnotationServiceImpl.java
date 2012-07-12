@@ -123,7 +123,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
         sqlQuery.append("select ann.annotationID, art.doi, art.title ");
         sqlQuery.append("from annotation ann ");
         sqlQuery.append("join article art on art.articleID = ann.articleID ");
-        sqlQuery.append("join Journal j on art.eIssn = j.eIssn ");
+        sqlQuery.append("join journal j on art.eIssn = j.eIssn ");
         sqlQuery.append("where j.journalKey = :journal ");
         params.put("journal", journal);
 

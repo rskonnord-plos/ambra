@@ -503,7 +503,6 @@ div#sideNav dl.related dd a:hover { text-decoration:underline; }
 #rhc div#share li.bookmarklets { height:2em; margin-top:3px; }
 #rhc div#share li.bookmarklets div { display:inline-block; }
 #rhc div#share li.bookmarklets img,
-#rhc div#share li.bookmarklets iframe { margin-bottom:-0.3em; } /*iframe for digg.com bookmarklet*/
 
 /* correction article type styles */
 div.correction span#oa { /* open access image */ background: #3D3D3D url(../images/correction_oa.gif) no-repeat 0 0; }
@@ -791,6 +790,9 @@ ol li.current * { color: #000; text-decoration: none; background: none; cursor: 
 div.fullBanner { width: 468px; height: 60px; margin: 0!important; padding: 0!important; }
 div.fullBanner img { float: left; }
 div.fullBanner span.body { display: block; }
+
+/*--- Social Button stylings ---*/
+#reddit {text-decoration: none}
 
 /* inline figure download iconography */
 div.figure-inline-download div{

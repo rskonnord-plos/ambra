@@ -84,8 +84,29 @@
     <ul>
       <li class="bookmarklets">Bookmark:
 
-          <#-- StumbleUpon -->
-          <a href="http://www.stumbleupon.com/submit?url=${article.jDocURL}" target="_new"> <img border=0 src="http://cdn.stumble-upon.com/images/16x16_su_solid.gif" alt="StumbleUpon" title="Add to StumbleUpon"></a>
+      <#-- Reddit -->
+      <#-- Be sure to remove the stylings from screen.css or wherever it currently resides when this gets kiboshed -->
+        <a href="http://www.reddit.com/submit?url=${article.docURL}"
+           target="_new"
+           id="reddit">
+          <img src="http://www.reddit.com/static/spreddit4.gif" alt="submit to reddit" border="0"/> </a>
+      <#-- google+-->
+        <g:plusone size="small" annotation="none" href=${article.docURL}></g:plusone>
+        <script type="text/javascript">
+          (function () {
+            var po = document.createElement('script');
+            po.type = 'text/javascript';
+            po.async = true;
+            po.src = 'https://apis.google.com/js/plusone.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(po, s);
+          })();
+        </script>
+      <#-- StumbleUpon -->
+        <a href="http://www.stumbleupon.com/submit?url=${article.jDocURL}" target="_new"> <img border=0
+                                                                                               src="http://cdn.stumble-upon.com/images/16x16_su_solid.gif"
+                                                                                               alt="StumbleUpon"
+                                                                                               title="Add to StumbleUpon"></a>
           <#-- for more info, see http://www.stumbleupon.com/buttons.php -->
           <#-- Facebook -->
           <script>function fbs_click() {u='${article.docURL}';t='${article.docTitle?url?replace("'","\\'")}';window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script><a href="http://www.facebook.com/share.php?u=${article.docURL?url}" onclick="return fbs_click()"><img src="http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif" alt="Facebook" title="Add to Facebook" /></a>       <!-- for mor info, see http://www.facebook.com/share_partners.php -->
@@ -115,22 +136,7 @@
           var twtLink = 'http://twitter.com/intent/tweet?text='+encodeURIComponent(twtTitle + ' ' + twtUrl);
           document.write('<a href="'+twtLink+'" target="_blank"'+'><img src="${freemarker_config.context}/images/icon_twitter.gif"  border="0" alt="Twitter icon" title="Tweet This!" /'+'><'+'/a>');
           </script>
-          <#-- Digg
-            TODO:Eventually we should be passing the abstract as the bodytext to digg and sending a topic as well
-            -->
-          <script type="text/javascript">
-          digg_url = '${article.docURL}';
-          digg_skin = 'icon';
-          digg_title = '<@articleFormat><@simpleText>${article.docTitle?replace("'","\\'")}</@simpleText></@articleFormat>';
-          digg_bodytext = '';
-          digg_topic = '';
-          digg_media = 'news';
-          digg_window = 'new';
-
-          </script>
-          <script src="http://widgets.digg.com/diggthis.js" type="text/javascript"></script>
-          <#-- for more info see http://digg.com/tools/integrate -->
-      </li>
+         </li>
       <li class="email icon"><a href="${emailArticleURL}">Email this article</a></li>
     </ul>
   </div>

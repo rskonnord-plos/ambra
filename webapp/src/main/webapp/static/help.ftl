@@ -151,7 +151,7 @@
 
 <a id="socialBookmarkLinks" name="socialBookmarkLinks"></a>
 <h2>Share This Article</h2>
-<p>The 'bookmarklet' icons in the right-hand column of every article allow users to save and share links to articles via a number of popular <a href="http://en.wikipedia.org/wiki/Social_bookmarking" title="Wikipedia | Social bookmarking">"social bookmarking"</a> services such as <a href="http://www.stumbleupon.com" title="Stumble Upon">Stumble Upon</a>, <a href="http://www.facebook.com">Facebook</a>, <a href="http://www.connotea.org/" title="Connotea">Connotea</a>, <a href="http://www.citeulike.org/" title="CiteULike">CiteULike</a>, and <a href="http://digg.com/" title="digg">digg</a>.</p>
+<p>The 'bookmarklet' icons in the right-hand column of every article allow users to save and share links to articles via a number of popular <a href="http://en.wikipedia.org/wiki/Social_bookmarking" title="Wikipedia | Social bookmarking">"social bookmarking"</a> services such as <a href="http://www.reddit.com" title="Reddit">Reddit</a>, <a href="https://plus.google.com/" title="Google+">Google+</a>, <a href="http://www.stumbleupon.com" title="Stumble Upon">Stumble Upon</a>, <a href="http://www.facebook.com">Facebook</a>, <a href="http://www.connotea.org/" title="Connotea">Connotea</a>, and <a href="http://www.citeulike.org/" title="CiteULike">CiteULike</a>.</p>
 
 <a id="relatedArticles" name="relatedArticles"></a>
 <h2>Related Content</h2>

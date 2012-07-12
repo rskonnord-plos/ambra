@@ -105,7 +105,7 @@ public class TrackbackServiceImpl extends HibernateServiceImpl implements Trackb
         sqlQuery.append("select track.trackbackID, art.doi, art.title ");
         sqlQuery.append("from trackback track ");
         sqlQuery.append("join article art on art.articleID = track.articleID ");
-        sqlQuery.append("join Journal j on art.eIssn = j.eIssn ");
+        sqlQuery.append("join journal j on art.eIssn = j.eIssn ");
         sqlQuery.append("where j.journalKey = :journal ");
         params.put("journal", journal);
 

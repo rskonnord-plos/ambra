@@ -152,7 +152,7 @@ public abstract class UserProfileAction extends UserActionSupport {
   private boolean validateInput() {
     boolean isValid = true;
     //check the display name
-    if (displayName == null) {
+    if (displayName == null || displayName.isEmpty()) {
       addFieldError(DISPLAY_NAME, "Please enter a username");
       isValid = false;
     } else {

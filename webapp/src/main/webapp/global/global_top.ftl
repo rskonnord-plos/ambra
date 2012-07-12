@@ -26,7 +26,10 @@
       xmlns:doi="http://dx.doi.org/"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:xsd="http://www.w3.org/2001/XMLSchema-datatypes#"
-      lang="en" xml:lang="en">
+      lang="en" xml:lang="en"
+      <#-- google+1 button-->
+      itemscope itemtype="http://schema.org/Article">
+
 <head>
 <#include "/global/global_head.ftl">
 </head>

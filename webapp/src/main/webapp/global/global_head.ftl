@@ -48,6 +48,8 @@
   <meta name="citation_doi" content="${articleInfoX.doi?replace('info:doi/','')}" />
   <#if articleInfoX.unformattedTitle??>
     <meta name="citation_title" content="${articleInfoX.unformattedTitle}"/>
+    <#-- below is for google+ button: delete if you come across this and there's no google+ button any longer -->
+    <meta itemprop="name" content="${articleInfoX.unformattedTitle}"/>
   </#if>
 
   <#if authorExtras?? >

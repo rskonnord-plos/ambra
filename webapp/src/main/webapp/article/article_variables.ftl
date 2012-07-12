@@ -25,10 +25,6 @@
   <#assign journalContext = "">
 </#if>
 
-<#--
-  The digg URL has to be different as digg appears to be picking up the redirect
-  from our internal DOI resolver and messing up the formating.
- -->
 <#if articleInfoX??>
   <#assign shortDOI = "${articleInfoX.doi?replace('info:doi/','')}" />
   <#assign docURL = "${freemarker_config.doiResolverURL}" + shortDOI />

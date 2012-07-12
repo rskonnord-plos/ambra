@@ -506,7 +506,6 @@ div#sideNav dl.related dd a:hover { text-decoration:underline; }
 #rhc div#share ul li.email { background-image: url(../images/icon_email.gif); }
 #rhc div#share li.bookmarklets { height:2em; padding-top:8px; }
 #rhc div#share li.bookmarklets img,
-#rhc div#share li.bookmarklets span.db-wrapper { margin-bottom:0; } /*span.db-wrapper digg.com bookmarklet*/
 #rhc div#share li.bookmarklets img { padding:0 2px; }
 
 /* correction article type styles */
@@ -895,6 +894,10 @@ div.fullBanner span.body { display: block; }
 
 span.gene i,
 span.gene u,
+span.gene b { display:inline-block; }
+
+/*--- Social Button stylings ---*/
+#reddit {text-decoration: none}
 span.gene b { display:inline-block; }
 
 /* inline figure download iconography */

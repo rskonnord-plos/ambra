@@ -15,6 +15,7 @@ dojo.provide("ambra.lightBox");
 dojo.require("ambra.general");
 dojo.require("ambra.domUtil");
 dojo.require("ambra.formUtil");
+dojo.require("dojo.window");
 
 ambra.lightBox = {
   showing: false,
@@ -146,6 +147,7 @@ ambra.lightBox = {
           if (typeof imageURI != 'undefined' && image.uri == imageURI) {
             createdivNode.className = "figure-window-nav-item current";
             currentImageIndex = i;
+            dojo.window.scrollIntoView(createdivNode);
           } else {
             createdivNode.className = "figure-window-nav-item";
           }
