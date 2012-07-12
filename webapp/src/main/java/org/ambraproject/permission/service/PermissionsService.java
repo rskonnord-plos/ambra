@@ -19,23 +19,35 @@
  */
 package org.ambraproject.permission.service;
 
+import org.ambraproject.models.UserRole.Permission;
+import java.util.Set;
+
 /**
- * A simple role based permissions service
- *
- * If needed at a later point in time we might add permissions to roles and add
- * a hasPermissions method here and make roles transparent.  But being we only have
- * one role (admin) it's overkill for now
+ * A simple role based permissions service, roles are cached keyed off of authID
  *
  * @author Joe Osowski
  */
 public interface PermissionsService {
+  @Deprecated
   public static String ADMIN_ROLE = "admin";
+
   /**
-   * Does the user associated with the current security principle have the given role?
-   * @param role
-   * @return
+   * Does the user associated with the current security principle have the given permission?
+   * @param permission The permission to check for
+   * @param authId the Authorization ID of the current user
+   *
+   * @throws SecurityException if the user doesn't have the permission
    */
-  public void checkRole(String role, String authId) throws SecurityException;
+  public void checkPermission(final Permission permission, final String authId) throws SecurityException;
+
+  /**
+   * Get all the permissions for the given authID
+   *
+   * @param authId the authID of the current user
+   *
+   * @return the complete set of permissions
+   */
+  public Set<Permission> getPermissions(final String authId);
 
   public void checkLogin(String authId) throws SecurityException;
 }

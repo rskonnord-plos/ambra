@@ -57,7 +57,7 @@
     <property name="interests" column="interests" type="text"/>
 
     <!--We don't want to cascade to roles; creating those should be a totally separate process from creating/users-->
-    <set name="roles" cascade="none" table="userProfileRoleJoinTable" fetch="join">
+    <set name="roles" cascade="none" table="userProfileRoleJoinTable">
       <key column="userProfileID"/>
       <many-to-many column="userRoleID" class="UserRole"/>
     </set>

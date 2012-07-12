@@ -147,16 +147,6 @@ public class UserServiceTest extends BaseTest {
   }
 
   @Test
-  public void testAllowAdminAction() throws Exception {
-    //make sure the auth ids correspond to new kinds of user
-    userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID);
-    userService.getUserByAuthId(DEFUALT_USER_AUTHID);
-
-    assertTrue(userService.allowAdminAction(DEFAULT_ADMIN_AUTHID), "User Service didn't allow admin action for admin user");
-    assertFalse(userService.allowAdminAction(DEFUALT_USER_AUTHID), "User Service allowed admin action for non-admin user");
-  }
-
-  @Test
   public void testSaveUser() throws DuplicateDisplayNameException {
     UserProfile userProfile = new UserProfile();
     userProfile.setEmail("email@saveProfile.org");

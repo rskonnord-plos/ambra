@@ -47,7 +47,7 @@ public class GetAverageRatingsAction extends AbstractRatingAction {
     final Article article = articleService.getArticle(articleURI, getAuthId());
     averageRatings = ratingsService.getAverageRatings(article.getID());
     hasRated = ratingsService.hasRated(article.getID(), getCurrentUser());
-    isResearchArticle = articleService.isResearchArticle(article, getAuthId());
+    isResearchArticle = articleService.isResearchArticle(article);
     return SUCCESS;
   }
 

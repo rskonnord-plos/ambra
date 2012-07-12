@@ -97,7 +97,7 @@ public class RateAction extends AbstractRatingAction {
     
     try {
       article = articleService.getArticle(articleURI, getAuthId());
-      isResearchArticle = articleService.isResearchArticle(article, getAuthId());
+      isResearchArticle = articleService.isResearchArticle(article);
     } catch (Exception ae) {
       log.info("Could not get article info for: " + articleURI, ae);
       return ERROR;

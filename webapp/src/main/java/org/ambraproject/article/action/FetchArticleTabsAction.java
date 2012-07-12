@@ -330,7 +330,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
     averageRatings = ratingsService.getAverageRatings(articleInfoX.getId());
     journalList = articleInfoX.getJournals();
-    isResearchArticle = articleService.isResearchArticle(articleInfoX, getAuthId());
+    isResearchArticle = articleService.isResearchArticle(articleInfoX);
     hasRated = ratingsService.hasRated(articleInfoX.getId(), getCurrentUser());
     articleIssues = articleService.getArticleIssues(articleURI);
     //count all the comments and corrections

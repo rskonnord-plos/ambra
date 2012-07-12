@@ -13,6 +13,12 @@
 
 package org.ambraproject.models;
 
+import org.apache.commons.lang.ArrayUtils;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Class representing a role for a user
  *
@@ -20,15 +26,35 @@ package org.ambraproject.models;
  */
 public class UserRole extends AmbraEntity {
 
+  public static enum Permission {
+    ACCESS_ADMIN,
+    INGEST_ARTICLE,
+    MANAGE_FLAGS,
+    MANAGE_ANNOTATIONS,
+    MANAGE_USERS,
+    MANAGE_ROLES,
+    MANAGE_JOURNALS,
+    MANAGE_SEARCH,
+    MANAGE_CACHES,
+    CROSS_PUB_ARTICLES,
+    DELETE_ARTICLES,
+    VIEW_UNPUBBED_ARTICLES
+  }
+
   private String roleName;
+  private Set<Permission> permissions;
 
   public UserRole() {
     super();
   }
 
-  public UserRole(String roleName) {
+  public UserRole(String roleName, Permission... permissions) {
     this();
     this.roleName = roleName;
+    if (!ArrayUtils.isEmpty(permissions)) {
+      this.permissions = new HashSet<Permission>();
+      Collections.addAll(this.permissions, permissions);
+    }
   }
 
   public String getRoleName() {
@@ -37,6 +63,14 @@ public class UserRole extends AmbraEntity {
 
   public void setRoleName(String roleName) {
     this.roleName = roleName;
+  }
+
+  public Set<Permission> getPermissions() {
+    return permissions;
+  }
+
+  public void setPermissions(Set<Permission> permissions) {
+    this.permissions = permissions;
   }
 
   @Override

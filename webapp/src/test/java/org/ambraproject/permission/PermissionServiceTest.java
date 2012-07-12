@@ -15,6 +15,7 @@ package org.ambraproject.permission;
 
 import org.ambraproject.BaseTest;
 import org.ambraproject.models.UserRole;
+import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.permission.service.PermissionsService;
 import org.ambraproject.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,22 +36,57 @@ public class PermissionServiceTest extends BaseTest {
   public void testCheckRoleOnAdmin() {
     //ensure that the admin auth id is a user
     assertNotNull(userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID), "Admin auth id was not a user");
-    permissionsService.checkRole(PermissionsService.ADMIN_ROLE, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.ACCESS_ADMIN, DEFAULT_ADMIN_AUTHID);
   }
 
   @Test(expectedExceptions = {SecurityException.class})
   public void testCheckRoleOnNonAdmin() {
     //ensure that the user auth id is a user
-    assertNotNull(userService.getUserByAuthId(DEFUALT_USER_AUTHID),"user auth id was not a user");
-    permissionsService.checkRole(PermissionsService.ADMIN_ROLE, DEFUALT_USER_AUTHID);
+    assertNotNull(userService.getUserByAuthId(DEFAULT_USER_AUTHID),"user auth id was not a user");
+    permissionsService.checkPermission(Permission.ACCESS_ADMIN, DEFAULT_USER_AUTHID);
+  }
+
+  @Test()
+  public void testCheckAdminPermissions() {
+    //ensure that the user auth id is a user
+    assertNotNull(userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID),"user auth id was not a user");
+
+    permissionsService.checkPermission(Permission.INGEST_ARTICLE, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.ACCESS_ADMIN, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_FLAGS, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_ANNOTATIONS, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_USERS, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_ROLES, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_JOURNALS, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_SEARCH, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_CACHES, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.CROSS_PUB_ARTICLES, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.DELETE_ARTICLES, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, DEFAULT_ADMIN_AUTHID);
+  }
+
+  @Test()
+  public void testCheckEditorialPermissions() {
+    //ensure that the user auth id is a user
+    assertNotNull(userService.getUserByAuthId(DEFAULT_EDITORIAL_AUTHID),"user auth id was not a user");
+
+    permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, DEFAULT_EDITORIAL_AUTHID);
   }
 
   @Test(expectedExceptions = {SecurityException.class})
-  public void testCheckNewRole() {
-    UserRole role = new UserRole("some new role");
-    dummyDataStore.store(role);
+  public void testCheckEditorialBadPermissions() {
+    //ensure that the user auth id is a user
+    assertNotNull(userService.getUserByAuthId(DEFAULT_EDITORIAL_AUTHID),"user auth id was not a user");
 
-    permissionsService.checkRole(role.getRoleName(), DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_JOURNALS, DEFAULT_EDITORIAL_AUTHID);
+  }
+
+  @Test(expectedExceptions = {SecurityException.class})
+  public void testUserNoPermissions() {
+    //ensure that the user auth id is a user
+    assertNotNull(userService.getUserByAuthId(DEFAULT_USER_AUTHID),"user auth id was not a user");
+
+    permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, DEFAULT_USER_AUTHID);
   }
 
   @Test

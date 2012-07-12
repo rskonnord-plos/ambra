@@ -83,7 +83,8 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
   @Autowired
   protected DummyDataStore dummyDataStore;
   public static final String DEFAULT_ADMIN_AUTHID = "AdminAuthorizationID";
-  public static final String DEFUALT_USER_AUTHID = "DummyTestUserAuthorizationID";
+  public static final String DEFAULT_EDITORIAL_AUTHID = "EditorialAuthorizationID";
+  public static final String DEFAULT_USER_AUTHID = "DummyTestUserAuthorizationID";
 
   public static final Journal defaultJournal = new Journal();
 

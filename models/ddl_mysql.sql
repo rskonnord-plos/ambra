@@ -240,8 +240,8 @@
         journalID bigint not null auto_increment,
         lastModified datetime not null,
         created datetime not null,
-        journalKey varchar(255),
-        eIssn varchar(255),
+        journalKey varchar(255) unique,
+        eIssn varchar(255) unique,
         imageUri varchar(255),
         title varchar(255),
         description longtext,
@@ -366,6 +366,11 @@
         created datetime not null,
         roleName varchar(255) not null unique,
         primary key (userRoleID)
+    );
+
+    create table userRolePermission (
+        userRoleID bigint not null,
+        permission varchar(255)
     );
 
     create table userSearch (
@@ -542,6 +547,12 @@
     alter table userProfileRoleJoinTable 
         add index FK57F48A30DDEDF391 (userRoleID), 
         add constraint FK57F48A30DDEDF391 
+        foreign key (userRoleID) 
+        references userRole (userRoleID);
+
+    alter table userRolePermission 
+        add index FK2E3B3F90DDEDF391 (userRoleID), 
+        add constraint FK2E3B3F90DDEDF391 
         foreign key (userRoleID) 
         references userRole (userRoleID);
 

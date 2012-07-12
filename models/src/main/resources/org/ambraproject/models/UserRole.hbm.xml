@@ -28,6 +28,15 @@
 
     <property name="roleName" column="roleName" type="string" unique="true" not-null="true"/>
 
+    <set name="permissions" table="userRolePermission" fetch="join">
+      <key column="userRoleID"/>
+      <element column="permission">
+        <type name="org.ambraproject.hibernate.GenericEnumUserType">
+          <param name="enumClass">org.ambraproject.models.UserRole$Permission</param>
+        </type>
+      </element>
+    </set>
+
   </class>
 
 </hibernate-mapping>

@@ -117,7 +117,7 @@ public class ArticleAssetServiceTest extends BaseTest {
     dummyDataStore.store(notYetPublished); //cascade to the assets
     return new Object[][]{
         //users shouldn't see unpublished asset
-        {asset1.getDoi(), asset1.getExtension(), DEFUALT_USER_AUTHID},
+        {asset1.getDoi(), asset1.getExtension(), DEFAULT_USER_AUTHID},
         //even admins shouldn't see disabled asset
         {asset2.getDoi(), asset2.getExtension(), DEFAULT_ADMIN_AUTHID}
     };
@@ -184,7 +184,7 @@ public class ArticleAssetServiceTest extends BaseTest {
     dummyDataStore.store(deliberatelyUnpubbed);
 
     return new Object[][]{
-        {notYetPubbed.getDoi(), DEFUALT_USER_AUTHID},
+        {notYetPubbed.getDoi(), DEFAULT_USER_AUTHID},
         {deliberatelyUnpubbed.getDoi(), DEFAULT_ADMIN_AUTHID}
     };
   }
@@ -267,7 +267,7 @@ public class ArticleAssetServiceTest extends BaseTest {
     dummyDataStore.store(disabled);
 
     return new Object[][]{
-        {unpubbed.getDoi(), DEFUALT_USER_AUTHID},
+        {unpubbed.getDoi(), DEFAULT_USER_AUTHID},
         {disabled.getDoi(), DEFAULT_ADMIN_AUTHID}
     };
   }

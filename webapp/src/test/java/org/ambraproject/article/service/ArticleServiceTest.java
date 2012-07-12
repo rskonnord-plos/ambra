@@ -753,7 +753,7 @@ public class ArticleServiceTest extends BaseTest {
         //admins should see unpubbed article
         {article.getDoi(), article, DEFAULT_ADMIN_AUTHID, new Article[]{unpubbedArticle, pubbedArticle}},
         //users should not
-        {article.getDoi(), article, DEFUALT_USER_AUTHID, new Article[]{pubbedArticle}}
+        {article.getDoi(), article, DEFAULT_USER_AUTHID, new Article[]{pubbedArticle}}
     };
   }
 

@@ -35,6 +35,7 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.views.AnnotationView;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -53,10 +54,10 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertEqualsNoOrder;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEqualsNoOrder;
 
 /**
  * Test for methods of {@link AnnotationService}.  The test just references methods of the interface so that different
@@ -71,6 +72,7 @@ public class AnnotationServiceTest extends BaseTest {
   protected AnnotationService annotationService;
 
   @Autowired
+  @Qualifier("articleHtmlCache")
   protected Cache articleHtmlCache; //just used to check that articles get kicked out of the cache when notes are created
 
   @DataProvider(name = "articleAnnotations")

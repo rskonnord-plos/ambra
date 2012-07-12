@@ -121,7 +121,7 @@ public abstract class BaseWebTest extends BaseTest {
    */
   protected void setupUserContext() {
     Map<String, Object> sessionAttributes = new HashMap<String, Object>();
-    sessionAttributes.put(Constants.AUTH_KEY, DEFUALT_USER_AUTHID);
+    sessionAttributes.put(Constants.AUTH_KEY, DEFAULT_USER_AUTHID);
     setupContext(sessionAttributes);
   }
 

@@ -132,14 +132,6 @@ public interface UserService {
   public List<UserAlert> getAvailableAlerts();
 
   /**
-   * Checks if the user specified by the given auth id should be allowed to perform admin actions
-   *
-   * @param authId the auth id of the user to check
-   * @return boolean true if the user is allowed to perform admin actions, false if not
-   */
-  public boolean allowAdminAction(final String authId);
-
-  /**
    * Get the email address that CAS has stored for the user
    *
    * @param authId the user to lookup

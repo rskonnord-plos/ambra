@@ -181,6 +181,7 @@
 
   <bean id="permissionsService" class="org.ambraproject.permission.service.PermissionsServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
+    <property name="rolesCache" ref="rolesCache"/>
   </bean>
 
   <bean id="annotationService" class="org.ambraproject.annotation.service.AnnotationServiceImpl">
@@ -285,8 +286,13 @@
     <constructor-arg index="0" ref="browseSolrEhcache"/>
     <constructor-arg index="1" value="false"/>
   </bean>
+
   <bean id="articleHtmlCache" class="org.ambraproject.cache.EhcacheProvider">
     <constructor-arg index="0" ref="articleHtmlEhcache"/>
+  </bean>
+
+  <bean id="rolesCache" class="org.ambraproject.cache.EhcacheProvider">
+    <constructor-arg index="0" ref="rolesEhCache"/>
   </bean>
 
   <!-- freemarker configs -->
@@ -308,6 +314,10 @@
 
   <bean id="articleHtmlEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
     <property name="cacheName" value="ArticleHtmlCache"/>
+  </bean>
+
+  <bean id="rolesEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="RolesCache"/>
   </bean>
 
   <!-- JMX exporting -->
@@ -347,7 +357,7 @@
   </bean>
 
   <!--For Dev setup, you can uncomment the dummy mailer and comment out the real mailer-->
-  <!--<bean id="ambraMailer" class="org.ambraproject.service.DummyAmbraMailer" />-->
+  <!--<bean id="ambraMailer" class="org.ambraproject.testutils.DummyAmbraMailer" />-->
 
   <bean id="ambraMailer" class="org.ambraproject.service.AmbraMailerImpl">
     <property name="fromEmailAddress" value="application@plosone.org"/>

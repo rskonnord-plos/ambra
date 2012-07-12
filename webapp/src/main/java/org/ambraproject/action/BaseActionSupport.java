@@ -21,6 +21,8 @@ package org.ambraproject.action;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.ambraproject.Constants;
+import org.ambraproject.models.UserRole;
+import org.ambraproject.permission.service.PermissionsService;
 import org.ambraproject.web.VirtualJournalContext;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
@@ -29,13 +31,13 @@ import org.apache.struts2.interceptor.RequestAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base class for all actions.
@@ -43,6 +45,7 @@ import java.util.Map;
 public abstract class BaseActionSupport extends ActionSupport implements RequestAware {
   private static final Logger  log  = LoggerFactory.getLogger(BaseActionSupport.class);
 
+  protected PermissionsService permissionsService;
   protected Configuration configuration;
   protected Map requestAttributes;
 
@@ -52,6 +55,19 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
 
   public void setRequest(Map map) {
     requestAttributes = map;
+  }
+
+
+  public UserRole.Permission[] getPermissions()
+  {
+    String authId = getAuthId();
+
+    if(authId != null) {
+      Set<UserRole.Permission> perms = this.permissionsService.getPermissions(authId);
+      return perms.toArray(new UserRole.Permission[perms.size()]);
+    } else {
+      return new UserRole.Permission[] {};
+    }
   }
 
   /**
@@ -111,6 +127,15 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
     this.configuration = configuration;
   }
 
+  /**
+   * Setter method for the permissions service
+   *
+   * @param permissionsService
+   */
+  @Required
+  public void setPermissionsService(PermissionsService permissionsService) {
+    this.permissionsService = permissionsService;
+  }
 
   /**
    * Add profane words together into a message.

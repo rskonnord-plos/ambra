@@ -24,7 +24,6 @@ package org.ambraproject.testutils;
 import org.ambraproject.BaseTest;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
-import org.ambraproject.permission.service.PermissionsService;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,6 +38,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -64,7 +64,23 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
     try {
       HibernateTemplate hibernateTemplate = new HibernateTemplate((SessionFactory) getObject());
       // Create an admin user to test admin functions
-      UserRole adminRole = new UserRole(PermissionsService.ADMIN_ROLE);
+      UserRole adminRole = new UserRole("admin");
+
+      Set<UserRole.Permission> perms = new HashSet<UserRole.Permission>();
+      perms.add(UserRole.Permission.ACCESS_ADMIN);
+      perms.add(UserRole.Permission.INGEST_ARTICLE);
+      perms.add(UserRole.Permission.MANAGE_FLAGS);
+      perms.add(UserRole.Permission.MANAGE_ANNOTATIONS);
+      perms.add(UserRole.Permission.MANAGE_USERS);
+      perms.add(UserRole.Permission.MANAGE_ROLES);
+      perms.add(UserRole.Permission.MANAGE_JOURNALS);
+      perms.add(UserRole.Permission.MANAGE_SEARCH);
+      perms.add(UserRole.Permission.MANAGE_CACHES);
+      perms.add(UserRole.Permission.CROSS_PUB_ARTICLES);
+      perms.add(UserRole.Permission.DELETE_ARTICLES);
+      perms.add(UserRole.Permission.VIEW_UNPUBBED_ARTICLES);
+
+      adminRole.setPermissions(perms);
       hibernateTemplate.save(adminRole);
 
       UserProfile admin = new UserProfile();
@@ -75,9 +91,23 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
       admin.getRoles().add(adminRole);
       hibernateTemplate.save(admin);
 
+      UserRole editorialRole = new UserRole("editorial");
+      perms = new HashSet<UserRole.Permission>();
+      perms.add(UserRole.Permission.ACCESS_ADMIN);
+      perms.add(UserRole.Permission.VIEW_UNPUBBED_ARTICLES);
+      editorialRole.setPermissions(perms);
+      hibernateTemplate.save(editorialRole);
+
+      UserProfile editorial = new UserProfile();
+      editorial.setAuthId(BaseTest.DEFAULT_EDITORIAL_AUTHID);
+      editorial.setEmail("editorial@test.org");
+      editorial.setDisplayName("editorialAdmin");
+      editorial.setRoles(new HashSet<UserRole>(1));
+      editorial.getRoles().add(editorialRole);
+      hibernateTemplate.save(editorial);
 
       UserProfile nonAdmin = new UserProfile();
-      nonAdmin.setAuthId(BaseTest.DEFUALT_USER_AUTHID);
+      nonAdmin.setAuthId(BaseTest.DEFAULT_USER_AUTHID);
       nonAdmin.setEmail("nonAdmin@test.org");
       nonAdmin.setDisplayName("testNonAdmin");
       hibernateTemplate.save(nonAdmin);

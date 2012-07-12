@@ -21,6 +21,7 @@
 package org.ambraproject.user.action;
 
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.models.UserRole.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,8 +68,15 @@ public class DisplayUserAction extends UserProfileAction {
     // check if the user wants to show private fields
     boolean showPrivateFields = user.getOrganizationVisibility();
     if (!showPrivateFields) {
+
       //if they said no, still show them to admins and that same user
-      showPrivateFields = userService.allowAdminAction(authId) || user.getAuthId().equals(authId);
+      try {
+        permissionsService.checkPermission(Permission.MANAGE_USERS, authId);
+        showPrivateFields = true;
+      } catch(SecurityException ex) {
+        log.debug("User does not have MANAGE_USERS permission");
+        showPrivateFields = user.getAuthId().equals(authId);
+      }
     }
 
     setFieldsFromProfile(userService.getProfileForDisplay(user, showPrivateFields));

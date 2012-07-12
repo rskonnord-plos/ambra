@@ -165,8 +165,10 @@ public class EmailArticleAction extends UserActionSupport {
         new URI(articleURI);
       } catch (UnsupportedEncodingException ex) {
         addFieldError("articleURI", "Must be a valid URI, character encoding is bad.");
-     } catch (URISyntaxException ex) {
+        isValid = false;
+      } catch (URISyntaxException ex) {
         addFieldError("articleURI", "Must be a valid URI");
+        isValid = false;
       }
     }
 

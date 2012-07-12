@@ -27,6 +27,7 @@ import org.ambraproject.filestore.FileStoreException;
 import org.ambraproject.filestore.FileStoreService;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
+import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.models.Journal;
 import org.ambraproject.permission.service.PermissionsService;
@@ -49,7 +50,6 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -57,7 +57,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -188,7 +189,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
     //If the article is in an unpublished state, none of the related objects should be returned
     if (Article.STATE_UNPUBLISHED == state) {
       try {
-        permissionsService.checkRole(PermissionsService.ADMIN_ROLE, authId);
+        permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, authId);
       } catch (SecurityException se) {
         throw new NoSuchObjectIdException(assetDoi);
       }

@@ -29,7 +29,7 @@
   <!--Ambra Actions and interceptors-->
   <bean id="ensureRoleInterceptor" class="org.ambraproject.user.EnsureRoleInterceptor">
     <property name="transactionManager" ref="transactionManager"/>
-    <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="ensureUserAccountInterceptor" class="org.ambraproject.user.EnsureUserAccountInterceptor">
@@ -40,26 +40,31 @@
   <bean id="displayUserAction" class="org.ambraproject.user.action.DisplayUserAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="createCitationAction" class="org.ambraproject.article.action.CreateCitation">
     <property name="articleService" ref="articleService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="slideshowAction" class="org.ambraproject.article.action.SlideshowAction">
     <property name="articleAssetService" ref="articleAssetService"/>
     <property name="secondaryObjectService" ref="secondaryObjectService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="homePageAction" class="org.ambraproject.action.HomePageAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="browseService" ref="browseService"/>
   </bean>
 
   <bean id="memberUserProfileAction" class="org.ambraproject.user.action.MemberUserProfileAction">
     <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
   </bean>
@@ -67,15 +72,18 @@
   <bean id="memberUserAlertsAction" class="org.ambraproject.user.action.MemberUserAlertsAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="fetchArticleAction" class="org.ambraproject.article.action.FetchArticleAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="articleService" ref="articleService"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="fetchArticleTabAction" class="org.ambraproject.article.action.FetchArticleTabsAction">
     <property name="ratingsService" ref="ratingsService"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="userService" ref="userService"/>
     <property name="trackBackService" ref="trackbackService"/>
     <property name="ambraFreemarkerConfig" ref="ambraFreemarkerConfig"/>
@@ -92,10 +100,12 @@
     <property name="xmlService" ref="xmlService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="fileStoreService" ref="fileStoreService"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="createAnnotationAction" class="org.ambraproject.annotation.action.CreateAnnotationAction">
     <property name="annotationService" ref="annotationService"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="articleHtmlCache" ref="articleHtmlCache"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
@@ -103,23 +113,50 @@
 
   <bean id="listReplyAction" class="org.ambraproject.annotation.action.ListReplyAction">
     <property name="annotationService" ref="annotationService"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="articleService" ref="articleService"/>
   </bean>
 
   <bean id="createFlagAction" class="org.ambraproject.annotation.action.CreateFlagAction">
     <property name="annotationService" ref="annotationService"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
   </bean>
 
   <bean id="createReplyAction" class="org.ambraproject.annotation.action.CreateReplyAction">
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="annotationService" ref="annotationService"/>
   </bean>
 
+  <bean id="feedbackAction" class="org.ambraproject.action.FeedbackAction">
+    <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="ambraMailer" ref="ambraMailer"/>
+  </bean>
+
+  <bean id="emailArticleAction" class="org.ambraproject.article.action.EmailArticleAction">
+    <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="ambraMailer" ref="ambraMailer"/>
+    <property name="articleService" ref="articleService"/>
+    <property name="secondaryObjectService" ref="secondaryObjectService"/>
+  </bean>
+
+  <bean id="getArticleRatingsAction" class="org.ambraproject.rating.action.GetArticleRatingsAction">
+    <property name="ratingsService" ref="ratingsService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="articleService" ref="articleService"/>
+  </bean>
+
   <bean id="fetchPowerPointAction" class="org.ambraproject.article.action.FetchPowerPointAction">
     <property name="articleAssetService" ref="articleAssetService"/>
+    <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
   </bean>
 </beans>

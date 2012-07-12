@@ -36,27 +36,25 @@ public interface ArticleService {
   /**
    * Determines if the articleURI is of type researchArticle
    *
-   * @param article The URI of the article
-   * @param authId the authorization ID of the current user
+   * @param article The article object
    * @return True if the article is a research article
    * @throws ApplicationException
    *                                  if there was a problem talking to the OTM
    * @throws NoSuchArticleIdException When the article does not exist
    */
-  public boolean isResearchArticle(final Article article, final String authId)
+  public boolean isResearchArticle(final Article article)
     throws NoSuchArticleIdException, ApplicationException;
 
   /**
    * Determines if the articleURI is of type researchArticle
    *
-   * @param articleInfo The URI of the article
-   * @param authId the authorization ID of the current user
+   * @param articleInfo The articleInfo object
    * @return True if the article is a research article
    * @throws ApplicationException
    *                                  if there was a problem talking to the OTM
    * @throws NoSuchArticleIdException When the article does not exist
    */
-  public boolean isResearchArticle(final ArticleInfo articleInfo, final String authId)
+  public boolean isResearchArticle(final ArticleInfo articleInfo)
       throws NoSuchArticleIdException, ApplicationException;
 
   /**

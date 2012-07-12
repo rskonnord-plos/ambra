@@ -20,7 +20,7 @@
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-      <comments>Copyright (c) 2006-2009 by Topaz, Inc.</comments>
+      <comments>Copyright (c) 2006-2012 by The Public Library of Science</comments>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -69,14 +69,6 @@
       </releases>
       <snapshots>
         <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>topaz</id>
-      <name>Maven 2 Repository for Topaz</name>
-      <url>http://maven.topazproject.org/maven2/</url>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
       </snapshots>
     </repository>
     <repository>
@@ -144,11 +136,6 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>topaz</id>
-      <name>Maven 2 Repository for Topaz</name>
-      <url>http://maven.topazproject.org/maven2/</url>
     </pluginRepository>
     <pluginRepository>
       <id>DataNucleus_2</id>

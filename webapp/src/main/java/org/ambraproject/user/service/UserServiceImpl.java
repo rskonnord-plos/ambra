@@ -316,16 +316,6 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   }
 
   @Override
-  public boolean allowAdminAction(final String authId) {
-    try {
-      permissionsService.checkRole(PermissionsService.ADMIN_ROLE, authId);
-      return true;
-    } catch (SecurityException ex) {
-      return false;
-    }
-  }
-
-  @Override
   public String fetchUserEmailFromCas(String authId) {
     String url = emailAddressUrl;
     if (!url.endsWith("?")) {

@@ -50,10 +50,12 @@
   <bean id="createTrackbackAction" class="org.ambraproject.trackback.CreateTrackbackAction">
     <property name="trackBackService" ref="trackbackService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="mostViewedAction" class="org.ambraproject.action.MostViewedAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="mostViewedArticleService" ref="mostViewedArticleService"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 </beans>

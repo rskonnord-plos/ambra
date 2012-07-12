@@ -33,6 +33,7 @@ import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.Category;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.models.Issue;
 import org.ambraproject.models.Journal;
 import org.ambraproject.models.Volume;
@@ -75,14 +76,13 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   /**
    * Determines if the articleURI is of type researchArticle
    *
-   * @param article The URI of the article
-   * @param authId the authorization ID of the current user
+   * @param article The article object
    * @return True if the article is a research article
    * @throws org.ambraproject.ApplicationException
    *                                  if there was a problem talking to the OTM
    * @throws NoSuchArticleIdException When the article does not exist
    */
-  public boolean isResearchArticle(final Article article, final String authId)
+  public boolean isResearchArticle(final Article article)
       throws ApplicationException, NoSuchArticleIdException {
     // resolve article type and supported properties
     ArticleType articleType = ArticleType.getDefaultArticleType();
@@ -104,14 +104,13 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   /**
    * Determines if the articleURI is of type researchArticle
    *
-   * @param articleInfo The URI of the article
-   * @param authId the authorization ID of the current user
+   * @param articleInfo The articleInfo Object
    * @return True if the article is a research article
    * @throws org.ambraproject.ApplicationException
    *                                  if there was a problem talking to the OTM
    * @throws NoSuchArticleIdException When the article does not exist
    */
-  public boolean isResearchArticle(final ArticleInfo articleInfo, final String authId)
+  public boolean isResearchArticle(final ArticleInfo articleInfo)
       throws ApplicationException, NoSuchArticleIdException {
     ArticleType articleType = ArticleType.getDefaultArticleType();
 
@@ -140,7 +139,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   @Transactional(rollbackFor = {Throwable.class})
   public void setState(final String articleDoi, final String authId, final int state) throws NoSuchArticleIdException {
-    permissionsService.checkRole(PermissionsService.ADMIN_ROLE, authId);
+    permissionsService.checkPermission(Permission.INGEST_ARTICLE, authId);
 
     List articles = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
           .add(Restrictions.eq("doi", articleDoi)));
@@ -321,7 +320,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     //If the article is unpublished, it should not be returned if the user is not an admin
     if (article.getState() == Article.STATE_UNPUBLISHED) {
       try {
-        permissionsService.checkRole(PermissionsService.ADMIN_ROLE, authId);
+        permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, authId);
       } catch(SecurityException se) {
         throw new NoSuchArticleIdException(article.getDoi());
       }

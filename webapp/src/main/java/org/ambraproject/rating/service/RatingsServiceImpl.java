@@ -23,6 +23,7 @@ package org.ambraproject.rating.service;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.hibernate.URIGenerator;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.permission.service.PermissionsService;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.views.RatingView;
@@ -64,7 +65,7 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
   @SuppressWarnings("unchecked")
   @Transactional(rollbackFor = { Throwable.class })
   public void deleteRating(final Long ratingID, String authId) throws ApplicationException {
-    permissionsService.checkRole(PermissionsService.ADMIN_ROLE, authId);
+    permissionsService.checkPermission(Permission.MANAGE_ANNOTATIONS, authId);
 
     final Rating articleRating = (Rating)hibernateTemplate.get(Rating.class, ratingID);
 

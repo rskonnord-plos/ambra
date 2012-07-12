@@ -20,7 +20,7 @@
 
 package org.ambraproject.user.action;
 
-import org.apache.struts2.json.annotations.JSON;
+import org.ambraproject.permission.service.PermissionsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -40,8 +40,7 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   protected UserService userService;
 
   /**
-   * @param userService
-   *          The userService to set.
+   * @param userService the userService to use
    */
   @Required
   public void setUserService(UserService userService) {
