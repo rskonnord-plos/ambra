@@ -1,5 +1,5 @@
-/* $HeadURL:: http://gandalf.topazproject.org/svn/head/plosone/libs/article-util/src/main/groovy/#$
- * $Id: Delete.groovy 2686 2007-05-15 08:22:38Z ebrown $
+/* $HeadURL::                                                                                     $
+ * $Id$
  *
  * Copyright (c) 2007-2010 by Public Library of Science
  * http://plos.org
