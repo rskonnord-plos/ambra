@@ -43,7 +43,7 @@ import static org.testng.Assert.*;
  *
  * @author Alex Kudlick Date: 5/13/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject.ambra
  */
 public class EmbeddedSolrServerFactoryTest {
 

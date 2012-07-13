@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 import static org.ambraproject.Constants.SINGLE_SIGNON_EMAIL_KEY;
 
 /**
- * Creates a new user in Topaz and sets come Profile properties.  User must be logged in via CAS.
+ * Creates a new user in ambra and sets come Profile properties.  User must be logged in via CAS.
  *
  * @author Stephen Cheng
  */

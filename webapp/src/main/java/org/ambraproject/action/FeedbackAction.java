@@ -45,7 +45,7 @@ public class FeedbackAction extends UserActionSupport {
   private String subject;
   private String name;
   private AmbraMailer ambraMailer;
-  private String topazId;
+  private String accountUri;
   public final String FROM_EMAIL_ADDRESS_KEY = "fromEmailAddress";
 
   /**
@@ -63,7 +63,7 @@ public class FeedbackAction extends UserActionSupport {
     if (null != ambraUser) {
       name = ambraUser.getDisplayName();
       fromEmailAddress = ambraUser.getEmail();
-      topazId = ambraUser.getAccountUri();
+      accountUri = ambraUser.getAccountUri();
     }
   }
 
@@ -81,7 +81,7 @@ public class FeedbackAction extends UserActionSupport {
     mapFields.put(FROM_EMAIL_ADDRESS_KEY, fromEmailAddress);
     mapFields.put("note", note);
     setUserDetailsFromSession();
-    mapFields.put("id", StringUtils.defaultString(topazId, "not found"));
+    mapFields.put("id", StringUtils.defaultString(accountUri, "not found"));
 
     final Map<String, String> attributes = getUserSessionAttributes();
     final List<String> values = new ArrayList<String>();

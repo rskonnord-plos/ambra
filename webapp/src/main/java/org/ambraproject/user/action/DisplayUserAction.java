@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Simple class to display a user based on a TopazId
+ * Simple class to display a user based on an id
  * 
  * @author Stephen Cheng
  * 

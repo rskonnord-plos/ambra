@@ -20,7 +20,7 @@
 -->
 ${name} (${fromEmailAddress}) has sent you a feedback from page ${page}<br/>
 
-User's topazId: ${id}<br/><br/>
+User's ambraId: ${id}<br/><br/>
 
 The sender added this:<br/>
 ${note}

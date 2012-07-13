@@ -24,7 +24,7 @@
   </head>
   <body>
     <fieldset>
-      <legend>The user profile fields with private visibility for topazId:${userId}</legend>
+      <legend>The user profile fields with private visibility for ambraId:${userId}</legend>
       <ul>
         <#list privateFields as fieldname>
           <li>${fieldname}</li>

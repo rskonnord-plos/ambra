@@ -56,7 +56,7 @@ public class MemberUserProfileActionTest extends BaseWebTest {
   @DataProvider(name = "unsavedUser")
   public Object[][] getUnsavedUser() {
     UserProfile user = new UserProfile();
-    user.setEmail("userActionTest@topazproject.org");
+    user.setEmail("userActionTest@ambraproject.org");
     user.setDisplayName("TEST_USERNAME");
     user.setGivenNames("my GIVENNAMES");
     user.setSurname("my Surnames");
