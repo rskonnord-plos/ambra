@@ -104,32 +104,6 @@
       <errorPage>static/pageNotFound.action</errorPage> <!-- error page to redirect to in pub app if article not found -->
       <appContext></appContext> <!-- web-app context path of ambra. Leave empty for ROOT context. -->
     </platform>
-    
-    <topaz>
-      <!-- Configuration to talk to Fedora -->
-      <blobStore>
-        <fedora>
-          <base-url>
-            http://${ambra.network.hosts.fedora}:${ambra.network.ports.fedora}/fedora/
-          </base-url>
-          <uri>${ambra.topaz.blobStore.fedora.base-url}services/management</uri>
-          <userName>fedoraAdmin</userName>
-          <password>fedoraAdmin</password>
-        </fedora>
-      </blobStore>
-
-      <tripleStore>
-        <mulgara>
-          <baseuri>
-            rmi://${ambra.network.hosts.mulgara}:${ambra.network.ports.mulgara}/topazproject
-          </baseuri>
-          <!-- Configuration to talk to Mulgara -->
-          <itql>
-            <uri>${ambra.topaz.tripleStore.mulgara.baseuri}</uri>
-          </itql>
-        </mulgara>
-      </tripleStore>
-    </topaz>
 
     <services>
       <cas>
