@@ -440,11 +440,6 @@ public class RateAction extends AbstractRatingAction {
     this.profanityCheckingService = profanityCheckingService;
   }
 
-  @Required
-  public void setPermissionsService(PermissionsService ps) {
-    this.permissionsService = ps;
-  }
-
   /**
    * Returns Milliseconds representation of the CIS start date
    * @return Milliseconds representation of the CIS start date 
