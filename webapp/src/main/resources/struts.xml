@@ -60,7 +60,7 @@
       </result-type>
       <result-type name="ambraStream" class="org.ambraproject.struts2.AmbraStreamResult" />
       <result-type name="json" class="org.ambraproject.struts2.JsonResult">
-        <param name="excludeProperties">advisors, callbacks</param>
+        <param name="excludeProperties">advisors, callbacks, permissions</param>
         <param name="ignoreHierarchy">false</param>
         <param name="noCache">true</param>
         <param name="wrapWithComments">true</param>
