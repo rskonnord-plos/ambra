@@ -65,7 +65,6 @@ public class RateAction extends AbstractRatingAction {
   private Article                  article;
 
   private ProfanityCheckingService profanityCheckingService;
-  private PermissionsService       permissionsService;
 
   /**
    * Rates an article for the currently logged in user.  Will look to see if there are
