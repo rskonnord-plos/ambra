@@ -127,7 +127,7 @@ ambra.lightBox = {
         createdivNode.id = "figure-thumb-div-" + i;
         createdivNode.className = "figure-window-nav-item";
         dojo.byId("figure-window-nav").appendChild(createdivNode);
-        createdivNode.innerHTML = '<span>Fig. ' + (i+1) + '</span><br/><a title="Click for larger image" href="#"><img border="0" class="thumbnail" id="tn' + i + '" src="/article/fetchObject.action?uri=' + image.uri + '&representation=' + image.repSmall + '" onclick="return ambra.lightBox.selectFigure(\'' + image.uri + '\');" title="' + image.title + ' ' + image.plainCaptionTitle + '"/>';
+        createdivNode.innerHTML = '<span>' + image.title + '</span><br/><a title="Click for larger image" href="#"><img border="0" class="thumbnail" id="tn' + i + '" src="/article/fetchObject.action?uri=' + image.uri + '&representation=' + image.repSmall + '" onclick="return ambra.lightBox.selectFigure(\'' + image.uri + '\');" title="' + image.title + ' ' + image.plainCaptionTitle + '"/>';
       }
     }
   },
@@ -182,9 +182,9 @@ ambra.lightBox = {
           dojo.byId("figure-window-title").innerHTML = (currentImage.title ? currentImage.title + '. ' : "") + currentImage.transformedCaptionTitle;
           dojo.byId("figure-window-description").innerHTML = currentImage.transformedDescription;
 
-          dojo.byId("figure-window-ppt").href = '/article/fetchPowerPoint.action?uri=' + currentImage.uri;
-          dojo.byId("figure-window-tiff").href = '/article/fetchObjectAttachment.action?uri=' + currentImage.uri + '&representation=TIF';
-          dojo.byId("figure-window-large").href = '/article/fetchObjectAttachment.action?uri=' + currentImage.uri + '&representation=' + currentImage.repLarge;
+          dojo.byId("figure-window-ppt").href = '/article/' + currentImage.uri + '/powerpoint'
+          dojo.byId("figure-window-tiff").href = '/article/' + currentImage.uri + '/originalimage';
+          dojo.byId("figure-window-large").href = '/article/' + currentImage.uri + '/largerimage';
           dojo.byId("figure-window-tiff-size").innerHTML =  this.displaySize(currentImage.sizeTiff) + " TIFF";
           dojo.byId("figure-window-large-size").innerHTML = this.displaySize(currentImage.sizeLarge) + " PNG";
 
@@ -264,7 +264,7 @@ ambra.lightBox = {
         //join it with dash. assuming image has always id in format like pone-0002519-t002.
         var name = parts.join("-");
         this.hide();
-        window.location = "#" + name;
+        setTimeout(function() {window.location = "#" + name;}, 500);
       }
     }
     return false;

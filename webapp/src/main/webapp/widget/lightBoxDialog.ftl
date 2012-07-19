@@ -35,7 +35,7 @@
 
         <!--start figure title-box-->
         <div id="figure-window-title-box" class="figure-window-title-less">
-          <div id="figure-window-title"></div>
+          <span id="figure-window-title"></span>
           <div id="figure-window-more" class="figure-window-more" onclick="return ambra.lightBox.showMoreOrLess();"></div>
           <div id="figure-window-description"></div>
         </div><!--end figure title-box-->

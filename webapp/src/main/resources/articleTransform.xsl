@@ -236,19 +236,19 @@
         </xsl:variable>
 
       <xsl:variable name="pptURL">
-        <xsl:value-of select="concat('/article/fetchPowerPoint.action?uri=',$imageURI)"/>
+        <xsl:value-of select="concat('/article/',$imageURI, '/powerpoint')"/>
       </xsl:variable>
 
       <xsl:variable name="bigImgURL">
         <xsl:value-of
-            select="concat('/article/fetchObjectAttachment.action?uri=',$imageURI,'&amp;representation=PNG_L')"/>
+            select="concat('/article/',$imageURI,'/largerimage')"/>
       </xsl:variable>
       <xsl:variable name="bigImgDOI">
         <xsl:value-of select="concat($imageURI,'.PNG_L')"/>
       </xsl:variable>
 
       <xsl:variable name="origImgURL">
-        <xsl:value-of select="concat('/article/fetchObjectAttachment.action?uri=',$imageURI,'&amp;representation=TIF')"/>
+        <xsl:value-of select="concat('/article/',$imageURI,'/originalimage')"/>
       </xsl:variable>
       <xsl:variable name="origImgDOI">
         <xsl:value-of select="concat($imageURI,'.TIF')"/>

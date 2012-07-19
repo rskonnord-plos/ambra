@@ -135,6 +135,60 @@
 
   <rule>
     <note>
+      re-write incoming PowerPoint URIs.
+      /article/doi/powerpoint -> /article/fetchPowerPoint.action?uri=doi
+    </note>
+    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/powerpoint$</from>
+    <to>$1/article/fetchPowerPoint.action?uri=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound PowerPoint URIs.
+      /article/fetchPowerPoint.action?uri=doi -> /article/doi/powerpoint
+    </note>
+    <from>^(/.+)?/article/fetchPowerPoint.action\?uri=(info%3Adoi%2F10\.1371%2F.+)$</from>
+    <to>$1/article/$2/powerpoint</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming larger image URIs.
+      /article/doi/largerimage -> /article/fetchObjectAttachment.action?uri=doi&amp;representation=PNG_L
+    </note>
+    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/largerimage$</from>
+    <to>$1/article/fetchObjectAttachment.action?uri=$2&amp;representation=PNG_L</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound large image URIs.
+      /article/fetchObjectAttachment.action?uri=doi&amp;representation=PNG_L -> /article/doi/largerimage
+    </note>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F10\.1371%2F.+)&amp;representation=PNG_L$</from>
+    <to>$1/article/$2/largerimage</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming original image URIs.
+      /article/doi/originalimage -> /article/fetchObjectAttachment.action?uri=doi&amp;representation=TIF
+    </note>
+    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/originalimage$</from>
+    <to>$1/article/fetchObjectAttachment.action?uri=$2&amp;representation=TIF</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound large image URIs.
+      /article/fetchObjectAttachment.action?uri=doi&amp;representation=TIF -> /article/doi/originalimage
+    </note>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F10\.1371%2F.+)&amp;representation=TIF$</from>
+    <to>$1/article/$2/originalimage</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
       re-write incoming Article URIs.
      /article/doi -> /article/fetchArticle.action?articleURI=doi
     </note>

@@ -19,20 +19,17 @@
  */
 package org.ambraproject.article.action;
 
-import java.util.ArrayList;
-
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
-
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.article.service.ArticleAssetService;
 import org.ambraproject.article.service.ArticleAssetWrapper;
 import org.ambraproject.service.XMLService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 
 /**
  * Fetch the secondary objects for a given uri
@@ -72,20 +69,13 @@ public class SlideshowAction extends BaseActionSupport {
           }
           elems = allTransformed.split("END_TITLE");
           desc = new StringBuilder();
-          doi = s.getDoi();
           if (elems.length > 1) {
             s.setTransformedCaptionTitle(elems[0]);
-            s.setPlainCaptionTitle(elems[0].replaceAll("<.*>",""));
+            s.setPlainCaptionTitle(elems[0].replaceAll("<.*?>",""));
             desc.append(elems[1]);
-            if ((doi != null) && (doi.length() > 0)) {
-              desc.append("doi:").append(doi);
-            }
             s.setTransformedDescription(desc.toString());
           } else if (elems.length == 1) {
             desc.append(elems[0]);
-            if ((doi != null) && (doi.length() > 0)) {
-              desc.append("doi:").append(doi);
-            }
             s.setTransformedDescription(desc.toString());
           }
         } catch (Exception e) {

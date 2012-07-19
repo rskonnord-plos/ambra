@@ -43,11 +43,15 @@
 
 #LightBox div#figure-window-nav {
   width: 95px;
+  /*IE9 hack*/
+  width: 89px \0/;
 }
 
 #LightBox div.figure-window-nav-item {
   text-align: center;
   padding: 10px;
+  /*IE9 hack*/
+  padding: 8px \0/;
 }
 
 #LightBox div.figure-window-nav-item img {
@@ -65,6 +69,8 @@
   color: #FFF;
   float: left;
   margin-left: 1px;
+  /*IE9 hack*/
+  margin-left: 8px \0/;
 }
 
 #LightBox div.figure-window-nav-item.current span {
@@ -72,6 +78,8 @@
   color: #333;
   float: left;
   margin-left: 1px;
+  /*IE9 hack*/
+  margin-left: 8px \0/;
 }
 
 /*LightBox figure container*/
@@ -133,9 +141,10 @@
   font-weight: bold;
 }
 
-#LightBox div#figure-window-title {
+#LightBox span#figure-window-title {
   max-width: 640px;
   display: inline-block;
+  vertical-align: middle;
 }
 
 #LightBox div.figure-window-title-more {
@@ -147,18 +156,18 @@
   overflow: hidden;
 }
 
-#LightBox div.figure-window-title-less div#figure-window-title {
+#LightBox div.figure-window-title-less span#figure-window-title {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
 #LightBox div#figure-window-more {
-  position: absolute;
+  position: relative;
   height: 16px;
-  margin-left: 10px;
   display: inline-block;
   cursor: pointer;
+  vertical-align: middle;
 }
 
 #LightBox div.figure-window-more {

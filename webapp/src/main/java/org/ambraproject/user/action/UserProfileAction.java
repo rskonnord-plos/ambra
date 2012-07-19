@@ -87,8 +87,8 @@ public abstract class UserProfileAction extends UserActionSupport {
   //users don't actually edit this value, but we need to pass it to the freemarker in a hidden input to get it back on the save action
   private String alertsJournals;
 
-  //Need this to tell us to show the display name text box if the user entered in a duplicate
-  private boolean showDisplayName = false;
+  //Need to hide the username text box field on the edit Profile page. Should display the text box only on create profile page.
+  private boolean showDisplayName = true;
 
   private ProfanityCheckingService profanityCheckingService;
 
@@ -114,6 +114,7 @@ public abstract class UserProfileAction extends UserActionSupport {
     UserProfile userProfile = userService.getUserByAuthId(authId);
     if (userProfile != null) {
       setFieldsFromProfile(userProfile);
+      showDisplayName = false;
       //If there is no display name, this is an old user without one, and we need to return a specific code
       //(otherwise we'll loop infinitely because EnsureAccountUserInterceptor will keep returning UPDATE_PROFILE
       if (displayName == null || displayName.isEmpty()) {
@@ -143,7 +144,6 @@ public abstract class UserProfileAction extends UserActionSupport {
       afterSave(savedProfile);
     } catch (DuplicateDisplayNameException e) {
       addFieldError(DISPLAY_NAME, "A user already exists with the given user name");
-      showDisplayName = true;
       return INPUT;
     }
     return SUCCESS;

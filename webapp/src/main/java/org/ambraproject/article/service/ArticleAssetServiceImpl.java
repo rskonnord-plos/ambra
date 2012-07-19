@@ -1,27 +1,20 @@
 /*
  * $HeadURL$
  * $Id$
- *
- * Copyright (c) 2006-$today.year by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
- *
+ * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- *   limitations under the License.
+ * limitations under the License.
  */
 
 package org.ambraproject.article.service;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.article.FigureSlideShow;
 import org.ambraproject.filestore.FSIDMapper;
 import org.ambraproject.filestore.FileStoreException;
 import org.ambraproject.filestore.FileStoreService;
@@ -33,35 +26,25 @@ import org.ambraproject.models.Journal;
 import org.ambraproject.permission.service.PermissionsService;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.service.XMLService;
-import org.apache.poi.hslf.model.Picture;
-import org.apache.poi.hslf.model.Slide;
-import org.apache.poi.hslf.model.TextBox;
-import org.apache.poi.hslf.model.Hyperlink;
-import org.apache.poi.hslf.usermodel.RichTextRun;
-import org.apache.poi.hslf.usermodel.SlideShow;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.im4java.core.IM4JavaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URL;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,6 +78,8 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
     FIGURE_AND_TABLE_CONTEXT_ELEMENTS.add("table-wrap");
     FIGURE_AND_TABLE_CONTEXT_ELEMENTS.add("alternatives");
   }
+
+  private static final int MAX_AUTHORS_IN_CITATION = 4; // any more are "et al."
 
   /**
    * Get the Article Asset by URI.
@@ -205,7 +190,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
    * Return a list of Figures and Tables of a DOI.
    *
    * @param articleDoi DOI.
-   * @param authId the authorization ID of the current user
+   * @param authId     the authorization ID of the current user
    * @return Figures and Tables for the article in DOI order.
    * @throws NoSuchArticleIdException NoSuchArticleIdException.
    */
@@ -232,9 +217,9 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
         }
         // set the size of different representation.
         String extension = asset.getExtension();
-        if("PNG_L".equals(extension)){
+        if ("PNG_L".equals(extension)) {
           articleAssetWrapper.setSizeLarge(asset.getSize());
-        } else if("TIF".equals(extension)) {
+        } else if ("TIF".equals(extension)) {
           articleAssetWrapper.setSizeTiff(asset.getSize());
         }
       }
@@ -261,136 +246,63 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
 
   /**
    * Get the data for powerpoint
+   *
    * @param assetDoi
    * @param authId
    * @return
    * @throws NoSuchArticleIdException
    */
   @Override
-  public InputStream getPowerPointSlide(String assetDoi, String authId) throws NoSuchArticleIdException, NoSuchObjectIdException, ApplicationException, IOException {
-    
+  public InputStream getPowerPointSlide(String assetDoi, String authId) throws NoSuchArticleIdException, NoSuchObjectIdException, ApplicationException {
+
     long startTime = Calendar.getInstance().getTimeInMillis();
-    String title = "";
 
     //get the article
-    Article article = articleService.getArticle(assetDoi.substring(0, assetDoi.lastIndexOf('.')), authId);
-
-    //get the article asset for "PNG_M"
-    ArticleAsset articleAsset = getArticleAsset(assetDoi, "PNG_M", authId);
-
-    //get the article description
-    String desc = getArticleDescription(articleAsset);
+    String articleDoi = assetDoi.substring(0, assetDoi.lastIndexOf('.'));
+    Article article = articleService.getArticle(articleDoi, authId);
 
     //construct the title for ppt.
-    if(articleAsset.getTitle()!= null) {
-      title = articleAsset.getTitle() + ". " + desc;
-    } else {
-      title = desc;
-    }
+    ArticleAsset articleAsset = getArticleAsset(assetDoi, "PNG_M", authId);
+    String desc = getArticleDescription(articleAsset);
+    String title = articleAsset.getTitle();
+    title = (title == null) ? desc : title + ". " + desc;
 
-    //get the citation info
-    StringBuilder citation = getCitationInfo(article);
+    /*
+    * Show the journal name and logo of article in which it published.
+    * An article can be cross-published but we always want to show the logo and URL of the source journal.
+    */
+    String journalName = (String) hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(Journal.class)
+            .add(Restrictions.eq("eIssn", article.geteIssn()))
+            .setProjection(Projections.property("journalKey")), 0, 1).get(0);
+    String logoPath = templatesDirectory + "/journals/" + journalName + "/webapp/images/logo.png";
+    String pptUrl = "http://www." + journalName.toLowerCase() + ".org/article/" + articleDoi;
+
+    String citation = getCitationInfo(article);
 
     ByteArrayOutputStream tempOutputStream = null;
+    File tempFile = null;
 
     try {
-
+      URL citationLink = new URL(pptUrl);
       byte[] image = fileStoreService.getFileByteArray(FSIDMapper.doiTofsid(assetDoi, "PNG_M"));
+      tempFile = File.createTempFile("tmp_image", "." + "png_m");
+      String imgAbsolutePath = fileStoreService.copyFileFromStore(FSIDMapper.doiTofsid(assetDoi, "PNG_M"), tempFile).getAbsolutePath();
+
       tempOutputStream = new ByteArrayOutputStream(image.length);
-
-      //make the new slide
-      SlideShow slideShow = new SlideShow();
-      slideShow.setPageSize(new Dimension(792, 612)); // letter size: 11"x8.5", 1"=72px
-
-      //set the picture box on particular location
-      Picture picture = setPictureBox(image, slideShow);
-
-      //create the slide
-      Slide slide = slideShow.createSlide();
-
-      //add the picture to slide
-      slide.addShape(picture);
-
-      //add the title to slide
-      if(!title.isEmpty()){
-        TextBox pptTitle = slide.addTitle();
-        pptTitle.setText(title);
-        pptTitle.setAnchor(new Rectangle(28, 22, 737, 36));
-        RichTextRun rt = pptTitle.getTextRun().getRichTextRuns()[0];
-        rt.setFontSize(16);
-        rt.setBold(true);
-        rt.setAlignment(TextBox.AlignCenter);
-      }
-
-      //add the citation text to slide
-      TextBox pptCitationText = new TextBox();
-
-      /**
-       * show the journal name and logo of article in which it published
-       * an article can be cross published but we always want to show logo and url
-       * of source journal
-       */
-
-      int index = assetDoi.lastIndexOf(".");
-      String articleDoi = assetDoi.substring(0, index);
-      String eIssn;
-
-      try {
-        eIssn = (String) hibernateTemplate.findByCriteria(
-            DetachedCriteria.forClass(Article.class)
-                .add(Restrictions.eq("doi", articleDoi))
-                .setProjection(Projections.property("eIssn")),0, 1).get(0);
-      } catch (IndexOutOfBoundsException e) {
-        throw new IllegalArgumentException("Doi " + articleDoi + " didn't correspond to an article");
-      }
-
-      String journalName = (String) hibernateTemplate.findByCriteria(
-          DetachedCriteria.forClass(Journal.class)
-              .add(Restrictions.eq("eIssn", eIssn))
-              .setProjection(Projections.property("journalKey")),0, 1).get(0);
-
-      String pptUrl = "http://www." + journalName.toLowerCase() + ".org/article/" + articleDoi;
-
-      pptCitationText.setText(citation.toString() + "\n" + pptUrl);
-      pptCitationText.setAnchor(new Rectangle(35, 513, 723, 26));
-
-      RichTextRun richTextRun = pptCitationText.getTextRun().getRichTextRuns()[0];
-      richTextRun.setFontSize(12);
-
-      String text = pptCitationText.getText();
-      Hyperlink link = new Hyperlink();
-      link.setAddress(pptUrl);
-      link.setTitle("click to visit the article page");
-      int linkId = slideShow.addHyperlink(link);
-      int startIndex = text.indexOf(pptUrl);
-      pptCitationText.setHyperlink(linkId, startIndex, startIndex + pptUrl.length());
-
-      slide.addShape(pptCitationText);
-
-      //add the logo to slide
-      String str = templatesDirectory + "/journals/" + journalName + "/webapp/images/logo.png";
-      File file =  new File(str);
-      if(file.exists()) {
-        InputStream input = new FileInputStream(file);
-        Dimension dimension = getImageDimension(input);
-        input.close();
-
-        int logoIdx = slideShow.addPicture(file, Picture.PNG);
-        Picture logo = new Picture(logoIdx);
-        logo.setAnchor(new Rectangle(792 - 5 - dimension.width, 612 - 5 - dimension.height, dimension.width, dimension.height));
-        slide.addShape(logo); 
-      } else {
-        log.warn("Logo for journal " + journalName + " not found at " + str);
-      }
-
+      FigureSlideShow slideShow = new FigureSlideShow(title, citation, journalName, citationLink, image, logoPath, imgAbsolutePath);
       slideShow.write(tempOutputStream);
-
       return new ByteArrayInputStream(tempOutputStream.toByteArray());
-
     } catch (FileStoreException e) {
       log.error("Error fetching image from file store for doi: " + assetDoi, e);
       return null;
     } catch (IOException e) {
+      log.error("Error creating powerpoint slide for doi: " + assetDoi, e);
+      return null;
+    } catch (IM4JavaException e) {
+      log.error("Error creating powerpoint slide for doi: " + assetDoi, e);
+      return null;
+    } catch (InterruptedException e) {
       log.error("Error creating powerpoint slide for doi: " + assetDoi, e);
       return null;
     } finally {
@@ -403,84 +315,19 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
           log.warn("Error closing temporary output stream when creating power point slide for " + assetDoi, e);
         }
       }
-    }
-  }
-
-  /**
-   * get the image dimension
-   * @param input
-   * @return
-   */
-  private Dimension getImageDimension(InputStream input) {
-    try {
-      ImageInputStream in = ImageIO.createImageInputStream(input) ;
-      try {
-        Iterator readers = ImageIO.getImageReaders(in);
-        if (readers.hasNext()) {
-          ImageReader reader = (ImageReader) readers.next();
-          try {
-            reader.setInput(in);
-            return new Dimension(reader.getWidth(0), reader.getHeight(0));
-          } finally {
-          reader.dispose();
-          }
+      if(tempFile != null){
+        try {
+          tempFile.delete();
+        } catch (Exception e) {
+          log.warn("Error deleting the temp file when creating power point slide for " + assetDoi, e);
         }
-      } finally {
-        if (in != null)
-        in.close();
+
       }
     }
-    catch (Exception ex) {
-      log.error("cannot get image dimension", ex);
-    }
-    return new Dimension(0, 0);
   }
 
-  /**
-   * set the dimension of picture box
-   * @param image
-   * @param slideShow
-   * @return
-   * @throws IOException
-   */
-  private Picture setPictureBox(byte[] image, SlideShow slideShow) throws IOException {
 
-    int index = slideShow.addPicture(image, Picture.PNG);
-
-    InputStream input = new ByteArrayInputStream(image);
-    Dimension dimension = getImageDimension(input);
-    input.close();
-
-    //get the image size
-    int imW = dimension.width;
-    int imH = dimension.height;
-
-    //add the image to picture and add picture to shape
-    Picture picture = new Picture(index);
-
-    // Image box size 750x432 at xy=21,68
-
-    if (imW > 0 && imH > 0) {
-      double pgRatio = 750.0/432.0;
-      double imRatio = (double) imW / (double) imH;
-      if (pgRatio >= imRatio) {
-        // horizontal center
-        int mw = (int)((double) imW * 432.0 / (double) imH);
-        int mx = 21 + (750 - mw) / 2;
-
-        picture.setAnchor(new Rectangle(mx, 68, mw, 432));
-      }
-      else {
-        // vertical center
-        int mh = (int)((double) imH * 750.0 / (double) imW);
-        int my = 68 + (432 - mh) / 2;
-
-        picture.setAnchor(new Rectangle(21, my, 750, mh));
-      }
-    }
-
-    return picture;
-  }
+  private static final Pattern TITLE_PATTERN = Pattern.compile("<title>(.*?)</title>");
 
   /**
    * get the article description
@@ -489,14 +336,12 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
    * @return
    * @throws ApplicationException
    */
-  private String getArticleDescription(ArticleAsset articleAsset) throws ApplicationException {
-    Pattern p = Pattern.compile("<title>(.*?)</title>");
+  private static String getArticleDescription(ArticleAsset articleAsset) throws ApplicationException {
     String description = "";
-    if(articleAsset.getDescription() != null) {
-      Matcher m = p.matcher(articleAsset.getDescription());
+    if (articleAsset.getDescription() != null) {
+      Matcher m = TITLE_PATTERN.matcher(articleAsset.getDescription());
       if (m.find()) {
         description = m.group(1);
-        description = description.replaceAll("<.*?>", "");
       }
     }
     return description;
@@ -504,15 +349,16 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
 
   /**
    * get the citation information for powerpoint
+   *
    * @param article
    * @return
    */
-  private StringBuilder getCitationInfo(Article article) {
+  private static String getCitationInfo(Article article) {
 
     List<ArticleAuthor> articleAuthors = article.getAuthors();
     List<String> collabAuthors = article.getCollaborativeAuthors();
     List<String> authors = new ArrayList<String>(articleAuthors.size() + collabAuthors.size());
-    for (Iterator<ArticleAuthor> it = articleAuthors.iterator(); it.hasNext();) {
+    for (Iterator<ArticleAuthor> it = articleAuthors.iterator(); it.hasNext(); ) {
       ArticleAuthor author = it.next();
       authors.add(author.getSurnames() + " " + toShortFormat(author.getGivenNames()));
     }
@@ -520,46 +366,47 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
 
     StringBuilder citation = new StringBuilder();
 
-    int maxIndex = Math.min(authors.size(), 4);
+    int maxIndex = Math.min(authors.size(), MAX_AUTHORS_IN_CITATION);
     for (int i = 0; i < maxIndex - 1; i++) {
       String author = authors.get(i);
       citation.append(author).append(", ");
     }
 
-    if(maxIndex > 0 ) {
+    if (maxIndex > 0) {
       String lastAuthor = authors.get(maxIndex - 1);
       citation.append(lastAuthor);
-      if (authors.size() > 4) {
+      if (authors.size() > MAX_AUTHORS_IN_CITATION) {
         citation.append(", et al.");
       }
     }
 
     //append the year, title, journal, volume, issue and eLocationId information
     citation.append(" (").append(new SimpleDateFormat("yyyy").format(article.getDate())).append(") ")
-      .append(article.getTitle().replaceAll("<.*?>", "")).append(". ")
-      .append(article.getJournal()).append(" ")
-      .append(article.getVolume())
-      .append("(").append(article.getIssue()).append("): ")
-      .append(article.geteLocationId()).append(". ")
-      .append("doi:").append(article.getDoi().replaceFirst("info:doi/", ""));
+        .append(article.getTitle()).append(". ")
+        .append(article.getJournal()).append(" ")
+        .append(article.getVolume())
+        .append("(").append(article.getIssue()).append("): ")
+        .append(article.geteLocationId()).append(". ")
+        .append("doi:").append(article.getDoi().replaceFirst("info:doi/", ""));
 
-    return citation;
+    return citation.toString();
   }
 
   /**
    * Function to format the author names
+   *
    * @param name
    * @return
    */
-  private String toShortFormat(String name) {
+  private static String toShortFormat(String name) {
     if (name == null)
       return null;
 
     String[] givenNames = name.split(" ");
     StringBuilder sb = new StringBuilder();
-    for(String givenName :givenNames) {
+    for (String givenName : givenNames) {
       if (givenName.length() > 0) {
-        if(givenName.matches(".*\\p{Pd}\\p{L}.*")) {
+        if (givenName.matches(".*\\p{Pd}\\p{L}.*")) {
           // Handle names with dash
           String[] sarr = givenName.split("\\p{Pd}");
           for (int i = 0; i < sarr.length; i++) {
@@ -567,12 +414,11 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
               sb.append('-');
             }
 
-            if(sarr[i].length() > 0) {
+            if (sarr[i].length() > 0) {
               sb.append(sarr[i].charAt(0));
             }
           }
-        }
-        else {
+        } else {
           sb.append(givenName.charAt(0));
         }
       }
