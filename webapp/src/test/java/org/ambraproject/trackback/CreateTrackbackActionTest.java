@@ -20,11 +20,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.*;
 
 /**
  * Normally, a test for an action class should extend {@link org.ambraproject.BaseWebTest}, but since the trackback
@@ -66,19 +65,28 @@ public class CreateTrackbackActionTest extends BaseHttpTest {
     action.setRequest(BaseWebTest.getDefaultRequestAttributes());
   }
 
-  @Test
+  @DataProvider(name = "booleanModes")
+  public Object[][] getBooleanModes() {
+    return new Object[][]{{Boolean.FALSE}, {Boolean.TRUE}};
+  }
+
+  @Test(dataProvider = "booleanModes")
   @DirtiesContext
-  public void testExecuteWithValidBlog() throws Exception {
-    final Article article = new Article("id:article-for-createTrackbackActionTest");
+  public void testExecuteWithValidBlog(final boolean escapeDoi) throws Exception {
+    final Article article = new Article("id:article-for-createTrackbackActionTest-" + (escapeDoi ? 1 : 0));
     article.seteIssn(defaultJournal.geteIssn());
     dummyDataStore.store(article);
     httpEndpoint.whenAnyExchangeReceived(new Processor() {
       @Override
       public void process(Exchange exchange) throws Exception {
+        String doiForLink = article.getDoi();
+        if (escapeDoi) {
+          doiForLink = doiForLink.replaceAll(":", "%3A");
+        }
         exchange.getOut().setBody("<html>\n" +
             "<head><title>My Cool Blog</title></head>" +
             "<body>\n" +
-            "<p>A cool blog with a <a href=\"http://www.journal.org/article/" + article.getDoi() + "\">link</a> to the article.\n</p>" +
+            "<p>A cool blog with a <a href=\"http://www.journal.org/article/" + doiForLink + "\">link</a> to the article.\n</p>" +
             "</body>\n" +
             "</html>");
       }
@@ -94,7 +102,7 @@ public class CreateTrackbackActionTest extends BaseHttpTest {
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
 
     assertEquals(action.getError(), 0, "Action returned an error");
-    assertNull(action.getErrorMessage(),"Action returned an error message");
+    assertNull(action.getErrorMessage(), "Action returned an error message");
 
     Trackback storedTrackback = null;
     for (Trackback t : dummyDataStore.getAll(Trackback.class)) {
@@ -145,7 +153,7 @@ public class CreateTrackbackActionTest extends BaseHttpTest {
     assertEquals(result, Action.ERROR, "Action didn't return error");
 
     assertEquals(action.getError(), 1, "Action didn't return an error");
-    assertNotNull(action.getErrorMessage(),"Action didn't return an error message");
+    assertNotNull(action.getErrorMessage(), "Action didn't return an error message");
 
     Trackback storedTrackback = null;
     for (Trackback t : dummyDataStore.getAll(Trackback.class)) {

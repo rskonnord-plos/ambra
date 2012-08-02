@@ -22,23 +22,24 @@ package org.ambraproject.feed.service;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.annotation.service.AnnotationService;
-import org.ambraproject.views.TOCArticleGroup;
 import org.ambraproject.article.service.BrowseService;
 import org.ambraproject.journal.JournalService;
 import org.ambraproject.model.article.ArticleInfo;
+import org.ambraproject.models.Journal;
 import org.ambraproject.service.HibernateServiceImpl;
 import org.ambraproject.solr.SolrException;
 import org.ambraproject.solr.SolrFieldConversion;
 import org.ambraproject.solr.SolrHttpService;
 import org.ambraproject.trackback.TrackbackService;
 import org.ambraproject.views.AnnotationView;
-import org.ambraproject.views.TrackbackView;
+import org.ambraproject.views.LinkbackView;
+import org.ambraproject.views.TOCArticleGroup;
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.ambraproject.models.Journal;
 import org.w3c.dom.Document;
+
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,25 +49,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The <code>FeedService</code> supplies the API for querying feed requests.
- * <code>FeedService</code> is a Spring injected singleton
- * which coordinates access to the <code>annotationService and articleService</code>
+ * The <code>FeedService</code> supplies the API for querying feed requests. <code>FeedService</code> is a Spring
+ * injected singleton which coordinates access to the <code>annotationService and articleService</code>
  */
 public class FeedServiceImpl extends HibernateServiceImpl implements FeedService {
   private static final Logger log = LoggerFactory.getLogger(FeedServiceImpl.class);
 
-  private AnnotationService   annotationService;    // Annotation service Spring injected.
-  private TrackbackService    trackbackService;     // Trackback service Spring injected
-  private BrowseService       browseService;        // Browse Article Servcie Spring Injected
-  private JournalService      journalService;       // Journal service Spring injected.
-  private SolrHttpService     solrHttpService;      // solr service
-  private Configuration       configuration;
+  private AnnotationService annotationService;    // Annotation service Spring injected.
+  private TrackbackService trackbackService;     // Trackback service Spring injected
+  private BrowseService browseService;        // Browse Article Servcie Spring Injected
+  private JournalService journalService;       // Journal service Spring injected.
+  private SolrHttpService solrHttpService;      // solr service
+  private Configuration configuration;
   private SolrFieldConversion solrFieldConverter;
 
   /**
    * Constructor - currently does nothing.
    */
-  public FeedServiceImpl(){
+  public FeedServiceImpl() {
   }
 
   /**
@@ -92,12 +92,12 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
     params.put("wt", "xml");
     // what I want returned, the fields needed for rss feed
     params.put("fl", "id,title_display,publication_date,author_without_collab_display,author_collab_only_display," +
-      "author_display,volume,issue,article_type,subject_hierarchy,abstract_primary_display,copyright");
+        "author_display,volume,issue,article_type,subject_hierarchy,abstract_primary_display,copyright");
 
     // filters
     String fq = "doc_type:full " +
-      "AND !article_type_facet:\"Issue Image\" " +
-      "AND cross_published_journal_key:" + searchParameters.getJournal();
+        "AND !article_type_facet:\"Issue Image\" " +
+        "AND cross_published_journal_key:" + searchParameters.getJournal();
 
     String[] categories = searchParameters.getCategories();
     if (categories != null && categories.length > 0) {
@@ -138,12 +138,12 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
 
     // sort the result
 
-    if (searchParameters.isMostViewed())  {
+    if (searchParameters.isMostViewed()) {
       // Sorts RSS Feed for the most viewed articles linked from the most viewed tab.
       String mostViewedKey = "ambra.virtualJournals." + journalService.getCurrentJournalName() + ".mostViewedArticles";
       Integer days = configuration.getInt(mostViewedKey + ".timeFrame");
       String sortField = (days != null) ? solrFieldConverter.getViewCountingFieldName(days)
-        : solrFieldConverter.getAllTimeViewsField();
+          : solrFieldConverter.getAllTimeViewsField();
       params.put("sort", sortField + " desc");
     } else {
       params.put("sort", "publication_date desc");
@@ -160,17 +160,16 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   }
 
   /**
-   *
    * @param searchParameters the feedAction data model
-   * @param journal Current journal
+   * @param journal          Current journal
    * @return List&lt;String&gt; if article Ids.
-   * @throws ApplicationException ApplicationException
+   * @throws ApplicationException        ApplicationException
    * @throws java.net.URISyntaxException URISyntaxException
    */
   @Override
   public List<ArticleInfo> getIssueArticles(final FeedSearchParameters searchParameters, String journal, String authId) throws
-    URISyntaxException, ApplicationException {
-    List<ArticleInfo> articleList  = new ArrayList<ArticleInfo>();
+      URISyntaxException, ApplicationException {
+    List<ArticleInfo> articleList = new ArrayList<ArticleInfo>();
 
     String issurURI = (searchParameters.getIssueURI() != null) ? searchParameters.getIssueURI() : null;
 
@@ -178,7 +177,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
       Journal curJrnl = journalService.getJournal(journal);
 
       //There is no current issue, return empty result
-      if(curJrnl.getCurrentIssue() == null) {
+      if (curJrnl.getCurrentIssue() == null) {
         return articleList;
       }
 
@@ -187,15 +186,15 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
 
     List<TOCArticleGroup> articleGroups = browseService.getArticleGrpList(issurURI, authId);
 
-    for(TOCArticleGroup ag : articleGroups)
+    for (TOCArticleGroup ag : articleGroups)
       articleList.addAll(ag.articles);
 
     return articleList;
   }
 
   /**
-   * Returns a list of annotationViews based on parameters contained in the searchParams.
-   * If a start date is not specified then a default date is used but not stored in the searchParams.
+   * Returns a list of annotationViews based on parameters contained in the searchParams. If a start date is not
+   * specified then a default date is used but not stored in the searchParams.
    *
    * @param searchParams input parameters.
    * @return <code>List&lt;String&gt;</code> a list of annotation Ids
@@ -203,32 +202,30 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
    */
   @Override
   public List<AnnotationView> getAnnotations(final AnnotationFeedSearchParameters searchParams)
-      throws ParseException, URISyntaxException
-  {
+      throws ParseException, URISyntaxException {
     return annotationService.getAnnotations(
-      searchParams.getStartDate(), searchParams.getEndDate(), searchParams.getAnnotationTypes(),
-      searchParams.getMaxResults(), searchParams.getJournal());
+        searchParams.getStartDate(), searchParams.getEndDate(), searchParams.getAnnotationTypes(),
+        searchParams.getMaxResults(), searchParams.getJournal());
   }
 
   /**
-   * Returns a list of trackbackViews based on the parameters. If a start date is not specified
-   * then a default date is used but not stored in the key.
+   * Returns a list of trackbackViews based on the parameters. If a start date is not specified then a default date is
+   * used but not stored in the key.
    *
    * @param searchParams input params.
    * @return <code>List&lt;String&gt;</code> a list of annotation Ids
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
   @Override
-  public List<TrackbackView> getTrackbacks(final AnnotationFeedSearchParameters searchParams)
-      throws ParseException, URISyntaxException
-  {
+  public List<LinkbackView> getTrackbacks(final AnnotationFeedSearchParameters searchParams)
+      throws ParseException, URISyntaxException {
     return trackbackService.getTrackbacks(
-      searchParams.getStartDate(), searchParams.getEndDate(), searchParams.getMaxResults(), searchParams.getJournal());
+        searchParams.getStartDate(), searchParams.getEndDate(), searchParams.getMaxResults(), searchParams.getJournal());
   }
 
 
   /**
-   * @param journalService   Journal Service
+   * @param journalService Journal Service
    */
   @Required
   public void setJournalService(JournalService journalService) {
@@ -236,7 +233,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   }
 
   /**
-   * @param annotationService   Annotation Service
+   * @param annotationService Annotation Service
    */
   @Required
   public void setAnnotationService(AnnotationService annotationService) {
@@ -244,7 +241,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   }
 
   /**
-   * @param browseService   Browse Service
+   * @param browseService Browse Service
    */
   @Required
   public void setBrowseService(BrowseService browseService) {
@@ -261,6 +258,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
 
   /**
    * Set solr http service
+   *
    * @param solrHttpService solr http service
    */
   @Required

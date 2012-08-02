@@ -37,8 +37,8 @@ import org.ambraproject.util.UriUtil;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.JournalView;
+import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.RatingSummaryView;
-import org.ambraproject.views.TrackbackView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -53,6 +53,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import static org.ambraproject.annotation.service.AnnotationService.AnnotationOrder;
 
 /**
@@ -99,7 +100,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private ArticleInfo articleInfoX;
   private ArticleType articleType;
   private List<List<String>> articleIssues;
-  private List<TrackbackView> trackbackList;
+  private List<LinkbackView> trackbackList;
   private int trackbackCount;
   private ArrayList<AuthorExtra> authorExtras;
   private ArrayList<CitationReference> references;
@@ -130,7 +131,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       //get the corrections without replies loaded up, and ordered oldest to newest. We don't need to show a count of replies on the main article page
       AnnotationView[] annotationViews = annotationService.listAnnotationsNoReplies(
           articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION,AnnotationType.MINOR_CORRECTION,AnnotationType.RETRACTION),
+          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
           AnnotationOrder.OLDEST_TO_NEWEST
       );
       for (AnnotationView annotationView : annotationViews) {
@@ -221,7 +222,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       isDisplayingCorrections = true;
       commentary = annotationService.listAnnotations(
           articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION,AnnotationType.MINOR_CORRECTION,AnnotationType.RETRACTION),
+          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
           AnnotationOrder.MOST_RECENT_REPLY
       );
 
@@ -425,7 +426,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   }
 
   /**
-   *
    * @param articleAssetService the articleAssetService
    */
   public void setArticleAssetService(ArticleAssetService articleAssetService) {
@@ -467,7 +467,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   }
 
   /**
-   *
    * @return the articleAssetWrapper
    */
   public ArticleAssetWrapper[] getArticleAssetWrapper() {
@@ -544,7 +543,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   /**
    * @return Returns the trackbackList.
    */
-  public List<TrackbackView> getTrackbackList() {
+  public List<LinkbackView> getTrackbackList() {
     return trackbackList;
   }
 

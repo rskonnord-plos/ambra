@@ -60,6 +60,11 @@
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
 
+  <bean id="pingbackService" class="org.ambraproject.trackback.PingbackServiceImpl">
+    <property name="sessionFactory" ref="hibernateSessionFactory"/>
+    <property name="configuration" ref="ambraConfiguration"/>
+  </bean>
+
   <!-- Defined in webapp/src/main/resources/ambra/configuration/defaults.xml -->
   <util:map id="xslArticleTransformStyleSheetMap">
     <entry key="default"

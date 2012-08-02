@@ -23,7 +23,7 @@ import org.ambraproject.ApplicationException;
 import org.ambraproject.model.article.ArticleInfo;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.views.AnnotationView;
-import org.ambraproject.views.TrackbackView;
+import org.ambraproject.views.LinkbackView;
 import org.w3c.dom.Document;
 
 import java.net.URISyntaxException;
@@ -31,10 +31,9 @@ import java.text.ParseException;
 import java.util.List;
 
 /**
- * The <code>FeedService</code> supplies the API for querying feed requests. <code>FeedService</code> is a
- * Spring injected singleton which coordinates access to the <code>annotationService</code>, and
+ * The <code>FeedService</code> supplies the API for querying feed requests. <code>FeedService</code> is a Spring
+ * injected singleton which coordinates access to the <code>annotationService</code>, and
  * <code></code>articleService</code>
- *
  */
 public interface FeedService {
 
@@ -83,21 +82,20 @@ public interface FeedService {
    * Queries for a list of articles from solr using the parameters set in searchParams
    *
    * @param searchParameters
-   *
    * @return solr search result that contains list of articles
    */
   public Document getArticles(final FeedSearchParameters searchParameters);
 
   /**
    * @param searchParams input parameters
-   * @param journal Current journal
-   * @parem authId the current user authId
+   * @param journal      Current journal
    * @return List&lt;String&gt; if article Ids.
    * @throws ApplicationException ApplicationException
    * @throws URISyntaxException   URISyntaxException
+   * @parem authId the current user authId
    */
   public List<ArticleInfo> getIssueArticles(final FeedSearchParameters searchParams, String journal, String authId) throws
-    URISyntaxException, ApplicationException;
+      URISyntaxException, ApplicationException;
 
   /**
    * Returns a list of annotationViews based on parameters contained in searchParams. If a start date is not specified
@@ -111,14 +109,14 @@ public interface FeedService {
       throws ParseException, URISyntaxException;
 
   /**
-   * Returns a list of trackbackViews based on parameters contained in the searchParams. If a start date is not specified
-   * then a default date is used but not stored in searchParams.
+   * Returns a list of trackbackViews based on parameters contained in the searchParams. If a start date is not
+   * specified then a default date is used but not stored in searchParams.
    *
    * @param searchParams search parameters
    * @return <code>List&lt;String&gt;</code> a list of annotation Ids
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
-  public List<TrackbackView> getTrackbacks(final AnnotationFeedSearchParameters searchParams)
+  public List<LinkbackView> getTrackbacks(final AnnotationFeedSearchParameters searchParams)
       throws ParseException, URISyntaxException;
 
 }

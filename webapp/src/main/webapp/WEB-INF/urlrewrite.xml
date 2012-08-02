@@ -18,7 +18,7 @@
   limitations under the License.
 -->
 <!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
-        "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+    "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
 <!--
     Configuration file for UrlRewriteFilter
     http://tuckey.org/urlrewrite/
@@ -27,7 +27,7 @@
   <rule>
     <note>
       re-write incoming trackbacks URIs.
-     /article/doi/trackback -> /trackback.action?doi=doi
+      /article/doi/trackback -> /trackback.action?doi=doi
     </note>
     <from>^(/.+)?/article/(info:doi/10\.1371/.+)/trackback$</from>
     <to>$1/trackback.action?doi=$2</to>
@@ -44,8 +44,26 @@
 
   <rule>
     <note>
+      re-write incoming pingback URIs.
+      /article/doi/pingback -> /pingback.action
+    </note>
+    <from>^(/.+)?/pingback$</from>
+    <to>$1/pingback.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound pingback URIs.
+      /pingback.action?doi=doi -> /pingback
+    </note>
+    <from>^(/.+)?/pingback.action$</from>
+    <to>$1/pingback</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
       re-write incoming related Article URIs.
-     /article/related/doi -> /article/fetchRelatedArticle.action?articleURI=doi
+      /article/related/doi -> /article/fetchRelatedArticle.action?articleURI=doi
     </note>
     <from>^(/.+)?/article/related/(info:doi/10\.1371/.+)$</from>
     <to last="true">$1/article/fetchRelatedArticle.action?articleURI=$2</to>
@@ -54,7 +72,7 @@
   <outbound-rule>
     <note>
       re-write outbound related Article URIs.
-     /article/fetchRelatedArticle.action?articleURI=doi -> /article/related/doi
+      /article/fetchRelatedArticle.action?articleURI=doi -> /article/related/doi
     </note>
     <from>^(/.+)?/article/fetchRelatedArticle.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
     <to>$1/article/related/$2</to>
@@ -63,7 +81,7 @@
   <rule>
     <note>
       re-write incoming Article Metrics Tab URIs.
-     /article/metrics/doi -> /article/fetchArticleMetrics.action?articleURI=doi
+      /article/metrics/doi -> /article/fetchArticleMetrics.action?articleURI=doi
     </note>
     <from>^(/.+)?/article/metrics/(info:doi/10\.1371/.+)$</from>
     <to last="true">$1/article/fetchArticleMetrics.action?articleURI=$2</to>
@@ -72,7 +90,7 @@
   <outbound-rule>
     <note>
       re-write outbound Article Metrics Tab URIs.
-     /article/fetchArticleMetrics.action?articleURI=doi -> /article/metrics/doi
+      /article/fetchArticleMetrics.action?articleURI=doi -> /article/metrics/doi
     </note>
     <from>^(/.+)?/article/fetchArticleMetrics.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
     <to>$1/article/metrics/$2</to>
@@ -81,7 +99,7 @@
   <rule>
     <note>
       re-write incoming Article CrossRef page URIs.
-     /article/crossref/doi -> /article/fetchArticleCrossRef.action?articleURI=doi
+      /article/crossref/doi -> /article/fetchArticleCrossRef.action?articleURI=doi
     </note>
     <from>^(/.+)?/article/crossref/(info:doi/10\.1371/.+)$</from>
     <to last="true">$1/article/fetchArticleCrossRef.action?articleURI=$2</to>
@@ -90,7 +108,7 @@
   <outbound-rule>
     <note>
       re-write outbound Article CrossRef page URIs.
-     /article/fetchArticleCrossRef.action?articleURI=doi -> /article/metrics/doi
+      /article/fetchArticleCrossRef.action?articleURI=doi -> /article/metrics/doi
     </note>
     <from>^(/.+)?/article/fetchArticleCrossRef.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
     <to>$1/article/crossref/$2</to>
@@ -117,7 +135,7 @@
   <rule>
     <note>
       re-write incoming article comment URIs.
-     /article/comments/doi -> /article/fetchArticleComments.action?articleURI=doi
+      /article/comments/doi -> /article/fetchArticleComments.action?articleURI=doi
     </note>
     <from>^(/.+)?/article/comments/(info:doi/10\.1371/.+)$</from>
     <to last="true">$1/article/fetchArticleComments.action?articleURI=$2</to>
@@ -126,7 +144,7 @@
   <outbound-rule>
     <note>
       re-write outbound article comment URIs.
-     /article/fetchArticleComments.action?articleURI=doi -> /article/comments/doi
+      /article/fetchArticleComments.action?articleURI=doi -> /article/comments/doi
     </note>
 
     <from>^(/.+)?/article/fetchArticleComments.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
@@ -190,7 +208,7 @@
   <rule>
     <note>
       re-write incoming Article URIs.
-     /article/doi -> /article/fetchArticle.action?articleURI=doi
+      /article/doi -> /article/fetchArticle.action?articleURI=doi
     </note>
     <from>^(/.+)?/article/(info:doi/10\.1371/.+)$</from>
     <to last="true">$1/article/fetchArticle.action?articleURI=$2</to>
@@ -199,7 +217,7 @@
   <outbound-rule>
     <note>
       re-write outbound Article URIs.
-     /article/fetchArticle.action?articleURI=doi -> /article/doi
+      /article/fetchArticle.action?articleURI=doi -> /article/doi
     </note>
     <from>^(/.+)?/article/fetchArticle.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
     <to>$1/article/$2</to>
@@ -208,7 +226,7 @@
   <rule>
     <note>
       re-write incoming Annotation URIs.
-     /annotation/xxxx -> /annotation/listThread.action?root=xxxx
+      /annotation/xxxx -> /annotation/listThread.action?root=xxxx
     </note>
     <from>^(/.+)?/annotation/(info:doi/10\.1371/.+)$</from>
     <to last="true">$1/annotation/listThread.action?root=$2</to>
@@ -217,7 +235,7 @@
   <outbound-rule>
     <note>
       re-write outbound Article URIs.
-     /annotation/listThread.action?doi=xxxx -> /annotation/xxxx
+      /annotation/listThread.action?doi=xxxx -> /annotation/xxxx
     </note>
     <from>^(/.+)?/annotation/listThread.action\?root=(info%3Adoi%2F10\.1371%2F.+)</from>
     <to>$1/annotation/$2</to>
@@ -235,7 +253,7 @@
   <outbound-rule>
     <note>
       re-write outbound Feed URIs.
-     /article/feed/getFeed.action?... -> /article/feed?...
+      /article/feed/getFeed.action?... -> /article/feed?...
     </note>
     <from>^(/.+)?/article/feed/getFeed.action(.*)?</from>
     <to last="true">$1/article/feed$2</to>

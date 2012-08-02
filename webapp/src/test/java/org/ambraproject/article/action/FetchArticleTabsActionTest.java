@@ -22,7 +22,7 @@ import org.ambraproject.models.Trackback;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.user.service.UserService;
 import org.ambraproject.views.AnnotationView;
-import org.ambraproject.views.TrackbackView;
+import org.ambraproject.views.LinkbackView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -228,9 +228,9 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     assertNotNull(action.getTrackbackList(), "action had null trackback list");
     assertEqualsNoOrder(
         action.getTrackbackList().toArray(),
-        new TrackbackView[]{
-            new TrackbackView(trackback1, getArticleToFetch().getDoi(), getArticleToFetch().getTitle()),
-            new TrackbackView(trackback2, getArticleToFetch().getDoi(), getArticleToFetch().getTitle())},
+        new LinkbackView[]{
+            new LinkbackView(trackback1, getArticleToFetch().getDoi(), getArticleToFetch().getTitle()),
+            new LinkbackView(trackback2, getArticleToFetch().getDoi(), getArticleToFetch().getTitle())},
         "Action had incorrect trackback list");
   }
 

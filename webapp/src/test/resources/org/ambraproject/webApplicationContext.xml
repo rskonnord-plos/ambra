@@ -159,4 +159,19 @@
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
   </bean>
+
+  <bean id="searchAction" class="org.ambraproject.search.action.SearchAction">
+    <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="searchService" ref="searchService"/>
+    <property name="ambraFreemarkerConfig" ref="ambraFreemarkerConfig"/>
+  </bean>
+
+  <bean id="createPingbackAction" class="org.ambraproject.trackback.CreatePingbackAction">
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="pingbackService" ref="pingbackService"/>
+  </bean>
+
 </beans>

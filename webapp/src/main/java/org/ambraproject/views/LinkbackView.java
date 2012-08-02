@@ -1,10 +1,18 @@
 /*
  * $HeadURL$
  * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ *
+ * Copyright (c) 2007-2012 by Public Library of Science
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -13,14 +21,17 @@
 
 package org.ambraproject.views;
 
+import org.ambraproject.models.Linkback;
 import org.ambraproject.models.Trackback;
+
 import java.util.Date;
 
 /**
  * An immutable wrapper around {@link org.ambraproject.models.Trackback} for the display layer
+ *
  * @author Joe Osowski
  */
-public class TrackbackView {
+public class LinkbackView {
   private final Long ID;
   private final Long articleID;
   private final String url;
@@ -31,18 +42,26 @@ public class TrackbackView {
   private final Date lastModified;
   private final String articleDoi;
   private final String articleTitle;
-  
-  public TrackbackView(final Trackback trackback, final String articleDoi, final String articleTitle) {
-    this.articleID = trackback.getArticleID();
-    this.url = trackback.getUrl();
-    this.title = trackback.getTitle();
-    this.blogName = trackback.getBlogName();
-    this.excerpt = trackback.getExcerpt();
-    this.ID = trackback.getID();
-    this.created = trackback.getCreated();
-    this.lastModified = trackback.getLastModified();
+
+  public LinkbackView(final Linkback linkback, final String articleDoi, final String articleTitle) {
+    this.ID = linkback.getID();
+    this.articleID = linkback.getArticleID();
+    this.url = linkback.getUrl();
+    this.title = linkback.getTitle();
+    this.created = linkback.getCreated();
+    this.lastModified = linkback.getLastModified();
     this.articleDoi = articleDoi;
     this.articleTitle = articleTitle;
+
+    if (linkback instanceof Trackback) {
+      Trackback trackback = (Trackback) linkback;
+      this.blogName = trackback.getBlogName();
+      this.excerpt = trackback.getExcerpt();
+    } else {
+      // The pingback protocol doesn't provide this information; omit it from the view
+      this.blogName = null;
+      this.excerpt = null;
+    }
   }
 
   public Long getID() {
@@ -90,7 +109,7 @@ public class TrackbackView {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    TrackbackView that = (TrackbackView) o;
+    LinkbackView that = (LinkbackView) o;
 
     if (!ID.equals(that.ID)) return false;
     if (!articleID.equals(that.articleID)) return false;

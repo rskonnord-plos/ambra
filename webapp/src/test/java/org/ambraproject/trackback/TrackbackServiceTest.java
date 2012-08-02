@@ -24,7 +24,7 @@ package org.ambraproject.trackback;
 import org.ambraproject.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.Trackback;
-import org.ambraproject.views.TrackbackView;
+import org.ambraproject.views.LinkbackView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -110,7 +110,7 @@ public class TrackbackServiceTest extends BaseTest {
     Calendar lastMonth = Calendar.getInstance();
     lastMonth.add(Calendar.MONTH, -1);
 
-    List<TrackbackView> article1Trackbacks = new ArrayList<TrackbackView>(2);
+    List<LinkbackView> article1Trackbacks = new ArrayList<LinkbackView>(2);
 
     Trackback trackback1 = new Trackback(article1.getID(), "http://someblog.net/foo");
     trackback1.setTitle("Unit Testing in Java With Mock Http Servers");
@@ -118,7 +118,7 @@ public class TrackbackServiceTest extends BaseTest {
     trackback1.setBlogName("My Cool Blog");
     trackback1.setCreated(Calendar.getInstance().getTime());
     dummyDataStore.store(trackback1);
-    article1Trackbacks.add(new TrackbackView(trackback1, article1.getDoi(), article1.getTitle()));
+    article1Trackbacks.add(new LinkbackView(trackback1, article1.getDoi(), article1.getTitle()));
 
     Trackback trackback2 = new Trackback(article1.getID(), "http://someblog.net/bar");
     trackback2.setTitle("How to Productively Refactor Code");
@@ -126,7 +126,7 @@ public class TrackbackServiceTest extends BaseTest {
     trackback2.setBlogName("My Cool Blog");
     trackback2.setCreated(lastMonth.getTime());
     dummyDataStore.store(trackback2);
-    article1Trackbacks.add(new TrackbackView(trackback2, article1.getDoi(), article1.getTitle()));
+    article1Trackbacks.add(new LinkbackView(trackback2, article1.getDoi(), article1.getTitle()));
 
     Trackback trackback3 = new Trackback(article1.getID(), "http://someblog.net/cookie");
     trackback3.setTitle("Code that Never Works");
@@ -134,7 +134,7 @@ public class TrackbackServiceTest extends BaseTest {
     trackback3.setBlogName("My Cool Blog");
     trackback3.setCreated(lastYear.getTime());
     dummyDataStore.store(trackback3);
-    article1Trackbacks.add(new TrackbackView(trackback3, article1.getDoi(), article1.getTitle()));
+    article1Trackbacks.add(new LinkbackView(trackback3, article1.getDoi(), article1.getTitle()));
 
     Article article2 = new Article("id:doi-with-no-trackbacks");
     article2.setTitle("Test Article2 for TrackbackServiceTest");
@@ -143,13 +143,13 @@ public class TrackbackServiceTest extends BaseTest {
 
     return new Object[][]{
         {article1, article1Trackbacks},
-        {article2, new ArrayList<TrackbackView>(0)}
+        {article2, new ArrayList<LinkbackView>(0)}
     };
   }
 
   @Test(dataProvider = "articleTrackbacks")
-  public void testGetTrackbacksForArticle(Article article, List<TrackbackView> expectedTrackbacks) {
-    List<TrackbackView> trackbacks = trackbackService.getTrackbacksForArticle(article.getDoi());
+  public void testGetTrackbacksForArticle(Article article, List<LinkbackView> expectedTrackbacks) {
+    List<LinkbackView> trackbacks = trackbackService.getLinkbacksForArticle(article.getDoi());
     assertNotNull(trackbacks, "Returned null list of trackbacks");
     assertEqualsNoOrder(trackbacks.toArray(), expectedTrackbacks.toArray(), "Returned incorrect trackbacks");
     //check the ordering
@@ -161,8 +161,8 @@ public class TrackbackServiceTest extends BaseTest {
   }
 
   @Test(dataProvider = "articleTrackbacks")
-  public void testCountTrackbacks(Article article, List<TrackbackView> expectedTrackbacks) {
-    assertEquals(trackbackService.countTrackbacksForArticle(article.getDoi()), expectedTrackbacks.size(),
+  public void testCountTrackbacks(Article article, List<LinkbackView> expectedTrackbacks) {
+    assertEquals(trackbackService.countLinkbacksForArticle(article.getDoi()), expectedTrackbacks.size(),
         "Trackback service returned incorrect count of trackbacks");
   }
 

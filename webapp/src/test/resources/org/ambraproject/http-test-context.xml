@@ -53,6 +53,12 @@
     <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
+  <bean id="createPingbackAction" class="org.ambraproject.trackback.CreatePingbackAction">
+    <property name="pingbackService" ref="pingbackService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="permissionsService" ref="permissionsService"/>
+  </bean>
+
   <bean id="mostViewedAction" class="org.ambraproject.action.MostViewedAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="mostViewedArticleService" ref="mostViewedArticleService"/>

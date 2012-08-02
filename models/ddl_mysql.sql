@@ -249,6 +249,17 @@
         primary key (journalID)
     );
 
+    create table pingback (
+        pingbackID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        articleID bigint not null,
+        url varchar(255) not null,
+        title varchar(255),
+        primary key (pingbackID),
+        unique (articleID, url)
+    );
+
     create table rating (
         annotationID bigint not null,
         insight integer not null,

@@ -16,11 +16,8 @@ package org.ambraproject.models;
 /**
  * @author Alex Kudlick 3/7/12
  */
-public class Trackback extends AmbraEntity {
-  
-  private Long articleID;
-  private String url;
-  private String title;
+public class Trackback extends Linkback {
+
   private String blogName;
   private String excerpt;
 
@@ -30,32 +27,8 @@ public class Trackback extends AmbraEntity {
 
   public Trackback(Long articleID, String url) {
     super();
-    this.articleID = articleID;
-    this.url = url;
-  }
-
-  public Long getArticleID() {
-    return articleID;
-  }
-
-  public void setArticleID(Long articleID) {
-    this.articleID = articleID;
-  }
-
-  public String getUrl() {
-    return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
+    setArticleID(articleID);
+    setUrl(url);
   }
 
   public String getBlogName() {
@@ -76,35 +49,31 @@ public class Trackback extends AmbraEntity {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Trackback)) return false;
+    if (!super.equals(o)) return false;
 
     Trackback trackback = (Trackback) o;
-
-    if (articleID != null ? !articleID.equals(trackback.articleID) : trackback.articleID != null) return false;
     if (blogName != null ? !blogName.equals(trackback.blogName) : trackback.blogName != null) return false;
-    if (url != null ? !url.equals(trackback.url) : trackback.url != null) return false;
+    if (excerpt != null ? !excerpt.equals(trackback.excerpt) : trackback.excerpt != null) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = articleID != null ? articleID.hashCode() : 0;
-    result = 31 * result + (url != null ? url.hashCode() : 0);
+    int result = super.hashCode();
     result = 31 * result + (blogName != null ? blogName.hashCode() : 0);
+    result = 31 * result + (excerpt != null ? excerpt.hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
     return "Trackback{" +
-        "articleID=" + articleID +
-        ", url='" + url + '\'' +
-        ", title='" + title + '\'' +
+        "articleID=" + getArticleID() +
+        ", url='" + getUrl() + '\'' +
+        ", title='" + getTitle() + '\'' +
         ", blogName='" + blogName + '\'' +
         ", excerpt='" + excerpt + '\'' +
         '}';
   }
 }
-

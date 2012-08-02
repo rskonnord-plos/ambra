@@ -96,6 +96,11 @@
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
 
+  <bean id="pingbackService" class="org.ambraproject.trackback.PingbackServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="configuration" ref="ambraConfiguration"/>
+  </bean>
+
   <bean id="ratingsService" class="org.ambraproject.rating.service.RatingsServiceImpl">
     <property name="applicationId" ref="applicationId"/>
     <property name="permissionsService" ref="permissionsService"/>

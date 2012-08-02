@@ -34,6 +34,15 @@
   title="${freemarker_config.getArticleTitlePrefix(journalContext)} ${rssName?html}"
   href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}${rssPath}" />
 
+<#if pgURL?contains('fetchArticle.action') && articleInfoX??>
+<#--
+  Do not mess with the whitespace in the following tag!
+  It is specified by http://www.hixie.ch/specs/pingback/pingback-1.0#TOC2.2
+  There should be exactly one space before the closing slash. If an auto-formatter ate it, please put it back.
+  -->
+<link rel="pingback" href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}/pingback" />
+</#if>
+
 <#include "../css/global_css.ftl">
 
 <meta name="description" content="${freemarker_config.getMetaDescription(journalContext)}" />

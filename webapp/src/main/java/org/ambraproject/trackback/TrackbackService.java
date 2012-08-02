@@ -20,7 +20,7 @@
 
 package org.ambraproject.trackback;
 
-import org.ambraproject.views.TrackbackView;
+import org.ambraproject.views.LinkbackView;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -30,22 +30,21 @@ import java.util.List;
 /**
  * Track back service.
  */
-public interface TrackbackService {
+public interface TrackbackService extends LinkbackService {
 
   /**
    * Find all trackbacks that match the passed in values.
    *
-   * @param startDate the startDate
-   * @param endDate the endDate
+   * @param startDate  the startDate
+   * @param endDate    the endDate
    * @param maxResults max results
-   * @param journal the journal to filter on
+   * @param journal    the journal to filter on
    * @return a list of trackback view objects
    */
-  public List<TrackbackView> getTrackbacks(Date startDate, Date endDate, int maxResults, String journal);
+  public List<LinkbackView> getTrackbacks(Date startDate, Date endDate, int maxResults, String journal);
 
   /**
    * Saves a track back, and returns the id of the trackback.
-   *
    *
    * @param articleDoi the doi of the article being annotated
    * @param url        the url of the blog
@@ -74,11 +73,10 @@ public interface TrackbackService {
   /**
    * Get a list of trackbacks on the given article, ordered newest to oldest
    *
-   *
    * @param articleDoi the doi of the article
    * @return an ordered list of trackbacks
    */
-  public List<TrackbackView> getTrackbacksForArticle(String articleDoi);
+  public List<LinkbackView> getTrackbacksForArticle(String articleDoi);
 
   /**
    * Count the number of trackbacks on the given article

@@ -21,8 +21,10 @@
 
 package org.ambraproject.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 
 /**
  * Static utility class to validate uris.  Copied from <a href="http://topazproject.org/svn/head/topaz/core/src/main/java/org/topazproject/otm/RdfUtil.java">Topaz</a>
@@ -67,4 +69,19 @@ public class UriUtil {
       throw new IllegalArgumentException("'" + name + "' must be a valid absolute URI", e);
     }
   }
+
+  /**
+   * Convenience method to apply UTF-8 decoding to a URL without a checked exception.
+   *
+   * @param url the URL to decode
+   * @return the decoded URL
+   */
+  public static String decodeUtf8(String url) {
+    try {
+      return URLDecoder.decode(url, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException("UTF-8 unsupported", e);
+    }
+  }
+
 }

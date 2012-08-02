@@ -20,58 +20,47 @@
 
 package org.ambraproject.feed.action;
 
-import java.util.List;
-
+import com.opensymphony.xwork2.ModelDriven;
+import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.feed.service.AnnotationFeedSearchParameters;
 import org.ambraproject.feed.service.FeedSearchParameters;
-import org.ambraproject.model.article.ArticleInfo;
-import org.ambraproject.views.AnnotationView;
-import org.ambraproject.views.TrackbackView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Required;
-
-import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.feed.service.FeedService;
 import org.ambraproject.feed.service.FeedService.FEED_TYPES;
-
-import com.opensymphony.xwork2.ModelDriven;
+import org.ambraproject.model.article.ArticleInfo;
+import org.ambraproject.views.AnnotationView;
+import org.ambraproject.views.LinkbackView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 
+import java.util.List;
+
 /**
- * The <code>class FeedAction</code> provides an API for criteria based retrieval of articles and
- * article information. The <code>class FeedAction</code> implements the Struts ModelDrive
- * interface. The data model used for <code>FeedAction</code> is <code>FeedSearchParameters</code>. The
- * field <code>FeedAction.searchParameters</code> is accessible to Struts through the
- * <code>FeedAction.getModel</code> and <code>FeedAction.getSearchParameters</code> bean getter. The
- * ModelDriven Interceptor parses the input parameters, converts them to the appropriate Java types
+ * The <code>class FeedAction</code> provides an API for criteria based retrieval of articles and article information.
+ * The <code>class FeedAction</code> implements the Struts ModelDrive interface. The data model used for
+ * <code>FeedAction</code> is <code>FeedSearchParameters</code>. The field <code>FeedAction.searchParameters</code> is
+ * accessible to Struts through the <code>FeedAction.getModel</code> and <code>FeedAction.getSearchParameters</code>
+ * bean getter. The ModelDriven Interceptor parses the input parameters, converts them to the appropriate Java types
  * then assigns them to fields in the data model.
- *
- * <p>
- * The <code>FeedAction.SearchParameters</code> serves the following purposes:
- * <ul>
- * <li> Receives and validates the parameters passed in during a Post/Get.
- * <li> Used to pass these parameters to AmbraFeedResult via the ValueStack.
+ * <p/>
+ * <p/>
+ * The <code>FeedAction.SearchParameters</code> serves the following purposes: <ul> <li> Receives and validates the
+ * parameters passed in during a Post/Get. <li> Used to pass these parameters to AmbraFeedResult via the ValueStack.
  * </ul>
- * <p>
- *
- * ArticleFeed implements the <code>FeedAction.execute</code> and <code>FeedSearchParameters.validate
- * </code> Struts entry points. The <code>FeedSearchParameters.validate</code> method assigns default values
- * to fields not provided by user input and checks parameters that are provided by the user. By the
- * time Struts invokes the <code>FeedAction.execute</code> all model data variables should be in a
- * known and acceptable state for execution.
- *
- * <p>
- * <ul>
- * <li>Define a hard limit of 200 articles returned in one query.
- * <li>If startDate &gt; endDate then startDate set to endDate.
- * </ul>
- *
- * <h4>Action URI</h4>
- * http://.../article/feed
- * <h4>Parameters</h4>
+ * <p/>
+ * <p/>
+ * ArticleFeed implements the <code>FeedAction.execute</code> and <code>FeedSearchParameters.validate </code> Struts
+ * entry points. The <code>FeedSearchParameters.validate</code> method assigns default values to fields not provided by
+ * user input and checks parameters that are provided by the user. By the time Struts invokes the
+ * <code>FeedAction.execute</code> all model data variables should be in a known and acceptable state for execution.
+ * <p/>
+ * <p/>
+ * <ul> <li>Define a hard limit of 200 articles returned in one query. <li>If startDate &gt; endDate then startDate set
+ * to endDate. </ul>
+ * <p/>
+ * <h4>Action URI</h4> http://.../article/feed <h4>Parameters</h4>
  * <pre>
  * <strong>
  * Param        Format        Required     Default                 Description </strong>
@@ -96,27 +85,26 @@ import org.w3c.dom.Document;
  *
  * </pre>
  *
- * @see       org.ambraproject.feed.service.FeedSearchParameters
- * @see       org.ambraproject.struts2.AmbraFeedResult
- *
  * @author Jeff Suttor
  * @author Eric Brown
  * @author Joe Osowski
+ * @see org.ambraproject.feed.service.FeedSearchParameters
+ * @see org.ambraproject.struts2.AmbraFeedResult
  */
- @SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings("UnusedDeclaration")
 public class FeedAction extends BaseActionSupport implements ModelDriven {
   private static final Logger log = LoggerFactory.getLogger(FeedAction.class);
 
-  private FeedService             feedService;     // Feed Service Spring injected.
-  private FeedSearchParameters    searchParams;    // The action data model
-  private List<ArticleInfo>       articles;        // List of Article IDs; result of search
-  private List<AnnotationView>    annotations;     // List of Annotations; result of search
-  private List<TrackbackView>     trackbacks;      // List of tracks; results of search
-  private Document                resultFromSolr;  // list of articles for the rss feed
+  private FeedService feedService;     // Feed Service Spring injected.
+  private FeedSearchParameters searchParams;    // The action data model
+  private List<ArticleInfo> articles;        // List of Article IDs; result of search
+  private List<AnnotationView> annotations;     // List of Annotations; result of search
+  private List<LinkbackView> trackbacks;      // List of tracks; results of search
+  private Document resultFromSolr;  // list of articles for the rss feed
 
   /**
-   * Try and find the query in the feed cache or query the Article OTM Service if nothing
-   * is found. The parameters are valid by this point.
+   * Try and find the query in the feed cache or query the Article OTM Service if nothing is found. The parameters are
+   * valid by this point.
    *
    * @throws Exception Exception
    */
@@ -125,7 +113,7 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
     FEED_TYPES t = searchParams.feedType();
 
     String status = SUCCESS;
-    
+
     switch (t) {
       case Annotation:
         //Trackbacks are (logically but not physically) a form of annotation, if this type of feed is selected
@@ -162,13 +150,13 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
   }
 
   /**
-   * Validate the input parameters or create defaults when they are not provided.  Struts calls this
-   * automagically after the parameters are parsed and the proper fields are set in the data model.
-   * It is assumed that all necessary fields are checked for validity and created if not specified.
-   * The <code>ArticleFeed.execute</code> should be able to use them without any further checks.
+   * Validate the input parameters or create defaults when they are not provided.  Struts calls this automagically after
+   * the parameters are parsed and the proper fields are set in the data model. It is assumed that all necessary fields
+   * are checked for validity and created if not specified. The <code>ArticleFeed.execute</code> should be able to use
+   * them without any further checks.
    */
   @Override
-  public void validate () {
+  public void validate() {
     /*
      * The searchParams must have both the current Journal and start date.  Current Journal is set here
      * and startDate will be set in the data model validator.
@@ -188,7 +176,7 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
   /**
    * Set <code>feedService</code> field to the article Feed service singleton.
    *
-   * @param  feedService  the object transaction model reference
+   * @param feedService the object transaction model reference
    */
   @Required
   public void setFeedService(final FeedService feedService) {
@@ -218,14 +206,14 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
    *
    * @return the list of article/annotation ID's returned from the query.
    */
-  public List<TrackbackView> getTrackbacks() {
+  public List<LinkbackView> getTrackbacks() {
     return trackbacks;
   }
 
   /**
    * Return the search parameters being used by this action.
    *
-   * @return  Key to the cache which is also the data model of the action
+   * @return Key to the cache which is also the data model of the action
    */
   public FeedSearchParameters getSearchParameters() {
     return this.searchParams;
@@ -246,6 +234,7 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
 
   /**
    * Returns the solr search result that contains the list of articles
+   *
    * @return solr search result
    */
   public Document getResultFromSolr() {
