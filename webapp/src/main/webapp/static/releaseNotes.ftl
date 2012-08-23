@@ -35,6 +35,13 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.41</h2>
+  <p>Released August 28, 2012</p>
+  <h3>Features Implemented in Ambra 2.41</h3>
+  <ul>
+      <li>Upgraded to <a href="http://lucene.apache.org/solr/">Solr 3.6</a>.</li>
+  </ul>
+
   <h2>Ambra 2.40</h2>
   <p>Released August 2, 2012</p>
   <h3>Features Implemented in Ambra 2.40</h3>
