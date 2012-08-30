@@ -20,8 +20,8 @@
 package org.ambraproject.action;
 
 import org.ambraproject.models.UserProfile;
-import org.ambraproject.service.AmbraMailer;
-import org.ambraproject.user.action.UserActionSupport;
+import org.ambraproject.service.mailer.AmbraMailer;
+import org.ambraproject.action.user.UserActionSupport;
 import org.apache.commons.collections.EnumerationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;

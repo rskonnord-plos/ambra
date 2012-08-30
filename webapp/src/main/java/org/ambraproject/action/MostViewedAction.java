@@ -24,8 +24,8 @@ package org.ambraproject.action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.article.service.MostViewedArticleService;
-import org.ambraproject.solr.SolrException;
+import org.ambraproject.service.article.MostViewedArticleService;
+import org.ambraproject.service.search.SolrException;
 import org.ambraproject.util.Pair;
 
 import java.util.ArrayList;

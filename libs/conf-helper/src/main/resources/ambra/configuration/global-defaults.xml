@@ -46,8 +46,6 @@
         * cas          - Handles user authentication for the publishing system
         * registration - Registers and logs in users (usually runs in the same
         container that cas runs in.
-        * fedora       - The blob store used to store ingested articles
-        * mulgara      - The triple store.
         * ambra        - The publishing system
         * doi-resolver - Resolves DOIs. (Also no configuration here yet. Shares
         ambra container.)
@@ -63,8 +61,6 @@
         <!-- For multibox install, change the following entires to the appropriate FQHNs -->
         <cas>${ambra.network.hosts.default}</cas>
         <registration>${ambra.network.hosts.cas}</registration>
-        <fedora>${ambra.network.hosts.default}</fedora>
-        <mulgara>${ambra.network.hosts.default}</mulgara>
         <ambra>${ambra.network.hosts.default}</ambra>
         <!-- TODO: Use registration apropriately every where. Pull out doi-resolver -->
       </hosts>
@@ -87,9 +83,7 @@
         <ambra-ssl>10443</ambra-ssl>
         <cas-ssl>7443</cas-ssl>
         <doi>${ambra.network.ports.ambra}</doi>
-        <fedora>9090</fedora>
         <registration-ssl>${ambra.network.ports.cas-ssl}</registration-ssl>
-        <mulgara>8111</mulgara>
       </ports>
     </network>
     <platform>
@@ -137,45 +131,6 @@
           </imageSetConfigs>
         </imageMagick>
       </documentManagement>
-      
-      <xacml>
-        <!-- 
-          The pdpName configures the XACML-PDP used by the corresponding XACML-PEP.
-          PDPs are configured seperately in a PDPConfig.xml. The default PDPConfig 
-          file is in WEB-INF/classes directory. It can be overridden by specifying a 
-          -Dcom.sun.xacml.PDPConfigFile=fileName 
-        -->
-        <articles>
-          <pdpName>standard-pdp</pdpName>
-        </articles>
-        <annotations>
-          <pdpName>standard-pdp</pdpName>
-        </annotations>
-        <replies>
-          <pdpName>standard-pdp</pdpName>
-        </replies>
-        <permissions>
-          <pdpName>standard-pdp</pdpName>
-        </permissions>
-        <profiles>
-          <pdpName>standard-pdp</pdpName>
-        </profiles>
-        <preferences>
-          <pdpName>standard-pdp</pdpName>
-        </preferences>
-        <users>
-          <pdpName>standard-pdp</pdpName>
-        </users>
-        <ratings>
-          <pdpName>standard-pdp</pdpName>
-        </ratings>
-        <alerts>
-          <pdpName>standard-pdp</pdpName>
-        </alerts>
-        <access>
-          <pdpName>standard-pdp</pdpName>
-        </access>
-      </xacml>
     </services>
 
     <server>

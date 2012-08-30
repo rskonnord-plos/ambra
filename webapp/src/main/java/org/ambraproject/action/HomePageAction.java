@@ -24,10 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.article.BrowseParameters;
-import org.ambraproject.article.BrowseResult;
-import org.ambraproject.article.service.BrowseService;
-import org.ambraproject.search.SearchHit;
+import org.ambraproject.service.article.BrowseParameters;
+import org.ambraproject.service.article.BrowseService;
+import org.ambraproject.views.BrowseResult;
+import org.ambraproject.views.SearchHit;
 
 import java.net.URI;
 import java.util.*;

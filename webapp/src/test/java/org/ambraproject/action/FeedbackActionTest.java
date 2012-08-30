@@ -22,14 +22,12 @@
 package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
-import org.ambraproject.BaseWebTest;
-import org.ambraproject.service.AmbraMailer;
+import org.ambraproject.service.mailer.AmbraMailer;
 import org.ambraproject.testutils.DummyAmbraMailer;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 import org.topazproject.ambra.email.impl.FreemarkerTemplateMailer;
-
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +36,7 @@ import static org.testng.Assert.*;
 /**
  * @author Ryan Skonnord
  */
-public class FeedbackActionTest extends BaseWebTest {
+public class FeedbackActionTest extends AmbraWebTest {
 
   @Autowired
   protected FeedbackAction action;

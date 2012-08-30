@@ -31,8 +31,6 @@
         <mailhost>localhost</mailhost>
         <cas>${ambra.network.hosts.default}</cas>
         <registration>${ambra.network.hosts.cas}</registration>
-        <fedora>${ambra.network.hosts.default}</fedora>
-        <mulgara>${ambra.network.hosts.default}</mulgara>
         <ambra>${ambra.network.hosts.default}</ambra>
       </hosts>
       <ports>
@@ -40,8 +38,6 @@
         <cas-ssl>7443</cas-ssl>
         <ambra>8080</ambra>
         <ambra-ssl>10443</ambra-ssl>
-        <fedora>9090</fedora>
-        <mulgara>9091</mulgara>
         <registration-ssl>${ambra.network.ports.cas-ssl}</registration-ssl>
       </ports>
     </network>

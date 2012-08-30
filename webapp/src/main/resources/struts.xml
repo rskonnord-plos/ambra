@@ -70,8 +70,8 @@
     </result-types>
 
     <interceptors>
-      <interceptor name="ensureUserAccount" class="org.ambraproject.user.EnsureUserAccountInterceptor"/>
-      <interceptor name="ensureAdmin" class="org.ambraproject.user.EnsureRoleInterceptor"/>
+      <interceptor name="ensureUserAccount" class="org.ambraproject.struts2.EnsureUserAccountInterceptor"/>
+      <interceptor name="ensureAdmin" class="org.ambraproject.struts2.EnsureRoleInterceptor"/>
       <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
       <interceptor name="transactionInterceptor" class="org.ambraproject.struts2.TransactionInterceptor"/>
 
@@ -159,7 +159,7 @@
       <result name="success" type="redirect">/home.action</result>
     </action>
 
-    <action name="trackback" class="org.ambraproject.trackback.CreateTrackbackAction">
+    <action name="trackback" class="org.ambraproject.action.trackback.CreateTrackbackAction">
       <result name="success">
         <param name="location">/trackback/success.ftl</param>
         <param name="contentType">application/xml</param>
@@ -242,7 +242,7 @@
       </result>
     </action>
 
-    <action name="simpleSearch" class="org.ambraproject.search.action.SearchAction" method="executeSimpleSearch">
+    <action name="simpleSearch" class="org.ambraproject.action.search.SearchAction" method="executeSimpleSearch">
       <result name="input" type="ambraFreemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
       </result>
@@ -255,7 +255,7 @@
       </result>
     </action>
 
-    <action name="advancedSearch" class="org.ambraproject.search.action.SearchAction" method="executeUnformattedSearch">
+    <action name="advancedSearch" class="org.ambraproject.action.search.SearchAction" method="executeUnformattedSearch">
       <result name="input" type="ambraFreemarker">
         <param name="templateFile">/search/searchUnformatted.ftl</param>
       </result>
@@ -268,8 +268,7 @@
       </result>
     </action>
 
-    <action name="findAnArticleSearch" class="org.ambraproject.search.action.SearchAction"
-            method="executeFindAnArticleSearch">
+    <action name="findAnArticleSearch" class="org.ambraproject.action.search.SearchAction" method="executeFindAnArticleSearch">
       <result name="input" type="ambraFreemarker">
         <param name="templateFile">/search/searchUnformatted.ftl</param>
       </result>
@@ -285,7 +284,7 @@
       </result>
     </action>
 
-    <action name="listFacet" class="org.ambraproject.search.action.ListFacetAction" method="listFacet">
+    <action name="listFacet" class="org.ambraproject.action.search.ListFacetAction" method="listFacet">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/search/searchFacet.ftl</param>
       </result>
@@ -314,20 +313,20 @@
       <result name="success">/WEB-INF/pages/article/articleRatings.ftl</result>
       <result name="error">/WEB-INF/pages/article/articleRatings.ftl</result>
     </action-->
-    <action name="getUpdatedRatings" class="org.ambraproject.rating.action.GetAverageRatingsAction">
+    <action name="getUpdatedRatings" class="org.ambraproject.action.rating.GetAverageRatingsAction">
       <result name="success" type="ambraFreemarker">
         <param name="location">/article/article_rhc_rating.ftl</param>
         <param name="noCache">true</param>
       </result>
     </action>
-    <action name="getUpdatedRatingsOnArticleMetricsTab" class="org.ambraproject.rating.action.GetAverageRatingsAction">
+    <action name="getUpdatedRatingsOnArticleMetricsTab" class="org.ambraproject.action.rating.GetAverageRatingsAction">
       <result name="success" type="ambraFreemarker">
         <param name="location">/article/article_metrics_rating.ftl</param>
         <param name="noCache">true</param>
       </result>
     </action>
 
-    <action name="getArticleRatings" class="org.ambraproject.rating.action.GetArticleRatingsAction">
+    <action name="getArticleRatings" class="org.ambraproject.action.rating.GetArticleRatingsAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/rating/index.ftl</param>
       </result>
@@ -342,19 +341,19 @@
 
     <default-action-ref name="pageNotFound"/>
 
-    <action name="rateArticle" class="org.ambraproject.rating.action.RateAction" method="rateArticle">
+    <action name="rateArticle" class="org.ambraproject.action.rating.RateAction" method="rateArticle">
       <result name="input" type="json"/>
       <result name="success" type="json"/>
       <result name="error" type="json"/>
     </action>
 
-    <action name="createRatingFlagSubmit" class="org.ambraproject.annotation.action.CreateFlagAction">
+    <action name="createRatingFlagSubmit" class="org.ambraproject.action.annotation.CreateFlagAction">
       <result name="input" type="json"/>
       <result name="error" type="json"/>
       <result name="success" type="json"/>
     </action>
 
-    <action name="getRatingsForUser" class="org.ambraproject.rating.action.RateAction" method="retrieveRatingsForUser">
+    <action name="getRatingsForUser" class="org.ambraproject.action.rating.RateAction" method="retrieveRatingsForUser">
       <result name="input" type="json"/>
       <result name="success" type="json"/>
       <result name="error" type="json"/>
@@ -365,7 +364,7 @@
 
     <default-action-ref name="pageNotFound"/>
 
-    <action name="emailArticle" class="org.ambraproject.article.action.EmailArticleAction" method="executeRender">
+    <action name="emailArticle" class="org.ambraproject.action.article.EmailArticleAction" method="executeRender">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/emailArticle.ftl</param>
       </result>
@@ -375,14 +374,13 @@
       </result>
     </action>
 
-    <action name="findArticle" class="org.ambraproject.article.action.FindArticleAction">
+    <action name="findArticle" class="org.ambraproject.action.article.FindArticleAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/findArticle.ftl</param>
       </result>
     </action>
 
-    <action name="emailThisArticleCreate" class="org.ambraproject.article.action.EmailArticleAction"
-            method="executeRender">
+    <action name="emailThisArticleCreate" class="org.ambraproject.action.article.EmailArticleAction" method="executeRender">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/emailArticle/emailArticle.ftl</param>
       </result>
@@ -392,8 +390,7 @@
       </result>
     </action>
 
-    <action name="emailThisArticleSubmit" class="org.ambraproject.article.action.EmailArticleAction"
-            method="executeSend">
+    <action name="emailThisArticleSubmit" class="org.ambraproject.action.article.EmailArticleAction" method="executeSend">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/emailSuccess.ftl</param>
       </result>
@@ -402,7 +399,7 @@
       </result>
     </action>
 
-    <action name="fetchArticle" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticle">
+    <action name="fetchArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_body.ftl</param>
       </result>
@@ -417,8 +414,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleComments" class="org.ambraproject.article.action.FetchArticleTabsAction"
-            method="fetchArticleComments">
+    <action name="fetchArticleComments" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleComments">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
@@ -428,8 +424,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleCorrections" class="org.ambraproject.article.action.FetchArticleTabsAction"
-            method="fetchArticleCorrections">
+    <action name="fetchArticleCorrections" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCorrections">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
@@ -439,8 +434,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleMetrics" class="org.ambraproject.article.action.FetchArticleTabsAction"
-            method="fetchArticleMetrics">
+    <action name="fetchArticleMetrics" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetrics">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_metrics.ftl</param>
       </result>
@@ -450,8 +444,7 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticle" class="org.ambraproject.article.action.FetchArticleTabsAction"
-            method="fetchArticleRelated">
+    <action name="fetchRelatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelated">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_related.ftl</param>
       </result>
@@ -461,8 +454,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleCrossRef" class="org.ambraproject.article.action.FetchArticleAction"
-            method="fetchArticleInfo">
+    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_crossref.ftl</param>
       </result>
@@ -472,7 +464,7 @@
       </result>
     </action>
 
-    <action name="lightbox" class="org.ambraproject.article.action.SlideshowAction">
+    <action name="lightbox" class="org.ambraproject.action.article.SlideshowAction">
       <result name="success" type="json">
         <param name="excludeProperties">advisors, callbacks, annotations</param>
       </result>
@@ -484,8 +476,7 @@
       </result>
     </action>
 
-    <action name="fetchArticleTwitter" class="org.ambraproject.article.action.FetchArticleAction"
-            method="fetchArticleInfo">
+    <action name="fetchArticleTwitter" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/article_twitter.ftl</param>
       </result>
@@ -495,7 +486,7 @@
       </result>
     </action>
 
-    <action name="slideshow" class="org.ambraproject.article.action.SlideshowAction">
+    <action name="slideshow" class="org.ambraproject.action.article.SlideshowAction">
       <result name="success" type="headless">
         <param name="templateFile">/article/imageWindow.ftl</param>
       </result>
@@ -519,8 +510,7 @@
       </result>
     </action>
 
-    <action name="fetchObjectAttachment" class="org.ambraproject.article.action.FetchObjectAction"
-            method="fetchObjectAction">
+    <action name="fetchObjectAttachment" class="org.ambraproject.action.article.FetchObjectAction" method="fetchObjectAction">
       <result name="success" type="ambraStream">
         <param name="isAttachment">true</param>
       </result>
@@ -530,7 +520,7 @@
       </result>
     </action>
 
-    <action name="fetchFullDOIXML" class="org.ambraproject.article.action.FetchObjectAction" method="fetchObjectAction">
+    <action name="fetchFullDOIXML" class="org.ambraproject.action.article.FetchObjectAction" method="fetchObjectAction">
       <param name="fullDOI">true</param>
       <param name="representation">XML</param>
       <result name="success" type="ambraStream">
@@ -542,7 +532,7 @@
       </result>
     </action>
 
-    <action name="fetchObject" class="org.ambraproject.article.action.FetchObjectAction" method="fetchObjectAction">
+    <action name="fetchObject" class="org.ambraproject.action.article.FetchObjectAction" method="fetchObjectAction">
       <result name="success" type="ambraStream">
         <param name="isAttachment">false</param>
       </result>
@@ -552,7 +542,7 @@
       </result>
     </action>
 
-    <action name="fetchPowerPoint" class="org.ambraproject.article.action.FetchPowerPointAction">
+    <action name="fetchPowerPoint" class="org.ambraproject.action.article.FetchPowerPointAction">
       <result name="success" type="ambraStream">
         <param name="isAttachment">false</param>
       </result>
@@ -562,8 +552,7 @@
       </result>
     </action>
 
-    <action name="fetchSingleRepresentation" class="org.ambraproject.article.action.FetchObjectAction"
-            method="fetchSingleRepresentation">
+    <action name="fetchSingleRepresentation" class="org.ambraproject.action.article.FetchObjectAction" method="fetchSingleRepresentation">
       <result name="success" type="ambraStream">
         <param name="isAttachment">true</param>
       </result>
@@ -573,8 +562,7 @@
       </result>
     </action>
 
-    <action name="fetchAnnotatedArticle" class="org.ambraproject.article.action.FetchArticleTabsAction"
-            method="displayAnnotatedArticle">
+    <action name="fetchAnnotatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="displayAnnotatedArticle">
       <result name="success">/article/displayArticle.ftl</result>
       <result name="error" type="ambraFreemarker">
         <param name="status">404</param>
@@ -582,7 +570,7 @@
       </result>
     </action>
 
-    <action name="fetchBody" class="org.ambraproject.article.action.FetchArticleTabsAction" method="fetchArticle">
+    <action name="fetchBody" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
       <result name="success" type="ambraFreemarker">
         <param name="location">/article/article_content.ftl</param>
         <param name="noCache">true</param>
@@ -593,7 +581,7 @@
       </result>
     </action>
 
-    <action name="browse" class="org.ambraproject.article.action.BrowseArticlesAction">
+    <action name="browse" class="org.ambraproject.action.article.BrowseArticlesAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/browse.ftl</param>
       </result>
@@ -603,7 +591,7 @@
       </result>
     </action>
 
-    <action name="browseIssue" class="org.ambraproject.article.action.BrowseIssueAction">
+    <action name="browseIssue" class="org.ambraproject.action.article.BrowseIssueAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/browseIssue.ftl</param>
       </result>
@@ -618,7 +606,7 @@
       </result>
     </action>
 
-    <action name="browseVolume" class="org.ambraproject.article.action.BrowseVolumeAction">
+    <action name="browseVolume" class="org.ambraproject.action.article.BrowseVolumeAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/browseVolume.ftl</param>
       </result>
@@ -628,7 +616,7 @@
       </result>
     </action>
 
-    <action name="citationList" class="org.ambraproject.article.action.CreateCitation">
+    <action name="citationList" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/article/citationList.ftl</param>
       </result>
@@ -637,7 +625,7 @@
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
-    <action name="getRisCitation" class="org.ambraproject.article.action.CreateCitation">
+    <action name="getRisCitation" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="citation">
         <param name="location">/article/ris.ftl</param>
         <param name="contentType">text/plain</param>
@@ -648,7 +636,7 @@
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
-    <action name="getBibTexCitation" class="org.ambraproject.article.action.CreateCitation">
+    <action name="getBibTexCitation" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="citation">
         <param name="location">/article/bibtex.ftl</param>
         <param name="contentType">text/plain</param>
@@ -665,7 +653,7 @@
 
     <default-action-ref name="pageNotFound"/>
 
-    <action name="getFeed" class="org.ambraproject.feed.action.FeedAction">
+    <action name="getFeed" class="org.ambraproject.action.feed.FeedAction">
       <result name="success" type="feed"/>
       <result name="input" type="httpheader">
         <param name="status">400</param>
@@ -682,7 +670,7 @@
 
     <default-action-ref name="pageNotFound"/>
 
-    <action name="getAnnotation" class="org.ambraproject.annotation.action.GetAnnotationAction">
+    <action name="getAnnotation" class="org.ambraproject.action.annotation.GetAnnotationAction">
       <result name="success" type="json">
         <!--param name="excludeProperties">advisors, callbacks, annotations</param-->
         <param name="ignoreHierarchy">false</param>
@@ -709,7 +697,7 @@
       </result>
     </action>
 
-    <action name="listReply" class="org.ambraproject.annotation.action.ListReplyAction">
+    <action name="listReply" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success">/annotation/listReply.ftl</result>
       <result name="error" type="ambraFreemarker">
         <param name="status">404</param>
@@ -717,7 +705,7 @@
       </result>
     </action>
 
-    <action name="listAllReplies" class="org.ambraproject.annotation.action.ListReplyAction">
+    <action name="listAllReplies" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success">/annotation/listReply.ftl</result>
       <result name="error" type="ambraFreemarker">
         <param name="status">404</param>
@@ -725,7 +713,7 @@
       </result>
     </action>
 
-    <action name="listThreadedReplies" class="org.ambraproject.annotation.action.ListReplyAction">
+    <action name="listThreadedReplies" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success">/annotation/listThreadedReply.ftl</result>
       <result name="error" type="ambraFreemarker">
         <param name="status">404</param>
@@ -733,7 +721,7 @@
       </result>
     </action>
 
-    <action name="listThread" class="org.ambraproject.annotation.action.ListReplyAction">
+    <action name="listThread" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/discussion/discussion.ftl</param>
         <param name="noCache">true</param>
@@ -744,7 +732,7 @@
       </result>
     </action>
 
-    <action name="listThreadRefresh" class="org.ambraproject.annotation.action.ListReplyAction">
+    <action name="listThreadRefresh" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success" type="ambraFreemarker">
         <param name="location">/discussion/threaded_replies.ftl</param>
         <param name="noCache">true</param>
@@ -764,25 +752,25 @@
       <result>/annotation/createAnnotation.ftl</result>
     </action>
 
-    <action name="startDiscussion" class="org.ambraproject.annotation.action.StartDiscussionAction">
+    <action name="startDiscussion" class="org.ambraproject.action.annotation.StartDiscussionAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/discussion/startDiscussion.ftl</param>
       </result>
     </action>
 
-    <action name="createAnnotationSubmit" class="org.ambraproject.annotation.action.CreateAnnotationAction">
+    <action name="createAnnotationSubmit" class="org.ambraproject.action.annotation.CreateAnnotationAction">
       <result name="input" type="json"/>
       <result name="error" type="json"/>
       <result name="success" type="json"/>
     </action>
 
-    <action name="createDiscussionSubmit" class="org.ambraproject.annotation.action.CreateAnnotationAction">
+    <action name="createDiscussionSubmit" class="org.ambraproject.action.annotation.CreateAnnotationAction">
       <result name="input" type="json"/>
       <result name="error" type="json"/>
       <result name="success" type="json"/>
     </action>
 
-    <action name="createReplySubmit" class="org.ambraproject.annotation.action.CreateReplyAction">
+    <action name="createReplySubmit" class="org.ambraproject.action.annotation.CreateReplyAction">
       <result name="input" type="json"/>
       <result name="error" type="json"/>
       <result name="success" type="json"/>
@@ -793,13 +781,13 @@
       <result>/annotation/createFlag.ftl</result>
     </action>
 
-    <action name="createAnnotationFlagSubmit" class="org.ambraproject.annotation.action.CreateFlagAction">
+    <action name="createAnnotationFlagSubmit" class="org.ambraproject.action.annotation.CreateFlagAction">
       <result name="input" type="json"/>
       <result name="error" type="json"/>
       <result name="success" type="json"/>
     </action>
 
-    <action name="createReplyFlagSubmit" class="org.ambraproject.annotation.action.CreateFlagAction">
+    <action name="createReplyFlagSubmit" class="org.ambraproject.action.annotation.CreateFlagAction">
       <result name="input" type="json"/>
       <result name="error" type="json"/>
       <result name="success" type="json"/>
@@ -818,12 +806,11 @@
       </result>
     </action>
 
-    <action name="getUserProfilePrivateFields" class="org.ambraproject.user.action.DisplayUserAction"
-            method="fetchUserProfileWithPrivateVisibility">
+    <action name="getUserProfilePrivateFields" class="org.ambraproject.action.user.DisplayUserAction" method="fetchUserProfileWithPrivateVisibility">
       <result name="success">/user/displayPrivateFieldNames.ftl</result>
     </action>
 
-    <action name="editAjaxAlerts" class="org.ambraproject.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+    <action name="editAjaxAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
       <result name="success" type="ambraFreemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
@@ -838,13 +825,12 @@
       </result>
     </action>
 
-    <action name="retrieveUserAlerts" class="org.ambraproject.user.action.MemberUserAlertsAction"
-            method="retrieveAlerts">
+    <action name="retrieveUserAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
       <result name="success">/user/alerts.ftl</result>
       <result name="input">/user/alerts.ftl</result>
     </action>
 
-    <action name="saveAjaxAlerts" class="org.ambraproject.user.action.MemberUserAlertsAction" method="saveAlerts">
+    <action name="saveAjaxAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="saveAlerts">
       <result name="success" type="ambraFreemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
@@ -859,7 +845,7 @@
       </result>
     </action>
 
-    <action name="editProfile" class="org.ambraproject.user.action.MemberUserProfileAction">
+    <action name="editProfile" class="org.ambraproject.action.user.MemberUserProfileAction" >
       <result name="success" type="user">
         <param name="templateFile">/user/editUser.ftl</param>
       </result>
@@ -868,7 +854,7 @@
       </result>
     </action>
 
-    <action name="editPrefsAlerts" class="org.ambraproject.user.action.MemberUserAlertsAction" method="retrieveAlerts">
+    <action name="editPrefsAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
       <result name="success" type="user">
         <param name="templateFile">/user/editUser.ftl</param>
       </result>
@@ -877,7 +863,7 @@
       </result>
     </action>
 
-    <action name="editAjaxProfile" class="org.ambraproject.user.action.MemberUserProfileAction">
+    <action name="editAjaxProfile" class="org.ambraproject.action.user.MemberUserProfileAction" >
       <result name="success" type="ambraFreemarker">
         <param name="location">/user/user.ftl</param>
         <param name="noCache">true</param>
@@ -892,8 +878,7 @@
       </result>
     </action>
 
-    <action name="saveAjaxProfile" class="org.ambraproject.user.action.MemberUserProfileAction"
-            method="executeSaveUser">
+    <action name="saveAjaxProfile" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
       <result name="success" type="redirectAction">editAjaxProfile.action</result>
       <result name="input" type="ambraFreemarker">
         <param name="location">/user/user.ftl</param>
@@ -906,14 +891,14 @@
       </result>
     </action>
 
-    <action name="saveProfile" class="org.ambraproject.user.action.MemberUserProfileAction" method="executeSaveUser">
+    <action name="saveProfile" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
       <result name="success" type="redirect">/user/secure/retrieveUserProfile.action</result>
       <result name="input" type="user">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
     </action>
 
-    <action name="retrieveUserProfile" class="org.ambraproject.user.action.MemberUserProfileAction">
+    <action name="retrieveUserProfile" class="org.ambraproject.action.user.MemberUserProfileAction">
       <result name="success" type="user">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
@@ -935,7 +920,7 @@
 
     <default-action-ref name="pageNotFound"/>
 
-    <action name="prePopulateNewUser" class="org.ambraproject.user.action.MemberUserProfileAction">
+    <action name="prePopulateNewUser" class="org.ambraproject.action.user.MemberUserProfileAction">
       <result name="new-profile" type="user">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
@@ -945,7 +930,7 @@
       <result name="success" type="redirect">/</result>
     </action>
 
-    <action name="createNewUser" class="org.ambraproject.user.action.MemberUserProfileAction" method="executeSaveUser">
+    <action name="createNewUser" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
       <result name="success" type="redirect">/user/secure/editPrefsAlerts.action?tabId=alerts</result>
       <result name="input" type="user">
         <param name="templateFile">/user/createNewUser.ftl</param>
@@ -957,17 +942,17 @@
       <result>/user/newUser.ftl</result>
     </action>
 
-    <action name="displayUser" class="org.ambraproject.user.action.DisplayUserAction">
+    <action name="displayUser" class="org.ambraproject.action.user.DisplayUserAction">
       <result name="success">/user/displayUser.ftl</result>
     </action>
 
-    <action name="showUser" class="org.ambraproject.user.action.DisplayUserAction">
+    <action name="showUser" class="org.ambraproject.action.user.DisplayUserAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/user/displayUser.ftl</param>
       </result>
     </action>
 
-    <action name="displayUserAJAX" class="org.ambraproject.user.action.DisplayUserAction">
+    <action name="displayUserAJAX" class="org.ambraproject.action.user.DisplayUserAction">
       <result name="success">/widget/userProfileTooltip.ftl</result>
     </action>
 

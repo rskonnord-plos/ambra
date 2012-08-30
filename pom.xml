@@ -174,6 +174,7 @@
     <module>models</module>
     <module>webapp</module>
     <module>libs</module>
+    <module>base</module>
     <module>journals</module>
   </modules>
 
@@ -433,7 +434,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>3.8.2</version>
+        <version>4.10</version>
         <scope>test</scope>
       </dependency>
 
@@ -589,7 +590,6 @@
             <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
             <link>http://jakarta.apache.org/commons/configuration/apidocs</link>
             <link>http://tomcat.apache.org/tomcat-5.5-doc/catalina/docs/api</link>
-            <link>http://sunxacml.sourceforge.net/javadoc</link>
             <link>http://ws.apache.org/axis/java/apiDocs</link>
             <link>http://jakarta.apache.org/commons/logging/apidocs</link>
             <link>http://jrdf.sourceforge.net/0.3.4/doc/javadoc</link>
@@ -739,6 +739,19 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>

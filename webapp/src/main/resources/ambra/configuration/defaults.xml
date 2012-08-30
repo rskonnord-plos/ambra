@@ -35,8 +35,6 @@
         <!-- For multibox install, change the following entires to the appropriate FQHNs -->
         <cas>${ambra.network.hosts.default}</cas>
         <registration>${ambra.network.hosts.cas}</registration>
-        <fedora>${ambra.network.hosts.default}</fedora>
-        <mulgara>${ambra.network.hosts.default}</mulgara>
         <ambra>${ambra.network.hosts.default}</ambra>
       </hosts>
     </network>
@@ -289,7 +287,6 @@
     <spring>
       <server>
         <ambra>${ambra.network.hosts.ambra}:${ambra.network.ports.ambra}</ambra>
-        <mulgara>${ambra.network.hosts.mulgara}</mulgara>
       </server>
       <homesite>${ambra.network.hosts.default}</homesite>
     </spring>

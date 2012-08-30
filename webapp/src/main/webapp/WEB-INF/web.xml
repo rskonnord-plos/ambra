@@ -93,7 +93,7 @@ If so, wrap request with virtual journal override values in FilterChain.</descri
 
   <filter>
     <filter-name>CAS Filter</filter-name>
-    <filter-class>org.ambraproject.cas.client.filter.CASFilterWrapper</filter-class>
+    <filter-class>org.ambraproject.service.cas.client.filter.CASFilterWrapper</filter-class>
     <init-param>
       <param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
       <param-value>https://localhost:7443/cas/login</param-value>

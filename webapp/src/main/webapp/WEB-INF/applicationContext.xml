@@ -40,12 +40,12 @@
         factory-method="getInstance"/>
   <bean id="ambraConfiguration" factory-bean="configurationStore" factory-method="getConfiguration"/>
 
-  <bean id="fetchArticleService" class="org.ambraproject.article.service.FetchArticleServiceImpl">
+  <bean id="fetchArticleService" class="org.ambraproject.service.article.FetchArticleServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="articleHtmlCache" ref="articleHtmlCache" />
   </bean>
 
-  <bean id="articleAssetService" class="org.ambraproject.article.service.ArticleAssetServiceImpl">
+  <bean id="articleAssetService" class="org.ambraproject.service.article.ArticleAssetServiceImpl">
     <property name="permissionsService" ref="permissionsService" />
     <property name="articleService" ref="articleService" />
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
@@ -55,12 +55,12 @@
     <property name="templatesDirectory" value="${ambra.virtualJournals.templateDir}"/>
   </bean>
 
-  <bean id="trackBackService" class="org.ambraproject.trackback.TrackbackServiceImpl">
+  <bean id="trackBackService" class="org.ambraproject.service.trackback.TrackbackServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
 
-  <bean id="pingbackService" class="org.ambraproject.trackback.PingbackServiceImpl">
+  <bean id="pingbackService" class="org.ambraproject.service.trackback.PingbackServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
@@ -75,7 +75,7 @@
            value="${ambra.services.articletransform.dtd_3_0}"/>
   </util:map>
 
-  <bean id="articleTransformService" class="org.ambraproject.service.XMLServiceImpl" init-method="init">
+  <bean id="articleTransformService" class="org.ambraproject.service.xml.XMLServiceImpl" init-method="init">
     <property name="articleRep" value="XML"/>
     <property name="xslDefaultTemplate" value="${ambra.services.articletransform.default}"/>
     <property name="xslTemplateMap" ref="xslArticleTransformStyleSheetMap"/>
@@ -93,7 +93,7 @@
            value="${ambra.services.fulldoitransform.dtd_3_0}"/>
   </util:map>
 
-  <bean id="xmlService" class="org.ambraproject.service.XMLServiceImpl" init-method="init">
+  <bean id="xmlService" class="org.ambraproject.service.xml.XMLServiceImpl" init-method="init">
     <property name="articleRep" value="XML"/>
     <property name="xslDefaultTemplate" value="${ambra.services.fulldoitransform.default}"/>
     <property name="xslTemplateMap" ref="xslFullDoiStyleSheetMap"/>
@@ -111,7 +111,7 @@
            value="${ambra.services.objinfotransform.dtd_3_0}"/>
   </util:map>
 
-  <bean id="secondaryObjectService" class="org.ambraproject.service.XMLServiceImpl" init-method="init">
+  <bean id="secondaryObjectService" class="org.ambraproject.service.xml.XMLServiceImpl" init-method="init">
     <property name="articleRep" value="XML"/>
     <property name="xslDefaultTemplate" value="${ambra.services.objinfotransform.default}"/>
     <property name="xslTemplateMap" ref="xslObjInfoStyleSheetMap"/>
@@ -126,12 +126,12 @@
            value="net.sf.saxon.Controller"/>
   </util:map>
 
-  <bean id="articleService" class="org.ambraproject.article.service.ArticleServiceImpl">
+  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
-  <bean id="feedService" class="org.ambraproject.feed.service.FeedServiceImpl">
+  <bean id="feedService" class="org.ambraproject.service.feed.FeedServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="annotationService" ref="annotationService"/>
     <property name="journalService" ref="journalService"/>
@@ -160,17 +160,17 @@
     <constructor-arg index="0" ref="multiThreadedHttpConnectionManager"/>
   </bean>
 
-  <bean id="crossRefLookupService" class="org.ambraproject.crossref.CrossRefLookupServiceImpl">
+  <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
     <property name="httpClient" ref="httpClient"/>
     <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
   </bean>
 
-  <bean id="pubGetLookupService" class="org.ambraproject.pubget.PubGetLookupServiceImpl">
+  <bean id="pubGetLookupService" class="org.ambraproject.service.pubget.PubGetLookupServiceImpl">
     <property name="httpClient" ref="httpClient"/>
     <property name="pubGetUrl" value="${ambra.services.pubget.url}"/>
   </bean>
 
-  <bean id="findArticleService" class="org.ambraproject.article.service.FindArticleServiceImpl">
+  <bean id="findArticleService" class="org.ambraproject.service.article.FindArticleServiceImpl">
     <property name="crossRefLookupService" ref="crossRefLookupService"/>
     <property name="pubGetLookupService" ref="pubGetLookupService"/>
   </bean>
@@ -184,22 +184,22 @@
     <constructor-arg value="topaz-ambra"/>
   </bean>
 
-  <bean id="permissionsService" class="org.ambraproject.permission.service.PermissionsServiceImpl">
+  <bean id="permissionsService" class="org.ambraproject.service.permission.PermissionsServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="rolesCache" ref="rolesCache"/>
   </bean>
 
-  <bean id="annotationService" class="org.ambraproject.annotation.service.AnnotationServiceImpl">
+  <bean id="annotationService" class="org.ambraproject.service.annotation.AnnotationServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="articleHtmlCache" ref="articleHtmlCache"/>
   </bean>
 
-  <bean id="ratingsService" class="org.ambraproject.rating.service.RatingsServiceImpl">
+  <bean id="ratingsService" class="org.ambraproject.service.rating.RatingsServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="applicationId" ref="applicationId"/>
   </bean>
 
-  <bean id="userService" class="org.ambraproject.user.service.UserServiceImpl">
+  <bean id="userService" class="org.ambraproject.service.user.UserServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="emailAddressUrl" value="${ambra.services.cas.url.base}/email"/>
     <property name="authIdParam" value="guid"/>
@@ -210,7 +210,7 @@
     <property name="profaneWords" ref="profaneWords"/>
   </bean>
 
-  <bean id="browseService" class="org.ambraproject.article.service.BrowseServiceImpl">
+  <bean id="browseService" class="org.ambraproject.service.article.BrowseServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="configuration" ref="ambraConfiguration"/>
     <property name="journalService" ref="journalService"/>
@@ -224,28 +224,28 @@
     <entry key="countries" value-ref="countries"/>
   </util:map>
 
-  <bean id="solrServerFactory" class="org.ambraproject.search.service.SolrServerFactory">
+  <bean id="solrServerFactory" class="org.ambraproject.service.search.SolrServerFactory">
     <constructor-arg ref="ambraConfiguration"/>
   </bean>
 
-  <bean id="searchService" class="org.ambraproject.search.service.SolrSearchService">
+  <bean id="searchService" class="org.ambraproject.service.search.SolrSearchService">
     <property name="configuration" ref="ambraConfiguration"/>
     <property name="serverFactory" ref="solrServerFactory"/>
   </bean>
 
-  <bean id="journalCreator" class="org.ambraproject.journal.JournalCreatorImpl"
+  <bean id="journalCreator" class="org.ambraproject.service.journal.JournalCreatorImpl"
         init-method="createJournals" depends-on="bootstrapMigrator">
     <property name="configuration" ref="ambraConfiguration"/>
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
   </bean>
 
-  <bean id="journalService" class="org.ambraproject.journal.JournalServiceImpl"
+  <bean id="journalService" class="org.ambraproject.service.journal.JournalServiceImpl"
         depends-on="journalCreator">
     <property name="configuration" ref="ambraConfiguration"/>
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
   </bean>
 
-  <bean id="bootstrapMigrator" class="org.ambraproject.migration.BootstrapMigratorServiceImpl"
+  <bean id="bootstrapMigrator" class="org.ambraproject.service.migration.BootstrapMigratorServiceImpl"
         init-method="migrate">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
   </bean>
@@ -287,25 +287,25 @@
 
   <!-- end hibernate settings -->
 
-  <bean id="browseSolrCache" class="org.ambraproject.cache.EhcacheProvider">
+  <bean id="browseSolrCache" class="org.ambraproject.service.cache.EhcacheProvider">
     <constructor-arg index="0" ref="browseSolrEhcache"/>
     <constructor-arg index="1" value="false"/>
   </bean>
 
-  <bean id="articleHtmlCache" class="org.ambraproject.cache.EhcacheProvider">
+  <bean id="articleHtmlCache" class="org.ambraproject.service.cache.EhcacheProvider">
     <constructor-arg index="0" ref="articleHtmlEhcache"/>
   </bean>
 
-  <bean id="rolesCache" class="org.ambraproject.cache.EhcacheProvider">
+  <bean id="rolesCache" class="org.ambraproject.service.cache.EhcacheProvider">
     <constructor-arg index="0" ref="rolesEhCache"/>
   </bean>
 
   <!-- freemarker configs -->
-  <bean id="ambraFreemarkerConfig" class="org.ambraproject.struts2.AmbraFreemarkerConfig">
+  <bean id="ambraFreemarkerConfig" class="org.ambraproject.freemarker.AmbraFreemarkerConfig">
     <constructor-arg index="0" ref="ambraConfiguration"/>
   </bean>
 
-  <bean id="ambraFreemarkerManager" class="org.ambraproject.struts2.AmbraFreemarkerManager"/>
+  <bean id="ambraFreemarkerManager" class="org.ambraproject.freemarker.AmbraFreemarkerManager"/>
 
   <!-- Caches -->
   <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
@@ -364,7 +364,7 @@
   <!--For Dev setup, you can uncomment the dummy mailer and comment out the real mailer-->
   <!--<bean id="ambraMailer" class="org.ambraproject.testutils.DummyAmbraMailer" />-->
 
-  <bean id="ambraMailer" class="org.ambraproject.service.AmbraMailerImpl">
+  <bean id="ambraMailer" class="org.ambraproject.service.mailer.AmbraMailerImpl">
     <property name="fromEmailAddress" value="application@plosone.org"/>
     <property name="feedbackEmailMap">
       <map>
@@ -400,17 +400,17 @@
     </property>
   </bean>
 
-  <bean id="solrHttpService" class="org.ambraproject.solr.SolrHttpServiceImpl">
+  <bean id="solrHttpService" class="org.ambraproject.service.search.SolrHttpServiceImpl">
     <property name="config" ref="ambraConfiguration"/>
   </bean>
 
-  <bean id="mostViewedArticleService" class="org.ambraproject.solr.SolrMostViewedArticleService">
+  <bean id="mostViewedArticleService" class="org.ambraproject.service.search.SolrMostViewedArticleService">
     <property name="solrFieldConverter" ref="solrFieldConverter"/>
     <property name="solrHttpService" ref="solrHttpService"/>
   </bean>
 
 
-  <bean id="solrFieldConverter" class="org.ambraproject.solr.SolrFieldConversionImpl">
+  <bean id="solrFieldConverter" class="org.ambraproject.service.search.SolrFieldConversionImpl">
     <property name="allTimeViewsField" value="counter_total_all"/>
     <property name="viewCountingFields">
       <map>

@@ -14,9 +14,8 @@
 package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
-import org.ambraproject.BaseWebTest;
 import org.ambraproject.models.Journal;
-import org.ambraproject.search.SearchHit;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.Pair;
 import org.ambraproject.web.VirtualJournalContext;
@@ -24,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +32,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -42,7 +39,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Alex Kudlick 2/7/12
  */
-public class HomepageActionTest extends BaseWebTest {
+public class HomepageActionTest extends AmbraWebTest {
   @Autowired
   protected HomePageAction action;
 
