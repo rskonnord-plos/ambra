@@ -53,10 +53,7 @@
   </bean>
 
   <!--Solr server factory-->
-  <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown">
-    <constructor-arg index="0" value="${project.basedir}/target/test-classes/solr/conf/test-solr-schema.xml"/>
-    <constructor-arg index="1" value="${project.basedir}/target/test-classes/solr/conf/test-solr-config.xml"/>
-  </bean>
+  <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
 
   <!-- Set up XML factories -->
   <bean id="documentBuilderFactory" class="org.ambraproject.util.DocumentBuilderFactoryCreator"
