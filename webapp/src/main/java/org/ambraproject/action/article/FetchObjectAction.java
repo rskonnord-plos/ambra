@@ -134,7 +134,8 @@ public class FetchObjectAction extends BaseSessionAwareActionSupport {
                   ArticleView.Type.PDF_DOWNLOAD);
         }
       } catch (Exception e) {
-        log.error("Error recording an article download for user: " + user.getID() + " and uri: " + uri);
+        log.error("Error recording an object download for user: {} and uri: {}", user.getID(), uri);
+        log.error(e.getMessage(), e);
       }
     }
 
