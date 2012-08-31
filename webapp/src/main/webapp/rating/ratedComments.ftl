@@ -53,7 +53,7 @@
       <#list articleRatings as articleRating>
         <@s.url id="fetchUserURL" namespace="/user" action="showUser" userId="${articleRating.creatorID?c}"/>
         <div class="response ratingComment">
-          <a name="${articleRating.ratingId}"/>
+          <a name="${articleRating.ratingId?c}"/>
           <div class="hd">
             <!-- begin : response title : user -->
             <h3>
@@ -140,7 +140,7 @@
             <ul>
               <li>
                 <#if Session?exists && Session[freemarker_config.userAttributeKey]?exists>
-                  <a href="#" onclick="ambra.responsePanel.show(this, _dcf, 'toolbar', '${articleRating.ratingId}', null, null, 2); return false;" class="flag tooltip" title="Report a Concern">Report a Concern</a>
+                  <a href="#" onclick="ambra.responsePanel.show(this, _dcf, 'toolbar', '${articleRating.ratingId?c}', null, null, 2); return false;" class="flag tooltip" title="Report a Concern">Report a Concern</a>
                 <#else>
                   <a href="${freemarker_config.context}/user/secure/secureRedirect.action?goTo=${global.thisPage}" class="flag tooltip" title="Report a Concern">Report a Concern</a>
                 </#if>

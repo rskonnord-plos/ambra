@@ -28,7 +28,7 @@
     <fieldset>
         <legend>Flag details</legend>
 
-          id          =${flag.id}            <br/>
+          id          =${flag.id?c}            <br/>
           annotates   =${flag.annotates}     <br/>
           body        =${flag.comment}       <br/>
           bodyWithUrlLinking        =${flag.commentWithUrlLinking}          <br/>
@@ -37,10 +37,10 @@
           mediator    =${flag.mediator}      <br/>
           type        =${flag.type}          <br/>
 
-          <@s.url id="createReplyURL" action="createReplySubmit" root="${flag.id}" inReplyTo="${flag.id}" namespace="/annotation/secure"/>
+          <@s.url id="createReplyURL" action="createReplySubmit" root="${flag.id?c}" inReplyTo="${flag.id?c}" namespace="/annotation/secure"/>
           <@s.a href="%{createReplyURL}">create reply</@s.a> <br/>
 
-          <@s.url id="listReplyURL" action="listAllReplies" root="${flag.id}" inReplyTo="${flag.id}"/>
+          <@s.url id="listReplyURL" action="listAllReplies" root="${flag.id?c}" inReplyTo="${flag.id?c}"/>
           <@s.a href="%{listReplyURL}">list all replies</@s.a> <br/>
 
     </fieldset>
