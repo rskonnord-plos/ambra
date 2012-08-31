@@ -46,7 +46,8 @@ public class SolrServiceUtil {
       if (type.isInstance(value)) {
         return type.cast(value);
       } else {
-        log.error("Field " + fieldName + " is not of type " + type.getName() + " for " + message);
+        //TODO: Change this back to Error as part of PDEV-1161
+        log.warn("Field " + fieldName + " is not of type " + type.getName() + " for " + message);
       }
     } else {
       log.warn("No \'" + fieldName + "\' field for " + message);
