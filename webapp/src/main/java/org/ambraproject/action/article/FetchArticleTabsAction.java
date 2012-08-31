@@ -166,7 +166,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       try {
         userService.recordArticleView(user.getID(), articleInfoX.getId(), ArticleView.Type.ARTICLE_VIEW);
       } catch (Exception e) {
-        log.error("Error recording an article view for user: " + user.getID() + " and article: " + articleInfoX.getId());
+        log.error("Error recording an article view for user: {} and article: {}", user.getID(), articleInfoX.getId());
+        log.error(e.getMessage(), e);
       }
     }
     return SUCCESS;
