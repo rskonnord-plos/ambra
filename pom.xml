@@ -147,9 +147,9 @@
   </pluginRepositories>
 
   <scm>
-    <developerConnection>scm:svn:http://ambraproject.org/svn/ambra/ambra/tags/ambra-2.4.0</developerConnection>
-    <connection>scm:svn:http://http://ambraproject.org/svn/ambra/ambra/tags/ambra-2.4.0</connection>
-    <url>scm:svn:http://ambraproject.org/svn/ambra/ambra/tags/ambra-2.4.0</url>
+    <developerConnection>scm:svn:http://ambraproject.org/svn/ambra/ambra/tags/journal-publishing-system-2.4.0</developerConnection>
+    <connection>scm:svn:http://http://ambraproject.org/svn/ambra/ambra/tags/journal-publishing-system-2.4.0</connection>
+    <url>scm:svn:http://ambraproject.org/svn/ambra/ambra/tags/journal-publishing-system-2.4.0</url>
   </scm>
 
   <distributionManagement>

@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.40</h2>
+  <p>Released August 2, 2012</p>
+  <h3>Features Implemented in Ambra 2.40</h3>
+  <ul>
+      <li>The server now can receive pingbacks, and article pages are pingback-enabled. Received pingbacks will be
+          stored in the database, but will not be visible in the Web application yet.
+      </li>
+  </ul>
+
   <h2>Ambra 2.38</h2>
   <p>Released July 12, 2012</p>
   <h3>Features Implemented in Ambra 2.38</h3>
