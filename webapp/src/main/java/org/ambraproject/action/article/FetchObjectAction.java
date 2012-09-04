@@ -48,7 +48,7 @@ import java.util.Date;
  * <p/>
  * All transactions will be spanning over to results.
  */
-@Transactional(readOnly = true)
+@Transactional
 public class FetchObjectAction extends BaseSessionAwareActionSupport {
   private static final Logger log = LoggerFactory.getLogger(FetchObjectAction.class);
 
