@@ -19,27 +19,26 @@
  */
 package org.topazproject.ambra.configuration;
 
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.util.Enumeration;
-import java.util.Collection;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.File;
-
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.CombinedConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.SystemConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Enumeration;
 
 /**
  * A singleton that manages the load/unload/re-load of Configuration.<p>

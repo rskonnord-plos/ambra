@@ -145,6 +145,7 @@
             <option value="reference" title="References">References</option>
             <option value="results_and_discussion" title="Results and Discussion">Results and Discussion</option>
             <option value="supporting_information" title="Supporting Information">Supporting Information</option>
+            <option value="trial_registration" title="Trial Registration">Trial Registration</option>
             <option value="volume" title="Volume Number">Volume Number</option>
           </select>
 

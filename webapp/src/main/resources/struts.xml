@@ -664,6 +664,20 @@
         <param name="templateFile">/static/feedError.ftl</param>
       </result>
     </action>
+
+    <action name="executeFeedSearch" class="org.ambraproject.feed.action.FeedAction" method="executeFeedSearch">
+      <result name="success" type="feed"/>
+      <result name="input" type="httpheader">
+        <param name="status">400</param>
+        <!-- Http status: Bad Request-->
+      </result>
+      <result name="error" type="ambraFreemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/static/feedError.ftl</param>
+      </result>
+    </action>
+
+
   </package>
 
   <package name="annotation" extends="default" namespace="/annotation">

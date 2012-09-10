@@ -109,7 +109,7 @@
                                                                                                title="Add to StumbleUpon"></a>
           <#-- for more info, see http://www.stumbleupon.com/buttons.php -->
           <#-- Facebook -->
-          <script>function fbs_click() {u='${article.docURL}';t='${article.docTitle?url?replace("'","\\'")}';window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script><a href="http://www.facebook.com/share.php?u=${article.docURL?url}" onclick="return fbs_click()"><img src="http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif" alt="Facebook" title="Add to Facebook" /></a>       <!-- for mor info, see http://www.facebook.com/share_partners.php -->
+          <script>function fbs_click() {u='${article.docURL}';t='${article.docTitle?url?replace("'","\\'")}';window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script><a href="http://www.facebook.com/share.php?u=${article.docURL?url}" onclick="return fbs_click()" target="_blank"><img src="http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif" alt="Facebook" title="Add to Facebook" /></a>       <!-- for mor info, see http://www.facebook.com/share_partners.php -->
           <#-- Connotea -->
           <script type="text/javascript">
             function bookmark_in_connotea(u) {

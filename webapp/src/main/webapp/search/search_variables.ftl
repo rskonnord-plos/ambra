@@ -34,3 +34,4 @@
 </#if>
 
 <@s.url id="advancedSearchURL" includeParams="none" namespace="/search" action="advancedSearch" />
+<@s.url id="rssSearchURL" includeParams="none" namespace="/article/feed" action="executeFeedSearch" />

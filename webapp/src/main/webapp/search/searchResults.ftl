@@ -64,6 +64,26 @@
 <#--
   Allow viewing of other "pages" of results.  Form submits an advanced search. "startPage" is usually modified.
 -->
+<form name="rssSearchForm" action="${rssSearchURL}" method="get">
+
+  <#--  Simple Search field  -->
+  <@s.hidden name="query" />
+  <#--  Unformatted Search field (new Advanced Search)  -->
+  <@s.hidden name="unformattedQuery" />
+
+  <#--  Find An Article Search fields  -->
+  <@s.hidden name="volume" />
+  <@s.hidden name="eLocationId" />
+  <@s.hidden name="id" />
+  <@s.hidden name="filterJournals" />
+  <@s.hidden name="filterSubjects" />
+  <@s.hidden name="filterArticleType" />
+  <@s.hidden name="filterKeyword" />
+</form>
+
+<#--
+  Allow viewing of other "pages" of results.  Form submits an advanced search. "startPage" is usually modified.
+-->
 <form name="otherSearchResultPages" action="${searchURL}" method="get">
   <@s.hidden name="startPage" />
   <@s.hidden name="pageSize" />
