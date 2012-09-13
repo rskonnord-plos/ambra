@@ -170,7 +170,7 @@
       </result>
     </action>
 
-    <action name="pingback" class="org.ambraproject.trackback.CreatePingbackAction">
+    <action name="pingback" class="org.ambraproject.action.trackback.CreatePingbackAction">
       <!-- Success is handled by XmlRpcServletServer, not Struts -->
       <result name="error">
         <param name="location">/trackback/pingback.ftl</param>
