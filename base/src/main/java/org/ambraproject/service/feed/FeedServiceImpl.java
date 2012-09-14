@@ -63,6 +63,11 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   private Configuration configuration;
   private SolrFieldConversion solrFieldConverter;
 
+
+  private static final String MAX_FACET_SIZE         = "100";
+  private static final String MIN_FACET_COUNT        = "1";
+  private static final String MAX_HIGHLIGHT_SNIPPETS = "3";
+
   /**
    * Constructor - currently does nothing.
    */
@@ -158,6 +163,80 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
 
     return result;
   }
+
+  @Override
+  public Document getSearchArticles(final FeedSearchParameters searchParameters) {
+    Map<String, String> params = new HashMap<String, String>();
+    // result format
+    params.put("wt", "xml");
+    // what I want returned, the fields needed for rss feed
+    params.put("fl", "id,title_display,publication_date,author_without_collab_display,author_collab_only_display," +
+        "author_display,volume,issue,article_type,subject_hierarchy,abstract_primary_display,copyright");
+
+    //set query string
+    params.put("q", searchParameters.getQuery());
+
+    //set query time out
+    //params.put( "timeAllowed", queryTimeout);
+
+    // The relevance (of each results element) to the search terms.
+    params.put("fl", "score");
+
+    //setting highlighting to true
+    params.put("hl", "true");
+
+   // params.put("hl.fl", this.highlightFields);
+    params.put("hl.requireFieldMatch", "true");
+
+    //adding the filters
+    StringBuilder filterQuery = new StringBuilder();
+    filterQuery.append("doc_type:full " +
+        "AND !article_type_facet:\"Issue Image\" ");
+
+
+    if (searchParameters.getFilterJournals() != null && searchParameters.getFilterJournals().length > 0) {
+      filterQuery.append(" AND ");
+      filterQuery.append("cross_published_journal_key:") ;
+      for (int i=0;i<searchParameters.getFilterJournals().length;i++) {
+        filterQuery.append(searchParameters.getFilterJournals()[i]).append(" OR ");
+      }
+       filterQuery.replace(filterQuery.length() - 4, filterQuery.length(), ""); // Remove last " OR"
+
+      }
+
+ //   filterQuery.append("cross_published_journal_key:").append("PLoSBiology OR PLoSMedicine OR PLoSONE");
+
+    params.put("fq", filterQuery.toString());
+
+    //adding facets
+    params.put("facet","true");
+    params.put("facet.field","subject_facet");
+    params.put("facet.field","author_facet");
+    params.put("facet.field","editor_facet");
+    params.put("facet.field","article_type_facet");
+    params.put("facet.field","affiliate_facet");
+    params.put("facet.field","cross_published_journal_key");
+
+    params.put("facet.limit", MAX_FACET_SIZE);
+    params.put("facet.mincount", MIN_FACET_COUNT);
+    params.put("facet.method", "fc");
+
+    params.put("defType", "dismax");
+
+
+
+
+
+    Document result = null;
+    try {
+      result = solrHttpService.makeSolrRequest(params);
+    } catch (SolrException e) {
+      e.printStackTrace();
+    }
+
+    return result;
+  }
+
 
   /**
    * @param searchParameters the feedAction data model

@@ -665,7 +665,7 @@
       </result>
     </action>
 
-    <action name="executeFeedSearch" class="org.ambraproject.feed.action.FeedAction" method="executeFeedSearch">
+    <action name="executeFeedSearch" class="org.ambraproject.action.feed.FeedAction" method="executeFeedSearch">
       <result name="success" type="feed"/>
       <result name="input" type="httpheader">
         <param name="status">400</param>

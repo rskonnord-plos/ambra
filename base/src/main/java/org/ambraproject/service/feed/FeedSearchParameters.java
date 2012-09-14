@@ -23,11 +23,12 @@ package org.ambraproject.service.feed;
 import org.ambraproject.action.BaseActionSupport;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * The <code>class FeedSearchParameters</code> serves two function:
@@ -61,6 +62,25 @@ public class FeedSearchParameters implements Serializable  {
   private String type;
   private boolean mostViewed = false;
   private String formatting;
+
+  // rss for search
+  private String query = "";
+
+
+  // Used by Find An Article search
+  private String        volume                = "";
+  private String        eLocationId           = "";
+  private String        id                    = ""; // One DOI.  These are indexed as "ID" in Solr
+  // Used to create query filters on any search
+  private String[]      filterSubjects      = {}; // Only search in these subjects
+  private String        filterKeyword         = ""; // Only search in this document part
+  private String        filterArticleType     = ""; // Only search for this article type
+  private String[]      filterJournals        = {}; // Only search these Journals. If no elements, then default to the current journal
+  // Controls results order
+  private String        sort                  = "";
+  // Used only by Query Builder search
+  private String  unformattedQuery      = "";
+
 
   final SimpleDateFormat dateFrmt = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -294,6 +314,132 @@ public class FeedSearchParameters implements Serializable  {
   public void setFormatting(String formatting) {
     this.formatting = formatting;
   }
+
+  public String getQuery() {
+    return query;
+  }
+
+  public void setQuery(String query) {
+    if (query == null || query.trim().length() < 1)
+      this.query = "";
+    else
+      this.query = query.trim();
+  }
+
+
+  public String getUnformattedQuery() {
+    return unformattedQuery;
+  }
+
+  public void setUnformattedQuery(String unformattedQuery) {
+    if (unformattedQuery == null || unformattedQuery.trim().length() < 1)
+      this.unformattedQuery = "";
+    else
+      this.unformattedQuery = unformattedQuery.trim();
+  }
+
+  public String getVolume() {
+    return volume;
+  }
+
+  public void setVolume(String volume) {
+    if (volume == null || volume.trim().length() < 1)
+      this.volume = "";
+    else
+      this.volume = volume.trim();
+  }
+
+  public String geteLocationId() {
+    return eLocationId;
+  }
+
+  public void seteLocationId(String eLocationId) {
+    if (eLocationId == null || eLocationId.trim().length() < 1)
+      this.eLocationId = "";
+    else
+      this.eLocationId = eLocationId.trim();
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    if (id == null || id.trim().length() < 1)
+      this.id = "";
+    else
+      this.id = id.trim();
+  }
+
+  public String[] getFilterSubjects() {
+    return filterSubjects;
+  }
+
+  public void setFilterSubjects(String[] subjects) {
+    if (subjects == null || subjects.length < 1) {
+      this.filterSubjects = new String[]{};
+    } else {
+      List<String> filterSubjectsList = new ArrayList<String>();
+      for (String subject : subjects) {
+        if (subject != null && subject.trim().length() > 0)
+          filterSubjectsList.add(subject.trim());
+      }
+      this.filterSubjects = new String[filterSubjectsList.size()];
+      filterSubjectsList.toArray(this.filterSubjects);
+    }
+  }
+
+  public String getFilterKeyword() {
+    return filterKeyword;
+  }
+
+  public void setFilterKeyword(String filterKeyword) {
+    if (filterKeyword == null || filterKeyword.trim().length() < 1)
+      this.filterKeyword = "";
+    else
+      this.filterKeyword = filterKeyword.trim();
+  }
+
+  public String getFilterArticleType() {
+    return filterArticleType;
+  }
+
+  public void setFilterArticleType(String filterArticleType) {
+    if (filterArticleType == null || filterArticleType.trim().length() < 1)
+      this.filterArticleType = "";
+    else
+      this.filterArticleType = filterArticleType.trim();
+  }
+
+  public String[] getFilterJournals() {
+    return filterJournals;
+  }
+
+  public void setFilterJournals(String[] journals) {
+    if (journals == null || journals.length < 1) {
+      this.filterJournals = new String[]{};
+    } else {
+      List<String> filterJournalsList = new ArrayList<String>();
+      for (String journal : journals) {
+        if (journal != null && journal.trim().length() > 0)
+          filterJournalsList.add(journal.trim());
+      }
+      this.filterJournals = new String[filterJournalsList.size()];
+      filterJournalsList.toArray(this.filterJournals);
+    }
+  }
+
+  public String getSort() {
+    return sort;
+  }
+
+  public void setSort(String sort) {
+    if (sort == null || sort.trim().length() < 1)
+      this.sort = "";
+    else
+      this.sort = sort.trim();
+  }
+
 }
 
 

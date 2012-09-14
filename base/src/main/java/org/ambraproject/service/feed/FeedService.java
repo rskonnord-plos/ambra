@@ -87,6 +87,16 @@ public interface FeedService {
   public Document getArticles(final FeedSearchParameters searchParameters);
 
   /**
+   * Queries for a list of articles from solr using the parameters set in searchParams
+   *
+   * @param searchParameters
+   * @return solr search result that contains list of articles
+   */
+  public Document getSearchArticles(final FeedSearchParameters searchParameters);
+
+
+
+  /**
    * @param searchParams input parameters
    * @param journal      Current journal
    * @return List&lt;String&gt; if article Ids.

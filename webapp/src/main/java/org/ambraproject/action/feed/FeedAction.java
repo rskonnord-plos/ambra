@@ -150,6 +150,17 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
     return status;
   }
 
+  public String executeFeedSearch(){
+    String status = SUCCESS;
+
+    resultFromSolr = feedService.getSearchArticles(searchParams);
+    if (resultFromSolr == null) {
+      status = ERROR;
+    }
+
+    return status;
+  }
+
   /**
    * Validate the input parameters or create defaults when they are not provided.  Struts calls this automagically after
    * the parameters are parsed and the proper fields are set in the data model. It is assumed that all necessary fields
