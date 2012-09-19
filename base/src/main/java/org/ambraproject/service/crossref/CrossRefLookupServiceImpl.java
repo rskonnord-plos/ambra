@@ -142,6 +142,17 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     return articles;
   }
 
+  public String findDoi(String title, String author) throws Exception {
+    List<CrossRefArticle> doiResults = findArticles(title, author);
+    if (!doiResults.isEmpty()) {
+      if (doiResults.size() > 1) {
+        log.warn("CrossRef returned more than 1 result; just using the first");
+      }
+      return doiResults.get(0).getDoi();
+    }
+    return null;
+  }
+
   private String createPipedQuery(String title, String author) throws UnsupportedEncodingException {
     return escapeString(URLEncoder.encode(title + "|" + author + "|||", "UTF-8"));
   }

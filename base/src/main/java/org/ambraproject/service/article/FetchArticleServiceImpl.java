@@ -21,32 +21,41 @@
 
 package org.ambraproject.service.article;
 
-import org.ambraproject.models.AnnotationType;
-import org.ambraproject.models.ArticleAsset;
-import org.ambraproject.views.AnnotationView;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
+import org.ambraproject.ApplicationException;
 import org.ambraproject.filestore.FSIDMapper;
 import org.ambraproject.filestore.FileStoreService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
-import org.ambraproject.ApplicationException;
+import org.ambraproject.models.AnnotationType;
+import org.ambraproject.models.ArticleAsset;
+import org.ambraproject.models.CitedArticle;
 import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.annotation.Annotator;
-import org.ambraproject.views.AuthorExtra;
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.views.CitationReference;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.xml.XMLService;
-import org.w3c.dom.*;
+import org.ambraproject.views.AnnotationView;
+import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.CitationReference;
+import org.ambraproject.views.article.ArticleInfo;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import javax.activation.DataSource;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,7 +91,12 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 //        log.debug(serializer.writeToString(dom));
 //      }
 
-      return articleTransformService.getTransformedDocument(getAnnotatedContentAsDocument(article));
+      // There are two cases where we need to render content in the HTML that's not in the XML (or that's difficult
+      // to get from the XML): annotations and extra links in the citations.  In these cases, we first load the DOM
+      // representation of the XML, then decorate it with the extra info before the XSLT.
+      Document doc = getAnnotatedContentAsDocument(article);
+      doc = addExtraCitationInfo(doc, article.getCitedArticles());
+      return articleTransformService.getTransformedDocument(doc);
     } catch (ApplicationException ae) {
       throw ae;
     } catch (NoSuchArticleIdException nsae) {
@@ -317,6 +331,46 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
+   * Returns a list of ref nodes from the ref-list of the DOM.
+   *
+   * @param doc DOM representation of the XML
+   * @return NodeList of ref elements
+   * @throws XPathExpressionException
+   */
+  private NodeList getReferenceNodes(Document doc) throws XPathExpressionException {
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+    XPathExpression expr = xpath.compile("//back/ref-list[title='References']/ref");
+    Object result = expr.evaluate(doc, XPathConstants.NODESET);
+
+    NodeList refList = (NodeList) result;
+
+    if (refList.getLength() == 0) {
+      expr = xpath.compile("//back/ref-list/ref");
+      result = expr.evaluate(doc, XPathConstants.NODESET);
+      refList = (NodeList) result;
+    }
+    return refList;
+  }
+
+  /**
+   * Returns the publication type attribute (Journal, Book, etc) of a citation node.
+   *
+   * @param citationNode citation element
+   * @return publication type
+   */
+  private String getCitationType(Node citationNode) {
+    NamedNodeMap nnm = citationNode.getAttributes();
+    Node nnmNode = nnm.getNamedItem("citation-type");
+
+    // nlm 3.0 has this attribute listed as 'publication-type'
+    nnmNode = nnmNode == null ? nnm.getNamedItem("publication-type") : nnmNode;
+
+    // some old articles do not have this attribute
+    return nnmNode == null ? null : nnmNode.getTextContent();
+  }
+
+  /**
    * Get references for a given article
    * @param doc article xml
    * @return references
@@ -329,18 +383,10 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     }
 
     try {
+      NodeList refList = getReferenceNodes(doc);
+
       XPathFactory factory = XPathFactory.newInstance();
       XPath xpath = factory.newXPath();
-      XPathExpression expr = xpath.compile("//back/ref-list[title='References']/ref");
-      Object result = expr.evaluate(doc, XPathConstants.NODESET);
-
-      NodeList refList = (NodeList) result;
-
-      if (refList.getLength() == 0) {
-        expr = xpath.compile("//back/ref-list/ref");
-        result = expr.evaluate(doc, XPathConstants.NODESET);
-        refList = (NodeList) result;
-      }
 
       XPathExpression typeExpr = xpath.compile("//citation | //nlm-citation | //element-citation");
       XPathExpression titleExpr = xpath.compile("//article-title");
@@ -365,13 +411,9 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
         Object resultObj = typeExpr.evaluate(df, XPathConstants.NODE);
         Node resultNode = (Node) resultObj;
         if (resultNode != null) {
-          NamedNodeMap nnm = resultNode.getAttributes();
-          Node nnmNode = nnm.getNamedItem("citation-type");
-          //nlm 3.0 has this attribute listed as 'publication-type'
-          nnmNode = nnmNode == null ? nnm.getNamedItem("publication-type") : nnmNode;
-          // some old articles do not have this attribute
-          if (nnmNode != null) {
-            citation.setCitationType(nnmNode.getTextContent());
+          String citationType = getCitationType(resultNode);
+          if (citationType != null) {
+            citation.setCitationType(citationType);
           }
         }
 
@@ -500,6 +542,63 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     }
 
     return journalAbbrev;
+  }
+
+  /**
+   * Indicates whether the given cited article has enough data to render a "find this article online" link.
+   *
+   * @param citedArticle the cited article of interest
+   * @return true if the citedArticle has a non-empty title, it has a non-empty DOI, or it has authors information
+   */
+  private boolean citedArticleIsValid(CitedArticle citedArticle) {
+    return StringUtils.isNotBlank(citedArticle.getTitle()) || StringUtils.isNotBlank(citedArticle.getDoi())
+        || citedArticle.getAuthors().size() > 0;
+  }
+
+  /**
+   * Decorates the citation elements of the XML DOM with extra information from the citedArticle table in the DB.
+   * An extraCitationInfo element is appended to each citation element.  It will contain between one and two
+   * attributes with the extra info: citedArticleID, the DB primary key, and doi, the DOI string, if it exists.
+   *
+   * @param doc DOM of the XML
+   * @param citedArticles List of CitedArticle persistent objects
+   * @return modified DOM
+   * @throws ApplicationException
+   */
+  private Document addExtraCitationInfo(Document doc, List<CitedArticle> citedArticles) throws ApplicationException {
+    if (citedArticles.isEmpty()) {
+      return doc;  // This happens in some unit tests.
+    }
+    try {
+      NodeList referenceList = getReferenceNodes(doc);
+
+      // TODO: can this ever happen?
+      if (referenceList.getLength() != citedArticles.size()) {
+        throw new ApplicationException(String.format("Article has %d citedArticles but %d references",
+            citedArticles.size(), referenceList.getLength()));
+      }
+      XPathFactory factory = XPathFactory.newInstance();
+      XPath xpath = factory.newXPath();
+      XPathExpression citationExpr = xpath.compile("./citation|./nlm-citation|./element-citation|./mixed-citation");
+      for (int i = 0; i < referenceList.getLength(); i++) {
+        Node referenceNode = referenceList.item(i);
+        Node citationNode = (Node) citationExpr.evaluate(referenceNode, XPathConstants.NODE);
+        CitedArticle citedArticle = citedArticles.get(i);
+        if (citationNode != null && "journal".equals(getCitationType(citationNode))
+            && citedArticleIsValid(citedArticle)) {
+          Element extraInfo = doc.createElement("extraCitationInfo");
+          citationNode.appendChild(extraInfo);
+          extraInfo.setAttribute("citedArticleID", Long.toString(citedArticle.getID()));
+          String doi = citedArticle.getDoi();
+          if (doi != null && !doi.isEmpty()) {
+            extraInfo.setAttribute("doi", doi);
+          }
+        }
+      }
+    } catch (XPathExpressionException xpee) {
+      throw new ApplicationException(xpee);
+    }
+    return doc;
   }
 
   /**

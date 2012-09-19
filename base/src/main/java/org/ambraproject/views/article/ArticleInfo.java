@@ -20,6 +20,7 @@
 package org.ambraproject.views.article;
 
 import org.ambraproject.views.UserProfileInfo;
+import org.ambraproject.models.CitedArticle;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.AssetView;
@@ -61,6 +62,7 @@ public class ArticleInfo implements Serializable {
   private String                 volume;
   private String                 issue;
   private List<AssetView>        articleAssets;
+  private List<CitedArticle>     citedArticles;
 
   private transient String unformattedTitle;
 
@@ -372,5 +374,13 @@ public class ArticleInfo implements Serializable {
 
   public void setIssue(String issue) {
     this.issue = issue;
+  }
+
+  public List<CitedArticle> getCitedArticles() {
+    return citedArticles;
+  }
+
+  public void setCitedArticles(List<CitedArticle> citedArticles) {
+    this.citedArticles = citedArticles;
   }
 }

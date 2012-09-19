@@ -22,20 +22,21 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.views.UserProfileInfo;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.CitationInfo;
 import org.ambraproject.views.article.RelatedArticleInfo;
 import org.ambraproject.models.Article;
+import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.Category;
-import org.ambraproject.models.UserProfile;
-import org.ambraproject.models.UserRole.Permission;
+import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.Issue;
 import org.ambraproject.models.Journal;
+import org.ambraproject.models.UserProfile;
+import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.models.Volume;
 import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
@@ -54,12 +55,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -485,6 +486,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     articleInfo.setIssue(article.getIssue());
     articleInfo.setVolume(article.getVolume());
     articleInfo.seteLocationId(article.geteLocationId());
+    articleInfo.setCitedArticles(article.getCitedArticles());
     //Set the citation info
     CitationInfo citationInfo = new CitationInfo();
     citationInfo.setId(URI.create(article.getDoi()));
@@ -606,6 +608,23 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     articleInfo.setTitle((String) results[1]);
 
     return articleInfo;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public CitedArticle getCitedArticle(long citedArticleID) {
+    return hibernateTemplate.get(CitedArticle.class, citedArticleID);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setCitationDoi(CitedArticle citedArticle, String doi) {
+    citedArticle.setDoi(doi);
+    hibernateTemplate.update(citedArticle);
   }
 
 

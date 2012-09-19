@@ -21,12 +21,18 @@
 
 package org.ambraproject.action.article;
 
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.crossref.CrossRefLookupService;
+import org.ambraproject.models.CitedArticle;
+import org.ambraproject.models.CitedArticleAuthor;
+import org.ambraproject.service.pubget.PubGetLookupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.ambraproject.action.BaseActionSupport;
-import org.ambraproject.service.article.FindArticleService;
-import org.ambraproject.service.article.ThisArticleFound;
+
+import java.util.List;
 
 /**
  * Display online resources for the references in an article.
@@ -39,51 +45,76 @@ public class FindArticleAction extends BaseActionSupport {
 
   private static final Logger log = LoggerFactory.getLogger(FindArticleAction.class);
 
-  private String author;
-  private String title;
+  private long citedArticleID;
 
   private String crossRefUrl;
   private String pubGetUrl;
+  private String title;
+  private String author;
 
-  private FindArticleService findArticleService;
-
+  private CrossRefLookupService crossRefLookupService;
+  private PubGetLookupService pubGetLookupService;
+  private ArticleService articleService;
 
   @Override
   public String execute() throws Exception {
 
-
-    ThisArticleFound article = findArticleService.findArticle(title, author);
-
-    if (article == null || article.getDoi() == null) {
-      log.debug("No articles found on CrossRef");
-      crossRefUrl = configuration.getString("ambra.services.crossref.guestquery.url");
-    } else {
-      crossRefUrl = "http://dx.doi.org/" + article.getDoi();
-      pubGetUrl = article.getPubGetUri();
+    // We first look for the DOI in the DB.  If it's not there, we query CrossRef, and if we get back a DOI,
+    // store it in the DB for next time.
+    CitedArticle citedArticle = articleService.getCitedArticle(citedArticleID);
+    title = citedArticle.getTitle() == null ? "" : citedArticle.getTitle();
+    author = getAuthorStringForLookup(citedArticle);
+    String doi = citedArticle.getDoi();
+    if (doi == null || doi.isEmpty()) {
+      doi = crossRefLookupService.findDoi(citedArticle.getTitle(), author);
+      if (doi != null && !doi.isEmpty()) {
+        articleService.setCitationDoi(citedArticle, doi);
+      }
     }
+    if (doi != null && !doi.isEmpty()) {
+      crossRefUrl = "http://dx.doi.org/" + doi;
 
+      // We never cache or store these PDF links, because they change frequently.
+      pubGetUrl = pubGetLookupService.getPDFLink(doi);
+    } else {
+      crossRefUrl = configuration.getString("ambra.services.crossref.guestquery.url");
+    }
     return SUCCESS;
   }
 
+  /**
+   * Formats a citation's authors for searching in CrossRef.
+   *
+   * @param citedArticle persistent class representing the citation
+   * @return String with author information formatted for a CrossRef query
+   */
+  private String getAuthorStringForLookup(CitedArticle citedArticle) {
+    List<CitedArticleAuthor> authors = citedArticle.getAuthors();
+    return authors.size() > 0 ? authors.get(0).getSurnames() : "";
+  }
+
   @Required
-  public void setFindArticleService(FindArticleService findArticleService) {
-    this.findArticleService = findArticleService;
+  public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
+    this.crossRefLookupService = crossRefLookupService;
   }
 
-  public String getAuthor() {
-    return author;
+  @Required
+  public void setPubGetLookupService(PubGetLookupService pubGetLookupService) {
+    this.pubGetLookupService = pubGetLookupService;
   }
 
-  public void setAuthor(String author) {
-    this.author = author;
+  @Required
+  public void setArticleService(ArticleService articleService) {
+    this.articleService = articleService;
   }
 
-  public String getTitle() {
-    return title;
+  @RequiredFieldValidator(message = "citedArticleID is a required field")
+  public long getCitedArticleID() {
+    return citedArticleID;
   }
 
-  public void setTitle(String title) {
-    this.title = title;
+  public void setCitedArticleID(long citedArticleID) {
+    this.citedArticleID = citedArticleID;
   }
 
   public String getCrossRefUrl() {
@@ -94,4 +125,11 @@ public class FindArticleAction extends BaseActionSupport {
     return pubGetUrl;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
+  public String getAuthor() {
+    return author;
+  }
 }

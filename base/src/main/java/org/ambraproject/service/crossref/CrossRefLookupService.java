@@ -31,6 +31,17 @@ import java.util.List;
 public interface CrossRefLookupService {
 
   /**
+   * Find a DOI for an article based on its title and author.  If multiple articles are found that match, one is
+   * arbitrarily selected.
+   *
+   * @param title Article title
+   * @param author Author name
+   * @return DOI of an article that matches, or null if no match is found
+   * @throws Exception
+   */
+  public String findDoi(String title, String author) throws Exception;
+
+  /**
    * Find article based on title and first author.
    *
    * @param title Article title
