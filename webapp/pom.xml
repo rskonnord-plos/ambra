@@ -611,6 +611,8 @@
           <path>/</path>
           <contextFile>/etc/ambra/context.xml</contextFile>
           <additionalConfigFilesDir>/etc/ambra/</additionalConfigFilesDir>
+          <keystoreFile>${user.home}/.keystore</keystoreFile>
+          <keystorePass>changeit</keystorePass>
           <systemProperties>
             <java.util.logging.manager>org.apache.juli.ClassLoaderLogManager</java.util.logging.manager>
             <log4j.configuration>file:///etc/ambra/log4j.xml</log4j.configuration>
