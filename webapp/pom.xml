@@ -16,14 +16,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-webapp</artifactId>
-  <version>2.4.4-SNAPSHOT</version>
+  <version>2.4.4-GINZU-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Ambra Web Application</name>
 
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-    <version>2.4.4-SNAPSHOT</version>
+    <version>2.4.4-GINZU-SNAPSHOT</version>
   </parent>
 
   <repositories>
@@ -545,7 +545,7 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ambra-js</artifactId>
+      <artifactId>dojo-js</artifactId>
       <version>${project.version}</version>
       <type>zip</type>
       <classifier>js</classifier>
@@ -661,7 +661,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>ambra-js</artifactId>
+                  <artifactId>dojo-js</artifactId>
                   <version>${project.parent.version}</version>
                   <type>zip</type>
                   <classifier>js</classifier>
