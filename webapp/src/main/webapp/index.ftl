@@ -20,5 +20,5 @@
 -->
 <!-- begin : main content -->
 <div id="content">
-Home Page
+Hello World
 </div>

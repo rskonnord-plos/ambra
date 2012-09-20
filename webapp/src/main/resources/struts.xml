@@ -43,20 +43,8 @@
       <result-type name="freemarker"
                    class="org.apache.struts2.views.freemarker.FreemarkerResult" default="true">
       </result-type>
-      <result-type name="ambraFreemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
-        <param name="location">/templates/main_template.ftl</param>
-      </result-type>
-      <result-type name="ambraStaticFreemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
-        <param name="location">/templates/main_static_template.ftl</param>
-      </result-type>
-      <result-type name="headless" class="org.ambraproject.struts2.AmbraFreemarkerResult">
-        <param name="location">/templates/headless_template.ftl</param>
-      </result-type>
-      <result-type name="naked" class="org.ambraproject.struts2.AmbraFreemarkerResult">
-        <param name="location">/templates/naked_template.ftl</param>
-      </result-type>
-      <result-type name="user" class="org.ambraproject.struts2.AmbraFreemarkerResult">
-        <param name="location">/templates/user_shared_template.ftl</param>
+      <result-type name="default_freemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
+        <param name="location">/template/main.ftl</param>
       </result-type>
       <result-type name="ambraStream" class="org.ambraproject.struts2.AmbraStreamResult"/>
       <result-type name="json" class="org.ambraproject.struts2.JsonResult">
@@ -142,10 +130,10 @@
         <param name="actionName">prePopulateNewUser</param>
         <param name="namespace">/user</param>
       </result>
-      <result name="role-insufficient" type="ambraFreemarker">
+      <result name="role-insufficient" type="default_freemarker">
         <param name="templateFile">/user/inSufficientRole.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/error.ftl</param>
       </result>
@@ -180,50 +168,50 @@
 
     <action name="pageNotFound" class="org.ambraproject.action.PageNotFoundAction">
       <interceptor-ref name="minimalStack"/>
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
     </action>
 
     <action name="home" class="org.ambraproject.action.HomePageAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/index.ftl</param>
       </result>
     </action>
 
     <action name="recentArticles" class="org.ambraproject.action.HomePageAction">
-      <result name="success" type="naked">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/recentArticles.ftl</param>
       </result>
     </action>
 
     <action name="mostCommented" class="org.ambraproject.action.HomePageAction">
-      <result name="success" type="naked">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/mostCommented.ftl</param>
       </result>
     </action>
 
     <action name="mostViewed" class="org.ambraproject.action.MostViewedAction">
-      <result name="success" type="naked">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/mostViewed.ftl</param>
       </result>
     </action>
 
     <action name="feedbackCreate" class="org.ambraproject.action.FeedbackAction" method="executeRender">
-      <result type="ambraFreemarker">
+      <result type="default_freemarker">
         <param name="templateFile">/feedback/feedbackEntry.ftl</param>
       </result>
     </action>
 
     <action name="feedback" class="org.ambraproject.action.FeedbackAction" method="executeSend">
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="templateFile">/feedback/feedbackEntry.ftl</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/feedback/feedbackEntry.ftl</param>
       </result>
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/feedback/feedbackSuccess.ftl</param>
       </result>
     </action>
@@ -237,58 +225,58 @@
     <default-action-ref name="pageNotFound"/>
 
     <action name="searchStart" class="org.ambraproject.action.NoOpAction">
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
       </result>
     </action>
 
     <action name="simpleSearch" class="org.ambraproject.action.search.SearchAction" method="executeSimpleSearch">
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
       </result>
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/searchError.ftl</param>
       </result>
     </action>
 
     <action name="advancedSearch" class="org.ambraproject.action.search.SearchAction" method="executeUnformattedSearch">
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/search/searchUnformatted.ftl</param>
       </result>
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/searchError.ftl</param>
       </result>
     </action>
 
     <action name="findAnArticleSearch" class="org.ambraproject.action.search.SearchAction" method="executeFindAnArticleSearch">
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/search/searchUnformatted.ftl</param>
       </result>
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
       </result>
       <result name="redirectToArticle" type="redirect">
         ${journalURL}/article/fetchArticle.action?articleURI=${articleURI}
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/searchError.ftl</param>
       </result>
     </action>
 
     <action name="listFacet" class="org.ambraproject.action.search.ListFacetAction" method="listFacet">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/search/searchFacet.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/searchError.ftl</param>
       </result>
@@ -299,7 +287,7 @@
   <package name="static" extends="default" namespace="/static">
     <action name="*" class="org.ambraproject.action.NoOpAction">
       <interceptor-ref name="minimalStack"/>
-      <result name="success" type="ambraStaticFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/static/{1}.ftl</param>
       </result>
     </action>
@@ -314,23 +302,23 @@
       <result name="error">/WEB-INF/pages/article/articleRatings.ftl</result>
     </action-->
     <action name="getUpdatedRatings" class="org.ambraproject.action.rating.GetAverageRatingsAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/article/article_rhc_rating.ftl</param>
         <param name="noCache">true</param>
       </result>
     </action>
     <action name="getUpdatedRatingsOnArticleMetricsTab" class="org.ambraproject.action.rating.GetAverageRatingsAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/article/article_metrics_rating.ftl</param>
         <param name="noCache">true</param>
       </result>
     </action>
 
     <action name="getArticleRatings" class="org.ambraproject.action.rating.GetArticleRatingsAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/rating/index.ftl</param>
       </result>
-      <result name="none" type="ambraFreemarker">
+      <result name="none" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
@@ -365,100 +353,100 @@
     <default-action-ref name="pageNotFound"/>
 
     <action name="emailArticle" class="org.ambraproject.action.article.EmailArticleAction" method="executeRender">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/emailArticle.ftl</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="findArticle" class="org.ambraproject.action.article.FindArticleAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/findArticle.ftl</param>
       </result>
     </action>
 
     <action name="emailThisArticleCreate" class="org.ambraproject.action.article.EmailArticleAction" method="executeRender">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/emailArticle/emailArticle.ftl</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="emailThisArticleSubmit" class="org.ambraproject.action.article.EmailArticleAction" method="executeSend">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/emailSuccess.ftl</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/article/emailArticle.ftl</param>
       </result>
     </action>
 
     <action name="fetchArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_body.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
       <!-- TODO, This could be handled better -->
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="fetchArticleComments" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleComments">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="fetchArticleCorrections" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCorrections">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="fetchArticleMetrics" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetrics">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_metrics.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="fetchRelatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelated">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_related.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_crossref.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -477,34 +465,34 @@
     </action>
 
     <action name="fetchArticleTwitter" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_twitter.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="slideshow" class="org.ambraproject.action.article.SlideshowAction">
-      <result name="success" type="headless">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/imageWindow.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="showImageLarge" class="org.ambraproject.action.NoOpAction">
-      <result name="success" type="headless">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/imageWindowLarge.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -514,7 +502,7 @@
       <result name="success" type="ambraStream">
         <param name="isAttachment">true</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -526,7 +514,7 @@
       <result name="success" type="ambraStream">
         <param name="isAttachment">true</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -536,7 +524,7 @@
       <result name="success" type="ambraStream">
         <param name="isAttachment">false</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -546,7 +534,7 @@
       <result name="success" type="ambraStream">
         <param name="isAttachment">false</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -556,7 +544,7 @@
       <result name="success" type="ambraStream">
         <param name="isAttachment">true</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -564,63 +552,63 @@
 
     <action name="fetchAnnotatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="displayAnnotatedArticle">
       <result name="success">/article/displayArticle.ftl</result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="fetchBody" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/article/article_content.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
     <action name="browse" class="org.ambraproject.action.article.BrowseArticlesAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/browse.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/browseError.ftl</param>
       </result>
     </action>
 
     <action name="browseIssue" class="org.ambraproject.action.article.BrowseIssueAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/browseIssue.ftl</param>
       </result>
-      <result name="none" type="ambraFreemarker">
+      <result name="none" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
       <!-- TODO: Make a real error page -->
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
     </action>
 
     <action name="browseVolume" class="org.ambraproject.action.article.BrowseVolumeAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/browseVolume.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
     </action>
 
     <action name="citationList" class="org.ambraproject.action.article.CreateCitation">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/article/citationList.ftl</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -631,7 +619,7 @@
         <param name="contentType">text/plain</param>
         <param name="fileExtension">.ris</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -642,7 +630,7 @@
         <param name="contentType">text/plain</param>
         <param name="fileExtension">.bib</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
@@ -659,7 +647,7 @@
         <param name="status">400</param>
         <!-- Http status: Bad Request-->
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/feedError.ftl</param>
       </result>
@@ -671,7 +659,7 @@
         <param name="status">400</param>
         <!-- Http status: Bad Request-->
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="templateFile">/static/feedError.ftl</param>
       </result>
@@ -713,7 +701,7 @@
 
     <action name="listReply" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success">/annotation/listReply.ftl</result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
@@ -721,7 +709,7 @@
 
     <action name="listAllReplies" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success">/annotation/listReply.ftl</result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
@@ -729,29 +717,29 @@
 
     <action name="listThreadedReplies" class="org.ambraproject.action.annotation.ListReplyAction">
       <result name="success">/annotation/listThreadedReply.ftl</result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
     </action>
 
     <action name="listThread" class="org.ambraproject.action.annotation.ListReplyAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/discussion/discussion.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
     </action>
 
     <action name="listThreadRefresh" class="org.ambraproject.action.annotation.ListReplyAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/discussion/threaded_replies.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/pageNotFound.ftl</param>
       </result>
@@ -767,7 +755,7 @@
     </action>
 
     <action name="startDiscussion" class="org.ambraproject.action.annotation.StartDiscussionAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/discussion/startDiscussion.ftl</param>
       </result>
     </action>
@@ -825,15 +813,15 @@
     </action>
 
     <action name="editAjaxAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
@@ -845,48 +833,48 @@
     </action>
 
     <action name="saveAjaxAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="saveAlerts">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="input">type="ambraFreemarker">
+      <result name="input">type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error">type="ambraFreemarker">
+      <result name="error">type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
     </action>
 
     <action name="editProfile" class="org.ambraproject.action.user.MemberUserProfileAction" >
-      <result name="success" type="user">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/user/editUser.ftl</param>
       </result>
-      <result name="input" type="user">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/user/editUser.ftl</param>
       </result>
     </action>
 
     <action name="editPrefsAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
-      <result name="success" type="user">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/user/editUser.ftl</param>
       </result>
-      <result name="input" type="user">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/user/editUser.ftl</param>
       </result>
     </action>
 
     <action name="editAjaxProfile" class="org.ambraproject.action.user.MemberUserProfileAction" >
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/user/user.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="location">/user/user.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="location">/user/user.ftl</param>
         <param name="noCache">true</param>
       </result>
@@ -894,11 +882,11 @@
 
     <action name="saveAjaxProfile" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
       <result name="success" type="redirectAction">editAjaxProfile.action</result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="location">/user/user.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="status">500</param>
         <param name="location">/static/error.ftl</param>
         <param name="noCache">true</param>
@@ -907,23 +895,23 @@
 
     <action name="saveProfile" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
       <result name="success" type="redirect">/user/secure/retrieveUserProfile.action</result>
-      <result name="input" type="user">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
     </action>
 
     <action name="retrieveUserProfile" class="org.ambraproject.action.user.MemberUserProfileAction">
-      <result name="success" type="user">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
       <result name="input">/user/newUser.ftl</result>
-      <result name="error" type="user">
+      <result name="error" type="default_freemarker">
         <param name="templateFile">/user/newUser.ftl</param>
       </result>
     </action>
 
     <action name="profile" class="org.ambraproject.action.NoOpAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/user/profile.ftl</param>
       </result>
     </action>
@@ -935,10 +923,10 @@
     <default-action-ref name="pageNotFound"/>
 
     <action name="prePopulateNewUser" class="org.ambraproject.action.user.MemberUserProfileAction">
-      <result name="new-profile" type="user">
+      <result name="new-profile" type="default_freemarker">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
-      <result name="update-profile" type="user">
+      <result name="update-profile" type="default_freemarker">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
       <result name="success" type="redirect">/</result>
@@ -946,7 +934,7 @@
 
     <action name="createNewUser" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
       <result name="success" type="redirect">/user/secure/editPrefsAlerts.action?tabId=alerts</result>
-      <result name="input" type="user">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/user/createNewUser.ftl</param>
       </result>
     </action>
@@ -961,7 +949,7 @@
     </action>
 
     <action name="showUser" class="org.ambraproject.action.user.DisplayUserAction">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="templateFile">/user/displayUser.ftl</param>
       </result>
     </action>
