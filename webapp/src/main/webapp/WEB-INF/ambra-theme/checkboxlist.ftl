@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: checkboxlist.ftl 1202798 2011-11-16 17:29:03Z jogep $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: dynamic-attributes.ftl 1144250 2011-07-08 10:54:01Z lukaszlenart $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

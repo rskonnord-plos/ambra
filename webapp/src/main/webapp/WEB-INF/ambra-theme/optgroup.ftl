@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: optgroup.ftl 817282 2009-09-21 15:07:03Z wesw $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

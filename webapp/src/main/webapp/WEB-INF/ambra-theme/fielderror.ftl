@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: fielderror.ftl 927354 2010-03-25 11:41:30Z lukaszlenart $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

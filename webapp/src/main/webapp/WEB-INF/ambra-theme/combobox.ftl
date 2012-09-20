@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: combobox.ftl 933218 2010-04-12 12:52:41Z lukaszlenart $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

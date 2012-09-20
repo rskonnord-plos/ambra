@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: radiomap.ftl 1211023 2011-12-06 17:01:50Z wesw $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

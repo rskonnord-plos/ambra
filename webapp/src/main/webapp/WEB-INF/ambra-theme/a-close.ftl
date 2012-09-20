@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: a-close.ftl 753015 2009-03-12 21:00:23Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

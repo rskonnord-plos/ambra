@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: submit.ftl 1054978 2011-01-04 11:37:14Z mcucchiara $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

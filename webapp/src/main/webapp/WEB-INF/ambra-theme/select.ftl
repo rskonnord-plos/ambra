@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: select.ftl 804072 2009-08-14 03:16:35Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

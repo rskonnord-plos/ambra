@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: doubleselect.ftl 1211074 2011-12-06 19:57:35Z jogep $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

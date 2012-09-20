@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: div.ftl 1142487 2011-07-03 19:32:59Z lukaszlenart $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

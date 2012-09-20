@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: reset.ftl 930097 2010-04-01 21:04:39Z lukaszlenart $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

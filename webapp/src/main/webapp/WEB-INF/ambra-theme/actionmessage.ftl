@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: actionmessage.ftl 805635 2009-08-19 00:18:54Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

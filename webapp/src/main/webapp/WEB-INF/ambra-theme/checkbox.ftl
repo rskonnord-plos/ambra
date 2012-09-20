@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: checkbox.ftl 1095111 2011-04-19 15:20:39Z mcucchiara $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

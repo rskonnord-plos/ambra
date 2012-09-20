@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: text.ftl 1157009 2011-08-12 08:38:39Z mcucchiara $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
