@@ -120,6 +120,7 @@
     </interceptors>
 
     <default-interceptor-ref name="ambraUserStack"/>
+    <default-action-ref name="home" />
 
     <global-results>
       <result name="new-profile" type="redirectAction">
