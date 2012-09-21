@@ -40,6 +40,8 @@ import org.ambraproject.util.ArticleFormattingDirective;
 import org.ambraproject.util.RandomNumberDirective;
 import org.ambraproject.util.SimpleTextDirective;
 import org.ambraproject.util.URLParametersDirective;
+import org.ambraproject.util.VersionedCSSDirective;
+import org.ambraproject.util.VersionedJSDirective;
 import org.ambraproject.web.VirtualJournalContext;
 import org.topazproject.ambra.configuration.ConfigurationStore;
 import org.springframework.beans.factory.annotation.Required;
@@ -282,6 +284,8 @@ public class AmbraFreemarkerManager extends FreemarkerManager {
     configuration.setSharedVariable("simpleText", new SimpleTextDirective());
     configuration.setSharedVariable("URLParameters", new URLParametersDirective());
     configuration.setSharedVariable("randomNumber", new RandomNumberDirective());
+    configuration.setSharedVariable("versionedCSS", new VersionedCSSDirective());
+    configuration.setSharedVariable("versionedJS", new VersionedJSDirective());
     return configuration;
   }
 }

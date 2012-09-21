@@ -21,21 +21,21 @@ package org.ambraproject.action.article;
 
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
-import org.ambraproject.service.article.ArticleAssetService;
-import org.ambraproject.service.article.NoSuchObjectIdException;
 import org.ambraproject.filestore.FSIDMapper;
 import org.ambraproject.filestore.FileStoreService;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.UserProfile;
-import org.ambraproject.service.xml.XMLService;
+import org.ambraproject.service.article.ArticleAssetService;
+import org.ambraproject.service.article.NoSuchObjectIdException;
 import org.ambraproject.service.user.UserService;
+import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.util.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -48,7 +48,6 @@ import java.util.Date;
  * <p/>
  * All transactions will be spanning over to results.
  */
-@Transactional
 public class FetchObjectAction extends BaseSessionAwareActionSupport {
   private static final Logger log = LoggerFactory.getLogger(FetchObjectAction.class);
 
@@ -74,7 +73,6 @@ public class FetchObjectAction extends BaseSessionAwareActionSupport {
    * @return webwork status code
    * @throws Exception Exception
    */
-  @Transactional
   public String fetchObjectAction() {
     ArticleAsset articleAsset;
     try {

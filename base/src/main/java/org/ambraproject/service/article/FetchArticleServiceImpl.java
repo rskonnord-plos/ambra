@@ -42,6 +42,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -112,11 +113,14 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
    * @return String representing the annotated article as HTML
    * @throws org.ambraproject.ApplicationException ApplicationException
    */
+  @Override
+  @Transactional(readOnly = true)
   public String getArticleAsHTML(final ArticleInfo article) throws Exception {
     final Object lock = (ARTICLE_LOCK + article.getDoi()).intern(); //lock @ Article level
 
     String content = articleHtmlCache.get(article.getDoi(),
       new Cache.SynchronizedLookup<String, Exception>(lock) {
+        @Override
         public String lookup() throws Exception {
           return getTransformedArticle(article);
         }

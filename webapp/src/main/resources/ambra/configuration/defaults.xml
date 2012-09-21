@@ -196,7 +196,7 @@
           <field displayName="Introduction">introduction</field>
           <field displayName="Materials and Methods">materials_and_methods</field>
           <field displayName="References">reference</field>
-          <field displayName="Results and Discussion">results_and_discussions</field>
+          <field displayName="Results and Discussion">results_and_discussion</field>
           <field displayName="Supporting Information">supporting_information</field>
           <field displayName="Title">title</field>
         </keywordFields>

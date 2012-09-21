@@ -23,7 +23,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>file-store</artifactId>
-      <version>${filestore.version}</version>
     </dependency>
 
     <dependency>
@@ -42,6 +41,12 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>ambra-emailer</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.tanesha.recaptcha4j</groupId>
+      <artifactId>recaptcha4j</artifactId>
+      <version>0.0.7</version>
     </dependency>
 
     <dependency>
@@ -99,9 +104,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.mysema.rdf</groupId>
-      <artifactId>rdfbean-guice</artifactId>
-      <version>0.7.8</version>
+      <groupId>net.sourceforge.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
     </dependency>
 
     <dependency>

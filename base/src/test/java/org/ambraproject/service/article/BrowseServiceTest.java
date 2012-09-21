@@ -288,7 +288,7 @@ public class BrowseServiceTest extends BaseTest {
 
     Volume volume2 = new Volume();
     volume2.setDisplayName("Volume 2");
-    volume2.setImageUri("id://volume-2-uri");
+    volume2.setVolumeUri("id://volume-2-uri");
     volume2.setImageUri("id://volume-2-image");
     dummyDataStore.store(volume2);
 
@@ -297,8 +297,9 @@ public class BrowseServiceTest extends BaseTest {
     volumeIds.add(volume2.getVolumeUri());
 
     Journal journal = new Journal();
-    journal.setJournalKey("test-journal");
+    journal.setJournalKey("test-journal-for-volume-list");
     journal.setVolumes(Arrays.asList(volume1, volume2));
+    dummyDataStore.store(journal);
 
     return new Object[][]{
         { journal, volumeIds }

@@ -61,17 +61,41 @@ public abstract class BaseWebTest extends BaseTest {
    */
   protected abstract BaseActionSupport getAction();
 
+  /**
+   * Optional hook for subclasses to override to set additional attributes on the request
+   * @param request the request attributes which will be set on the action
+   */
+  protected void doModifyRequest(Map<String, Object> request){
+    //do nothing by default
+  }
+
+  /**
+   * Optional hook for sublcasses to override to perform actions after context has been setup
+   */
+  protected void afterContextSetup() {
+    //do nothing by default
+  }
+
+  /**
+   * Set up a default session and request. The current journal will be set to {@link BaseTest#defaultJournal}, and
+   * the default user defined by {@link BaseTest#DEFAULT_USER_AUTHID} will be logged in
+   */
   @BeforeMethod
   public void setDefaultRequest() {
     setupUserContext();
     if (getAction() != null) {
-      getAction().setRequest(getDefaultRequestAttributes());
+      Map<String, Object> request = getDefaultRequestAttributes();
+      doModifyRequest(request);
+      getAction().setRequest(request);
       if (getAction() instanceof SessionAware) {
         ((SessionAware) getAction()).setSession(ActionContext.getContext().getSession());
       }
     }
   }
 
+  /**
+   * Clear the session and any messages set on the action
+   */
   @AfterMethod
   public void clearMessages() {
     if (getAction() != null) {
@@ -84,19 +108,41 @@ public abstract class BaseWebTest extends BaseTest {
     }
   }
 
-  protected void putInSession(String key, Object value) {
+  /**
+   * Utility method to add items to the test session
+   *
+   * @param key   the key for the item to add to the session
+   * @param value the value to add
+   */
+  protected final void putInSession(String key, Object value) {
     ActionContext.getContext().getSession().put(key, value);
   }
 
-  protected void removeFromSession(String key) {
+  /**
+   * Utility method to remove objects from the test session
+   *
+   * @param key the key of the object to remove
+   */
+  protected final void removeFromSession(String key) {
     ActionContext.getContext().getSession().remove(key);
   }
 
-  protected Object getFromSession(String key) {
+  /**
+   * Utility method to get an item from the session
+   *
+   * @param key the key of the item to get
+   * @return the value of the item in the session, or null if it is not present
+   */
+  protected final Object getFromSession(String key) {
     return ActionContext.getContext().getSession().get(key);
   }
 
-  protected void login(UserProfile user) {
+  /**
+   * Insert all the session attributes that would indicate the given user is logged in
+   *
+   * @param user
+   */
+  protected final void login(UserProfile user) {
     putInSession(Constants.AMBRA_USER_KEY, user);
     putInSession(Constants.AUTH_KEY, user.getAuthId());
     putInSession(Constants.SINGLE_SIGNON_EMAIL_KEY, user.getEmail());
@@ -106,7 +152,7 @@ public abstract class BaseWebTest extends BaseTest {
    * Set up struts container / context with an admin request.  This is for unit tests that need to access attributes
    * from the session, set up mock action invocations, etc.
    */
-  protected void setupAdminContext() {
+  protected final void setupAdminContext() {
     Map<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(Constants.AUTH_KEY, DEFAULT_ADMIN_AUTHID);
 
@@ -117,13 +163,18 @@ public abstract class BaseWebTest extends BaseTest {
    * Set up struts container / context with an admin request.  This is for unit tests that need to access attributes
    * from the session, set up mock action invocations, etc.
    */
-  protected void setupUserContext() {
+  protected final void setupUserContext() {
     Map<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(Constants.AUTH_KEY, DEFAULT_USER_AUTHID);
     setupContext(sessionAttributes);
   }
 
-  protected void setupContext(Map<String, Object> sessionAttributes) {
+  /**
+   * Set up the {@link ActionContext} for the test.
+   *
+   * @param sessionAttributes the attributes to put in the session
+   */
+  protected final void setupContext(Map<String, Object> sessionAttributes) {
     MockHttpServletRequest request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     for (String attr : sessionAttributes.keySet()) {
@@ -143,9 +194,12 @@ public abstract class BaseWebTest extends BaseTest {
     ActionContext.getContext().setSession(sessionAttributes);
     ServletActionContext.setContext(ActionContext.getContext());
     ServletActionContext.setRequest(request);
+    afterContextSetup();
   }
 
-
+  /**
+   * @return the default request attributes that are set up for action invocations
+   */
   public static Map<String, Object> getDefaultRequestAttributes() {
     Map<String, Object> requestAttributes = new HashMap<String, Object>();
     requestAttributes.put(VirtualJournalContext.PUB_VIRTUALJOURNAL_CONTEXT,

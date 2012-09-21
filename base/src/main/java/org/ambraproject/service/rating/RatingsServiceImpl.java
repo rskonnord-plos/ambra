@@ -21,13 +21,15 @@
 package org.ambraproject.service.rating;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.service.hibernate.URIGenerator;
+import org.ambraproject.models.Rating;
+import org.ambraproject.models.RatingSummary;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole.Permission;
-import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.ambraproject.views.RatingView;
+import org.ambraproject.service.hibernate.URIGenerator;
+import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.views.RatingSummaryView;
+import org.ambraproject.views.RatingView;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -37,8 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.models.Rating;
-import org.ambraproject.models.RatingSummary;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
    */
   @SuppressWarnings("unchecked")
   @Transactional(rollbackFor = { Throwable.class })
+  @Override
   public void deleteRating(final Long ratingID, String authId) throws ApplicationException {
     permissionsService.checkPermission(Permission.MANAGE_ANNOTATIONS, authId);
 
@@ -93,6 +95,8 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
    * @param user
    * @return
    */
+  @Override
+  @Transactional(readOnly = true)
   @SuppressWarnings("unchecked")
   public Rating getRating(final long articleID, final UserProfile user) {
     List results = hibernateTemplate.findByCriteria(
@@ -116,6 +120,8 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
    * @param articleID
    * @return
    */
+  @Override
+  @Transactional(readOnly = true)
   @SuppressWarnings("unchecked")
   public List<RatingView> getRatingViewList(final Long articleID) {
     List results = hibernateTemplate.findByCriteria(
@@ -141,6 +147,8 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
    * @return
    */
   @SuppressWarnings("unchecked")
+  @Override
+  @Transactional(readOnly = true)
   public RatingSummary getRatingSummary(final long articleID)
   {
     List results = hibernateTemplate.findByCriteria(
@@ -162,6 +170,8 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
    * Save a rating
    * @param rating rating to save
    */
+  @Override
+  @Transactional
   public void saveRating(Rating rating)
   {
     //Update ratingSummary as well as rating
@@ -220,6 +230,7 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
    * @return Rating
    */
   @Transactional(readOnly = true)
+  @Override
   public Rating getRating(final Long ratingID) {
     return (Rating)hibernateTemplate.get(Rating.class, ratingID);
   }
@@ -231,6 +242,7 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
    * @return Rating
    */
   @Transactional(readOnly = true)
+  @Override
   public Rating getRating(final String annotationUri) {
     List results = hibernateTemplate.findByCriteria(
       DetachedCriteria.forClass(Rating.class)
@@ -247,6 +259,7 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
     return null;
   }
 
+  @Override
   @Transactional(readOnly = true)
   @SuppressWarnings("unchecked")
   public RatingSummaryView getAverageRatings(final long articleID) {
@@ -258,6 +271,7 @@ public class RatingsServiceImpl extends HibernateServiceImpl implements RatingsS
                                           new RatingSummaryView();
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   @Transactional(readOnly = true)
   public boolean hasRated(final long articleID, final UserProfile user) {

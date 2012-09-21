@@ -339,7 +339,6 @@
         email varchar(255) unique,
         displayName varchar(255) unique,
         authId longtext unique,
-        userAccountURI varchar(100),
         userProfileURI varchar(100),
         accountState integer not null,
         realName longtext,

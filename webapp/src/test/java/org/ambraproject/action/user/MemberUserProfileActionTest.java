@@ -182,26 +182,6 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
   }
 
   @Test(dataProvider = "unsavedUser", dependsOnMethods = {"testCreateNewUser"})
-  public void testUpdateDoesNotOverwriteAccountUri(UserProfile user) throws Exception {
-    UserProfile storedUser = userService.getUserByAuthId(user.getAuthId());
-    String accountUri = "id:accountUriForTestingOverwrite";
-    storedUser.setAccountUri(accountUri);
-    dummyDataStore.update(storedUser);
-
-    action.setDisplayName(storedUser.getDisplayName());
-    action.setGivenNames(storedUser.getGivenNames());
-    action.setSurnames(storedUser.getSurname());
-    String result = action.executeSaveUser();
-    assertEquals(result, Action.SUCCESS, "Action didn't return success");
-    assertEquals(action.getActionErrors().size(), 0, "action had errors: " + StringUtils.join(action.getActionErrors(), ";"));
-    assertEquals(action.getFieldErrors().size(), 0,
-        "action had field errors: " + StringUtils.join(action.getFieldErrors().values(), ";"));
-
-    storedUser = userService.getUserByAuthId(user.getAuthId());
-    assertEquals(storedUser.getAccountUri(), accountUri, "Account uri got overwritten");
-  }
-
-  @Test(dataProvider = "unsavedUser", dependsOnMethods = {"testCreateNewUser"})
   public void testExecuteWithExistingUser(UserProfile user) throws Exception {
     assertEquals(action.execute(), Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getActionErrors().size(), 0, "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));

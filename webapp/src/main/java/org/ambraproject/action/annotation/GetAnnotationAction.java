@@ -19,14 +19,14 @@
  */
 package org.ambraproject.action.annotation;
 
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.views.AnnotationView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.action.BaseActionSupport;
-import org.ambraproject.service.annotation.AnnotationService;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 
@@ -42,7 +42,6 @@ public class GetAnnotationAction extends BaseActionSupport {
 
   private static final Logger log = LoggerFactory.getLogger(GetAnnotationAction.class);
 
-  @Transactional(readOnly = true)
   @Override
   public String execute() throws Exception {
     try {

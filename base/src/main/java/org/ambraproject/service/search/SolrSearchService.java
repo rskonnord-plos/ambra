@@ -42,8 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 /**
  * Service to provide search capabilities for the application.
@@ -61,6 +61,12 @@ public class SolrSearchService implements SearchService {
   private static final int MAX_FACET_SIZE         = 100;
   private static final int MIN_FACET_COUNT        = 1;
   private static final int MAX_HIGHLIGHT_SNIPPETS = 3;
+
+  // sort option possible values (sort direction is optional)
+  // field desc|asc
+  // sum(field1, field2) desc|asc
+  // break up the option string on comma: ","
+  private static final Pattern SORT_OPTION_PATTERN = Pattern.compile(",(?![^\\(\\)]*\\))");
 
   private Map validKeywords = null;
   private List pageSizes = null;
@@ -297,17 +303,17 @@ public class SolrSearchService implements SearchService {
         throw new ApplicationException("Invalid sort of '" + sp.getSort() + "' specified.");
       }
 
-      //First tokenize up defined sorts into tokens on comma: ","
-      StringTokenizer sortTokens = new StringTokenizer(sortValue,",");
+      String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);
+      for (String sortOption: sortOptions) {
+        sortOption = sortOption.trim();
+        int index = sortOption.lastIndexOf(" ");
 
-      while(sortTokens.hasMoreTokens()) {
-        //Now tokenize each sort command on space
-        StringTokenizer curSort = new StringTokenizer(sortTokens.nextToken());
-        String fieldName = curSort.nextToken(); // First token
+        String fieldName = sortOption;
         String sortDirection = null;
 
-        if (curSort.hasMoreTokens()) {
-          sortDirection = curSort.nextToken(); // Second token
+        if (index != -1) {
+          fieldName = sortOption.substring(0, index);
+          sortDirection = sortOption.substring(index + 1).trim();
         }
 
         if ( sortDirection == null || ! sortDirection.toLowerCase().equals("asc")) {

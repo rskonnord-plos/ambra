@@ -73,7 +73,6 @@
       <interceptor name="ensureUserAccount" class="org.ambraproject.struts2.EnsureUserAccountInterceptor"/>
       <interceptor name="ensureAdmin" class="org.ambraproject.struts2.EnsureRoleInterceptor"/>
       <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
-      <interceptor name="transactionInterceptor" class="org.ambraproject.struts2.TransactionInterceptor"/>
 
       <interceptor-stack name="strutsBaseStack">
         <interceptor-ref name="exception">
@@ -105,23 +104,16 @@
 
       <interceptor-stack name="ambraBaseStack">
         <interceptor-ref name="strutsBaseStack"/>
-        <interceptor-ref name="transactionInterceptor"/>
       </interceptor-stack>
 
-      <!--We're duplicating interceptors from ambraBaseStack because we need to ensure that
-      transactionInterceptor gets called after ensureUserAccount, etc., since those
-      have their own transactions-->
       <interceptor-stack name="ambraUserStack">
-        <interceptor-ref name="strutsBaseStack"/>
+        <interceptor-ref name="ambraBaseStack"/>
         <interceptor-ref name="ensureUserAccount"/>
-        <interceptor-ref name="transactionInterceptor"/>
       </interceptor-stack>
 
       <interceptor-stack name="ambraAdminStack">
-        <interceptor-ref name="strutsBaseStack"/>
-        <interceptor-ref name="ensureUserAccount"/>
+        <interceptor-ref name="ambraUserStack"/>
         <interceptor-ref name="ensureAdmin"/>
-        <interceptor-ref name="transactionInterceptor"/>
       </interceptor-stack>
 
       <interceptor-stack name="minimalStack">
@@ -963,6 +955,9 @@
     <action name="showUser" class="org.ambraproject.action.user.DisplayUserAction">
       <result name="success" type="ambraFreemarker">
         <param name="templateFile">/user/displayUser.ftl</param>
+      </result>
+      <result name="input" type="ambraFreemarker">
+        <param name="templateFile">/user/userNotFound.ftl</param>
       </result>
     </action>
 

@@ -26,6 +26,8 @@
     <constructor-arg index="0" ref="ambraConfiguration"/>
   </bean>
 
+  <bean id="captchaService" class="org.ambraproject.testutils.DummyCaptcha" />
+
   <bean id="displayUserAction" class="org.ambraproject.action.user.DisplayUserAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="userService" ref="userService"/>
@@ -125,6 +127,7 @@
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="ambraMailer" ref="ambraMailer"/>
+    <property name="captchaService" ref="captchaService"/>
   </bean>
 
   <bean id="emailArticleAction" class="org.ambraproject.action.article.EmailArticleAction">
@@ -134,6 +137,7 @@
     <property name="ambraMailer" ref="ambraMailer"/>
     <property name="articleService" ref="articleService"/>
     <property name="secondaryObjectService" ref="secondaryObjectService"/>
+    <property name="captchaService" ref="captchaService"/>
   </bean>
 
   <bean id="getArticleRatingsAction" class="org.ambraproject.action.rating.GetArticleRatingsAction">
@@ -163,4 +167,11 @@
     <property name="pingbackService" ref="pingbackService"/>
   </bean>
 
+  <bean id="browseIssueAction" class="org.ambraproject.action.article.BrowseIssueAction">
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="secondaryObjectService" ref="secondaryObjectService"/>
+    <property name="journalService" ref="journalService"/>
+    <property name="browseService" ref="browseService"/>
+  </bean>
 </beans>

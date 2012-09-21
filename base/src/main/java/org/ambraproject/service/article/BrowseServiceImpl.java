@@ -22,20 +22,22 @@ not* $Id$
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.service.article.BrowseParameters;
-import org.ambraproject.views.BrowseResult;
-import org.ambraproject.views.TOCArticleGroup;
+import org.ambraproject.models.Issue;
+import org.ambraproject.models.Journal;
+import org.ambraproject.models.Volume;
 import org.ambraproject.service.cache.Cache;
+import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.journal.JournalService;
+import org.ambraproject.service.search.SolrServerFactory;
+import org.ambraproject.service.search.SolrServiceUtil;
+import org.ambraproject.views.BrowseResult;
 import org.ambraproject.views.IssueInfo;
+import org.ambraproject.views.SearchHit;
+import org.ambraproject.views.TOCArticleGroup;
 import org.ambraproject.views.VolumeInfo;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.Years;
-import org.ambraproject.views.SearchHit;
-import org.ambraproject.service.search.SolrServerFactory;
-import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.ambraproject.service.search.SolrServiceUtil;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -47,18 +49,20 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.models.Issue;
-import org.ambraproject.models.Journal;
-import org.ambraproject.models.Volume;
+
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,8 +72,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * Class to get all Articles in system and organize them by date and by category
@@ -84,6 +88,12 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   private static final String ARTBYCAT_LIST_KEY   = "ArtByCat-";
   private static final String DATE_LIST_KEY       = "DateList-";
   private static final String ARTBYDATE_LIST_KEY  = "ArtByDate-";
+
+  // sort option possible values (sort direction is optional)
+  // field desc|asc
+  // sum(field1, field2) desc|asc
+  // break up the option string on comma: ","
+  private static final Pattern SORT_OPTION_PATTERN = Pattern.compile(",(?![^\\(\\)]*\\))");
 
   private Cache browseSolrCache;
   private JournalService journalService;
@@ -302,6 +312,8 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    * @param issueUri DOI of Issue.
    * @return the Issue information.
    */
+  @Override
+  @Transactional(readOnly = true)
   public IssueInfo getIssueInfo(final String issueUri)
   {
     final Issue issue = getIssue(issueUri);
@@ -392,6 +404,8 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    * @param journal The journal in which to seek the most recent Issue
    * @return The most recent Issue from the most recent Volume, or null if there are no Issues
    */
+  @Override
+  @Transactional(readOnly = true)
   public String getLatestIssueFromLatestVolume(Journal journal) {
     List<VolumeInfo> vols = getVolumeInfosForJournal(journal);
     if (vols.size() > 0) {
@@ -416,6 +430,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    * @return VolumeInfo
    */
   @Transactional(readOnly = true)
+  @Override
   public VolumeInfo getVolumeInfo(String volumeUri, String journalKey) {
     List<VolumeInfo> volumes = getVolumeInfosForJournal(journalService.getJournal(journalKey));
 
@@ -436,12 +451,20 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    * @return VolumeInfos for journal in reverse order.
    */
   @Transactional(readOnly = true)
+  @Override
   public List<VolumeInfo> getVolumeInfosForJournal(final Journal journal) {
-    List<VolumeInfo> volumeInfos = loadVolumeInfos(journal.getVolumes());
+    //get journal volumes in a session since they're lazy
+    return hibernateTemplate.execute(new HibernateCallback<List<VolumeInfo>>() {
+      @Override
+      public List<VolumeInfo> doInHibernate(Session session) throws HibernateException, SQLException {
+        List<Volume> volumes = ((Journal) session.get(Journal.class, journal.getID())).getVolumes();
+        List<VolumeInfo> volumeInfos = loadVolumeInfos(volumes);
 
-    Collections.reverse(volumeInfos);
+        Collections.reverse(volumeInfos);
 
-    return volumeInfos;
+        return volumeInfos;
+      }
+    });
   }
 
   /**
@@ -543,6 +566,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   /**
    *
    */
+  @Override
   public List<TOCArticleGroup> getArticleGrpList(String issueURI, String authId) {
     IssueInfo issueInfo = getIssueInfo(issueURI);
 
@@ -556,6 +580,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   /**
    *
    */
+  @Override
   public List<TOCArticleGroup> getArticleGrpList(IssueInfo issue, String authId){
     List<TOCArticleGroup> groupList = new ArrayList<TOCArticleGroup>();
 
@@ -570,6 +595,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   /**
    *
    */
+  @Override
   public List<TOCArticleGroup> buildArticleGroups(IssueInfo issue, List<TOCArticleGroup> articleGroups,
                                                   String authId) {
 
@@ -619,6 +645,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
   }
 
   @SuppressWarnings("unchecked")
+  @Transactional(readOnly = true)
   private Volume getVolume(String volumeUri) {
     List<Volume> volumes = hibernateTemplate.findByCriteria(
       DetachedCriteria.forClass(Volume.class)
@@ -749,20 +776,20 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
         throw new RuntimeException("Invalid sort of '" + params.getSort() + "' specified.");
       }
 
-      //First tokenize up defined sorts into tokens on comma: ","
-      StringTokenizer sortTokens = new StringTokenizer(sortValue,",");
+      String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);
+      for (String sortOption: sortOptions) {
+        sortOption = sortOption.trim();
+        int index = sortOption.lastIndexOf(" ");
 
-      while(sortTokens.hasMoreTokens()) {
-        //Now tokenize each sort command on space
-        StringTokenizer curSort = new StringTokenizer(sortTokens.nextToken());
-        String fieldName = curSort.nextToken(); // First token
+        String fieldName = sortOption;
         String sortDirection = null;
 
-        if (curSort.hasMoreTokens()) {
-          sortDirection = curSort.nextToken(); // Second token
+        if (index != -1) {
+          fieldName = sortOption.substring(0, index);
+          sortDirection = sortOption.substring(index + 1).trim();
         }
 
-        if (sortDirection == null || !sortDirection.toLowerCase().equals("asc")) {
+        if ( sortDirection == null || ! sortDirection.toLowerCase().equals("asc")) {
           query.addSortField(fieldName, SolrQuery.ORDER.desc);
         } else {
           query.addSortField(fieldName, SolrQuery.ORDER.asc);
@@ -879,12 +906,12 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     Date publicationDate = SolrServiceUtil.getFieldValue(document, "publication_date", Date.class, message);
     String eissn = SolrServiceUtil.getFieldValue(document, "eissn", String.class, message);
     String articleType = SolrServiceUtil.getFieldValue(document, "article_type", String.class, message);
-    String abstractDisplay = SolrServiceUtil.getFieldValue(document, "abstract_primary_display", String.class, message);
+    List<String> abstractDisplayList = SolrServiceUtil.getFieldMultiValue(document, message, String.class, "abstract_primary_display");
 
     List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, message, String.class, "author_display");
 
     SearchHit hit = new SearchHit(null, id, title, null, authorList, publicationDate, eissn, null, articleType);
-    hit.setAbstractPrimary(abstractDisplay);
+    hit.setAbstractPrimary(StringUtils.join(abstractDisplayList, ", "));
 
     return hit;
   }

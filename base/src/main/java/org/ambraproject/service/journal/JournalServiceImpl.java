@@ -60,6 +60,7 @@ public class JournalServiceImpl extends HibernateServiceImpl implements JournalS
    * @param journalKey the journal's key
    * @return the journal, or null if not found
    */
+  @Override
   @Transactional(readOnly = true)
   @SuppressWarnings("unchecked")
   public Journal getJournal(final String journalKey) {

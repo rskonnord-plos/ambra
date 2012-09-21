@@ -50,17 +50,17 @@
 </script>	
   <#elseif x?contains("dojo.js")>
     <#if freemarker_config.dojoDebug>
-<script type="text/javascript" src="${freemarker_config.context}/javascript/dojo/dojo/dojo.js.uncompressed.js"></script>
+<@versionedJS file="${freemarker_config.context}/javascript/dojo/dojo/dojo.js.uncompressed.js" />
     <#else>
-<script type="text/javascript" src="${freemarker_config.context}/javascript/dojo/dojo/dojo.js"></script>
+<@versionedJS file="${freemarker_config.context}/javascript/dojo/dojo/dojo.js" />
     </#if>
 	<#elseif x?contains("ambra.js")>
     <#if freemarker_config.dojoDebug>
-<script type="text/javascript" src="${freemarker_config.context}/javascript/dojo/dojo/ambra.js.uncompressed.js"></script>
+<@versionedJS file="${freemarker_config.context}/javascript/dojo/dojo/ambra.js.uncompressed.js" />
     <#else>
-<script type="text/javascript" src="${freemarker_config.context}/javascript/dojo/dojo/ambra.js"></script>
+<@versionedJS file="${freemarker_config.context}/javascript/dojo/dojo/ambra.js" />
     </#if>
   <#else>
-<script type="text/javascript" src="${x}"></script>	
+<@versionedJS file="${x}" />
 	</#if>
 </#list>

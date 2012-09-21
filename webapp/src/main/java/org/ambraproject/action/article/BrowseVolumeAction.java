@@ -20,19 +20,19 @@
 
 package org.ambraproject.action.article;
 
-import java.util.List;
+import org.ambraproject.ApplicationException;
+import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.models.Journal;
+import org.ambraproject.service.article.BrowseService;
+import org.ambraproject.service.journal.JournalService;
+import org.ambraproject.service.xml.XMLService;
+import org.ambraproject.views.IssueInfo;
+import org.ambraproject.views.VolumeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.ApplicationException;
-import org.ambraproject.service.xml.XMLService;
-import org.ambraproject.action.BaseActionSupport;
-import org.ambraproject.service.article.BrowseService;
-import org.ambraproject.service.journal.JournalService;
-import org.ambraproject.views.IssueInfo;
-import org.ambraproject.views.VolumeInfo;
-import org.ambraproject.models.Journal;
+
+import java.util.List;
 
 public class BrowseVolumeAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(BrowseArticlesAction.class);
@@ -46,9 +46,7 @@ public class BrowseVolumeAction extends BaseActionSupport {
   private XMLService secondaryObjectService;
 
   @Override
-  @Transactional(readOnly = true)
   public String execute() throws Exception {
-    // JournalService, OTM usage wants to be in a Transaction
     Journal currentJournal = journalService.getJournal(getCurrentJournal());
 
     //WTO: ToDo there is a lot of needless code here - must clean up.

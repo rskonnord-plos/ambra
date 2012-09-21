@@ -83,6 +83,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    *                                  if there was a problem talking to the OTM
    * @throws NoSuchArticleIdException When the article does not exist
    */
+  @Override
   public boolean isResearchArticle(final Article article)
       throws ApplicationException, NoSuchArticleIdException {
     // resolve article type and supported properties
@@ -297,6 +298,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * @return Article with specified URI or null if not found.
    * @throws NoSuchArticleIdException NoSuchArticleIdException
    */
+  @Override
   @Transactional(readOnly = true, noRollbackFor = {SecurityException.class})
   @SuppressWarnings("unchecked")
   public Article getArticle(final String articleDoi, final String authId) throws NoSuchArticleIdException {
@@ -350,9 +352,12 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     if (articleDois == null)
       throw new IllegalArgumentException("articleDois == null");
 
-    List<Article> articles = hibernateTemplate.findByCriteria(
+    List<Article> articles = new ArrayList<Article>();
+    if(!articleDois.isEmpty()) {
+      articles = hibernateTemplate.findByCriteria(
       DetachedCriteria.forClass(Article.class)
         .add(Restrictions.in("doi", articleDois)));
+    }
 
     for(int a = 0; a < articles.size(); a++) {
       try {
@@ -563,6 +568,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ArticleInfo getBasicArticleView(Long articleID) throws NoSuchArticleIdException {
     if (articleID == null) {
       throw new NoSuchArticleIdException("Null id");
@@ -614,6 +620,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * {@inheritDoc}
    */
   @Override
+  @Transactional(readOnly = true)
   public CitedArticle getCitedArticle(long citedArticleID) {
     return hibernateTemplate.get(CitedArticle.class, citedArticleID);
   }
@@ -622,6 +629,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * {@inheritDoc}
    */
   @Override
+  @Transactional
   public void setCitationDoi(CitedArticle citedArticle, String doi) {
     citedArticle.setDoi(doi);
     hibernateTemplate.update(citedArticle);

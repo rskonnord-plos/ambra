@@ -15,35 +15,35 @@ package org.ambraproject.action.article;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
+import org.ambraproject.freemarker.AmbraFreemarkerConfig;
+import org.ambraproject.models.AnnotationType;
+import org.ambraproject.models.ArticleView;
+import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.annotation.AnnotationService;
-import org.ambraproject.views.AuthorExtra;
-import org.ambraproject.views.CitationReference;
 import org.ambraproject.service.article.ArticleAssetService;
 import org.ambraproject.service.article.ArticleAssetWrapper;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.service.article.NoSuchArticleIdException;
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.views.article.ArticleType;
-import org.ambraproject.models.AnnotationType;
-import org.ambraproject.models.ArticleView;
-import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.rating.RatingsService;
-import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.service.trackback.TrackbackService;
 import org.ambraproject.service.user.UserService;
 import org.ambraproject.util.TextUtils;
 import org.ambraproject.util.UriUtil;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
+import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.RatingSummaryView;
+import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.ArticleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +52,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import static org.ambraproject.service.annotation.AnnotationService.AnnotationOrder;
 
 
@@ -122,7 +123,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return "success" on succes, "error" on error
    */
-  @Transactional
   public String fetchArticle() {
     try {
 
@@ -178,7 +178,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return "success" on success, "error" on error
    */
-  @Transactional(readOnly = true)
   public String fetchArticleComments() {
     try {
       setCommonData();
@@ -214,7 +213,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return "success" on succes, "error" on error
    */
-  @Transactional(readOnly = true)
   public String fetchArticleCorrections() {
     try {
       setCommonData();
@@ -248,7 +246,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return "success" on succes, "error" on error
    */
-  @Transactional(readOnly = true)
   public String fetchArticleMetrics() {
     try {
       setCommonData();
@@ -272,7 +269,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return "success" on succes, "error" on error
    */
-  @Transactional(readOnly = true)
   public String fetchArticleRelated() {
     try {
       setCommonData();
@@ -296,7 +292,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return "success" on succes, "error" on error
    */
-  @Transactional(readOnly = true)
   public String fetchArticleCrossRef() {
     try {
       setCommonData();

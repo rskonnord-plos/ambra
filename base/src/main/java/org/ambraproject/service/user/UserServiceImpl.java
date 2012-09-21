@@ -25,6 +25,7 @@ import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserSearch;
+import org.ambraproject.service.hibernate.URIGenerator;
 import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.util.FileUtils;
@@ -86,6 +87,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   }
 
   @Override
+  @Transactional
   public void updateEmail(Long userId, String email) {
     UserProfile user = (UserProfile) hibernateTemplate.get(UserProfile.class, userId);
     if (user != null) {
@@ -95,6 +97,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserProfile getUserByAuthId(String authId) {
     log.debug("Attempting to find user with authID: {}", authId);
     try {
@@ -104,23 +107,6 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
           , 0, 1).get(0);
     } catch (IndexOutOfBoundsException e) {
       log.warn("Didn't find user for authID: {}", authId);
-      return null;
-    }
-  }
-
-  @Override
-  public UserProfile getUserByAccountUri(String accountUri) {
-    if (accountUri == null) {
-      throw new IllegalArgumentException("provided null account uri");
-    }
-    try {
-      log.debug("Loading user with account uri: {}", accountUri);
-      return (UserProfile) hibernateTemplate.findByCriteria(
-          DetachedCriteria.forClass(UserProfile.class)
-              .add(Restrictions.eq("accountUri", accountUri)),
-          0, 1).get(0);
-    } catch (IndexOutOfBoundsException e) {
-      log.warn("Didn't find user for accountURI: {}", accountUri);
       return null;
     }
   }
@@ -147,12 +133,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
       return existingUser;
     } else {
       log.debug("Creating a new user with authID: {}; {}", userProfile.getAuthId(), userProfile);
-      //TODO: We're generating account and profile uris here to maintain backwards compatibility with annotations
-      //once those are refactored we can just call hibernateTemplate.save()
-      String prefix = System.getProperty(ConfigurationStore.SYSTEM_OBJECT_ID_PREFIX);
-      String accountUri = prefix + "account/" + UUID.randomUUID().toString();
-      String profileUri = prefix + "profile/" + UUID.randomUUID().toString();
-      userProfile.setAccountUri(accountUri);
+      String profileUri = URIGenerator.generate(userProfile);
       userProfile.setProfileUri(profileUri);
       hibernateTemplate.save(userProfile);
       return userProfile;

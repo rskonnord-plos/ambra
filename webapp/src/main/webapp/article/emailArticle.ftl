@@ -37,7 +37,15 @@
         <@s.textarea rows="${maxEmails}" label="Recipients' E-mail addresses (one per line, max ${maxEmails})" required="true" name="emailTo" size="40" />
         <@s.textfield label="Your E-mail address" required="true" name="emailFrom" size="40" />
         <@s.textfield label="Your name" required="true" name="senderName" size="40" />
-        <@s.textarea label="Your comments to add to the E-mail" value="%{'I thought you would find this article interesting.'}" name="note" rows="5" cols="40"/>          
+        <@s.textarea label="Your comments to add to the E-mail" value="%{'I thought you would find this article interesting.'}" name="note" rows="5" cols="40"/>
+        <li <#if fieldErrors["captcha"]??>class="form-error"</#if>>
+          <label for="recaptcha_widget_div">Text verification:</label>
+          ${captchaHTML}
+          <#if fieldErrors["captcha"]??>
+            &nbsp;${fieldErrors["captcha"][0]?html}
+          </#if>
+          <div class="clearer"></div>
+        </li>
       </ol>
       <@s.submit value="Send"/>
     </fieldset>

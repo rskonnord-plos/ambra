@@ -33,9 +33,6 @@ public class UserProfile extends AmbraEntity {
   public static final String MONTHLY_ALERT_SUFFIX = "_monthly";
   public static final String WEEKLY_ALERT_SUFFIX = "_weekly";
 
-  //TODO: This property is legacy and should be removed once annotations are refactored
-  private String accountUri;
-
   private String profileUri;
 
   private int accountState;
@@ -279,14 +276,6 @@ public class UserProfile extends AmbraEntity {
 
   public void setRoles(Set<UserRole> roles) {
     this.roles = roles;
-  }
-
-  public String getAccountUri() {
-    return accountUri;
-  }
-
-  public void setAccountUri(String accountUri) {
-    this.accountUri = accountUri;
   }
 
   public String getProfileUri() {

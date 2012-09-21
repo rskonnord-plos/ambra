@@ -23,12 +23,12 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.NoSuchArticleIdException;
-import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.util.UriUtil;
+import org.ambraproject.views.article.ArticleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 
 /**
@@ -48,7 +48,6 @@ public class FetchArticleAction extends BaseSessionAwareActionSupport {
    *
    * @return "success" on succes, "error" on error
    */
-  @Transactional
   public String fetchArticleInfo() throws NoSuchArticleIdException {
 
     try {

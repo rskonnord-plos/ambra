@@ -45,7 +45,6 @@ public class DisplayUserActionTest extends AmbraWebTest {
   @DataProvider(name = "user")
   public Object[][] getUser() {
     UserProfile user = new UserProfile();
-    user.setAccountUri("id:test-account-uri-forDisplayUserActionTest");
     user.setEmail("email@DisplayUserActionTest.org");
     user.setDisplayName("displayNameForDisplayUserActionTest");
     user.setAuthId("authIdNameForDisplayUserActionTest");
@@ -73,18 +72,10 @@ public class DisplayUserActionTest extends AmbraWebTest {
     assertNull(action.getOrganizationName(), "action didn't hide organization name");
   }
 
-  @Test(dataProvider = "user")
-  public void testExecuteWithAccountUri(UserProfile user) throws Exception {
-    action.setUserAccountUri(user.getAccountUri());
+  public void testExecuteWithBadID() throws Exception {
+    action.setUserId(20202030l);
     String result = action.execute();
-    assertEquals(result, Action.SUCCESS, "action didn't return success");
-    assertEquals(action.getActionErrors().size(), 0,
-        "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
-    assertEquals(action.getEmail(), user.getEmail(), "Action returned incorrect email");
-    assertEquals(action.getDisplayName(), user.getDisplayName(), "Action returned incorrect display name");
-    assertEquals(action.getCity(), user.getCity(), "Action returned incorrect city");
-    assertEquals(action.getCountry(), user.getCountry(), "Action returned incorrect country");
-    assertNull(action.getOrganizationName(), "action didn't hide organization name");
+    assertEquals(result, Action.INPUT, "action didn't return INPUT");
   }
 
   @Test(dataProvider = "user", dependsOnMethods = {"testExecute"})

@@ -21,17 +21,17 @@ package org.ambraproject.action.article;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.models.Journal;
 import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.service.journal.JournalService;
-import org.ambraproject.models.Journal;
+import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.views.IssueInfo;
 import org.ambraproject.views.TOCArticleGroup;
 import org.ambraproject.views.VolumeInfo;
-import org.ambraproject.service.xml.XMLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -57,7 +57,6 @@ public class BrowseIssueAction extends BaseActionSupport{
   private VolumeInfo volumeInfo;
 
   @Override
-  @Transactional(readOnly = true)
   public String execute() {
     // Was Issue specified?  If not, then use Current Issue.
     // If no Current Issue, then use most recent Issue from the most recent Volume.

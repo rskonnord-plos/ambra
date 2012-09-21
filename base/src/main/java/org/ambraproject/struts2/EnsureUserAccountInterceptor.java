@@ -28,10 +28,6 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +45,6 @@ import static org.ambraproject.Constants.SINGLE_SIGNON_RECEIPT;
  */
 public class EnsureUserAccountInterceptor extends AbstractInterceptor {
   private UserService userService;
-  private PlatformTransactionManager transactionManager; //TODO: obviate the need for this.  See transaction interceptor
   private static final Logger log = LoggerFactory.getLogger(EnsureUserAccountInterceptor.class);
 
   /**
@@ -92,16 +87,11 @@ public class EnsureUserAccountInterceptor extends AbstractInterceptor {
       if (ambraUser == null) {
         //No user object, so we must just be returning from CAS.  Look up the user in the db, and record their login
         final HttpServletRequest request = ServletActionContext.getRequest();
-        ambraUser = (UserProfile) new TransactionTemplate(transactionManager).execute(new TransactionCallback() {
-          @Override
-          public Object doInTransaction(TransactionStatus transactionStatus) {
-            return userService.login(authId, new UserLogin(
+        ambraUser = userService.login(authId, new UserLogin(
                 request.getRequestedSessionId(), //session id
                 request.getRemoteAddr(), //ip
                 request.getHeader("user-agent") //user-agent
             ));
-          }
-        });
         if (ambraUser == null) {
           //No matching user in the database. redirect to the profile creation page
           log.debug("This is a new user with auth id: {}", authId);
@@ -128,11 +118,6 @@ public class EnsureUserAccountInterceptor extends AbstractInterceptor {
       //continue with the action invocation
       return actionInvocation.invoke();
     }
-  }
-
-  @Required
-  public void setTransactionManager(PlatformTransactionManager transactionManager) {
-    this.transactionManager = transactionManager;
   }
 
   @Required

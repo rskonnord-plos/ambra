@@ -28,11 +28,7 @@
     <property name="email" column="email" type="string" length="255" unique="true"/>
     <property name="displayName" column="displayName" type="string" length="255" unique="true"/>
     <property name="authId" column="authId" type="string" length="512" unique="true"/>
-
-    <!-- TODO: These properties are legacy and should be removed once annotations are refactored-->
-    <property name="accountUri" column="userAccountURI" type="string" length="100"/>
     <property name="profileUri" column="userProfileURI" type="string" length="100"/>
-
     <property name="accountState" column="accountState" type="integer" not-null="true"/>
     <property name="realName" column="realName" type="string" length="500"/>
     <property name="givenNames" column="givenNames" type="string" length="255"/>

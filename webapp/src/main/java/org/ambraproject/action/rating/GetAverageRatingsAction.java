@@ -21,7 +21,6 @@ package org.ambraproject.action.rating;
 
 import org.ambraproject.models.Article;
 import org.ambraproject.views.RatingSummaryView;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * General Rating action class to store and retrieve summary ratings on an article.
@@ -42,7 +41,6 @@ public class GetAverageRatingsAction extends AbstractRatingAction {
    * @return WebWork action status
    */
   @Override
-  @Transactional(readOnly = true)
   public String execute() throws Exception {
     final Article article = articleService.getArticle(articleURI, getAuthId());
     averageRatings = ratingsService.getAverageRatings(article.getID());

@@ -41,7 +41,6 @@ public interface ArticleAssetService {
    * @return the object-info of the object
    * @throws NoSuchObjectIdException NoSuchObjectIdException
    */
-  @Transactional(readOnly = true)
   public List<ArticleAsset> getArticleXmlAndPdf(final String articleDoi, final String authId) throws NoSuchObjectIdException;
 
   /**
@@ -53,7 +52,6 @@ public interface ArticleAssetService {
    * @return the object-info of the object
    * @throws NoSuchObjectIdException NoSuchObjectIdException
    */
-  @Transactional(readOnly = true)
   public ArticleAsset getSuppInfoAsset(final String assetUri, final String authId) throws NoSuchObjectIdException;
 
   /**
@@ -65,7 +63,6 @@ public interface ArticleAssetService {
    * @return the object-info of the object
    * @throws NoSuchObjectIdException NoSuchObjectIdException
    */
-  @Transactional(readOnly = true)
   public ArticleAsset getArticleAsset(final String assetUri, final String representation, final String authId) throws NoSuchObjectIdException;
 
    /**
@@ -76,7 +73,6 @@ public interface ArticleAssetService {
    * @return Figures and Tables for the article in DOI order.
    * @throws NoSuchArticleIdException NoSuchArticleIdException.
    */
-  @Transactional(readOnly = true)
   public ArticleAssetWrapper[] listFiguresTables(final String articleDoi, final String authId) throws NoSuchArticleIdException;
 
   /**

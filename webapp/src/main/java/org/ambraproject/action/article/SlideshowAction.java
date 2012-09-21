@@ -27,7 +27,6 @@ import org.ambraproject.service.xml.XMLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -49,7 +48,6 @@ public class SlideshowAction extends BaseActionSupport {
    * @throws Exception
    */
   @Override
-  @Transactional(readOnly = true)
   public String execute() throws Exception {
     try {
       articleAssetWrapper = articleAssetService.listFiguresTables(uri, getAuthId());

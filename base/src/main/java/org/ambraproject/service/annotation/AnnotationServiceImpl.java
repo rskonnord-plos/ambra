@@ -301,6 +301,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
   }
 
   @Override
+  @Transactional(readOnly = true)
   public int countAnnotations(Long articleID, Set<AnnotationType> annotationTypes) {
     if (annotationTypes != null && !annotationTypes.isEmpty()) {
       return ((Number) hibernateTemplate.findByCriteria(
@@ -320,6 +321,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
 
 
   @Override
+  @Transactional
   public Long createComment(UserProfile user, String articleDoi, String title, String body, String ciStatement, Context context, boolean flagAsCorrection) {
     if (articleDoi == null) {
       throw new IllegalArgumentException("Attempted to create comment with null article id");
@@ -376,6 +378,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
   }
 
   @Override
+  @Transactional
   public Long createReply(UserProfile user, Long parentId, String title, String body, @Nullable String ciStatement) {
     if (parentId == null) {
       throw new IllegalArgumentException("Attempting to create reply with null parent id");
@@ -403,6 +406,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
 
   @Override
   @SuppressWarnings("unchecked")
+  @Transactional(readOnly = true)
   public AnnotationView getFullAnnotationView(Long annotationId) {
     if (annotationId == null) {
       throw new IllegalArgumentException("No annotation id specified");
@@ -417,6 +421,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
   }
 
   @Override
+  @Transactional(readOnly = true)
   public AnnotationView getBasicAnnotationView(Long annotationId) {
     if (annotationId == null) {
       throw new IllegalArgumentException("No annotation id specified");
@@ -430,6 +435,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
   }
 
   @Override
+  @Transactional(readOnly = true)
   public AnnotationView getBasicAnnotationViewByUri(String annotationUri) {
     if (annotationUri == null) {
       throw new IllegalArgumentException("No annotation URI specified");

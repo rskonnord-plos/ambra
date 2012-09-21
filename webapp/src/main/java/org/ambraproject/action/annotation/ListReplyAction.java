@@ -22,12 +22,11 @@ package org.ambraproject.action.annotation;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.article.ArticleService;
-import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.AnnotationView;
+import org.ambraproject.views.article.ArticleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Action class to get a list of replies to annotations.
@@ -42,7 +41,6 @@ public class ListReplyAction extends BaseActionSupport {
   protected AnnotationService annotationService;
   private ArticleService articleService;
 
-  @Transactional(readOnly = true)
   @Override
   public String execute() throws Exception {
     try {

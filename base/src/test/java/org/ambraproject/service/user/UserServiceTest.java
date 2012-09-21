@@ -55,7 +55,6 @@ public class UserServiceTest extends BaseTest {
     userProfile.setDisplayName("nameForTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
     userProfile.setAuthId("authIdForTestLogin");
-    userProfile.setAccountUri("id:account/test-account-uri");
     Long id = Long.valueOf(dummyDataStore.store(userProfile));
 
     return new Object[][]{
@@ -75,13 +74,6 @@ public class UserServiceTest extends BaseTest {
   @Test(dataProvider = "userProfile")
   public void testGetUserByAuthId(Long id, UserProfile userProfile) {
     UserProfile result = userService.getUserByAuthId(userProfile.getAuthId());
-    assertNotNull(result, "user service returned null profile");
-    assertEquals(result.getID(), id, "user service returned incorrect user profile");
-  }
-
-  @Test(dataProvider = "userProfile")
-  public void testGetUserByAccountUri(Long id, UserProfile userProfile) {
-    UserProfile result = userService.getUserByAccountUri(userProfile.getAccountUri());
     assertNotNull(result, "user service returned null profile");
     assertEquals(result.getID(), id, "user service returned incorrect user profile");
   }
@@ -167,12 +159,6 @@ public class UserServiceTest extends BaseTest {
     assertEquals(savedUser.getAuthId(), userProfile.getAuthId(), "Saved user had incorrect authId");
     assertEquals(savedUser.getBiography(), userProfile.getBiography(), "Saved user had incorrect biography");
 
-    assertNotNull(savedUser.getAccountUri(), "user service didn't generate account uri");
-    try {
-      URI.create(savedUser.getAccountUri());
-    } catch (Exception e) {
-      fail("account uri wasn't a valid URI", e);
-    }
     assertNotNull(savedUser.getProfileUri(), "user service didn't generate profile uri");
     try {
       URI.create(savedUser.getProfileUri());
@@ -229,16 +215,13 @@ public class UserServiceTest extends BaseTest {
     UserProfile user = new UserProfile("authIdForUpdateTestOverwriteUris",
         "email@overwriteUris.org",
         "displayNameForOverwriteUris");
-    user.setAccountUri(accountUri);
     user.setProfileUri(profileUri);
     Long id = Long.valueOf(dummyDataStore.store(user));
 
     user.setProfileUri(null);
-    user.setAccountUri(null);
 
     userService.saveOrUpdateUser(user);
     UserProfile storedUser = dummyDataStore.get(UserProfile.class, id);
-    assertEquals(storedUser.getAccountUri(), accountUri, "account uri got overwritten");
     assertEquals(storedUser.getProfileUri(), profileUri, "account uri got overwritten");
   }
 

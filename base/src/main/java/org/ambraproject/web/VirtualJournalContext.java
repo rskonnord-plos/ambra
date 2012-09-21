@@ -20,7 +20,17 @@
 
 package org.ambraproject.web;
 
+import org.apache.commons.configuration.Configuration;
+import org.topazproject.ambra.configuration.ConfigurationStore;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.StringTokenizer;
 
 /**
  * The virtual journal context.
@@ -228,6 +238,153 @@ public class VirtualJournalContext {
   }
 
   /**
+   * For a given request, returns a request with paths mapped to the appropriate journal.
+   *
+   * @param request the original request, with non-journal-relative paths
+   * @param configuration configuration object
+   * @param servletContext servlet context for the given request
+   * @return a request with paths mapped appropriately.  May be the original request passed in, if no changes were
+   *     needed.
+   * @throws ServletException
+   */
+  public HttpServletRequest mapRequest(HttpServletRequest request, Configuration configuration,
+      ServletContext servletContext) throws ServletException {
+    String journal = getJournal();
+
+    if (journal == null)
+      return request;
+
+    String cp      = request.getContextPath();
+    String sp      = request.getServletPath();
+    String pi      = request.getPathInfo();
+
+    // Find resource in journal
+    String[] mapped = getMappedPaths(virtualizeUri(cp, sp, pi), configuration, servletContext);
+
+    // Find resource in default journal
+    if (mapped == null)
+      mapped = getMappedPaths(siteDefaultUri(cp, sp, pi), configuration, servletContext);
+
+    // Find resource in app defaults
+    if (mapped == null)
+      mapped = getMappedPaths(defaultUri(cp, sp, pi), configuration, servletContext);
+
+    if ((mapped != null) && mapped[3].equals(request.getRequestURI()))
+      return request;
+
+    if (mapped == null)
+      return request;
+    else
+      return wrapRequest(request, mapped);
+  }
+
+  private String[] getMappedPaths(String[] paths, Configuration configuration, ServletContext servletContext)
+      throws ServletException {
+
+    // strip contextPath ("/ambra-webapp") from resource path
+    String resource = paths[3].substring(paths[0].length());
+
+    if (resource.startsWith("journals") || resource.startsWith("/journals")) {
+      String path = getJournalResourcePath(resource, configuration);
+      String fullPath = path.startsWith("/") ? path : "/" + path;
+
+      if (resourceExistsInPath(fullPath)) {
+        return new String[]{paths[0], "", fullPath, paths[0] + fullPath};
+      }
+    } else if (resourceExistsInServletContext(resource, servletContext)) {
+      return paths;
+    }
+
+    return null;
+  }
+
+  /**
+   * Path /journal/journal-name/resource changes to /journal/journal-name/webapp/resource
+   * @param resource Resource path
+   * @return Absolute resource path
+   */
+  private String getJournalResourcePath(String resource, Configuration configuration) {
+    String templatePath = configuration.getString(ConfigurationStore.JOURNAL_TEMPLATE_DIR, null);
+
+    StringTokenizer tokenizer = new StringTokenizer(resource,"/");
+    StringBuilder stringBuilder = new StringBuilder();
+    boolean addWebapp = false;
+    while(tokenizer.hasMoreTokens()) {
+      String token = tokenizer.nextToken();
+      if (token.equals("journals") && stringBuilder.length() == 0) {
+        addWebapp = true;
+      }
+      stringBuilder.append('/').append(token);
+      if (addWebapp && !token.equals("journals")) {
+        stringBuilder.append("/webapp");
+        addWebapp = false;
+      }
+    }
+
+    return templatePath + stringBuilder.toString();
+  }
+
+  /**
+   * Search in servlet context - struts directory
+   * @param resource path to resource
+   * @return true if resource exists in servlet context
+   * @throws ServletException Servlet exception
+   */
+  private boolean resourceExistsInServletContext(String resource, ServletContext servletContext)
+      throws ServletException {
+    try {
+      return servletContext.getResource(resource) != null;
+    } catch (MalformedURLException mre) {
+      throw new ServletException("Invalid resource path: " + resource, mre);
+    }
+  }
+
+  /**
+   * Search in file system
+   * @param resource path to resource
+   * @return true if resource exists in servlet context
+   * @throws ServletException Servlet exception
+   */
+  private boolean resourceExistsInPath(String resource) throws ServletException {
+    File file = new File(resource);
+    return file.isFile() && file.canRead();
+  }
+
+  /**
+   * Wrap an HttpServletRequest with arbitrary URI values.
+   *
+   * @param request the request to wrap
+   * @param paths the paths to substitute
+   *
+   * @return the wrapped request instance
+   *
+   * @throws IllegalArgumentException DOCUMENT ME!
+   */
+  public static HttpServletRequest wrapRequest(final HttpServletRequest request,
+                                               final String[] paths) {
+    if ((paths == null) || (paths.length != 4))
+      throw new IllegalArgumentException("Invalid path list");
+
+    return new HttpServletRequestWrapper(request) {
+      public String getRequestURI() {
+        return paths[3];
+      }
+
+      public String getContextPath() {
+        return paths[0];
+      }
+
+      public String getServletPath() {
+        return paths[1];
+      }
+
+      public String getPathInfo() {
+        return paths[2];
+      }
+    };
+  }
+
+  /**
    * Get the virtual journal name.
    *
    * @return Journal name, may be <code>null</code>.
@@ -298,5 +455,15 @@ public class VirtualJournalContext {
    */
   public Collection<String> getVirtualJournals() {
     return virtualJournals;
+  }
+
+  public String toString() {
+    String result = String.format("VirtualJournalContext: journal=%s, defaultMappingPrefix=%s, requestScheme=%s, "
+        + "requestPort=%s, requestServerName=%s, requestContext=%s, virtualJournals=", journal, defaultMappingPrefix,
+        requestScheme, requestPort, requestServerName, requestContext);
+    for (String s : virtualJournals) {
+      result += s + ",";
+    }
+    return result;
   }
 }

@@ -20,12 +20,14 @@
 package org.ambraproject.action;
 
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.captcha.CaptchaService;
 import org.ambraproject.service.mailer.AmbraMailer;
 import org.ambraproject.action.user.UserActionSupport;
 import org.apache.commons.collections.EnumerationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Required;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -45,7 +47,13 @@ public class FeedbackAction extends UserActionSupport {
   private String subject;
   private String name;
   private AmbraMailer ambraMailer;
-  private String accountUri;
+  private CaptchaService captchaService;
+  private String captchaHTML;
+  private String captchaChallenge;
+  private String captchaResponse;
+
+  private String userID;
+
   public final String FROM_EMAIL_ADDRESS_KEY = "fromEmailAddress";
 
   /**
@@ -55,6 +63,7 @@ public class FeedbackAction extends UserActionSupport {
    */
   public String executeRender() throws Exception {
     setUserDetailsFromSession();
+    setNewReCaptcha();
     return SUCCESS;
   }
 
@@ -63,7 +72,7 @@ public class FeedbackAction extends UserActionSupport {
     if (null != ambraUser) {
       name = ambraUser.getDisplayName();
       fromEmailAddress = ambraUser.getEmail();
-      accountUri = ambraUser.getAccountUri();
+      userID = String.valueOf(ambraUser.getID());
     }
   }
 
@@ -81,7 +90,7 @@ public class FeedbackAction extends UserActionSupport {
     mapFields.put(FROM_EMAIL_ADDRESS_KEY, fromEmailAddress);
     mapFields.put("note", note);
     setUserDetailsFromSession();
-    mapFields.put("id", StringUtils.defaultString(accountUri, "not found"));
+    mapFields.put("id", StringUtils.defaultString(userID, "not found"));
 
     final Map<String, String> attributes = getUserSessionAttributes();
     final List<String> values = new ArrayList<String>();
@@ -128,7 +137,7 @@ public class FeedbackAction extends UserActionSupport {
     return headers;
   }
 
-  private boolean validates() {
+  private boolean validates() throws Exception {
     boolean isValid = true;
     if (StringUtils.isBlank(subject)) {
       addFieldError("subject", "Subject cannot be empty");
@@ -150,7 +159,23 @@ public class FeedbackAction extends UserActionSupport {
       isValid = false;
     }
 
+    HttpServletRequest request = ServletActionContext.getRequest();
+
+    if (!captchaService.validateCaptcha(request.getRemoteAddr(), captchaChallenge, captchaResponse)) {
+      addFieldError("captcha", "Text verification is incorrect");
+      isValid = false;
+    }
+
+    if(!isValid) {
+      setNewReCaptcha();
+    }
+
     return isValid;
+  }
+
+  private void setNewReCaptcha() throws Exception
+  {
+    captchaHTML = captchaService.getCaptchaHTML();
   }
 
   /**
@@ -239,5 +264,41 @@ public class FeedbackAction extends UserActionSupport {
    */
   public void setSubject(final String subject) {
     this.subject = subject;
+  }
+
+  /**
+   * @return Returns the RecaptchaHTML block
+   */
+  public String getCaptchaHTML()
+  {
+    return captchaHTML;
+  }
+
+  /**
+   * This field is defined in the form that the google recaptcha sends us and
+   * as best as I can tell, can't be changed.
+   *
+   * @param recaptcha_challenge_field
+   */
+  public void setRecaptcha_challenge_field(String recaptcha_challenge_field) {
+    captchaChallenge = recaptcha_challenge_field;
+  }
+
+  /**
+   * This field is defined in the form that the google recaptcha sends us and
+   * as best as I can tell, can't be changed.
+   *
+   * @param recaptcha_challenge_field
+   */
+  public void setRecaptcha_response_field(String recaptcha_response_field) {
+    captchaResponse = recaptcha_response_field;
+  }
+
+  /**
+   * @param captchaService The captchaService to set.
+   */
+  @Required
+  public void setCaptchaService(CaptchaService captchaService) {
+    this.captchaService = captchaService;
   }
 }

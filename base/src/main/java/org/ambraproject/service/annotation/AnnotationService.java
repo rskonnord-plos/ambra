@@ -37,9 +37,8 @@ import java.util.Set;
  */
 public interface AnnotationService {
   /**
-   * Enum for passing order values to {@link AnnotationService#listAnnotations(Long, java.util.Set,
-   * org.ambraproject.annotation.service.AnnotationService.AnnotationOrder)} and {@link
-   * AnnotationService#listAnnotationsNoReplies(Long, java.util.Set, org.ambraproject.annotation.service.AnnotationService.AnnotationOrder)}
+   * Enum for passing order values to {@link AnnotationService#listAnnotations(Long, java.util.Set, org.ambraproject.service.annotation.AnnotationService.AnnotationOrder)} and {@link
+   * AnnotationService#listAnnotationsNoReplies(Long, java.util.Set, org.ambraproject.service.annotation.AnnotationService.AnnotationOrder)}
    */
   public static enum AnnotationOrder {
     /**
