@@ -945,7 +945,7 @@
       <result name="success" type="default_freemarker">
         <param name="templateFile">/user/displayUser.ftl</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="templateFile">/user/userNotFound.ftl</param>
       </result>
     </action>
