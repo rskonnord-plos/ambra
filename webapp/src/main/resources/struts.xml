@@ -830,11 +830,11 @@
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="input">type="default_freemarker">
+      <result name="input" type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error">type="default_freemarker">
+      <result name="error" type="default_freemarker">
         <param name="location">/user/alerts.ftl</param>
         <param name="noCache">true</param>
       </result>
