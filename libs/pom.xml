@@ -19,7 +19,6 @@
     <module>entity-resolver</module>
     <module>conf-helper</module>
     <module>dom-ranges-helper</module>
-    <module>dojo-js</module>
     <module>password-service</module>
   </modules>
 

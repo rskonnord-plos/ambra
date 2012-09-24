@@ -5,8 +5,8 @@
 </#if>
 
 <!--include the headers-->
-<#include "/global/global_header.ftl">
+<#include "/includes/header.ftl">
 <!--include the template-->
 <#include "${templateFile}">
 <!--include the footer-->
-<#include "/global/global_footer.ftl">
+<#include "/includes/footer.ftl">

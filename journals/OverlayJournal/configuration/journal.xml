@@ -68,6 +68,7 @@
             <file>/css/lte_ie7.css</file>
           </css>
           <javascript>
+            <file>/javascript/ambra.js</file>
           </javascript>
         </page>
       </journal>

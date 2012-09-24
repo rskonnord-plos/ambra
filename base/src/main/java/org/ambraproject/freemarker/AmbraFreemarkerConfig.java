@@ -56,7 +56,7 @@ public class AmbraFreemarkerConfig {
   private static int DEFAULT_TEMPLATE_CACHE_STRONG = 350;
   private static int DEFAULT_TEMPLATE_CACHE_SOFT = 100;
 
-  private final boolean dojoDebug;
+  private final boolean debug;
   private Map<String, JournalConfig> journals;
   private Map<String, JournalConfig> journalsByIssn;
   private Configuration freemarkerProperties;
@@ -90,7 +90,7 @@ public class AmbraFreemarkerConfig {
     if (log.isDebugEnabled()) {
       log.debug("Creating FreeMarker configuration");
     }
-    dojoDebug = configuration.getBoolean("struts.devMode");
+    debug = configuration.getBoolean("struts.devMode");
     dirPrefix = configuration.getString("ambra.platform.appContext");
     subdirPrefix = configuration.getString("ambra.platform.resourceSubDir");
     host = configuration.getString("ambra.platform.host");
@@ -415,10 +415,10 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * @return <code>true</code> if the dojo debug flag is on.
+   * @return <code>true</code> if struts is in dev mode
    */
-  public boolean isDojoDebug() {
-    return dojoDebug;
+  public boolean getDebug() {
+    return debug;
   }
 
   /**

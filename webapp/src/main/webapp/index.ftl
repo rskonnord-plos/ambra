@@ -22,3 +22,4 @@
 <div id="content">
 Hello World
 </div>
+<#include "includes/javascript.ftl">

@@ -551,14 +551,6 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>dojo-js</artifactId>
-      <version>${project.version}</version>
-      <type>zip</type>
-      <classifier>js</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>entity-resolver</artifactId>
        <version>${project.version}</version>
       <exclusions>
@@ -611,6 +603,38 @@
     </resources>
     <plugins>
       <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <nosuffix>false</nosuffix>
+          <linebreakpos>5000</linebreakpos>
+          <force>true</force>
+          <excludes>
+            <exclude>template/ambra-theme/**.js</exclude>
+          </excludes>
+
+          <aggregations>
+            <aggregation>
+              <insertNewLine>true</insertNewLine>
+              <removeIncluded>true</removeIncluded>
+              <output>${project.build.directory}/${project.build.finalName}/javascript/ambra.js</output>
+              <includes>
+                <include>**/*.js</include>
+              </includes>
+            </aggregation>
+          </aggregations>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>tomcat-maven-plugin</artifactId>
         <configuration>
@@ -651,32 +675,6 @@
             <version>5.1.12</version>
           </dependency>
         </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.0</version>
-        <executions>
-          <execution>
-            <id>unpack dojo js and css</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>dojo-js</artifactId>
-                  <version>${project.parent.version}</version>
-                  <type>zip</type>
-                  <classifier>js</classifier>
-                  <outputDirectory>${project.basedir}/src/main/webapp</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
 
       <!--Deploy test classes so they can be used by other projects (e.g. admin app)-->

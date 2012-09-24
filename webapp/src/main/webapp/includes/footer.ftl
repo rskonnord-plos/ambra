@@ -41,5 +41,6 @@
     </div>
   </div><!-- end pageftr -->
 </div><!-- page-wrap -->
+<#include "/includes/javascript.ftl">
 </body>
 </html>
