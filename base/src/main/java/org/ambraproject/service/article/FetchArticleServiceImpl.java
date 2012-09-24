@@ -591,12 +591,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
         if (citationNode != null && "journal".equals(getCitationType(citationNode))
             && citedArticleIsValid(citedArticle)) {
           Element extraInfo = doc.createElement("extraCitationInfo");
-
-          // Currently the XSL has some logic that depends on comments in
-          // citations being the last child element.  So if we use appendChild
-          // here, it will break that!
-          // TODO: fix the .xsl
-          citationNode.insertBefore(extraInfo, citationNode.getFirstChild());
+          citationNode.appendChild(extraInfo);
           extraInfo.setAttribute("citedArticleID", Long.toString(citedArticle.getID()));
           String doi = citedArticle.getDoi();
           if (doi != null && !doi.isEmpty()) {
