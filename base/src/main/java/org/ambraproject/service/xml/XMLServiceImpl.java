@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.util.FileUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.topazproject.xml.transform.cache.CachedSource;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -108,6 +109,7 @@ public class XMLServiceImpl implements XMLService {
    * @return Transformed document as a String
    * @throws org.ambraproject.ApplicationException
    */
+  @Override
   public String getTransformedDocument(String description) throws ApplicationException {
     try {
       final DocumentBuilder builder = createDocBuilder();
@@ -130,6 +132,7 @@ public class XMLServiceImpl implements XMLService {
    * @return XML String of transformed document
    * @throws org.ambraproject.ApplicationException
    */
+  @Override
   public String getTransformedDocument(Document doc) throws ApplicationException {
     String transformedString;
     try {
@@ -148,6 +151,7 @@ public class XMLServiceImpl implements XMLService {
     return transformedString;
   }
 
+  @Override
   public byte[] getTransformedByArray(byte[] xml) throws ApplicationException {
     try {
 
@@ -163,6 +167,7 @@ public class XMLServiceImpl implements XMLService {
     }
   }
 
+  @Override
   public InputStream getTransformedInputStream(InputStream xml) throws ApplicationException {
     try {
       final Writer writer = new StringWriter(1000);
@@ -185,6 +190,7 @@ public class XMLServiceImpl implements XMLService {
    * @return string
    * @throws org.ambraproject.ApplicationException
    */
+  @Override
   public String getTransformedDescription(String description) throws ApplicationException {
     String transformedString;
     try {
@@ -211,6 +217,7 @@ public class XMLServiceImpl implements XMLService {
    * @return Document Builder
    * @throws javax.xml.parsers.ParserConfigurationException
    */
+  @Override
   public DocumentBuilder createDocBuilder() throws ParserConfigurationException {
     // Create the builder and parse the file
     final DocumentBuilder builder = factory.newDocumentBuilder();

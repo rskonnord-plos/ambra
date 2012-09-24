@@ -19,18 +19,14 @@
  */
 package org.ambraproject.struts2;
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.ambraproject.Constants;
 import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.service.permission.PermissionsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.ambraproject.Constants;
+
 import java.util.Map;
 
 /**
@@ -43,7 +39,6 @@ public class EnsureRoleInterceptor extends AbstractInterceptor {
   private static final Logger log = LoggerFactory.getLogger(EnsureRoleInterceptor.class);
 
   private PermissionsService permissionsService;
-  private PlatformTransactionManager transactionManager; //TODO: obviate the need for this.  See Transaction Interceptor
 
   public String intercept(final ActionInvocation actionInvocation) throws Exception {
     log.debug("EnsureRoleInterceptor called");
@@ -51,23 +46,14 @@ public class EnsureRoleInterceptor extends AbstractInterceptor {
     Map session = actionInvocation.getInvocationContext().getSession();
     final String authId = (String)session.get(Constants.AUTH_KEY);
 
-    Boolean allowAdminAction = (Boolean) new TransactionTemplate(transactionManager).execute(new TransactionCallback() {
-      @Override
-      public Object doInTransaction(TransactionStatus transactionStatus) {
-        try {
-          permissionsService.checkPermission(Permission.ACCESS_ADMIN, authId);
-          return true;
-        } catch(SecurityException ex) {
-          log.debug("User does not have ACCESS_ADMIN permission");
-          return false;
-        }
-      }
-    });
 
-    if (allowAdminAction)
+    try {
+      permissionsService.checkPermission(Permission.ACCESS_ADMIN, authId);
       return actionInvocation.invoke();
-
-    return Constants.ReturnCode.NOT_SUFFICIENT_ROLE;
+    } catch (SecurityException ex) {
+      log.debug("User does not have ACCESS_ADMIN permission");
+      return Constants.ReturnCode.NOT_SUFFICIENT_ROLE;
+    }
   }
 
   /**
@@ -76,10 +62,5 @@ public class EnsureRoleInterceptor extends AbstractInterceptor {
    */
   public void setPermissionsService(final PermissionsService permissionsService) {
     this.permissionsService = permissionsService;
-  }
-
-  @Required
-  public void setTransactionManager(PlatformTransactionManager transactionManager) {
-    this.transactionManager = transactionManager;
   }
 }

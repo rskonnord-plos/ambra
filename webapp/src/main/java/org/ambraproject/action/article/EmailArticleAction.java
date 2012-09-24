@@ -20,21 +20,23 @@
 package org.ambraproject.action.article;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.service.article.ArticleService;
-import org.ambraproject.service.article.NoSuchArticleIdException;
+import org.ambraproject.action.user.UserActionSupport;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.article.NoSuchArticleIdException;
+import org.ambraproject.service.captcha.CaptchaService;
 import org.ambraproject.service.mailer.AmbraMailer;
 import org.ambraproject.service.xml.XMLService;
-import org.ambraproject.action.user.UserActionSupport;
 import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
+import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 import org.topazproject.ambra.email.impl.FreemarkerTemplateMailer;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,9 +59,14 @@ public class EmailArticleAction extends UserActionSupport {
   private String title;
   private String description;
   private String journalName;
+  private String captchaHTML;
+  private String captchaChallenge;
+  private String captchaResponse;
+
   private AmbraMailer ambraMailer;
   private XMLService secondaryObjectService;
   private ArticleService articleService;
+  private CaptchaService captchaService;
   private static final Logger log = LoggerFactory.getLogger(EmailArticleAction.class);
   private static final int MAX_TO_EMAIL = 5;
 
@@ -68,7 +75,6 @@ public class EmailArticleAction extends UserActionSupport {
    * @return webwork status
    * @throws Exception Exception
    */
-  @Transactional(readOnly = true)
   public String executeRender() throws Exception {
     if (!validatesArticleURI())
       return INPUT;
@@ -78,7 +84,10 @@ public class EmailArticleAction extends UserActionSupport {
       senderName = ambraUser.getDisplayName();
       emailFrom = ambraUser.getEmail();
     }
+
     setArticleTitleAndDesc(articleURI);
+    setNewReCaptcha();
+
     return SUCCESS;
   }
 
@@ -87,7 +96,6 @@ public class EmailArticleAction extends UserActionSupport {
    * @return webwork status
    * @throws Exception Exception
    */
-  @Transactional(readOnly = true)
   public String executeSend() throws Exception {
 
     if (!validates())
@@ -146,7 +154,22 @@ public class EmailArticleAction extends UserActionSupport {
       isValid = false;
     }
 
+    HttpServletRequest request = ServletActionContext.getRequest();
+
+    if (!captchaService.validateCaptcha(request.getRemoteAddr(), captchaChallenge, captchaResponse)) {
+      addFieldError("captcha", "Text verification is incorrect");
+      isValid = false;
+    }
+
+    if(!isValid) {
+      setNewReCaptcha();
+    }
+
     return isValid;
+  }
+
+  private void setNewReCaptcha() {
+    captchaHTML = captchaService.getCaptchaHTML();
   }
 
   /**
@@ -321,6 +344,14 @@ public class EmailArticleAction extends UserActionSupport {
   }
 
   /**
+   * @param captchaService The captchaService to set.
+   */
+  @Required
+  public void setCaptchaService(CaptchaService captchaService) {
+    this.captchaService = captchaService;
+  }
+
+  /**
    * Getter for description.
    * @return Value of description.
    */
@@ -362,5 +393,32 @@ public class EmailArticleAction extends UserActionSupport {
    */
   public int getMaxEmails() {
     return MAX_TO_EMAIL;
+  }
+
+  /**
+   * @return Returns the RecaptchaHTML block
+   */
+  public String getCaptchaHTML() {
+    return captchaHTML;
+  }
+
+  /**
+   * This field is defined in the form that the google recaptcha sends us and
+   * as best as I can tell, can't be changed.
+   *
+   * @param recaptcha_challenge_field
+   */
+  public void setRecaptcha_challenge_field(String recaptcha_challenge_field) {
+    captchaChallenge = recaptcha_challenge_field;
+  }
+
+  /**
+   * This field is defined in the form that the google recaptcha sends us and
+   * as best as I can tell, can't be changed.
+   *
+   * @param recaptcha_challenge_field
+   */
+  public void setRecaptcha_response_field(String recaptcha_response_field) {
+    captchaResponse = recaptcha_response_field;
   }
 }

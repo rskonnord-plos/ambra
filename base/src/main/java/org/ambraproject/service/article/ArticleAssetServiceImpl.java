@@ -105,6 +105,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
    * @throws NoSuchObjectIdException NoSuchObjectIdException
    */
   @Transactional(readOnly = true)
+  @Override
   public ArticleAsset getSuppInfoAsset(final String assetUri, final String authId) throws NoSuchObjectIdException {
     // sanity check parms
     if (assetUri == null)
@@ -151,6 +152,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
    * @throws NoSuchObjectIdException NoSuchObjectIdException
    */
   @Transactional(readOnly = true)
+  @Override
   public ArticleAsset getArticleAsset(final String assetUri, final String representation, final String authId)
       throws NoSuchObjectIdException {
 
@@ -210,6 +212,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
    * @throws NoSuchArticleIdException NoSuchArticleIdException.
    */
   @Transactional(readOnly = true)
+  @Override
   public ArticleAssetWrapper[] listFiguresTables(final String articleDoi, final String authId) throws NoSuchArticleIdException {
     //TODO:
     // Do we have to get the article here to get the assets?  We can't we just get a list of assets
@@ -243,6 +246,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Long getArticleID(ArticleAsset articleAsset) {
     final Long assetID = articleAsset.getID();
     Object result = hibernateTemplate.execute(new HibernateCallback() {
@@ -267,6 +271,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
    * @throws NoSuchArticleIdException
    */
   @Override
+  @Transactional(readOnly = true)
   public InputStream getPowerPointSlide(String assetDoi, String authId) throws NoSuchArticleIdException, NoSuchObjectIdException, ApplicationException, IOException {
     
     long startTime = Calendar.getInstance().getTimeInMillis();

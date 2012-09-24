@@ -26,6 +26,24 @@
 <urlrewrite>
   <rule>
     <note>
+      re-write incoming user profile requests.
+      /user/userId -> /user/showUser.action?userId=userId
+    </note>
+    <from>^(/.+)?/user/(\d+)$</from>
+    <to>$1/user/showUser.action?userId=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound user profile requests.
+      /user/showUser.action.action?userId=userId -> /user/userId
+    </note>
+    <from>^(/.+)?/user/showUser.action\?userId=(\d+)$</from>
+    <to>$1/user/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
       re-write incoming trackbacks URIs.
       /article/doi/trackback -> /trackback.action?doi=doi
     </note>

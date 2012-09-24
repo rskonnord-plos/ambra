@@ -38,6 +38,7 @@ import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 
 import java.net.URISyntaxException;
@@ -246,6 +247,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
    * @throws java.net.URISyntaxException URISyntaxException
    */
   @Override
+  @Transactional(readOnly = true)
   public List<ArticleInfo> getIssueArticles(final FeedSearchParameters searchParameters, String journal, String authId) throws
       URISyntaxException, ApplicationException {
     List<ArticleInfo> articleList = new ArrayList<ArticleInfo>();
@@ -280,6 +282,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
   @Override
+  @Transactional(readOnly = true)
   public List<AnnotationView> getAnnotations(final AnnotationFeedSearchParameters searchParams)
       throws ParseException, URISyntaxException {
     return annotationService.getAnnotations(
@@ -296,6 +299,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
    * @throws ApplicationException Converts all exceptions to ApplicationException
    */
   @Override
+  @Transactional(readOnly = true)
   public List<LinkbackView> getTrackbacks(final AnnotationFeedSearchParameters searchParams)
       throws ParseException, URISyntaxException {
     return trackbackService.getTrackbacks(

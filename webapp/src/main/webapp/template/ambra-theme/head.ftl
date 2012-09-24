@@ -18,5 +18,5 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<link rel="stylesheet" href="<@s.url value='/struts/xhtml/styles.css' encode='false' includeParams='none'/>" type="text/css"/>
+<@versionedCSS file="<@s.url value='/struts/xhtml/styles.css' encode='false' includeParams='none'/>" />
 <#include "/${parameters.templateDir}/simple/head.ftl" />

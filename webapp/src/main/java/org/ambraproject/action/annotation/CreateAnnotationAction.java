@@ -22,15 +22,14 @@ package org.ambraproject.action.annotation;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.Constants;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
-import org.ambraproject.service.annotation.Context;
 import org.ambraproject.service.annotation.AnnotationService;
+import org.ambraproject.service.annotation.Context;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.util.ProfanityCheckingService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -64,7 +63,6 @@ public class CreateAnnotationAction extends BaseSessionAwareActionSupport {
    * Also does some profanity check for commentTitle and comment before creating the annotation.
    */
   @Override
-  @Transactional(rollbackFor = {Throwable.class})
   public String execute() throws Exception {
     if (isInvalid())
       return INPUT;

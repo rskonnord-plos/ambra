@@ -24,7 +24,6 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Simple class to display a user based on an id
@@ -37,9 +36,6 @@ public class DisplayUserAction extends UserProfileAction {
 
   private Long userId;
 
-  //TODO: Fetch users by id and not uri.  We need this b/c annotations still have a reference to the account uri
-  private String userAccountUri;
-
   //We don't need this since we're overriding execute
   @Override
   protected String getUserAuthId() {
@@ -51,7 +47,6 @@ public class DisplayUserAction extends UserProfileAction {
    * 
    * @return webwork status string
    */
-  @Transactional(readOnly = true)
   @Override
   public String execute() throws Exception {
     UserProfile user;
@@ -59,8 +54,11 @@ public class DisplayUserAction extends UserProfileAction {
     if (userId != null) {
       user = userService.getUser(userId);
     } else {
-      user = userService.getUserByAccountUri(userAccountUri);
-      
+      return INPUT;
+    }
+
+    if(user == null) {
+      return INPUT;
     }
 
     final String authId = this.getAuthId();
@@ -89,9 +87,5 @@ public class DisplayUserAction extends UserProfileAction {
    */
   public void setUserId(Long userId) {
     this.userId = userId;
-  }
-
-  public void setUserAccountUri(String userAccountUri) {
-    this.userAccountUri = userAccountUri;
   }
 }

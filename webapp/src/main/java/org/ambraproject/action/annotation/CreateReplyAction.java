@@ -27,7 +27,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
 
   private static final Logger log = LoggerFactory.getLogger(CreateReplyAction.class);
 
-  @Transactional(rollbackFor = { Throwable.class })
   @Override
   public String execute() throws Exception {
     if (isInvalid())

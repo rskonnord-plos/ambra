@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -142,6 +143,8 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     return articles;
   }
 
+  @Override
+  @Transactional(readOnly = true)
   public String findDoi(String title, String author) throws Exception {
     List<CrossRefArticle> doiResults = findArticles(title, author);
     if (!doiResults.isEmpty()) {

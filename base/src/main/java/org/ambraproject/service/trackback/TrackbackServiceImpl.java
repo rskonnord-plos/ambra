@@ -156,6 +156,7 @@ public class TrackbackServiceImpl extends LinkbackServiceImpl implements Trackba
 
   @Override
   @SuppressWarnings("unchecked")
+  @Transactional
   public Long createTrackback(String articleDoi, String url, String title, String blogName, String excerpt) throws DuplicateTrackbackException {
     if (articleDoi == null) {
       throw new IllegalArgumentException("No DOI specified");
@@ -195,6 +196,7 @@ public class TrackbackServiceImpl extends LinkbackServiceImpl implements Trackba
   }
 
   @Override
+  @Transactional(readOnly = true)
   public boolean blogLinksToArticle(String blogUrl, String doi) throws IOException {
     final String articleDoi = UriUtil.decodeUtf8(doi);
     //look up the url for the journal in which the article was published
@@ -223,11 +225,13 @@ public class TrackbackServiceImpl extends LinkbackServiceImpl implements Trackba
 
   @Override
   @SuppressWarnings("unchecked")
+  @Transactional(readOnly = true)
   public List<LinkbackView> getTrackbacksForArticle(String articleDoi) {
     return getLinkbacksForArticle(Trackback.class, articleDoi);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public int countTrackbacksForArticle(String articleDoi) {
     return countLinkbacksForArticle(Trackback.class, articleDoi);
   }

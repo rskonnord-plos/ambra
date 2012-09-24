@@ -24,17 +24,15 @@ import com.opensymphony.xwork2.ModelDriven;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.feed.AnnotationFeedSearchParameters;
 import org.ambraproject.service.feed.FeedSearchParameters;
-import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.service.feed.FeedService;
+import org.ambraproject.service.feed.FeedService.FEED_TYPES;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.LinkbackView;
+import org.ambraproject.views.article.ArticleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
-import org.ambraproject.action.BaseActionSupport;
-import org.ambraproject.service.feed.FeedService;
-import org.ambraproject.service.feed.FeedService.FEED_TYPES;
 
 import java.util.List;
 
@@ -109,7 +107,6 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
    *
    * @throws Exception Exception
    */
-  @Transactional(readOnly = true)
   public String execute() throws Exception {
     FEED_TYPES t = searchParams.feedType();
 

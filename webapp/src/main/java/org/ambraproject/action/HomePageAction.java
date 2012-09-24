@@ -20,17 +20,25 @@
 
 package org.ambraproject.action;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.views.BrowseResult;
 import org.ambraproject.views.SearchHit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.SortedMap;
 
 /**
  * @author stevec
@@ -193,7 +201,6 @@ public class HomePageAction extends BaseActionSupport {
    * This execute method always returns SUCCESS
    */
   @Override
-  @Transactional(readOnly = true)
   public String execute() {
     categoryInfos = browseService.getSubjectsForJournal(this.getCurrentJournal());
 

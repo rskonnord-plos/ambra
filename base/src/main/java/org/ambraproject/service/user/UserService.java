@@ -57,13 +57,6 @@ public interface UserService {
   public UserProfile getUserByAuthId(String authId);
 
   /**
-   * Get the user with the specified account uri
-   * @param accountUri
-   * @return
-   */
-  public UserProfile getUserByAccountUri(String accountUri);
-
-  /**
    * update the email stored for the given user
    *
    * @param userId the id of the {@link org.ambraproject.models.UserProfile} object to update

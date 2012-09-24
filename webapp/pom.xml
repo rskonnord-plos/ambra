@@ -63,6 +63,12 @@
     </dependency>
 
     <dependency>
+      <groupId>net.tanesha.recaptcha4j</groupId>
+      <artifactId>recaptcha4j</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+
+    <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
       <version>1.4</version>

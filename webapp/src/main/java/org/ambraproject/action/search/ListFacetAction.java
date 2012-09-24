@@ -22,7 +22,6 @@ package org.ambraproject.action.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A simple action to retrieve and display facet information
@@ -38,7 +37,6 @@ public class ListFacetAction extends SearchAction {
    * For the current set of parameters, just retrieve the facet data
    * @return ERROR or SUCCESS
    */
-  @Transactional(readOnly = true)
   public String listFacet() {
     //We only allow a very small set of options and all these options should be set by the system.  '
     //hence, we have unforgiving input validation

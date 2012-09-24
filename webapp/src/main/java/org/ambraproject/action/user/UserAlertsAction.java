@@ -23,7 +23,7 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.user.UserAlert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.ServletException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,7 +57,6 @@ public abstract class UserAlertsAction extends UserActionSupport {
    * @return webwork status
    * @throws Exception Exception
    */
-  @Transactional(rollbackFor = {Throwable.class})
   public String saveAlerts() throws Exception {
     final String authId = getUserAuthId();
     if (authId == null) {
@@ -73,7 +72,6 @@ public abstract class UserAlertsAction extends UserActionSupport {
    * @return webwork status
    * @throws Exception Exception
    */
-  @Transactional(readOnly = true)
   public String retrieveAlerts() throws Exception {
     final String authId = getUserAuthId();
     if (authId == null) {

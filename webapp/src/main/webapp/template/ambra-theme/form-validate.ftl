@@ -19,7 +19,7 @@
   limitations under the License.
 -->
 <#if parameters.validate?default(false) == true>
-	<script src="${base}/struts/xhtml/validation.js"></script>
+  <@versionedJS file="${base}/struts/xhtml/validation.js" />
 	<#if parameters.onsubmit?exists>
 		${tag.addParameter('onsubmit', "${parameters.onsubmit}; customOnsubmit(); return validateForm_${parameters.id}();")}
 	<#else>

@@ -30,29 +30,20 @@ public abstract class BaseInterceptorTest extends BaseWebTest {
   protected MockActionInvocation actionInvocation;
 
   @Override
-  public void setDefaultRequest() {
-    //do nothing (we don't want to call setupUserContext twice)
+  protected BaseActionSupport getAction() {
+    return null;  //we don't have an action to test
   }
 
-  @BeforeMethod
-  public void setupActionInvocation() {
-    setupUserContext();
+  /**
+   * Setup an @{link MockActionInvocation}
+   */
+  @Override
+  protected void afterContextSetup() {
     actionInvocation = new MockActionInvocation() {
       public String invoke() throws Exception {
         return Action.SUCCESS;
       }
     };
-    actionInvocation.setInvocationContext(ActionContext.getContext());
-  }
-
-  @Override
-  protected BaseActionSupport getAction() {
-    return null;  //we don't have an action to test
-  }
-
-  @Override
-  protected void setupAdminContext() {
-    super.setupAdminContext();
     actionInvocation.setInvocationContext(ActionContext.getContext());
   }
 

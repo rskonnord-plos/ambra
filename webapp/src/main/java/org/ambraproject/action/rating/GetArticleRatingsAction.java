@@ -21,12 +21,12 @@ package org.ambraproject.action.rating;
 
 import org.ambraproject.models.Article;
 import org.ambraproject.models.RatingSummary;
-import org.ambraproject.views.RatingView;
 import org.ambraproject.views.RatingAverage;
 import org.ambraproject.views.RatingSummaryView;
+import org.ambraproject.views.RatingView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -55,7 +55,6 @@ public class GetArticleRatingsAction extends AbstractRatingAction {
    * @return WebWork action status
    */
   @Override
-  @Transactional(readOnly = true)
   @SuppressWarnings("unchecked")
   public String execute() throws Exception {
     final Article article = articleService.getArticle(articleURI, getAuthId());

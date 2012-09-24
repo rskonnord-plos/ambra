@@ -21,12 +21,11 @@
 
 package org.ambraproject.action;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.ambraproject.service.article.MostViewedArticleService;
 import org.ambraproject.service.search.SolrException;
 import org.ambraproject.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -48,7 +47,6 @@ public class MostViewedAction extends BaseActionSupport {
    * This execute method always returns SUCCESS
    */
   @Override
-  @Transactional(readOnly = true)
   public String execute() {
     if (mostViewedEnabled()) {
       initMostViewed();

@@ -149,7 +149,7 @@ public class ConfigurationStore {
   }
 
   /**
-   * Overrides all existing configuration with the given conifguration object
+   * Overrides all existing configuration with the given configuration object
    * (useful for JUnit testing!)
    * @param newConfig the new configuration to test
    */

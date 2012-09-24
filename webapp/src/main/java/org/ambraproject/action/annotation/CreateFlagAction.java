@@ -20,14 +20,13 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.Constants;
+import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.models.FlagReasonCode;
+import org.ambraproject.service.annotation.AnnotationService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.action.BaseSessionAwareActionSupport;
-import org.ambraproject.service.annotation.AnnotationService;
 
 /**
  * Create a flag for a given annotation or reply
@@ -42,7 +41,6 @@ public class CreateFlagAction extends BaseSessionAwareActionSupport {
 
   private static final Logger log = LoggerFactory.getLogger(CreateFlagAction.class);
 
-  @Transactional(rollbackFor = { Throwable.class })
   @Override
   public String execute() throws Exception {
     if (isInvalid())
