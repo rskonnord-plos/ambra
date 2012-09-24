@@ -55,7 +55,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class VersionedFileDirective implements TemplateDirectiveModel {
 
-  private static final Logger log = LoggerFactory.getLogger(VersionedFileDirective.class);
+  protected static final Logger log = LoggerFactory.getLogger(VersionedFileDirective.class);
 
   /**
    * Frequency with which the fingerprintCache is cleared, in milliseconds.  mbaehr said that 15 minutes is a
