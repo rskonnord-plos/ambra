@@ -1,12 +1,8 @@
 <#list freemarker_config.getJavaScript(templateFile, journalContext) as jsFile>
-  <#if jsFile?contains("ambra.js")>
-    <#if freemarker_config.debug>
-      <@versionedJS file="${freemarker_config.context}/javascript/jquery-1.8.1.js" />
-      <@versionedJS file="${freemarker_config.context}/javascript/global.js" />
-    <#else>
-      <@versionedJS file="${freemarker_config.context}/javascript/ambra.js" />
-    </#if>
+  <#if freemarker_config.debug>
+    <#assign jsFileName = "${jsFile}" />
   <#else>
-    <@versionedJS file="${jsFile}" />
+    <#assign jsFileName = "${jsFile?replace('.js','-min.js')}" />
   </#if>
+  <@versionedJS file="${jsFileName}" />
 </#list>
