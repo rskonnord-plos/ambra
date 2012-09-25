@@ -8,6 +8,7 @@
   <#else>
     <#assign cssFileName = "${cssFile?replace('.css','-min.css')}" />
   </#if>
+
   <#if cssFile?contains("_ie7")>
     <!--[if lte IE 7]>
     <@versionedCSS file="${cssFileName}" />
@@ -15,4 +16,5 @@
   <#else>
     <@versionedCSS file="${cssFileName}" />
   </#if>
+
 </#list>
