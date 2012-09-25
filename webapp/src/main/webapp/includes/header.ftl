@@ -1,29 +1,28 @@
 <!--This is the header file included in main.ftl-->
-<#include "/includes/global_variables.ftl">
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <#include "/includes/global_variables.ftl">
     <title>${pgTitle}</title>
 
     <#include "/includes/css.ftl">
 
+    <!--chartbeat -->
+    <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
     <script>document.documentElement.className += ' js';</script>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9" />
+    <meta name="description" content="${freemarker_config.getMetaDescription(journalContext)}" />
+    <meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}" />
+
+    <#include "/includes/article_variables.ftl">
 
     <link rel="shortcut icon" href="${freemarker_config.context}/images/favicon.ico" type="image/x-icon" />
-
-    <!--chartbeat -->
-    <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
-
     <link rel="home" title="home" href="${homeURL}" />
     <link rel="alternate" type="application/rss+xml"
           title="${freemarker_config.getArticleTitlePrefix(journalContext)} New Articles"
           href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}/article/feed" />
-
-    <meta name="description" content="${freemarker_config.getMetaDescription(journalContext)}" />
-    <meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}" />
   </head>
   <body>
     <#import "global_body.ftl" as global>

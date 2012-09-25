@@ -9,5 +9,3 @@
 <@s.url id="homeURL" includeParams="none" includeContext="true" namespace="/" action="home"/>
 
 <#assign rdfPgURL = pgURL?replace("&amp;", "&")>
-
-<#include "/includes/article_variables.ftl">
