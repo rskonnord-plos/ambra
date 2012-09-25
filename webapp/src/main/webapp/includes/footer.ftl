@@ -1,4 +1,4 @@
-  <!--This is the global footer for journal home pages-->
+  <#--This is the global footer for journal home pages-->
   <div id="pageftr">
     <div class="ftr-cols cf">
       <div class="col">
@@ -39,8 +39,8 @@
         </div>
       </div>
     </div>
-  </div><!-- end pageftr -->
-</div><!-- page-wrap -->
+  </div><#-- end pageftr -->
+</div><#-- page-wrap -->
 <#include "/includes/javascript.ftl">
 </body>
 </html>

@@ -25,5 +25,5 @@
     <meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}" />
   </head>
   <body>
-  <!--body and html tags gets closed in global_footer.ftl-->
+  <#--body and html tags gets closed in global_footer.ftl-->
     <div id="page-wrap">
