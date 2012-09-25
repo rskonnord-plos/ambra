@@ -1,6 +1,3 @@
-<!--chartbeat -->
-<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
-
 <#assign pgTitleOrig = freemarker_config.getTitle(templateFile, journalContext)>
 <#assign pgTitle = pgTitleOrig>
 
@@ -8,38 +5,25 @@
   <#assign pgTitle = freemarker_config.getArticleTitlePrefix(journalContext) + " " + articleInfoX.unformattedTitle>
 </#if>
 
-<title>${pgTitle}</title>
-
 <@s.url id="pgURL" includeParams="get" includeContext="true" encode="false"/>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9" />
-
-<link rel="shortcut icon" href="${freemarker_config.context}/images/favicon.ico" type="image/x-icon" />
-
 <@s.url id="homeURL" includeParams="none" includeContext="true" namespace="/" action="home"/>
-
-<link rel="home" title="home" href="${homeURL}" />
-<link rel="alternate" type="application/rss+xml"
-  title="${freemarker_config.getArticleTitlePrefix(journalContext)} New Articles"
-  href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}/article/feed" />
 
 <#if pgURL?contains('fetchArticle.action') && articleInfoX??>
   <#--
     Do not mess with the whitespace in the following tag!
     It is specified by http://www.hixie.ch/specs/pingback/pingback-1.0#TOC2.2
     There should be exactly one space before the closing slash. If an auto-formatter ate it, please put it back.
+    TODO: Move to article pages!
     -->
   <link rel="pingback" href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}/pingback" />
 </#if>
 
-<!--[if IE]><@versionedCSS file="../css/ie-all.css" /><![endif]-->
-<meta name="description" content="${freemarker_config.getMetaDescription(journalContext)}" />
-<meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}" />
-
 <#assign rdfPgURL = pgURL?replace("&amp;", "&")>
 
-<#-- When the current page is displaying article data, add this extra info for Google Scholar -->
+<#--
+  When the current page is displaying article data, add this extra info for Google Scholar
+  TODO: Move to article pages!
+-->
 <#if articleInfoX??>
   <meta name="citation_publisher" content="${articleInfoX.publisher}" />
   <meta name="citation_doi" content="${articleInfoX.doi?replace('info:doi/','')}" />
