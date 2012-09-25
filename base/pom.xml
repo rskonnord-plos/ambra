@@ -105,9 +105,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.mysema.rdf</groupId>
-      <artifactId>rdfbean-guice</artifactId>
-      <version>0.7.8</version>
+      <groupId>net.sourceforge.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
     </dependency>
 
     <dependency>
