@@ -28,6 +28,10 @@ public class VersionedJSDirective extends VersionedFileDirective {
 
   @Override
   public String getLink(String filename, String fingerprint, Map params) throws TemplateException {
-    return String.format("<script type=\"text/javascript\" src=\"%s?v=%s\"></script>\n", filename, fingerprint);
+    if(fingerprint != null) {
+      filename = filename.concat("?v=").concat(fingerprint);
+    }
+
+    return String.format("<script type=\"text/javascript\" src=\"%s\"></script>\n", filename);
   }
 }

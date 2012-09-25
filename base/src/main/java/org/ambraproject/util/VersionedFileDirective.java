@@ -149,11 +149,13 @@ public abstract class VersionedFileDirective implements TemplateDirectiveModel {
       throw new TemplateModelException(se);
     }
 
-    // There are some style and script tags in the codebase that refer to non-existent files.  Just do nothing
-    // in these cases.
+    //Sometimes we link to CSS that is external to our site.  If we can't find the file locally
+    //Just return the file path unmodified
     File test = new File(path);
     if (test.exists()) {
       environment.getOut().write(getLink(filename, getFingerprint(path), params));
+    } else {
+      environment.getOut().write(getLink(filename, null, params));
     }
   }
 

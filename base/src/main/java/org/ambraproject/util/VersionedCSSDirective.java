@@ -34,7 +34,11 @@ public class VersionedCSSDirective extends VersionedFileDirective {
     if (mediaParam != null) {
       media = "media=\"" + mediaParam.toString() + "\"";
     }
-    return String.format("<link rel=\"stylesheet\" type=\"text/css\" %s href=\"%s?v=%s\" />\n", media, filename,
-        fingerprint);
+
+    if(fingerprint != null) {
+      filename = filename.concat("?v=").concat(fingerprint);
+    }
+
+    return String.format("<link rel=\"stylesheet\" type=\"text/css\" %s href=\"%s\" />\n", media, filename);
   }
 }
