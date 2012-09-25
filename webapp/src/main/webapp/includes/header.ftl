@@ -1,3 +1,4 @@
+<!--This is the header file included in main.ftl-->
 <#include "/includes/global_variables.ftl">
 <!DOCTYPE html>
 <html lang="en">
@@ -25,5 +26,21 @@
     <meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}" />
   </head>
   <body>
-  <#--body and html tags gets closed in global_footer.ftl-->
+    <#import "global_body.ftl" as global>
     <div id="page-wrap">
+      <div id="topbanner" class="cf">
+        <#include "/includes/macro_banner.ftl">
+        <#include "/includes/topbanner.ftl">
+      </div>
+
+      <div id="pagehdr-wrap">
+        <div id="pagehdr">
+
+          <div id="user" class="nav">
+            <ul>
+              <li><a href="TEST">plos.org</a></li>
+              <@s.url id="loginURL" includeParams="none" namespace="/user/secure" action="secureRedirect" goTo="${global.thisPage}"/>
+              <li class="btn-style"><a href="${freemarker_config.context}/user/secure/secureRedirect.action?goTo=${global.thisPage}">sign in</a></li>
+            </ul>
+          </div>
+    <#--body and html tags gets closed in global_footer.ftl-->

@@ -1,9 +1,10 @@
-  <#--This is the global footer for journal home pages-->
+
+  <!--This is the global footer for journals-->
   <div id="pageftr">
     <div class="ftr-cols cf">
       <div class="col">
         <div class="logo">
-          <img src="images/logo.plos.ftr.gif" width="115" height="43" alt="PLOS">
+          <img src="/images/logo.plos.ftr.gif" width="115" height="43" alt="PLOS">
         </div>
       </div>
       <div class="col">
@@ -28,7 +29,8 @@
         </div>
       </div>
       <div class="col">
-        <div class="copy"><img src="images/icon.cc.16.png" width="16" height="16" alt="Creative Commons"> All site content, except where otherwise noted, is licensed under a <a href="TEST">Creative Commons Attribution License</a>.</div>
+        <div class="copy"><img src="/images/icon.cc.16.png" width="16" height="16" alt="Creative Commons"> All site
+          content, except where otherwise noted, is licensed under a <a href="TEST">Creative Commons Attribution License</a>.</div>
         <div class="nav">
           <ul>
             <li><a href="TEST">Privacy Policy</a></li>
