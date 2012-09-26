@@ -1,31 +1,7 @@
 <#include "/includes/javascript.ftl">
-
-<div id="db">
-  <form name="searchForm" action="/search/simpleSearch.action" method="get">
-    <input type="hidden" name="from" value="globalSimpleSearch"/>
-    <input type="hidden" name="filterJournals" value="PLoSONE">
-    <fieldset>
-      <legend>Search</legend>
-      <label for="search">Search</label>
-      <div class="wrap">
-        <input id="search" type="text" name="query" placeholder="Search">
-        <input type="image" alt="SEARCH" src="/images/icon.search.gif">
-      </div>
-    </fieldset>
-  </form>
-  <a id="advSearch" href="TEST">advanced search</a>
-</div>
-
-<div id="nav-main" class="nav">
-  <ul>
-    <li class="active"><a href="TEST">Article</a></li>
-    <li><a href="TEST">For Authors</a></li>
-    <li><a href="TEST">About Us</a></li>
-  </ul>
-</div>
-
-</div><!-- pagehdr-->
-</div><!-- pagehdr-wrap -->
+<#include "article_common.ftl">
+<#import "/article/article_variables.ftl" as article>
+<#import "/includes/global_body.ftl" as global>
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
@@ -43,26 +19,17 @@
         </div>
       </div>
       <div class="header" id="hdr-article">
-        <h1>Psychoactive Pharmaceuticals Induce Fish Gene Expression Profiles Associated with Human Idiopathic Autism</h1>
+        <h1 xpathLocation="noSelect" property="dc:title" datatype="" rel="dc:type" href="http://purl.org/dc/dcmitype/Text"><@articleFormat>${article.docTitle}</@articleFormat></h1>
         <p class="authors">
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">Michael A. Thomas,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">John Smith,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last3,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last4,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last5,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last6,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last7,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last8,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last9,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last10,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last11,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last12,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last13,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last14,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last15,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last16,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last17,</span></span>
-          <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">First M. Last18</span></span>
+          <#if authorExtras?? >
+            <#list authorExtras as author>
+              <#if (author_has_next)>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName},</span></span>
+              <#else>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}</span></span>
+              </#if>
+            </#list>
+          </#if>
         </p>
       </div>
       <div class="main cf">
@@ -74,6 +41,7 @@
             <li><a href="TEST">Behind the Research</a></li>
             <li><a href="TEST">Comments &amp; Letters</a></li>
             <li><a href="TEST">In the news</a></li>
+
             <li><a href="TEST">Related Content</a></li>
           </ul>
         </div>
