@@ -1,5 +1,6 @@
-Abouth the authors:
+<#-- TODO:FORMAT TEMPLATE ONCE WE GET CODE DROP -->
 
+About the authors:
 <ul>
   <#list authorExtras as author>
     <@s.url id="searchURL" includeParams="none"
