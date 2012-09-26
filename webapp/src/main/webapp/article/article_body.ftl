@@ -1,8 +1,4 @@
-<#include "../includes/javascript.ftl">
-<!--TODO remove plosone specific image-->
-<div class="logo">
-  <a href="TEST"><img src="/images/logo.plos-1.191.png" width="191" height="41" alt="PLOS One"></a>
-</div>
+<#include "/includes/javascript.ftl">
 
 <div id="db">
   <form name="searchForm" action="/search/simpleSearch.action" method="get">
@@ -78,7 +74,6 @@
             <li><a href="TEST">Behind the Research</a></li>
             <li><a href="TEST">Comments &amp; Letters</a></li>
             <li><a href="TEST">In the news</a></li>
-            <li><a href="TEST">Metrics</a></li>
             <li><a href="TEST">Related Content</a></li>
           </ul>
         </div>
