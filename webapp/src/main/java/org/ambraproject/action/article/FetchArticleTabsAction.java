@@ -379,7 +379,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       }
     }
 
-    //TODO: Refactor this to not be spaghetti
+    //TODO: Refactor this to not be spaghetti, all these properties should be made
+    //to be part of articleInfo.  Rename articleInfo to articleView and populate articleView
+    //In the service tier in whatever way is appropriate
     Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
     authorExtras = this.fetchArticleService.getAuthorAffiliations(doc);
     correspondingAuthor = this.fetchArticleService.getCorrespondingAuthor(doc);
