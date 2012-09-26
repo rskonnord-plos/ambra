@@ -335,6 +335,54 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
+   * @inheritDoc
+   */
+  public String getCorrespondingAuthor(Document doc)
+  {
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+
+    try {
+      XPathExpression xpr = xpath.compile("//corresp/email");
+      NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
+
+      if(nodeList.getLength() > 0) {
+        //TODO: Test this code across many articles
+        return nodeList.item(0).getFirstChild().getTextContent();
+      }
+
+    } catch (XPathExpressionException ex) {
+      log.error("Error occurred while gathering the author correspondence.", ex);
+    }
+
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public String getAuthorContributions(Document doc)
+  {
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+
+    try {
+      XPathExpression xpr = xpath.compile("//author-notes/fn[@fn-type='con']");
+      NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
+
+      if(nodeList.getLength() > 0) {
+        //TODO: Test this code across many articles
+        return nodeList.item(0).getTextContent();
+      }
+
+    } catch (XPathExpressionException ex) {
+      log.error("Error occurred while gathering the author correspondence.", ex);
+    }
+
+    return null;
+  }
+
+  /**
    * Returns a list of ref nodes from the ref-list of the DOM.
    *
    * @param doc DOM representation of the XML

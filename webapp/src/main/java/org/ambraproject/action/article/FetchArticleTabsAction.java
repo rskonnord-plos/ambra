@@ -79,6 +79,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
+  private String correspondingAuthor = "";
+  private String authorContributions = "";
   private int pageCount = 0;
 
   private int totalNumAnnotations = 0;
@@ -242,6 +244,27 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   }
 
   /**
+   * Fetches common data for the authors tab
+   *
+   * @return "success" on succes, "error" on error
+   */
+  public String fetchArticleAuthors() {
+    try {
+      setCommonData();
+
+    } catch (NoSuchArticleIdException e) {
+      messages.add("No article found for id: " + articleURI);
+      log.info("Could not find article: " + articleURI, e);
+      return ERROR;
+    } catch (Exception e) {
+      messages.add(e.getMessage());
+      log.error("Error retrieving article: " + articleURI, e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
    * Fetches common data and the trackback list.
    *
    * @return "success" on succes, "error" on error
@@ -356,8 +379,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       }
     }
 
+    //TODO: Refactor this to not be spaghetti
     Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
     authorExtras = this.fetchArticleService.getAuthorAffiliations(doc);
+    correspondingAuthor = this.fetchArticleService.getCorrespondingAuthor(doc);
+    authorContributions = this.fetchArticleService.getAuthorContributions(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
     articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
@@ -578,6 +604,22 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     }
 
     return sb.toString();
+  }
+
+  /**
+   * Get the corresponding author
+   * @return
+   */
+  public String getCorrespondingAuthor() {
+    return this.correspondingAuthor;
+  }
+
+  /**
+   * Get the author contributions
+   * @return
+   */
+  public String getAuthorContributions() {
+    return this.authorContributions;
   }
 
   /**

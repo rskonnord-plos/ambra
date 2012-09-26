@@ -80,6 +80,24 @@
 
   <rule>
     <note>
+      re-write incoming article author URIs.
+      /article/authors/doi -> /article/fetchArticleAuthors.action?articleURI=doi
+    </note>
+    <from>^(/.+)?/article/authors/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleAuthors.action?articleURI=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound Article author URIs.
+      /article/fetchArticleAuthors.action?articleURI=doi -> /article/authors/doi
+    </note>
+    <from>^(/.+)?/article/fetchArticleAuthors.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <to>$1/article/authors/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
       re-write incoming related Article URIs.
       /article/related/doi -> /article/fetchRelatedArticle.action?articleURI=doi
     </note>

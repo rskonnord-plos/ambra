@@ -56,6 +56,24 @@ public interface FetchArticleService extends HibernateService {
   public ArrayList<AuthorExtra> getAuthorAffiliations(Document doc);
 
   /**
+   * Get the corresponding Author's email
+   *
+   * @param doc
+   *
+   * @return an email address
+   */
+  public String getCorrespondingAuthor(Document doc);
+
+  /**
+   * Get the author contributions
+   *
+   * @param doc
+   *
+   * @return the author contributions
+   */
+  public String getAuthorContributions(Document doc);
+
+  /**
    * Get references for a given article
    * @param doc article xml
    * @return references

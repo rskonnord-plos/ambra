@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 /**
  * Wrapper around ArticleAsset
+ * TODO: Move to views namespace
  */
 public class ArticleAssetWrapper implements Serializable {
 

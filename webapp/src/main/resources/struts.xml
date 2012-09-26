@@ -388,14 +388,21 @@
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
-      <!-- TODO, This could be handled better -->
-      <result name="input" type="default_freemarker">
+    </action>
+
+    <action name="fetchArticleAuthors" class="org.ambraproject.action.article.FetchArticleTabsAction"
+            method="fetchArticleAuthors">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/article_authors.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
 
-    <action name="fetchArticleComments" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleComments">
+    <action name="fetchArticleComments" class="org.ambraproject.action.article.FetchArticleTabsAction"
+            method="fetchArticleComments">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
@@ -405,7 +412,8 @@
       </result>
     </action>
 
-    <action name="fetchArticleCorrections" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCorrections">
+    <action name="fetchArticleCorrections" class="org.ambraproject.action.article.FetchArticleTabsAction"
+            method="fetchArticleCorrections">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_comments.ftl</param>
       </result>
@@ -415,7 +423,8 @@
       </result>
     </action>
 
-    <action name="fetchArticleMetrics" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetrics">
+    <action name="fetchArticleMetrics" class="org.ambraproject.action.article.FetchArticleTabsAction"
+            method="fetchArticleMetrics">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_metrics.ftl</param>
       </result>
@@ -425,7 +434,8 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelated">
+    <action name="fetchRelatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction"
+            method="fetchArticleRelated">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_related.ftl</param>
       </result>
@@ -435,7 +445,8 @@
       </result>
     </action>
 
-    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
+    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction"
+            method="fetchArticleInfo">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_crossref.ftl</param>
       </result>
