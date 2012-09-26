@@ -1,14 +1,11 @@
 //GA TRACKING v2.0 by www.blastam.com - analytics@blastam.com
 // cross-domain/addIgnoreds list should be in here - if it needs to be updated there will be no need to modify beacons
 
-//if we are on domain under UA-338393-1
-
-if (bamGAID == 'UA-338393-1'){
-  var bamGAcrossDomains = ["plosone.org", "plosbiology.org","plosmedicine.org","plosgenetics.org","ploscompbiol.org","plospathogens.org","plosntds.org","ploscollections.org","plosreports.org","ploshubs.org","plos.org"]; // cross domain list
-  var bamGAIgnoredRefs = ["plosone.org", "plosbiology.org","plosmedicine.org","plosgenetics.org","ploscompbiol.org","plospathogens.org","plosntds.org","ploscollections.org","plosreports.org","ploshubs.org","plos.org"];
-} else {
-  var bamGAcrossDomains = [];
-}
+var bamGAID = 'UA-338393-1';
+var bamGAVPV = location.pathname + location.search + location.hash;
+// cross domain list
+var bamGAcrossDomains = ["plosone-josowski.plos.org", "plosone.org", "plosbiology.org","plosmedicine.org","plosgenetics.org","ploscompbiol.org","plospathogens.org","plosntds.org","ploscollections.org","plosreports.org","ploshubs.org","plos.org"];
+var bamGAIgnoredRefs = ["plosone.org", "plosbiology.org","plosmedicine.org","plosgenetics.org","ploscompbiol.org","plospathogens.org","plosntds.org","ploscollections.org","plosreports.org","ploshubs.org","plos.org"];
 
 if (typeof(bamGAID) != 'undefined') {
   var _bamGA = [];
