@@ -15,6 +15,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9" />
     <meta name="description" content="${freemarker_config.getMetaDescription(journalContext)}" />
     <meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}" />
+    <meta name="almHost" content="${freemarker_config.get("almHost")}" />
+    <meta name="solrHost" content="${freemarker_config.get("solrHost")}" />
+    <meta name="pubGetHost" content="${freemarker_config.pubGetURL}" />
 
     <#include "/includes/article_variables.ftl">
 
