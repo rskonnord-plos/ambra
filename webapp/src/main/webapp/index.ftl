@@ -20,36 +20,6 @@
 -->
 <!-- begin : main content -->
 
-    <div id="nav-main" class="nav txt-lg">
-      <ul>
-        <li><a href="TEST">Article</a></li>
-        <li><a href="TEST">For Authors</a></li>
-        <li><a href="TEST">About Us</a></li>
-      </ul>
-    </div>
-
-  </div><!-- pagehdr-->
-</div><!-- pagehdr-wrap -->
-
-<div id="search-home">
-  <p class='intro'>PLOS ONE is a <strong>peer-reviewed, open-access</strong> resource<br> from the Public Library of Science.</p>
-  <div id="db">
-    <form name="searchForm" action="/search/simpleSearch.action" method="get">
-      <input type="hidden" name="from" value="globalSimpleSearch"/>
-      <input type="hidden" name="filterJournals" value="PLoSONE">
-      <fieldset>
-        <legend>Search</legend>
-        <label for="search">Search</label>
-        <div class="wrap">
-          <input id="search" type="text" name="query" placeholder="Search articles...">
-          <input type="image" alt="SEARCH" src="images/icon.search.gif">
-        </div>
-      </fieldset>
-    </form>
-    <a id="advSearch" class="btn" href="TEST">advanced</a>
-  </div>
-</div><!-- search-home -->
-
 <div id="pagebdy-wrap">
 <div id="pagebdy">
 
