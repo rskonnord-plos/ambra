@@ -9,7 +9,6 @@
     <div id="article-block" class="cf">
       <div class="article-meta cf">
         <ul>
-          <li class="pick">Editor's Pick</li>
           <li><span class="num">1,278</span> views</li>
           <li><span class="num">12</span> citations</li>
         </ul>
@@ -38,62 +37,24 @@
           <ul>
             <li><span class="active">Article</span></li>
             <li><a href="TEST">Authors</a></li>
-            <li><a href="TEST">Behind the Research</a></li>
             <li><a href="TEST">Comments &amp; Letters</a></li>
-            <li><a href="TEST">In the news</a></li>
-
+            <li><a href="TEST">Metrics</a></li>
             <li><a href="TEST">Related Content</a></li>
+            <li><a href="TEST">Corrections</a></li>
           </ul>
         </div>
 
         <div class="nav-col">
           <div class="nav" id="nav-article-page">
             <ul>
-              <li><a href="TEST">Letters to the Editor (1)</a></li>
               <li><a href="TEST">Reader Comments (3)</a></li>
-              <li><a href="TEST">Supporting Material (2)</a></li>
+              <li><a href="TEST">Corrections (2)</a></li>
             </ul>
 
           </div>
         </div>
         <div class="article">
-
-          <div class="section"><a id="abstract0" name="abstract0" toc="abstract0" title="Abstract"></a>
-            <h2>Abstract</h2>
-            <p>Idiopathic autism, caused by genetic susceptibility interacting with unknown environmental triggers, has increased dramatically in the past 25 years. Identifying environmental triggers has been difficult due to poorly understood pathophysiology and subjective definitions of autism. The use of antidepressants by pregnant women has been associated with autism. These and other unmetabolized psychoactive pharmaceuticals (UPPs) have also been found in drinking water from surface sources, providing another possible exposure route and raising questions about human health consequences. Here, we examined gene expression patterns of fathead minnows treated with a mixture of three psychoactive pharmaceuticals (fluoxetine, venlafaxine &amp; carbamazepine) in dosages intended to be similar to the highest observed conservative estimates of environmental concentrations. We conducted microarray experiments examining brain tissue of fish exposed to individual pharmaceuticals and a mixture of all three. We used gene-class analysis to test for enrichment of gene sets involved with ten human neurological disorders. Only sets associated with idiopathic autism were unambiguously enriched. We found that UPPs induce autism-like gene expression patterns in fish. Our findings suggest a new potential trigger for idiopathic autism in genetically susceptible individuals involving an overlooked source of environmental contamination.</p>
-          </div>
-
-          <div class="articleinfo">
-            <p><strong>Citation: </strong>Thomas MA, Klaper RD (2012) Psychoactive Pharmaceuticals Induce Fish Gene Expression Profiles Associated with Human Idiopathic Autism. PLoS ONE 7(6): e32917 doi:10.1371/journal.pone.0032917</p>
-            <p><strong>Editor: </strong>Efthimios M. C. Skoulakis, Alexander Flemming Biomedical Sciences Research Center, Greece</p>
-            <p><strong>Received:</strong> September 2, 2011; <strong>Accepted:</strong> February 6, 2012; <strong>Published:</strong> June 6, 2012</p>
-            <p><strong>Copyright:</strong> Â© 2012 Thomas, Klaper. This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</p>
-            <p><strong>Funding:</strong> MAT was supported by a PhRMA Foundation Sabbatical Fellowship grant, National Institutes of Health Grant Number P20 RR016454 from the INBRE Program of the National Center for Research Resources, and grant number URC-FY2010-05 from the University Research Committee of Idaho State University. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.</p>
-            <p><strong>Competing interests:</strong> The authors have declared that no competing interests exist.</p>
-            <p><a name="cor1"></a>* E-mail: <a href="mailto:mthomas@isu.edu">mthomas@isu.edu</a></p>
-          </div>
-
-          <div class="section" id="section1"><a id="s1" name="s1" toc="s1" title="Introduction"></a>
-            <h3>Introduction</h3>
-            <p>Autism spectrum disorders (ASD) are characterized by stereotyped behaviors and impaired social skills, typically diagnosed by three years of age <a href="#pone.0032917-Landrigan1">[1]</a>â€“<a href="#pone.0032917-Hughes1">[3]</a>. Idiopathic ASD, caused by genetic susceptibility factors <a href="#pone.0032917-Pinto1">[4]</a>â€“<a href="#pone.0032917-Glessner1">[6]</a> interacting with unknown environmental triggers <a href="#pone.0032917-Hallmayer1">[7]</a>, <a href="#pone.0032917-Johnson1">[8]</a>, has increased dramatically in the past 25 years <a href="#pone.0032917-Rice1">[9]</a>, <a href="#pone.0032917-McDonald1">[10]</a>. Identifying environmental triggers has been difficult due to the poorly understood pathophysiology of ASD and broad, subjective case definitions.</p>
-            <p>In order to serve as such a trigger, a candidate teratogen must have a biologically plausible etiological mechanism, exist in sufficient environmental concentrations, be capable of passing from mother to fetus and across the fetal blood-brain barrier (if one assumes prenatal exposure), and have experienced historical increases in environmental concentration parallel with observed increases in ASD prevalence.</p>
-            <p>Coincident with the observed increase in ASD prevalence is the introduction of modern rationally designed psychoactive pharmaceuticals, beginning with selective serotonin re-uptake inhibitors (SSRIs) in 1987 (initially fluoxetine, FLX; now 9+ versions), and serotoninâ€“norepinephrine reuptake inhibitors (SNRIs) in 1994 (initially venlafaxine, VNX; now 8+ versions). These pharmaceuticals result in an increase in the neurotransmitter serotonin, which is responsible for the regulation of neural activity and other physiological functions <a href="#pone.0032917-Berger1">[11]</a>. The leaky blood brain barrier of the fetus and infants is permeable to many compounds, making this population particularly vulnerable to the effects of serotonin. Maternal exposure to SSRIs result in elevated fetal plasma serotonin levels, which has been associated with autism <a href="#pone.0032917-McNamara1">[12]</a>. In other work, rat pups exposed prenatally to SSRIs exhibited behaviors associated with ASD <a href="#pone.0032917-Simpson1">[13]</a>.</p>
-          </div>
-
-          <div class="section" id="section2"><a id="s2" name="s2" toc="s2" title="Section 2"></a>
-            <h3>Section 2</h3>
-            <p>Autism spectrum disorders (ASD) are characterized by stereotyped behaviors and impaired social skills, typically diagnosed by three years of age <a href="#pone.0032917-Landrigan1">[1]</a>â€“<a href="#pone.0032917-Hughes1">[3]</a>. Idiopathic ASD, caused by genetic susceptibility factors <a href="#pone.0032917-Pinto1">[4]</a>â€“<a href="#pone.0032917-Glessner1">[6]</a> interacting with unknown environmental triggers <a href="#pone.0032917-Hallmayer1">[7]</a>, <a href="#pone.0032917-Johnson1">[8]</a>, has increased dramatically in the past 25 years <a href="#pone.0032917-Rice1">[9]</a>, <a href="#pone.0032917-McDonald1">[10]</a>. Identifying environmental triggers has been difficult due to the poorly understood pathophysiology of ASD and broad, subjective case definitions.</p>
-            <p>In order to serve as such a trigger, a candidate teratogen must have a biologically plausible etiological mechanism, exist in sufficient environmental concentrations, be capable of passing from mother to fetus and across the fetal blood-brain barrier (if one assumes prenatal exposure), and have experienced historical increases in environmental concentration parallel with observed increases in ASD prevalence.</p>
-            <p>Coincident with the observed increase in ASD prevalence is the introduction of modern rationally designed psychoactive pharmaceuticals, beginning with selective serotonin re-uptake inhibitors (SSRIs) in 1987 (initially fluoxetine, FLX; now 9+ versions), and serotoninâ€“norepinephrine reuptake inhibitors (SNRIs) in 1994 (initially venlafaxine, VNX; now 8+ versions). These pharmaceuticals result in an increase in the neurotransmitter serotonin, which is responsible for the regulation of neural activity and other physiological functions <a href="#pone.0032917-Berger1">[11]</a>. The leaky blood brain barrier of the fetus and infants is permeable to many compounds, making this population particularly vulnerable to the effects of serotonin. Maternal exposure to SSRIs result in elevated fetal plasma serotonin levels, which has been associated with autism <a href="#pone.0032917-McNamara1">[12]</a>. In other work, rat pups exposed prenatally to SSRIs exhibited behaviors associated with ASD <a href="#pone.0032917-Simpson1">[13]</a>.</p>
-          </div>
-
-          <div class="section" id="section3"><a id="s3" name="s3" toc="s3" title="Section 3"></a>
-            <h3>Section 3</h3>
-            <p>Autism spectrum disorders (ASD) are characterized by stereotyped behaviors and impaired social skills, typically diagnosed by three years of age <a href="#pone.0032917-Landrigan1">[1]</a>â€“<a href="#pone.0032917-Hughes1">[3]</a>. Idiopathic ASD, caused by genetic susceptibility factors <a href="#pone.0032917-Pinto1">[4]</a>â€“<a href="#pone.0032917-Glessner1">[6]</a> interacting with unknown environmental triggers <a href="#pone.0032917-Hallmayer1">[7]</a>, <a href="#pone.0032917-Johnson1">[8]</a>, has increased dramatically in the past 25 years <a href="#pone.0032917-Rice1">[9]</a>, <a href="#pone.0032917-McDonald1">[10]</a>. Identifying environmental triggers has been difficult due to the poorly understood pathophysiology of ASD and broad, subjective case definitions.</p>
-            <p>In order to serve as such a trigger, a candidate teratogen must have a biologically plausible etiological mechanism, exist in sufficient environmental concentrations, be capable of passing from mother to fetus and across the fetal blood-brain barrier (if one assumes prenatal exposure), and have experienced historical increases in environmental concentration parallel with observed increases in ASD prevalence.</p>
-            <p>Coincident with the observed increase in ASD prevalence is the introduction of modern rationally designed psychoactive pharmaceuticals, beginning with selective serotonin re-uptake inhibitors (SSRIs) in 1987 (initially fluoxetine, FLX; now 9+ versions), and serotoninâ€“norepinephrine reuptake inhibitors (SNRIs) in 1994 (initially venlafaxine, VNX; now 8+ versions). These pharmaceuticals result in an increase in the neurotransmitter serotonin, which is responsible for the regulation of neural activity and other physiological functions <a href="#pone.0032917-Berger1">[11]</a>. The leaky blood brain barrier of the fetus and infants is permeable to many compounds, making this population particularly vulnerable to the effects of serotonin. Maternal exposure to SSRIs result in elevated fetal plasma serotonin levels, which has been associated with autism <a href="#pone.0032917-McNamara1">[12]</a>. In other work, rat pups exposed prenatally to SSRIs exhibited behaviors associated with ASD <a href="#pone.0032917-Simpson1">[13]</a>.</p>
-          </div>
-
+          <@s.property value="transformedArticle" escape="false"/>
         </div>
       </div><!-- main -->
 
