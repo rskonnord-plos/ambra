@@ -39,7 +39,9 @@
   <bean id="ambraConfiguration" factory-bean="configurationStore" factory-method="getConfiguration"/>
 
   <bean id="fetchArticleService" class="org.ambraproject.service.article.FetchArticleServiceImpl">
-    <property name="sessionFactory" ref="hibernateSessionFactory"/>
+    <property name="sessionFactory" ref="hibernateSessionFactory" />
+    <property name="articleTransformService" ref="articleTransformService" />
+    <property name="fileStoreService" ref="fileStoreService" />
     <property name="articleHtmlCache" ref="articleHtmlCache" />
   </bean>
 

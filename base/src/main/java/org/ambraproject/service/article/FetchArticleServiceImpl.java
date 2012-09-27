@@ -24,15 +24,11 @@ package org.ambraproject.service.article;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.filestore.FSIDMapper;
 import org.ambraproject.filestore.FileStoreService;
-import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.CitedArticle;
-import org.ambraproject.service.annotation.AnnotationService;
-import org.ambraproject.service.annotation.Annotator;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.xml.XMLService;
-import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.AuthorExtra;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
@@ -71,39 +67,24 @@ import java.util.Map;
  * Fetch article service.
  */
 public class FetchArticleServiceImpl extends HibernateServiceImpl implements FetchArticleService {
+  private static final Logger log = LoggerFactory.getLogger(FetchArticleServiceImpl.class);
   private static final String ARTICLE_LOCK = "ArticleHtmlCache-Lock-";
 
   private XMLService articleTransformService;
-
-  private static final Logger log = LoggerFactory.getLogger(FetchArticleServiceImpl.class);
-  private AnnotationService annotationService;
   private FileStoreService fileStoreService;
   private Cache articleHtmlCache;
 
   private String getTransformedArticle(final ArticleInfo article)
       throws ApplicationException, NoSuchArticleIdException {
     try {
-//      Document dom = getAnnotatedContentAsDocument(article);
-//
-//      if(log.isDebugEnabled()) {
-//        DOMImplementationLS domImplLS = (DOMImplementationLS) dom
-//          .getImplementation();
-//        LSSerializer serializer = domImplLS.createLSSerializer();
-//        log.debug(serializer.writeToString(dom));
-//      }
+      DataSource content = getArticleXML(article.getDoi());
+      Document doc = articleTransformService.createDocBuilder().parse(content.getInputStream());
 
-      // There are two cases where we need to render content in the HTML that's not in the XML (or that's difficult
-      // to get from the XML): annotations and extra links in the citations.  In these cases, we first load the DOM
-      // representation of the XML, then decorate it with the extra info before the XSLT.
-      Document doc = getAnnotatedContentAsDocument(article);
       doc = addExtraCitationInfo(doc, article.getCitedArticles());
+
       return articleTransformService.getTransformedDocument(doc);
-    } catch (ApplicationException ae) {
-      throw ae;
-    } catch (NoSuchArticleIdException nsae) {
-      throw nsae;
     } catch (Exception e) {
-      throw new ApplicationException (e);
+      throw new ApplicationException(e);
     }
   }
 
@@ -129,36 +110,6 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     return content;
   }
 
-  /**
-   *
-   * @param article- the Article content
-   * @return Article DOM document
-   * @throws java.io.IOException
-   * @throws NoSuchArticleIdException
-   * @throws javax.xml.parsers.ParserConfigurationException
-   * @throws org.xml.sax.SAXException
-   * @throws org.ambraproject.ApplicationException
-   */
-  private Document getAnnotatedContentAsDocument(final ArticleInfo article)
-      throws IOException, NoSuchArticleIdException, ParserConfigurationException, SAXException,
-             ApplicationException {
-    DataSource content;
-
-    try {
-      content = getArticleXML(article.getDoi());
-    } catch (NoSuchArticleIdException ex) {
-      throw new NoSuchArticleIdException(article.getDoi(),
-                                         "(representation=" + articleTransformService.getArticleRep() + ")",
-                                         ex);
-    }
-
-    final AnnotationView[] annotations = annotationService.listAnnotationsNoReplies(
-        article.getId(),
-        EnumSet.of(AnnotationType.MINOR_CORRECTION, AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION, AnnotationType.NOTE),
-        AnnotationService.AnnotationOrder.OLDEST_TO_NEWEST);
-    return applyAnnotationsOnContentAsDocument(content, annotations);
-  }
-
   private DataSource getArticleXML(final String articleDoi)
     throws NoSuchArticleIdException {
     String fsid = FSIDMapper.doiTofsid(articleDoi, "XML");
@@ -174,48 +125,6 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       throw new NoSuchArticleIdException(articleDoi);
 
     return new ByteArrayDataSource(fileStoreService, fsid, (ArticleAsset)assets.get(0));
-  }
-
-  private Document applyAnnotationsOnContentAsDocument(DataSource content,
-                                                       AnnotationView[] annotations)
-          throws ApplicationException
-  {
-    Document doc = null;
-
-    if (log.isDebugEnabled())
-      log.debug("Parsing article xml ...");
-
-    try {
-      doc = articleTransformService.createDocBuilder().parse(content.getInputStream());
-    } catch (Exception e){
-      throw new ApplicationException(e.getMessage(), e);
-    }
-
-    try {
-      if (annotations.length == 0)
-        return doc;
-
-      if (log.isDebugEnabled())
-        log.debug("Applying " + annotations.length + " annotations to article ...");
-
-      return Annotator.annotateAsDocument(doc, annotations);
-    } catch (Exception e){
-      if (log.isErrorEnabled()) {
-        log.error("Could not apply annotations to article: " + content.getName(), e);
-      }
-      throw new ApplicationException("Applying annotations failed for resource:" +
-                                     content.getName(), e);
-    }
-  }
-
-  /**
-   * Setter for annotationService
-   *
-   * @param annotationService annotationService
-   */
-  @Required
-  public void setAnnotationService(final AnnotationService annotationService) {
-    this.annotationService = annotationService;
   }
 
   /**

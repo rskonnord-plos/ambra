@@ -207,7 +207,6 @@
   <bean id="fetchArticleService" class="org.ambraproject.service.article.FetchArticleServiceImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="articleHtmlCache" ref="articleHtmlCache"/>
-    <property name="annotationService" ref="annotationService"/>
     <property name="fileStoreService" ref="fileStoreService"/>
     <property name="articleTransformService" ref="xmlService"/>
   </bean>
