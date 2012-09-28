@@ -1,7 +1,8 @@
-<#include "/includes/javascript.ftl">
-<#include "article_common.ftl">
 <#import "/article/article_variables.ftl" as article>
 <#import "/includes/global_body.ftl" as global>
+
+<#include "article_common.ftl">
+
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">

@@ -1,3 +1,9 @@
+<#import "/article/article_variables.ftl" as article>
+<#import "/includes/global_body.ftl" as global>
+
+<#include "article_common.ftl">
+
+
 <#-- TODO:FORMAT TEMPLATE ONCE WE GET CODE DROP -->
 
 About the authors:
