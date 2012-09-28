@@ -36,7 +36,7 @@ public class VersionedCSSDirective extends VersionedFileDirective {
     }
 
     if(fingerprint != null) {
-      filename = filename.concat("?v=").concat(fingerprint);
+      filename = filename + "?v=" + fingerprint;
     }
 
     return String.format("<link rel=\"stylesheet\" type=\"text/css\" %s href=\"%s\" />\n", media, filename);
