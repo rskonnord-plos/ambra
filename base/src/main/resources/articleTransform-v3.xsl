@@ -83,74 +83,6 @@
       <!-- change context to front/article-meta -->
       <xsl:for-each select="front/article-meta">
         <xsl:apply-templates select="title-group" mode="metadata"/>
-        <!-- author byline -->
-        <p class="authors" xpathLocation="noSelect">
-          <xsl:for-each select="contrib-group/contrib[@contrib-type='author']">
-            <xsl:choose>
-              <xsl:when test="name">
-                <xsl:element name="span">
-                  <xsl:attribute name="rel">dc:creator</xsl:attribute>
-                  <xsl:element name="span">
-                    <xsl:attribute name="class">person</xsl:attribute>
-                    <xsl:attribute name="property">foaf:name</xsl:attribute>
-                    <xsl:attribute name="typeof">foaf:Person</xsl:attribute>
-                    <xsl:apply-templates select="name" mode="metadata"/>
-                  </xsl:element>
-                </xsl:element>
-                <xsl:apply-templates select="name" mode="metadata-inline"/>
-              </xsl:when>
-                <xsl:when test="collab">
-                  <!-- 1/4/12: only create span if previous contrib doesn't contain on-behalf-of -->
-                  <xsl:if test="not(preceding-sibling::contrib[1]/on-behalf-of)">
-                    <xsl:element name="span">
-                      <xsl:attribute name="rel">dc:creator</xsl:attribute>
-                      <xsl:element name="span">
-                        <xsl:attribute name="class">organization</xsl:attribute>
-                        <xsl:attribute name="property">foaf:name</xsl:attribute>
-                        <xsl:attribute name="typeof">foaf:Organization</xsl:attribute>
-                        <xsl:apply-templates select="collab" mode="metadata"/>
-                      </xsl:element>
-                    </xsl:element>
-                  </xsl:if>
-                  <xsl:apply-templates select="xref" mode="metadata-inline"/>
-                </xsl:when>
-            </xsl:choose>
-            <xsl:if test="position() != last()">
-              <xsl:text>, </xsl:text>
-            </xsl:if>
-            <xsl:apply-templates select="*[not(self::name) and not(self::collab) and not(self::xref)
-                 and not(self::email) and not(self::degrees) and not(self::aff)]" mode="metadata"/>
-          </xsl:for-each>
-        </p>
-        <!-- author affiliations -->
-        <p class="affiliations" xpathLocation="noSelect">
-          <xsl:for-each select="aff">
-            <xsl:variable name="rid"><xsl:value-of select="@id"/></xsl:variable>
-            <xsl:if test="../contrib-group/contrib[@contrib-type='author']/xref[@ref-type='aff' and @rid=$rid]">
-              <xsl:element name="a">
-                <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
-                <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
-              </xsl:element>
-              <xsl:if test="label">
-                <xsl:apply-templates select="label"/>
-                <xsl:text> </xsl:text>
-              </xsl:if>
-              <xsl:if test="institution">
-                <xsl:apply-templates select="institution" />
-                <xsl:text>, </xsl:text>
-              </xsl:if>
-              <xsl:apply-templates select="addr-line/node()" />
-              <xsl:if test="following-sibling::aff">
-                <xsl:variable name="nextId">
-                  <xsl:value-of select="following-sibling::aff[1]/@id"/>
-                </xsl:variable>
-                <xsl:if test="../contrib-group/contrib[@contrib-type='author']/xref[@ref-type='aff' and @rid=$nextId]">
-                  <xsl:text>, </xsl:text>
-                </xsl:if>
-              </xsl:if>
-            </xsl:if>
-          </xsl:for-each>
-        </p>
         <!-- abstracts -->
         <xsl:for-each select="abstract[not(@abstract-type) or (@abstract-type !='toc' and @abstract-type != 'teaser'
              and @abstract-type != 'editor' and @abstract-type != 'patient')]">
@@ -884,7 +816,7 @@
     <xsl:template match="abstract/title">
       <xsl:call-template name="newline1"/>
       <h2 xpathLocation="noSelect">
-        <xsl:apply-templates/><xsl:call-template name="topAnchor"/>
+        <xsl:apply-templates/>
       </h2>
       <xsl:call-template name="newline1"/>
     </xsl:template>
@@ -894,7 +826,7 @@
       <!-- only output an h3 if the body/sec/title has content -->
       <xsl:if test="string(.)">
         <h3 xpathLocation="noSelect">
-          <xsl:apply-templates/><xsl:call-template name="topAnchor"/>
+          <xsl:apply-templates/>
         </h3>
       </xsl:if>
     </xsl:template>
@@ -939,7 +871,7 @@
             <xsl:attribute name="toc"><xsl:value-of select="$abs_id"/></xsl:attribute>
             <xsl:attribute name="title">Abstract</xsl:attribute>
           </xsl:element>
-          <h2 xpathLocation="noSelect"><xsl:text>Abstract</xsl:text><xsl:call-template name="topAnchor"/></h2>
+          <h2 xpathLocation="noSelect"><xsl:text>Abstract</xsl:text></h2>
         </xsl:when>
       </xsl:choose>
     </xsl:template>
@@ -1012,13 +944,13 @@
         </xsl:attribute>
       </a>
       <h3 xpathLocation="noSelect">
-        <xsl:apply-templates/><xsl:call-template name="topAnchor"/>
+        <xsl:apply-templates/>
       </h3>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="notes/sec/title">
-      <h3 xpathLocation="noSelect"><xsl:value-of select="."/><xsl:call-template name="topAnchor"/></h3>
+      <h3 xpathLocation="noSelect"><xsl:value-of select="."/></h3>
     </xsl:template>
 
     <!-- 1/4/12: plos modifications (creates any other titles not already specified) -->
@@ -2193,7 +2125,7 @@
         <xsl:for-each select="//abstract[@abstract-type='patient']">
           <div class="patient">
             <a id="patient" name="patient" toc="patient" title="Patient Summary"/>
-            <h3 xpathLocation="noSelect"><xsl:value-of select="title"/><xsl:call-template name="topAnchor"/></h3>
+            <h3 xpathLocation="noSelect"><xsl:value-of select="title"/></h3>
             <xsl:apply-templates select="*[not(self::title)]"/>
           </div>
         </xsl:for-each>
@@ -2204,7 +2136,7 @@
     <xsl:template name="author-contrib">
       <xsl:if test="../front/article-meta/author-notes/fn[@fn-type='con']">
         <div class="contributions"><a id="authcontrib" name="authcontrib" toc="authcontrib"
-                title="Author Contributions"/><h3 xpathLocation="noSelect">Author Contributions<xsl:call-template name="topAnchor"/></h3>
+                title="Author Contributions"/><h3 xpathLocation="noSelect">Author Contributions</h3>
           <p xpathLocation="noSelect">
             <xsl:apply-templates select="../front/article-meta/author-notes/fn[@fn-type='con']"/>
           </p>
@@ -2226,7 +2158,7 @@
       <div xpathLocation="noSelect" >
         <xsl:call-template name="assign-id"/>
         <xsl:if test="not(title)">
-          <a id="ack" name="ack" toc="ack" title="Acknowledgments"/><h3 xpathLocation="noSelect">Acknowledgments<xsl:call-template name="topAnchor"/></h3>
+          <a id="ack" name="ack" toc="ack" title="Acknowledgments"/><h3 xpathLocation="noSelect">Acknowledgments</h3>
           <xsl:call-template name="newline1"/>
         </xsl:if>
         <xsl:apply-templates/>
@@ -2606,11 +2538,6 @@
     <!-- 1/4/12: plos-specific template (used for displaying annotations (xml is coming from ambra, not article xml)) -->
     <xsl:template match="aml:annotated">
       <xsl:call-template name="createAnnotationSpan"/>
-    </xsl:template>
-
-    <!-- 1/4/12: plos-specific template (creates 'top' links on main headings) -->
-    <xsl:template name="topAnchor">
-      <xsl:if test="string-length(normalize-space(.)) > 0">&#160;<a href="#top">Top</a></xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template (creates newlines for legibility of source html) -->
