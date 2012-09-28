@@ -720,11 +720,16 @@
       </xsl:attribute>
     </xsl:template>
 
+    <xsl:template name="make-section-class">
+      <xsl:attribute name="class">section</xsl:attribute>
+    </xsl:template>
+
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="body/sec">
       <xsl:call-template name="newline1"/>
       <div>
         <xsl:call-template name="make-section-id"/>
+        <xsl:call-template name="make-section-class"/>
         <xsl:call-template name="makeXpathLocation" />
         <xsl:if test="descendant::title[1] != ''">
           <xsl:element name="a">
