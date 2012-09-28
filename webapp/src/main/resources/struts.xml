@@ -382,7 +382,7 @@
 
     <action name="fetchArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_body.ftl</param>
+        <param name="templateFile">/article/article.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
