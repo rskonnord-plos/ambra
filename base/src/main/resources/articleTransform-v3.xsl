@@ -1310,6 +1310,9 @@
 
     <!-- 1/4/12: plos modifications -->
     <xsl:template match="p">
+      <a>
+        <xsl:call-template name="makeIdFromXpathLocation"/>
+      </a>
 	    <p>
         <xsl:call-template name="makeXpathLocation"/>
 	      <xsl:apply-templates/>
@@ -2415,6 +2418,51 @@
         </xsl:when>
       </xsl:choose>
     </xsl:template>
+
+  <xsl:template name="makeIdFromXpathLocation">
+    <xsl:variable name="idFromXpath">
+      <xsl:call-template name="createIdXpath">
+        <xsl:with-param name="theNode" select="."/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:attribute name="id">
+      <xsl:value-of select="substring($idFromXpath, 2)"/>
+    </xsl:attribute>
+  </xsl:template>
+
+  <xsl:template name="createIdXpath">
+    <xsl:param name="theNode" select="."/>
+    <xsl:choose>
+      <xsl:when test="$theNode[1]">
+        <xsl:choose>
+          <xsl:when test="not($theNode[1]/..)">
+            <!-- cann't figure out when this is used -->
+            <xsl:text>.</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$theNode[1]/ancestor-or-self::*[not(self::aml:annotated)]">
+              <xsl:text/>.<xsl:value-of select="name()"/>
+              <xsl:text/><xsl:value-of select="count(preceding-sibling::*[name() = name(current())]) + 1"/><xsl:text/>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$theNode">
+        <xsl:choose>
+          <xsl:when test="not($theNode/..)">
+            <!-- cann't figure out when this is used -->
+            <xsl:text>.</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$theNode/ancestor-or-self::*[not(self::aml:annotated)]">
+              <xsl:text/>.<xsl:value-of select="name()"/>
+              <xsl:text/><xsl:value-of select="count(preceding-sibling::*[name() = name(current())]) + 1"/><xsl:text/>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
 
     <!-- 1/4/12: plos-specific template (prevents double punctuation if xml contains valid punctuation already) -->
     <xsl:template name="punctuation">
