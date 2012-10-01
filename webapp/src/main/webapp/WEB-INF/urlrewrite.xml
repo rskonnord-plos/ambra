@@ -303,4 +303,13 @@
     <from>^(/?)home.action(.*)</from>
     <to last="true">/$2</to>
   </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming requests for static pages
+      /static/whatever? -> /static/whatever.action
+    </note>
+    <from>^/static/(\s+)\??.*$</from>
+    <to>/static/$1.action</to>
+  </rule>
 </urlrewrite>
