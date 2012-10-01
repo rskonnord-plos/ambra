@@ -513,8 +513,8 @@ var launchModal = function(json_url, ref, state, el) {
       $modal.append($slides);
       $modal.append($thmbs);
 
-      abstract ='<div id="fig-viewer-abst">'
-        + '<div class="txt">' + data.abstract + '</div>'
+      abstractHtml = '<div id="fig-viewer-abst">' +
+        '<div class="txt">' + data["abstract"] + '</div>'
         + '<div class="lnks">'
         + '<p class="dl">Download'
         + ' <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Artilce PDF Version</a>'
@@ -525,7 +525,7 @@ var launchModal = function(json_url, ref, state, el) {
         + '</p>'
         + '</div>'
         + '</div>';
-      $modal.append(abstract);
+      $modal.append(abstractHtml);
 
       $('body').append($modal)
         .append($mask);
