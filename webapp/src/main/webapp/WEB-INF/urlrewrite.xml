@@ -295,13 +295,12 @@
     <to last="true">$1/article/feed$2</to>
   </outbound-rule>
 
-  <rule>
+  <outbound-rule>
     <note>
-      restrict access to indexAllArticlesUnprotected.action
+      re-write outbound home.action
+      /home.action?... -> /?...
     </note>
-    <condition type="remote-addr" operator="notequal">127.*.*.*</condition>
-    <from>/search/indexAllArticlesUnprotected.action</from>
-    <to>/static/pageNotFound.action</to>
-  </rule>
-
+    <from>^(/.+)?/home.action(.*)</from>
+    <to last="true">$1/$2</to>
+  </outbound-rule>
 </urlrewrite>
