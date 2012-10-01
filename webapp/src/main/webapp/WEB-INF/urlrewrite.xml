@@ -300,7 +300,7 @@
       re-write outbound home.action
       /home.action?... -> /?...
     </note>
-    <from>^(/.+)?/home.action(.*)</from>
-    <to last="true">$1/$2</to>
+    <from>^(/?)home.action(.*)</from>
+    <to last="true">/$2</to>
   </outbound-rule>
 </urlrewrite>
