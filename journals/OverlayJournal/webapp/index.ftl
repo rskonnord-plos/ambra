@@ -40,7 +40,7 @@
         <label for="search">Search</label>
         <div class="wrap">
           <input id="search" type="text" name="query" placeholder="Search articles...">
-          <input type="image" alt="SEARCH" src="images/icon.search.gif">
+          <input type="image" alt="SEARCH" src="/images/icon.search.gif">
         </div>
       </fieldset>
     </form>

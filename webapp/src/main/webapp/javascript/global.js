@@ -174,7 +174,7 @@ if ($fig_search.length) {
       var hdr_view = true;
       var ftr_view = false;
       var speed = 'slow';
-      var $btn = $('<div class="btn-g"><img src="images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function() {
+      var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function() {
         $title.remove();
         $bnr.hide();
         $win.unbind('scroll.sf');
@@ -431,7 +431,7 @@ if ($fig_search.length) {
 
 
 var launchModal = function(json_url, ref, state, el) {
-  var path = 'article/';
+  var path = '/article/';
   var $modal = $('<div id="fig-viewer" class="modal" />');
   var $thmbs = $('<div id="fig-viewer-thmbs" />');
   var $slides = $('<div id="fig-viewer-slides" />');

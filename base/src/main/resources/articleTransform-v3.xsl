@@ -1012,7 +1012,7 @@
       <xsl:variable name="slideshowURL">
         <xsl:value-of select="concat($pubAppContext, '/article/',
                 substring($imageURI, 1, (string-length($imageURI)-5)),
-                '?imageURI=', $imageURI)"/>
+                '&amp;representation=PNG_M')"/>
       </xsl:variable>
 
       <xsl:variable name="pptURL">
@@ -1038,46 +1038,42 @@
       <xsl:variable name="targetURI">
         <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
       </xsl:variable>
-      <xsl:variable name="jsWindow">
-        <xsl:value-of select="concat('return ambra.lightBox.show(', $apos, $targetURI, $apos, ', ', $apos, $imageURI, $apos, ');')"/>
+
+
+      <xsl:variable name="popupURL">
+        <xsl:value-of select="concat('/article/', $targetURI, '')"/>
       </xsl:variable>
+
       <xsl:if test=".//graphic">
         <div class="figure">
-          <xsl:call-template name="makeXpathLocation"/>
-          <xsl:element name="a">
-            <!-- 6/13/12: added translate so names and ids have dash (for figure enhancement) -->
-            <xsl:attribute name="name"><xsl:value-of select="translate($figId, '.', '-')"/></xsl:attribute>
-              <xsl:attribute name="id"><xsl:value-of select="translate($figId, '.', '-')"/></xsl:attribute>
-              <xsl:attribute name="title">Click for larger image </xsl:attribute>
-              <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
-              <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
-              <xsl:element name="div">
-                <xsl:attribute name="class">expand-link</xsl:attribute>
-                <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
+          <div class="img">
+            <xsl:call-template name="makeXpathLocation"/>
+            <xsl:element name="a">
+              <!-- 6/13/12: added translate so names and ids have dash (for figure enhancement) -->
+              <xsl:attribute name="name"><xsl:value-of select="translate($figId, '.', '-')"/></xsl:attribute>
+                <xsl:attribute name="id"><xsl:value-of select="translate($figId, '.', '-')"/></xsl:attribute>
+                <xsl:attribute name="title">Click for larger image </xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
+                <xsl:attribute name="data-json-url"><xsl:value-of select="$popupURL"/></xsl:attribute>
+                <xsl:attribute name="data-uri"><xsl:value-of select="$imageURI"/></xsl:attribute>
+                <xsl:element name="img">
+                  <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
+                  <xsl:attribute name="src">
+                  <xsl:value-of select="concat($pubAppContext,'/article/fetchObject.action?uri=',$imageURI,'&amp;representation=PNG_I')"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="alt">thumbnail</xsl:attribute>
+                  <xsl:attribute name="class">thumbnail</xsl:attribute>
+                </xsl:element>
+                <xsl:element name="div">
+                  <xsl:attribute name="class">expand</xsl:attribute>
+                </xsl:element>
               </xsl:element>
-              <xsl:element name="img">
-                <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
-                <xsl:attribute name="border">1</xsl:attribute>
-                <xsl:attribute name="src">
-                <xsl:value-of select="concat($pubAppContext,'/article/fetchObject.action?uri=',$imageURI,'&amp;representation=PNG_I')"/>
-                </xsl:attribute>
-                <xsl:attribute name="align">left</xsl:attribute>
-                <xsl:attribute name="alt">thumbnail</xsl:attribute>
-                <xsl:attribute name="class">thumbnail</xsl:attribute>
-              </xsl:element>
-          </xsl:element>
+            </div>
             <p><strong>
               <xsl:call-template name="makeXpathLocationParam" >
                 <xsl:with-param name="node" select="label"/>
               </xsl:call-template>
-              <xsl:element name="a">
-                <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
-                <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
-                <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
-                <span>
-                  <xsl:apply-templates select="label"/>
-                </span>
-              </xsl:element>
+              <strong><xsl:apply-templates select="label"/></strong>
               <xsl:if test="caption/title">
                 <xsl:text> </xsl:text>
                 <span>
@@ -1095,33 +1091,35 @@
           <div class="clearer"/>
           <!--start figure download-->
           <div class="figure-inline-download">
-            <ul>
-              <li><strong>Download: </strong>
-                  <xsl:element name="a">
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$pptURL"/>
-                    </xsl:attribute>PowerPoint slide</xsl:element> |
-                  <xsl:element name="a">
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$bigImgURL"/>
-                    </xsl:attribute>
-                    larger image (<xsl:element name="span">
-                      <xsl:attribute name="id">
-                        <xsl:value-of select="$bigImgDOI"/>
-                      </xsl:attribute>
-                    </xsl:element> PNG)</xsl:element> |
-                  <xsl:element name="a">
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$origImgURL"/>
-                    </xsl:attribute>
-                    original image (<xsl:element name="span">
-                      <xsl:attribute name="id">
-                        <xsl:value-of select="$origImgDOI"/>
-                      </xsl:attribute>
-                    </xsl:element> TIFF)
-                  </xsl:element>
-              </li>
-            </ul>
+            Download:
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <xsl:value-of select="$pptURL"/>
+              </xsl:attribute>
+              <xsl:attribute name="class">ppt</xsl:attribute>
+              PowerPoint slide
+            </xsl:element> |
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <xsl:value-of select="$bigImgURL"/>
+              </xsl:attribute>
+              <xsl:attribute name="class">png</xsl:attribute>
+              larger image (<xsl:element name="span">
+                <xsl:attribute name="id">
+                  <xsl:value-of select="$bigImgDOI"/>
+                </xsl:attribute>
+              </xsl:element> PNG)</xsl:element> |
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <xsl:value-of select="$origImgURL"/>
+              </xsl:attribute>
+              <xsl:attribute name="class">tiff</xsl:attribute>
+              original image (<xsl:element name="span">
+                <xsl:attribute name="id">
+                  <xsl:value-of select="$origImgDOI"/>
+                </xsl:attribute>
+              </xsl:element> TIFF)
+            </xsl:element>
           </div>
           <!--end figure download-->
 
