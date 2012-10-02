@@ -330,9 +330,6 @@
                           <xsl:attribute name="alt">thumbnail</xsl:attribute>
                           <xsl:attribute name="class">thumbnail</xsl:attribute>
                       </xsl:element>
-                      <xsl:element name="div">
-                        <xsl:attribute name="class">expand</xsl:attribute>
-                      </xsl:element>
                   </xsl:element>
                 </div>
                 <p>
