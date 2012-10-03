@@ -440,7 +440,7 @@ var launchModal = function(json_url, ref, state, el) {
   })
   var active_thmb = null;
   $.ajax({
-    url: json_url,
+    url: '/article/lightbox.action?uri=' + json_url,
     dataFilter: function (data, type) {
       return data.replace(/(\/\*|\*\/)/g, '');
     },
