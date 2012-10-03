@@ -277,9 +277,8 @@
         <xsl:variable name="apos">'</xsl:variable>
         <xsl:variable name="imageURI"><xsl:value-of select="graphic/@xlink:href"/></xsl:variable>
         <xsl:variable name="slideshowURL">
-            <xsl:value-of select="concat($pubAppContext, '/article/',
-                substring($imageURI, 1, (string-length($imageURI)-5)),
-                '&amp;representation=PNG_M')"/>
+            <xsl:value-of select="concat($pubAppContext, '/article/fetchObject.action?uri=',
+                $imageURI,'&amp;representation=PNG_M')"/>
         </xsl:variable>
 
         <xsl:variable name="pptURL">
@@ -305,10 +304,6 @@
           <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
         </xsl:variable>
 
-        <xsl:variable name="popupURL">
-          <xsl:value-of select="concat('/article/', $targetURI, '')"/>
-        </xsl:variable>
-
         <xsl:if test="graphic">
             <div class="figure">
                 <div class="img">
@@ -318,7 +313,7 @@
                       <xsl:attribute name="id"><xsl:value-of select="$figId"/></xsl:attribute>
                       <xsl:attribute name="title">Click for larger image </xsl:attribute>
                       <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
-                      <xsl:attribute name="data-json-url"><xsl:value-of select="$popupURL"/></xsl:attribute>
+                      <xsl:attribute name="data-json-url"><xsl:value-of select="$targetURI"/></xsl:attribute>
                       <xsl:attribute name="data-uri"><xsl:value-of select="$imageURI"/></xsl:attribute>
                       <xsl:element name="img">
                           <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
