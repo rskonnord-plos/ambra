@@ -10,6 +10,7 @@
     <div id="article-block" class="cf">
       <div class="article-meta cf">
         <ul>
+          <li class="pick">Editor's Pick</li>
           <li><span class="num">1,278</span> views</li>
           <li><span class="num">12</span> citations</li>
         </ul>
@@ -19,17 +20,17 @@
         </div>
       </div>
       <div class="header" id="hdr-article">
-        <h1 xpathLocation="noSelect" property="dc:title" datatype="" rel="dc:type" href="http://purl.org/dc/dcmitype/Text"><@articleFormat>${article.docTitle}</@articleFormat></h1>
+        <h1 property="dc:title" datatype="" rel="dc:type" href="http://purl.org/dc/dcmitype/Text"><@articleFormat>${article.docTitle}</@articleFormat></h1>
         <p class="authors">
-          <#if authorExtras?? >
-            <#list authorExtras as author>
-              <#if (author_has_next)>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName},</span></span>
-              <#else>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}</span></span>
-              </#if>
-            </#list>
-          </#if>
+        <#if authorExtras?? >
+          <#list authorExtras as author>
+            <#if (author_has_next)>
+              <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName},</span></span>
+            <#else>
+              <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}</span></span>
+            </#if>
+          </#list>
+        </#if>
         </p>
       </div>
       <div class="main cf">
@@ -45,17 +46,36 @@
           </ul>
         </div>
 
+        <div id="figure-thmbs" class="carousel cf">
+          <div class="wrapper">
+            <div class="slider">
+            <#if articleAssetWrapper?size gt 0>
+              <#list articleAssetWrapper as assets>
+                <#assign name = "${assets.doi?replace('info:doi/10.1371/journal.','')}"/>
+                <#assign formattedName = "${name?replace('.','-')}"/>
+                <div class="item">
+                  <a href="#${formattedName}" data-json-url="${articleInfoX.doi}" data-uri="${assets.doi}" title="${assets.title}">
+                    <img src="/article/fetchObject.action?uri=${assets.doi}&representation=PNG_I" alt=""></a>
+                </div>
+              </#list>
+            </#if>
+            </div>
+          </div>
+        </div>
+
         <div class="nav-col">
           <div class="nav" id="nav-article-page">
             <ul>
               <li><a href="TEST">Reader Comments (3)</a></li>
               <li><a href="TEST">Corrections (2)</a></li>
+              <li><a href="TEST">Supporting Material (2)</a></li>
+              <li><a data-json-url="article/10.1371/journal.pone.0000001" id="nav-figures">Figures</a></li>
             </ul>
 
           </div>
         </div>
         <div class="article">
-          <@s.property value="transformedArticle" escape="false"/>
+        <@s.property value="transformedArticle" escape="false"/>
         </div>
       </div><!-- main -->
 
@@ -68,8 +88,7 @@
             <div class="content">
               <ul class="bullet">
                 <li><a href="#" onclick="window.print();return false;" title="Print Article">Print article</a></li>
-                <li><a href="TEST" title="Odyssey Press">EzReprint</a> <img src="/images/icon.new.png" width="29"
-                                                                            height="12" alt="New"> <span class="note">New &amp; improved!</span></li>
+                <li><a href="TEST" title="Odyssey Press">EzReprint</a> <img src="images/icon.new.png" width="29" height="12" alt="New"> <span class="note">New &amp; improved!</span></li>
               </ul>
             </div>
           </div>
@@ -77,36 +96,26 @@
             <span class="btn">Share</span>
             <div class="content">
               <ul class="social">
-                <li><a href="TEST"><img src="/images/icon.reddit.16.png" width="16" height="16"
-                                        alt="Reddit"> Reddit</a></li>
-                <li><a href="TEST"><img src="/images/icon.gplus.16.png" width="16" height="16"
-                                        alt="G+"> G+</a></li>
-                <li><a href="TEST"><img src="/images/icon.stumble.16.png" width="16" height="16"
-                                        alt="StumbleUpon"> StumbleUpon</a></li>
-                <li><a href="TEST"><img src="/images/icon.fb.16.png" width="16" height="16"
-                                        alt="Facebook"> Facebook</a></li>
-                <li><a href="TEST"><img src="/images/icon.connotea.16.png" width="16" height="16"
-                                        alt="Connotea"> Connotea</a></li>
-                <li><a href="TEST"><img src="/images/icon.cul.16.png" width="16" height="16"
-                                        alt="CiteULike"> CiteULike</a></li>
-                <li><a href="TEST"><img src="/images/icon.mendeley.16.png" width="16" height="16"
-                                        alt="Mendeley"> Mendeley</a></li>
-                <li><a href="TEST"><img src="/images/icon.twtr.16.png" width="16" height="16"
-                                        alt="Twitter"> Twitter</a></li>
-                <li><a href="TEST"><img src="/images/icon.email.16.png" width="16" height="16"
-                                        alt="Email"> Email</a></li>
+                <li><a href="TEST"><img src="/images/icon.reddit.16.png" width="16" height="16" alt="Reddit">
+                  Reddit</a></li>
+                <li><a href="TEST"><img src="/images/icon.gplus.16.png" width="16" height="16" alt="G+"> G+</a></li>
+                <li><a href="TEST"><img src="/images/icon.stumble.16.png" width="16" height="16" alt="StumbleUpon">
+                  StumbleUpon</a></li>
+                <li><a href="TEST"><img src="/images/icon.fb.16.png" width="16" height="16" alt="Facebook">
+                  Facebook</a></li>
+                <li><a href="TEST"><img src="/images/icon.connotea.16.png" width="16" height="16" alt="Connotea">
+                  Connotea</a></li>
+                <li><a href="TEST"><img src="/images/icon.cul.16.png" width="16" height="16" alt="CiteULike">
+                  CiteULike</a></li>
+                <li><a href="TEST"><img src="/images/icon.mendeley.16.png" width="16" height="16" alt="Mendeley">
+                  Mendeley</a></li>
+                <li><a href="TEST"><img src="/images/icon.twtr.16.png" width="16" height="16" alt="Twitter">
+                  Twitter</a></li>
+                <li><a href="TEST"><img src="/images/icon.email.16.png" width="16" height="16" alt="Email">
+                  Email</a></li>
               </ul>
             </div>
           </div>
-        </div>
-
-        <div class="block">
-          <div class="header">
-            <h3>Editor Recommends</h3>
-          </div>
-          <p><a href="TEST">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.</a></p>
-          <p><a href="TEST">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.</a></p>
-          <p><a href="TEST">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.</a></p>
         </div>
 
         <div class="block">
