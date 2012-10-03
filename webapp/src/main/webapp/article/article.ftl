@@ -88,7 +88,8 @@
             <div class="content">
               <ul class="bullet">
                 <li><a href="#" onclick="window.print();return false;" title="Print Article">Print article</a></li>
-                <li><a href="TEST" title="Odyssey Press">EzReprint</a> <img src="images/icon.new.png" width="29" height="12" alt="New"> <span class="note">New &amp; improved!</span></li>
+                <li><a href="TEST" title="Odyssey Press">EzReprint</a> <img src="/images/icon.new.png" width="29"
+                                                                            height="12" alt="New"> <span class="note">New &amp; improved!</span></li>
               </ul>
             </div>
           </div>

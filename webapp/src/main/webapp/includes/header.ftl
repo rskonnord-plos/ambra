@@ -31,8 +31,10 @@
     <#import "global_body.ftl" as global>
     <div id="page-wrap">
       <div id="topbanner" class="cf">
-        <#include "/includes/macro_banner.ftl">
-        <#include "/includes/topbanner.ftl">
+        <div class="center">
+          <div class="title">Advertisement</div>
+          <img src="/images/placeholder.gif" width="730" height="90" alt="">
+        </div>
       </div>
 
       <div id="pagehdr-wrap">
