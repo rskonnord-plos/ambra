@@ -46,8 +46,8 @@
     <filestore.version>1.0.1</filestore.version>
     <httpclient.version>4.2.1</httpclient.version>
     <httpmime.version>4.2.1</httpmime.version>
+    <recaptcha.version>0.0.7</recaptcha.version>
   </properties>
-
 
   <repositories>
     <repository>
