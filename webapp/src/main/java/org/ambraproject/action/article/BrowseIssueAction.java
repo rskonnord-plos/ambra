@@ -19,7 +19,6 @@
  */
 package org.ambraproject.action.article;
 
-import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.models.Journal;
 import org.ambraproject.service.article.BrowseService;
@@ -98,13 +97,7 @@ public class BrowseIssueAction extends BaseActionSupport{
 
     // Translate the currentIssue description to HTML
     if (issueInfo.getDescription() != null) {
-      try {
-        issueDescription = secondaryObjectService.getTransformedDescription(issueInfo.getDescription());
-      } catch (ApplicationException e) {
-        log.error("Failed to translate issue description to HTML.", e);
-        // Just use the untranslated issue description
-        issueDescription = issueInfo.getDescription();
-      }
+      issueDescription = issueInfo.getDescription();
     } else {
       log.error("The currentIssue description was null. Issue DOI='" + issueInfo.getIssueURI() + "'");
       issueDescription = "No description found for this issue";
