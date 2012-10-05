@@ -1,4 +1,3 @@
-
 var $win = $(window);
 var $pagebdy = $('#pagebdy');
 
@@ -33,20 +32,31 @@ $(document).ready(function() {
     });
   });
 
+  $('#nav-toc').doOnce(function(){
+    this.buildNav({
+      content: $('#toc-block').find('div.col-2')
+    });
+  });
+
+  $('#nav-toc').doOnce(function(){
+    this.floatingNav({
+      sections: $('#toc-block').find('div.section')
+    });
+  });
+
   $('#nav-article-page').doOnce(function(){
     this.floatingNav({
       sections: $article.find('div.section')
     });
   });
 
-  $('#hdr-article').doOnce(function(){
+  $article.doOnce(function(){
     this.scrollFrame();
   });
 
   $('#figure-thmbs').doOnce(function(){
     this.carousel({
-      access : true,
-      infinite : false
+      access : true
     });
   });
 
@@ -86,17 +96,20 @@ if ($fig_search.length) {
       var ftr_top = $('#pageftr').offset().top;
       var el_top = $this.offset().top;
       var el_h = $this.innerHeight();
-      var bnr_h = $('#banner-ftr').innerHeight();
+      var bnr_h = 0;
+      if ($('#banner-ftr').length) {
+        bnr_h = $('#banner-ftr').innerHeight();
+      }
       var win_top = 0;
       var lnks = $this.find('a.scroll');
       var positionEl = function() {
         win_top = $win.scrollTop();
         if (
-          (win_top > (el_top - options.margin)) //the top of the element is out of the viewport
-            && ((el_h + options.margin + bnr_h) < $win.height()) //the viewport is tall enough-
-            && (win_top < (ftr_top - (el_h + options.margin))) //the element is not overlapping the footer
-            && ($win.width() >= 960) //the viewport is wide enough
-          ) {
+            (win_top > (el_top - options.margin)) //the top of the element is out of the viewport
+                && ((el_h + options.margin + bnr_h) < $win.height()) //the viewport is tall enough-
+                && (win_top < (ftr_top - (el_h + options.margin))) //the element is not overlapping the footer
+                && ($win.width() >= 960) //the viewport is wide enough
+            ) {
           $this.css({ 'position' : 'fixed', 'top' : options.margin + 'px' });
           hilite()
         }
@@ -165,9 +178,9 @@ if ($fig_search.length) {
 (function($){
   $.fn.scrollFrame = function() {
     return this.each(function() {
-      var $this = $(this);
-      var el_top = $this.offset().top;
-      var el_h = $this.innerHeight();
+      var $hdr = $('#hdr-article');
+      var el_top = $hdr.offset().top;
+      var el_h = $hdr.innerHeight();
       var ftr_top = $('#pageftr').offset().top;
       var top_open = false;
       var bot_open = false;
@@ -180,9 +193,9 @@ if ($fig_search.length) {
         $win.unbind('scroll.sf');
         $win.unbind('resize.sf');
       })
-      var $title = $('<div id="title-banner" />').prepend($this.html())
-        .prepend($btn)
-        .wrapInner('<div class="content" />');
+      var $title = $('<div id="title-banner" />').prepend($hdr.html())
+          .prepend($btn)
+          .wrapInner('<div class="content" />');
       $title.find('div.article-kicker').remove();
       $title.appendTo($('body'));
       var $bnr = $('#banner-ftr');
@@ -203,34 +216,34 @@ if ($fig_search.length) {
 
         if (!hdr_view && !top_open) {
           $title.stop()
-            .css({ 'top' : '-100px'})
-            .animate({
-              top: '+=100'
-            }, speed);
+              .css({ 'top' : '-100px'})
+              .animate({
+                top: '+=100'
+              }, speed);
           top_open = true;
         }
         if (hdr_view && top_open) {
           $title.stop()
-            .css({ 'top' : '0px'})
-            .animate({
-              top: '-=100'
-            }, speed);
+              .css({ 'top' : '0px'})
+              .animate({
+                top: '-=100'
+              }, speed);
           top_open = false;
         }
         if (!hdr_view && !ftr_view && !bot_open) {
           $bnr.stop()
-            .css({ 'bottom' : '-100px'})
-            .animate({
-              bottom: '+=100'
-            }, speed);
+              .css({ 'bottom' : '-100px'})
+              .animate({
+                bottom: '+=100'
+              }, speed);
           bot_open = true;
         }
         if ((hdr_view || ftr_view) && bot_open) {
           $bnr.stop()
-            .css({ 'bottom' : '0px'})
-            .animate({
-              bottom: '-=100'
-            }, speed);
+              .css({ 'bottom' : '0px'})
+              .animate({
+                bottom: '-=100'
+              }, speed);
           bot_open = false;
         }
 
@@ -256,17 +269,17 @@ if ($fig_search.length) {
       if ($authors.length > options.display) {
         overflow = $authors.eq(options.display -2).nextUntil($authors.last());
         overflow.hide();
-        $ellipsis = $('<span class="ellipsis"> [ ... ], </span>');
+        $ellipsis = $('<span class="ellipsis"> [ ... ] </span>');
         $authors.eq(options.display -2).after($ellipsis);
         $action = $('<span class="action">, <a>[ view all ]</a></span>').toggle(function() {
-            $ellipsis.hide();
-            overflow.show();
-            $action.html('<span class="action">, <a>[ view less ]</a></span>')
-          }, function() {
-            overflow.hide();
-            $ellipsis.show();
-            $action.html('<span class="action">, <a>[ view all ]</a></span>')
-          }
+              $ellipsis.hide();
+              overflow.show();
+              $action.html('<span class="action"> <a>[ view less ]</a></span>')
+            }, function() {
+              overflow.hide();
+              $ellipsis.show();
+              $action.html('<span class="action"> <a>[ view all ]</a></span>')
+            }
         ).insertAfter($authors.last());
       }
     });
@@ -315,15 +328,15 @@ if ($fig_search.length) {
     var options = $.extend(defaults, options);
     return this.each(function() {
       var $this = $(this),
-        $wrapper = $this.find('div.wrapper'),
-        $slider = $wrapper.find('div.slider'),
-        $items = $slider.find('div.item'),
-        $single = $items.eq(0),
-        single_width = $single.outerWidth(),
-        visible = Math.ceil($wrapper.innerWidth() / single_width),
-        current_page = 1,
-        pages = Math.ceil($items.length / visible),
-        $buttons;
+          $wrapper = $this.find('div.wrapper'),
+          $slider = $wrapper.find('div.slider'),
+          $items = $slider.find('div.item'),
+          $single = $items.eq(0),
+          single_width = $single.outerWidth(),
+          visible = Math.ceil($wrapper.innerWidth() / single_width),
+          current_page = 1,
+          pages = Math.ceil($items.length / visible),
+          $buttons;
       if (options.infinite) {
         // add empty items to last page if needed
         if (($items.length % visible) != 0) {
@@ -336,9 +349,9 @@ if ($fig_search.length) {
 
         // clone last page and insert at beginning, clone first page and insert at end
         $items.filter(':first').before($items.slice(-visible).clone()
-          .addClass('clone'));
+            .addClass('clone'));
         $items.filter(':last').after($items.slice(0, visible).clone()
-          .addClass('clone'));
+            .addClass('clone'));
 
         $items = $slider.find('div.item'); // update
 
@@ -350,8 +363,8 @@ if ($fig_search.length) {
 
       function gotoPage(page) {
         var dir = page < current_page ? -1 : 1,
-          pages_move = Math.abs(current_page - page),
-          distance = single_width * dir * visible * pages_move;
+            pages_move = Math.abs(current_page - page),
+            distance = single_width * dir * visible * pages_move;
 
         $wrapper.filter(':not(:animated)').animate({
           scrollLeft : '+=' + distance
@@ -376,14 +389,14 @@ if ($fig_search.length) {
 
       var controls = $('<div class="controls" />');
       var btn_prev = $('<span class="button prev" />')
-        .on('click', function() {
-          gotoPage(current_page - 1);
-        }).appendTo(controls);
+          .on('click', function() {
+            gotoPage(current_page - 1);
+          }).appendTo(controls);
 
       var btn_next = $('<span class="button next" />')
-        .on('click', function() {
-          gotoPage(current_page + 1);
-        }).appendTo(controls);
+          .on('click', function() {
+            gotoPage(current_page + 1);
+          }).appendTo(controls);
       controls.appendTo($this);
 
       if (options.access && ($items.length > visible)) {
@@ -394,8 +407,8 @@ if ($fig_search.length) {
             this_ref = this_but.data('ref');
             gotoPage(this_ref);
           })
-            .data('ref',i)
-            .appendTo($buttons);
+              .data('ref',i)
+              .appendTo($buttons);
         }
         $buttons.find('span').eq(0).addClass('active');
         $buttons.appendTo($this);
@@ -410,12 +423,12 @@ if ($fig_search.length) {
         $(window).load(function() {
           var play = true;
           $this.hover(
-            function () {
-              play = false;
-            },
-            function () {
-              play = true;
-            }
+              function () {
+                play = false;
+              },
+              function () {
+                play = true;
+              }
           );
           setInterval(function () {
             if (play) {
@@ -430,119 +443,144 @@ if ($fig_search.length) {
 })(jQuery);
 
 
-var launchModal = function(json_url, ref, state, el) {
+var launchModal = function(doi, ref, state, el) {
   var path = '/article/fetchObject.action?uri=';
   var $modal = $('<div id="fig-viewer" class="modal" />');
   var $thmbs = $('<div id="fig-viewer-thmbs" />');
   var $slides = $('<div id="fig-viewer-slides" />');
   var $mask = $('<div id="modal-mask" />').on('click', function() {
     killModal();
-  })
-  var active_thmb = null;
-  $.ajax({
-    url: '/article/lightbox.action?uri=' + json_url,
-    dataFilter: function (data, type) {
-      return data.replace(/(\/\*|\*\/)/g, '');
-    },
-    dataType:'json',
-    cache: false,
-    success: function(data){
-
-      $hdr = $('<div class="header" />');
-      $hdr_article = $('#hdr-article');
-
-      if ($hdr_article.length) {
-        $hdr.append($hdr_article.html());
-      } else if (el) {
-        kicker = el.find('.article-kicker').clone();
-        h1 = '<h1>' + el.find('.article a').text() + '</h1>';
-        authors = el.find('.authors').clone();
-        $hdr.append(kicker);
-        $hdr.append(h1);
-        $hdr.append(authors);
-      }
-      $close = $('<span class="close" />').on('click', function() {
-        killModal();
-      });
-      $hdr.append($close);
-      $modal.append($hdr);
-      $.each(data.secondaryObjects, function(){
-        title_txt = (this.title ? this.title + '. ' : '')  + this.transformedCaptionTitle;
-        $thmb = $('<div class="thmb"'  + ' data-uri="' + this.uri +'"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_txt  + '" title="' + title_txt + '"></div>').on('click', function() {
-          changeSlide($(this));
-        })
-        $thmbs.append($thmb);
-        slide = $('<div class="slide" />');
-        txt = $('<div class="txt" />');
-        lnks = $('<div class="lnks" />');
-        title = '<span class="title">' + title_txt + '</span>';
-        $toggle = $('<span class="toggle">more</span>').toggle(function() {
-          $(this).closest('div.txt').addClass('expand');
-          $(this).html('<span class="toggle">less</span>');
-        }, function() {
-          $(this).closest('div.txt').removeClass('expand');
-          $(this).html('<span class="toggle">more</span>');
-        });
-        desc = '<div class="desc">' + this.transformedDescription + '</div>';
-        img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_txt + '"></div>'
-        lnks_txt = '<p class="dl">Download'
-          + ' <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a>'
-          + ' <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a>'
-          + ' <a href="' + "/article/" + this.uri + "/originalimage" + '" class="tiff">original image (' + displaySize(this.sizeTiff) + ')</a>'
-          + '</p><p>'
-          + '<span class="btn active">browse figures</span>'
-          + '<span class="btn" onclick="toggleModalState();">view abstract</span>'
-          + '<a class="btn" href="' + showInContext(this.uri) + '" onclick="killModal();">show in context</a>'
-          + '</p>';
-        slide.append(img);
-        txt.append(title);
-        txt.append($toggle);
-        txt.append(desc);
-        lnks.append(lnks_txt);
-        slide.append(txt);
-        slide.append(lnks);
-        $slides.append(slide);
-      });
-
-      btn_prev = $('<span class="fig-btn prev" />').on('click', function() {
-        changeSlide(active_thmb.prev());
-      }).appendTo($slides);
-      btn_next = $('<span class="fig-btn next" />').on('click', function() {
-        changeSlide(active_thmb.next());
-      }).appendTo($slides);
-      $modal.append($slides);
-      $modal.append($thmbs);
-
-      abstractHtml = '<div id="fig-viewer-abst">' +
-        '<div class="txt">' + data["abstract"] + '</div>'
-        + '<div class="lnks">'
-        + '<p class="dl">Download'
-        + ' <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Artilce PDF Version</a>'
-        + '</p><p>'
-        + '<span class="btn" onclick="toggleModalState();">browse figures</span>'
-        + '<span class="btn active">view abstract</span>'
-        + '<a class="btn" href="' + data.URL + '">full text</a>'
-        + '</p>'
-        + '</div>'
-        + '</div>';
-      $modal.append(abstractHtml);
-
-      $('body').append($modal)
-        .append($mask);
-      resizeModal();
-      $win.bind('resize.modal', resizeModal);
-      if (ref) {
-        $thmbs.find('div[data-uri="' + ref + '"]').trigger('click');
-      } else {
-        $thmbs.find('div.thmb').eq(0).trigger('click');
-      }
-      if (state == 'abstract') {
-        toggleModalState();
-      }
-
-
-    }
   });
+  var active_thmb = null;
+  var page_url;
+  var buildFigs = function() {
+    $.ajax({
+    url: '/article/lightbox.action?uri=' + doi,
+      dataFilter: function (data, type) {
+        return data.replace(/(\/\*|\*\/)/g, '');
+      },
+      dataType:'json',
+      success: function(data){
+        page_url = data.URL;
+        $.each(data.secondaryObjects, function(){
+          title_txt = (this.title ? this.title + '. ' : '')  + this.transformedCaptionTitle;
+          $thmb = $('<div class="thmb"'  + ' data-uri="' + this.uri +'"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_txt  + '" title="' + title_txt + '"></div>').on('click', function() {
+            changeSlide($(this));
+          })
+          $thmbs.append($thmb);
+          slide = $('<div class="slide" />');
+          txt = $('<div class="txt" />');
+          lnks = $('<div class="lnks" />');
+          title = '<span class="title">' + title_txt + '</span>';
+          $toggle = $('<span class="toggle">more</span>').toggle(function() {
+            $(this).closest('div.txt').addClass('expand');
+            $(this).html('<span class="toggle">less</span>');
+          }, function() {
+            $(this).closest('div.txt').removeClass('expand');
+            $(this).html('<span class="toggle">more</span>');
+          });
+          context_hash = showInContext(this.uri);
+          if (el) { // the image is on another page
+            context_hash = '/article/' + page_url + context_hash;
+          }
+          desc = '<div class="desc">' + this.transformedDescription + '</div>';
+          img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_txt + '"></div>'
+          lnks_txt = '<p class="dl">Download'
+              + ' <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a>'
+              + ' <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a>'
+              + ' <a href="' + "/article/" + this.uri + "/originalimage" + '" class="tiff">original image (' + displaySize(this.sizeTiff) + ')</a>'
+              + '</p><p>'
+              + '<span class="btn active">browse figures</span>'
+              + '<span class="btn" onclick="toggleModalState();">view abstract</span>'
+              + '<a class="btn" href="' + context_hash + '" onclick="killModal();">show in context</a>'
+              + '</p>';
+          slide.append(img);
+          txt.append(title);
+          txt.append($toggle);
+          txt.append(desc);
+          lnks.append(lnks_txt);
+          slide.append(txt);
+          slide.append(lnks);
+          $slides.append(slide);
+        });
+
+        btn_prev = $('<span class="fig-btn prev" />').on('click', function() {
+          changeSlide(active_thmb.prev());
+        }).appendTo($slides);
+        btn_next = $('<span class="fig-btn next" />').on('click', function() {
+          changeSlide(active_thmb.next());
+        }).appendTo($slides);
+        $modal.append($slides);
+        $modal.append($thmbs);
+
+        if (ref) {
+          $thmbs.find('div[data-uri="' + ref + '"]').trigger('click');
+        } else {
+          $thmbs.find('div.thmb').eq(0).trigger('click');
+        }
+
+        buildAbs();
+
+
+      }
+    });
+  }();
+
+  var buildAbs = function() {
+    $.ajax({
+      //url: 'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
+      url: 'article/SOLR/' + doi,
+      dataType:'json',
+      success: function(data){
+        $.each(data.response.docs, function(){
+          abstract_html ='<div id="fig-viewer-abst">'
+              + '<div class="txt">' + this.abstract + '</div>'
+              + '<div class="lnks">'
+              + '<p class="dl">Download'
+              + ' <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Artilce PDF Version</a>'
+              + '</p><p>'
+              + '<span class="btn" onclick="toggleModalState();">browse figures</span>'
+              + '<span class="btn active">view abstract</span>'
+              + '<a class="btn" href="' + '/article/' + page_url + '">full text</a>'
+              + '</p>'
+              + '</div>'
+              + '</div>';
+          $modal.append(abstract_html);
+        });
+        displayModal();
+      }
+    });
+  }
+
+  var displayModal = function() {
+    $hdr = $('<div class="header" />');
+    $hdr_article = $('#hdr-article');
+
+    if ($hdr_article.length) {
+      $hdr.append($hdr_article.html());
+    } else if (el) {
+      kicker = el.find('.article-kicker').clone();
+      h1 = '<h1>' + el.find('.article a').text() + '</h1>';
+      authors = el.find('.authors').clone();
+      $hdr.append(kicker);
+      $hdr.append(h1);
+      $hdr.append(authors);
+    }
+    $close = $('<span class="close" />').on('click', function() {
+      killModal();
+    });
+    $hdr.append($close);
+    $modal.prepend($hdr);
+    if (state == 'abstract') {
+      $modal.addClass('abstract');
+    }
+
+    $('body').append($modal)
+        .append($mask);
+    resizeModal();
+    $win.bind('resize.modal', resizeModal);
+
+  }
 
   var changeSlide = function(thmb) {
     $all_thmb = $thmbs.find('div.thmb');
@@ -556,7 +594,7 @@ var launchModal = function(json_url, ref, state, el) {
       img ='<img src="' + src + '" title="' + txt + '" alt="' + txt + '">';
       $fig.append(img);
       $fig.removeAttr('data-img-src')
-        .removeAttr('data-img-txt');
+          .removeAttr('data-img-txt');
     }
     this_sld.show();
     if (active_thmb !== null) {
@@ -617,23 +655,26 @@ var $figure_thmbs = $('#figure-thmbs');
 if ($figure_thmbs.length) {
   $figure_thmbs.find('.item a').on('click', function(e) {
     e.preventDefault();
+    doi= $(this).data('doi');
     ref= $(this).data('uri');
-    json_url= $(this).data('json-url');
-    launchModal(json_url, ref, 'fig');
+    launchModal(doi, ref, 'fig');
   });
   $wrap = $figure_thmbs.find('div.wrapper');
-  $tog = $('<span class="toggle">Hide Figures</span>').toggle(function() {
-      $wrap.hide();
-      $figure_thmbs.find('div.buttons').hide();
-      $tog.html('Show Figures')
-        .toggleClass('hide');
-    }, function() {
-      $wrap.show();
-      $figure_thmbs.find('div.buttons').show();
-      $tog.html('Hide Figures')
-        .toggleClass('hide');
-    }
-  ).appendTo($figure_thmbs);
+  $fig_tog = $('<span>Hide Figures</span>').toggle(function() {
+        $wrap.hide();
+        $figure_thmbs.find('div.buttons').hide();
+        $figure_thmbs.find('div.controls').hide();
+        $fig_tog.html('Show Figures')
+            .toggleClass('hide');
+      }, function() {
+        $wrap.show();
+        $figure_thmbs.find('div.buttons').show();
+        $figure_thmbs.find('div.controls').show();
+        $fig_tog.html('Hide Figures')
+            .toggleClass('hide');
+      }
+  ).insertAfter($figure_thmbs)
+      .wrap('<div id="fig-toggle" class="cf" />');
 }
 
 var $fig_inline = $('#article-block').find('div.figure');
@@ -642,8 +683,8 @@ if ($fig_inline.length) {
   $lnks.on('click', function(e) {
     e.preventDefault();
     ref= $(this).data('uri');
-    json_url= $(this).data('json-url');
-    launchModal(json_url, ref, 'fig');
+    doi= $(this).data('doi');
+    launchModal(doi, ref, 'fig');
   });
   $lnks.append('<div class="expand" />');
 }
@@ -651,23 +692,23 @@ if ($fig_inline.length) {
 var $fig_results = $('#fig-search-results');
 if ($fig_results.length) {
   $fig_results.find('a.figures').on('click', function() {
-    json_url= $(this).data('json-url');
+    doi= $(this).data('doi');
     el = $(this).closest('ul').closest('li');
-    launchModal(json_url, null, 'fig', el);
+    launchModal(doi, null, 'fig', el);
   });
   $fig_results.find('a.abstract').on('click', function() {
-    json_url= $(this).data('json-url');
+    doi= $(this).data('doi');
     el = $(this).closest('ul').closest('li');
-    launchModal(json_url, null, 'abstract', el);
+    launchModal(doi, null, 'abstract', el);
   });
 }
 
 
-var $nav_figs = $('#nav-figures');
+var $nav_figs = $('#nav-figures a');
 if ($nav_figs.length) {
   $nav_figs.on('click', function() {
-    json_url= $(this).data('json-url');
-    launchModal(json_url, null, 'fig');
+    doi= $(this).data('doi');
+    launchModal(doi, null, 'fig');
   });
 }
 
