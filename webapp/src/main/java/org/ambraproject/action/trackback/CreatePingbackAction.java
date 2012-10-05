@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action for incoming pingback requests.
@@ -81,6 +83,47 @@ public class CreatePingbackAction extends BaseActionSupport {
         + "(\"" + sourceUri.toASCIIString() + "\", \"" + targetUri.toASCIIString() + "\")";
   }
 
+  private static final String FAULT_LOG_FORMAT =
+      "XML-RPC Fault: code=%d; message=\"%s\"; RPC method=\"%s\"; RPC parameters=%s";
+
+  /**
+   * Log the content of and response to a faulty pingback request.
+   * <p/>
+   * When the XML-RPC server library handles an {@link XmlRpcException}, it logs the stack trace, but otherwise the
+   * system would not retain data about the faulty input from the client. So this method does. (This makes it an
+   * exception to the "log or throw but not both" pattern: it logs data that would be discarded after the exception is
+   * thrown.)
+   *
+   * @param fault   the exception encapsulating the fault message to send as an XML-RPC response
+   * @param request the faulty request
+   */
+  private void logXmlRpcFault(XmlRpcException fault, XmlRpcRequest request) {
+    if (log.isInfoEnabled()) {
+      int parameterCount = request.getParameterCount();
+      List<String> requestParameters = new ArrayList<String>(parameterCount);
+      for (int i = 0; i < parameterCount; i++) {
+        requestParameters.add(String.valueOf(request.getParameter(i)));
+      }
+
+      String logMessage = String.format(FAULT_LOG_FORMAT, fault.code, fault.getMessage(),
+          request.getMethodName(), requestParameters);
+      log.info(logMessage);
+    }
+  }
+
+  /**
+   * Log the content of and response to an XML-RPC request to an unsupported method name.
+   *
+   * @param fault      the exception encapsulating the fault message to send as an XML-RPC response
+   * @param methodName the remote procedure name
+   */
+  private void logXmlRpcFault(XmlRpcException fault, String methodName) {
+    if (log.isInfoEnabled()) {
+      String logMessage = String.format(FAULT_LOG_FORMAT, fault.code, fault.getMessage(), methodName, null);
+      log.info(logMessage);
+    }
+  }
+
   /**
    * Adapter object to make {@link XmlRpcServletServer} delegate to {@link PingbackService}.
    */
@@ -93,6 +136,22 @@ public class CreatePingbackAction extends BaseActionSupport {
 
     @Override
     public Object execute(XmlRpcRequest request) throws XmlRpcException {
+      try {
+        return handleRequest(request);
+      } catch (XmlRpcException fault) {
+        logXmlRpcFault(fault, request);
+        throw fault;
+      }
+    }
+
+    /**
+     * Receive an XML-RPC request and, if it's a valid pingback, store it.
+     *
+     * @param request the XML-RPC request
+     * @return a response message
+     * @throws XmlRpcException if the request is invalid or the pingback will not be stored
+     */
+    private String handleRequest(XmlRpcRequest request) throws XmlRpcException {
       int paramCount = request.getParameterCount();
       if (paramCount != 2) {
         throw PingbackFault.INVALID_PARAMS.getException();
@@ -137,7 +196,9 @@ public class CreatePingbackAction extends BaseActionSupport {
         if (!PINGBACK_METHOD_NAME.equals(handlerName)) {
           String message = "Method not found: \"" + handlerName + "\". The only supported RPC method is \""
               + PINGBACK_METHOD_NAME + "\".";
-          throw PingbackFault.METHOD_NOT_FOUND.getException(message);
+          XmlRpcException fault = PingbackFault.METHOD_NOT_FOUND.getException(message);
+          logXmlRpcFault(fault, handlerName);
+          throw fault;
         }
         return new PingbackHandler(pingbackServerHostname);
       }

@@ -87,11 +87,7 @@ public abstract class LinkbackServiceImpl extends HibernateServiceImpl implement
 
       //parse the html, looking for links
       LinkCallback callback = new LinkCallback(linkValidator);
-      try {
-        parser.parse(new StringReader(html.toString()), callback, true);
-      } catch (ParserEarlyHaltException e) {
-        // This is normal. Fall through.
-      }
+      parser.parse(new StringReader(html.toString()), callback, true);
       return callback.makeDigest();
     } finally {
       //close our reader (closes all the encapsulated streams)
@@ -226,7 +222,6 @@ public abstract class LinkbackServiceImpl extends HibernateServiceImpl implement
         }
         if (linkValidator.isValid(blogLink)) {
           this.link = blogLink;
-          checkHaltConditions();
         }
       } else if (HTML.Tag.TITLE == tag) {
         // Valid HTML has no elements nested in <title>, so expect the next handleText call to have the title
@@ -239,19 +234,6 @@ public abstract class LinkbackServiceImpl extends HibernateServiceImpl implement
       if (atTitle) {
         title = String.valueOf(data);
         atTitle = false;
-        checkHaltConditions();
-      }
-    }
-
-    /**
-     * If this object already contains all the data it was seeking in the page, throw an exception to halt the
-     * superclass's parsing operation.
-     *
-     * @throws ParserEarlyHaltException if the title and link are found
-     */
-    private void checkHaltConditions() {
-      if (link != null && title != null) {
-        throw new ParserEarlyHaltException();
       }
     }
 

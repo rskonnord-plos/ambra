@@ -2636,7 +2636,7 @@
         and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment)]|text()"
         mode="none"/>
-      <xsl:if test="extraCitationInfo/@doi">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -2664,7 +2664,7 @@
         and not(self::collab) and not(self::comment) and not(self::year)
         and not (self::article-title)]|text()"
         mode="none"/>
-      <xsl:if test="extraCitationInfo/@doi">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -3371,8 +3371,8 @@
       </xsl:if>
       <!-- only output a single comment tag that appears as the very last child of the
         citation. -->
-      <xsl:variable name="x" select="child::*[position()=last()]"/>
-      <xsl:if test="local-name($x)='comment' and not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
+      <xsl:variable name="x" select="child::comment[position()=last()]"/>
+      <xsl:if test="not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
         <xsl:text> </xsl:text><xsl:apply-templates select="$x"/>
       </xsl:if>
       <xsl:apply-templates select="annotation" mode="citation"/>
