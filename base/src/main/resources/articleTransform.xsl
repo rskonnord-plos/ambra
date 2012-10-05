@@ -313,7 +313,7 @@
                       <xsl:attribute name="id"><xsl:value-of select="$figId"/></xsl:attribute>
                       <xsl:attribute name="title">Click for larger image </xsl:attribute>
                       <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
-                      <xsl:attribute name="data-json-url"><xsl:value-of select="$targetURI"/></xsl:attribute>
+                      <xsl:attribute name="data-doi"><xsl:value-of select="$targetURI"/></xsl:attribute>
                       <xsl:attribute name="data-uri"><xsl:value-of select="$imageURI"/></xsl:attribute>
                       <xsl:element name="img">
                           <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
