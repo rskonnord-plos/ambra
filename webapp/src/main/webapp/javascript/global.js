@@ -534,7 +534,7 @@ var launchModal = function(doi, ref, state, el) {
       success: function(data){
         $.each(data.response.docs, function(){
           abstract_html ='<div id="fig-viewer-abst">'
-              + '<div class="txt">' + this.abstract + '</div>'
+              + '<div class="txt">' + this["abstract"] + '</div>'
               + '<div class="lnks">'
               + '<p class="dl">Download'
               + ' <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Artilce PDF Version</a>'
