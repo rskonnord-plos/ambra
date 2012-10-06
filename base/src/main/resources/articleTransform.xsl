@@ -218,18 +218,21 @@
       </xsl:choose>
     </xsl:template>
 
-  <xsl:template name="makeIdFromXpathLocation">
+  <xsl:template name="makeIdNameFromXpathLocation">
     <xsl:variable name="idFromXpath">
-      <xsl:call-template name="createIdXpath">
+      <xsl:call-template name="createIdNameXpath">
         <xsl:with-param name="theNode" select="."/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:attribute name="id">
       <xsl:value-of select="substring($idFromXpath, 2)"/>
     </xsl:attribute>
+    <xsl:attribute name="name">
+      <xsl:value-of select="substring($idFromXpath, 2)"/>
+    </xsl:attribute>
   </xsl:template>
 
-  <xsl:template name="createIdXpath">
+  <xsl:template name="createIdNameXpath">
     <xsl:param name="theNode" select="."/>
     <xsl:choose>
       <xsl:when test="$theNode[1]">
@@ -865,7 +868,7 @@
 	    </xsl:when>
 		<xsl:otherwise>
       <a>
-        <xsl:call-template name="makeIdFromXpathLocation"/>
+        <xsl:call-template name="makeIdNameFromXpathLocation"/>
       </a>
       <p>
             <xsl:call-template name="makeXpathLocation"/>
