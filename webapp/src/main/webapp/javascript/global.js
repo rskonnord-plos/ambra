@@ -480,8 +480,7 @@ if ($fig_search.length) {
 
 	
 var launchModal = function(doi, ref, state, el) {
-	//var path = '/article/fetchObject.action?uri'
-	var path = 'article/';
+	var path = '/article/fetchObject.action?uri='
 	var $modal = $('<div id="fig-viewer" class="modal" />');
 	var $thmbs = $('<div id="fig-viewer-thmbs" />');
 	var $slides = $('<div id="fig-viewer-slides" />');
@@ -492,8 +491,7 @@ var launchModal = function(doi, ref, state, el) {
 	var page_url;	
 	var buildFigs = function() {
 		$.ajax({
-			// url: '/article/lightbox.action?uri='+ doi,
-			url: 'article/' + doi,
+			url: '/article/lightbox.action?uri='+ doi,
 			dataFilter: function (data, type) {
 				return data.replace(/(\/\*|\*\/)/g, '');
 			},
@@ -566,8 +564,7 @@ var launchModal = function(doi, ref, state, el) {
 	
 	var buildAbs = function() {
 		$.ajax({
-			//url: 'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
-			url: 'article/SOLR/' + doi,	
+			url: 'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi + '%22' + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
 			dataType:'json',
 			success: function(data){				
 				$.each(data.response.docs, function(){
