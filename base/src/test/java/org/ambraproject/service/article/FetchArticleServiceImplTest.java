@@ -24,7 +24,7 @@ public class FetchArticleServiceImplTest extends BaseTest {
   /**
    * This is testing the xsl transform of the article xml
    */
-  public void testGetArticleAsHTML() {
+  public void testGetArticleAsHTML() throws Exception {
 
     String doi = "info:doi/10.1371/journal.pone.0023176";
 
@@ -47,15 +47,16 @@ public class FetchArticleServiceImplTest extends BaseTest {
     article.setCitedArticles(new ArrayList<CitedArticle>());
 
     CitedArticle citedArticle = new CitedArticle();
-    citedArticle.setKey("8");
-    citedArticle.setYear(1989);
-    citedArticle.setDisplayYear("1989");
-    citedArticle.setVolumeNumber(109);
-    citedArticle.setVolume("109");
-    citedArticle.setTitle("Analysis of fibronectin receptor function with monoclonal antibodies: roles in cell adhesion, migration, matrix assembly, and cytoskeletal organization.");
-    citedArticle.setPages("863-875");
-    citedArticle.seteLocationID("863");
-    citedArticle.setJournal("J Cell Biol");
+    citedArticle.setKey("1");
+    citedArticle.setYear(1982);
+    citedArticle.setDisplayYear("1982");
+    citedArticle.setVolumeNumber(115);
+    citedArticle.setVolume("115");
+    citedArticle.setIssue("5");
+    citedArticle.setTitle("Estimating household and community transmission parameters for influenza.");
+    citedArticle.setPages("736-51");
+    citedArticle.seteLocationID("736");
+    citedArticle.setJournal("Am J Epidemiol");
     citedArticle.setCitationType("http://purl.org/net/nknouf/ns/bibtex#Article");
 
     article.getCitedArticles().add(citedArticle);
@@ -69,20 +70,14 @@ public class FetchArticleServiceImplTest extends BaseTest {
     articleInfo.getCitedArticles().add(citedArticle);
 
 
-    try {
+    // note, addExtraCitationInfo function throws an error if the citations in the article xml doesn't match the
+    // citedArticles list in the articleInfo object
+    String output = fetchArticleService.getArticleAsHTML(articleInfo);
+    Document doc = Jsoup.parseBodyFragment(output);
 
-      // note, addExtraCitationInfo function throws an error if the citations in the article xml doesn't match the
-      // citedArticles list in the articleInfo object
-      String output = fetchArticleService.getArticleAsHTML(articleInfo);
-      Document doc = Jsoup.parseBodyFragment(output);
-
-      // test all the differetn aspects of the xsl transformation
-      for (HtmlChecker validator : HtmlChecker.allCheckers()) {
-        validator.check(doc);
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    // test all the differetn aspects of the xsl transformation
+    for (HtmlChecker validator : HtmlChecker.allCheckers()) {
+      validator.check(doc);
     }
 
   }
