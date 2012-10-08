@@ -563,9 +563,12 @@ var launchModal = function(doi, ref, state, el) {
 	}();
 	
 	var buildAbs = function() {
-		$.ajax({
+		$.jsonp({
 			url: 'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi + '%22' + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
 			dataType:'json',
+            context: document.body,
+            timeout: 10000,
+            callbackParameter: "callback",
 			success: function(data){				
 				$.each(data.response.docs, function(){
 					abstract_html ='<div id="fig-viewer-abst">'
@@ -583,7 +586,10 @@ var launchModal = function(doi, ref, state, el) {
 					$modal.append(abstract_html);
 				});
 				displayModal();
-			}
+			},
+            error:function(xOptions, textStatus) {
+              console.log('Error: ' + textStatus);
+            }
 		});
 	}
 		
