@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * BrowseIssueAction retrieves data for presentation of an issue and a table of contents. Articles
@@ -48,7 +50,10 @@ public class BrowseIssueAction extends BaseActionSupport{
   private JournalService journalService;
   private BrowseService browseService;
   private IssueInfo issueInfo;
+  private String issueFullDescription;
   private String issueDescription;
+  private String issueTitle;
+  private String issueImageCredit;
   private List<TOCArticleGroup> articleGroups;
 
   private XMLService secondaryObjectService;
@@ -95,17 +100,44 @@ public class BrowseIssueAction extends BaseActionSupport{
     //  Issue should always have a parent Volume.
     volumeInfo = browseService.getVolumeInfo(issueInfo.getParentVolume(), this.getCurrentJournal());
 
-    // Translate the currentIssue description to HTML
     if (issueInfo.getDescription() != null) {
-      issueDescription = issueInfo.getDescription();
+      issueFullDescription = issueInfo.getDescription();
+      String results[] = formatIssue(issueFullDescription);
+      issueTitle = results[0];
+      issueImageCredit = results[1];
+      issueDescription = results[2];
     } else {
       log.error("The currentIssue description was null. Issue DOI='" + issueInfo.getIssueURI() + "'");
-      issueDescription = "No description found for this issue";
+      issueFullDescription = "No description found for this issue";
     }
 
     articleGroups = browseService.getArticleGrpList(issueInfo, getAuthId());
 
     return SUCCESS;
+  }
+
+  private String[] formatIssue(String desc) {
+    Pattern p1 = Pattern.compile("<title>(.*?)</title>");
+    Pattern p2 = Pattern.compile("<italic>Image Credit: (.*?)</italic>");
+    Pattern p3 = Pattern.compile("<p>(.*?)</p>");
+    Pattern patterns[] = {p1, p2, p3};
+    String results[] = {"", "", ""};
+    for (int i=0; i< patterns.length; ++i) {
+      results[i] = formatSingleIssue(patterns[i], desc);
+    }
+    return results;
+  }
+
+  private String formatSingleIssue(Pattern p, String desc){
+    String description = "";
+    if(desc != null) {
+      Matcher m = p.matcher(desc);
+      if (m.find()) {
+        description = m.group(1);
+        description = description.replaceAll("<.*?>", "");
+      }
+    }
+    return description;
   }
 
   /**
@@ -166,15 +198,27 @@ public class BrowseIssueAction extends BaseActionSupport{
     this.browseService = browseService;
   }
 
-  public String getIssueDescription() {
-    return issueDescription;
-  }
-
   /**
    * returns the VolumeInfo for the current issue's parent volume
    * @return VolumeInfo
    */
   public VolumeInfo getVolumeInfo() {
     return volumeInfo;
+  }
+
+  public String getIssueImageCredit() {
+    return issueImageCredit;
+  }
+
+  public String getIssueTitle() {
+    return issueTitle;
+  }
+
+  public String getIssueDescription() {
+    return issueDescription;
+  }
+
+  public String getIssueFullDescription() {
+    return issueFullDescription;
   }
 }
