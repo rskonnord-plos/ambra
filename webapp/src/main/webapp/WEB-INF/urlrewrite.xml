@@ -309,7 +309,16 @@
       re-write incoming requests for static pages
       /static/whatever? -> /static/whatever.action
     </note>
-    <from>^/static/(\s+)\??.*$</from>
+    <from>^/static/([\w\d]+)\??.*$</from>
     <to>/static/$1.action</to>
   </rule>
+  <outbound-rule>
+    <note>
+      re-write outbound static action links
+      /static/whatever.action?... -> /static/whatever
+    </note>
+    <from>^/static/([\w\d]+).action\??.*$</from>
+    <to last="true">/static/$1</to>
+  </outbound-rule>
+
 </urlrewrite>
