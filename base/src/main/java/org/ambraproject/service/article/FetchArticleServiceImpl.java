@@ -45,10 +45,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.activation.DataSource;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -276,6 +274,30 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
     try {
       XPathExpression xpr = xpath.compile("//author-notes/fn[@fn-type='con']");
+      NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
+
+      if(nodeList.getLength() > 0) {
+        //TODO: Test this code across many articles
+        return nodeList.item(0).getTextContent();
+      }
+
+    } catch (XPathExpressionException ex) {
+      log.error("Error occurred while gathering the author correspondence.", ex);
+    }
+
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public String getAuthorCompetingInterest(Document doc)
+  {
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+
+    try {
+      XPathExpression xpr = xpath.compile("//fn-group/fn[@fn-type='conflict']");
       NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
 
       if(nodeList.getLength() > 0) {

@@ -20,11 +20,10 @@
 
 package org.ambraproject.service.article;
 
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.models.Article;
 import org.ambraproject.service.hibernate.HibernateService;
 import org.ambraproject.views.AuthorExtra;
 import org.ambraproject.views.CitationReference;
+import org.ambraproject.views.article.ArticleInfo;
 import org.w3c.dom.Document;
 import java.util.ArrayList;
 
@@ -72,6 +71,15 @@ public interface FetchArticleService extends HibernateService {
    * @return the author contributions
    */
   public String getAuthorContributions(Document doc);
+
+  /**
+   * Get the authors competing interest
+   *
+   * @param doc
+   *
+   * @return the authors competing interest
+   */
+  public String getAuthorCompetingInterest(Document doc);
 
   /**
    * Get references for a given article

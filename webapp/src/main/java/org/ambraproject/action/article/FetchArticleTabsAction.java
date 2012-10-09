@@ -81,6 +81,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private String annotationId = "";
   private String correspondingAuthor = "";
   private String authorContributions = "";
+  private String competingInterest = "";
   private int pageCount = 0;
 
   private int totalNumAnnotations = 0;
@@ -386,6 +387,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     authorExtras = this.fetchArticleService.getAuthorAffiliations(doc);
     correspondingAuthor = this.fetchArticleService.getCorrespondingAuthor(doc);
     authorContributions = this.fetchArticleService.getAuthorContributions(doc);
+    competingInterest = this.fetchArticleService.getAuthorCompetingInterest(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
     articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
@@ -622,6 +624,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    */
   public String getAuthorContributions() {
     return this.authorContributions;
+  }
+
+  /**
+   * Get the authors competing interest
+   * @return
+   */
+  public String getCompetingInterest() {
+    return competingInterest;
   }
 
   /**

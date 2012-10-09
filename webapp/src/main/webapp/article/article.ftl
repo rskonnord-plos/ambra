@@ -54,9 +54,10 @@
                 <#assign name = "${assets.doi?replace('info:doi/10.1371/journal.','')}"/>
                 <#assign formattedName = "${name?replace('.','-')}"/>
                 <div class="item">
-                  <a href="#${formattedName}" data-doi="${articleInfoX.doi}" data-uri="${assets.doi}" title="${assets
-                  .title}">
-                    <img src="/article/fetchObject.action?uri=${assets.doi}&representation=PNG_I" alt=""></a>
+                  <a href="#${formattedName}" data-doi="${articleInfoX.doi}" data-uri="${assets.doi}"
+                     title="${assets.title}">
+                    <img src="/article/fetchObject.action?uri=${assets.doi}&representation=PNG_I" alt="">
+                  </a>
                 </div>
               </#list>
             </#if>
@@ -70,7 +71,7 @@
               <li><a href="TEST">Reader Comments (3)</a></li>
               <li><a href="TEST">Corrections (2)</a></li>
               <li><a href="TEST">Supporting Material (2)</a></li>
-              <li><a data-doi="article/10.1371/journal.pone.0000001" id="nav-figures">Figures</a></li>
+              <li><a data-doi="${articleInfoX.doi}" id="nav-figures">Figures</a></li>
             </ul>
 
           </div>
