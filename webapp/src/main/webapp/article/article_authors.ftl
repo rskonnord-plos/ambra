@@ -51,8 +51,12 @@
 
           <dl class="authors">
             <#list authorExtras as author>
+              <@s.url id="searchURL" includeParams="none"
+              pagesize="10" queryField="author" unformattedQuery="author:\"${author.authorName}\""
+              journalOpt="all" subjectCatOpt="all" filterArticleTypeOpt="all"
+              namespace="/search" action="advancedSearch"/>
               <dt>
-                ${author.authorName}
+                <a href="${searchURL}">${author.authorName}</a>
               </dt>
               <dd>
                 <#list author.affiliations as affiliation>
