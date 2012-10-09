@@ -199,6 +199,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       }
 
       XPathExpression authorExpr = xpath.compile("//contrib-group/contrib[@contrib-type='author']");
+      XPathExpression equalContribExpr = xpath.compile("//@equal-contrib");
       XPathExpression surNameExpr = xpath.compile("//name/surname");
       XPathExpression givenNameExpr = xpath.compile("//name/given-names");
       XPathExpression affExpr = xpath.compile("//xref[@ref-type='aff']");
@@ -211,6 +212,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
         df.appendChild(cnode);
         Node sNode = (Node) surNameExpr.evaluate(df, XPathConstants.NODE);
         Node gNode = (Node) givenNameExpr.evaluate(df, XPathConstants.NODE);
+        Node ecNode = (Node) equalContribExpr.evaluate(df, XPathConstants.NODE);
         
         // Either surname or givenName can be blank
         String surname = (sNode == null) ? "" : sNode.getTextContent();
@@ -226,10 +228,12 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
             String affId = anode.getAttributes().getNamedItem("rid").getTextContent();
             affiliations.add(affiliateMap.get(affId));
           }
+          String equalContrib = (ecNode == null) ? "" : ecNode.getTextContent();
 
           AuthorExtra authorEx = new AuthorExtra();
           authorEx.setAuthorName(surname, givenName);
           authorEx.setAffiliations(affiliations);
+          authorEx.setEqualContrib(equalContrib);
           list.add(authorEx);
         }
       }

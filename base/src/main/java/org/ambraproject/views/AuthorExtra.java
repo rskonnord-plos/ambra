@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class AuthorExtra {
   private String authorName;
   private ArrayList<String> affiliations = new ArrayList<String>();
+  private String equalContrib;
 
   public String getAuthorName() {
     return authorName;
@@ -40,5 +41,13 @@ public class AuthorExtra {
 
   public void setAffiliations(ArrayList<String> affiliations) {
     this.affiliations = affiliations;
+  }
+
+  public String getEqualContrib() {
+    return equalContrib;
+  }
+
+  public void setEqualContrib(String equalContrib) {
+    this.equalContrib = equalContrib;
   }
 }

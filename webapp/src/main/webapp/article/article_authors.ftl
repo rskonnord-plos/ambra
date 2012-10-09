@@ -25,9 +25,9 @@
           <#if authorExtras?? >
             <#list authorExtras as author>
               <#if (author_has_next)>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span>,</span></span>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes"><span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if>,</span></span>
               <#else>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></span></span>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes"><span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if></span></span>
               </#if>
             </#list>
           </#if>
@@ -51,12 +51,8 @@
 
           <dl class="authors">
             <#list authorExtras as author>
-              <@s.url id="searchURL" includeParams="none"
-              pagesize="10" queryField="author" unformattedQuery="author:\"${author.authorName}\""
-              journalOpt="all" subjectCatOpt="all" filterArticleTypeOpt="all"
-              namespace="/search" action="advancedSearch"/>
               <dt>
-                <a href="${searchURL}">${author.authorName}</a>
+                ${author.authorName}
               </dt>
               <dd>
                 <#list author.affiliations as affiliation>
