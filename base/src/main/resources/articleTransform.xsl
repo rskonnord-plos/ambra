@@ -330,7 +330,40 @@
                       </xsl:element>
                   </xsl:element>
                 </div>
-                <p>
+              <!--start figure download-->
+              <div class="figure-inline-download">
+                Download:
+                <xsl:element name="a">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="$pptURL"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="class">ppt</xsl:attribute>
+                  PowerPoint slide
+                </xsl:element> |
+                <xsl:element name="a">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="$bigImgURL"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="class">png</xsl:attribute>
+                  larger image (<xsl:element name="span">
+                  <xsl:attribute name="id">
+                    <xsl:value-of select="$bigImgDOI"/>
+                  </xsl:attribute>
+                </xsl:element> PNG)</xsl:element> |
+                <xsl:element name="a">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="$origImgURL"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="class">tiff</xsl:attribute>
+                  original image (<xsl:element name="span">
+                  <xsl:attribute name="id">
+                    <xsl:value-of select="$origImgDOI"/>
+                  </xsl:attribute>
+                </xsl:element> TIFF)
+                </xsl:element>
+              </div>
+              <!--end figure download-->
+              <p>
                   <strong>
                     <xsl:call-template name="makeXpathLocationParam" >
                         <xsl:with-param name="node" select="label"/>
@@ -351,39 +384,6 @@
                 <xsl:if test="object-id[@pub-id-type='doi']">
                     <span xpathLocation="noSelect"><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
                 </xsl:if>
-                <!--start figure download-->
-                <div class="figure-inline-download">
-                  Download:
-                  <xsl:element name="a">
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$pptURL"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="class">ppt</xsl:attribute>
-                    PowerPoint slide
-                  </xsl:element> |
-                  <xsl:element name="a">
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$bigImgURL"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="class">png</xsl:attribute>
-                    larger image (<xsl:element name="span">
-                    <xsl:attribute name="id">
-                      <xsl:value-of select="$bigImgDOI"/>
-                    </xsl:attribute>
-                  </xsl:element> PNG)</xsl:element> |
-                  <xsl:element name="a">
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$origImgURL"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="class">tiff</xsl:attribute>
-                    original image (<xsl:element name="span">
-                    <xsl:attribute name="id">
-                      <xsl:value-of select="$origImgDOI"/>
-                    </xsl:attribute>
-                  </xsl:element> TIFF)
-                  </xsl:element>
-                </div>
-              <!--end figure download-->
             </div>
         </xsl:if>
         <xsl:if test="not(graphic)">
