@@ -55,7 +55,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class VersionedFileDirective implements TemplateDirectiveModel {
 
-  protected static final Logger log = LoggerFactory.getLogger(VersionedFileDirective.class);
+  private static final Logger log = LoggerFactory.getLogger(VersionedFileDirective.class);
 
   /**
    * Frequency with which the fingerprintCache is cleared, in milliseconds.  mbaehr said that 15 minutes is a
@@ -149,13 +149,11 @@ public abstract class VersionedFileDirective implements TemplateDirectiveModel {
       throw new TemplateModelException(se);
     }
 
-    //Sometimes we link to CSS that is external to our site.  If we can't find the file locally
-    //Just return the file path unmodified
+    // There are some style and script tags in the codebase that refer to non-existent files.  Just do nothing
+    // in these cases.
     File test = new File(path);
     if (test.exists()) {
       environment.getOut().write(getLink(filename, getFingerprint(path), params));
-    } else {
-      environment.getOut().write(getLink(filename, null, params));
     }
   }
 
