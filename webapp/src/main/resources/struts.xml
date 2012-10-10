@@ -46,6 +46,9 @@
       <result-type name="default_freemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
         <param name="location">/template/main.ftl</param>
       </result-type>
+      <result-type name="naked" class="org.ambraproject.struts2.AmbraFreemarkerResult">
+        <param name="location">/template/naked_template.ftl</param>
+      </result-type>
       <result-type name="ambraStream" class="org.ambraproject.struts2.AmbraStreamResult"/>
       <result-type name="json" class="org.ambraproject.struts2.JsonResult">
         <param name="excludeProperties">advisors, callbacks, permissions</param>
@@ -174,7 +177,7 @@
     </action>
 
     <action name="recentArticles" class="org.ambraproject.action.HomePageAction">
-      <result name="success" type="default_freemarker">
+      <result name="success" type="naked">
         <param name="templateFile">/article/recentArticles.ftl</param>
       </result>
     </action>
@@ -186,7 +189,7 @@
     </action>
 
     <action name="mostViewed" class="org.ambraproject.action.MostViewedAction">
-      <result name="success" type="default_freemarker">
+      <result name="success" type="naked">
         <param name="templateFile">/article/mostViewed.ftl</param>
       </result>
     </action>
