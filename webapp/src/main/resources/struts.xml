@@ -46,6 +46,9 @@
       <result-type name="default_freemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
         <param name="location">/template/main.ftl</param>
       </result-type>
+      <result-type name="static_freemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
+        <param name="location">/template/static.ftl</param>
+      </result-type>
       <result-type name="naked" class="org.ambraproject.struts2.AmbraFreemarkerResult">
         <param name="location">/template/naked_template.ftl</param>
       </result-type>
@@ -283,7 +286,7 @@
   <package name="static" extends="default" namespace="/static">
     <action name="*" class="org.ambraproject.action.NoOpAction">
       <interceptor-ref name="minimalStack"/>
-      <result name="success" type="default_freemarker">
+      <result name="success" type="static_freemarker">
         <param name="templateFile">/static/{1}.ftl</param>
       </result>
     </action>
