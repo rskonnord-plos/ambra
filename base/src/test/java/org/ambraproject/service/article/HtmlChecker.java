@@ -4,10 +4,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -16,25 +12,10 @@ import static org.testng.Assert.assertEquals;
  * Override the check function to test a specific logic of the xsl.
  *
  */
-public abstract class HtmlChecker {
 
-  public abstract void check(Document html);
-
-  private static List<HtmlChecker> allCheckers = new ArrayList<HtmlChecker>();
-
-  // keep track of all the xsl transform tests
-  public HtmlChecker() {
-    allCheckers.add(this);
-  }
-
-  public static List<HtmlChecker> allCheckers() {
-    return Collections.unmodifiableList(allCheckers);
-  }
-
-
-  public static HtmlChecker CheckForAnchorTag = new HtmlChecker() {
-    @Override
-    public void check(Document html) {
+public enum HtmlChecker {
+  CheckForAnchorTag {
+    void check(Document html) {
       Elements elements = html.getElementsByAttribute("xpathlocation");
 
       for (Element element : elements) {
@@ -58,4 +39,5 @@ public abstract class HtmlChecker {
     }
   };
 
+  abstract void check(Document html);
 }

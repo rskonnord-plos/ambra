@@ -471,10 +471,10 @@
     </dependency>
 
     <dependency>
-      <scope>test</scope>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>1.7.1</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
