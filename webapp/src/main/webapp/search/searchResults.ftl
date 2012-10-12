@@ -1,5 +1,9 @@
 <div id="nav-main" class="nav txt-lg">
   <#include "/global/global_nav.ftl">
+</div>
+
+</div><!-- pagehdr-->
+</div><!-- pagehdr-wrap -->
 
 <div id="hdr-search-results">
   <div id="db">

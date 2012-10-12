@@ -5,6 +5,10 @@
 
 <div id="nav-main" class="nav">
   <#include "/global/global_nav.ftl">
+</div>
+
+</div><!-- pagehdr-->
+</div><!-- pagehdr-wrap -->
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
