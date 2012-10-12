@@ -186,7 +186,7 @@
     </action>
 
     <action name="mostCommented" class="org.ambraproject.action.HomePageAction">
-      <result name="success" type="default_freemarker">
+      <result name="success" type="naked">
         <param name="templateFile">/article/mostCommented.ftl</param>
       </result>
     </action>
