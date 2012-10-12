@@ -153,7 +153,7 @@ ERROR, searchType must be defined.
 <div id="search-results-block" class="cf">
 
 <div class="header hdr-results">
-  <h2>145 results for <span>implicit learning and autism</span></h2>
+  <h2>${totalNoOfResults} results for <span>${query?html}</span></h2>
 </div>
 
 <div class="main">
