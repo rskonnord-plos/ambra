@@ -566,9 +566,9 @@ var launchModal = function(doi, ref, state, el) {
 		$.jsonp({
 			url: 'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi + '%22' + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
 			dataType:'json',
-            context: document.body,
-            timeout: 10000,
-            callbackParameter: "callback",
+      context: document.body,
+      timeout: 10000,
+      callbackParameter: "json.wrf",
 			success: function(data){				
 				$.each(data.response.docs, function(){
 					abstract_html ='<div id="fig-viewer-abst">'
@@ -763,3 +763,25 @@ var killModal = function(){
 var toggleModalState = function() {
 	$('#fig-viewer').toggleClass('abstract');
 }
+
+function getParameterByName(name)
+{
+  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  var regexS = "[\\?&]" + name + "=([^&#]*)";
+  var regex = new RegExp(regexS);
+  var results = regex.exec(window.location.search);
+  if(results == null)
+    return "";
+  else
+    return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+var imageURI = getParameterByName("imageURI");
+if(imageURI){
+  var index = imageURI.lastIndexOf(".");
+  if (index > 0) {
+    var doi = imageURI.substr(0, index);
+    launchModal(doi, imageURI, 'fig');
+  }
+}
+delete imageURI;
