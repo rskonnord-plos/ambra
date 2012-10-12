@@ -26,6 +26,13 @@
 <urlrewrite>
   <rule>
     <note>
+      re-write requests at site root to home.action
+    </note>
+    <from>^/?$</from>
+    <to>/home.action</to>
+  </rule>
+  <rule>
+    <note>
       re-write incoming user profile requests.
       /user/userId -> /user/showUser.action?userId=userId
     </note>

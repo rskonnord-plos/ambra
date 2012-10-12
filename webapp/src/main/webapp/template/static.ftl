@@ -18,6 +18,7 @@
 <#attempt>
   <#include "${templateFile}">
   <#recover>
+    ${response.setStatus(404)}
     <#include "/static/pageNotFound.ftl">
 </#attempt>
 <!--include the footer-->
