@@ -159,115 +159,34 @@ ERROR, searchType must be defined.
 <div class="main">
 
   <ul id="search-results">
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
-
-    <li data-doi="10.1371/journal.pbio.0060298" data-metricsurl="http://www.plosbiology.org/article/metrics/info%3Adoi%2F10.1371%2Fjournal.pbio.0060298">
-								<span class="article">
-									<a href="TEST" title="Read Open-Access Article">Learning in Autism: Implicitly Superb</a>
-								</span>
-      <span class="authors">Dezso Nemeth, Karolina Janacsek, Virag Balogh, Zsuzsa Londe, Robert Mingesz, Marta Fazekas, Szilvia Jambori, Izabella Danyi, Agnes Vetro</span>
-      Research Article |
-      published 25 Nov 2008 |
-      PLoS Biology
-      <span class="metrics"><a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a></span>
-    </li>
+    <#list searchResults as hit>
+      <li doi="${hit.uri}" pdate="${hit.date.getTime()?string.computer}">
+              <span class="article">
+               <@s.url id="fetchArticleURL" action="fetchArticle" namespace="/article" articleURI="info:doi/${hit.uri}" includeParams="none"/>
+               <@s.a href="${(freemarker_config.getJournalUrlFromIssn(hit.issn))!(freemarker_config.doiResolverURL)}%{fetchArticleURL}" title="Read Open-Access Article"><@articleFormat>${hit.title}</@articleFormat></@s.a>
+              </span>
+        <span class="authors"> <#-- hitScore: ${hit.hitScore} --> ${hit.creator!""}</span>
+        <#if hit.highlight??><span class="cite">${hit.highlight}</span></#if>
+        <#if filterJournals?size == 1 && filterJournals?first == freemarker_config.getIssn(journalContext)>
+          <#if hit.journalTitle?? && hit.getIssn() != freemarker_config.getIssn(journalContext)>
+            <strong><em>${hit.journalTitle}</em></strong><em>:</em>
+          </#if>
+        <#else>
+          <#if hit.journalTitle??>
+            <strong><em>${hit.journalTitle}</em></strong><em>:</em>
+          </#if>
+        </#if>
+        <#if hit.articleTypeForDisplay??>
+        ${hit.articleTypeForDisplay},
+        </#if>
+        <#if hit.date??>
+          published ${hit.date?string("dd MMM yyyy")}
+        </#if>
+        <#if hit.uri??>
+          <span class="uri">${hit.uri?replace("info:doi/", "doi:")}</span>
+        </#if>
+      </li>
+    </#list>
   </ul>
 
   <div class="pagination">
