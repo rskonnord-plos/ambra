@@ -1,3 +1,116 @@
+<#import "search_variables.ftl" as search>
+
+<#function max x y>
+  <#if  (x > y) >
+    <#return x />
+  <#else>
+    <#return y />
+  </#if>
+</#function>
+<#function min x y>
+  <#if x < y>
+    <#return x />
+  <#else>
+    <#return y />
+  </#if>
+</#function>
+
+<#assign max_authors = 5>
+<#assign max_editors = 5>
+<#assign max_institutions = 5>
+<#assign max_subjects = 10>
+<#assign max_articletypes = 10>
+
+<#assign filterJournalsAsString>
+  <#list filterJournals as journalKey>
+  ${freemarker_config.getDisplayName(journalKey)}<#if journalKey_has_next> OR </#if>
+  </#list>
+</#assign>
+
+<#assign filterSubjectsAsString>
+  <#list filterSubjects as subject>
+  "${subject}"<#if subject_has_next> AND </#if>
+  </#list>
+</#assign>
+
+<#--
+  This URL is used for both the return link to the Advanced Search form AND the links to other pages of results.
+-->
+<#if (searchType.length() == 0)>
+ERROR, searchType must be defined.
+</#if>
+
+<#--
+  Allow viewing of other "pages" of results.  Form submits an advanced search. "startPage" is usually modified.
+-->
+<form name="rssSearchForm" action="${rssSearchURL}" method="get">
+
+<#--  Simple Search field  -->
+  <@s.hidden name="query" />
+  <#--  Unformatted Search field (new Advanced Search)  -->
+  <@s.hidden name="unformattedQuery" />
+
+  <#--  Find An Article Search fields  -->
+  <@s.hidden name="volume" />
+  <@s.hidden name="eLocationId" />
+  <@s.hidden name="id" />
+  <@s.hidden name="filterJournals" />
+  <@s.hidden name="filterSubjects" />
+  <@s.hidden name="filterArticleType" />
+  <@s.hidden name="filterKeyword" />
+</form>
+
+<#--
+  Allow viewing of other "pages" of results.  Form submits an advanced search. "startPage" is usually modified.
+-->
+<form name="otherSearchResultPages" action="${searchURL}" method="get">
+<@s.hidden name="startPage" />
+  <@s.hidden name="pageSize" />
+  <@s.hidden name="sort" />
+  <#--  Simple Search field  -->
+  <@s.hidden name="query" />
+
+  <#--  Unformatted Search field (new Advanced Search)  -->
+  <@s.hidden name="unformattedQuery" />
+
+  <#--  Find An Article Search fields  -->
+  <@s.hidden name="volume" />
+  <@s.hidden name="eLocationId" />
+  <@s.hidden name="id" />
+  <@s.hidden name="filterJournals" />
+  <@s.hidden name="filterSubjects" />
+  <@s.hidden name="filterArticleType" />
+  <@s.hidden name="filterKeyword" />
+</form>
+
+
+<form name="reviseSearch" action="${advancedSearchURL}" method="get">
+<@s.hidden name="noSearchFlag" value="set" />
+<@s.hidden name="pageSize" />
+<@s.hidden name="sort" />
+<#--  Simple Search field
+-->
+<@s.hidden name="query" />
+
+<#--  Unformatted Search field for the Query Builder (new Advanced Search)
+-->
+<#if searchType == "findAnArticle">
+  <input type="hidden" name="unformattedQuery" value="${queryAsExecuted}"/>
+<#else>
+  <@s.hidden name="unformattedQuery" />
+</#if>
+
+<#--  Find An Article Search fields
+-->
+<@s.hidden name="volume" />
+<@s.hidden name="eLocationId" />
+<@s.hidden name="id" />
+<@s.hidden name="filterJournals" />
+<@s.hidden name="filterSubjects" />
+<@s.hidden name="filterArticleType" />
+<@s.hidden name="filterKeyword" />
+</form>
+
 <div id="nav-main" class="nav txt-lg">
   <#include "/global/global_nav.ftl">
 </div>
@@ -21,12 +134,6 @@
   </div>
   <div id="search-options" class="cf">
     <div class="section">
-      <b>Filter:</b>
-      <span class="btn active">all</span>
-      <a href="TEST" class="btn">editor's choice</a>
-      <a href="TEST" class="btn">in the news</a>
-    </div>
-    <div class="section">
       <b>Sort:</b>
       <span class="btn active">most recent</span>
       <a href="TEST" class="btn">most viewed</a>
@@ -36,7 +143,6 @@
       <b>View as:</b>
       <span class="figs">Figures</span>
       <a href="TEST" class="list">List</a>
-      <a href="TEST" class="timeline">Timeline</a>
     </div>
   </div>
 </div><!-- hdr-fig-search -->
@@ -183,28 +289,19 @@
       <h3>Search History</h3>
     </div>
     <div class="body">
-      <ul>
-        <li><a href="TEST">Department of Health</a></li>
-        <li><a href="TEST">autism</a></li>
-        <li><a href="TEST">Ahmanson Lovelace</a></li>
-        <li><a href="TEST">James Ashe</a></li>
-        <li><a href="TEST">Giacomo Rizzolati</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- This block for Phase 2 development -->
-  <div class="block blk-style-a blk-related-searches">
-    <div class="header">
-      <h3>Related Searches</h3>
-    </div>
-    <div class="body">
-      <ul class="chart-bar">
-        <li><a href="TEST" title="duodenum"><span>&ldquo;duodenum&rdquo;</span></a> <span class="bar" style="width: 100%;"></span></li>
-        <li><a href="TEST" title="genitourinary system">&ldquo;genitourinary system&rdquo;</a> <span class="bar" style="width: 83.1%;"></span></li>
-        <li><a href="TEST" title="biliary tree">&ldquo;biliary tree&rdquo;</a> <span class="bar" style="width: 76.2%;"></span></li>
-        <li><a href="TEST" title="genitourinary system">&ldquo;genitourinary system&rdquo;</a> <span class="bar" style="width: 33.7%;"></span></li>
-      </ul>
+      <#assign recentSearchDisplayTextMaxLength = 28>
+      <#if recentSearches?? && recentSearches?size gt 0>
+        <h3>Recent Searches</h3>
+        <dl id="recentSearches" class="facet">
+          <#list recentSearches?keys?reverse as key>
+            <#if key?length gt recentSearchDisplayTextMaxLength>
+              <dd><a href="${recentSearches[key]}" title="${key}">${key?substring(0,recentSearchDisplayTextMaxLength-2)}...</a></dd>
+            <#else>
+              <dd><a href="${recentSearches[key]}" title="${key}">${key}</a></dd>
+            </#if>
+          </#list>
+        </dl>
+      </#if>
     </div>
   </div>
 
@@ -214,88 +311,43 @@
       <h3>Related Collections</h3>
     </div>
     <div class="body">
-      <h4>Authors:</h4>
-      <ul class="actions">
-        <li>
-          <a href="TEST">Kenji Hashimoto</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-        <li>
-          <a href="TEST">Olaf Sporns</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-        <li>
-          <a href="TEST">Angela Sirigu</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-        <li>
-          <a href="TEST">Bernhard Baune</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-        <li>
-          <a href="TEST">Pedro Antonio Valdes-Sosa</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-      </ul>
-      <h4>Editors:</h4>
-      <ul class="actions">
-        <li>
-          <a href="TEST">Kenji Hashimoto</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-        <li>
-          <a href="TEST">Olaf Sporns</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-        <li>
-          <a href="TEST">Angela Sirigu</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-        <li>
-          <a href="TEST">Bernhard Baune</a>
-										<span class="icons">
-											<a href="TEST"><img src="images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-											<a href="TEST"><img src="images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-											<a href="TEST"><img src="images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-										</span>
-        </li>
-      </ul>
-      <h4>Institutions:</h4>
-      <p><a href="TEST">Department of Molecular and Human Genetics</a>, Baylor College of Medicine, Houston, Texas, United States of America</p>
-      <p><a href="TEST">Department of Human Genetics</a>, University of Chicago, Chicago, Illinois, United States of America</p>
-      <p><a href="TEST">Department of Neuroscience</a>, University of Parma, Parma, Italy</p>
+      <#if ((totalNoOfResults gt 0) && (fieldErrors?size == 0))>
+        <#if (resultsSinglePage.authorFacet??)>
+          <dl id="authorFacet" class="facet">
+            <h4>Authors</h4>
+            <#list resultsSinglePage.authorFacet as f>
+              <#if f_index < max_authors>
+                <dd><a href="${advancedSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}">
+                ${f.name}</a></dd>
+              </#if>
+            </#list>
+          </dl>
+        </#if>
+
+        <#if (resultsSinglePage.editorFacet??)>
+          <dl id="editorFacet" class="facet">
+            <h4>Editors</h4>
+            <#list resultsSinglePage.editorFacet as f>
+              <#if f_index < max_editors>
+                <dd><a href="${advancedSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}">
+                ${f.name}</a></dd>
+              </#if>
+            </#list>
+          </dl>
+        </#if>
+
+        <#if (resultsSinglePage.institutionFacet??)>
+          <dl id="institutionsFacet" class="facet">
+            <h4>Institutions:</h4>
+            <#list resultsSinglePage.institutionFacet as f>
+              <#if f_index < max_institutions>
+                <dd><a href="${advancedSearchURL}?unformattedQuery=affiliate%3A%22${f.name?url}%22&from=institutionLink&sort=${sorts[0]?url}">
+                ${f.name}</a></dd>
+              </#if>
+            </#list>
+          </dl>
+        </#if>
+      </#if>
     </div>
   </div>
 </div>
