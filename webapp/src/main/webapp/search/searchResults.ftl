@@ -1,37 +1,5 @@
-
-    <div id="nav-main" class="nav txt-lg">
-      <ul>
-        <li id="mn-01"><a href="TEST">Articles</a></li>
-        <li id="mn-02"><a href="TEST">For Authors</a>
-          <div class="submenu">
-            <div class="block">
-              <div class="submit-script">
-                <h3>Submit your Manuscript</h3>
-                <ul>
-                  <li>190,000+ readers per month</li>
-                  <li>69% acceptance on average</li>
-                </ul>
-                <a href="TEST" class="btn">get started</a>
-              </div>
-            </div>
-            <div class="menu">
-              <ul>
-                <li><a href="TEST">Editorial and Publishing Policies</a></li>
-                <li><a href="TEST">Author Guidelines</a></li>
-                <li><a href="TEST">Preparing Figures and Tables</a></li>
-                <li><a href="TEST">Reviewer Guidelines</a></li>
-                <li><a href="TEST">Academic Editor Guidelines</a></li>
-                <li><a href="TEST">Submit your Manuscript</a></li>
-              </ul>
-            </div>
-          </div>
-        </li>
-        <li id="mn-03"><a href="TEST">About Us</a></li>
-      </ul>
-    </div>
-
-  </div><!-- pagehdr-->
-</div><!-- pagehdr-wrap -->
+<div id="nav-main" class="nav txt-lg">
+  <#include "/global/global_nav.ftl">
 
 <div id="hdr-search-results">
   <div id="db">

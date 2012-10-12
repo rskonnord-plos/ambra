@@ -1,8 +1,10 @@
 <#import "/article/article_variables.ftl" as article>
 <#import "/includes/global_body.ftl" as global>
 
-<#include "article_common.ftl">
+<#include "/includes/global_search.ftl">
 
+<div id="nav-main" class="nav">
+  <#include "/global/global_nav.ftl">
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
