@@ -19,7 +19,10 @@
   limitations under the License.
 -->
 <!-- begin : main contents wrapper -->
-<div id="content" class="static">
+<#include "/article/about_common.ftl">
+
+<div id="pagebdy-wrap">
+  <div id="pagebdy">
   <h1>Find this article online</h1>
   <h2>${title?html}</h2>
   <p>Use the following links to find the article:</p>
@@ -45,4 +48,5 @@
        onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in Google Scholar" class="google icon">Google Scholar</a></li>
   </ul>
   <a href="#" onClick="history.back();return false;" class="article icon">Back to article</a>
+  </div>
 </div>
