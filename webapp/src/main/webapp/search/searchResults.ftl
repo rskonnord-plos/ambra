@@ -210,7 +210,6 @@ ERROR, searchType must be defined.
     <div class="body">
       <#assign recentSearchDisplayTextMaxLength = 28>
       <#if recentSearches?? && recentSearches?size gt 0>
-        <h3>Recent Searches</h3>
         <dl id="recentSearches" class="facet">
           <#list recentSearches?keys?reverse as key>
             <#if key?length gt recentSearchDisplayTextMaxLength>
@@ -232,39 +231,57 @@ ERROR, searchType must be defined.
     <div class="body">
       <#if ((totalNoOfResults gt 0) && (fieldErrors?size == 0))>
         <#if (resultsSinglePage.authorFacet??)>
-          <dl id="authorFacet" class="facet">
-            <h4>Authors</h4>
+          <h4>Authors</h4>
+          <ul class="actions">
             <#list resultsSinglePage.authorFacet as f>
               <#if f_index < max_authors>
-                <dd><a href="${advancedSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}">
-                ${f.name}</a></dd>
+                <li>
+                  <a href="${advancedSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}">${f.name}</a>
+                  <span class="icons">
+                    <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
+                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
+                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
+                  </span>
+                </li>
               </#if>
             </#list>
-          </dl>
+          </ul>
         </#if>
 
         <#if (resultsSinglePage.editorFacet??)>
-          <dl id="editorFacet" class="facet">
-            <h4>Editors</h4>
+          <h4>Editors</h4>
+          <ul class="actions">
             <#list resultsSinglePage.editorFacet as f>
               <#if f_index < max_editors>
-                <dd><a href="${advancedSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}">
-                ${f.name}</a></dd>
+                <li>
+                  <a href="${advancedSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}">${f.name}</a>
+                  <span class="icons">
+                    <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
+                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
+                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
+                  </span>
+                </li>
               </#if>
             </#list>
-          </dl>
+          </ul>
         </#if>
 
         <#if (resultsSinglePage.institutionFacet??)>
-          <dl id="institutionsFacet" class="facet">
-            <h4>Institutions:</h4>
+          <h4>Institutions:</h4>
+          <ul class="actions">
             <#list resultsSinglePage.institutionFacet as f>
               <#if f_index < max_institutions>
-                <dd><a href="${advancedSearchURL}?unformattedQuery=affiliate%3A%22${f.name?url}%22&from=institutionLink&sort=${sorts[0]?url}">
-                ${f.name}</a></dd>
+                <li>
+                  <a href="${advancedSearchURL}?unformattedQuery=affiliate%3A%22${f.name?url}%22&from=institutionLink&sort=${sorts[0]?url}">${f.name}</a>
+                  <span class="icons">
+                    <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
+                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
+                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
+                  </span>
+                </li>
               </#if>
             </#list>
-          </dl>
+          </ul>
         </#if>
       </#if>
     </div>
