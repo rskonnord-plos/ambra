@@ -37,6 +37,9 @@ public class AmbraMailerImpl extends FreemarkerTemplateMailer implements AmbraMa
   private Map<String, String> feedbackEmailMap;
   private Map<String, String> autoIngestEmailMap;
   private Map<String, String> errorEmailMap;
+  private Map<String, String> registrationEmailMap;
+  private Map<String, String> forgotPasswordEmailMap;
+  private Map<String, String> changeEmailMap;
 
   /**
    * Setter for emailThisArticleMap.
@@ -68,6 +71,18 @@ public class AmbraMailerImpl extends FreemarkerTemplateMailer implements AmbraMa
    */
   public void setErrorEmailMap(final Map<String, String> errorEmailMap) {
     this.errorEmailMap = errorEmailMap;
+  }
+
+  public void setRegistrationEmailMap(Map<String, String> registrationEmailMap) {
+    this.registrationEmailMap = registrationEmailMap;
+  }
+
+  public void setForgotPasswordEmailMap(Map<String, String> forgotPasswordEmailMap) {
+    this.forgotPasswordEmailMap = forgotPasswordEmailMap;
+  }
+
+  public void setChangeEmailMap(Map<String, String> changeEmailMap) {
+    this.changeEmailMap = changeEmailMap;
   }
 
   /**
@@ -115,5 +130,36 @@ public class AmbraMailerImpl extends FreemarkerTemplateMailer implements AmbraMa
     newMapFields.put("host", host);
 
     sendEmail(errorEmailMap.get(TO_EMAIL_ADDRESS), getFromEmailAddress(), newMapFields);
+  }
+
+  @Override
+  public void sendVerificationEmail(String email, String verificationToken) {
+    final Map<String, Object> newMapFields = new HashMap<String, Object>();
+    newMapFields.putAll(registrationEmailMap);
+    newMapFields.put("email", email);
+    newMapFields.put("verificationToken", verificationToken);
+    newMapFields.put("name", getFromEmailName());
+    sendEmail(email, newMapFields);
+  }
+
+  @Override
+  public void sendForgotPasswordEmail(String email, String verificationToken) {
+    final Map<String, Object> newMapFields = new HashMap<String, Object>();
+    newMapFields.putAll(forgotPasswordEmailMap);
+    newMapFields.put("email", email);
+    newMapFields.put("verificationToken", verificationToken);
+    newMapFields.put("name", getFromEmailName());
+    sendEmail(email, newMapFields);
+  }
+
+  @Override
+  public void sendChangeEmailNotice(String oldEmail, String newEmail, String verificationToken) {
+    final Map<String, Object> newMapFields = new HashMap<String, Object>();
+    newMapFields.putAll(changeEmailMap);
+    newMapFields.put("oldEmail", oldEmail);
+    newMapFields.put("newEmail", newEmail);
+    newMapFields.put("verificationToken", verificationToken);
+    newMapFields.put("name", getFromEmailName());
+    sendEmail(newEmail, newMapFields);
   }
 }

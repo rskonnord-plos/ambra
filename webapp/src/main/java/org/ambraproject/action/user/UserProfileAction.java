@@ -20,10 +20,8 @@
 
 package org.ambraproject.action.user;
 
-import org.ambraproject.ApplicationException;
 import org.ambraproject.Constants;
 import org.ambraproject.models.UserProfile;
-import org.ambraproject.service.user.DuplicateDisplayNameException;
 import org.ambraproject.util.ProfanityCheckingService;
 import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
@@ -33,8 +31,6 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static org.ambraproject.Constants.SINGLE_SIGNON_EMAIL_KEY;
 
 /**
  * Creates a new user in ambra and sets come Profile properties.  User must be logged in via CAS.
@@ -65,7 +61,6 @@ public abstract class UserProfileAction extends UserActionSupport {
   private static final String WEBLOG = "weblog";
 
   private static final String HTTP_PREFIX = "http://";
-  private static final Pattern validDisplayNamePattern = Pattern.compile("[\\p{L}\\p{N}\\p{Pc}\\p{Pd}]*");
 
   private String email;
   private String displayName;
@@ -112,7 +107,6 @@ public abstract class UserProfileAction extends UserActionSupport {
   public String execute() throws Exception {
     String authId = getUserAuthId();
     UserProfile userProfile = userService.getUserByAuthId(authId);
-    if (userProfile != null) {
       setFieldsFromProfile(userProfile);
       showDisplayName = false;
       //If there is no display name, this is an old user without one, and we need to return a specific code
@@ -122,11 +116,6 @@ public abstract class UserProfileAction extends UserActionSupport {
       } else {
         return SUCCESS;
       }
-    } else {
-      //this is a new user
-      email = fetchUserEmailAddress();
-      return Constants.ReturnCode.NEW_PROFILE;
-    }
   }
 
   public String executeSaveUser() throws Exception {
@@ -139,37 +128,13 @@ public abstract class UserProfileAction extends UserActionSupport {
     //Make sure to set the auth id so the user service can see if this account already exists
     String userAuthId = getUserAuthId();
     profile.setAuthId(userAuthId);
-    try {
-      UserProfile savedProfile = userService.saveOrUpdateUser(profile);
-      afterSave(savedProfile);
-    } catch (DuplicateDisplayNameException e) {
-      addFieldError(DISPLAY_NAME, "A user already exists with the given user name");
-      return INPUT;
-    }
+    UserProfile savedProfile = userService.updateProfile(profile);
+    afterSave(savedProfile);
     return SUCCESS;
   }
 
   private boolean validateInput() {
     boolean isValid = true;
-    //check the display name
-    if (displayName == null || displayName.isEmpty()) {
-      addFieldError(DISPLAY_NAME, "Please enter a username");
-      isValid = false;
-    } else {
-      if (validDisplayNamePattern.matcher(displayName).matches()) {
-        final int usernameLength = displayName.length();
-        if (usernameLength < Integer.parseInt(Constants.Length.DISPLAY_NAME_MIN)
-            || usernameLength > Integer.parseInt(Constants.Length.DISPLAY_NAME_MAX)) {
-          addFieldError(DISPLAY_NAME, "must be between " + Constants.Length.DISPLAY_NAME_MIN +
-              " and " + Constants.Length.DISPLAY_NAME_MAX + " characters");
-          isValid = false;
-        }
-      } else {
-        addFieldError(DISPLAY_NAME, "username may only contain letters, numbers, dashes, and underscores");
-        isValid = false;
-      }
-    }
-
     if (givenNames == null || StringUtils.isBlank(givenNames)) {
       addFieldError(GIVEN_NAMES, "Given name cannot be empty");
       isValid = false;
@@ -294,29 +259,6 @@ public abstract class UserProfileAction extends UserActionSupport {
     }
 
     return userProfile;
-  }
-
-  /**
-   * Get the email address of the user being edited. This is taken from the session, if it's there, or else from CAS
-   * <p/>
-   * We only need to call this if we're editing a new user whose email isn't in ambra's database
-   *
-   * @return the email address of the user being edited
-   * @throws ApplicationException if there was a problem talking to the CAS server
-   */
-  @SuppressWarnings("unchecked")
-  protected String fetchUserEmailAddress() throws ApplicationException {
-    String presetEmail = (String) session.get(SINGLE_SIGNON_EMAIL_KEY);
-    if (presetEmail != null) {
-      return presetEmail;
-    } else {
-      String email = userService.fetchUserEmailFromCas(getUserAuthId());
-      if (email == null) {
-        throw new ApplicationException("Unable to fetch user email address for authid: " + getUserAuthId());
-      }
-      session.put(SINGLE_SIGNON_EMAIL_KEY, email);
-      return email;
-    }
   }
 
   private String makeValidUrl(final String url) throws MalformedURLException {

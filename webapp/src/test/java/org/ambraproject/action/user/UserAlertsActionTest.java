@@ -54,6 +54,7 @@ public class UserAlertsActionTest extends AmbraWebTest {
     user.setDisplayName("userWithAlertsForTestAlerts");
     user.setAuthId("authIdWithAlertsForTestUserAlerts");
     user.setAlertsJournals("journal_weekly,journal_monthly");
+    user.setPassword("pass");
     dummyDataStore.store(user);
 
     String[] expectedWeeklyAlerts = new String[]{"journal"};
@@ -103,6 +104,7 @@ public class UserAlertsActionTest extends AmbraWebTest {
     user.setAuthId("authIdForTestEditAlerts");
     user.setDisplayName("displayNameForTestEditAlerts");
     user.setAlertsJournals("journal_weekly,journal_monthly");
+    user.setPassword("pass");
     dummyDataStore.store(user);
 
     String[] newWeeklyAlerts = new String[]{"journal_weekly", "journal1_weekly"};
@@ -126,6 +128,7 @@ public class UserAlertsActionTest extends AmbraWebTest {
     user.setEmail("email@testAddAlerts.org");
     user.setAuthId("authIdForTestAddAlerts");
     user.setDisplayName("displayNameForTestAddAlerts");
+    user.setPassword("pass");
     dummyDataStore.store(user);
 
     String[] newWeeklyAlerts = new String[]{"journal_weekly", "journal1_weekly"};

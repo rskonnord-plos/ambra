@@ -44,9 +44,8 @@ public class CreateReplyActionTest extends AmbraWebTest {
   @Test
   public void testCreateReply() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateReplyAction",
         "email@createReplyAction.org",
-        "displayNameForCreateReplyAction");
+        "displayNameForCreateReplyAction", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-reply-action");
@@ -85,9 +84,8 @@ public class CreateReplyActionTest extends AmbraWebTest {
   @Test
   public void testCreateReplyWithCiStatement() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateReplyWithCiStatementAction",
         "email@createReplyWithCiStatementAction.org",
-        "displayNameForCreateReplyWithCiStatementAction");
+        "displayNameForCreateReplyWithCiStatementAction", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-reply-action");
@@ -127,9 +125,8 @@ public class CreateReplyActionTest extends AmbraWebTest {
   @Test
   public void testCreateReplyWithNoBody() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateReplyActionNoBody",
         "email@createReplyActionNoBody.org",
-        "displayNameForCreateReplyActionNoBody");
+        "displayNameForCreateReplyActionNoBody", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-reply-action");
@@ -157,9 +154,8 @@ public class CreateReplyActionTest extends AmbraWebTest {
   @Test
   public void testCreateReplyWithNoTitle() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateReplyActionNoBody",
         "email@createReplyActionNoBody.org",
-        "displayNameForCreateReplyActionNoBody");
+        "displayNameForCreateReplyActionNoBody", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-reply-action");
@@ -187,9 +183,8 @@ public class CreateReplyActionTest extends AmbraWebTest {
   @Test
   public void testCreateReplyWithCompetingInterestCheckedAndNoCiStatement() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateReplyActionNoTitle",
         "email@createReplyActionNoTitle.org",
-        "displayNameForCreateReplyActionNoTitle");
+        "displayNameForCreateReplyActionNoTitle", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-reply-action");

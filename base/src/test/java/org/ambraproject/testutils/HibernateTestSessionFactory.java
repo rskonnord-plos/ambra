@@ -87,6 +87,7 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
       admin.setAuthId(BaseTest.DEFAULT_ADMIN_AUTHID);
       admin.setEmail("admin@test.org");
       admin.setDisplayName("testAdmin");
+      admin.setPassword("adminPass");
       admin.setRoles(new HashSet<UserRole>(1));
       admin.getRoles().add(adminRole);
       hibernateTemplate.save(admin);
@@ -102,6 +103,7 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
       editorial.setAuthId(BaseTest.DEFAULT_EDITORIAL_AUTHID);
       editorial.setEmail("editorial@test.org");
       editorial.setDisplayName("editorialAdmin");
+      editorial.setPassword("pass");
       editorial.setRoles(new HashSet<UserRole>(1));
       editorial.getRoles().add(editorialRole);
       hibernateTemplate.save(editorial);
@@ -110,6 +112,7 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
       nonAdmin.setAuthId(BaseTest.DEFAULT_USER_AUTHID);
       nonAdmin.setEmail("nonAdmin@test.org");
       nonAdmin.setDisplayName("testNonAdmin");
+      nonAdmin.setPassword("nonAdminPass");
       hibernateTemplate.save(nonAdmin);
       //save the default journal
       hibernateTemplate.save(BaseTest.defaultJournal);

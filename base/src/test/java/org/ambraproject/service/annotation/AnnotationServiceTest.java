@@ -21,7 +21,6 @@
 package org.ambraproject.service.annotation;
 
 import org.ambraproject.action.BaseTest;
-import org.ambraproject.service.annotation.Context;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationCitation;
@@ -88,9 +87,9 @@ public class AnnotationServiceTest extends BaseTest {
     dummyDataStore.store(article);
 
     UserProfile creator = new UserProfile(
-        "user-1-annotationsTopLevel",
         "email@annotationsTopLevel.org",
-        "user-1-annotationsTopLevel");
+        "user-1-annotationsTopLevel",
+        "pass");
     dummyDataStore.store(creator);
 
     //dates to be able to differentiate expected order of results
@@ -205,9 +204,9 @@ public class AnnotationServiceTest extends BaseTest {
     dummyDataStore.store(article2);
 
     UserProfile creator2 = new UserProfile(
-        "user-2-annotationsTopLevel",
         "email2@annotationsTopLevel.org",
-        "user-2-annotationsTopLevel");
+        "user-2-annotationsTopLevel",
+        "pass");
     dummyDataStore.store(creator2);
 
     /**********ANNOTATIONS ON THE THIRD ARTICLE***********/
@@ -383,9 +382,8 @@ public class AnnotationServiceTest extends BaseTest {
   public void testCreateComment() throws Exception {
     Article article = new Article("id:doiForCreateCommentByService");
     UserProfile user = new UserProfile(
-        "authIdForCreateCommentService",
         "email@createCommentService.org",
-        "displayNAmeForCreateCommentService");
+        "displayNAmeForCreateCommentService", "pass");
     dummyDataStore.store(article);
     dummyDataStore.store(user);
 
@@ -423,9 +421,9 @@ public class AnnotationServiceTest extends BaseTest {
     yesterday.add(Calendar.DAY_OF_MONTH, -1);
 
     UserProfile creator = new UserProfile(
-        "authIdForTestGetAnnotationsByDate",
         "email@getAnnotationsByDate.org",
-        "displayNameForTestGetAnnotationsByDate");
+        "displayNameForTestGetAnnotationsByDate",
+        "pass");
     dummyDataStore.store(creator);
 
     Article article1 = new Article("id:doi-for-get-annotations-by-date1");
@@ -492,9 +490,8 @@ public class AnnotationServiceTest extends BaseTest {
   public void testCreateInlineNote() throws Exception {
     Article article = new Article("id:doiForCreateInlineNoteByService");
     UserProfile user = new UserProfile(
-        "authIdForCreateInlineNoteByService",
         "email@createInlineNoteByService.org",
-        "displayNAmeForCreateInlineNoteByService");
+        "displayNAmeForCreateInlineNoteByService", "pass");
     dummyDataStore.store(article);
     dummyDataStore.store(user);
 
@@ -527,9 +524,8 @@ public class AnnotationServiceTest extends BaseTest {
   public void testCreateCommentWithNullBody() throws Exception {
     Article article = new Article("id:doiForCreateWithNullBody");
     UserProfile user = new UserProfile(
-        "authIdForCreateWithNullBody",
         "email@CreateWithNullBody.org",
-        "displayNAmeForCreateWithNullBody");
+        "displayNAmeForCreateWithNullBody", "pass");
     dummyDataStore.store(article);
     dummyDataStore.store(user);
 
@@ -548,9 +544,8 @@ public class AnnotationServiceTest extends BaseTest {
   public void testCreateCommentWithBadDoi() throws Exception {
     Article article = new Article("id:doiForCreateWithBadDoi");
     UserProfile user = new UserProfile(
-        "authIdForCreateWithBadDoi",
         "email@CreateWithBadDoi.org",
-        "displayNAmeForCreateWithBadDoi");
+        "displayNAmeForCreateWithBadDoi", "pass");
     dummyDataStore.store(user);
 
     annotationService.createComment(user, article.getDoi(), "foo", "foo", "foo", null, false);
@@ -560,9 +555,8 @@ public class AnnotationServiceTest extends BaseTest {
   public void testCreateAndFlagAsCorrection() {
     Article article = new Article("id:doiForCreateAndFlagByService");
     UserProfile user = new UserProfile(
-        "authIdForCreateAndFlagByService",
         "email@CreateAndFlagByService.org",
-        "displayNAmeForCreateAndFlagByService");
+        "displayNAmeForCreateAndFlagByService", "pass");
     dummyDataStore.store(article);
     dummyDataStore.store(user);
 
@@ -610,9 +604,8 @@ public class AnnotationServiceTest extends BaseTest {
     article.setCollaborativeAuthors(Arrays.asList("The Skoll Foundation", "The Bill and Melinda Gates Foundation"));
     dummyDataStore.store(article);
     UserProfile creator = new UserProfile(
-        "authIdForAnnotationService",
         "email@annotationService.org",
-        "displayNameForAnnotationService");
+        "displayNameForAnnotationService", "pass");
     dummyDataStore.store(creator);
 
     Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, article.getID());
@@ -760,10 +753,9 @@ public class AnnotationServiceTest extends BaseTest {
   @Test
   public void testAnnotationViewEscapesHtml() {
     UserProfile creator = new UserProfile(
-        "authIdForAnnotationViewEscapesHtml",
         "email@EscapesHtml.org",
-        "displayNameForAnnotationViewEscapesHtml"
-    );
+        "displayNameForAnnotationViewEscapesHtml",
+        "pass");
     dummyDataStore.store(creator);
     Long articleId = Long.valueOf(dummyDataStore.store(new Article("id:doi-for-AnnotationViewEscapesViewHtml")));
     String title = "hello <p /> world!";
@@ -784,10 +776,9 @@ public class AnnotationServiceTest extends BaseTest {
   @Test
   public void testAnnotationViewCorrectionTitles() {
     UserProfile creator = new UserProfile(
-        "authIdForAnnotationViewCorrectionTitles",
         "email@CorrectionTitles.org",
-        "displayNameForAnnotationViewCorrectionTitles"
-    );
+        "displayNameForAnnotationViewCorrectionTitles",
+        "pass");
     dummyDataStore.store(creator);
 
     Article article = new Article();
@@ -851,7 +842,7 @@ public class AnnotationServiceTest extends BaseTest {
 
   @Test
   public void testCreateFlag() throws Exception {
-    UserProfile creator = new UserProfile("authIdForCreateFlag", "email@createFlag.org", "displayNameForCreateFlag");
+    UserProfile creator = new UserProfile("email@createFlag.org", "displayNameForCreateFlag", "pass");
     dummyDataStore.store(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, 123l);
     Long annotationId = Long.valueOf(dummyDataStore.store(annotation));
@@ -870,9 +861,8 @@ public class AnnotationServiceTest extends BaseTest {
   @Test
   public void testCreateReply() {
     UserProfile creator = new UserProfile(
-        "authIdForCreateReply",
         "email@createReply.org",
-        "displayNameForCreateReply");
+        "displayNameForCreateReply", "pass");
     dummyDataStore.store(creator);
     Article article = new Article("id:doi-for-create-reply");
     Long articleId = Long.valueOf(dummyDataStore.store(article));
@@ -895,7 +885,7 @@ public class AnnotationServiceTest extends BaseTest {
 
   @Test
   public void testCountComments() {
-    UserProfile user = new UserProfile("authIdForTestCountComments", "email@testCountComments.org", "displayNameTestCountComments");
+    UserProfile user = new UserProfile("email@testCountComments.org", "displayNameTestCountComments", "pass");
     dummyDataStore.store(user);
     Article article = new Article("id:doi-test-count-comments");
     dummyDataStore.store(article);

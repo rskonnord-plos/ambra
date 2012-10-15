@@ -44,33 +44,6 @@ public class EnsureUserAccountInterceptorTest extends BaseInterceptorTest {
     String result = interceptor.intercept(actionInvocation);
     assertEquals(result, Action.SUCCESS, "interceptor didn't forward to action invocation");
   }
-
-  @Test
-  public void testInterceptNewUser() throws Exception {
-    putInSession(Constants.AUTH_KEY, "ASDASDASD12312313EDB");
-    actionInvocation.setAction(null);
-
-    final String result = interceptor.intercept(actionInvocation);
-    assertEquals(result, Constants.ReturnCode.NEW_PROFILE, "Interceptor didn't redirect to new profile page");
-  }
-
-  @Test
-  public void testInterceptUserWithNoDisplayName() throws Exception {
-    final String GUID = "ASDASDASD12312313EDB";
-    final UserProfile ambraUser = new UserProfile();
-    ambraUser.setAuthId(GUID);
-    ambraUser.setEmail("viru@home.com");
-    ambraUser.setDisplayName(null); //Display name is not set
-    ambraUser.setRealName("virender");
-
-    putInSession(Constants.AUTH_KEY, ambraUser.getAuthId());
-    putInSession(Constants.SINGLE_SIGNON_EMAIL_KEY, ambraUser.getEmail());
-    putInSession(Constants.AMBRA_USER_KEY, ambraUser);
-
-    final String result = interceptor.intercept(actionInvocation);
-    assertEquals(result, Constants.ReturnCode.UPDATE_PROFILE, "Interceptor didn't redirect correctly");
-  }
-
   @Test
   public void testShouldForwardToOriginalAction() throws Exception {
     final String GUID = "ASDASDASD12312313EDB";
@@ -93,7 +66,7 @@ public class EnsureUserAccountInterceptorTest extends BaseInterceptorTest {
     UserProfile user = new UserProfile();
     user.setDisplayName("displayNameForUserAccountInterceptor");
     user.setEmail("email@UserAccountInterceptor.org");
-    user.setAuthId("123432534jhlkdsghlakkh");
+    user.setPassword("pass");
     dummyDataStore.store(user);
 
     putInSession(Constants.AUTH_KEY, user.getAuthId());
@@ -113,25 +86,6 @@ public class EnsureUserAccountInterceptorTest extends BaseInterceptorTest {
     //check that the user got a login object saved
     assertEquals(countLogins(user.getID()), 1,
         "Interceptor didn't store a login object for the user");
-  }
-
-  @Test
-  public void testUpdateEmailFromCAS() throws Exception {
-    UserProfile user = new UserProfile();
-    user.setDisplayName("displayNameForInterceptorUpdateEmail");
-    user.setEmail("old_email@UserAccountInterceptor.org");
-    user.setAuthId("aslkfjwoihegvfn29854");
-    dummyDataStore.store(user);
-
-    String newEmail = "new_email@UserAccountInterceptor.org";
-    putInSession(Constants.AUTH_KEY, user.getAuthId());
-    putInSession(Constants.SINGLE_SIGNON_EMAIL_KEY, newEmail); //email from CAS doesn't match the db
-
-    String result = interceptor.intercept(actionInvocation);
-    assertEquals(result, Action.SUCCESS, "Interceptor didn't allow action invocation to continue");
-
-    String storedEmail = dummyDataStore.get(UserProfile.class, user.getID()).getEmail();
-    assertEquals(storedEmail, newEmail, "Interceptor didn't update user's email");
   }
 
   private int countLogins(Long userId) {

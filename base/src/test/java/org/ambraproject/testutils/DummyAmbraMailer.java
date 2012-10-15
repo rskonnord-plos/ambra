@@ -45,6 +45,9 @@ public class DummyAmbraMailer extends AmbraMailerImpl {
     setFeedbackEmailMap(Collections.<String, String>emptyMap());
     setAutoIngestEmailMap(Collections.<String, String>emptyMap());
     setErrorEmailMap(Collections.<String, String>emptyMap());
+    setRegistrationEmailMap(Collections.<String, String>emptyMap());
+    setForgotPasswordEmailMap(Collections.<String, String>emptyMap());
+    setChangeEmailMap(Collections.<String, String>emptyMap());
   }
 
 

@@ -55,9 +55,8 @@ public class ListReplyActionTest extends AmbraWebTest {
   @Test
   public void testExecute() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForListReplyActionTest",
         "email@ListReplyActionTest.org",
-        "displayNameForListReplyActionTest");
+        "displayNameForListReplyActionTest", "pass");
     dummyDataStore.store(creator);
     Article article = new Article("id:doi-for-listReplyActionTest");
     article.setTitle("test title for article");
@@ -101,9 +100,8 @@ public class ListReplyActionTest extends AmbraWebTest {
   @Test
   public void testExecuteWithCorrection() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForListReplyActionTestWithCorrection",
         "email@ListReplyActionTestWithCorrection.org",
-        "displayNameForListReplyActionTestWithCorrection");
+        "displayNameForListReplyActionTestWithCorrection", "pass");
     dummyDataStore.store(creator);
     Article article = new Article("id:doi-for-listReplyActionTestWithCorrection");
     article.setTitle("test title");

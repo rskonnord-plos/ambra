@@ -26,12 +26,10 @@ import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
 import org.ambraproject.models.UserSearch;
-import org.ambraproject.service.user.DuplicateDisplayNameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +53,7 @@ public class UserServiceTest extends BaseTest {
     userProfile.setDisplayName("nameForTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
     userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setPassword("pass");
     Long id = Long.valueOf(dummyDataStore.store(userProfile));
 
     return new Object[][]{
@@ -127,52 +126,13 @@ public class UserServiceTest extends BaseTest {
     assertNull(login, "User service didn't return null for non-existent user");
   }
 
-  @Test(dataProvider = "userProfile")
-  public void testUpdateEmail(Long id, UserProfile userProfile) {
-    String newEmail = "new@UpdateEmail.org";
-    userService.updateEmail(id, newEmail);
-
-
-    String storedEmail = dummyDataStore.get(UserProfile.class, id).getEmail();
-
-    assertEquals(storedEmail, newEmail, "user service didn't update the user's email");
-  }
-
   @Test
-  public void testSaveUser() throws DuplicateDisplayNameException {
-    UserProfile userProfile = new UserProfile();
-    userProfile.setEmail("email@saveProfile.org");
-    userProfile.setDisplayName("displayNameForSavingUser");
-    userProfile.setAuthId("authIdForSavingUser");
-    userProfile.setBiography("Emma Swan is a 28 year-old bail bondswoman from Boston who is strong and self-reliant, " +
-        "though still somehow not quite at home in her own skin. Abandoned at birth, Emma grew up in the foster care " +
-        "system. She has learned to rely only on herself, never letting anyone else get close enough to let her down. " +
-        "She takes a special pleasure in out-maneuvering skips on the job, and seems to prefer hauling them " +
-        "in by their ears.");
-
-    UserProfile result = userService.saveOrUpdateUser(userProfile);
-    assertNotNull(result, "User service returned null user profile");
-    assertNotNull(result.getID(), "User service returned profile with null id");
-    UserProfile savedUser = dummyDataStore.get(UserProfile.class, result.getID());
-    assertEquals(savedUser.getDisplayName(), userProfile.getDisplayName(), "Saved user had incorrect display name");
-    assertEquals(savedUser.getEmail(), userProfile.getEmail(), "Saved user had incorrect email");
-    assertEquals(savedUser.getAuthId(), userProfile.getAuthId(), "Saved user had incorrect authId");
-    assertEquals(savedUser.getBiography(), userProfile.getBiography(), "Saved user had incorrect biography");
-
-    assertNotNull(savedUser.getProfileUri(), "user service didn't generate profile uri");
-    try {
-      URI.create(savedUser.getProfileUri());
-    } catch (Exception e) {
-      fail("profile uri wasn't a valid URI", e);
-    }
-  }
-
-  @Test
-  public void testUpdateUser() throws DuplicateDisplayNameException {
+  public void testUpdateUser() throws DuplicateUserException, NoSuchUserException {
     UserProfile userProfile = new UserProfile();
     userProfile.setAuthId("authIdForUpdatingUser");
     userProfile.setEmail("email@updateUser.org");
     userProfile.setDisplayName("displayNameForUpdatingUser");
+    userProfile.setPassword("pass");
     userProfile.setBiography("Regina is the mayor of Storybrooke and Henry’s adoptive mother—responsibilities she has " +
         "been balancing, without help, since she adopted Henry as a newborn. Despite the demands of her job, Regina " +
         "is an extremely attentive mother to Henry. At times, though, she can be a bit overbearing. This is " +
@@ -184,17 +144,17 @@ public class UserServiceTest extends BaseTest {
         "for Regina, who seems able to mobilize the entire population of Storybrooke to hassle Emma during her stay.";
 
     userProfile.setBiography(newBio);
-    userService.saveOrUpdateUser(userProfile);
-
+    userService.updateProfile(userProfile);
     String storedBio = dummyDataStore.get(UserProfile.class, id).getBiography();
     assertEquals(storedBio, newBio, "User didn't get biography updated");
   }
   
   @Test
-  public void testUpdateUserDoesNotOverwriteRoles() throws DuplicateDisplayNameException {
-    UserProfile user = new UserProfile("authIdForUpdateTestOverwriteRoles", 
+  public void testUpdateUserDoesNotOverwriteRoles() throws DuplicateUserException, NoSuchUserException {
+    UserProfile user = new UserProfile(
         "email@overwriteRoles.org", 
-        "displayNameForOverwriteRoles");
+        "displayNameForOverwriteRoles",
+        "pass");
     user.setRoles(new HashSet<UserRole>(dummyDataStore.getAll(UserRole.class)));
     int numRoles = user.getRoles().size();
     assertTrue(numRoles > 0, "There were no stored roles to assign"); //shouldn't happen
@@ -203,58 +163,31 @@ public class UserServiceTest extends BaseTest {
     
     user.setRoles(new HashSet<UserRole>());
 
-    userService.saveOrUpdateUser(user);
+    userService.updateProfile(user);
     Set<UserRole> storedRoles = dummyDataStore.get(UserProfile.class, id).getRoles();
     assertEquals(storedRoles.size(), numRoles, "Roles got overwritten");
   }
 
   @Test
-  public void testUpdateDoesNotOverwriteAccountAndProfileUri() throws DuplicateDisplayNameException {
-    String accountUri = "id:test-account-uri-for-overwrite-check";
+  public void testUpdateDoesNotOverwriteProfileUri() throws DuplicateUserException, NoSuchUserException {
     String profileUri = "id:test-profile-uri-for-overwrite-check";
-    UserProfile user = new UserProfile("authIdForUpdateTestOverwriteUris",
+    UserProfile user = new UserProfile(
         "email@overwriteUris.org",
-        "displayNameForOverwriteUris");
+        "displayNameForOverwriteUris",
+        "pass");
     user.setProfileUri(profileUri);
     Long id = Long.valueOf(dummyDataStore.store(user));
 
     user.setProfileUri(null);
 
-    userService.saveOrUpdateUser(user);
+    userService.updateProfile(user);
     UserProfile storedUser = dummyDataStore.get(UserProfile.class, id);
     assertEquals(storedUser.getProfileUri(), profileUri, "account uri got overwritten");
   }
 
-  @Test(expectedExceptions = {DuplicateDisplayNameException.class})
-  public void testSaveUserWithDuplicateDisplayName() throws DuplicateDisplayNameException {
-    UserProfile userProfile1 = new UserProfile();
-    userProfile1.setAuthId("authIdForDupDisplayName");
-    userProfile1.setEmail("email1@dupDisplayName.org");
-    userProfile1.setDisplayName("thisDisplayNameWillBeDuplicated");
-
-    UserProfile userProfile2 = new UserProfile();
-    userProfile2.setAuthId("authIdForDupDisplayName2");
-    userProfile2.setEmail("email2@dupDisplayName.org");
-    userProfile2.setDisplayName("thisDisplayNameWillBeDuplicated");
-
-    try {
-      userService.saveOrUpdateUser(userProfile1);
-    } catch (Exception e) {
-      fail("user service threw exception when saving first user");
-    }
-    userService.saveOrUpdateUser(userProfile2);
-  }
-
-  @Test(expectedExceptions = {DuplicateDisplayNameException.class})
-  public void testUpdateUserWithDupDisplayName() throws DuplicateDisplayNameException {
-    UserProfile userProfile1 = new UserProfile("authIdForUpdateDupDisplayName", "email@updateDupDisplayName1.org", "updateThisAndDup");
-    UserProfile userProfile2 = new UserProfile("authIdForUpdateDupDisplayName2", "email@updateDupDisplayName2.org", null);
-
-    dummyDataStore.store(userProfile1);
-    dummyDataStore.store(userProfile2);
-
-    userProfile2.setDisplayName(userProfile1.getDisplayName());
-    userService.saveOrUpdateUser(userProfile2);
+  @Test(expectedExceptions = {NoSuchUserException.class})
+  public void testUpdateNonexistentUser() throws NoSuchUserException {
+    userService.updateProfile(new UserProfile("updateNonExistent@example.org", "updateNonExistent", "pass"));
   }
 
   @Test

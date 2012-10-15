@@ -42,14 +42,14 @@ public class AnnotationTest extends BaseHibernateTest {
 
   @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullType() {
-    UserProfile creator = new UserProfile("authIdForNullType", "email@nullType.org", "displayNameForNullType");
+    UserProfile creator = new UserProfile("email@nullType.org", "displayNameForNullType", "pass");
     hibernateTemplate.save(creator);
     hibernateTemplate.save(new Annotation(creator, null, 12l));
   }
 
   @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullArticleID() {
-    UserProfile creator = new UserProfile("authIdForNullArticleId", "email@nullArticleID.org", "displayNameForNullArticleID");
+    UserProfile creator = new UserProfile("email@nullArticleID.org", "displayNameForNullArticleID", "pass");
     hibernateTemplate.save(creator);
     hibernateTemplate.save(new Annotation(creator, AnnotationType.COMMENT, null));
   }
@@ -69,10 +69,9 @@ public class AnnotationTest extends BaseHibernateTest {
   public void testSaveBasicAnnotation() {
     long testStart = Calendar.getInstance().getTimeInMillis();
     UserProfile creator = new UserProfile(
-        "authIdForInsertAnnotation",
         "email@InsertAnnotation.org",
-        "displayNameForInsertAnnotation"
-    );
+        "displayNameForInsertAnnotation",
+        "pass");
     hibernateTemplate.save(creator);
     Annotation annotation = new Annotation();
     annotation.setCreator(creator);
@@ -104,7 +103,7 @@ public class AnnotationTest extends BaseHibernateTest {
 
   @Test
   public void testSaveWithCitation() {
-    UserProfile creator = new UserProfile("authIdForSaveWithCitation", "email@saveWithCitation.org", "displayNameForSaveWithCitation");
+    UserProfile creator = new UserProfile("email@saveWithCitation.org", "displayNameForSaveWithCitation", "pass");
     hibernateTemplate.save(creator);
     Long articleID = (Long) hibernateTemplate.save(new Article("if:doi-for-saveWithCitation"));
     Annotation annotation = new Annotation(creator, AnnotationType.RETRACTION, articleID);
@@ -126,10 +125,9 @@ public class AnnotationTest extends BaseHibernateTest {
   public void testAddCitation() {
     long testStart = Calendar.getInstance().getTimeInMillis();
     UserProfile creator = new UserProfile(
-        "authIdForAnnotationWithCitation",
         "email@AnnotationCitation.org",
-        "displayNameForAnnotationCitation"
-    );
+        "displayNameForAnnotationCitation",
+        "pass");
     hibernateTemplate.save(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.REPLY, 1234l);
     Serializable id = hibernateTemplate.save(annotation);
@@ -225,10 +223,9 @@ public class AnnotationTest extends BaseHibernateTest {
   @Test
   public void testDoesNotCascadeDeleteToCreator() {
     UserProfile creator = new UserProfile(
-        "authIdForCascadeDelete",
         "email@CascadeDelete.org",
-        "displayNameForCascadeDelete"
-    );
+        "displayNameForCascadeDelete",
+        "pass");
     Serializable creatorId = hibernateTemplate.save(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.FORMAL_CORRECTION, 23l);
     hibernateTemplate.save(annotation);
@@ -239,10 +236,9 @@ public class AnnotationTest extends BaseHibernateTest {
   @Test
   public void testCascadeDeleteToCitation() {
     UserProfile creator = new UserProfile(
-        "authIdForCascadeDeleteCitation",
         "email@CascadeDeleteCitation.org",
-        "displayNameForCascadeDeleteCitation"
-    );
+        "displayNameForCascadeDeleteCitation",
+        "pass");
     hibernateTemplate.save(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.FORMAL_CORRECTION, 23l);
     Serializable annotationId = hibernateTemplate.save(annotation);
@@ -266,10 +262,9 @@ public class AnnotationTest extends BaseHibernateTest {
   @SuppressWarnings("unchecked")
   public void testLoadTypeFromStringRepresentation() {
     final Long userId = (Long) hibernateTemplate.save(new UserProfile(
-        "authIdForLoadType",
         "email@LoadType.org",
-        "displayNameForLoadType"
-    ));
+        "displayNameForLoadType",
+        "pass"));
     final Long articleId = (Long) hibernateTemplate.save(new Article("id:doi-for-LoadType"));
 
     hibernateTemplate.execute(new HibernateCallback() {

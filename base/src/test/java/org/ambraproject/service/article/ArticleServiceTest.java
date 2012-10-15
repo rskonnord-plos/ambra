@@ -743,10 +743,9 @@ public class ArticleServiceTest extends BaseTest {
     dummyDataStore.store(article);
 
     UserProfile annotationCreator = new UserProfile(
-        "authIdForArticleServiceTest",
         "email@articleServiceTest.org",
-        "displayNameForArticleServiceTest"
-    );
+        "displayNameForArticleServiceTest",
+        "pass");
     dummyDataStore.store(annotationCreator);
 
     return new Object[][]{

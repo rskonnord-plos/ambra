@@ -25,17 +25,14 @@ import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserSearch;
-import org.ambraproject.service.hibernate.URIGenerator;
 import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.ambraproject.util.FileUtils;
 import org.ambraproject.util.TextUtils;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,13 +43,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.topazproject.ambra.configuration.ConfigurationStore;
 
 import java.beans.PropertyDescriptor;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Class to roll up web services that a user needs in Ambra. Rest of application should generally
@@ -71,9 +66,6 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   private Configuration configuration;
   private boolean advancedLogging = false;
 
-  private String emailAddressUrl;
-  private String authIdParam;
-
   @Override
   @Transactional(rollbackFor = {Throwable.class})
   public UserProfile login(final String authId, final UserLogin loginInfo) {
@@ -84,16 +76,6 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
       hibernateTemplate.save(loginInfo);
     }
     return user;
-  }
-
-  @Override
-  @Transactional
-  public void updateEmail(Long userId, String email) {
-    UserProfile user = (UserProfile) hibernateTemplate.get(UserProfile.class, userId);
-    if (user != null) {
-      user.setEmail(email);
-      hibernateTemplate.update(user);
-    }
   }
 
   @Override
@@ -113,31 +95,16 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
   @Override
   @Transactional(rollbackFor = {Throwable.class})
-  public UserProfile saveOrUpdateUser(final UserProfile userProfile) throws DuplicateDisplayNameException {
-    //even if you're updating a user, it could be a user with no display name. so we need to make sure they don't pick one that already exists
-    Long count = (Long) hibernateTemplate.findByCriteria(
-        DetachedCriteria.forClass(UserProfile.class)
-            .add(Restrictions.eq("displayName", userProfile.getDisplayName()))
-            .add(Restrictions.not(Restrictions.eq("authId", userProfile.getAuthId())))
-            .setProjection(Projections.rowCount()), 0, 1)
-        .get(0);
-    if (!count.equals(0l)) {
-      throw new DuplicateDisplayNameException();
-    }
-    //check if a user with the same auth id already exists
+  public UserProfile updateProfile(final UserProfile userProfile) throws NoSuchUserException {
+    //get the user by auth id
     UserProfile existingUser = getUserByAuthId(userProfile.getAuthId());
-    if (existingUser != null) {
-      log.debug("Found a user with authID: {}, updating profile", userProfile.getAuthId());
-      copyFields(userProfile, existingUser);
-      hibernateTemplate.update(existingUser);
-      return existingUser;
-    } else {
-      log.debug("Creating a new user with authID: {}; {}", userProfile.getAuthId(), userProfile);
-      String profileUri = URIGenerator.generate(userProfile);
-      userProfile.setProfileUri(profileUri);
-      hibernateTemplate.save(userProfile);
-      return userProfile;
+    if (existingUser == null) {
+      throw new NoSuchUserException();
     }
+    log.debug("Found a user with authID: {}, updating profile", userProfile.getAuthId());
+    copyFields(userProfile, existingUser);
+    hibernateTemplate.update(existingUser);
+    return existingUser;
   }
 
   @Override
@@ -269,7 +236,6 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
    * @param destination
    */
   private void copyFields(UserProfile source, UserProfile destination) {
-    destination.setAccountState(source.getAccountState());
     destination.setAuthId(source.getAuthId());
     destination.setRealName(source.getRealName());
     destination.setGivenNames(source.getGivenNames());
@@ -296,21 +262,6 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   }
 
   @Override
-  public String fetchUserEmailFromCas(String authId) {
-    String url = emailAddressUrl;
-    if (!url.endsWith("?")) {
-      url += "?";
-    }
-    url += (authIdParam + "=" + authId);
-    try {
-      return FileUtils.getTextFromUrl(url);
-    } catch (IOException ex) {
-      log.error("Failed to fetch the email address using the url:" + url, ex);
-      return null;
-    }
-  }
-
-  @Override
   @Transactional
   public Long recordArticleView(Long userId, Long articleId, ArticleView.Type type) {
     if (this.advancedLogging) {
@@ -328,22 +279,6 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     } else {
       return 0L;
     }
-  }
-
-  /**
-   * @param emailAddressUrl The url from which the email address of the given guid can be fetched
-   */
-  @Required
-  public void setEmailAddressUrl(final String emailAddressUrl) {
-    this.emailAddressUrl = emailAddressUrl;
-  }
-
-  /**
-   * @param authIdParam the name of the auth id param to pass to cas in http requests for the user email
-   */
-  @Required
-  public void setAuthIdParam(String authIdParam) {
-    this.authIdParam = authIdParam;
   }
 
   /**

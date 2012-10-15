@@ -131,7 +131,11 @@
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
 
-  <bean id="ambraMailer" class="org.ambraproject.testutils.DummyAmbraMailer"/>
+  <bean id="ambraMailer" class="org.ambraproject.testutils.DummyAmbraMailer">
+    <property name="mailSender"><null/></property>
+    <property name="freemarkerConfig"><null/></property>
+    <property name="fromEmailAddress"><null/></property>
+  </bean>
 
   <bean id="applicationId" class="java.lang.String">
     <constructor-arg index="0" value="topaz-ambra"/>
@@ -141,8 +145,6 @@
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="configuration" ref="ambraConfiguration"/>
-    <property name="emailAddressUrl" value="http://localhost:1234/select"/>
-    <property name="authIdParam" value="guid"/>
   </bean>
 
   <util:map id="xslArticleTransformStyleSheetMap">
@@ -211,6 +213,16 @@
     <property name="articleTransformService" ref="xmlService"/>
   </bean>
 
+  <bean id="passwordDigestService" class="org.topazproject.ambra.service.password.PasswordDigestService">
+    <property name="algorithm" value="SHA-256"/>
+    <property name="encodingCharset" value="UTF-8"/>
+  </bean>
+
+  <bean id="userRegistrationService" class="org.ambraproject.service.user.UserRegistrationServiceImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="ambraMailer" ref="ambraMailer"/>
+    <property name="passwordDigestService" ref="passwordDigestService"/>
+  </bean>
   <!--Ambra interceptors-->
   <bean id="ensureRoleInterceptor" class="org.ambraproject.struts2.EnsureRoleInterceptor">
     <property name="permissionsService" ref="permissionsService"/>

@@ -19,8 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<beans default-autowire="byName"
-       xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:tx="http://www.springframework.org/schema/tx"
@@ -53,6 +52,7 @@
     <property name="mediumImageRep" value="PNG_M"/>
     <property name="largeImageRep" value="PNG_L"/>
     <property name="templatesDirectory" value="${ambra.virtualJournals.templateDir}"/>
+    <property name="fileStoreService" ref="fileStoreService"/>
   </bean>
 
   <bean id="trackBackService" class="org.ambraproject.service.trackback.TrackbackServiceImpl">
@@ -139,6 +139,7 @@
     <property name="browseService" ref="browseService"/>
     <property name="configuration" ref="ambraConfiguration" />
     <property name="solrFieldConverter" ref="solrFieldConverter" />
+    <property name="trackBackService" ref="trackBackService"/>
   </bean>
 
   <!--TODO: Neither DocumentBuilder nor DocumentBuilderFactory are thread safe ... find a solution, possibly using ThreadLocals-->
@@ -197,13 +198,13 @@
   <bean id="ratingsService" class="org.ambraproject.service.rating.RatingsServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="applicationId" ref="applicationId"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="userService" class="org.ambraproject.service.user.UserServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
-    <property name="emailAddressUrl" value="${ambra.services.cas.url.base}/email"/>
-    <property name="authIdParam" value="guid"/>
     <property name="configuration" ref="ambraConfiguration"/>
+    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="captchaService" class="org.ambraproject.service.captcha.CaptchaServiceImpl">
@@ -309,7 +310,10 @@
     <constructor-arg index="0" ref="ambraConfiguration"/>
   </bean>
 
-  <bean id="ambraFreemarkerManager" class="org.ambraproject.freemarker.AmbraFreemarkerManager"/>
+  <bean id="ambraFreemarkerManager" class="org.ambraproject.freemarker.AmbraFreemarkerManager">
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="ambraFreemarkerConfig" ref="ambraFreemarkerConfig"/>
+  </bean>
 
   <!-- Caches -->
   <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
@@ -370,6 +374,8 @@
 
   <bean id="ambraMailer" class="org.ambraproject.service.mailer.AmbraMailerImpl">
     <property name="fromEmailAddress" value="application@plosone.org"/>
+    <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    <property name="mailSender" ref="mailSender"/>
     <property name="feedbackEmailMap">
       <map>
         <entry key="text" value="feedback-text.ftl"/>

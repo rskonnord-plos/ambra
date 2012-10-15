@@ -15,20 +15,23 @@ package org.ambraproject.service.rating;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
+import org.ambraproject.models.Rating;
+import org.ambraproject.models.RatingSummary;
 import org.ambraproject.models.UserProfile;
-import org.ambraproject.service.rating.RatingsService;
 import org.ambraproject.views.RatingSummaryView;
 import org.ambraproject.views.RatingView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.ambraproject.models.Rating;
-import org.ambraproject.models.RatingSummary;
+
 import java.net.MalformedURLException;
 import java.util.List;
 
-import static org.testng.Assert.*;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test for methods of {@link RatingsService}.
@@ -46,7 +49,11 @@ public class RatingServiceTest extends BaseTest {
     article.seteIssn("testeIssn");
     dummyDataStore.store(article);
 
-    UserProfile userProfile = new UserProfile();
+    UserProfile userProfile = new UserProfile(
+        "deleteRating@example.com",
+        "deleteRating",
+        "pass"
+    );
     userProfile.setRealName("user-delete");
     dummyDataStore.store(userProfile);
 
@@ -116,7 +123,11 @@ public class RatingServiceTest extends BaseTest {
     article.seteIssn("testeIssn");
     dummyDataStore.store(article);
     
-    UserProfile userProfile = new UserProfile();
+    UserProfile userProfile = new UserProfile(
+        "ratingList1@example.org",
+        "ratingList1",
+        "pass"
+    );
     userProfile.setRealName("user-rating-list");
     dummyDataStore.store(userProfile);
 
@@ -126,13 +137,17 @@ public class RatingServiceTest extends BaseTest {
     //Use the ratings service to save, as it also populates the ratingSummary table
     ratingsService.saveRating(rating);
 
-    userProfile = new UserProfile();
-    userProfile.setRealName("user-two-rating-list");
-    dummyDataStore.store(userProfile);
+    UserProfile userProfile2 = new UserProfile(
+        "ratingList2@example.org",
+        "ratingList2",
+        "pass"
+    );
+    userProfile2.setRealName("user-two-rating-list");
+    dummyDataStore.store(userProfile2);
 
     Rating rating1 = new Rating();
     rating1.setArticleID(article.getID());
-    rating1.setCreator(userProfile);
+    rating1.setCreator(userProfile2);
     //Use the ratings service to save, as it also populates the ratingSummary table
     ratingsService.saveRating(rating1);
 
@@ -171,7 +186,11 @@ public class RatingServiceTest extends BaseTest {
     article.seteIssn("testeIssn");
     dummyDataStore.store(article);
 
-    UserProfile userProfile = new UserProfile();
+    UserProfile userProfile = new UserProfile(
+        "ratingListSummary1@example.org",
+        "ratingListSummary1",
+        "pass"
+    );
     userProfile.setRealName("user-list-summary");
     dummyDataStore.store(userProfile);
 
@@ -217,7 +236,11 @@ public class RatingServiceTest extends BaseTest {
     article.seteIssn("testeIssn");
     dummyDataStore.store(article);
 
-    UserProfile userProfile = new UserProfile();
+    UserProfile userProfile = new UserProfile(
+        "rating@example.org",
+        "rating",
+        "pass"
+    );
     userProfile.setRealName("user");
     dummyDataStore.store(userProfile);
 
@@ -260,11 +283,19 @@ public class RatingServiceTest extends BaseTest {
     article2.seteIssn("testeIssn2");
     dummyDataStore.store(article2);
 
-    UserProfile userProfile = new UserProfile();
+    UserProfile userProfile = new UserProfile(
+        "articleList@example.org",
+        "articleList",
+        "pass"
+    );
     userProfile.setRealName("user-1-article-list-2");
     dummyDataStore.store(userProfile);
 
-    UserProfile userProfile1 = new UserProfile();
+    UserProfile userProfile1 = new UserProfile(
+        "articleList1@example.org",
+        "articleList1",
+        "pass"
+    );
     userProfile1.setRealName("user-2-article-list-2");
     dummyDataStore.store(userProfile1);
 
@@ -346,7 +377,11 @@ public class RatingServiceTest extends BaseTest {
     article.seteIssn("testeIssn");
     dummyDataStore.store(article);
 
-    UserProfile userProfile = new UserProfile();
+    UserProfile userProfile = new UserProfile(
+        "singleRating@example.org",
+        "singleRating",
+        "pass"
+    );
     userProfile.setRealName("user-single-rating");
     dummyDataStore.store(userProfile);
 
@@ -416,7 +451,11 @@ public class RatingServiceTest extends BaseTest {
     article.seteIssn("testeIssn");
     dummyDataStore.store(article);
 
-    UserProfile userProfile = new UserProfile();
+    UserProfile userProfile = new UserProfile(
+        "multiRating@example.org",
+        "multiRating",
+        "pass"
+    );
     userProfile.setRealName("user-multi-ratings");
     dummyDataStore.store(userProfile);
 
@@ -431,47 +470,59 @@ public class RatingServiceTest extends BaseTest {
     //Use the ratings service to save, as it also populates the ratingSummary table
     ratingsService.saveRating(rating);
 
-    userProfile = new UserProfile();
-    userProfile.setRealName("user2-multi-ratings");
-    dummyDataStore.store(userProfile);
+    UserProfile userProfile2 = new UserProfile(
+        "multiRating2@example.org",
+        "multiRating2",
+        "pass"
+    );
+    userProfile2.setRealName("user2-multi-ratings");
+    dummyDataStore.store(userProfile2);
 
-    rating = new Rating();
-    rating.setAnnotationUri("id://rating-id-2-multi-ratings");
-    rating.setArticleID(article.getID());
-    rating.setCreator(userProfile);
-    rating.setSingleRating(3);
-    rating.setInsight(1);
-    rating.setReliability(1);
-    rating.setStyle(2);
-    ratingsService.saveRating(rating);
+    Rating rating2 = new Rating();
+    rating2.setAnnotationUri("id://rating-id-2-multi-ratings");
+    rating2.setArticleID(article.getID());
+    rating2.setCreator(userProfile2);
+    rating2.setSingleRating(3);
+    rating2.setInsight(1);
+    rating2.setReliability(1);
+    rating2.setStyle(2);
+    ratingsService.saveRating(rating2);
 
-    userProfile = new UserProfile();
-    userProfile.setRealName("user3-multi-ratings");
-    dummyDataStore.store(userProfile);
+    UserProfile userProfile3 = new UserProfile(
+        "multiRating3@example.org",
+        "multiRating3",
+        "pass"
+    );
+    userProfile3.setRealName("user3-multi-ratings");
+    dummyDataStore.store(userProfile3);
 
-    rating = new Rating();
-    rating.setAnnotationUri("id://rating-id-3-multi-ratings");
-    rating.setArticleID(article.getID());
-    rating.setCreator(userProfile);
-    rating.setSingleRating(3);
-    rating.setInsight(4);
-    rating.setReliability(3);
-    rating.setStyle(1);
-    ratingsService.saveRating(rating);
+    Rating rating3 = new Rating();
+    rating3.setAnnotationUri("id://rating-id-3-multi-ratings");
+    rating3.setArticleID(article.getID());
+    rating3.setCreator(userProfile3);
+    rating3.setSingleRating(3);
+    rating3.setInsight(4);
+    rating3.setReliability(3);
+    rating3.setStyle(1);
+    ratingsService.saveRating(rating3);
 
-    userProfile = new UserProfile();
-    userProfile.setRealName("user4-multi-ratings");
-    dummyDataStore.store(userProfile);
+    UserProfile userProfile4 = new UserProfile(
+        "multiRating4@example.org",
+        "multiRating4",
+        "pass"
+    );
+    userProfile4.setRealName("user4-multi-ratings");
+    dummyDataStore.store(userProfile4);
 
-    rating = new Rating();
-    rating.setAnnotationUri("id://rating-id-4-multi-ratings");
-    rating.setArticleID(article.getID());
-    rating.setCreator(userProfile);
-    rating.setSingleRating(0);
-    rating.setInsight(4);
-    rating.setReliability(3);
-    rating.setStyle(1);
-    ratingsService.saveRating(rating);
+    Rating rating4 = new Rating();
+    rating4.setAnnotationUri("id://rating-id-4-multi-ratings");
+    rating4.setArticleID(article.getID());
+    rating4.setCreator(userProfile4);
+    rating4.setSingleRating(0);
+    rating4.setInsight(4);
+    rating4.setReliability(3);
+    rating4.setStyle(1);
+    ratingsService.saveRating(rating4);
 
     return new Object[][]{
       { article.getID() },

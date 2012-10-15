@@ -57,10 +57,7 @@ public class EnsureUserAccountInterceptor extends AbstractInterceptor {
    * If there is, then we:
    * 2. Check if a user object is in the session.
    * a. If not, look up the user in the database, and put it in the session.
-   * i.  if the user is not in the database, this must be a new profile.  forward to profile creation page.
-   * 3. Update the database to ensure that the email address on file for this user matches the one from CAS
-   * TODO: this next step may be deprecated
-   * 4. Check if the user object in the session has a display name
+   * 3. Check if the user object in the session has a display name
    * a. If not, the user is an old account.  forward to the update profile page
    *
    * @param actionInvocation
@@ -92,26 +89,13 @@ public class EnsureUserAccountInterceptor extends AbstractInterceptor {
                 request.getRemoteAddr(), //ip
                 request.getHeader("user-agent") //user-agent
             ));
-        if (ambraUser == null) {
-          //No matching user in the database. redirect to the profile creation page
-          log.debug("This is a new user with auth id: {}", authId);
-          return ReturnCode.NEW_PROFILE;
-        }
         //put the user in the session
         session.put(AMBRA_USER_KEY, ambraUser);
       }
 
-      //STEP 3: make sure that ambra's email address matches the one from CAS
-      String emailFromCAS = (String) session.get(SINGLE_SIGNON_EMAIL_KEY);
-      if (emailFromCAS == null) {
-        emailFromCAS = userService.fetchUserEmailFromCas(authId);
-        session.put(SINGLE_SIGNON_EMAIL_KEY, emailFromCAS);
-      }
-      if (ambraUser.getEmail() == null || (!ambraUser.getEmail().equals(emailFromCAS))) {
-        userService.updateEmail(ambraUser.getID(), emailFromCAS);
-      }
+      session.put(SINGLE_SIGNON_EMAIL_KEY, ambraUser.getEmail());
 
-      //STEP 4: Check if the user has a display name  (this is only relevant for old users)
+      //STEP 3: Check if the user has a display name  (this is only relevant for old users)
       if (!StringUtils.hasText(ambraUser.getDisplayName())) {
         return ReturnCode.UPDATE_PROFILE;
       }

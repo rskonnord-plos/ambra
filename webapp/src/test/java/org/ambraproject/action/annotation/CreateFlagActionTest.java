@@ -42,7 +42,7 @@ public class CreateFlagActionTest extends AmbraWebTest {
   
   @Test
   public void testCreateFlag() throws Exception {
-    UserProfile user = new UserProfile("authIdForCreateFlagAction", "email@createFlagAction.org", "displayNameForCreateFlagAction");
+    UserProfile user = new UserProfile("email@createFlagAction.org", "displayNameForCreateFlagAction", "pass");
     dummyDataStore.store(user);
     login(user);
     Annotation annotation = new Annotation(user, AnnotationType.REPLY, 2134l);
@@ -73,9 +73,8 @@ public class CreateFlagActionTest extends AmbraWebTest {
   @Test
   public void testCreateWithNoComment() throws Exception {
     UserProfile user = new UserProfile(
-        "authIdForCreateWithNoComment",
         "email@createFlagActionWithNoComment.org",
-        "displayNameForCreateWithNoComment");
+        "displayNameForCreateWithNoComment", "pass");
     dummyDataStore.store(user);
     login(user);
     Annotation annotation = new Annotation(user, AnnotationType.REPLY, 2134l);

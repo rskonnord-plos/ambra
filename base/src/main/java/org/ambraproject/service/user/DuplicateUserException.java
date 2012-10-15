@@ -22,19 +22,21 @@ package org.ambraproject.service.user;
 /**
  *
  */
-public class DuplicateDisplayNameException extends Exception {
-  public DuplicateDisplayNameException() {
+public class DuplicateUserException extends Exception {
+  /**
+   * Indicates which field is duplicated
+   */
+  public static enum Field {
+    EMAIL, DISPLAY_NAME
   }
 
-  public DuplicateDisplayNameException(String s) {
-    super(s);
+  private Field field;
+
+  public DuplicateUserException(Field field) {
+    this.field = field;
   }
 
-  public DuplicateDisplayNameException(String s, Throwable throwable) {
-    super(s, throwable);
-  }
-
-  public DuplicateDisplayNameException(Throwable throwable) {
-    super(throwable);
+  public Field getField() {
+    return field;
   }
 }

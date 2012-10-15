@@ -49,9 +49,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateComment() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateNote",
         "email@createNote.org",
-        "displayNameForCreateNote");
+        "displayNameForCreateNote", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-note-action");
@@ -93,9 +92,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateInlineComment() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateInlineNote",
         "email@createInlineNote.org",
-        "displayNameForCreateInlineNote");
+        "displayNameForCreateInlineNote", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-inlineNote-action");
@@ -139,9 +137,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateAndFlag() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateAndFlag",
         "email@createAndFlag.org",
-        "displayNameForCreateAndFlag");
+        "displayNameForCreateAndFlag", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-and-flag-action");
@@ -197,9 +194,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateWithNoBody() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateWithNoBody",
         "email@createWithNoBody.org",
-        "displayNameForCreateWithNoBody");
+        "displayNameForCreateWithNoBody", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-WithNoBody-action");
@@ -227,9 +223,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateWithCiCheckedAndNoCiStatement() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateWithCiProblems",
         "email@createWithCiProblems.org",
-        "displayNameForCreateWithCiProblems");
+        "displayNameForCreateWithCiProblems", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-WithCiProblems-action");
@@ -257,9 +252,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateWithProfaneTitle() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateWithProfaneTitle",
         "email@createWithProfaneTitle.org",
-        "displayNameForCreateWithProfaneTitle");
+        "displayNameForCreateWithProfaneTitle", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-withProfaneTitle-action");
@@ -285,9 +279,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateWithProfaneBody() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateWithProfaneBody",
         "email@createWithProfaneBody.org",
-        "displayNameForCreateWithProfaneBody");
+        "displayNameForCreateWithProfaneBody", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-withProfaneBody-action");
@@ -313,9 +306,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateWithProfaneCiStatement() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateWithProfaneCiStatement",
         "email@createWithProfaneCiStatement.org",
-        "displayNameForCreateWithProfaneCiStatement");
+        "displayNameForCreateWithProfaneCiStatement", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-withProfaneCiStatement-action");
@@ -341,9 +333,8 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
   @Test
   public void testCreateWithLongTitle() throws Exception {
     UserProfile creator = new UserProfile(
-        "authIdForCreateWithLongTitle",
         "email@createWithLongTitle.org",
-        "displayNameForCreateWithLongTitle");
+        "displayNameForCreateWithLongTitle", "pass");
     dummyDataStore.store(creator);
     login(creator);
     Article article = new Article("id:doi-for-create-withLongTitle-action");

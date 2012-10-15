@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package org.ambraproject.service.hibernate;
+package org.ambraproject.util;
 
 import org.ambraproject.models.AnnotationType;
 import org.topazproject.ambra.configuration.ConfigurationStore;
