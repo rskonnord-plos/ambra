@@ -268,20 +268,13 @@ ERROR, searchType must be defined.
 
         <#if (resultsSinglePage.institutionFacet??)>
           <h4>Institutions:</h4>
-          <ul class="actions">
-            <#list resultsSinglePage.institutionFacet as f>
-              <#if f_index < max_institutions>
-                <li>
-                  <a href="${advancedSearchURL}?unformattedQuery=affiliate%3A%22${f.name?url}%22&from=institutionLink&sort=${sorts[0]?url}">${f.name}</a>
-                  <span class="icons">
-                    <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
-                  </span>
-                </li>
-              </#if>
-            </#list>
-          </ul>
+          <#list resultsSinglePage.institutionFacet as f>
+            <#if f_index < max_institutions>
+              <p>
+                <a href="${advancedSearchURL}?unformattedQuery=affiliate%3A%22${f.name?url}%22&from=institutionLink&sort=${sorts[0]?url}">${f.name}</a>
+              </p>
+            </#if>
+          </#list>
         </#if>
       </#if>
     </div>
