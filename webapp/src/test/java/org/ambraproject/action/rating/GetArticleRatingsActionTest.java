@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
 
@@ -37,9 +34,8 @@ public class GetArticleRatingsActionTest extends AmbraWebTest {
   @DataProvider
   public Object[][] ratings() {
     UserProfile creator = new UserProfile(
-        "authIdForRatingAction",
         "email@RatingAction.org",
-        "displayName@RatingAction");
+        "displayName@RatingAction", "pass");
     dummyDataStore.store(creator);
 
     //Article with ratings that have insight, reliability and style

@@ -13,6 +13,8 @@
 
 package org.ambraproject.models;
 
+import org.ambraproject.util.TokenGenerator;
+import org.ambraproject.util.URIGenerator;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -27,15 +29,16 @@ import java.util.Set;
  */
 public class UserProfile extends AmbraEntity {
 
-  public static final int STATE_ACTIVE = 0;
-  public static final int STATE_SUSPENDED = 1;
   public static final String ALERTS_SEPARATOR = ",";
   public static final String MONTHLY_ALERT_SUFFIX = "_monthly";
   public static final String WEEKLY_ALERT_SUFFIX = "_weekly";
 
   private String profileUri;
 
-  private int accountState;
+  private String password;
+  private boolean verified;
+  private String verificationToken;
+
   private String authId;
   private String realName;
   private String givenNames;
@@ -68,23 +71,19 @@ public class UserProfile extends AmbraEntity {
   public UserProfile() {
     super();
     this.organizationVisibility = false;
-    this.accountState = STATE_ACTIVE;
+    this.verified = false;
+    this.authId = TokenGenerator.getUniqueToken();
+    this.verificationToken = TokenGenerator.getUniqueToken();
+    this.profileUri = URIGenerator.generate(this);
   }
 
-  public UserProfile(String authId, String email, String displayName) {
+  public UserProfile(String email, String displayName, String password) {
     this();
-    this.authId = authId;
     this.email = email;
     this.displayName = displayName;
+    this.password = password;
   }
 
-  public int getAccountState() {
-    return accountState;
-  }
-
-  public void setAccountState(int accountState) {
-    this.accountState = accountState;
-  }
 
   public String getAuthId() {
     return authId;
@@ -285,7 +284,31 @@ public class UserProfile extends AmbraEntity {
   public void setProfileUri(String profileUri) {
     this.profileUri = profileUri;
   }
-  
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public boolean getVerified() {
+    return verified;
+  }
+
+  public void setVerified(boolean verified) {
+    this.verified = verified;
+  }
+
+  public String getVerificationToken() {
+    return verificationToken;
+  }
+
+  public void setVerificationToken(String verificationToken) {
+    this.verificationToken = verificationToken;
+  }
+
   public List<String> getAlertsList() {
     if (getAlertsJournals() != null) {
       String[] alerts = getAlertsJournals().split(ALERTS_SEPARATOR);

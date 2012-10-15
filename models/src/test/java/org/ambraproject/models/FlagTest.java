@@ -30,10 +30,9 @@ public class FlagTest extends BaseHibernateTest {
   public void testSaveFlag() {
     long testStart = Calendar.getInstance().getTimeInMillis();
     UserProfile creator = new UserProfile(
-        "authIdForSavingFlag",
         "email@saveFlag.org",
-        "displayNameForSaveFlag"
-    );
+        "displayNameForSaveFlag",
+        "pass");
     hibernateTemplate.save(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, 123l);
     hibernateTemplate.save(annotation);
@@ -62,10 +61,9 @@ public class FlagTest extends BaseHibernateTest {
   @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullCreator() {
     UserProfile creator = new UserProfile(
-        "authIdForSavingFlagWithNoCreator",
         "email@saveFlagWithNoCreator.org",
-        "displayNameForSaveFlagWithNoCreator"
-    );
+        "displayNameForSaveFlagWithNoCreator",
+        "pass");
     hibernateTemplate.save(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, 123l);
     hibernateTemplate.save(annotation);
@@ -76,10 +74,9 @@ public class FlagTest extends BaseHibernateTest {
   @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullAnnotation() {
     UserProfile creator = new UserProfile(
-        "authIdForSavingFlagWithNoAnnotation",
         "email@saveFlagWithNoAnnotation.org",
-        "displayNameForSaveFlagWithNoAnnotation"
-    );
+        "displayNameForSaveFlagWithNoAnnotation",
+        "pass");
     hibernateTemplate.save(creator);
 
     hibernateTemplate.save(new Flag(creator, FlagReasonCode.SPAM, null));
@@ -88,10 +85,9 @@ public class FlagTest extends BaseHibernateTest {
   @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullReason() {
     UserProfile creator = new UserProfile(
-        "authIdForSavingFlagWithNoReason",
         "email@saveFlagWithNoReason.org",
-        "displayNameForSaveFlagWithNoReason"
-    );
+        "displayNameForSaveFlagWithNoReason",
+        "pass");
     hibernateTemplate.save(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, 123l);
     hibernateTemplate.save(annotation);
@@ -102,10 +98,9 @@ public class FlagTest extends BaseHibernateTest {
   @Test
   public void testDoesNotCascadeDelete() {
     UserProfile creator = new UserProfile(
-        "authIdForCascadeDeleteOnFlag",
         "email@CascadeDeleteOnFlag.org",
-        "displayNameForCascadeDeleteOnFlag"
-    );
+        "displayNameForCascadeDeleteOnFlag",
+        "pass");
     Serializable creatorId = hibernateTemplate.save(creator);
     Annotation annotation = new Annotation(creator, AnnotationType.FORMAL_CORRECTION, 23l);
     Serializable annotationId = hibernateTemplate.save(annotation);

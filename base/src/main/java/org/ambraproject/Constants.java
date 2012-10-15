@@ -43,8 +43,6 @@ public interface Constants {
    * Defines the length of various fields used by Webwork Annotations
    */
   interface Length {
-    String EMAIL = "256";
-    String PASSWORD = "256";
     String DISPLAY_NAME_MIN = "4";
     String DISPLAY_NAME_MAX = "18";
     int COMMENT_TITLE_MAX = 500;

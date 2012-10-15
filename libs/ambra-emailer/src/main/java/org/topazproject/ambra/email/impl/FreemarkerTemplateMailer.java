@@ -38,6 +38,7 @@ import freemarker.template.TemplateException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.mail.MailPreparationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -175,8 +176,11 @@ public class FreemarkerTemplateMailer implements TemplateMailer {
    * Set the free marker configurer
    * @param freemarkerConfig freeMarkerConfigurer
    */
+  @Required
   public void setFreemarkerConfig(final FreeMarkerConfigurer freemarkerConfig) {
-    this.configuration = freemarkerConfig.getConfiguration();
+    if (freemarkerConfig != null) {
+      this.configuration = freemarkerConfig.getConfiguration();
+    }
   }
 
   protected String getFromEmailName() {
@@ -202,6 +206,7 @@ public class FreemarkerTemplateMailer implements TemplateMailer {
    * Set the from email address
    * @param fromEmailAddress fromEmailAddress
    */
+  @Required
   public void setFromEmailAddress(final String fromEmailAddress) {
     this.fromEmailAddress = fromEmailAddress;
   }
@@ -210,6 +215,7 @@ public class FreemarkerTemplateMailer implements TemplateMailer {
    * Set the mail sender
    * @param mailSender mailSender
    */
+  @Required
   public void setMailSender(final JavaMailSender mailSender) {
     this.mailSender = mailSender;
   }

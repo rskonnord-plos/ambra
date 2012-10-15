@@ -57,25 +57,17 @@ public interface UserService {
   public UserProfile getUserByAuthId(String authId);
 
   /**
-   * update the email stored for the given user
-   *
-   * @param userId the id of the {@link org.ambraproject.models.UserProfile} object to update
-   * @param email  the email to set
-   */
-  public void updateEmail(Long userId, String email);
-
-  /**
-   * save a user with information given by the user profile argument, if none exists. If a user with the same auth id as provided exists,
-   * that user will be updated.
+   * Update the stored user object with the same authId as the provided argument.
    *
    * Does not overwrite a user's roles, and if some are provided they will be ignored
    * 
    *
+   *
    * @param userProfile a detached {@link org.ambraproject.models.UserProfile} instance with values to save
    * @return the saved user object
-   * @throws DuplicateDisplayNameException if this is a new auth id and a user with the given display name already exists
+   * @throws DuplicateUserException if no user matches the auth id in the profile object provided
    */
-  public UserProfile saveOrUpdateUser(UserProfile userProfile) throws DuplicateDisplayNameException;
+  public UserProfile updateProfile(UserProfile userProfile) throws NoSuchUserException;
 
   /**
    * Save the given alerts for the user specified by the given id.
@@ -120,14 +112,6 @@ public interface UserService {
    * @return All available user alerts
    */
   public List<UserAlert> getAvailableAlerts();
-
-  /**
-   * Get the email address that CAS has stored for the user
-   *
-   * @param authId the user to lookup
-   * @return the email from CAS
-   */
-  public String fetchUserEmailFromCas(final String authId);
 
   /**
    * Record an article view by the given user

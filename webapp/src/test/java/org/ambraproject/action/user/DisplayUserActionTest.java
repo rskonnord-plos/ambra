@@ -48,6 +48,7 @@ public class DisplayUserActionTest extends AmbraWebTest {
     user.setEmail("email@DisplayUserActionTest.org");
     user.setDisplayName("displayNameForDisplayUserActionTest");
     user.setAuthId("authIdNameForDisplayUserActionTest");
+    user.setPassword("pass");
     user.setCity("Storybrooke");
     user.setCountry("USA");
     user.setOrganizationVisibility(false);

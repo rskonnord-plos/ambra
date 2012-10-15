@@ -22,6 +22,12 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>ambra-password-service</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>file-store</artifactId>
     </dependency>
 

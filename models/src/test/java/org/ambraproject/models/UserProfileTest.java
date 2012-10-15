@@ -13,8 +13,12 @@
 
 package org.ambraproject.models;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,31 +34,13 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Alex Kudlick 2/9/12
  */
 public class UserProfileTest extends BaseHibernateTest {
-
-  private static final Logger log = LoggerFactory.getLogger(UserProfileTest.class);
-
-/*
-  @Test(expectedExceptions = {DataIntegrityViolationException.class})
-  public void testSaveWithNullEmail() {
-    UserProfile profile = new UserProfile();
-    profile.setDisplayName("HarryPotter");
-
-    hibernateTemplate.save(profile);
-  }
-
-  @Test(expectedExceptions = {DataIntegrityViolationException.class})
-  public void testSaveWithNullDisplayName() {
-    UserProfile profile = new UserProfile();
-    profile.setEmail("foo@bar.org");
-
-    hibernateTemplate.save(profile);
-  }
-*/
 
   @Test
   public void testSetAlertsFromCollection() {
@@ -95,10 +81,12 @@ public class UserProfileTest extends BaseHibernateTest {
     UserProfile profile1 = new UserProfile();
     profile1.setEmail("foo@bar.org");
     profile1.setDisplayName("FooBar");
+    profile1.setPassword("pass");
 
     UserProfile profile2 = new UserProfile();
     profile2.setEmail("foo@bar.org");
     profile2.setDisplayName("FooBare");
+    profile2.setPassword("pass");
 
     hibernateTemplate.save(profile1);
     hibernateTemplate.save(profile2);
@@ -109,10 +97,12 @@ public class UserProfileTest extends BaseHibernateTest {
     UserProfile profile1 = new UserProfile();
     profile1.setEmail("foo@ambraproject.org");
     profile1.setDisplayName("ambra");
+    profile1.setPassword("pass");
 
     UserProfile profile2 = new UserProfile();
     profile2.setEmail("foo2@ambraproject.org");
     profile2.setDisplayName("ambra");
+    profile2.setPassword("pass");
 
     hibernateTemplate.save(profile1);
     hibernateTemplate.save(profile2);
@@ -122,9 +112,15 @@ public class UserProfileTest extends BaseHibernateTest {
   public void testUniqueAuthIdConstraint() {
     UserProfile profile1 = new UserProfile();
     profile1.setAuthId("test-authId1");
+    profile1.setPassword("pass");
+    profile1.setDisplayName("displayNameForTestUniqueAuthId1");
+    profile1.setEmail("emailNameForTestUniqueAuthId1@example.com");
 
     UserProfile profile2 = new UserProfile();
     profile2.setAuthId("test-authId1");
+    profile1.setPassword("pass");
+    profile1.setDisplayName("displayNameForTestUniqueAuthId2");
+    profile1.setEmail("emailNameForTestUniqueAuthId2@example.com");
 
     hibernateTemplate.save(profile1);
     hibernateTemplate.save(profile2);
@@ -139,6 +135,7 @@ public class UserProfileTest extends BaseHibernateTest {
     final UserProfile profile = new UserProfile();
     profile.setEmail("deltron@3030.com");
     profile.setDisplayName("Deltron3030");
+    profile.setPassword("pass");
     profile.setBiography("Foucault is best known for his critical studies of social institutions, most notably " +
         "psychiatry, medicine, the human sciences and the prison system, as well as for his work on the history " +
         "of human sexuality. His writings on power, knowledge, and discourse have been widely influential in " +
@@ -156,23 +153,24 @@ public class UserProfileTest extends BaseHibernateTest {
     final List<String> expectedAlerts = new ArrayList<String>(2);
     expectedAlerts.add("foo1");
     expectedAlerts.add("foo2");
+    UserProfile storedProfile = (UserProfile) hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserProfile.class)
+            .setFetchMode("roles", FetchMode.JOIN)
+            .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+            .add(Restrictions.eq("ID", id))
+    ).get(0);
 
-    //lazy login collection means we need to test inside of a session
-    hibernateTemplate.execute(new HibernateCallback() {
-      @Override
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
-        UserProfile storedProfile = (UserProfile) session.get(UserProfile.class, id);
+    assertEquals(storedProfile.getEmail(), profile.getEmail(), "storedProfile had incorrect email");
+    assertEquals(storedProfile.getDisplayName(), profile.getDisplayName(), "storedProfile had incorrect display name");
+    assertEquals(storedProfile.getBiography(), profile.getBiography(), "storedProfile had incorrect biography");
+    assertEquals(storedProfile.getRoles().size(), 1, "Didn't save user role");
+    assertEquals(storedProfile.getAlertsJournals(), profile.getAlertsJournals(), "saved user didn't have correct alerts text");
+    assertEquals(storedProfile.getAlertsList(), expectedAlerts, "saved user didn't return correct alerts list");
 
-        assertEquals(storedProfile.getEmail(), profile.getEmail(), "storedProfile had incorrect email");
-        assertEquals(storedProfile.getDisplayName(), profile.getDisplayName(), "storedProfile had incorrect display name");
-        assertEquals(storedProfile.getBiography(), profile.getBiography(), "storedProfile had incorrect biography");
-        assertEquals(storedProfile.getRoles().size(), 1, "Didn't save user role");
-        assertEquals(storedProfile.getAlertsJournals(), profile.getAlertsJournals(), "saved user didn't have correct alerts text");
-        assertEquals(storedProfile.getAlertsList(), expectedAlerts, "saved user didn't return correct alerts list");
-
-        return null;
-      }
-    });
+    assertNotNull(storedProfile.getAuthId(), "didn't generate auth id");
+    assertNotNull(storedProfile.getVerificationToken(), "didn't generate verification token");
+    assertNotNull(storedProfile.getProfileUri(), "didn't generate a profile uri");
+    assertFalse(storedProfile.getVerified(), "didn't set verified to false");
   }
 
   @Test(expectedExceptions = {InvalidDataAccessApiUsageException.class})
@@ -180,6 +178,7 @@ public class UserProfileTest extends BaseHibernateTest {
     UserProfile profile = new UserProfile();
     profile.setEmail("emailForRoleTest");
     profile.setDisplayName("nameForRoleTest");
+    profile.setPassword("pass");
     profile.setRoles(new HashSet<UserRole>(1));
     UserRole role = new UserRole();
     role.setRoleName("role that should not be added to db");

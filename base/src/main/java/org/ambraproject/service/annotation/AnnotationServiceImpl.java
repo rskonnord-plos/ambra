@@ -22,17 +22,15 @@
 package org.ambraproject.service.annotation;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.service.annotation.Context;
-import org.ambraproject.service.annotation.ContextFormatter;
-import org.ambraproject.service.cache.Cache;
-import org.ambraproject.service.hibernate.URIGenerator;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.Flag;
 import org.ambraproject.models.FlagReasonCode;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.util.URIGenerator;
 import org.ambraproject.views.AnnotationView;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -112,7 +110,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
       @Override
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
 
-        /**
+        /**                                                                 URIGen
          * We have to do this with SQL because of how the mappings are currently defined
          * And hence, there is no way to unit test this
          */

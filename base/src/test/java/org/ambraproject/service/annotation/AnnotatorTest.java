@@ -85,7 +85,7 @@ public class AnnotatorTest {
     fc.setXpath(articleId +
       "#xpointer(string-range(%2farticle%5b1%5d%2fbody%5b1%5d%2fsec%5b1%5d%2fp%5b1%5d%2c+''%2c+17%2c+3)%5b1%5d)");
     fc.setCreated(dateFormat.parse("03/22/09"));
-    fc.setCreator(new UserProfile("authID", "e@mail.net", "user:1"));
+    fc.setCreator(new UserProfile("e@mail.net", "user:1", "pass"));
     fc.setTitle("Formal Correction Title");
     annotations[0] = new AnnotationView(fc, "test-title", "test-doi", null);
 
@@ -99,7 +99,7 @@ public class AnnotatorTest {
     r.setXpath(articleId +
         "#xpointer(string-range(%2Farticle%5B1%5D%2Ffront%5B1%5D%2Farticle-meta%5B1%5D%2Fabstract%5B1%5D%2Fp%5B1%5D%2C+''%2C+10%2C+4)%5B1%5D)");
     r.setCreated(dateFormat.parse("12/01/08"));
-    r.setCreator(new UserProfile("authID2", "e@mail2.net", "user:2"));
+    r.setCreator(new UserProfile("e@mail2.net", "user:2", "pass"));
     r.setTitle("Retraction Title");
     annotations[1] = new AnnotationView(r, "test-title", "test-doi", null);
 

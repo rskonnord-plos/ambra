@@ -107,6 +107,34 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     if (dbVersion < 243) {
       migrate240();
     }
+
+    if (dbVersion < 246) {
+      migrate245();
+    }
+  }
+
+  private void migrate245() {
+    log.info("Migration from 245 starting");
+
+    hibernateTemplate.execute(new HibernateCallback<Void>() {
+      @Override
+      public Void doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        v.setName("Ambra 2.46");
+        v.setVersion(246);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        execSQLScript(session, "migrate_ambra_2_4_6_part1.sql");
+
+        v.setUpdateInProcess(false);
+        session.update(v);
+
+        return null;
+      }
+    });
+
+    log.info("Migration from 245 complete");
   }
 
   private void migrate240() {

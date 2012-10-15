@@ -26,10 +26,13 @@
     <property name="created" column="created" type="timestamp" not-null="true" update="false" />
 
     <property name="email" column="email" type="string" length="255" unique="true"/>
+    <property name="password" column="password" type="string" length="256" not-null="true"/>
+    <property name="verificationToken" column="verificationToken" type="string" length="256"/>
+    <property name="authId" column="authId" type="string" length="256" not-null="true" unique="true"/>
+    <property name="verified" column="verified" type="boolean" not-null="true"/>
+
     <property name="displayName" column="displayName" type="string" length="255" unique="true"/>
-    <property name="authId" column="authId" type="string" length="512" unique="true"/>
-    <property name="profileUri" column="userProfileURI" type="string" length="100"/>
-    <property name="accountState" column="accountState" type="integer" not-null="true"/>
+    <property name="profileUri" column="userProfileURI" type="string" length="100" not-null="true"/>
     <property name="realName" column="realName" type="string" length="500"/>
     <property name="givenNames" column="givenNames" type="string" length="255"/>
     <property name="surname" column="surName" type="string" length="15"/>

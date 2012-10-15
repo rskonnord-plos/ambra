@@ -30,9 +30,8 @@ public class RatingTest extends BaseHibernateTest {
   public void testSaveRating() {
     long testStart = Calendar.getInstance().getTimeInMillis();
     UserProfile creator = new UserProfile(
-        "authIDForSavingRating",
         "email@saveRating.org",
-        "displayNameForSavingRating");
+        "displayNameForSavingRating", "pass");
     hibernateTemplate.save(creator);
 
     Rating rating = new Rating(creator, 1232132l);
@@ -64,9 +63,8 @@ public class RatingTest extends BaseHibernateTest {
   @Test(expectedExceptions = {DataIntegrityViolationException.class})
   public void testSaveWithNullArticle() {
     UserProfile creator = new UserProfile(
-        "authIDForSavingRatingWithNoArticle",
         "email@saveRatingWithNoArticle.org",
-        "displayNameForSavingRatingWithNoArticle");
+        "displayNameForSavingRatingWithNoArticle", "pass");
     hibernateTemplate.save(creator);
     hibernateTemplate.save(new Rating(creator, null));
   }
@@ -74,10 +72,9 @@ public class RatingTest extends BaseHibernateTest {
   @Test
   public void testDoesNotCascadeDelete() {
     UserProfile creator = new UserProfile(
-        "authIdForCascadeDeleteOnRating",
         "email@CascadeDeleteOnRating.org",
-        "displayNameForCascadeDeleteOnRating"
-    );
+        "displayNameForCascadeDeleteOnRating",
+        "pass");
     Serializable creatorId = hibernateTemplate.save(creator);
 
     Rating rating = new Rating(creator, 1231423l);
@@ -91,9 +88,8 @@ public class RatingTest extends BaseHibernateTest {
   public void testUpdate() {
     long testStart = Calendar.getInstance().getTimeInMillis();
     UserProfile creator = new UserProfile(
-        "authIDForUpdateRating",
         "email@updateRating.org",
-        "displayNameForUpdateRating");
+        "displayNameForUpdateRating", "pass");
     hibernateTemplate.save(creator);
 
     Rating rating = new Rating(creator, 1232132l);

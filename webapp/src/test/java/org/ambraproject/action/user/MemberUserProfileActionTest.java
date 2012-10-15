@@ -22,7 +22,6 @@ package org.ambraproject.action.user;
 import com.opensymphony.xwork2.Action;
 import org.ambraproject.action.AmbraWebTest;
 import org.ambraproject.Constants;
-import org.ambraproject.action.AmbraWebTest;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
@@ -54,8 +53,8 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
   @Autowired
   protected UserService userService;
 
-  @DataProvider(name = "unsavedUser")
-  public Object[][] getUnsavedUser() {
+  @DataProvider(name = "user")
+  public Object[][] getUser() {
     UserProfile user = new UserProfile();
     user.setEmail("userActionTest@ambraproject.org");
     user.setDisplayName("TEST_USERNAME");
@@ -70,6 +69,8 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     user.setCity("my city");
     user.setCountry("my country");
     user.setAuthId("auth-id-for-MemberUserActionTest");
+    user.setPassword("pass");
+    dummyDataStore.store(user);
 
     return new Object[][]{
         {user}
@@ -79,7 +80,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
   @BeforeMethod
   public void setupSession() {
     //add email to the session to ensure that the action doesn't try and talk to CAS
-    UserProfile user = (UserProfile) getUnsavedUser()[0][0];
+    UserProfile user = (UserProfile) getUser()[0][0];
     login(user);
   }
 
@@ -101,65 +102,12 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setHomePage(null);
   }
 
-  @Test(dataProvider = "unsavedUser")
-  public void testExecuteWithNewUser(UserProfile user) throws Exception {
-    String result = action.execute();
-    assertEquals(result, Constants.ReturnCode.NEW_PROFILE, "Action didn't return new profile code");
-    assertEquals(action.getEmail(), user.getEmail(), "action had incorrect email");
-  }
-
-  @Test(dataProvider = "unsavedUser", dependsOnMethods = {"testExecuteWithNewUser"})
-  public void testCreateNewUser(UserProfile unsavedUser) throws Exception {
-    action.setDisplayName(unsavedUser.getDisplayName());
-    action.setEmail(unsavedUser.getEmail());
-
-    action.setGivenNames(unsavedUser.getGivenNames());
-    action.setSurnames(unsavedUser.getSurname());
-    action.setPositionType(unsavedUser.getPositionType());
-    action.setOrganizationType(unsavedUser.getOrganizationType());
-    action.setPostalAddress(unsavedUser.getPostalAddress());
-    action.setBiographyText(unsavedUser.getBiography());
-    action.setInterestsText(unsavedUser.getInterests());
-    action.setResearchAreasText(unsavedUser.getResearchAreas());
-    action.setCity(unsavedUser.getCity());
-    action.setCountry(unsavedUser.getCountry());
-
-    assertEquals(action.executeSaveUser(), Action.SUCCESS, "executeSaveUser() didn't return success");
-    assertEquals(action.getActionErrors().size(), 0, "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
-    assertEquals(action.getActionMessages().size(), 0, "Action returned messages: " + StringUtils.join(action.getActionErrors(), ";"));
-
-    UserProfile savedUser = userService.getUserByAuthId(unsavedUser.getAuthId());
-
-    assertNotNull(savedUser, "Failed to save user");
-    assertEquals(savedUser.getEmail(), unsavedUser.getEmail(), "saved user didn't have correct email");
-    assertEquals(savedUser.getRealName(), unsavedUser.getGivenNames() + " " + unsavedUser.getSurname(), "saved user didn't have correct real name");
-    assertEquals(savedUser.getDisplayName(), unsavedUser.getDisplayName(), "saved user didn't have correct display name");
-    assertEquals(savedUser.getGivenNames(), unsavedUser.getGivenNames(), "saved user didn't have correct given names");
-    assertEquals(savedUser.getSurname(), unsavedUser.getSurname(), "saved user didn't have correct surnames");
-    assertEquals(savedUser.getPositionType(), unsavedUser.getPositionType(), "saved user didn't have correct position type");
-    assertEquals(savedUser.getOrganizationType(), unsavedUser.getOrganizationType(), "saved user didn't have correct organization type");
-    assertEquals(savedUser.getPostalAddress(), unsavedUser.getPostalAddress(), "saved user didn't have correct postal address");
-    assertEquals(savedUser.getBiography(), unsavedUser.getBiography(), "saved user didn't have correct biography text");
-    assertEquals(savedUser.getInterests(), unsavedUser.getInterests(), "saved user didn't have correct interests text");
-    assertEquals(savedUser.getResearchAreas(), unsavedUser.getResearchAreas(), "saved user didn't have correct research areas text");
-    assertEquals(savedUser.getCity(), unsavedUser.getCity(), "saved user didn't have correct city");
-    assertEquals(savedUser.getCountry(), unsavedUser.getCountry(), "saved user didn't have correct country");
-
-    assertFalse(savedUser.getOrganizationVisibility(), "user didn't get saved with organization visibility set to false");
-    assertEquals(savedUser.getAccountState(), UserProfile.STATE_ACTIVE, "user didn't get saved with active state");
-    assertEquals(savedUser.getRoles().size(), 0, "User got created with roles attached: " + StringUtils.join(savedUser.getRoles(), ";"));
-
-    UserProfile cachedUser = (UserProfile) getFromSession(Constants.AMBRA_USER_KEY);
-    assertNotNull(cachedUser, "user didn't get cached in session");
-    assertEquals(cachedUser.getID(), savedUser.getID(), "incorrect user got cached in session");
-  }
-
   /**
    * Regression test for a bug that never made it into production in which updating a profile would overwrite the user's roles
    *
    * @param user
    */
-  @Test(dataProvider = "unsavedUser", dependsOnMethods = {"testCreateNewUser"})
+  @Test(dataProvider = "user")
   public void testUpdateDoesNotOverwriteRoles(UserProfile user) throws Exception {
     UserRole role = new UserRole("test role for UserProfileActionTest");
     dummyDataStore.store(role);
@@ -181,7 +129,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     assertTrue(storedUser.getRoles().size() > 0, "Roles got erased");
   }
 
-  @Test(dataProvider = "unsavedUser", dependsOnMethods = {"testCreateNewUser"})
+  @Test(dataProvider = "user")
   public void testExecuteWithExistingUser(UserProfile user) throws Exception {
     assertEquals(action.execute(), Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getActionErrors().size(), 0, "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
@@ -201,7 +149,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     assertEquals(action.getCountry(), user.getCountry(), "action didn't have correct country");
   }
 
-  @Test(dataProvider = "unsavedUser", dependsOnMethods = {"testExecuteWithExistingUser", "testCreateNewUser"})
+  @Test(dataProvider = "user", dependsOnMethods = {"testExecuteWithExistingUser"})
   public void testEditAlreadySavedUser(UserProfile user) throws Exception {
     long testStart = Calendar.getInstance().getTime().getTime();
     String newOrganizationType = "new organization type";
@@ -255,33 +203,6 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     assertTrue(cachedUser.getOrganizationVisibility(), "cached user user didn't have new organization visibility");
   }
   
-  //The action should return a specific return code for old users that have no display name
-  @Test
-  public void testExecuteWithUserThatHasNoDisplayName() throws Exception {
-    UserProfile user = new UserProfile("authIdForUserWithNoDisplayName", "email@noDisplayName.org", null);
-    dummyDataStore.store(user);
-    login(user);
-    String result = action.execute();
-    assertEquals(result, Constants.ReturnCode.UPDATE_PROFILE, "Action didn't return update-profile code");
-    assertEquals(action.getActionErrors().size(), 0,
-        "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
-    assertEquals(action.getFieldErrors().size(), 0,
-        "Action returned field errors: " + StringUtils.join(action.getFieldErrors().values(), ";"));
-  }
-
-  @Test
-  public void testSaveWithNullDisplayName() throws Exception {
-    action.setDisplayName(null);
-    action.setGivenNames("foo");
-    action.setSurnames("foo");
-
-    String result = action.executeSaveUser();
-    assertEquals(result, Action.INPUT, "Action didn't return input");
-    assertNotNull(action.getFieldErrors().get("displayName"), "action didn't add field errors");
-    assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
-        + StringUtils.join(action.getFieldErrors().keySet(), ","));
-  }
-
   @Test
   public void testSaveWithNullGivenNames() throws Exception {
     action.setDisplayName("testdisplayname");
@@ -304,45 +225,6 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     String result = action.executeSaveUser();
     assertEquals(result, Action.INPUT, "Action didn't return input");
     assertNotNull(action.getFieldErrors().get("surnames"), "action didn't add field errors");
-    assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
-        + StringUtils.join(action.getFieldErrors().keySet(), ","));
-  }
-
-  @Test
-  public void testSaveWithShortDisplayName() throws Exception {
-    action.setDisplayName("a");
-    action.setGivenNames("foo");
-    action.setSurnames("foo");
-
-    String result = action.executeSaveUser();
-    assertEquals(result, Action.INPUT, "Action didn't return input");
-    assertNotNull(action.getFieldErrors().get("displayName"), "action didn't add field errors");
-    assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
-        + StringUtils.join(action.getFieldErrors().keySet(), ","));
-  }
-
-  @Test
-  public void testSaveWithLongDisplayName() throws Exception {
-    action.setDisplayName("Meet_Mary_Margaret_Shes_a_charitable_sensitive_elementary_school_teacher_in_Storybrooke_Maine");
-    action.setGivenNames("foo");
-    action.setSurnames("foo");
-
-    String result = action.executeSaveUser();
-    assertEquals(result, Action.INPUT, "Action didn't return input");
-    assertNotNull(action.getFieldErrors().get("displayName"), "action didn't add field errors");
-    assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
-        + StringUtils.join(action.getFieldErrors().keySet(), ","));
-  }
-
-  @Test
-  public void testSaveDisplayNameWithBadCharacters() throws Exception {
-    action.setDisplayName("@#$(U^(#&$)(&U");
-    action.setGivenNames("foo");
-    action.setSurnames("foo");
-
-    String result = action.executeSaveUser();
-    assertEquals(result, Action.INPUT, "Action didn't return input");
-    assertNotNull(action.getFieldErrors().get("displayName"), "action didn't add field errors");
     assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
         + StringUtils.join(action.getFieldErrors().keySet(), ","));
   }
@@ -390,19 +272,6 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
         + StringUtils.join(action.getFieldErrors().keySet(), ","));
   }
-
-  @Test(dataProvider = "unsavedUser", dependsOnMethods = {"testCreateNewUser"})
-  public void testSaveWithDuplicateDisplayName(UserProfile userProfile) throws Exception {
-    putInSession(Constants.AUTH_KEY, "new-auth-key-for-dup-displayName");
-    action.setDisplayName(userProfile.getDisplayName());
-    action.setGivenNames(userProfile.getGivenNames());
-    action.setSurnames(userProfile.getSurname());
-
-    String result = action.executeSaveUser();
-    assertEquals(result, Action.INPUT, "Action didn't return input");
-    assertNotNull(action.getFieldErrors().get("displayName"), "action didn't return field error(s) for display name");
-  }
-
 
   @Override
   protected BaseActionSupport getAction() {
