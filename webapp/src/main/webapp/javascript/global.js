@@ -3,6 +3,15 @@ var $win = $(window);
 var $pagebdy = $('#pagebdy');
 
 $(document).ready(function() { 
+	
+	// detect touch screen
+	$.support.touchEvents = (function(){
+		return (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
+	})();
+		
+	if ($.support.touchEvents) {
+		$('html').addClass('touch');
+	}
 
 	$.fn.doOnce = function(func){ 
 		this.length && func.apply(this); 
@@ -55,15 +64,25 @@ $(document).ready(function() {
 		});
 	});
 	
-	$article.doOnce(function(){
-		this.scrollFrame();
-	});
 	
 	$('#figure-thmbs').doOnce(function(){
 		this.carousel({
 			access : true
 		});
 	});
+	
+	$('#article-block').find('div.btn-reveal').doOnce(function(){
+		this.hoverEnhanced({
+			trigger: 'span.btn'
+		});
+	});
+	
+	if (!$.support.touchEvents && $win.width() >= 960) {
+		$article.doOnce(function(){
+			this.scrollFrame();
+		});
+	}
+
 	
 });
 
@@ -351,6 +370,37 @@ if ($fig_search.length) {
 })(jQuery);
 
 
+
+(function($){
+	$.fn.hoverEnhanced = function(options) {	
+		defaults = {
+			trigger : ''
+		};
+		var options = $.extend(defaults, options);
+		return this.each(function() {
+			var $this = $(this);
+			$this.hoverIntent(
+				function () {
+					$this.addClass('reveal');
+				}, 
+				function () {
+					$this.removeClass('reveal');
+				}
+			);
+			if ($.support.touchEvents) {
+				$this.unbind('mouseenter')
+				.unbind('mouseleave');
+				$this.find(options.trigger).on('click', function() {
+					$this.siblings().removeClass('reveal');
+					$this.toggleClass('reveal');
+				})
+			}
+		});
+	};
+})(jQuery);
+
+
+
 (function($){
 	$.fn.carousel = function(options) {	
 		defaults = {
@@ -478,20 +528,130 @@ if ($fig_search.length) {
 	};
 })(jQuery);
 
+
+
+// advanced search
+var $adv_search = $('#unformattedSearchFormId');
+if ($adv_search.length) {
+	var $query_field = $('#queryFieldId');
+	var $term_el = $('#queryTermDivBlockId');
+	var $term = $('#queryTermId');
+	var $date_el = $('#startAndEndDateDivBlockId');
+	var $date_start = $('#startDateAsStringId');
+	var $date_end = $('#endDateAsStringId');
+	var is_date;
+	var isDate = function(field) {
+		if (field.val() == 'publication_date' || field.val() == 'received_date' || field.val() == 'accepted_date') {
+			is_date = true;
+		} else	 {
+			is_date = false;
+		}
+	}
+	var changeField = function() {
+		if (is_date && $date_el.is(':hidden')) {
+			$term_el.hide();
+			$date_el.show();
+			$term.prop('disabled', true);
+			$date_start.prop('disabled', false);
+			$date_end.prop('disabled', false);
+		} else if (!is_date && $date_el.is(':visible')) {
+			$term_el.show();
+			$date_el.hide();
+			$term.prop('disabled', false);
+			$date_start.prop('disabled', true);
+			$date_end.prop('disabled', true);
+		}
+	}
+	$query_field.change(function() {
+		isDate($(this));
+		changeField();
+		 
+	});
+	isDate($query_field);
+	changeField();
 	
+	
+	var journals_all = $('#journalsOpt_all');
+	var subject_all = $('#subjectOption_all');
+	var article_all = $('#articleType_all');
+	var disableFormEls = function(el) {
+		inpts = el.closest('ol').find('.options input');
+		inpts.prop('disabled', true);
+	}
+	var enableFormEls = function(el) {
+		inpts = el.closest('ol').find('.options input');
+		inpts.prop('disabled', false);
+
+	}
+	journals_all.change(function() {
+		disableFormEls($(this));
+	});
+	$('#journalsOpt_slct').change(function() {
+		enableFormEls($(this));
+	});
+
+	subject_all.change(function() {
+		disableFormEls($(this));
+	});
+	$('#subjectOption_some').change(function() {
+		enableFormEls($(this));
+	});
+
+	article_all.change(function() {
+		disableFormEls($(this));
+	});
+	$('#articleType_one').change(function() {
+		enableFormEls($(this));
+	});
+	if (journals_all.is(':checked')) {
+		disableFormEls(journals_all);
+	}
+	if (subject_all.is(':checked')) {
+		disableFormEls(subject_all);
+	}
+	if (article_all.is(':checked')) {
+		disableFormEls(article_all);
+	}
+	$('#clearFiltersButtonId2').on('click', function() {
+		journals_all.prop('checked', true);
+		subject_all.prop('checked', true);
+		article_all.prop('checked', true);
+		disableFormEls(journals_all);
+		disableFormEls(subject_all);
+		disableFormEls(article_all);
+	});
+	$('#clearUnformattedQueryButtonId').on('click', function() {
+		$('#unformattedQueryId').val('')
+	});
+}
+
+
+
+	
+// BEGIN Figure Viewer
 var launchModal = function(doi, ref, state, el) {
-	var path = '/article/fetchObject.action?uri='
+	var path = '/article/fetchObject.action?uri'
 	var $modal = $('<div id="fig-viewer" class="modal" />');
 	var $thmbs = $('<div id="fig-viewer-thmbs" />');
 	var $slides = $('<div id="fig-viewer-slides" />');
+	var $abstract = $('<div id="fig-viewer-abst" />');
 	var $mask = $('<div id="modal-mask" />').on('click', function() {
 		killModal();
 	});
 	var active_thmb = null;
-	var page_url;	
+	var page_url;
+	var modal_h;
+	var slides_h;
+	var $figs;
+	var figs_h;	
+	var thmbs_h;
+	var abst_h;
+	var $abs_txt;
+	var abs_txt_h;
 	var buildFigs = function() {
 		$.ajax({
-			url: '/article/lightbox.action?uri='+ doi,
+			// url: '/article/lightbox.action?uri='+ doi,
+			url: 'article/' + doi,
 			dataFilter: function (data, type) {
 				return data.replace(/(\/\*|\*\/)/g, '');
 			},
@@ -589,7 +749,7 @@ var launchModal = function(doi, ref, state, el) {
 			},
             error:function(xOptions, textStatus) {
               console.log('Error: ' + textStatus);
-            }
+			}
 		});
 	}
 		
@@ -618,6 +778,14 @@ var launchModal = function(doi, ref, state, el) {
 
 		$('body').append($modal)
 		.append($mask);
+		modal_h = $modal.height();
+		slides_h =$slides.height();
+		$figs = $slides.find('div.figure');
+		figs_h = $figs.eq(0).height();
+		thmbs_h = $thmbs.height();
+		abst_h = $abstract.height();
+		$abs_txt = $abstract.find('div.txt');
+		abs_txt_h = $abs_txt.height();
 		resizeModal();
 		$win.bind('resize.modal', resizeModal);
 
@@ -675,19 +843,27 @@ var launchModal = function(doi, ref, state, el) {
 
 
 		
-
 	var resizeModal = function() {
 		var doc_h = $(document).height();
 		var win_h = $win.height();
 		var win_w = $win.width();
-		var modal_h = $modal.height();
-		$mask.css({'width':win_w,'height':doc_h});		
+		$mask.css({'width':win_w,'height':doc_h});
 		if (win_h >= modal_h) {
-			$modal.css('top',  win_h/2 - modal_h/2);
+			$modal.css('top',  Math.round(win_h/2 - modal_h/2));
+			$slides.css('height', slides_h);
+			$figs.css('height', figs_h);
+			$thmbs.css('height', thmbs_h);
+			$abstract.css('height', abst_h);
+			$abs_txt.css('height', abs_txt_h);
 		} else {
 			$modal.css('top', 0);
+			$slides.css('height', win_h - (modal_h - slides_h));
+			$figs.css('height', win_h - (modal_h - figs_h));
+			$thmbs.css('height', win_h - (modal_h - thmbs_h));
+			$abstract.css('height', win_h - (modal_h - abst_h));
+			$abs_txt.css('height', win_h - (modal_h - abs_txt_h));
 		}
-		$modal.css('left', win_w/2 - $modal.width()/2);
+		$modal.css('left', Math.round(win_w/2 - $modal.width()/2));
 	}
 }
 
