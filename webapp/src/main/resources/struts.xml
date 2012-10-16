@@ -197,13 +197,18 @@
       </result>
     </action>
 
-    <action name="feedbackCreate" class="org.ambraproject.action.FeedbackAction" method="executeRender">
+    <action name="selectList" class="org.ambraproject.action.ListingAction"/>
+
+  </package>
+
+  <package name="feedback" extends="default" namespace="/feedback">
+    <action name="feedback" class="org.ambraproject.action.FeedbackAction" method="executeRender">
       <result type="default_freemarker">
         <param name="templateFile">/feedback/feedbackEntry.ftl</param>
       </result>
     </action>
 
-    <action name="feedback" class="org.ambraproject.action.FeedbackAction" method="executeSend">
+    <action name="feedbackCreate" class="org.ambraproject.action.FeedbackAction" method="executeSend">
       <result name="error" type="default_freemarker">
         <param name="templateFile">/feedback/feedbackEntry.ftl</param>
       </result>
@@ -214,9 +219,6 @@
         <param name="templateFile">/feedback/feedbackSuccess.ftl</param>
       </result>
     </action>
-
-    <action name="selectList" class="org.ambraproject.action.ListingAction"/>
-
   </package>
 
   <package name="search" extends="default" namespace="/search">

@@ -319,6 +319,7 @@
     <from>^/static/([\w\d]+)\??.*$</from>
     <to>/static/$1.action</to>
   </rule>
+
   <outbound-rule>
     <note>
       re-write outbound static action links
@@ -326,6 +327,42 @@
     </note>
     <from>^/static/([\w\d]+).action\??.*$</from>
     <to last="true">/static/$1</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming feedback requests
+      /feedback/new -> /feedback/feedback.action
+    </note>
+    <from>^(/.+)?/feedback/new$</from>
+    <to>/feedback/feedback.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound feedback requests
+      /feedback/feedback.action -> /feedback/new
+    </note>
+    <from>^(/.+)?/feedback/feedback.action(.*)</from>
+    <to>$1/feedback/new</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming feedback submit requests
+      /feedback/submit -> /feedback/feedbackCreate.action
+    </note>
+    <from>^(/.+)?/feedback/submit$</from>
+    <to>/feedback/feedbackCreate.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound feedback submit requests
+      /feedback/feedbackCreate.action -> /feedback/submit
+    </note>
+    <from>^(/.+)?/feedback/feedbackCreate.action(.*)</from>
+    <to>$1/feedback/submit</to>
   </outbound-rule>
 
 </urlrewrite>
