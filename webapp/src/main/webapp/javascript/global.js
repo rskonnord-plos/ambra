@@ -655,7 +655,7 @@ if ($adv_search.length) {
 
 // BEGIN Figure Viewer
 var launchModal = function(doi, ref, state, el) {
-	var path = '/article/fetchObject.action?uri'
+	var path = '/article/fetchObject.action?uri='
   var $modal = $('<div id="fig-viewer" class="modal" />');
   var $thmbs = $('<div id="fig-viewer-thmbs" />');
   var $slides = $('<div id="fig-viewer-slides" />');
