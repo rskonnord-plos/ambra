@@ -650,8 +650,7 @@ var launchModal = function(doi, ref, state, el) {
 	var abs_txt_h;
 	var buildFigs = function() {
 		$.ajax({
-			// url: '/article/lightbox.action?uri='+ doi,
-			url: 'article/' + doi,
+			url: '/article/lightbox.action?uri='+ doi,
 			dataFilter: function (data, type) {
 				return data.replace(/(\/\*|\*\/)/g, '');
 			},
@@ -731,8 +730,7 @@ var launchModal = function(doi, ref, state, el) {
       callbackParameter: "json.wrf",
 			success: function(data){				
 				$.each(data.response.docs, function(){
-					abstract_html ='<div id="fig-viewer-abst">'
-					+ '<div class="txt">' + this["abstract"] + '</div>'
+					abstract_html = '<div class="txt">' + this["abstract"] + '</div>'
 					+ '<div class="lnks">'
 					+ '<p class="dl">Download'
 					+ ' <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Artilce PDF Version</a>'
@@ -741,9 +739,9 @@ var launchModal = function(doi, ref, state, el) {
 					+ '<span class="btn active">view abstract</span>'
 					+ '<a class="btn" href="' + '/article/' + page_url + '">full text</a>'
 					+ '</p>'
-					+ '</div>'
 					+ '</div>';
 					$modal.append(abstract_html);
+          $modal.append($abstract);
 				});
 				displayModal();
 			},
