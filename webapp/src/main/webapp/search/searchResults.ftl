@@ -112,7 +112,7 @@ ERROR, searchType must be defined.
 </form>
 
 <div id="nav-main" class="nav txt-lg">
-  <#include "/global/global_nav.ftl">
+<#include "/global/global_nav.ftl">
 </div>
 
 </div><!-- pagehdr-->
@@ -121,9 +121,12 @@ ERROR, searchType must be defined.
 <div id="hdr-search-results">
   <div id="db">
     <form name="searchForm" action="/search/simpleSearch.action" method="get" id="searchForm">
-      <input type="hidden" name="from" value="globalSimpleSearch"> <input type="hidden" name="filterJournals" value="PLoSONE">
+      <input type="hidden" name="from" value="globalSimpleSearch"> <input type="hidden" name="filterJournals"
+                                                                          value="PLoSONE">
       <fieldset>
-        <legend>Search</legend> <label for="search">Search</label>
+        <legend>Search</legend>
+        <label for="search">Search</label>
+
         <div class="wrap">
           <input id="search" type="text" name="query" placeholder="implicit learning and autism">
           <input type="image" alt="SEARCH" src="/images/icon.search.gif">
@@ -148,140 +151,146 @@ ERROR, searchType must be defined.
 </div><!-- hdr-fig-search -->
 
 <div id="pagebdy-wrap" class="bg-dk">
-<div id="pagebdy">
+  <div id="pagebdy">
 
-<div id="search-results-block" class="cf">
+    <div id="search-results-block" class="cf">
 
-<div class="header hdr-results">
-  <h2>${totalNoOfResults} results for <span>${query?html}</span></h2>
-</div>
+      <div class="header hdr-results">
+        <h2>${totalNoOfResults} results for <span>${query?html}</span></h2>
+      </div>
 
-<div class="main">
+      <div class="main">
 
-  <ul id="search-results">
-    <#list searchResults as hit>
-      <li doi="${hit.uri}" pdate="${hit.date.getTime()?string.computer}">
+        <ul id="search-results">
+        <#list searchResults as hit>
+          <li doi="${hit.uri}" pdate="${hit.date.getTime()?string.computer}">
               <span class="article">
                <@s.url id="fetchArticleURL" action="fetchArticle" namespace="/article" articleURI="info:doi/${hit.uri}" includeParams="none"/>
                <@s.a href="${(freemarker_config.getJournalUrlFromIssn(hit.issn))!(freemarker_config.doiResolverURL)}%{fetchArticleURL}" title="Read Open-Access Article"><@articleFormat>${hit.title}</@articleFormat></@s.a>
               </span>
-        <span class="authors"> <#-- hitScore: ${hit.hitScore} --> ${hit.creator!""}</span>
-        <#if hit.highlight??><span class="cite">${hit.highlight}</span></#if>
-        <#if filterJournals?size == 1 && filterJournals?first == freemarker_config.getIssn(journalContext)>
-          <#if hit.journalTitle?? && hit.getIssn() != freemarker_config.getIssn(journalContext)>
-            <strong><em>${hit.journalTitle}</em></strong><em>:</em>
-          </#if>
-        <#else>
-          <#if hit.journalTitle??>
-            <strong><em>${hit.journalTitle}</em></strong><em>:</em>
-          </#if>
-        </#if>
-        <#if hit.articleTypeForDisplay??>
-        ${hit.articleTypeForDisplay},
-        </#if>
-        <#if hit.date??>
-          published ${hit.date?string("dd MMM yyyy")}
-        </#if>
-        <#if hit.uri??>
-          <span class="uri">${hit.uri?replace("info:doi/", "doi:")}</span>
-        </#if>
-      </li>
-    </#list>
-  </ul>
-
-  <div class="pagination">
-    <span class="prev">&lt;</span>
-    <strong>1</strong>
-    <a href="TEST">2</a>
-    <a href="TEST">3</a>
-    <span>...</span>
-    <a href="TEST">6</a>
-    <a href="TEST" class="next">&gt;</a>
-  </div>
-
-</div>
-
-<div class="sidebar">
-
-  <div class="block blk-style-a blk-search-history">
-    <div class="header">
-      <h3>Search History</h3>
-    </div>
-    <div class="body">
-      <#assign recentSearchDisplayTextMaxLength = 28>
-      <#if recentSearches?? && recentSearches?size gt 0>
-        <dl id="recentSearches" class="facet">
-          <#list recentSearches?keys?reverse as key>
-            <#if key?length gt recentSearchDisplayTextMaxLength>
-              <dd><a href="${recentSearches[key]}" title="${key}">${key?substring(0,recentSearchDisplayTextMaxLength-2)}...</a></dd>
+            <span class="authors"> <#-- hitScore: ${hit.hitScore} --> ${hit.creator!""}</span>
+            <#if hit.highlight??><span class="cite">${hit.highlight}</span></#if>
+            <#if filterJournals?size == 1 && filterJournals?first == freemarker_config.getIssn(journalContext)>
+              <#if hit.journalTitle?? && hit.getIssn() != freemarker_config.getIssn(journalContext)>
+                <strong><em>${hit.journalTitle}</em></strong><em>:</em>
+              </#if>
             <#else>
-              <dd><a href="${recentSearches[key]}" title="${key}">${key}</a></dd>
+              <#if hit.journalTitle??>
+                <strong><em>${hit.journalTitle}</em></strong><em>:</em>
+              </#if>
             </#if>
-          </#list>
-        </dl>
-      </#if>
-    </div>
-  </div>
+            <#if hit.articleTypeForDisplay??>
+            ${hit.articleTypeForDisplay},
+            </#if>
+            <#if hit.date??>
+              published ${hit.date?string("dd MMM yyyy")}
+            </#if>
+            <#if hit.uri??>
+              <span class="uri">${hit.uri?replace("info:doi/", "doi:")}</span>
+            </#if>
+          </li>
+        </#list>
+        </ul>
 
-  <!-- This block for Phase 2 development -->
-  <div class="block blk-style-a blk-related-collections">
-    <div class="header">
-      <h3>Related Collections</h3>
-    </div>
-    <div class="body">
-      <#if ((totalNoOfResults gt 0) && (fieldErrors?size == 0))>
-        <#if (resultsSinglePage.authorFacet??)>
-          <h4>Authors</h4>
-          <ul class="actions">
-            <#list resultsSinglePage.authorFacet as f>
-              <#if f_index < max_authors>
-                <li>
-                  <a href="${advancedSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}">${f.name}</a>
+        <div class="pagination">
+          <span class="prev">&lt;</span>
+          <strong>1</strong>
+          <a href="TEST">2</a>
+          <a href="TEST">3</a>
+          <span>...</span>
+          <a href="TEST">6</a>
+          <a href="TEST" class="next">&gt;</a>
+        </div>
+
+      </div>
+
+      <div class="sidebar">
+
+        <div class="block blk-style-a blk-search-history">
+          <div class="header">
+            <h3>Search History</h3>
+          </div>
+          <div class="body">
+          <#assign recentSearchDisplayTextMaxLength = 28>
+          <#if recentSearches?? && recentSearches?size gt 0>
+            <dl id="recentSearches" class="facet">
+              <#list recentSearches?keys?reverse as key>
+                <#if key?length gt recentSearchDisplayTextMaxLength>
+                  <dd><a href="${recentSearches[key]}"
+                         title="${key}">${key?substring(0,recentSearchDisplayTextMaxLength-2)}...</a></dd>
+                <#else>
+                  <dd><a href="${recentSearches[key]}" title="${key}">${key}</a></dd>
+                </#if>
+              </#list>
+            </dl>
+          </#if>
+          </div>
+        </div>
+
+        <!-- This block for Phase 2 development -->
+        <div class="block blk-style-a blk-related-collections">
+          <div class="header">
+            <h3>Related Collections</h3>
+          </div>
+          <div class="body">
+          <#if ((totalNoOfResults gt 0) && (fieldErrors?size == 0))>
+            <#if (resultsSinglePage.authorFacet??)>
+              <h4>Authors</h4>
+              <ul class="actions">
+                <#list resultsSinglePage.authorFacet as f>
+                  <#if f_index < max_authors>
+                    <li>
+                      <a href="${advancedSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}">${f.name}</a>
                   <span class="icons">
                     <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
+                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
+                                        title="Alert"></a>
+                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
+                                        title="E-mail"></a>
                   </span>
-                </li>
-              </#if>
-            </#list>
-          </ul>
-        </#if>
+                    </li>
+                  </#if>
+                </#list>
+              </ul>
+            </#if>
 
-        <#if (resultsSinglePage.editorFacet??)>
-          <h4>Editors</h4>
-          <ul class="actions">
-            <#list resultsSinglePage.editorFacet as f>
-              <#if f_index < max_editors>
-                <li>
-                  <a href="${advancedSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}">${f.name}</a>
+            <#if (resultsSinglePage.editorFacet??)>
+              <h4>Editors</h4>
+              <ul class="actions">
+                <#list resultsSinglePage.editorFacet as f>
+                  <#if f_index < max_editors>
+                    <li>
+                      <a href="${advancedSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}">${f.name}</a>
                   <span class="icons">
                     <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert" title="Alert"></a>
-                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail" title="E-mail"></a>
+                    <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
+                                        title="Alert"></a>
+                    <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
+                                        title="E-mail"></a>
                   </span>
-                </li>
-              </#if>
-            </#list>
-          </ul>
-        </#if>
-
-        <#if (resultsSinglePage.institutionFacet??)>
-          <h4>Institutions:</h4>
-          <#list resultsSinglePage.institutionFacet as f>
-            <#if f_index < max_institutions>
-              <p>
-                <a href="${advancedSearchURL}?unformattedQuery=affiliate%3A%22${f.name?url}%22&from=institutionLink&sort=${sorts[0]?url}">${f.name}</a>
-              </p>
+                    </li>
+                  </#if>
+                </#list>
+              </ul>
             </#if>
-          </#list>
-        </#if>
-      </#if>
+
+            <#if (resultsSinglePage.institutionFacet??)>
+              <h4>Institutions:</h4>
+              <#list resultsSinglePage.institutionFacet as f>
+                <#if f_index < max_institutions>
+                  <p>
+                    <a href="${advancedSearchURL}?unformattedQuery=affiliate%3A%22${f.name?url}%22&from=institutionLink&sort=${sorts[0]?url}">${f.name}</a>
+                  </p>
+                </#if>
+              </#list>
+            </#if>
+          </#if>
+          </div>
+        </div>
+      </div>
+
     </div>
+
   </div>
-</div>
-
-</div>
-
-</div><!-- pagebdy -->
+  <!-- pagebdy -->
 </div><!-- pagebdy-wrap -->
