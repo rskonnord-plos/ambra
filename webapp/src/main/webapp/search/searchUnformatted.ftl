@@ -237,17 +237,17 @@ There are no results for your search query.<br/>
     <li class="options">
       <fieldset id="fsSubjectOpt">
 
+      <#if (filterSubjects?size gt 0)>
+        <p>Listed below are all subject categories from
+          <b title="Articles that already match your entered search terms">matching</b> articles.</p></#if>
+      <#if (unformattedQuery?length gt 0)>
+        <p><i>(#) indicates the number of articles with
+          <#if (filterSubjects?size lte 0)><b title="Articles that already match your entered search terms"></#if>
+          matching<#if (filterSubjects?size lte 0)></b></#if> terms in each subject.</i></p>
+      <#else>
+        <p><i>(#) indicates the number of articles in each subject.</i></p>
+      </#if>
         <ul>
-        <#if (filterSubjects?size gt 0)>
-          <p>Listed below are all subject categories from
-            <b title="Articles that already match your entered search terms">matching</b> articles.</p></#if>
-        <#if (unformattedQuery?length gt 0)>
-          <p>(#) indicates the number of articles with
-            <#if (filterSubjects?size lte 0)><b title="Articles that already match your entered search terms"></#if>
-            matching<#if (filterSubjects?size lte 0)></b></#if> terms in each subject.</p>
-        <#else>
-          <p>(#) indicates the number of articles in each subject.</p>
-        </#if>
         <#if subjects?? && subjects?size gt 0>
           <#assign colSize = (subjects?size / 2) + 0.5>
           <ul>
