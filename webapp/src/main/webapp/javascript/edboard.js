@@ -56,7 +56,7 @@ $.fn.edBoard = function () {
     }, args);
 
     //clear out the existing editors
-    $("#all_editors > div.editor").each(function (index, obj) { console.log(index); });
+    $("div.editor").each(function (index, obj) { $(this).remove(); });
     $("#all_editors").css("display","none");
 
     //TODO: show a loading spinner?
@@ -67,13 +67,13 @@ $.fn.edBoard = function () {
     //so we'll do the highlighting on the client side
     args.queryTerms = [];
     if (args.highlight) {
-      args.queryTerms = $.each(args.query.split(" AND "), function (index, item) {
+      $.each(args.query.split(" AND "), function (index, item) {
         var term = item
           .replace(/.*:/, "")
           .replace(/[^a-zA-Z\- ()]/g, "")//filter out characters that break regex
           .replace(/\(/, "\\(")
           .replace(/\)/, "\\)");
-        return new RegExp("(" + term + ")", "ig");
+        args.queryTerms.push(new RegExp("(" + term + ")", "ig"));
       });
     }
 
@@ -121,11 +121,11 @@ $.fn.edBoard = function () {
         if (editor.ae_subject) {
           //highlight the subjects
           if (args.highlight) {
-            editor.ae_subject = $.each(editor.ae_subject, function (index, subject) {
+            $.each(editor.ae_subject, function (index, subject) {
               $.each(args.queryTerms, function (index, term) {
                 subject = subject.replace(term, "<span class=\"highlight\">$1</span>");
               });
-              return subject;
+              editor.ae_subject[index] = subject;
             });
           }
 
@@ -157,8 +157,7 @@ $.fn.edBoard = function () {
               .attr("href", "javascript:void(0)")
               .addClass("show_all")
               .click(function (eventObj) {
-                console.log(eventObj);
-                eventObj.currentTarget.css("display", "none");
+                $(this).css("display", "none");
                 elipses.css("display", "none");
                 more.css("display", "inline");
               });
@@ -272,8 +271,8 @@ $.fn.edBoard = function () {
         } else {
           event.target.value = ul.item.value;
         }
-        //event.cancel();
-        //event.target.close();
+
+        return false;
       },
 
       source: function(entry, response) {
@@ -314,9 +313,13 @@ $.fn.edBoard = function () {
               $.each(subjects, function (index, subject) {
                 //solr returns a list that looks like
                 // ["biology",2411, "biophysics",344]
-                if (index % 2 == 0 && subjects[index + 1] > 0) {
-                  var countString = " (" + subjects[index + 1] + ")";
-                  options.push({ label:subject + countString, value:subject });
+
+                //Onlu push terms that haven't been selected. :-)
+                if($.inArray(subject, terms) == -1) {
+                  if (index % 2 == 0 && subjects[index + 1] > 0) {
+                    var countString = " (" + subjects[index + 1] + ")";
+                    options.push({ label:subject + countString, value:subject });
+                  }
                 }
               });
 
@@ -331,22 +334,3 @@ $.fn.edBoard = function () {
     });
   };
 };
-
-
-
-//  //listeners for the search button
-//  dojo.connect(button, "click", null, function () {
-//    hideOldList();
-//    if (textbox.value == default_value) {
-//      textbox.value = "";
-//    }
-//    args.searchFunction(textbox.value);
-//  });
-//
-//  dojo.connect(button, "keypress", null, function (e) {
-//    hideOldList();
-//    if (e.keyCode == 13) {
-//      args.searchFunction(textbox.value);
-//    }
-//  };
-//};
