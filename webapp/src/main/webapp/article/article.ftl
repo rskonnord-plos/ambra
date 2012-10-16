@@ -4,7 +4,7 @@
 <#include "/includes/global_search.ftl">
 
 <div id="nav-main" class="nav">
-  <#include "/global/global_nav.ftl">
+  <#include "/includes/common_navbar.ftl">
 </div>
 
 </div><!-- pagehdr-->

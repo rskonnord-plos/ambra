@@ -112,7 +112,7 @@ ERROR, searchType must be defined.
 </form>
 
 <div id="nav-main" class="nav txt-lg">
-<#include "/global/global_nav.ftl">
+<#include "/includes/common_navbar.ftl">
 </div>
 
 </div><!-- pagehdr-->
