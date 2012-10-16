@@ -242,7 +242,7 @@ if ($fig_search.length) {
 			var hdr_view = true;
 			var ftr_view = false;
 			var speed = 'slow';
-			var $btn = $('<div class="btn-g"><img src="images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function() {
+			var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function() {
 				$title.remove();
 				$bnr.hide();
 				$win.unbind('scroll.sf');
