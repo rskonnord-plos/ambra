@@ -86,82 +86,8 @@
 
       </div><!-- main -->
 
-      <div class="sidebar">
+      <#include "article_sidebar.ftl">
 
-        <div class="article-actions cf">
-          <div class="btn-reveal">
-            <span class="btn">Download</span>
-            <div class="content">
-              <ul class="bullet">
-                <li><a href="${articlePDFURL}"" title="Download article PDF">PDF</a></li>
-                <li><a href="${articleCitationURL}" title="Download citations">Citation</a></li>
-                <li><a href="${articleXMLURL}" title="Download article XML">XML</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="btn-reveal flt-l">
-            <span class="btn">Print</span>
-            <div class="content">
-              <ul class="bullet">
-                <li><a href="#" onclick="window.print();return false;" title="Print Article">Print article</a></li>
-              <#if article.ezReprintLink??>
-                <li>
-                  <a href="${article.ezReprintLink}" title="Odyssey Press">EzReprint</a>
-                  <img src="/images/icon.new.png" width="29" height="12" alt="New"> <span class="note">New &amp; improved!</span>
-                </li>
-              <#else>
-                <li>
-                  <a href="http://www.authorbilling.com/client.php?ID=1806" title="Order Reprints">Order Reprints</a>
-                  <img src="/images/icon.reprint.gif" width="29" height="12" alt="New">
-                </li>
-              </#if>
-              </ul>
-            </div>
-          </div>
-          <div class="btn-reveal flt-r">
-            <span class="btn">Share</span>
-            <div class="content">
-              <ul class="social">
-                <li><a href="TEST"><img src="/images/icon.reddit.16.png" width="16" height="16" alt="Reddit">
-                  Reddit</a></li>
-                <li><a href="TEST"><img src="/images/icon.gplus.16.png" width="16" height="16" alt="G+"> G+</a></li>
-                <li><a href="TEST"><img src="/images/icon.stumble.16.png" width="16" height="16" alt="StumbleUpon">
-                  StumbleUpon</a></li>
-                <li><a href="TEST"><img src="/images/icon.fb.16.png" width="16" height="16" alt="Facebook">
-                  Facebook</a></li>
-                <li><a href="TEST"><img src="/images/icon.connotea.16.png" width="16" height="16" alt="Connotea">
-                  Connotea</a></li>
-                <li><a href="TEST"><img src="/images/icon.cul.16.png" width="16" height="16" alt="CiteULike">
-                  CiteULike</a></li>
-                <li><a href="TEST"><img src="/images/icon.mendeley.16.png" width="16" height="16" alt="Mendeley">
-                  Mendeley</a></li>
-                <li><a href="TEST"><img src="/images/icon.twtr.16.png" width="16" height="16" alt="Twitter">
-                  Twitter</a></li>
-                <li><a href="TEST"><img src="/images/icon.email.16.png" width="16" height="16" alt="Email">
-                  Email</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="block">
-          <div class="header">
-            <h3>Commments</h3>
-          </div>
-          <p><a href="TEST">Please explain the relevance to humans and concern that ADs cause damage to brain cells.</a><br>
-            Posted by BryanRoth</p>
-          <p><a href="TEST">Kudos on the excellent use of the yeast model</a><br>
-            Posted by jkrise</p>
-          <p><a href="TEST">Some layman's questions about your article</a><br>
-            Posted by ArniePerlstein</p>
-        </div>
-
-        <div class="ad">
-          <div class="title">Advertisement</div>
-          <img src="images/placeholder.gif" width="160" height="600" alt="">
-        </div>
-
-      </div><!-- sidebar -->
     </div><!-- article-block -->
 
     <div id="banner-ftr">
