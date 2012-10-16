@@ -4,6 +4,7 @@
 <#macro chkd tstr str><#if tstr == str>${checkedstr}</#if></#macro>
 <#macro chkdlist tstr strlist><#list strlist as str><#if tstr == str>${checkedstr}</#if></#list></#macro>
 <!-- begin : unformatted search form -->
+<#include "/includes/common_navbar.ftl">
 
 <div id="pagebdy-wrap">
 <div id="pagebdy">
