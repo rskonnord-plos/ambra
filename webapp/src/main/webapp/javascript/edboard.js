@@ -249,6 +249,18 @@ $.fn.edBoard = function () {
       $(this).css("opacity", 1);
     });
 
+    textbox.keyup(function (eventObj) {
+      if(eventObj.keyCode == 13) {
+        //Enter pressed
+        //Select first element (if any) as value
+        //Simulate filter click
+        console.log($(this).data("autocomplete").menu.options);
+        if($(this).data("autocomplete").menu.options) {
+          console.log($(this).data("autocomplete").menu.options[0]);
+        }
+      }
+    });
+
     searchButton.click(function (eventObj) {
       var textbox = $("#" + args.textBox);
 
@@ -272,6 +284,13 @@ $.fn.edBoard = function () {
           event.target.value = ul.item.value;
         }
 
+        return false;
+      },
+
+      focus: function(event, ul) {
+        //Don't update the text of the box until a selection is made
+        console.log($("#" + args.textBox).val());
+        console.log(ul.value);
         return false;
       },
 

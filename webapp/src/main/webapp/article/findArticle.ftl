@@ -19,7 +19,7 @@
   limitations under the License.
 -->
 <!-- begin : main contents wrapper -->
-<#include "/article/about_common.ftl">
+<#include "/includes/common_navbar.ftl">
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
