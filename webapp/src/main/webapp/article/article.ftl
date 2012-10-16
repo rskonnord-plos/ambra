@@ -1,8 +1,6 @@
 <#import "/article/article_variables.ftl" as article>
 <#import "/includes/global_body.ftl" as global>
 
-<#include "/includes/global_search.ftl">
-
 <div id="nav-main" class="nav">
   <#include "/includes/common_navbar.ftl">
 </div>
