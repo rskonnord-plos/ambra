@@ -58,8 +58,7 @@ $.fn.edBoard = function () {
     //clear out the existing editors
     $("div.editor").each(function (index, obj) { $(this).remove(); });
     $("#all_editors").css("display","none");
-
-    //TODO: show a loading spinner?
+    $("#loading").css("display","block");
 
     //asking solr to do the highlighting is too slow
     //(qtime goes from ~4ms to ~90ms,
@@ -185,9 +184,8 @@ $.fn.edBoard = function () {
       });
 
       //show the loaded data
-      $(editorsDiv).css("display","block");
-
-      //TODO: show a transition?
+      $("#loading").fadeOut();
+      $(editorsDiv).show( "blind", 500 );
     }; //end loadCallback
 
     //make the request to solr
@@ -206,12 +204,10 @@ $.fn.edBoard = function () {
       },
       success: function (data) {
         args["data"] = data;
-        //TODO: hide the loading spinner
         loadCallback(args);
       },
       error: function (xOptions, textStatus) {
         console.log(textStatus);
-        //TODO: Display error state
       }
 
     });
@@ -289,8 +285,6 @@ $.fn.edBoard = function () {
 
       focus: function(event, ul) {
         //Don't update the text of the box until a selection is made
-        console.log($("#" + args.textBox).val());
-        console.log(ul.value);
         return false;
       },
 
