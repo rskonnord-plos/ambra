@@ -60,7 +60,7 @@ ERROR, searchType must be defined.
   <@s.hidden name="filterKeyword" />
 </form>
 
-<#macro renderSearchPaginationLinks url totalPages currentPageParam class>
+<#macro renderSearchPaginationLinks url totalPages currentPageParam>
 <#--
   currentPage is zero based
   SOLR (the action class) expects a startPage parameter of 0 to N
@@ -85,49 +85,19 @@ ERROR, searchType must be defined.
 -->
   <#assign currentPage = currentPageParam + 1/>
 
-<!-- DEBUG
-  url=${url}
-  totalPages=${totalPages}
-  currentPageParam=${currentPageParam}
-  class=${class}
-
-  totalNoOfResults=${totalNoOfResults}
--->
-
   <#if (totalPages gt 1 )>
-  <div class="${class}">
     <#if (totalPages lt 4) >
-      <#if (currentPage gt 1) >
-        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage - 2] />">
-          &lt;</a>&nbsp;
-      <#else>
-        <span class="arrow">&lt;</span>
-      </#if>
-
       <#list 1..totalPages as pageNumber>
         <#if pageNumber == currentPage>
-        ${currentPage}
+        <strong>${currentPage}</strong>
         <#else>
-          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
+        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
         </#if>
       </#list>
 
-      <#if (currentPage lt totalPages)>
-        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage] />">
-          &gt;</a>
-      <#else>
-        <span class="arrow">&gt;</span>
-      </#if>
-    <#else>
-      <#if (currentPage gt 1) >
-        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage - 2] />">
-          &lt;</a>
-        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[0] />">1</a>
-      <#else>
-        <span class="arrow">&lt;</span><strong>1</strong>
-      </#if>
+    <#else> <#-- totalPages >= 4 -->
       <#if (currentPage gt 3) >
-        ...
+      ...
       </#if>
 
     <#--
@@ -138,25 +108,16 @@ ERROR, searchType must be defined.
         <#if ((pageNumber > 1 && pageNumber < totalPages && pageNumber > (currentPage - 2)
         || ((pageNumber == (totalPages - 2)) && (pageNumber > (currentPage - 3)))))>
           <#if (currentPage == pageNumber)>
-            <strong>${pageNumber}</strong>
+          <strong>${pageNumber}</strong>
           <#else>
-            <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
+          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
           </#if>
         </#if>
       </#list>
       <#if (currentPage lt (totalPages - 2))>
-        ...
-      </#if>
-      <#if (currentPage lt totalPages)>
-        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[totalPages - 1] />">${totalPages}</a>
-        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage] />">
-          &gt;</a>
-      <#else>
-        <strong>${totalPages}</strong>
-        <span class="arrow">&gt;</span>
+      ...
       </#if>
     </#if>
-  </div>
   </#if>
 </#macro>
 
@@ -288,8 +249,22 @@ ERROR, searchType must be defined.
         </ul>
 
         <div class="pagination">
+        <#-- &lt; and &gt; are fallbacks for browsers without CSS. Even with CSS, they must not be blank. -->
+        <#if startPage == 0>
           <span class="prev">&lt;</span>
-        <@renderSearchPaginationLinks searchURL totalPages startPage "pageNums pgTop" />
+        <#else>
+          <a href="${searchURL}?<@URLParameters parameters=searchParameters names="startPage" values=[startPage - 1] />"
+             class="prev">&lt;</a>
+        </#if>
+
+        <@renderSearchPaginationLinks searchURL totalPages startPage />
+
+        <#if startPage == totalPages - 1>
+          <span class="next">&lt;</span>
+        <#else>
+          <a href="${searchURL}?<@URLParameters parameters=searchParameters names="startPage" values=[startPage + 1] />"
+             class="next">&gt;</a>
+        </#if>
         </div>
 
       </div>
