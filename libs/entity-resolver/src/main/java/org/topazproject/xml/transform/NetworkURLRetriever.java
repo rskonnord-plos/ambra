@@ -22,8 +22,8 @@ package org.topazproject.xml.transform;
 import java.net.URL;
 import java.io.IOException;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Retrieve the URL over the network.
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  */
 public class NetworkURLRetriever implements URLRetriever {
-  private static final Log log = LogFactory.getLog(NetworkURLRetriever.class);
+  private static final Logger log = LoggerFactory.getLogger(NetworkURLRetriever.class);
 
   /**
    * Retrieve the specified url from the network and return it.

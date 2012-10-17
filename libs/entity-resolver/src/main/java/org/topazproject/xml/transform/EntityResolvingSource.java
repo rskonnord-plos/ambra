@@ -29,8 +29,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.SAXException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Creates a {@link Source} that can be used in a {@link javax.xml.transform.Transformer#transform}
@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  */
 public class EntityResolvingSource extends SAXSource implements Source {
-  private static final Log log = LogFactory.getLog(EntityResolvingSource.class);
+  private static final Logger log = LoggerFactory.getLogger(EntityResolvingSource.class);
   private static final String xmlReaderCName;
 
   static {
