@@ -111,13 +111,6 @@ ERROR, searchType must be defined.
 <@s.hidden name="filterKeyword" />
 </form>
 
-<div id="nav-main" class="nav txt-lg">
-<#include "/includes/common_navbar.ftl">
-</div>
-
-</div><!-- pagehdr-->
-</div><!-- pagehdr-wrap -->
-
 <div id="hdr-search-results">
   <div id="db">
     <form name="searchForm" action="/search/simpleSearch.action" method="get" id="searchForm">
