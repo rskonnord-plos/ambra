@@ -365,4 +365,40 @@
     <to>$1/feedback/submit</to>
   </outbound-rule>
 
+  <rule>
+    <note>
+      re-write incoming simple search requests
+      /search/simpleSearch -> /search/simpleSearch.action
+    </note>
+    <from>^(/.+)?/search/simple(.*)?</from>
+    <to>$1/search/simpleSearch.action$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound simple search requests
+      /search/simpleSearch.action -> /search/simple
+    </note>
+    <from>^(/.+)?/search/simpleSearch.action(.*)</from>
+    <to>$1/search/simple$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming advanced search requests
+      /search/advanced -> /search/advancedSearch.action
+    </note>
+    <from>^(/.+)?/search/advanced(.*)?</from>
+    <to>$1/search/advancedSearch.action$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound advanced search requests
+      /search/advancedSearch.action -> /search/advanced
+    </note>
+    <from>^(/.+)?/search/advancedSearch.action(.*)?</from>
+    <to>$1/search/advanced$2</to>
+  </outbound-rule>
+
 </urlrewrite>
