@@ -128,7 +128,7 @@ ERROR, searchType must be defined.
         <label for="search">Search</label>
 
         <div class="wrap">
-          <input id="search" type="text" name="query" placeholder="implicit learning and autism">
+          <input id="search" type="text" name="query" placeholder="${queryAsExecuted}">
           <input type="image" alt="SEARCH" src="/images/icon.search.gif">
         </div>
       </fieldset>
