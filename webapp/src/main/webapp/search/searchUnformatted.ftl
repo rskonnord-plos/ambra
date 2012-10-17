@@ -247,40 +247,38 @@ There are no results for your search query.<br/>
       <#else>
         <p><i>(#) indicates the number of articles in each subject.</i></p>
       </#if>
+      <#if subjects?? && subjects?size gt 0>
+        <#assign colSize = (subjects?size / 2) + 0.5>
         <ul>
-        <#if subjects?? && subjects?size gt 0>
-          <#assign colSize = (subjects?size / 2) + 0.5>
-          <ul>
-            <#list subjects?sort_by("name") as subject>
-              <#if (subject_index + 1) lte colSize>
-                <#assign subjectId = subject.name?replace(" ","_","r")>
-                <li>
-                  <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
-                         type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked="true"</#if>
-                         title="Select Subject Category ${subject.name}"
-                         alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
-                  <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
-              </#if>
-            </#list>
-          </ul>
-          <ul>
-            <#list subjects?sort_by("name") as subject>
-              <#if (subject_index + 1) gt colSize>
-                <#assign subjectId = subject.name?replace(" ","_","r")>
-                <li>
-                  <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
-                         type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked="true"</#if>
-                         title="Select Subject Category ${subject.name}"
-                         alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
-                  <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
-              </#if>
-            </#list>
-          </ul>
-        <#else>
-          <br/>
-          <span id="filterReset" style="color:red;">There are no matching subjects in the current result set.</span>
-        </#if>
+          <#list subjects?sort_by("name") as subject>
+            <#if (subject_index + 1) lte colSize>
+              <#assign subjectId = subject.name?replace(" ","_","r")>
+              <li>
+                <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
+                       type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked="true"</#if>
+                       title="Select Subject Category ${subject.name}"
+                       alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
+                <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
+            </#if>
+          </#list>
         </ul>
+        <ul>
+          <#list subjects?sort_by("name") as subject>
+            <#if (subject_index + 1) gt colSize>
+              <#assign subjectId = subject.name?replace(" ","_","r")>
+              <li>
+                <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
+                       type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked="true"</#if>
+                       title="Select Subject Category ${subject.name}"
+                       alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
+                <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
+            </#if>
+          </#list>
+        </ul>
+      <#else>
+        <br/>
+        <span id="filterReset" style="color:red;">There are no matching subjects in the current result set.</span>
+      </#if>
       </fieldset>
     </li>
   </ol>
@@ -295,42 +293,40 @@ There are no results for your search query.<br/>
                       title="Search For Only Selected Article Type"/> Search for one of the following:</label></li>
     <li class="options">
       <fieldset id="fsarticleTypOpt">
+      <#if articleTypes?? && articleTypes?size gt 0>
+        <#assign colSize = (articleTypes?size / 2) + 0.5>
         <ul>
-        <#if articleTypes?? && articleTypes?size gt 0>
-          <#assign colSize = (articleTypes?size / 2) + 0.5>
-          <ul>
-            <#list articleTypes?sort_by("name") as articleType>
-              <#if (articleType_index + 1) lte colSize>
-                <#assign articleTypeId = articleType.name?replace(" ","_","r")>
-                <li>
-                  <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                         type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
-                         title="Select Article Type ${articleType.name}"
-                         alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
-                  <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
-                </li>
-              </#if>
-            </#list>
-          </ul>
-          <ul>
-            <#list articleTypes?sort_by("name") as articleType>
-              <#if (articleType_index + 1) gt colSize>
-                <#assign articleTypeId = articleType.name?replace(" ","_","r")>
-                <li>
-                  <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                         type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
-                         title="Select Article Type ${articleType.name}"
-                         alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
-                  <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
-                </li>
-              </#if>
-            </#list>
-          </ul>
-        <#else>
-          <br/>
-          <span id="filterReset" style="color:red;">ERROR: There are no matching article types in the system.</span>
-        </#if>
+          <#list articleTypes?sort_by("name") as articleType>
+            <#if (articleType_index + 1) lte colSize>
+              <#assign articleTypeId = articleType.name?replace(" ","_","r")>
+              <li>
+                <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
+                       type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
+                       title="Select Article Type ${articleType.name}"
+                       alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
+                <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+              </li>
+            </#if>
+          </#list>
         </ul>
+        <ul>
+          <#list articleTypes?sort_by("name") as articleType>
+            <#if (articleType_index + 1) gt colSize>
+              <#assign articleTypeId = articleType.name?replace(" ","_","r")>
+              <li>
+                <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
+                       type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
+                       title="Select Article Type ${articleType.name}"
+                       alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
+                <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+              </li>
+            </#if>
+          </#list>
+        </ul>
+      <#else>
+        <br/>
+        <span id="filterReset" style="color:red;">ERROR: There are no matching article types in the system.</span>
+      </#if>
       </fieldset>
     </li>
   </ol>
