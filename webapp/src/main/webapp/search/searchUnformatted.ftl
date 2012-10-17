@@ -21,10 +21,10 @@
       <h3>Find an Article</h3>
     </div>
     <div class="body">
-      <form id="quickFind" name="findAnArticleSearchForm" onsubmit="return true;"
-            action="/search/findAnArticleSearch.action" method="get" enctype="multipart/form-data" class="advSearch"
-            title="Find An Article Search Form">
-        <input type="hidden" name="pageSize" value="10" id="pageSize"/>
+    <@s.url id="findAnArticleSearchURL" includeParams="none" namespace="/search" action="findAnArticleSearch" />
+      <form id="quickFind" name="findAnArticleSearchForm" onsubmit="return true;" action="${findAnArticleSearchURL}"
+            method="get" enctype="multipart/form-data" class="advSearch" title="Find An Article Search Form">
+      <@s.hidden name="pageSize" />
 
         <p>Use citation information to quickly find a specific article.</p>
         <fieldset>
@@ -97,9 +97,12 @@
 
 <div class="col-2">
 
-<form id="unformattedSearchFormId" name="unformattedSearchForm" onsubmit="return true;"
-      action="/search/advancedSearch.action" method="get" enctype="multipart/form-data" class="advSearch">
-<input type="hidden" name="pageSize" value="10" id="pageSize"/><input type="hidden" name="sort" value="" id="sort"/>
+<@s.url id="unformattedSearchURL" includeParams="none" namespace="/search" action="advancedSearch" />
+<form id="unformattedSearchFormId" name="unformattedSearchForm" onsubmit="return true;" action="${unformattedSearchURL}"
+      method="get" enctype="multipart/form-data" class="advSearch" title="Advanced Search">
+<@s.hidden name="pageSize" />
+<@s.hidden name="sort" />
+<@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp" />
 
 <fieldset id="queryBuilder">
   <legend><span>Construct Your Search <a href="/static/searchHelp.action">Help</a></span></legend>
