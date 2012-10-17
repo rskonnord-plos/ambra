@@ -137,6 +137,7 @@
       </div><!-- sidebar -->
     </div><!-- article-block -->
 
+    <#-- Not supported yet
     <div id="banner-ftr">
       <div class="content">
         <div class="col col-1">
@@ -152,6 +153,7 @@
         </div>
       </div>
     </div>
+    -->
 
   </div><!-- pagebdy -->
 
