@@ -36,8 +36,8 @@
   </p>
 
   <h2>Ambra 2.4.6</h2>
-  <p>Released October 4, 2012</p>
-  <h3>Features Implemented in Ambra 2.4.5</h3>
+  <p>Released October 23, 2012</p>
+  <h3>Features Implemented in Ambra 2.4.6</h3>
   <ul>
     <li>Alm: show percentage of html views that lead to a pdf download.</li>
     <li>Registration: streamlined initial login to require fewer steps.</li>
