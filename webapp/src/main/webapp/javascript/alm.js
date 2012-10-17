@@ -497,25 +497,34 @@ $.fn.alm = function () {
    * Set cross ref text by DIO
    * @param doi the doi
    * @param crossRefID the ID of the document element to place the result
-   * @param errorID the ID of the document element to place the error
+   * @param pubGetErrorID the ID of the document element to place any pub get errors
+   * @param almErrorID the ID of the document element to place the alm error
    */
-  this.setCrossRefText = function(doi, crossRefID, errorID) {
+  this.setCrossRefText = function(doi, crossRefID, pubGetErrorID, almErrorID) {
     //almService.getCitesCrossRefOnly(doi, setCrossRefLinks, setCrossRefLinksError);
 
-    var success = function(response) {
-        this.setCrossRefLinks(response, crossRefID);
-      };
+    var pubGetError = function(response) {
+      var errorDiv = $("#" + pubGetErrorID);
+      errorDiv.html("Links to PDF files of open access articles " +
+        "on Pubget are currently not available, please check back later.");
+      errorDiv.show( "blind", 500 );
+    };
 
-    var error = function(response) {
-        $.("#" + errorID).val(response);
-        $.("#" + errorID).show( "blind", 500 );
+    var almError = function(response) {
+      var errorDiv = $("#" + almErrorID);
+      errorDiv.html("Citations are currently not available, please check back later.");
+      errorDiv.show( "blind", 500 );
+    };
+
+    var success = function(response) {
+        this.setCrossRefLinks(response, crossRefID, pubGetError);
       };
 
     //The proxy function forces the success method to be run in "this" context.
-    this.getCitesCrossRefOnly(doi, jQuery.proxy(success, this), error);
+    this.getCitesCrossRefOnly(doi, jQuery.proxy(success, this), almError);
   }
 
-  this.getPubGetPDF = function(dois) {
+  this.getPubGetPDF = function(dois, pubGetError) {
     var doiList = dois[0];
 
     for (var a = 1; a < dois.length; a++) {
@@ -552,11 +561,7 @@ $.fn.alm = function () {
         return response;
       },
 
-      error:function (response) {
-        setPubGetError("Links to PDF files of open access articles " +
-          "on Pubget are currently not available, please check back later.");
-        return response;
-      },
+      error:pubGetError,
 
       timeout:3000
     };
@@ -572,7 +577,7 @@ $.fn.alm = function () {
     return doi.replace(/\//g, ":");
   }
 
-  this.setCrossRefLinks = function(response, crossRefID) {
+  this.setCrossRefLinks = function(response, crossRefID, pubGetError) {
     var doi = escape(response.article.doi);
     var citationDOIs = new Array();
     var numCitations = 0;
@@ -668,13 +673,13 @@ $.fn.alm = function () {
     //Limit that here
     var doiLimit = 200;
     if (citationDOIs.length < doiLimit) {
-      this.getPubGetPDF(citationDOIs);
+      this.getPubGetPDF(citationDOIs, pubGetError);
     } else {
       for (var b = 0; b < (citationDOIs.length / doiLimit); b++) {
         var start = b * doiLimit;
         var end = (b + 1) * doiLimit;
 
-        this.getPubGetPDF(citationDOIs.slice(start, end));
+        this.getPubGetPDF(citationDOIs.slice(start, end), pubGetError);
       }
     }
   }
