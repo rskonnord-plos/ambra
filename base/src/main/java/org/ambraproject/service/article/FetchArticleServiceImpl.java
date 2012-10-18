@@ -301,7 +301,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     XPath xpath = factory.newXPath();
 
     try {
-      XPathExpression xpr = xpath.compile("//fn-group/fn[@fn-type='conflict']");
+      XPathExpression xpr = xpath.compile("//fn[@fn-type='conflict']");
       NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
 
       if(nodeList.getLength() > 0) {
