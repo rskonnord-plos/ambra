@@ -65,10 +65,10 @@
         <#if correspondingAuthor?? && correspondingAuthor?size gt 0>
           <h3>Corresponding Author</h3>
           <#if correspondingAuthor?size == 1>
-            <#list correspondingAuthor as author><p>Email: ${author}</a></p></#list>
+            <p>Email: ${correspondingAuthor[0]}</p>
           <#else>
             <ul>
-              <#list correspondingAuthor as author><li>Email: ${author}</a></li></#list>
+              <#list correspondingAuthor as author><li>Email: ${author}</li></#list>
             </ul>
           </#if>
         </#if>
@@ -76,7 +76,7 @@
         <#if competingInterest?? && competingInterest?size gt 0>
           <h3>Competing Interests</h3>
           <#if competingInterest?size == 1>
-            <#list competingInterest as interest><p>${interest}</p></#list>
+            <p>${competingInterest[0]}</p>
           <#else>
             <ul>
               <#list competingInterest as interest>
@@ -88,7 +88,7 @@
         <#if authorContributions?? && authorContributions?size gt 0>
           <h3>Author Contributions</h3>
           <#if authorContributions?size == 1>
-            <#list authorContributions as contribution><p>${contribution}</p></#list>
+            <p>${authorContributions[0]}</p>
           <#else>
             <ul>
               <#list authorContributions as contribution><li>${contribution}</li></#list>

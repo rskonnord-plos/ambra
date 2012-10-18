@@ -29,7 +29,6 @@ import org.ambraproject.models.CitedArticle;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.xml.XMLService;
-import org.ambraproject.util.NodeListTextView;
 import org.ambraproject.views.AuthorExtra;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
@@ -249,32 +248,42 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
+   * @param document        a document to search for nodes
+   * @param xpathExpression XPath describing the nodes to find
+   * @return a list of the text content of the nodes found, or {@code null} if none
+   */
+  private static List<String> findTextFromNodes(Document document, String xpathExpression) {
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+
+    NodeList nodes;
+    try {
+      XPathExpression xpr = xpath.compile(xpathExpression);
+      nodes = (NodeList) xpr.evaluate(document, XPathConstants.NODESET);
+    } catch (XPathExpressionException ex) {
+      log.error("Error occurred while gathering text with: " + xpathExpression, ex);
+      return null;
+    }
+
+    int length = nodes.getLength();
+    if (length == 0) {
+      return null;
+    }
+    List<String> text = new ArrayList<String>(length);
+    for (int i = 0; i < length; i++) {
+      Node item = nodes.item(i);
+      text.add(item.getTextContent());
+    }
+    return text;
+  }
+
+  /**
    * @inheritDoc
    */
   @Override
   public List<String> getCorrespondingAuthors(Document doc) {
-    XPathFactory factory = XPathFactory.newInstance();
-    XPath xpath = factory.newXPath();
-
-    try {
-      XPathExpression xpr = xpath.compile("//corresp/email");
-      NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
-
-      if (nodeList.getLength() > 0) {
-        //TODO: Test this code across many articles
-        return new NodeListTextView(nodeList) {
-          @Override
-          protected String extractText(Node node) {
-            return node.getFirstChild().getTextContent();
-          }
-        };
-      }
-
-    } catch (XPathExpressionException ex) {
-      log.error("Error occurred while gathering the author correspondence.", ex);
-    }
-
-    return null;
+    //TODO: Test this code across many articles
+    return findTextFromNodes(doc, "//corresp/email");
   }
 
   /**
@@ -282,23 +291,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
    */
   @Override
   public List<String> getAuthorContributions(Document doc) {
-    XPathFactory factory = XPathFactory.newInstance();
-    XPath xpath = factory.newXPath();
-
-    try {
-      XPathExpression xpr = xpath.compile("//author-notes/fn[@fn-type='con']");
-      NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
-
-      if (nodeList.getLength() > 0) {
-        //TODO: Test this code across many articles
-        return new NodeListTextView(nodeList);
-      }
-
-    } catch (XPathExpressionException ex) {
-      log.error("Error occurred while gathering the author correspondence.", ex);
-    }
-
-    return null;
+    //TODO: Test this code across many articles
+    return findTextFromNodes(doc, "//author-notes/fn[@fn-type='con']");
   }
 
   /**
@@ -306,23 +300,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
    */
   @Override
   public List<String> getAuthorCompetingInterests(Document doc) {
-    XPathFactory factory = XPathFactory.newInstance();
-    XPath xpath = factory.newXPath();
-
-    try {
-      XPathExpression xpr = xpath.compile("//fn[@fn-type='conflict']");
-      NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
-
-      if (nodeList.getLength() > 0) {
-        //TODO: Test this code across many articles
-        return new NodeListTextView(nodeList);
-      }
-
-    } catch (XPathExpressionException ex) {
-      log.error("Error occurred while gathering the author correspondence.", ex);
-    }
-
-    return null;
+    //TODO: Test this code across many articles
+    return findTextFromNodes(doc, "//fn[@fn-type='conflict']");
   }
 
   /**
