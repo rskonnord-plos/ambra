@@ -79,9 +79,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
-  private String correspondingAuthor = "";
-  private String authorContributions = "";
-  private String competingInterest = "";
+  private List<String> correspondingAuthor;
+  private List<String> authorContributions;
+  private List<String> competingInterest;
   private int pageCount = 0;
 
   private int totalNumAnnotations = 0;
@@ -105,8 +105,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private List<List<String>> articleIssues;
   private List<LinkbackView> trackbackList;
   private int trackbackCount;
-  private ArrayList<AuthorExtra> authorExtras;
-  private ArrayList<CitationReference> references;
+  private List<AuthorExtra> authorExtras;
+  private List<CitationReference> references;
   private String journalAbbrev;
 
   private FetchArticleService fetchArticleService;
@@ -385,9 +385,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     //In the service tier in whatever way is appropriate
     Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
     authorExtras = this.fetchArticleService.getAuthorAffiliations(doc);
-    correspondingAuthor = this.fetchArticleService.getCorrespondingAuthor(doc);
+    correspondingAuthor = this.fetchArticleService.getCorrespondingAuthors(doc);
     authorContributions = this.fetchArticleService.getAuthorContributions(doc);
-    competingInterest = this.fetchArticleService.getAuthorCompetingInterest(doc);
+    competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
     articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
@@ -615,7 +615,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return
    */
-  public String getCorrespondingAuthor() {
+  public List<String> getCorrespondingAuthor() {
     return this.correspondingAuthor;
   }
 
@@ -624,7 +624,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return
    */
-  public String getAuthorContributions() {
+  public List<String> getAuthorContributions() {
     return this.authorContributions;
   }
 
@@ -633,7 +633,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return
    */
-  public String getCompetingInterest() {
+  public List<String> getCompetingInterest() {
     return competingInterest;
   }
 
@@ -723,7 +723,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return author affiliations
    */
-  public ArrayList<AuthorExtra> getAuthorExtras() {
+  public List<AuthorExtra> getAuthorExtras() {
     return this.authorExtras;
   }
 
@@ -732,7 +732,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return citation references
    */
-  public ArrayList<CitationReference> getReferences() {
+  public List<CitationReference> getReferences() {
     return this.references;
   }
 

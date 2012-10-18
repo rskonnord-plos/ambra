@@ -29,6 +29,7 @@ import org.ambraproject.models.CitedArticle;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.xml.XMLService;
+import org.ambraproject.util.NodeListTextView;
 import org.ambraproject.views.AuthorExtra;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
@@ -250,7 +251,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   /**
    * @inheritDoc
    */
-  public String getCorrespondingAuthor(Document doc) {
+  @Override
+  public List<String> getCorrespondingAuthors(Document doc) {
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
 
@@ -260,7 +262,12 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
       if (nodeList.getLength() > 0) {
         //TODO: Test this code across many articles
-        return nodeList.item(0).getFirstChild().getTextContent();
+        return new NodeListTextView(nodeList) {
+          @Override
+          protected String extractText(Node node) {
+            return node.getFirstChild().getTextContent();
+          }
+        };
       }
 
     } catch (XPathExpressionException ex) {
@@ -273,7 +280,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   /**
    * @inheritDoc
    */
-  public String getAuthorContributions(Document doc) {
+  @Override
+  public List<String> getAuthorContributions(Document doc) {
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
 
@@ -283,7 +291,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
       if (nodeList.getLength() > 0) {
         //TODO: Test this code across many articles
-        return nodeList.item(0).getTextContent();
+        return new NodeListTextView(nodeList);
       }
 
     } catch (XPathExpressionException ex) {
@@ -296,7 +304,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   /**
    * @inheritDoc
    */
-  public String getAuthorCompetingInterest(Document doc) {
+  @Override
+  public List<String> getAuthorCompetingInterests(Document doc) {
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
 
@@ -306,7 +315,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
       if (nodeList.getLength() > 0) {
         //TODO: Test this code across many articles
-        return nodeList.item(0).getTextContent();
+        return new NodeListTextView(nodeList);
       }
 
     } catch (XPathExpressionException ex) {

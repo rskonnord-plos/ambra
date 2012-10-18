@@ -26,7 +26,7 @@ import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
 import org.w3c.dom.Document;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fetch article service.
@@ -57,7 +57,7 @@ public interface FetchArticleService extends HibernateService {
    * @param doc article xml
    * @return author affiliations
    */
-  public ArrayList<AuthorExtra> getAuthorAffiliations(Document doc);
+  public List<AuthorExtra> getAuthorAffiliations(Document doc);
 
   /**
    * Get the corresponding Author's email
@@ -65,7 +65,7 @@ public interface FetchArticleService extends HibernateService {
    * @param doc
    * @return an email address
    */
-  public String getCorrespondingAuthor(Document doc);
+  public List<String> getCorrespondingAuthors(Document doc);
 
   /**
    * Get the author contributions
@@ -73,7 +73,7 @@ public interface FetchArticleService extends HibernateService {
    * @param doc
    * @return the author contributions
    */
-  public String getAuthorContributions(Document doc);
+  public List<String> getAuthorContributions(Document doc);
 
   /**
    * Get the authors competing interest
@@ -81,7 +81,7 @@ public interface FetchArticleService extends HibernateService {
    * @param doc
    * @return the authors competing interest
    */
-  public String getAuthorCompetingInterest(Document doc);
+  public List<String> getAuthorCompetingInterests(Document doc);
 
   /**
    * Get references for a given article
@@ -89,7 +89,7 @@ public interface FetchArticleService extends HibernateService {
    * @param doc article xml
    * @return references
    */
-  public ArrayList<CitationReference> getReferences(Document doc);
+  public List<CitationReference> getReferences(Document doc);
 
   /**
    * Returns abbreviated journal name
