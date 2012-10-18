@@ -21,7 +21,7 @@
 
 
 $(document).ready(function() {
-  var doi = $("#doi").attr("value");
+  var doi = $('meta[name=citation_doi]').attr("content");
 
   var alm = new $.fn.alm();
   alm.getCitesTwitterOnly(doi, setTweets , setTwitterError);
