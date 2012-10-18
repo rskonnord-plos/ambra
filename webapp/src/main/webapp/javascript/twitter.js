@@ -43,7 +43,7 @@ $.fn.twitter = function () {
   };
 
   this.showTweetsPage = function(currentPage) {
-
+    //console.log("Currentpage:" + currentPage);
     var json = window.tweetsResponse;
     var numTweets = 0;
 
@@ -176,13 +176,11 @@ $.fn.twitter = function () {
       var prev = '<span class="prev">&lt;</span>';
       var next = '<span class="next">&gt;</span>';
 
-      var showTweetsCurPage = 'showTweetsPage(' + (currentPage + 1) + '); return false;';
-
       if (totalPages < 4) {
         // if less than 4 pages, do not put "..."
         // put < with or without link depending on whether this is first page.
         if (currentPage > 0) {
-          pagination.append(this.pagingAnchor(showTweetsCurPage, "&lt;", "prev"));
+          pagination.append(this.pagingAnchor(currentPage, "&lt;", "prev"));
         }
         else {
           pagination.append(prev);
@@ -195,25 +193,24 @@ $.fn.twitter = function () {
             pagination.append("<strong>" + (currentPage + 1) + "</strong>");
           }
           else {
-            pagination.append(this.pagingAnchor('showTweetsPage(' + pageNumber + '); return false;', pageNumber + 1));
+            pagination.append(this.pagingAnchor(pageNumber, pageNumber + 1));
           }
         }
 
         // put > at the end with or without link depending on whether it is the last page.
         if (currentPage < (totalPages - 1)) {
-          pagination.append(this.pagingAnchor(showTweetsCurPage, "&gt;", "next"));
+          pagination.append(this.pagingAnchor(currentPage + 1, "&gt;", "next"));
         }
         else {
           pagination.append(next);
         }
-      }
-      else {
+      } else {
         // if >=4 pages then need to put "..."
         // put < and first page number always.
         // The link is present if this is not the first page.
         if (currentPage > 0) {
-          pagination.append(this.pagingAnchor(showTweetsCurPage, "&lt;", "prev"));
-          pagination.append(this.pagingAnchor('showTweetsPage(' + 0 + '); return false;', 1));
+          pagination.append(this.pagingAnchor(currentPage - 1, "&lt;", "prev"));
+          pagination.append(this.pagingAnchor(0, 1));
         }
         else {
           pagination.append(prev + '<strong>1</strong>');
@@ -230,7 +227,7 @@ $.fn.twitter = function () {
               pagination.append("<strong>" + pageNumber + "</strong>");
             }
             else {
-              pagination.append(this.pagingAnchor('showTweetsPage(' + (pageNumber - 1) + '); return false;', pageNumber));
+              pagination.append(this.pagingAnchor(pageNumber - 1, pageNumber));
             }
           }
         }
@@ -241,8 +238,8 @@ $.fn.twitter = function () {
         // put the last page number and >.
         // The link depends of whether this is the last page.
         if (currentPage < (totalPages - 1)) {
-          pagination.append(this.pagingAnchor('showTweetsPage(' + (totalPages - 1) + '); return false;', totalPages));
-          pagination.append(this.pagingAnchor(showTweetsCurPage, "&gt;", "next"));
+          pagination.append(this.pagingAnchor(totalPages - 1, totalPages));
+          pagination.append(this.pagingAnchor(currentPage + 1, "&gt;", "next"));
         }
         else {
           pagination.append('<strong>' + totalPages + '</strong>' + next);
@@ -253,10 +250,11 @@ $.fn.twitter = function () {
     return pagination;
   };
 
-  this.pagingAnchor = function(onclickLogic, pagingText, className) {
+  this.pagingAnchor = function(pageNumber, pagingText, className) {
     var anchor = $('<a></a>').attr({
       href: "#",
-      onclick: onclickLogic
+      title: "(" + pageNumber + ")",
+      onclick: "twitter.showTweetsPage(" + pageNumber + "); return false;"
     }).html(pagingText);
 
     if (className) {
