@@ -25,6 +25,7 @@ import org.ambraproject.views.AuthorExtra;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
 import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 
 /**
@@ -33,14 +34,17 @@ import java.util.ArrayList;
 public interface FetchArticleService extends HibernateService {
   /**
    * Get the URI transformed as HTML.
+   *
    * @param article The Article to transform into HTML
    * @return String representing the annotated article as HTML
-   * @throws org.ambraproject.ApplicationException ApplicationException
+   * @throws org.ambraproject.ApplicationException
+   *          ApplicationException
    */
   public String getArticleAsHTML(final ArticleInfo article) throws Exception;
 
   /**
    * Get the article xml
+   *
    * @param article the article
    * @return article xml
    */
@@ -49,6 +53,7 @@ public interface FetchArticleService extends HibernateService {
 
   /**
    * Get the author affiliations for a given article
+   *
    * @param doc article xml
    * @return author affiliations
    */
@@ -58,7 +63,6 @@ public interface FetchArticleService extends HibernateService {
    * Get the corresponding Author's email
    *
    * @param doc
-   *
    * @return an email address
    */
   public String getCorrespondingAuthor(Document doc);
@@ -67,7 +71,6 @@ public interface FetchArticleService extends HibernateService {
    * Get the author contributions
    *
    * @param doc
-   *
    * @return the author contributions
    */
   public String getAuthorContributions(Document doc);
@@ -76,13 +79,13 @@ public interface FetchArticleService extends HibernateService {
    * Get the authors competing interest
    *
    * @param doc
-   *
    * @return the authors competing interest
    */
   public String getAuthorCompetingInterest(Document doc);
 
   /**
    * Get references for a given article
+   *
    * @param doc article xml
    * @return references
    */
@@ -90,6 +93,7 @@ public interface FetchArticleService extends HibernateService {
 
   /**
    * Returns abbreviated journal name
+   *
    * @param doc article xml
    * @return abbreviated journal name
    */

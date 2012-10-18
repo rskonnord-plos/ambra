@@ -612,6 +612,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
 
   /**
    * Get the corresponding author
+   *
    * @return
    */
   public String getCorrespondingAuthor() {
@@ -620,6 +621,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
 
   /**
    * Get the author contributions
+   *
    * @return
    */
   public String getAuthorContributions() {
@@ -628,6 +630,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
 
   /**
    * Get the authors competing interest
+   *
    * @return
    */
   public String getCompetingInterest() {

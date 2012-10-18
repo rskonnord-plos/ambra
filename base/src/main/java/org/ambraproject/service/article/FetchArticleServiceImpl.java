@@ -87,9 +87,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Get the URI transformed as HTML.
+   *
    * @param article The article to transform
    * @return String representing the annotated article as HTML
-   * @throws org.ambraproject.ApplicationException ApplicationException
+   * @throws org.ambraproject.ApplicationException
+   *          ApplicationException
    */
   @Override
   @Transactional(readOnly = true)
@@ -97,31 +99,31 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     final Object lock = (ARTICLE_LOCK + article.getDoi()).intern(); //lock @ Article level
 
     String content = articleHtmlCache.get(article.getDoi(),
-      new Cache.SynchronizedLookup<String, Exception>(lock) {
-        @Override
-        public String lookup() throws Exception {
-          return getTransformedArticle(article);
-        }
-      });
-    
+        new Cache.SynchronizedLookup<String, Exception>(lock) {
+          @Override
+          public String lookup() throws Exception {
+            return getTransformedArticle(article);
+          }
+        });
+
     return content;
   }
 
   private DataSource getArticleXML(final String articleDoi)
-    throws NoSuchArticleIdException {
+      throws NoSuchArticleIdException {
     String fsid = FSIDMapper.doiTofsid(articleDoi, "XML");
 
     if (fsid == null)
       throw new NoSuchArticleIdException(articleDoi);
 
     List assets = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(ArticleAsset.class)
-          .add(Restrictions.eq("doi", articleDoi))
-          .add(Restrictions.eq("extension", "XML")));
+        .add(Restrictions.eq("doi", articleDoi))
+        .add(Restrictions.eq("extension", "XML")));
 
-    if(assets.size() == 0)
+    if (assets.size() == 0)
       throw new NoSuchArticleIdException(articleDoi);
 
-    return new ByteArrayDataSource(fileStoreService, fsid, (ArticleAsset)assets.get(0));
+    return new ByteArrayDataSource(fileStoreService, fsid, (ArticleAsset) assets.get(0));
   }
 
   /**
@@ -134,8 +136,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Get the article xml
-   * @param article article uri
    *
+   * @param article article uri
    * @return article xml
    */
   public Document getArticleDocument(final ArticleInfo article) {
@@ -162,6 +164,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Get the author affiliations for a given article
+   *
    * @param doc article xml
    * @param doc article xml
    * @return author affiliations
@@ -186,15 +189,15 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
       // Map all affiliation id's to their affiliation strings
       for (int i = 0; i < affiliationNodeList.getLength(); i++) {
-        Node node =  affiliationNodeList.item(i);
+        Node node = affiliationNodeList.item(i);
         // Not all <aff>'s have the 'id' attribute.
         String id = (node.getAttributes().getNamedItem("id") == null) ? "" : node.getAttributes().getNamedItem("id").getTextContent();
         // Not all <aff> id's are affiliations.
         if (id.startsWith("aff")) {
           DocumentFragment df = doc.createDocumentFragment();
           df.appendChild(node);
-          String address = ((Node)affiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
-          affiliateMap.put(id,address);
+          String address = ((Node) affiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
+          affiliateMap.put(id, address);
         }
       }
 
@@ -206,17 +209,17 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
       NodeList authorList = (NodeList) authorExpr.evaluate(doc, XPathConstants.NODESET);
 
-      for (int i=0; i < authorList.getLength(); i++) {
+      for (int i = 0; i < authorList.getLength(); i++) {
         Node cnode = authorList.item(i);
         DocumentFragment df = doc.createDocumentFragment();
         df.appendChild(cnode);
         Node sNode = (Node) surNameExpr.evaluate(df, XPathConstants.NODE);
         Node gNode = (Node) givenNameExpr.evaluate(df, XPathConstants.NODE);
         Node ecNode = (Node) equalContribExpr.evaluate(df, XPathConstants.NODE);
-        
+
         // Either surname or givenName can be blank
         String surname = (sNode == null) ? "" : sNode.getTextContent();
-        String givenName = (gNode == null) ? "" : gNode.getTextContent(); 
+        String givenName = (gNode == null) ? "" : gNode.getTextContent();
         // If both are null then don't bother to add
         if ((sNode != null) || (gNode != null)) {
           NodeList affList = (NodeList) affExpr.evaluate(df, XPathConstants.NODESET);
@@ -247,8 +250,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   /**
    * @inheritDoc
    */
-  public String getCorrespondingAuthor(Document doc)
-  {
+  public String getCorrespondingAuthor(Document doc) {
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
 
@@ -256,7 +258,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       XPathExpression xpr = xpath.compile("//corresp/email");
       NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
 
-      if(nodeList.getLength() > 0) {
+      if (nodeList.getLength() > 0) {
         //TODO: Test this code across many articles
         return nodeList.item(0).getFirstChild().getTextContent();
       }
@@ -271,8 +273,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   /**
    * @inheritDoc
    */
-  public String getAuthorContributions(Document doc)
-  {
+  public String getAuthorContributions(Document doc) {
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
 
@@ -280,7 +281,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       XPathExpression xpr = xpath.compile("//author-notes/fn[@fn-type='con']");
       NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
 
-      if(nodeList.getLength() > 0) {
+      if (nodeList.getLength() > 0) {
         //TODO: Test this code across many articles
         return nodeList.item(0).getTextContent();
       }
@@ -295,8 +296,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   /**
    * @inheritDoc
    */
-  public String getAuthorCompetingInterest(Document doc)
-  {
+  public String getAuthorCompetingInterest(Document doc) {
     XPathFactory factory = XPathFactory.newInstance();
     XPath xpath = factory.newXPath();
 
@@ -304,7 +304,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       XPathExpression xpr = xpath.compile("//fn[@fn-type='conflict']");
       NodeList nodeList = (NodeList) xpr.evaluate(doc, XPathConstants.NODESET);
 
-      if(nodeList.getLength() > 0) {
+      if (nodeList.getLength() > 0) {
         //TODO: Test this code across many articles
         return nodeList.item(0).getTextContent();
       }
@@ -358,6 +358,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Get references for a given article
+   *
    * @param doc article xml
    * @return references
    */
@@ -503,6 +504,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Returns abbreviated journal name
+   *
    * @param doc article xml
    * @return abbreviated journal name
    */
@@ -542,11 +544,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   * Decorates the citation elements of the XML DOM with extra information from the citedArticle table in the DB.
-   * An extraCitationInfo element is appended to each citation element.  It will contain between one and two
-   * attributes with the extra info: citedArticleID, the DB primary key, and doi, the DOI string, if it exists.
+   * Decorates the citation elements of the XML DOM with extra information from the citedArticle table in the DB. An
+   * extraCitationInfo element is appended to each citation element.  It will contain between one and two attributes
+   * with the extra info: citedArticleID, the DB primary key, and doi, the DOI string, if it exists.
    *
-   * @param doc DOM of the XML
+   * @param doc           DOM of the XML
    * @param citedArticles List of CitedArticle persistent objects
    * @return modified DOM
    * @throws ApplicationException
