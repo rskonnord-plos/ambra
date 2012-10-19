@@ -21,12 +21,10 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SimpleTimeZone;
@@ -153,7 +151,7 @@ public class AnnotationView {
     fmt.setTimeZone(new SimpleTimeZone(0, "UTC"));
     this.createdFormatted = fmt.format(created);
 
-    if (fullReplyTree == null) {
+    if (fullReplyTree == null || fullReplyTree.isEmpty()) {
       this.replies = EMPTY_ARRAY;
       this.lastReplyDate = this.created;
       this.totalNumReplies = 0;
@@ -211,8 +209,10 @@ public class AnnotationView {
     if (competingInterestStatement != null ? !competingInterestStatement.equals(that.competingInterestStatement) : that.competingInterestStatement != null)
       return false;
     if (creatorID != null ? !creatorID.equals(that.creatorID) : that.creatorID != null) return false;
-    if (creatorDisplayName != null ? !creatorDisplayName.equals(that.creatorDisplayName) : that.creatorDisplayName != null) return false;
-    if (creatorFormattedName != null ? !creatorFormattedName.equals(that.creatorFormattedName) : that.creatorFormattedName != null) return false;
+    if (creatorDisplayName != null ? !creatorDisplayName.equals(that.creatorDisplayName) : that.creatorDisplayName != null)
+      return false;
+    if (creatorFormattedName != null ? !creatorFormattedName.equals(that.creatorFormattedName) : that.creatorFormattedName != null)
+      return false;
     if (title != null ? !title.equals(that.title) : that.title != null) return false;
     if (type != that.type) return false;
     if (xpath != null ? !xpath.equals(that.xpath) : that.xpath != null) return false;
