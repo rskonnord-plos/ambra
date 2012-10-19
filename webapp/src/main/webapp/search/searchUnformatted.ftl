@@ -161,7 +161,7 @@
     <textarea name="unformattedQuery" id="unformattedQueryId" title="Query"></textarea>
   </div>
   <div class="btnwrap">
-    <input type="button" id="buttonSearchId" class="primary" value="Search" title="Search"/>
+    <input type="submit" id="buttonSearchId" class="primary" value="Search" title="Search"/>
     <input type="button" name="clearUnformattedQueryButton" id="clearUnformattedQueryButtonId" value="Clear Query"
            title="Clear Query"/>
   </div>
@@ -335,7 +335,7 @@ There are no results for your search query.<br/>
 </fieldset>
 
 <div class="btnwrap">
-  <input type="button" id="buttonSearchId2" class="primary" value="Search" title="Search"/>
+  <input type="submit" id="buttonSearchId2" class="primary" value="Search" title="Search"/>
   <input type="button" name="clearFiltersButton2" id="clearFiltersButtonId2" value="Clear Filters"
          title="Clear Filters"/>
 </div>
