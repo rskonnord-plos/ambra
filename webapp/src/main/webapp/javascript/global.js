@@ -407,7 +407,8 @@ if ($fig_search.length) {
 			speed : 500,
 			access : false,
 			autoplay : false,
-			delay : 10000
+			delay : 10000,
+			defaultpaddingbottom : 10
 			
 		};
 		var options = $.extend(defaults, options);
@@ -423,11 +424,13 @@ if ($fig_search.length) {
 				pages = Math.ceil($items.length / visible),
 				$buttons;
 				if ($items.length <= visible) { 
+					$wrapper.css('paddingBottom', options.defaultpaddingbottom );
 					$wrapper.scrollLeft(0);
 					return false; 
 				}
+
 				// add empty items to last page if needed
-				if (($items.length % visible) != 0) {
+				if ($items.length % visible) {
 					empty_items = visible - ($items.length % visible);
 					for (i=0; i<empty_items; i++) {
 						$slider.append('<div class="item empty" />');
