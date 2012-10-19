@@ -5,7 +5,7 @@
 <#macro chkdlist tstr strlist><#list strlist as str><#if tstr == str>${checkedstr}</#if></#list></#macro>
 <!-- begin : unformatted search form -->
 
-<div id="pagebdy-wrap">
+<div id="pagebdy-wrap" class="bg-dk">
 <div id="pagebdy">
 
 <div id="search-adv-block" class="cf">
