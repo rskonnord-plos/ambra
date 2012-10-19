@@ -55,7 +55,7 @@ $.fn.twitter = function () {
         && json.article.source[0].events != null && json.article.source[0].events.length > 0) {
 
       var events = json.article.source[0].events;
-      events = events.sort(this.sort_tweets_by_date);
+      events = events.sort(jQuery.proxy(this.sort_tweets_by_date,this));
 
       numTweets = events.length;
 
@@ -74,10 +74,14 @@ $.fn.twitter = function () {
         var tweet = events[i].event;
         var tweet_url = events[i].event_url;
 
-        var created_dt = $.format.date(Date.parse(tweet.created_at), "MMM d, yyyy");
+        var created_dt = isNaN($.format.date(tweet.created_at, "MMM d, yyyy"))?
+            $.format.date(this.parseTwitterDate(tweet.created_at), "MMM d, yyyy"):
+            $.format.date(tweet.created_at, "MMM d, yyyy");
 
-        ol.append("<li><div><img src=\"" + tweet.user_profile_image + "\"/><span class=\"text\"><a href=\"https://twitter.com/#!/" + tweet.user + "\">"
-            + tweet.user + "</a> " + this.linkify(tweet.text) + "</span><br/><a target='_blank' href=\""+tweet_url+"\"><span class=\"text\">" + created_dt + "</span></a></div></li>");
+        ol.append("<li><div><img src=\"" + tweet.user_profile_image
+          + "\"/><span class=\"text\"><a href=\"https://twitter.com/#!/" + tweet.user
+          + "\">" + tweet.user + "</a> " + this.linkify(tweet.text) + "</span><br/><a target='_blank' href=\""
+          + tweet_url + "\"><span class=\"text\">" + created_dt + "</span></a></div></li>");
 
       }
 
@@ -108,8 +112,20 @@ $.fn.twitter = function () {
     $("#tweets").prepend(h3);
   }
 
+  this.parseTwitterDate = function(tweetdate) {
+    //running regex to grab everything after the time
+    var newdate = tweetdate.replace(/(\d{1,2}[:]\d{2}[:]\d{2}) (.*)/, '$2 $1');
+    //moving the time code to the end
+    newdate = newdate.replace(/(\+\S+) (.*)/, '$2 $1')
+
+    return new Date(Date.parse(newdate));
+  }
+
   this.sort_tweets_by_date = function(a, b) {
-    return (Date.parse(b.event.created_at)) - (Date.parse(a.event.created_at));
+    var aDt = isNaN(a.event.created_at)?this.parseTwitterDate(a.event.created_at):a.event.created_at;
+    var bDt = isNaN(b.event.created_at)?this.parseTwitterDate(b.event.created_at):b.event.created_at;
+
+    return (new Date(bDt).getTime()) - (new Date(aDt).getTime());
   }
 
   this.linkify = function(tweetText) {
