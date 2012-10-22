@@ -687,6 +687,360 @@ $.fn.alm = function () {
       }
     }
   }
+
+  /**
+   * Sets the bookmarks text
+   *
+   * @param doi the doi
+   * @param bookMarksID the ID of the element to contain the bookmarks text
+   * @parem loadingID the ID of the "loading" element to fade out after completion
+   */
+  this.setBookmarksText = function(doi, bookMarksID, loadingID) {
+
+    var almError = function(message) {
+      $("#" + loadingID).fadeOut('slow');
+      $("#" + bookMarksID).html(message);
+      $("#" + bookMarksID).show( "blind", 500 );
+    };
+
+    var success = function(response) {
+      $("#" + loadingID).fadeOut('slow');
+      $("#" + bookMarksID).css("display","none");
+
+      this.setBookmarks(response, bookMarksID);
+    };
+
+    this.getSocialData(doi, jQuery.proxy(success, this), jQuery.proxy(almError, this));
+  }
+
+  this.setBookmarks = function (response, bookMarksID) {
+    var doi = escape($('meta[name=citation_doi]').attr("content"));
+    var mendeleyData = null;
+    var facebookData = null;
+
+    if (response.article.source.length > 0) {
+      var html = "";
+      var countTilesCreated = 0;
+
+      for (var a = 0; a < response.article.source.length; a++) {
+        var url = response.article.source[a].public_url;
+        var tileName = response.article.source[a].source.toLowerCase().replace(" ", "-");
+        var countToShowOnTile = 0;
+
+        if (tileName == 'facebook') {  //  Facebook does not need a URL
+          facebookData = {
+            likes: 0,
+            shares: 0,
+            posts: 0
+          }
+
+          if (response.article.source[a].events) {
+            for (var i = 0; i < response.article.source[a].events.length; i++) {
+              countToShowOnTile = countToShowOnTile + response.article.source[a].events[i].total_count;
+              facebookData.likes += response.article.source[a].events[i].like_count;
+              facebookData.shares += response.article.source[a].events[i].share_count;
+              facebookData.posts += response.article.source[a].events[i].comment_count;
+            }
+          }
+
+        } else if (tileName == 'twitter') {  //  Twitter, compose a URL to our own twitter landing page
+          countToShowOnTile = response.article.source[a].count;
+          url = "/article/twitter/info:doi/" + doi;
+        } else if (tileName == 'mendeley') {
+          if(response.article.source[a].events != null) {
+            countToShowOnTile = response.article.source[a].count;
+
+            var groupData = 0;
+            if(response.article.source[a].events.groups != null) {
+              groupData = response.article.source[a].events.groups.length;
+            }
+
+            mendeleyData = {
+              individuals: countToShowOnTile,
+              groups: groupData
+            }
+          }
+
+        } else if (url && tileName) { // Only list links that have DEFINED URLS and NAMES.
+          countToShowOnTile = response.article.source[a].count;
+        }
+
+        if (countToShowOnTile > 0) {
+          if (tileName == 'facebook') {  //  Facebook does NOT get links
+            html = html + this.createMetricsTileNoLink(tileName,
+              "/images/logo-" + tileName + ".png",
+              countToShowOnTile)
+              + '\n';
+          } else {
+            html = html + this.createMetricsTile(tileName,
+              url,
+              "/images/logo-" + tileName + ".png",
+              countToShowOnTile)
+              + '\n';
+          }
+          countTilesCreated++;
+        }
+      }
+    }
+
+    //  If ZERO tiles were created, then hide the header, too.
+    if (countTilesCreated > 0) {
+      $("#" + bookMarksID).html(html);
+      $("#" + bookMarksID).show( "blind", 500 );
+    } else {
+      $('#socialNetworksOnArticleMetricsPage').css("display","none");
+    }
+
+    //Here we wire up the tool tips.  We have to do this after the html is appended to
+    //the dom because of the way javascript wires events.  In the future, we should create
+    //dom nodes and append the nodes with associated events, instead of building up an html
+    //string and then inserting the string into the dom
+    var fbTile = $("#facebookOnArticleMetricsTab");
+    var menTile = $("#mendeleyOnArticleMetricsTab");
+
+    if (fbTile) {
+      //Wire up events for display of details box
+      fbTile.tooltip({
+        delay: 250,
+        fade: 250,
+        track: true,
+        showURL: false,
+        bodyHandler: function() {
+          return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+            "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
+            "</thead><tbody><tr><td class=\"data1\">" + facebookData.likes.format(0,'.',',') + "</td>" +
+            "<td class=\"data2\">" + facebookData.shares.format(0,'.',',') + "</td><td class=\"data1\">" +
+            facebookData.posts.format(0,'.',',') + "</td></tr>" +
+            "</tbody></table></div>");
+        }
+      });
+    }
+
+    if (menTile) {
+      //Wire up events for display of details box
+      menTile.tooltip({
+        delay: 250,
+        fade: 250,
+        track: true,
+        showURL: false,
+        bodyHandler: function() {
+          return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+            "<thead><tr><th>Invididuals</th><th>Groups</th></tr>" +
+            "</thead><tbody><tr><td class=\"data1\">" + mendeleyData.individuals.format(0,'.',',') + "</td>" +
+            "<td class=\"data2\">" + mendeleyData.groups.format(0,'.',',') + "</td></tr>" +
+            "</tbody></table></div>");
+        }
+      });
+    }
+  };
+
+  this.createMetricsTile = function(name, url, imgSrc, linkText) {
+    return '<div id="' + name + 'OnArticleMetricsTab" class="metrics_tile">' +
+      '<a href="' + url + '"><img id="' + name + 'ImageOnArticleMetricsTab" src="' + imgSrc + '" alt="' + linkText + ' ' + name + '" class="metrics_tile_image"/></a>' +
+      '<div class="metrics_tile_footer" onclick="location.href=\'' + url + '\';">' +
+      '<a href="' + url + '">' + linkText + '</a>' +
+      '</div>' +
+      '</div>';
+  };
+
+  this.createMetricsTileNoLink = function(name, imgSrc, linkText) {
+    return '<div id="' + name + 'OnArticleMetricsTab" class="metrics_tile_no_link">' +
+      '<img id="' + name + 'ImageOnArticleMetricsTab" src="' + imgSrc + '" alt="' + linkText + ' ' + name + '" class="metrics_tile_image"/>' +
+      '<div class="metrics_tile_footer_no_link">' +
+      linkText +
+      '</div>' +
+      '</div>';
+  };
+
+  this.setRelatedBlogsText = function(doi, relatedBlogPostsID, errorID, loadingID) {
+    var almError = function(message) {
+      $("#" + loadingID).fadeOut('slow');
+      this.setRelatedBlogError(message, relatedBlogPostsID, errorID);
+    };
+
+    var success = function(response) {
+      $("#" + loadingID).fadeOut('slow');
+      $("#" + relatedBlogPostsID).css("display","none");
+
+      this.setRelatedBlogs(response, relatedBlogPostsID);
+    };
+
+    this.getRelatedBlogs(doi, jQuery.proxy(success, this), jQuery.proxy(almError, this));
+  }
+
+  this.setRelatedBlogs = function(response, relatedBlogPostsID) {
+    var html = "";
+    var doi = escape($('meta[name=citation_doi]').attr("content"));
+    var articleTitle = $('meta[name=citation_title]').attr("content");
+    var natureViews = 0;
+    var wikiViews = 0;
+
+    if (response.article.source.length > 0) {
+      html = "";
+      // If there is at least one hit for a blog site, then create a link to those blogs.
+      // else, if there are zero hits for a blog site, then create a "search for title" link instead.
+      for (var a = 0; a < response.article.source.length; a++) {
+        var url = response.article.source[a].public_url;
+        var tileName = response.article.source[a].source.toLowerCase().replace(" ", "-");
+        var count = response.article.source[a].count;
+
+        //Nature is a special case and will always be displayed.
+        if(tileName == "nature") {
+          natureViews = count;
+        } else if(tileName == "wikipedia") {
+          wikiViews = count;
+        } else {
+          if(tileName == "research-blogging") {
+            if(count > 0) {
+              //Research blogging wants the DOI to search on
+              html = html + createMetricsTile(tileName,
+                url,
+                "/images/logo-" + tileName + ".png",
+                count + '\n');
+            }
+          } else {
+            //Only list links that HAVE DEFINED URLS
+            if (url && count > 0) {
+              html = html + createMetricsTile(tileName,
+                url,
+                "/images/logo-" + tileName + ".png",
+                count + '\n');
+            } else if (response.article.source[a].search_url != null
+              && response.article.source[a].search_url.length > 0) {
+
+              html = html + createMetricsTile(tileName,
+                response.article.source[a].search_url + articleTitle,
+                "/images/logo-" + tileName + ".png",
+                count + '\n');
+            }
+          }
+        }
+      }
+    }
+
+    //  If the count for Nature is positive, then show the Nature tile.
+    if (natureViews > 0) {
+      html = html + createMetricsTileNoLink("nature",
+        "/images/logo-nature.png",
+        natureViews)
+        + '\n';
+    }
+
+    if (wikiViews > 0) {
+      html = html + this.createMetricsTileNoLink("wikipedia",
+        "/images/logo-wikipedia.png",
+        wikiViews)
+        + '\n';
+    }
+
+    //  Always show the Google Blogs tile.
+    html = html + this.createMetricsTile("google-blogs",
+      "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
+      "/images/logo-googleblogs.png",
+      "Search")
+      + '\n';
+
+    $("#" + relatedBlogPostsID).html($("#" + relatedBlogPostsID).html() + html);
+    $("#" + relatedBlogPostsID).show( "blind", 500 );
+  }
+
+  this.setRelatedBlogError = function(message, successID, errorID) {
+    $("#" + successID).css("display","none");
+
+    var articleTitle = $('meta[name=citation_title]').attr("content");
+    var html = "Search for related blog posts on <a href=\"http://blogsearch.google.com/blogsearch?as_q=%22"
+      + articleTitle + "%22\">Google Blogs</a><br/><div id=\"relatedBlogPostsError\"></div>";
+
+    $("#" + successID).html(html);
+    $("#" + successID).show( "blind", 500 );
+
+    $("#" + errorID).text(message);
+    $("#" + errorID).show( "blind", 500 );
+  }
+
+  this.setCitesText = function(doi, citesID, loadingID) {
+    var almError = function(message) {
+      $("#" + loadingID).fadeOut('slow');
+      $("#" + citesID).html(message);
+      $("#" + citesID).show( "blind", 500 );
+    };
+
+    var success = function(response) {
+      $("#" + loadingID).fadeOut('slow');
+      $("#" + citesID).css("display","none");
+
+      this.setCites(response, citesID);
+      $("#" + citesID).show( "blind", 500 );
+    };
+
+    this.getCites(doi, jQuery.proxy(success, this), almError);
+  }
+
+  // Sort into ascending order by the "source" variable of each element.  ALWAYS put Scopus first.
+  this.sortCitesBySource = function(a,b) {
+    if (b.source.toLowerCase() == 'scopus') {
+      return 1;
+    } else if (a.source.toLowerCase() == 'scopus' || a.source.toLowerCase() < b.source.toLowerCase()) {
+      return -1;
+    } else if (a.source.toLowerCase() > b.source.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  }
+
+  this.setCites = function(response, citesID) {
+    var numCitesRendered = 0;
+    var doi = escape($('meta[name=citation_doi]').attr("content"));
+    var html = "";
+
+    if (response.article.source.length > 0) {
+      // Citation Sources should always start with Scopus (if an entry for Scopus exists)
+      // followed by the rest of the sources in alphabetical order.
+      response.article.source = response.article.source.sort(this.sortCitesBySource);
+
+      for (var a = 0; a < response.article.source.length; a++) {
+        var url = response.article.source[a].public_url;
+        // find all spaces
+        var patternForSpace = /\s/g;
+        var tileName = response.article.source[a].source.toLowerCase().replace(patternForSpace, "-");
+        // removing registered trademark symbol from web of science
+        tileName = tileName.replace("\u00ae", "");
+
+        //  If CrossRef, then compose a URL to our own CrossRef Citations page.
+        if (response.article.source[a].source == 'CrossRef' && response.article.source[a].count > 0) {
+          html = html + this.createMetricsTile(tileName,
+            "/article/crossref/info:doi/" + doi,
+            "/images/logo-" + tileName + ".png",
+            response.article.source[a].count)
+            + '\n';
+          numCitesRendered++;
+        }
+        //  Only list links that HAVE DEFINED URLS
+        else if (url && response.article.source[a].count > 0) {
+          html = html + this.createMetricsTile(tileName,
+            url,
+            "/images/logo-" + tileName + ".png",
+            response.article.source[a].count)
+            + '\n';
+          numCitesRendered++;
+        }
+      }
+    }
+
+    // A link for searching Google Scholar should ALWAYS show up, but the display of that link
+    //   depends on whether there are other citation Metrics Tiles displayed.
+    var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/","");
+    if (numCitesRendered == 0) {
+      html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
+    } else {
+      html = html + this.createMetricsTile("googleScholar",
+        "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
+        "/images/logo-google-scholar.png",
+        "Search");
+    }
+
+    $("#" + citesID).html(html);
+  }
 }
 
 //var alm = new $.fn.alm();
