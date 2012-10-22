@@ -21,9 +21,9 @@
           <#if authorExtras?? >
             <#list authorExtras as author>
               <#if (author_has_next)>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes"><span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if>,</span></span>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes">&nbsp;<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if>,</span></span>
               <#else>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes"><span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if></span></span>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes">&nbsp;<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if></span></span>
               </#if>
             </#list>
           </#if>
