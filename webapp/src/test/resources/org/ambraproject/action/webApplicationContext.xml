@@ -107,6 +107,7 @@
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="articleService" ref="articleService"/>
+    <property name="fetchArticleService" ref="fetchArticleService"/>
   </bean>
 
   <bean id="createFlagAction" class="org.ambraproject.action.annotation.CreateFlagAction">
