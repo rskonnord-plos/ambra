@@ -499,8 +499,9 @@ $.fn.alm = function () {
    * @param crossRefID the ID of the document element to place the result
    * @param pubGetErrorID the ID of the document element to place any pub get errors
    * @param almErrorID the ID of the document element to place the alm error
+   * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setCrossRefText = function(doi, crossRefID, pubGetErrorID, almErrorID) {
+  this.setCrossRefText = function(doi, crossRefID, pubGetErrorID, almErrorID, loadingID) {
     //almService.getCitesCrossRefOnly(doi, setCrossRefLinks, setCrossRefLinksError);
 
     var pubGetError = function(response) {
@@ -508,16 +509,19 @@ $.fn.alm = function () {
       errorDiv.html("Links to PDF files of open access articles " +
         "on Pubget are currently not available, please check back later.");
       errorDiv.show( "blind", 500 );
+      $("#" + loadingID).fadeOut('slow');
     };
 
     var almError = function(response) {
       var errorDiv = $("#" + almErrorID);
       errorDiv.html("Citations are currently not available, please check back later.");
       errorDiv.show( "blind", 500 );
+      $("#" + loadingID).fadeOut('slow');
     };
 
     var success = function(response) {
         this.setCrossRefLinks(response, crossRefID, pubGetError);
+      $("#" + loadingID).fadeOut('slow');
       };
 
     //The proxy function forces the success method to be run in "this" context.
