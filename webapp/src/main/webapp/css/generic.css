@@ -1,0 +1,16 @@
+
+/*General overrides*/
+body { font: Arial; }
+#pagebdy { padding-top: 30px; }
+#pagehdr-wrap { border-top: 6px solid #1547f2; }
+#pagehdr .logo { padding-bottom: 20px; }
+
+#user .btn-style a { background: #1547f2; border-radius: 0 0 4px 4px; color: #fff; }
+a { color: #3c63af; text-decoration: underline; }
+
+ul, li { list-style: none outside none; }
+
+legend { font-weight: bold; font-size: 18px; }
+
+span.note { font-size: 13px; color: #999; font-weight: normal; text-decoration: none; }
+

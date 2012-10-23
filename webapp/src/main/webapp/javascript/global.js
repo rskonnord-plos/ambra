@@ -424,35 +424,6 @@ if ($hdr_search.length) {
 })(jQuery);
 
 
-
-(function($){
-	$.fn.tabs = function() {	
-		return this.each(function() {
-			var $this = $(this);
-			var $panes = $(this).find('div.tab-pane');
-			var $tab_nav = $(this).find('div.tab-nav');
-			var $tab_lis = $tab_nav.find('li');
-			$tab_lis.eq(0).addClass('active');
-			$panes.eq(0).nextAll('div.tab-pane').hide();
-			$tab_nav.on('click', 'a', function(e) {
-				e.preventDefault();
-				var this_lnk = $(this);		
-				var this_href = this_lnk.attr('href');
-				$panes.hide();
-				if (this_lnk.is('[data-loadurl]')) {
-					$(this_href).load(this_lnk.data('loadurl'));
-				}
-				$(this_href).show();
-				$tab_lis.removeClass('active');
-				this_lnk.closest('li').addClass('active');
-
-			});
-		});
-	};
-})(jQuery);
-
-
-
 (function($){
 	$.fn.hoverEnhanced = function(options) {	
 		defaults = {
@@ -1110,8 +1081,7 @@ var toggleModalState = function() {
 	$('#fig-viewer').toggleClass('abstract');
 }
 
-function getParameterByName(name)
-{
+function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
   var regexS = "[\\?&]" + name + "=([^&#]*)";
   var regex = new RegExp(regexS);

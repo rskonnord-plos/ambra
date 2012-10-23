@@ -33,10 +33,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Creates a new user in ambra and sets come Profile properties.  User must be logged in via CAS.
+ * TODO: Remove this class. Only admin uses it now; admin should be refactored to directly extend {@link UserActionSupport}
  *
  * @author Stephen Cheng
  */
+@Deprecated
 public abstract class UserProfileAction extends UserActionSupport {
   private static final Logger log = LoggerFactory.getLogger(UserProfileAction.class);
 

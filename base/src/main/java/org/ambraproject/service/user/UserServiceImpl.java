@@ -109,7 +109,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
   @Override
   @Transactional
-  public void setAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts) {
+  public UserProfile setAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts) {
     UserProfile user = getUserByAuthId(userAuthId);
 
     log.debug("updating alerts for user: {}; Montly alerts: {}; weekly alerts: {}",
@@ -131,6 +131,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     }
     user.setAlertsList(allAlerts);
     hibernateTemplate.update(user);
+    return user;
   }
 
   /**

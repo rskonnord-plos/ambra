@@ -30,9 +30,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Update action for saving or getting alerts that the user subscribes to.
+ * TODO: Remove this class. Only admin uses it now. Admin should be refactored to directly extend {@link UserActionSupport}
  */
-@SuppressWarnings("serial")
+@Deprecated
 public abstract class UserAlertsAction extends UserActionSupport {
   private static final Logger log = LoggerFactory.getLogger(UserAlertsAction.class);
 

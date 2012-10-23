@@ -72,11 +72,12 @@ public interface UserService {
   /**
    * Save the given alerts for the user specified by the given id.
    *
-   * @param userAuthId the auth id of the user to set the alerts on
+   * @param userAuthId    the auth id of the user to set the alerts on
    * @param monthlyAlerts a list of the monthly alerts
-   * @param weeklyAlerts a list of the weekly alerts
+   * @param weeklyAlerts  a list of the weekly alerts
+   * @return the user object
    */
-  public void setAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts);
+  public UserProfile setAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts);
 
   /**
    * Return a copy of the given user profile object with private fields set to null, if applicable, and all html escaped in string fields

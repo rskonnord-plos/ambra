@@ -49,6 +49,9 @@
       <result-type name="static_freemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
         <param name="location">/template/static.ftl</param>
       </result-type>
+      <result-type name="generic_freemarker" class="org.ambraproject.struts2.AmbraFreemarkerResult">
+        <param name="location">/template/generic.ftl</param>
+      </result-type>
       <result-type name="naked" class="org.ambraproject.struts2.AmbraFreemarkerResult">
         <param name="location">/template/naked_template.ftl</param>
       </result-type>
@@ -820,111 +823,30 @@
       </result>
     </action>
 
-    <action name="getUserProfilePrivateFields" class="org.ambraproject.action.user.DisplayUserAction" method="fetchUserProfileWithPrivateVisibility">
-      <result name="success">/user/displayPrivateFieldNames.ftl</result>
-    </action>
-
-    <action name="editAjaxAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
-      <result name="success" type="default_freemarker">
-        <param name="location">/user/alerts.ftl</param>
-        <param name="noCache">true</param>
+    <action name="editProfile" class="org.ambraproject.action.user.EditUserAction">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
-      <result name="input" type="default_freemarker">
-        <param name="location">/user/alerts.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="location">/user/alerts.ftl</param>
-        <param name="noCache">true</param>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
     </action>
 
-    <action name="retrieveUserAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
-      <result name="success">/user/alerts.ftl</result>
-      <result name="input">/user/alerts.ftl</result>
-    </action>
-
-    <action name="saveAjaxAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="saveAlerts">
-      <result name="success" type="default_freemarker">
-        <param name="location">/user/alerts.ftl</param>
-        <param name="noCache">true</param>
+    <action name="saveProfile" class="org.ambraproject.action.user.EditUserAction" method="saveUser">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
-      <result name="input" type="default_freemarker">
-        <param name="location">/user/alerts.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="location">/user/alerts.ftl</param>
-        <param name="noCache">true</param>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
     </action>
 
-    <action name="editProfile" class="org.ambraproject.action.user.MemberUserProfileAction" >
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/user/editUser.ftl</param>
+    <action name="saveUserAlerts" class="org.ambraproject.action.user.EditUserAction" method="saveAlerts">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
-      <result name="input" type="default_freemarker">
-        <param name="templateFile">/user/editUser.ftl</param>
-      </result>
-    </action>
-
-    <action name="editPrefsAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveAlerts">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/user/editUser.ftl</param>
-      </result>
-      <result name="input" type="default_freemarker">
-        <param name="templateFile">/user/editUser.ftl</param>
-      </result>
-    </action>
-
-    <action name="editAjaxProfile" class="org.ambraproject.action.user.MemberUserProfileAction" >
-      <result name="success" type="default_freemarker">
-        <param name="location">/user/user.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="input" type="default_freemarker">
-        <param name="location">/user/user.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="location">/user/user.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-    </action>
-
-    <action name="saveAjaxProfile" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
-      <result name="success" type="redirectAction">editAjaxProfile.action</result>
-      <result name="input" type="default_freemarker">
-        <param name="location">/user/user.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">500</param>
-        <param name="location">/static/error.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-    </action>
-
-    <action name="saveProfile" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
-      <result name="success" type="redirect">/user/secure/retrieveUserProfile.action</result>
-      <result name="input" type="default_freemarker">
-        <param name="templateFile">/user/createNewUser.ftl</param>
-      </result>
-    </action>
-
-    <action name="retrieveUserProfile" class="org.ambraproject.action.user.MemberUserProfileAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/user/createNewUser.ftl</param>
-      </result>
-      <result name="input">/user/newUser.ftl</result>
-      <result name="error" type="default_freemarker">
-        <param name="templateFile">/user/newUser.ftl</param>
-      </result>
-    </action>
-
-    <action name="profile" class="org.ambraproject.action.NoOpAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/user/profile.ftl</param>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
     </action>
   </package>
@@ -934,30 +856,10 @@
 
     <default-action-ref name="pageNotFound"/>
 
-    <action name="prePopulateNewUser" class="org.ambraproject.action.user.MemberUserProfileAction">
-      <result name="new-profile" type="default_freemarker">
-        <param name="templateFile">/user/createNewUser.ftl</param>
-      </result>
-      <result name="update-profile" type="default_freemarker">
-        <param name="templateFile">/user/createNewUser.ftl</param>
-      </result>
-      <result name="success" type="redirect">/</result>
-    </action>
-
-    <action name="createNewUser" class="org.ambraproject.action.user.MemberUserProfileAction" method="executeSaveUser">
-      <result name="success" type="redirect">/user/secure/editPrefsAlerts.action?tabId=alerts</result>
-      <result name="input" type="default_freemarker">
-        <param name="templateFile">/user/createNewUser.ftl</param>
-      </result>
-    </action>
-
-    <!-- TODO: not needed ??? -->
-    <action name="newUser">
-      <result>/user/newUser.ftl</result>
-    </action>
-
     <action name="displayUser" class="org.ambraproject.action.user.DisplayUserAction">
-      <result name="success">/user/displayUser.ftl</result>
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/user/displayUser.ftl</param>
+      </result>
     </action>
 
     <action name="showUser" class="org.ambraproject.action.user.DisplayUserAction">
@@ -968,10 +870,5 @@
         <param name="templateFile">/user/userNotFound.ftl</param>
       </result>
     </action>
-
-    <action name="displayUserAJAX" class="org.ambraproject.action.user.DisplayUserAction">
-      <result name="success">/widget/userProfileTooltip.ftl</result>
-    </action>
-
   </package>
 </struts>

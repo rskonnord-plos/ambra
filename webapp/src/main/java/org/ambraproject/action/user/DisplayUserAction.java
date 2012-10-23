@@ -31,16 +31,10 @@ import org.slf4j.LoggerFactory;
  * @author Stephen Cheng
  * 
  */
-public class DisplayUserAction extends UserProfileAction {
+public class DisplayUserAction extends UserActionSupport {
   private static final Logger log = LoggerFactory.getLogger(DisplayUserAction.class);
 
   private Long userId;
-
-  //We don't need this since we're overriding execute
-  @Override
-  protected String getUserAuthId() {
-    return null;
-  }
 
   /**
    * Returns the user based on the userId passed in.

@@ -1,0 +1,172 @@
+/*basic styles for user page*/
+h2.displayName { font: 30px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }
+div#user-tabs a { outline: 0; }
+.note { color: #999; font-style:italic; font-size:12px; line-height:15px; margin-top:2px; }
+
+/*Set a minimum height so page doesn't drastically grow when content is loaded*/
+div#user-forms { min-height: 600px; }
+
+#info-list li { margin: 7px 0; }
+#info-list li.close-top { margin-top: -5px; }
+
+/**************Override jquery ui tabs default look**********************/
+div#user-forms { border: none; }
+div#user-tabs ul {
+  background: none; border-top: none; border-left: none; border-right: none;
+  border-bottom-right-radius: 0; border-bottom-left-radius: 0;
+}
+
+/*****************Styles for the forms******************************/
+.required {color: #f03; font-size:12px; font-weight: bold; }
+
+.ambra-form {
+  position: relative;
+  display: block;
+}
+
+.ambra-form fieldset {
+  position: relative;
+  margin: 20px 0 0 0;
+  padding: 0;
+  border:none;
+}
+.ambra-form fieldset legend {
+  font-family: Verdana, Arial, Helvetica, san-serif, serif;
+  font-size: 1.6em;
+  color: #333;
+  background-color: #FFFFFF;
+  padding:0;
+  margin: 0 0 20px 0;
+}
+.ambra-form ol { list-style-type: none; margin: 0; padding: 0; position: relative; overflow:hidden; }
+
+.ambra-form ol li {
+  position: relative;
+  list-style: none;
+  display: block;
+  padding-bottom: 14px;
+  background-color: transparent;
+  background-image: none;
+  clear: both;
+}
+
+.ambra-form .form-last-item { border-bottom:none; }
+/************* inline form elements styles *****************/
+.ambra-form ol li ol li {
+  float: left;
+  margin-right: 10px;
+  border-bottom: none !important;
+  padding-left: 0;
+  clear: none;
+}
+.ambra-form ol li ol {
+  display: block;
+  clear: both;
+  width: 100%;
+  float: none;
+}
+/************* general comambrant styles *****************/
+.ambra-form ol li label { display: block; font-size:12px; color:#333; margin-bottom:2px; line-height:normal; }
+.ambra-form ol li input { width: 206px; border:1px solid #999; padding: 2px; }
+.ambra-form ol li input.radio { border-width: 0; }
+.ambra-form ol li .long-input { width: 430px; }
+.ambra-form ol li select { padding: 1px; width:213px; margin-top: -2px; }
+.ambra-form ol li .radio { width: 14px;}
+.ambra-form ol li .checkbox { width: 14px;}
+.ambra-form textarea { width: 206px; border:1px solid #999; }
+.ambra-form #submit, .ambra-form #cancel { }
+.ambra-form .checkboxLabel { display:inline-block; position:relative; top:-2px; margin-bottom:30px; }
+
+/***********************************************/
+/* individual styles                         */
+/***********************************************/
+#userForm_postalAddress { width: 212px; }
+#userForm_title { width:auto; }
+#userForm_givenNames { width:106px; }
+#userForm_biographyText { width: 430px; min-height: 130px; }
+
+/************* error styles *****************/
+.ambra-form ol .form-error { color: #f03; font-style:italic; }
+.ambra-form ol .form-error label { font-weight:bold; color: #f03; font-style:normal; }
+.ambra-form ol .form-error input, .ambra-form ol .form-error select, .ambra-form ol .form-error textarea { border-color:#c03; }
+.ambra-form .errorMessage { padding-left:16px; }
+/************* success message styles *****************/
+.ambra-form .form-success { padding: 25px 0 25px 10px; }
+
+
+.ambra-form ol .note.top { }
+
+/************* create profile styles *****************/
+
+.ambra-form .public-private {
+  background-image: none;
+  margin-top:0;
+  clear: both;
+  border: none;
+}
+
+.public-private label { position:relative; top: -2px; }
+
+/************ two column layout *******************/
+.ambra-form .col { float:left; clear:none; margin-right:9px;  }
+.ambra-form .row.col { clear:both; float:left; }
+
+.ambra-form .public-private legend { background-color:transparent; font-size:1.4em; margin: 20px 0;}
+
+.public-private label { position:relative; top:-2px; }
+
+/************* alerts styles *****************/
+#alert-form ol { overflow:hidden; position:relative; width:545px; }
+#alert-form ol ol { width:auto; }
+#alert-form .alerts-title { width: 300px; float:left; font-weight:bold; margin:0; padding:5px 0; }
+#alert-form .alerts-weekly { width:160px; margin:0; padding:5px 0; }
+#alert-form ol li { position: relative; overflow:hidden; margin: 0; padding:5px 0; display: block; border-bottom:1px solid #ccc; width:auto; }
+#alert-form ol li ol { position: relative; top: 0; display:inline; margin: 0; padding:0; width:auto; }
+#alert-form label { text-align: left; width: auto; font-weight: normal; margin:0; padding:0; }
+#alert-form label input { margin: 0; width: 20px; border-width: 0; position:relative; top:3px; }
+
+ul { margin-left:15px; padding:0; }
+
+.btnwrap { margin-top:15px; }
+
+/** webkit (Safari & Chrome fixes) **/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  ol { -webkit-margin-top-collapse: separate; margin-top: 10px !important; }
+  .public-private label { position:relative; top:0; }
+  #userForm_givenNames { width:110px; }
+}
+
+
+/********************
+
+display profile page
+
+*********************/
+div.profile ol {
+  clear: left;
+  list-style-type: none;
+  margin: 25px 0 0;
+  padding: 20px 0 0;
+}
+div.profile ol li {
+  background-color: transparent;
+  background-image: none;
+  border-bottom: 2px solid #999;
+  clear: both;
+  display: block;
+  list-style: none outside none;
+  padding: 5px 20px 10px;
+}
+div.profile li em {
+  color: #555555;
+  font-size: 0.9em;
+}
+div.profile ol li span.heading {
+  display: block;
+  font-weight: bold;
+}
+div.profile ol li input {
+  border: 1px solid #FDAE7A;
+  padding: 2px;
+  width: 200px;
+}

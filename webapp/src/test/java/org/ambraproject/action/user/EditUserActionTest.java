@@ -1,30 +1,13 @@
-/* $HeadURL::                                                                            $
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.ambraproject.action.user;
 
 import com.opensymphony.xwork2.Action;
-import org.ambraproject.action.AmbraWebTest;
+import com.opensymphony.xwork2.ActionContext;
 import org.ambraproject.Constants;
+import org.ambraproject.action.AmbraWebTest;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
+import org.ambraproject.service.user.UserAlert;
 import org.ambraproject.service.user.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,23 +15,27 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertEqualsNoOrder;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Test for {@link MemberUserProfileAction}.  This test creates mock instances that are prevented from talking to CAS,
- * but behave the same in all other respects
- *
- * @author Alex Kudlick
+ * @author Alex Kudlick 10/23/12
  */
-public class MemberUserProfileActionTest extends AmbraWebTest {
-
+public class EditUserActionTest extends AmbraWebTest {
+  
   @Autowired
-  protected MemberUserProfileAction action;
+  protected EditUserAction action;
+  
+  @Override
+  protected BaseActionSupport getAction() {
+    return action; 
+  }
 
   @Autowired
   protected UserService userService;
@@ -70,10 +57,19 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     user.setCountry("my country");
     user.setAuthId("auth-id-for-MemberUserActionTest");
     user.setPassword("pass");
+    user.setAlertsJournals("journal_weekly,journal_monthly");
     dummyDataStore.store(user);
 
+    String[] expectedWeeklyAlerts = new String[]{"journal"};
+    String[] expectedMonthlyAlerts = new String[]{"journal"};
+
+    //these come from the config
+    List<UserAlert> alerts = new ArrayList<UserAlert>(2);
+    alerts.add(new UserAlert("journal", "Journal", true, true));
+    alerts.add(new UserAlert("journal1", "Journal 1", false, true));
+
     return new Object[][]{
-        {user}
+        {user, alerts, expectedWeeklyAlerts, expectedMonthlyAlerts}
     };
   }
 
@@ -100,6 +96,9 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setCountry(null);
     action.setWeblog(null);
     action.setHomePage(null);
+    action.setAlertsJournals(null);
+    action.setMonthlyAlerts(null);
+    action.setWeeklyAlerts(null);
   }
 
   /**
@@ -108,7 +107,8 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
    * @param user
    */
   @Test(dataProvider = "user")
-  public void testUpdateDoesNotOverwriteRoles(UserProfile user) throws Exception {
+  public void testUpdateDoesNotOverwriteRoles(UserProfile user, List<UserAlert> expectedAlerts,
+                                              String[] expectedWeeklyAlerts, String[] expectedMonthlyAlerts) throws Exception {
     UserRole role = new UserRole("test role for UserProfileActionTest");
     dummyDataStore.store(role);
     UserProfile storedUser = userService.getUserByAuthId(user.getAuthId());
@@ -118,7 +118,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setDisplayName(storedUser.getDisplayName());
     action.setGivenNames(storedUser.getGivenNames());
     action.setSurnames(storedUser.getSurname());
-    String result = action.executeSaveUser();
+    String result = action.saveUser();
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getActionErrors().size(), 0, "action had errors: " + StringUtils.join(action.getActionErrors(), ";"));
     assertEquals(action.getFieldErrors().size(), 0,
@@ -130,7 +130,8 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
   }
 
   @Test(dataProvider = "user")
-  public void testExecuteWithExistingUser(UserProfile user) throws Exception {
+  public void testExecuteWithExistingUser(UserProfile user, List<UserAlert> expectedAlerts,
+                                          String[] expectedWeeklyAlerts, String[] expectedMonthlyAlerts) throws Exception {
     assertEquals(action.execute(), Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getActionErrors().size(), 0, "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
     assertEquals(action.getActionMessages().size(), 0, "Action returned messages: " + StringUtils.join(action.getActionErrors(), ";"));
@@ -147,17 +148,36 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     assertEquals(action.getResearchAreasText(), user.getResearchAreas(), "action didn't have correct research areas text");
     assertEquals(action.getCity(), user.getCity(), "action didn't have correct city");
     assertEquals(action.getCountry(), user.getCountry(), "action didn't have correct country");
+
+    assertEquals(action.getUserAlerts().size(), expectedAlerts.size(), "Action didn't return correct number of alerts");
+    for (UserAlert alert : action.getUserAlerts()) {
+      UserAlert matchingAlert = null;
+      for (UserAlert expectedAlert : expectedAlerts) {
+        if (alert.getKey().equals(expectedAlert.getKey())) {
+          matchingAlert = expectedAlert;
+          break;
+        }
+      }
+      assertNotNull(matchingAlert, "didn't find a matching alert for " + alert);
+      assertEquals(alert.isMonthlyAvailable(), matchingAlert.isMonthlyAvailable(), "alert had incorrect monthly availability");
+      assertEquals(alert.isWeeklyAvailable(), matchingAlert.isWeeklyAvailable(), "alert had incorrect weekly availability");
+      assertEquals(alert.getName(), matchingAlert.getName(), "alert had incorrect name");
+    }
+    assertEqualsNoOrder(action.getWeeklyAlerts(), expectedWeeklyAlerts, "Action had incorrect weekly alerts for user");
+    assertEqualsNoOrder(action.getMonthlyAlerts(), expectedMonthlyAlerts, "Action had incorrect monthly alerts for user");
+
   }
 
   @Test(dataProvider = "user", dependsOnMethods = {"testExecuteWithExistingUser"})
-  public void testEditAlreadySavedUser(UserProfile user) throws Exception {
+  public void testEditAlreadySavedUser(UserProfile user, List<UserAlert> expectedAlerts,
+                                       String[] expectedWeeklyAlerts, String[] expectedMonthlyAlerts) throws Exception {
     long testStart = Calendar.getInstance().getTime().getTime();
     String newOrganizationType = "new organization type";
     String newPositionType = "new position type";
 
     action.setPositionType(newPositionType);
     action.setOrganizationType(newOrganizationType);
-    action.setOrgVisibility("public");
+    action.setOrganizationVisibility(true);
 
     action.setEmail(user.getEmail());
     action.setDisplayName(user.getDisplayName());
@@ -170,7 +190,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setCity(user.getCity());
     action.setCountry(user.getCountry());
 
-    assertEquals(action.executeSaveUser(), Action.SUCCESS, "Action didn't return success");
+    assertEquals(action.saveUser(), Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getActionErrors().size(), 0, "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
     assertEquals(action.getActionMessages().size(), 0, "Action returned messages: " + StringUtils.join(action.getActionErrors(), ";"));
 
@@ -202,14 +222,14 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     assertEquals(cachedUser.getPositionType(), newPositionType, "cached user didn't have new position type");
     assertTrue(cachedUser.getOrganizationVisibility(), "cached user user didn't have new organization visibility");
   }
-  
+
   @Test
   public void testSaveWithNullGivenNames() throws Exception {
     action.setDisplayName("testdisplayname");
     action.setGivenNames(null);
     action.setSurnames("foo");
 
-    String result = action.executeSaveUser();
+    String result = action.saveUser();
     assertEquals(result, Action.INPUT, "Action didn't return input");
     assertNotNull(action.getFieldErrors().get("givenNames"), "action didn't add field errors");
     assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
@@ -222,7 +242,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setGivenNames("foo");
     action.setSurnames(null);
 
-    String result = action.executeSaveUser();
+    String result = action.saveUser();
     assertEquals(result, Action.INPUT, "Action didn't return input");
     assertNotNull(action.getFieldErrors().get("surnames"), "action didn't add field errors");
     assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
@@ -238,7 +258,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setHomePage(null);
     action.setWeblog(null);
 
-    String result = action.executeSaveUser();
+    String result = action.saveUser();
     assertEquals(result, Action.INPUT, "Action didn't return input");
     assertNotNull(action.getFieldErrors().get("biographyText"), "action didn't add field errors");
     assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
@@ -252,7 +272,7 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setSurnames("foo");
     action.setHomePage("hello this is a bad home page");
 
-    String result = action.executeSaveUser();
+    String result = action.saveUser();
     assertEquals(result, Action.INPUT, "Action didn't return input");
     assertNotNull(action.getFieldErrors().get("homePage"), "action didn't add field errors");
     assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
@@ -266,15 +286,60 @@ public class MemberUserProfileActionTest extends AmbraWebTest {
     action.setSurnames("foo");
     action.setWeblog("hello this is a bad blog");
 
-    String result = action.executeSaveUser();
+    String result = action.saveUser();
     assertEquals(result, Action.INPUT, "Action didn't return input");
     assertNotNull(action.getFieldErrors().get("weblog"), "action didn't add field errors");
     assertEquals(action.getFieldErrors().size(), 1, "action added unexpected field errors for fields: "
         + StringUtils.join(action.getFieldErrors().keySet(), ","));
   }
 
-  @Override
-  protected BaseActionSupport getAction() {
-    return action;
+  @Test
+  public void testEditAlerts() throws Exception {
+    UserProfile user = new UserProfile();
+    user.setEmail("email@testEditAlerts.org");
+    user.setAuthId("authIdForTestEditAlerts");
+    user.setDisplayName("displayNameForTestEditAlerts");
+    user.setAlertsJournals("journal_weekly,journal_monthly");
+    user.setPassword("pass");
+    dummyDataStore.store(user);
+
+    String[] newWeeklyAlerts = new String[]{"journal_weekly", "journal1_weekly"};
+    String[] newMonthlyAlerts = new String[]{};
+    String[] expectedAlerts = new String[]{"journal_weekly", "journal1_weekly"};
+
+    ActionContext.getContext().getSession().put(Constants.AUTH_KEY, user.getAuthId());
+    action.setSession(ActionContext.getContext().getSession());
+    action.setWeeklyAlerts(newWeeklyAlerts);
+    action.setMonthlyAlerts(newMonthlyAlerts);
+
+    String result = action.saveAlerts();
+    assertEquals(result, Action.SUCCESS, "Action didn't return success");
+    String storedAlerts = dummyDataStore.get(UserProfile.class, user.getID()).getAlertsJournals();
+    assertEqualsNoOrder(storedAlerts.split(","), expectedAlerts, "action didn't store correct alerts to the database");
   }
+
+  @Test
+  public void testAddAlertsForUserWithNoAlerts() throws Exception {
+    UserProfile user = new UserProfile();
+    user.setEmail("email@testAddAlerts.org");
+    user.setAuthId("authIdForTestAddAlerts");
+    user.setDisplayName("displayNameForTestAddAlerts");
+    user.setPassword("pass");
+    dummyDataStore.store(user);
+
+    String[] newWeeklyAlerts = new String[]{"journal_weekly", "journal1_weekly"};
+    String[] newMonthlyAlerts = new String[]{"journal_monthly"};
+    String[] expectedAlerts = new String[]{"journal_weekly", "journal1_weekly", "journal_monthly"};
+
+    ActionContext.getContext().getSession().put(Constants.AUTH_KEY, user.getAuthId());
+    action.setSession(ActionContext.getContext().getSession());
+    action.setWeeklyAlerts(newWeeklyAlerts);
+    action.setMonthlyAlerts(newMonthlyAlerts);
+
+    String result = action.saveAlerts();
+    assertEquals(result, Action.SUCCESS, "Action didn't return success");
+    String storedAlerts = dummyDataStore.get(UserProfile.class, user.getID()).getAlertsJournals();
+    assertEqualsNoOrder(storedAlerts.split(","), expectedAlerts, "action didn't store correct alerts to the database");
+  }
+
 }
