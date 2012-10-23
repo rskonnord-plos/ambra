@@ -662,9 +662,9 @@ $.fn.alm = function () {
 
       html = "<h3>" + numCitations + " citation" + pluralization
         + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
-        + $.format.date(response.article.published, 'MMM dd, yyyy')
+        + $.datepicker.formatDate("M dd, yy", new Date(response.article.published))
         + ". Citations updated on "
-        + $.format.date(response.article.source[0].updated_at, 'MMM dd, yyyy')
+        + $.datepicker.formatDate("M dd, yy", new Date(response.article.source[0].updated_at))
         + ".</h3>"
         + " <ol>" + html + "</ol>";
     }
