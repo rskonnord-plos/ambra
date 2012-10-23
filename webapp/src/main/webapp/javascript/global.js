@@ -60,7 +60,7 @@ $(document).ready(function() {
 	
 	$('#nav-article-page').doOnce(function(){
 		this.floatingNav({
-			sections: $article.find('div.section')
+			sections: $article.find('a[toc]').closest('div')
 		});
 	});
 	
@@ -77,13 +77,12 @@ $(document).ready(function() {
 		});
 	});
 	
-	if (!$.support.touchEvents && $win.width() >= 960) {
+	if (!$.support.touchEvents) {
 		$article.doOnce(function(){
 			this.scrollFrame();
 		});
 	}
 
-	
 });
 
 var $nav_article = $('#nav-article');
@@ -93,17 +92,86 @@ if ($nav_article.length) {
 }
 
 
-
-var $fig_search = $('#fig-search-block');
-if ($fig_search.length) {
-	$refine = $('<span id="search-display">Refine</span>').toggle(function() {
-		$fig_search.addClass('refine');
-		$refine.addClass('open').text('Hide');
-	}, function() {
-		$fig_search.removeClass('refine');
-		$refine.removeClass('open').text('Refine');
+// search filter
+var $hdr_search = $('#hdr-search-results');
+if ($hdr_search.length) {
+	var $srch_facets = $('#search-facets');
+	var $facets = $srch_facets.find('.facet');
+	var $menu_itms = $srch_facets.find('div[data-facet]');
+	$menu_itms.each(function() {
+		$this = $(this);
+		ref = $this.data('facet');
+		if ($('#' + ref).length == 0) {
+			$this.addClass('inactive');
+		}
+	})
+	$menu_itms.on('click', function() {
+		$this = $(this);
+		if ($this.hasClass('active') || $this.hasClass('inactive')) { return false; }
+		$menu_itms.removeClass('active');
+		$facets.hide();
+		$facets.find('dl.more').hide();
+		$facets.find('.view-more').show();
+		$this.addClass('active');
+		ref = $this.data('facet');
+		$('#' + ref).show();
 	});
-	$fig_search.find('div.header').append($refine);
+	$chkbxs = $srch_facets.find(':checkbox');
+	$chkbxs.each(function() {
+		chkbx = $(this);
+		if (chkbx.prop('checked')) {
+			chkbx.closest('dd').addClass('checked');
+		}
+	})
+	$chkbxs.on('change', function() {
+		chkbx = $(this);
+		if (chkbx.prop('checked')) {
+			chkbx.closest('dd').addClass('checked');
+		} else {
+			chkbx.closest('dd').removeClass('checked');
+		}
+	});
+	
+	
+	$srch_facets.find('.view-more').on('click', function() {
+		$(this).hide()
+		.closest('div.facet').find('dl.more').show();
+	});
+	$srch_facets.find('.view-less').on('click', function() {
+		this_facet = $(this).closest('div.facet');
+		this_facet.find('dl.more').hide();
+		this_facet.find('.view-more').show();
+	});
+	
+	$('#startDateAsStringId').datepicker({
+		changeMonth: true,
+		changeYear: true,
+		maxDate: 0,
+		dateFormat: "yy-mm-dd",
+		onSelect: function( selectedDate ) {
+			$('#endDateAsStringId').datepicker('option', 'minDate', selectedDate );
+		}
+	});
+	$('#endDateAsStringId').datepicker({
+		changeMonth: true,	
+		changeYear: true,	
+		maxDate: 0,
+		dateFormat: "yy-mm-dd",
+		onSelect: function( selectedDate ) {
+			$('#startDateAsStringId').datepicker('option', 'maxDate', selectedDate );
+		}
+	});
+	
+	$toggle_filter = $('<div class="toggle btn">filter by &nbsp;+</div>').toggle(function() {
+		$srch_facets.show();
+		$toggle_filter.addClass('open');
+	}, function() {
+		$srch_facets.hide();
+		$toggle_filter.removeClass('open');
+	}
+	).prependTo($hdr_search.find('div.options'));
+	
+	$('#sortPicklist').uniform();
 }
 
 
@@ -219,8 +287,10 @@ if ($fig_search.length) {
 				new_li = $('<li><a href="#' + target + '" class="scroll">' + title +'</a></li>').appendTo($new_ul);
 			});
 			$new_ul.find('li').eq(0).addClass('active');
+
 			$new_ul.prependTo($this);
 			$this.on("click", "a.scroll", function(event){
+				$(this).parent('li').addClass('active');
 				$('html,body').animate({scrollTop:$('[name="'+this.hash.substring(1)+'"]').offset().top - options.margin}, 500);
 			});
 			
@@ -268,7 +338,19 @@ if ($fig_search.length) {
 				} else {
 					ftr_view = false;
 				}
-				
+				if ($win.width() < 960) {
+					if (top_open) {
+						$title.stop()
+						.css({ 'top' : '-100px'});
+						top_open = false;
+					}
+					if (bot_open) {
+						$bnr.stop()
+						.css({ 'bottom' : '-100px'});
+						bot_open = false;
+					}
+					return false;
+				}
 				if (!hdr_view && !top_open) {
 					$title.stop()
 					.css({ 'top' : '-100px'})
@@ -680,7 +762,7 @@ if ($adv_search.length) {
 		} else if (conj == 'NOT') {	
 			q = conj + ' ' + query_type + ':' + q_string;
 		} else {		
-			q = (query_type + ':' + q_string);
+			q = query_type + ':' + q_string;
 		}
 		$query.val(q);
 	}	
@@ -708,8 +790,8 @@ if ($adv_search.length) {
 	
 // BEGIN Figure Viewer
 var launchModal = function(doi, ref, state, el) {
-	//var path = '/article/fetchObject.action?uri'
-	var path = 'article/';
+	var path = '/article/fetchObject.action?uri='
+	//var path = 'article/';
 	var $modal = $('<div id="fig-viewer" class="modal" />');
 	var $thmbs = $('<div id="fig-viewer-thmbs" />');
 	var $slides = $('<div id="fig-viewer-slides" />');
@@ -760,9 +842,9 @@ var launchModal = function(doi, ref, state, el) {
 					desc = '<div class="desc">' + this.transformedDescription + '</div>';
 					img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_txt + '"></div>'
 					lnks_txt = '<p class="dl">Download'
-					+ ' <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a>'
-					+ ' <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a>'
-					+ ' <a href="' + "/article/" + this.uri + "/originalimage" + '" class="tiff">original image (' + displaySize(this.sizeTiff) + ')</a>'
+					+ ' <div class="icon">PPT</div> <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a>'
+					+ ' <div class="icon">PPT</div> <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a>'
+					+ ' <div class="icon">PPT</div> <a href="' + "/article/" + this.uri + "/originalimage" + '" class="tiff">original image (' + displaySize(this.sizeTiff) + ')</a>'
 					+ '</p><p>'
 					+ '<span class="btn active">browse figures</span>'
 					+ '<span class="btn" onclick="toggleModalState();">view abstract</span>'
@@ -809,7 +891,8 @@ var launchModal = function(doi, ref, state, el) {
 			callbackParameter: "json.wrf",
 			success: function(data){
 				$.each(data.response.docs, function(){
-					abstract_html = '<div class="txt">' + this["abstract"] + '</div>'
+					abstract_html ='<div id="fig-viewer-abst">'
+					+ '<div class="txt"><p>' + this["abstract"] + '</p></div>'
 					+ '<div class="lnks">'
 					+ '<p class="dl">Download'
 					+ ' <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Artilce PDF Version</a>'
@@ -818,9 +901,9 @@ var launchModal = function(doi, ref, state, el) {
 					+ '<span class="btn active">view abstract</span>'
 					+ '<a class="btn" href="' + '/article/' + page_url + '">full text</a>'
 					+ '</p>'
+					+ '</div>'
 					+ '</div>';
 					$modal.append(abstract_html);
-          $modal.append($abstract);
 				});
 				displayModal();
 			},
@@ -830,6 +913,7 @@ var launchModal = function(doi, ref, state, el) {
 		});
 	}
 
+		
 	var displayModal = function() {
 		$hdr = $('<div class="header" />');
 		$hdr_article = $('#hdr-article');
@@ -976,6 +1060,8 @@ if ($figure_thmbs.length) {
 	}
 }
 
+
+// inline figures
 var $fig_inline = $('#article-block').find('div.figure');
 if ($fig_inline.length) {
 	$lnks = $fig_inline.find('.img a');
@@ -988,6 +1074,8 @@ if ($fig_inline.length) {
 	$lnks.append('<div class="expand" />');
 }
 
+
+// figure search results
 var $fig_results = $('#fig-search-results');
 if ($fig_results.length) {
 	$fig_results.find('a.figures').on('click', function() {
@@ -1002,7 +1090,7 @@ if ($fig_results.length) {
 	});
 }
 
-
+// figure link in article floating nav
 var $nav_figs = $('#nav-figures a');
 if ($nav_figs.length) {
 	$nav_figs.on('click', function() {

@@ -1063,34 +1063,43 @@
           <!--start figure download-->
           <div class="figure-inline-download">
             Download:
-            <xsl:element name="a">
-              <xsl:attribute name="href">
-                <xsl:value-of select="$pptURL"/>
-              </xsl:attribute>
-              <xsl:attribute name="class">ppt</xsl:attribute>
-              PowerPoint slide
-            </xsl:element> |
-            <xsl:element name="a">
-              <xsl:attribute name="href">
-                <xsl:value-of select="$bigImgURL"/>
-              </xsl:attribute>
-              <xsl:attribute name="class">png</xsl:attribute>
-              larger image (<xsl:element name="span">
-              <xsl:attribute name="id">
-                <xsl:value-of select="$bigImgDOI"/>
-              </xsl:attribute>
-            </xsl:element> PNG)</xsl:element> |
-            <xsl:element name="a">
-              <xsl:attribute name="href">
-                <xsl:value-of select="$origImgURL"/>
-              </xsl:attribute>
-              <xsl:attribute name="class">tiff</xsl:attribute>
-              original image (<xsl:element name="span">
-              <xsl:attribute name="id">
-                <xsl:value-of select="$origImgDOI"/>
-              </xsl:attribute>
-            </xsl:element> TIFF)
-            </xsl:element>
+            <ul>
+              <li>
+                <div class="icon">PPT</div>
+                <xsl:element name="a">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="$pptURL"/>
+                  </xsl:attribute>
+                  PowerPoint slide
+                </xsl:element>
+              </li>
+              <li>
+                <div class="icon">PPT</div>
+                <xsl:element name="a">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="$bigImgURL"/>
+                  </xsl:attribute>
+                  larger image (<xsl:element name="span">
+                    <xsl:attribute name="id">
+                      <xsl:value-of select="$bigImgDOI"/>
+                    </xsl:attribute>
+                  </xsl:element>PNG)
+                </xsl:element>
+              </li>
+              <li>
+                <div class="icon">PPT</div>
+                <xsl:element name="a">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="$origImgURL"/>
+                  </xsl:attribute>
+                  original image (<xsl:element name="span">
+                    <xsl:attribute name="id">
+                      <xsl:value-of select="$origImgDOI"/>
+                    </xsl:attribute>
+                  </xsl:element>TIFF)
+                </xsl:element>
+              </li>
+            </ul>
           </div>
           <!--end figure download-->
           <p><strong>
