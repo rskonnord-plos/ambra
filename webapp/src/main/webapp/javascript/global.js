@@ -76,7 +76,17 @@ $(document).ready(function() {
 			trigger: 'span.btn'
 		});
 	});
-	
+
+	$('.article a[href^="#"]').on('click', function(e){
+		e.preventDefault();
+		var href = $(this).attr('href').split('#')[1];
+		var b = $('a[name="' + href + '"]');
+		$('html,body').animate({scrollTop:b.offset().top - 100}, 500, 'linear', function(){
+			// see spec
+			// window.location.hash = '#' + href;
+		});
+	});
+
 	if (!$.support.touchEvents) {
 		$article.doOnce(function(){
 			this.scrollFrame();
@@ -230,7 +240,7 @@ if ($hdr_search.length) {
 				if (
 					(win_top > (el_top - options.margin)) //the top of the element is out of the viewport
 					&& ((el_h + options.margin + bnr_h) < $win.height()) //the viewport is tall enough-					
-					&& (win_top < (ftr_top - (el_h + options.margin))) //the element is not overlapping the footer
+					// && (win_top < (ftr_top - (el_h + options.margin))) //the element is not overlapping the footer
 					&& ($win.width() >= 960) //the viewport is wide enough
 				) {
 					$this.css({ 'position' : 'fixed', 'top' : options.margin + 'px' });
@@ -290,8 +300,12 @@ if ($hdr_search.length) {
 
 			$new_ul.prependTo($this);
 			$this.on("click", "a.scroll", function(event){
-				$(this).parent('li').addClass('active');
-				$('html,body').animate({scrollTop:$('[name="'+this.hash.substring(1)+'"]').offset().top - options.margin}, 500);
+				var link = $(this);
+				event.preventDefault();
+				$('html,body').animate({scrollTop:$('[name="'+this.hash.substring(1)+'"]').offset().top - options.margin}, 500, function(){
+					// see spec
+					// window.location.hash = link.attr('href');
+				});
 			});
 			
 		});
