@@ -1043,8 +1043,8 @@ $.fn.alm = function () {
   }
 
   this.setChartData = function(doi, chartID, loadingID) {
-    var publishDate = $('meta[name=pubGetHost]').attr("citation_date");
-    var publishDatems = new Number(publishDate);
+    var publishDate = $('meta[name=pubGetHost]').attr("citation_date"),
+      publishDatems = new Number(publishDate);
 
     if(this.isNewArticle(publishDate)) {
       //The article is less then 2 days old, and there is no data
@@ -1066,11 +1066,13 @@ $.fn.alm = function () {
           $("#" + loadingID).fadeOut('slow');
           $("#" + chartID).css("display","none");
 
+          console.log(publishDate);
+
           var data = this.massageChartData(response.article.source, publishDatems);
 
           var summaryTable = '<div id="pageViewsSummary"><div id="left"><div class="header">Total Article Views</div>' +
             '<div class="totalCount">' + data.total.format(0,'.',',') + '</div>' +
-            '<div class="pubDates">' + $.datepicker.formatDate('M yy', new Date(publishDatems)) +
+            '<div class="pubDates">' + $.datepicker.formatDate('M yy', this.publishDate) +
             '<br>through ' + $.datepicker.formatDate('M yy',new Date()) + '</div></div><div id="right">' +
             '<table id="pageViewsTable"><tbody><tr><th></th><th nowrap="">HTML Page Views</th>' +
             '<th nowrap="">PDF Downloads</th><th nowrap="">XML Downloads</th><th>Totals</th></tr><tr>' +
@@ -1160,33 +1162,32 @@ $.fn.alm = function () {
               backgroundColor: "#efefef",
               borderColor: "#efefef",
               formatter: function() {
-                var key = this.points[0].key;
-                var h = data.history;
-                var tooltip = "<table id='mini' cellpadding='0' cellspacing='0'>" +
-                  "<tr><th></td><td colspan='2'>Views in " +
-                  $.datepicker.formatDate('M yy', new Date(h[key].year,h[key].month-1,2)) +
-                  "</td><td colspan='2'>Views since " + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2)) +
-                  "</td></tr><tr><th>Source</th><th class='header1'>PLoS</th><th class='header2'>PMC</th>" +
-                  "<th class='header1'>PLoS</th><th class='header2'>PMC</th></tr>" +
-                  "<tr><td>HTML</td><td class='data1'>" + h[key].source.counterViews.totalHTML + "</td>" +
-                  "<td class='data2'>" + (h[key].source["pmcViews"] != null)?h[key].source.pmcViews.totalHTML:"n.a." + "</td>" +
-                  "<td class='data1'>" + h[key].source.counterViews.cumulativeHTML + "</td>" +
-                  "<td class='data2'>" + (h[key].source["pmcViews"] != null)?h[key].source.pmcViews.cumulativeHTML:"n.a." + "</td></tr>" +
-                  "<tr><td>PDF</td><td class='data1'>" + h[key].source.counterViews.totalPDF + "</td>" +
-                  "<td class='data2'>" + (h[key].source["pmcViews"] != null)?h[key].source.pmcViews.totalPDF:"n.a." + "</td>" +
-                  "<td class='data1'>" + h[key].source.counterViews.cumulativePDF + "</td>" +
-                  "<td class='data2'>" + (h[key].source["pmcViews"] != null)?h[key].source.pmcViews.cumulativePDF:"n.a." + "</td></tr>"  +
-                  "<tr><td>XML</td><td class='data1'>" + h[key].source.counterViews.totalXML + "</td>" +
-                  "<td class='data2'>" + (h[key].source["pmcViews"] != null)?h[key].source.pmcViews.totalXML:"n.a." + "</td>" +
-                  "<td class='data1'>" + h[key].source.counterViews.cumulativeXML + "</td>" +
-                  "<td class='data2'>n.a.</td></tr>" +
-                  "<tr><td>Total</td><td class='data1'>" + h[key].source.counterViews.total + "</td>" +
-                  "<td class='data2'>" + (h[key].source["pmcViews"] != null)?h[key].source.pmcViews.total:"n.a." + "</td>" +
-                  "<td class='data1'>" + h[key].source.counterViews.cumulativeTotal + "</td>" +
-                  "<td class='data2'>" + (h[key].source["pmcViews"] != null)?h[key].source.pmcViews.cumulativeTotal:"n.a." + "</td></tr>" +
-                  "</table>";
+                var key = this.points[0].key,
+                  h = data.history;
 
-                return tooltip;
+                return "<table id='mini' cellpadding='0' cellspacing='0'>"
+                  + "<tr><th></td><td colspan='2'>Views in "
+                  + $.datepicker.formatDate('M yy', new Date(h[key].year,h[key].month-1,2))
+                  + "</td><td colspan='2'>Views since " + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+                  + "</td></tr><tr><th>Source</th><th class='header1'>PLoS</th><th class='header2'>PMC</th>"
+                  + "<th class='header1'>PLoS</th><th class='header2'>PMC</th></tr>"
+                  + "<tr><td>HTML</td><td class='data1'>" + h[key].source.counterViews.totalHTML + "</td>"
+                  + "<td class='data2'>" + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalHTML:"n.a.") + "</td>"
+                  + "<td class='data1'>" + h[key].source.counterViews.cumulativeHTML + "</td>"
+                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeHTML:"n.a.") + "</td></tr>"
+                  + "<tr><td>PDF</td><td class='data1'>" + h[key].source.counterViews.totalPDF + "</td>"
+                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalPDF:"n.a.") + "</td>"
+                  + "<td class='data1'>" + h[key].source.counterViews.cumulativePDF + "</td>"
+                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativePDF:"n.a.") + "</td></tr>"
+                  + "<tr><td>XML</td><td class='data1'>" + h[key].source.counterViews.totalXML + "</td>"
+                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalXML:"n.a.") + "</td>"
+                  + "<td class='data1'>" + h[key].source.counterViews.cumulativeXML + "</td>"
+                  + "<td class='data2'>n.a.</td></tr>"
+                  + "<tr><td>Total</td><td class='data1'>" + h[key].source.counterViews.total + "</td>"
+                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.total:"n.a.") + "</td>"
+                  + "<td class='data1'>" + h[key].source.counterViews.cumulativeTotal + "</td>"
+                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeTotal:"n.a.") + "</td></tr>"
+                  + "</table>";
               }
             }
           }
