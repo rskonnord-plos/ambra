@@ -1070,8 +1070,6 @@ $.fn.alm = function () {
 
           var data = this.massageChartData(response.article.source, publishDatems);
 
-          console.log(publishDatems);
-
           var summaryTable = $('<div id="pageViewsSummary"><div id="left"><div class="header">Total Article Views</div>' +
             '<div class="totalCount">' + data.total.format(0,'.',',') + '</div>' +
             '<div class="pubDates">' + $.datepicker.formatDate('M d, yy',publishDate) + ' (publication date)' +
@@ -1182,19 +1180,19 @@ $.fn.alm = function () {
                   + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
                   + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalHTML:"n.a.") + '</td>'
                   + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML + '</td>'
-                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeHTML:"n.a.") + '</td></tr>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeHTML:"n.a.") + '</td></tr>'
                   + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
-                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalPDF:"n.a.") + '</td>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalPDF:"n.a.") + '</td>'
                   + '<td class="data1">' + h[key].source.counterViews.cumulativePDF + '</td>'
-                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativePDF:"n.a.") + '</td></tr>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativePDF:"n.a.") + '</td></tr>'
                   + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
-                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalXML:"n.a.") + '</td>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalXML:"n.a.") + '</td>'
                   + '<td class="data1">' + h[key].source.counterViews.cumulativeXML + '</td>'
                   + '<td class="data2">n.a.</td></tr>'
                   + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
-                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.total:"n.a.") + '</td>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.total:"n.a.") + '</td>'
                   + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal + '</td>'
-                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeTotal:"n.a.") + '</td></tr>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeTotal:"n.a.") + '</td></tr>'
                   + '</table>';
               }
             }
