@@ -46,6 +46,10 @@ public interface AnnotationService {
      */
     OLDEST_TO_NEWEST,
     /**
+     * Order by the created date of the annotation, going newest to oldest
+     */
+    NEWEST_TO_OLDEST,
+    /**
      * Order by the date of the most recent reply to any comment in the thread, newest to oldest. This includes replies
      * to replies. If there are no replies, the creation date of the annotation is used.
      */

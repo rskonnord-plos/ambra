@@ -271,6 +271,9 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
       case OLDEST_TO_NEWEST:
         criteria.addOrder(Order.asc("created"));
         break;
+      case NEWEST_TO_OLDEST:
+        criteria.addOrder(Order.desc("created"));
+        break;
     }
     List annotationResults = hibernateTemplate.findByCriteria(criteria);
     //Don't want to call buildAnnotationView() here because that would involve finding the article title and doi for each annotation,

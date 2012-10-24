@@ -46,6 +46,7 @@ import org.w3c.dom.Document;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -133,9 +134,12 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       //get the corrections without replies loaded up, and ordered oldest to newest. We don't need to show a count of replies on the main article page
       AnnotationView[] annotationViews = annotationService.listAnnotationsNoReplies(
           articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
-          AnnotationOrder.OLDEST_TO_NEWEST
+          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
+              AnnotationType.COMMENT, AnnotationType.NOTE),
+          AnnotationOrder.NEWEST_TO_OLDEST
       );
+
+      List<AnnotationView> commentList = new LinkedList<AnnotationView>();
       for (AnnotationView annotationView : annotationViews) {
         switch (annotationView.getType()) {
           case FORMAL_CORRECTION:
@@ -147,9 +151,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
           case RETRACTION:
             retractions.add(annotationView);
             break;
+          case COMMENT:
+          case NOTE:
+            commentList.add(annotationView);
+            break;
         }
       }
-      numCorrections = annotationViews.length;
+      commentary = commentList.toArray(new AnnotationView[commentList.size()]);
+      numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
 
 
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
