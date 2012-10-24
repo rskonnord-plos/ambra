@@ -33,9 +33,8 @@ $.fn.alm = function () {
     jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
   }
 
-  this.isNewArticle = function(date) {
+  this.isNewArticle = function(pubDateInMilliseconds) {
     //The article publish date should be stored in the current page is a hidden form variable
-    var pubDateInMilliseconds = new Number(date);
     var todayMinus48Hours = (new Date()).getTime() - 172800000;
 
     if(todayMinus48Hours < pubDateInMilliseconds) {
@@ -1042,38 +1041,41 @@ $.fn.alm = function () {
     $("#" + citesID).html(html);
   }
 
-  this.setChartData = function(doi, chartID, loadingID) {
-    var publishDate = $('meta[name=pubGetHost]').attr("citation_date"),
-      publishDatems = new Number(publishDate);
+  this.setChartData = function(doi, usageID, loadingID) {
+    //citation_date format = 2006/12/20
+    //citation_date format = 2006/2/2
 
-    if(this.isNewArticle(publishDate)) {
+    var publishDate = $.datepicker.parseDate("yy/m/d", $('meta[name=citation_date]').attr("content"));
+      publishDatems = publishDate.getTime();
+
+    if(this.isNewArticle(publishDatems)) {
       //The article is less then 2 days old, and there is no data
       //give the user a good error message
-      $("#" + chartID).html('This article was only recently published. ' +
+      $("#" + usageID).html('This article was only recently published. ' +
         'Although we update our data on a daily basis (not in real time), there may be a 48-hour ' +
         'delay before the most recent numbers are available.<br/><br/>');
-      $("#" + chartID).show( "blind", 500 );
+      $("#" + usageID).show( "blind", 500 );
       $("#" + loadingID).fadeOut('slow');
     } else {
       if(this.isArticle(doi)) {
         var almError = function(message) {
           $("#" + loadingID).fadeOut('slow');
-          $("#" + chartID).html(message);
-          $("#" + chartID).show( "blind", 500 );
+          $("#" + usageID).html(message);
+          $("#" + usageID).show( "blind", 500 );
         };
 
         var success = function(response) {
           $("#" + loadingID).fadeOut('slow');
-          $("#" + chartID).css("display","none");
-
-          console.log(publishDate);
+          $("#" + usageID).css("display","none");
 
           var data = this.massageChartData(response.article.source, publishDatems);
 
-          var summaryTable = '<div id="pageViewsSummary"><div id="left"><div class="header">Total Article Views</div>' +
+          console.log(publishDatems);
+
+          var summaryTable = $('<div id="pageViewsSummary"><div id="left"><div class="header">Total Article Views</div>' +
             '<div class="totalCount">' + data.total.format(0,'.',',') + '</div>' +
-            '<div class="pubDates">' + $.datepicker.formatDate('M yy', this.publishDate) +
-            '<br>through ' + $.datepicker.formatDate('M yy',new Date()) + '</div></div><div id="right">' +
+            '<div class="pubDates">' + $.datepicker.formatDate('M d, yy',publishDate) + ' (publication date)' +
+            '<br>through ' + $.datepicker.formatDate('M d, yy',new Date()) + '*</div></div><div id="right">' +
             '<table id="pageViewsTable"><tbody><tr><th></th><th nowrap="">HTML Page Views</th>' +
             '<th nowrap="">PDF Downloads</th><th nowrap="">XML Downloads</th><th>Totals</th></tr><tr>' +
             '<td class="source1">PLOS</td><td>' + data.totalCounterHTML.format(0,'.',',') +'</td>' +
@@ -1083,7 +1085,9 @@ $.fn.alm = function () {
             '<td>n.a.</td><td class="total">' + data.totalPMCTotal.format(0,'.',',') + '</td></tr><tr><td>Totals</td>' +
             '<td class="total">' + data.totalHTML.format(0,'.',',') + '</td><td ' +
             'class="total">' + data.totalPDF.format(0,'.',',') + '</td><td class="total">' + data.totalXML.format(0,'.',',') +
-            '</td><td class="total">' + data.total.format(0,'.',',') + '</td></tr></tbody></table></div></div> ';
+            '</td><td class="total">' + data.total.format(0,'.',',') + '</td></tr>' +
+            '<tr class="percent"><td colspan="5"><b>' + ((data.totalPDF / data.totalHTML) * 100).format(2, '.', ',') +
+            '%</b> of article views led to PDF downloads</td></tr></tbody></table></div></div>');
 
           var options = {
             chart: {
@@ -1113,7 +1117,11 @@ $.fn.alm = function () {
                 align: "high"
               },
               labels: {
-                step: 1
+                step: (Object.keys(data.history).length < 50)
+                  ?1:(Object.keys(data.history).length < 100)?10:20,
+                formatter: function() {
+                  return (this.value == 0)?"":this.value;
+                }
               },
               categories: []
             },
@@ -1165,34 +1173,33 @@ $.fn.alm = function () {
                 var key = this.points[0].key,
                   h = data.history;
 
-                return "<table id='mini' cellpadding='0' cellspacing='0'>"
-                  + "<tr><th></td><td colspan='2'>Views in "
+                return '<table id="mini" cellpadding="0" cellspacing="0">'
+                  + '<tr><th></td><td colspan="2">Views in '
                   + $.datepicker.formatDate('M yy', new Date(h[key].year,h[key].month-1,2))
-                  + "</td><td colspan='2'>Views since " + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                  + "</td></tr><tr><th>Source</th><th class='header1'>PLoS</th><th class='header2'>PMC</th>"
-                  + "<th class='header1'>PLoS</th><th class='header2'>PMC</th></tr>"
-                  + "<tr><td>HTML</td><td class='data1'>" + h[key].source.counterViews.totalHTML + "</td>"
-                  + "<td class='data2'>" + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalHTML:"n.a.") + "</td>"
-                  + "<td class='data1'>" + h[key].source.counterViews.cumulativeHTML + "</td>"
-                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeHTML:"n.a.") + "</td></tr>"
-                  + "<tr><td>PDF</td><td class='data1'>" + h[key].source.counterViews.totalPDF + "</td>"
-                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalPDF:"n.a.") + "</td>"
-                  + "<td class='data1'>" + h[key].source.counterViews.cumulativePDF + "</td>"
-                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativePDF:"n.a.") + "</td></tr>"
-                  + "<tr><td>XML</td><td class='data1'>" + h[key].source.counterViews.totalXML + "</td>"
-                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalXML:"n.a.") + "</td>"
-                  + "<td class='data1'>" + h[key].source.counterViews.cumulativeXML + "</td>"
-                  + "<td class='data2'>n.a.</td></tr>"
-                  + "<tr><td>Total</td><td class='data1'>" + h[key].source.counterViews.total + "</td>"
-                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.total:"n.a.") + "</td>"
-                  + "<td class='data1'>" + h[key].source.counterViews.cumulativeTotal + "</td>"
-                  + "<td class='data2'>" + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeTotal:"n.a.") + "</td></tr>"
-                  + "</table>";
+                  + '</td><td colspan="2">Views since ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+                  + '</td></tr><tr><th>Source</th><th class="header1">PLoS</th><th class="header2">PMC</th>'
+                  + '<th class="header1">PLoS</th><th class="header2">PMC</th></tr>'
+                  + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalHTML:"n.a.") + '</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML + '</td>'
+                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeHTML:"n.a.") + '</td></tr>'
+                  + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
+                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalPDF:"n.a.") + '</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativePDF + '</td>'
+                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativePDF:"n.a.") + '</td></tr>'
+                  + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
+                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalXML:"n.a.") + '</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativeXML + '</td>'
+                  + '<td class="data2">n.a.</td></tr>'
+                  + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
+                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.total:"n.a.") + '</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal + '</td>'
+                  + '<td class="data2">' + (h[key].hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeTotal:"n.a.") + '</td></tr>'
+                  + '</table>';
               }
             }
           }
 
-          var i = 1;
           for (var key in data.history) {
             if(data.history[key].source.pmcViews != null) {
               options.series[0].data.push({ name: key, y: data.history[key].source.pmcViews.cumulativeTotal });
@@ -1200,21 +1207,17 @@ $.fn.alm = function () {
               options.series[0].data.push({ name:key, y:0 });
             }
             options.series[1].data.push({ name: key, y:data.history[key].source.counterViews.cumulativeTotal });
-            options.xAxis.categories.push(i++);
           }
 
-          $("#" + chartID).before(summaryTable);
-//          $("#" + chartID).append(
-//            $("<div></div>").attr("id", "chart")
-//              .css("width", "600px")
-//              .css("height","200px"));
+          $("#" + usageID).append(summaryTable);
+          $("#" + usageID).append($('<div id="chart"></div>')
+            .css("width","600px")
+            .css("height","200px"));
 
           var chart = new Highcharts.Chart(options);
 
-          //TODO:Append this text:
-          //<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>
-
-          $("#" + chartID).show( "blind", 500 );
+          $("#" + usageID).append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
+          $("#" + usageID).show("blind", 500);
         };
 
         this.getChartData(doi, jQuery.proxy(success, this), almError);
