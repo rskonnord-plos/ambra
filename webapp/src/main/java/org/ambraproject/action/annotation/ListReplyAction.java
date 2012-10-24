@@ -20,6 +20,7 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.models.AnnotationType;
 import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
@@ -31,7 +32,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Action class to get a list of replies to annotations.
@@ -39,6 +43,9 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class ListReplyAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(ListReplyAction.class);
+
+  private static final Set<AnnotationType> COMMENT_TYPES = Collections.unmodifiableSet(EnumSet.of(
+      AnnotationType.COMMENT, AnnotationType.NOTE));
 
   protected AnnotationService annotationService;
   private ArticleService articleService;
@@ -48,12 +55,15 @@ public class ListReplyAction extends BaseActionSupport {
   private AnnotationView baseAnnotation;
   private ArticleInfo articleInfo;
   private List<AuthorExtra> authorExtras;
+  private int numComments;
 
   @Override
   public String execute() throws Exception {
     try {
       baseAnnotation = annotationService.getFullAnnotationView(root);
-      articleInfo = articleService.getBasicArticleView(baseAnnotation.getArticleID());
+      Long articleID = baseAnnotation.getArticleID();
+      articleInfo = articleService.getBasicArticleView(articleID);
+      numComments = annotationService.countAnnotations(articleID, COMMENT_TYPES);
 
       Document doc = fetchArticleService.getArticleDocument(articleInfo);
       authorExtras = fetchArticleService.getAuthorAffiliations(doc);
@@ -83,6 +93,10 @@ public class ListReplyAction extends BaseActionSupport {
 
   public List<AuthorExtra> getAuthorExtras() {
     return authorExtras;
+  }
+
+  public int getNumComments() {
+    return numComments;
   }
 
   @Required
