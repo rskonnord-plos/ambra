@@ -191,19 +191,314 @@ ERROR, searchType must be defined.
     </form>
     <a id="advSearch" class="btn" href="TEST" name="advSearch">advanced</a>
   </div>
-  <div id="search-options" class="cf">
-    <div class="section">
-      <b>Sort:</b>
-      <span class="btn active">most recent</span>
-      <a href="TEST" class="btn">most viewed</a>
-      <a href="TEST" class="btn">most cited</a>
-    </div>
-    <div class="section view">
-      <b>View as:</b>
-      <span class="figs">Figures</span>
-      <a href="TEST" class="list">List</a>
+  <div class="options">
+    <span class="clear-filter"><a id="clearAllFilters" href="TEST" class="btn">Clear all filters</a></span>
+
+    <div class="resultSort">
+      <select name="sort" id="sortPicklist">
+        <option value="" selected>Sort by</option>
+        <option value="Relevance">Relevance</option>
+        <option value="Date, newest first">Date, newest first</option>
+        <option value="Date, oldest first">Date, oldest first</option>
+        <option value="Most views, last 30 days">Most views, last 30 days</option>
+        <option value="Most views, all time">Most views, all time</option>
+        <option value="Most cited, all time">Most cited, all time</option>
+        <option value="Most bookmarked">Most bookmarked</option>
+        <option value="Most shared in social media">Most shared in social media</option>
+      </select>
     </div>
   </div>
+  <div class="filter-block cf">
+    <div class="filter-item">
+      PLOS Biology&nbsp;
+      <img src="/images/btn.close.png" class="clear-filter" title="Clear this filter" alt="Clear this filter">
+    </div>
+    <div class="filter-item">
+      PLOS Collections&nbsp;
+      <img src="/images/btn.close.png" class="clear-filter" title="Clear this filter" alt="Clear this filter">
+    </div>
+    <div class="filter-item">
+      PLOS Medicine&nbsp;
+      <img src="/images/btn.close.png" class="clear-filter" title="Clear this filter" alt="Clear this filter">
+    </div>
+    <div class="filter-item">
+      PLOS Neglected Tropical Diseases&nbsp;
+      <img src="/images/btn.close.png" class="clear-filter" title="Clear this filter" alt="Clear this filter">
+    </div>
+    <div class="filter-item">
+      "Non-Clinical Medicine"&nbsp;
+      <img src="/images/btn.close.png" class="clear-filter" title="Clear this filter" alt="Clear this filter">
+    </div>
+    <div class="filter-item">
+      "Public Health and Epidemiology"&nbsp;
+      <img src="/images/btn.close.png" class="clear-filter" title="Clear this filter" alt="Clear this filter">
+    </div>
+  </div>
+
+  <div id="search-facets">
+  <div class="menu">
+    <!--<div class="item" data-facet="dateFacet">Date</div> -->
+    <div class="item" data-facet="journalFacet">Journals</div>
+    <div class="item" data-facet="topicFacet">Topics</div>
+    <div class="item" data-facet="authorFacet">Authors</div>
+    <div class="item" data-facet="keywordFacet">Where my keywords appear</div>
+    <div class="item" data-facet="articleTypeFacet">Article Type</div>
+  </div>
+
+  <!--
+  <div id="dateFacet" class="facet">
+    <label for="startDateAsStringId">Content posted between:</label>
+    <input type="text" name="startDateAsString" maxlength="10" placeholder="YYYY-MM-DD" id="startDateAsStringId" />
+    <label for="endDateAsStringId">and</label>
+    <input type="text" name="endDateAsString" maxlength="10" placeholder="YYYY-MM-DD" id="endDateAsStringId" />
+    <input type="button" class="btn" value="apply" title="apply" />
+  </div>    -->
+
+  <div id="journalFacet" class="facet">
+    <dl>
+      <dt>Journals</dt>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSONE"> PLoS ONE (15,467)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSPathogens"> PLoS Pathogens (1,611)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSGenetics"> PLoS Genetics (905)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSBiology"> PLoS Biology (770)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSCompBiol"> PLoS Computational Biology (703)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSNTD"> PLoS Neglected Tropical Diseases (534)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSMedicine"> PLoS Medicine (412)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSClinicalTrials"> PLoS Hub for Clinical Trials (226)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterJournals" value="PLoSCollections"> PLoS Collections (175)</label>
+      </dd>
+    </dl>
+  </div>
+
+  <div id="topicFacet" class="facet">
+    <dl>
+      <dt>Topics</dt>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Cell Biology"> Cell Biology (264)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Genetics and Genomics"> Genetics and Genomics (204)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Neuroscience"> Neuroscience (194)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Developmental Biology"> Developmental Biology (153)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Molecular Biology"> Molecular Biology (127)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Biochemistry"> Biochemistry (122)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Immunology"> Immunology (118)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Computational Biology"> Computational Biology (114)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Evolutionary Biology"> Evolutionary Biology (96)</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value="Microbiology"> Microbiology (95)</label>
+      </dd>
+      <dd>
+        <label><span class="view-more">See more...</span></label>
+      </dd>
+    </dl>
+
+    <dl class="more">
+      <dt>More Topics</dt>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><input type="checkbox" name="filterSubjects" value=""> Additional Topic</label>
+      </dd>
+      <dd>
+        <label><a href="#hdr-search-results" class="view-less">See less...</a></label>
+      </dd>
+    </dl>
+  </div>
+
+  <div id="keywordFacet" class="facet">
+    <dl>
+      <dt>Where my keywords appear</dt>
+      <dd>
+        <a href="TEST">Body (193)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Results and Discussion (75)</a>
+      </dd>
+      <dd>
+        <a href="TEST">References (21)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Introduction (9)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Materials and Methods (8)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Abstract (1)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Supporting Information (1)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Title (1)</a>
+      </dd>
+    </dl>
+  </div>
+
+  <div id="articleTypeFacet" class="facet">
+    <dl>
+      <dt>Article Type</dt>
+      <dd>
+        <a href="TEST">Research Article (629)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Synopsis (49)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Primer (39)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Essay (19)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Feature (19)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Unsolved Mystery (5)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Community Page (4)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Perspective (3)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Book Review/Science in the Media (2)</a>
+      </dd>
+      <dd>
+        <a href="TEST">Obituary (1)</a>
+      </dd>
+    </dl>
+  </div>
+
+  <div id="authorFacet" class="facet">
+    <dl>
+      <dt>Authors</dt>
+      <dd>
+        <a href="TEST">Christoph Kayser</a>
+      </dd>
+      <dd>
+        <a href="TEST">Christopher I Petkov</a>
+      </dd>
+      <dd>
+        <a href="TEST">Mark Augath</a>
+      </dd>
+      <dd>
+        <a href="TEST">ikos K Logothetis</a>
+      </dd>
+      <dd>
+        <a href="TEST">Robin A A Ince</a>
+      </dd>
+    </dl>
+  </div>
+  </div>
+
 </div><!-- hdr-fig-search -->
 
 <div id="pagebdy-wrap" class="bg-dk">
@@ -213,6 +508,20 @@ ERROR, searchType must be defined.
 
       <div class="header hdr-results">
         <h2>${totalNoOfResults} results for <span>${query?html}</span></h2>
+
+        <div id="search-view">
+          View as:
+          <a href="TEST" class="figs">Figures</a>
+          <span class="list">List</span>
+        </div>
+        <div id="connect" class="nav">
+          <span class="txt">Like this collection?</span>
+          <ul class="lnk-social cf">
+            <li class="lnk-alert ir"><a href="TEST" title="Alert">Alert</a></li>
+            <li class="lnk-email ir"><a href="TEST" title="E-mail">E-mail</a></li>
+            <li class="lnk-rss ir"><a href="http://www.plosone.org/article/feed" title="RSS">RSS</a></li>
+          </ul>
+        </div>
       </div>
 
       <div class="main">
