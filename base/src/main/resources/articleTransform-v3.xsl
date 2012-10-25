@@ -1074,7 +1074,7 @@
                 </xsl:element>
               </li>
               <li>
-                <div class="icon">PPT</div>
+                <div class="icon">PNG</div>
                 <xsl:element name="a">
                   <xsl:attribute name="href">
                     <xsl:value-of select="$bigImgURL"/>
@@ -1087,7 +1087,7 @@
                 </xsl:element>
               </li>
               <li>
-                <div class="icon">PPT</div>
+                <div class="icon">TIFF</div>
                 <xsl:element name="a">
                   <xsl:attribute name="href">
                     <xsl:value-of select="$origImgURL"/>
