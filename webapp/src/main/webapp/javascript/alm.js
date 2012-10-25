@@ -1118,7 +1118,7 @@ $.fn.alm = function () {
                 step: (Object.keys(data.history).length < 50)
                   ?1:(Object.keys(data.history).length < 100)?10:20,
                 formatter: function() {
-                  return (this.value == 0)?"":this.value;
+                  return this.value + 1;
                 }
               },
               categories: []
@@ -1163,10 +1163,18 @@ $.fn.alm = function () {
               }
             ],
             tooltip: {
+              //Make background invisible
+              backgroundColor: 'rgba(255, 255, 255, 0.0)',
               useHTML: true,
               shared: true,
-              backgroundColor: "#efefef",
-              borderColor: "#efefef",
+              shadow: false,
+              borderWidth: 0,
+              borderRadius: 0,
+              positioner: function (labelHeight, labelWidth, point) {
+                var newX = point.plotX + (labelWidth / 2) + 25,
+                  newY = point.plotY - (labelHeight / 2) + 25;
+                return { x: newX, y: newY };
+              },
               formatter: function() {
                 var key = this.points[0].key,
                   h = data.history;
