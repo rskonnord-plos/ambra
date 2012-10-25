@@ -44,9 +44,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -131,8 +129,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     try {
 
       setCommonData();
-      //get the corrections without replies loaded up, and ordered oldest to newest. We don't need to show a count of replies on the main article page
-      AnnotationView[] annotationViews = annotationService.listAnnotationsNoReplies(
+      //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
+      AnnotationView[] annotationViews = annotationService.listAnnotations(
           articleInfoX.getId(),
           EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
               AnnotationType.COMMENT, AnnotationType.NOTE),
