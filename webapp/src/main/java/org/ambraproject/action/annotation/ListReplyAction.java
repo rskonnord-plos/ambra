@@ -27,6 +27,7 @@ import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.AuthorExtra;
 import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.ArticleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -54,6 +55,7 @@ public class ListReplyAction extends BaseActionSupport {
   private Long root;
   private AnnotationView baseAnnotation;
   private ArticleInfo articleInfo;
+  private ArticleType articleType;
   private List<AuthorExtra> authorExtras;
   private int numComments;
 
@@ -62,7 +64,8 @@ public class ListReplyAction extends BaseActionSupport {
     try {
       baseAnnotation = annotationService.getFullAnnotationView(root);
       Long articleID = baseAnnotation.getArticleID();
-      articleInfo = articleService.getBasicArticleView(articleID);
+      articleInfo = articleService.getArticleInfo(articleID, getAuthId());
+      articleType = articleInfo.getKnownArticleType();
       numComments = annotationService.countAnnotations(articleID, COMMENT_TYPES);
 
       Document doc = fetchArticleService.getArticleDocument(articleInfo);
@@ -97,6 +100,10 @@ public class ListReplyAction extends BaseActionSupport {
 
   public int getNumComments() {
     return numComments;
+  }
+
+  public ArticleType getArticleType() {
+    return articleType;
   }
 
   @Required

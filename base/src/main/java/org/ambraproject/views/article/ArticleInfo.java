@@ -24,6 +24,8 @@ import org.ambraproject.models.CitedArticle;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.AssetView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -38,6 +40,7 @@ import java.util.Set;
  * The info about a single article that the UI needs.
  */
 public class ArticleInfo implements Serializable {
+  private static final Logger log = LoggerFactory.getLogger(ArticleInfo.class);
 
   private static final long serialVersionUID = 3823215602197299918L;
 
@@ -91,6 +94,34 @@ public class ArticleInfo implements Serializable {
    */
   public Set<ArticleType> getArticleTypes() {
     return articleTypes;
+  }
+
+  /**
+   * Get the article type, from the {@code types} field of URIs, that corresponds to a "known" article type in {@code
+   * ArticleType}'s static map. At most one value is expected to match a "known" type; if more than one does, an error
+   * is logged and an arbitrary one is returned. If none is matched, return the default article type.
+   *
+   * @return the known article type, or the default
+   * @throws IllegalStateException if {@code this.getTypes() == null}
+   */
+  public ArticleType getKnownArticleType() {
+    if (types == null) {
+      throw new IllegalStateException("types not set");
+    }
+    ArticleType knownType = null;
+    for (String artType : types) {
+      URI articleTypeUri = URI.create(artType);
+      ArticleType typeForURI = ArticleType.getKnownArticleTypeForURI(articleTypeUri);
+      if (typeForURI != null) {
+        if (knownType != null && !knownType.equals(typeForURI) && log.isErrorEnabled()) {
+          log.error("Multiple article types ({}, {}) matched from: {}",
+              new String[]{knownType.getHeading(), typeForURI.getHeading(), types.toString()});
+        } else {
+          knownType = typeForURI;
+        }
+      }
+    }
+    return knownType == null ? ArticleType.getDefaultArticleType() : knownType;
   }
 
   /**

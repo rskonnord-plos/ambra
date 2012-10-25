@@ -147,6 +147,14 @@ public interface ArticleService {
   public ArticleInfo getArticleInfo(final String articleDoi, final String authId) throws NoSuchArticleIdException;
 
   /**
+   * Get the articleInfo object for an article
+   * @param articleID the back-end primary key of the article
+   * @param authId the authorization ID of the current user
+   * @return articleInfo
+   */
+  public ArticleInfo getArticleInfo(final Long articleID, final String authId) throws NoSuchArticleIdException;
+
+  /**
    * Get the articleInfo objects for the list of articles
    * @param articleDois the IDs of the articles
    * @param authId the authorization ID of the current user

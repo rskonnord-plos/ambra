@@ -451,6 +451,16 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Transactional(readOnly = true)
+  @Override
+  public ArticleInfo getArticleInfo(Long articleID, String authId) throws NoSuchArticleIdException {
+    Article article = hibernateTemplate.get(Article.class, articleID);
+    return createArticleInfo(article, authId);
+  }
+
+  /**
    * Get the articleInfo object for an article
    * @param articleDois the ID of the article
    * @param authId the authorization ID of the current user

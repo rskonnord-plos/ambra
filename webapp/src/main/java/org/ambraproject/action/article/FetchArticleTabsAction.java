@@ -367,14 +367,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
         EnumSet.of(AnnotationType.NOTE, AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
             AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
 
-    articleType = ArticleType.getDefaultArticleType();
-    for (String artType : this.articleInfoX.getTypes()) {
-      URI articleTypeUri = URI.create(artType);
-      if (ArticleType.getKnownArticleTypeForURI(articleTypeUri) != null) {
-        articleType = ArticleType.getKnownArticleTypeForURI(articleTypeUri);
-        break;
-      }
-    }
+    articleType = articleInfoX.getKnownArticleType();
 
     String pages = this.articleInfoX.getPages();
 
