@@ -58,6 +58,7 @@ public class ListReplyAction extends BaseActionSupport {
   private ArticleType articleType;
   private List<AuthorExtra> authorExtras;
   private int numComments;
+  private boolean isPeerReviewed;
 
   @Override
   public String execute() throws Exception {
@@ -70,6 +71,7 @@ public class ListReplyAction extends BaseActionSupport {
 
       Document doc = fetchArticleService.getArticleDocument(articleInfo);
       authorExtras = fetchArticleService.getAuthorAffiliations(doc);
+      isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
     } catch (Exception ae) {
       log.error("Could not list all replies for root: " + root, ae);
       addActionError("Reply fetching failed with error message: " + ae.getMessage());
@@ -100,6 +102,10 @@ public class ListReplyAction extends BaseActionSupport {
 
   public int getNumComments() {
     return numComments;
+  }
+
+  public boolean getIsPeerReviewed() {
+    return isPeerReviewed;
   }
 
   public ArticleType getArticleType() {
