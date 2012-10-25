@@ -866,8 +866,11 @@ var launchModal = function(doi, ref, state, el) {
 					+ '</p>';
 					slide.append(img);
 					txt.append(title);
-					txt.append($toggle);
-					txt.append(desc);
+					// only append the toggle + description if the description isn't blank
+					if (!/^\s*$/.test(this.transformedDescription)) {
+						txt.append($toggle);
+						txt.append(desc);
+					}
 					lnks.append(lnks_txt);
 					slide.append(txt);
 					slide.append(lnks);
