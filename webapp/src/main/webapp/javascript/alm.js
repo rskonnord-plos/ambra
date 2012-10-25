@@ -1115,8 +1115,8 @@ $.fn.alm = function () {
                 align: "high"
               },
               labels: {
-                step: (Object.keys(data.history).length < 50)
-                  ?1:(Object.keys(data.history).length < 100)?10:20,
+                step: (Object.keys(data.history).length) < 15?1:
+                  Math.round(Object.keys(data.history).length / 15),
                 formatter: function() {
                   return this.value + 1;
                 }
@@ -1145,8 +1145,7 @@ $.fn.alm = function () {
               series: {
                 pointPadding: 0,
                 groupPadding: 0,
-                borderWidth: 1,
-                borderColor: "rgba(0, 0, 0, .15)",
+                borderWidth: 0,
                 shadow: false
               }
             },
