@@ -1145,8 +1145,8 @@ $.fn.alm = function () {
               series: {
                 pointPadding: 0,
                 groupPadding: 0,
-                borderWidth: 0,
-                borderColor: "#000",
+                borderWidth: 1,
+                borderColor: "rgba(0, 0, 0, .15)",
                 shadow: false
               }
             },
@@ -1164,7 +1164,7 @@ $.fn.alm = function () {
             ],
             tooltip: {
               //Make background invisible
-              backgroundColor: 'rgba(255, 255, 255, 0.0)',
+              backgroundColor: "rgba(255, 255, 255, 0.0)",
               useHTML: true,
               shared: true,
               shadow: false,
@@ -1186,21 +1186,27 @@ $.fn.alm = function () {
                   + '</td></tr><tr><th>Source</th><th class="header1">PLoS</th><th class="header2">PMC</th>'
                   + '<th class="header1">PLoS</th><th class="header2">PMC</th></tr>'
                   + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalHTML:"n.a.") + '</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeHTML:"n.a.") + '</td></tr>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?
+                    h[key].source.pmcViews.totalHTML.format(0,'.',','):"n.a.") + '</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML.format(0,'.',',') + '</td>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?
+                    h[key].source.pmcViews.cumulativeHTML.format(0,'.',','):"n.a.") + '</td></tr>'
                   + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalPDF:"n.a.") + '</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativePDF + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativePDF:"n.a.") + '</td></tr>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?
+                    h[key].source.pmcViews.totalPDF.format(0,'.',','):"n.a.") + '</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativePDF.format(0,'.',',') + '</td>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?
+                    h[key].source.pmcViews.cumulativePDF.format(0,'.',','):"n.a.") + '</td></tr>'
                   + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.totalXML:"n.a.") + '</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativeXML + '</td>'
+                  + '<td class="data2">n.a.</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativeXML.format(0,'.',',') + '</td>'
                   + '<td class="data2">n.a.</td></tr>'
                   + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.total:"n.a.") + '</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?h[key].source.pmcViews.cumulativeTotal:"n.a.") + '</td></tr>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?
+                    h[key].source.pmcViews.total.format(0,'.',','):"n.a.") + '</td>'
+                  + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal.format(0,'.',',') + '</td>'
+                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews")?
+                    h[key].source.pmcViews.cumulativeTotal.format(0,'.',','):"n.a.") + '</td></tr>'
                   + '</table>';
               }
             }
