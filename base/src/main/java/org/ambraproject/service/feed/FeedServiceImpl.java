@@ -24,9 +24,8 @@ import org.ambraproject.ApplicationException;
 import org.ambraproject.models.Journal;
 import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.article.BrowseService;
-import org.ambraproject.service.journal.JournalService;
-import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.service.search.SolrException;
 import org.ambraproject.service.search.SolrFieldConversion;
 import org.ambraproject.service.search.SolrHttpService;
@@ -34,7 +33,10 @@ import org.ambraproject.service.trackback.TrackbackService;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.TOCArticleGroup;
+import org.ambraproject.views.article.ArticleInfo;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -45,9 +47,11 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * The <code>FeedService</code> supplies the API for querying feed requests. <code>FeedService</code> is a Spring
@@ -65,10 +69,15 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   private SolrFieldConversion solrFieldConverter;
 
 
-  private static final String MAX_FACET_SIZE         = "100";
-  private static final String MIN_FACET_COUNT        = "1";
-  private static final String MAX_HIGHLIGHT_SNIPPETS = "3";
+  private static final int MAX_FACET_SIZE         = 100;
+  private static final int MIN_FACET_COUNT        = 1;
+  private int queryTimeout = 60000;
+  private Map validSorts = null;
+  private String highlightFields = null;
+  private List displaySorts = null;
+  private Map validKeywords = null;
 
+  private static final Pattern SORT_OPTION_PATTERN = Pattern.compile(",(?![^\\(\\)]*\\))");
   /**
    * Constructor - currently does nothing.
    */
@@ -166,78 +175,228 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   }
 
   @Override
-  public Document getSearchArticles(final FeedSearchParameters searchParameters) {
-    Map<String, String> params = new HashMap<String, String>();
-    // result format
-    params.put("wt", "xml");
-    // what I want returned, the fields needed for rss feed
-    params.put("fl", "id,title_display,publication_date,author_without_collab_display,author_collab_only_display," +
-        "author_display,volume,issue,article_type,subject_hierarchy,abstract_primary_display,copyright");
+  public Document getSearchArticles(final FeedSearchParameters sParams) throws ApplicationException {
 
-    //set query string
-    params.put("q", searchParameters.getQuery());
+    log.debug("Performing RSS Feed Search");
 
-    //set query time out
-    //params.put( "timeAllowed", queryTimeout);
+    SolrQuery query = null;
 
-    // The relevance (of each results element) to the search terms.
-    params.put("fl", "score");
+    if(sParams.getUnformattedQuery().equals("")){
+      log.debug("Simple Rss Search performed on the String: " + sParams.getQuery());
+      query = new SolrQuery(sParams.getQuery());
+      query.set("defType", "dismax");
+    }else {
+      log.debug("Simple Rss Search performed on the String: " + sParams.getUnformattedQuery());
+      query = new SolrQuery(sParams.getUnformattedQuery());
+    }
 
-    //setting highlighting to true
-    params.put("hl", "true");
+    query.setTimeAllowed(queryTimeout);
+    query.setIncludeScore(true); // The relevance (of each results element) to the search terms.
+    query.setHighlight(true);
+    query.set("hl.fl", this.highlightFields);
+    query.set("hl.requireFieldMatch", true);
+    // request only fields that we need
+    query.setFields("id","title_display","publication_date","author_without_collab_display","author_collab_only_display","author_display","volume","issue","article_type","subject_hierarchy","abstract_primary_display","copyright");
+    query.addFilterQuery("doc_type:full");
+    query.addFilterQuery("!article_type_facet:\"Issue Image\"");
+    query.addFacetField("cross_published_journal_key");
 
-   // params.put("hl.fl", this.highlightFields);
-    params.put("hl.requireFieldMatch", "true");
-
-    //adding the filters
-    StringBuilder filterQuery = new StringBuilder();
-    filterQuery.append("doc_type:full " +
-        "AND !article_type_facet:\"Issue Image\" ");
+    // Form field description: "Journals".  Query Filter.
+    if (sParams.getFilterJournals() != null && sParams.getFilterJournals().length > 0) {
+      query.addFilterQuery(createFilterLimitForJournals(sParams.getFilterJournals()));
+    }
 
 
-    if (searchParameters.getFilterJournals() != null && searchParameters.getFilterJournals().length > 0) {
-      filterQuery.append(" AND ");
-      filterQuery.append("cross_published_journal_key:") ;
-      for (int i=0;i<searchParameters.getFilterJournals().length;i++) {
-        filterQuery.append(searchParameters.getFilterJournals()[i]).append(" OR ");
+    // Form field description: "Subject Categories".  Query Filter.
+    if (sParams.getFilterSubjects() != null && sParams.getFilterSubjects().length > 0) {
+      query.addFilterQuery(createFilterLimitForSubject(sParams.getFilterSubjects()));
+    }
+
+    // Form field description: "Article Types".  Query Filter.
+    if (sParams.getFilterArticleType() != null && sParams.getFilterArticleType().length() > 0) {
+      query.addFilterQuery(createFilterLimitForArticleType(sParams.getFilterArticleType()));
+    }
+
+    //Set the sort ordering for results, if applicable.
+    setSort(query, sParams);
+
+    //If the keywords parameter is specified, we need to change what field we're querying against
+    //aka, body, conclusions, materials and methods ... etc ...
+    if(sParams.getFilterKeyword().length() > 0) {
+      String fieldkey = sParams.getFilterKeyword();
+
+      if(!validKeywords.containsKey(fieldkey)) {
+        throw new ApplicationException("Invalid filterKeyword value of " +
+            fieldkey + " specified");
       }
-       filterQuery.replace(filterQuery.length() - 4, filterQuery.length(), ""); // Remove last " OR"
+      String fieldName = (String)validKeywords.get(fieldkey);
+      query.set("qf", fieldName);
+    }
 
-      }
-
- //   filterQuery.append("cross_published_journal_key:").append("PLoSBiology OR PLoSMedicine OR PLoSONE");
-
-    params.put("fq", filterQuery.toString());
-
-    //adding facets
-    params.put("facet","true");
-    params.put("facet.field","subject_facet");
-    params.put("facet.field","author_facet");
-    params.put("facet.field","editor_facet");
-    params.put("facet.field","article_type_facet");
-    params.put("facet.field","affiliate_facet");
-    params.put("facet.field","cross_published_journal_key");
-
-    params.put("facet.limit", MAX_FACET_SIZE);
-    params.put("facet.mincount", MIN_FACET_COUNT);
-    params.put("facet.method", "fc");
-
-    params.put("defType", "dismax");
-
-
-
-
+    query.set("wt", "xml") ;
 
     Document result = null;
     try {
-      result = solrHttpService.makeSolrRequest(params);
+      result = solrHttpService.makeSolrRequestForRss(query.toString());
     } catch (SolrException e) {
       e.printStackTrace();
     }
-
     return result;
   }
 
+  private void setSort(SolrQuery query, FeedSearchParameters sp) throws ApplicationException {
+    if (log.isDebugEnabled()) {
+      log.debug("SearchParameters.sort = " + sp.getSort());
+    }
+
+    if (sp.getSort().length() > 0) {
+      String sortKey = sp.getSort();
+      String sortValue = (String)validSorts.get(sortKey);
+
+      if(sortValue == null) {
+        throw new ApplicationException("Invalid sort of '" + sp.getSort() + "' specified.");
+      }
+
+      String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);
+      for (String sortOption: sortOptions) {
+        sortOption = sortOption.trim();
+        int index = sortOption.lastIndexOf(" ");
+
+        String fieldName = sortOption;
+        String sortDirection = null;
+
+        if (index != -1) {
+          fieldName = sortOption.substring(0, index);
+          sortDirection = sortOption.substring(index + 1).trim();
+        }
+
+        if ( sortDirection == null || ! sortDirection.toLowerCase().equals("asc")) {
+          query.addSortField(fieldName, SolrQuery.ORDER.desc);
+        } else {
+          query.addSortField(fieldName, SolrQuery.ORDER.asc);
+        }
+      }
+    }
+
+    if(query.getSortField() == null || query.getSortField().length() == 0) {
+      //Always default to score if it's not defined
+      query.addSortField("score", SolrQuery.ORDER.desc);
+      //If two articles are ranked the same, give the one with a more recent publish date a bump
+      query.addSortField("publication_date", SolrQuery.ORDER.desc);
+      //If everything else is equal, order by id
+      query.addSortField("id", SolrQuery.ORDER.desc);
+    }
+  }
+
+
+  private String createFilterLimitForJournals(String[] journals) {
+    Arrays.sort(journals); // Consistent order so that each filter will only be cached once.
+    StringBuilder fq = new StringBuilder();
+    for (String journal : journals) {
+      fq.append("cross_published_journal_key:").append(journal).append(" OR ");
+    }
+    return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
+  }
+
+  private String createFilterLimitForSubject(String[] subjects) {
+    Arrays.sort(subjects); // Consistent order so that each filter will only be cached once.
+    StringBuilder fq = new StringBuilder();
+    for (String category : subjects) {
+      fq.append("subject:\"").append(category).append("\" AND ");
+    }
+    return fq.replace(fq.length() - 5, fq.length(), "").toString(); // Remove last " OR".
+  }
+
+  private String createFilterLimitForArticleType(String artycleType) {
+    StringBuilder fq = new StringBuilder();
+
+    fq.append("article_type:\"").append(artycleType).append("\"");
+
+    return fq.toString();
+  }
+
+
+  private SolrQuery createQuery(String queryString, boolean useDismax) {
+    SolrQuery query = new SolrQuery(queryString);
+    query.setTimeAllowed(queryTimeout);
+    query.setIncludeScore(true); // The relevance (of each results element) to the search terms.
+    query.setHighlight(true);
+
+    if(useDismax) {
+      query.set("defType", "dismax");
+    }
+
+    //TODO: Put The "options" from the "queryField" picklist into a config file.
+    //This list matches the "options" from the "queryField" picklist on unformattedSearch.ftl,
+    //without the "date" fields.
+    query.set("hl.fl", this.highlightFields);
+    query.set("hl.requireFieldMatch", true);
+
+    // request only fields that we need to display
+    query.setFields("id","title_display","publication_date","author_without_collab_display","author_collab_only_display","author_display","volume","issue","article_type","subject_hierarchy","abstract_primary_display","copyright");
+
+    // Add a filter to ensure that Solr never returns partial documents
+    query.addFilterQuery(createFilterFullDocuments());
+
+    return query;
+  }
+
+  private String createFilterFullDocuments() {
+    return "doc_type:full";
+  }
+
+  @Required
+  public void setConfiguration(Configuration configuration) throws ApplicationException {
+    this.configuration = configuration;
+    StringBuilder hightlightFieldBuilder = new StringBuilder();
+    queryTimeout = configuration.getInt("ambra.services.search.timeout", 60000); // default to 1 min
+
+    if(configuration.containsKey("ambra.services.search.sortOptions.option")) {
+      validSorts = new HashMap();
+      displaySorts = new ArrayList();
+
+      HierarchicalConfiguration hc = (HierarchicalConfiguration)configuration;
+      List<HierarchicalConfiguration> sorts =
+          hc.configurationsAt("ambra.services.search.sortOptions.option");
+
+      for (HierarchicalConfiguration s : sorts) {
+        String key = s.getString("[@displayName]");
+        String value = s.getString("");
+        validSorts.put(key, value);
+        displaySorts.add(key);
+      }
+
+      ((HierarchicalConfiguration) configuration).setExpressionEngine(null);
+    } else {
+      throw new ApplicationException("ambra.services.search.sortOptions.option not defined " +
+          "in configuration.");
+    }
+
+
+    if(configuration.containsKey("ambra.services.search.keywordFields.field")) {
+      validKeywords = new HashMap();
+      HierarchicalConfiguration hc = (HierarchicalConfiguration)configuration;
+      List<HierarchicalConfiguration> sorts =
+          hc.configurationsAt("ambra.services.search.keywordFields.field");
+
+      for (HierarchicalConfiguration s : sorts) {
+        String key = s.getString("[@displayName]");
+        String value = s.getString("");
+        validKeywords.put(key, value);
+
+        //These fields can be highlighted too!
+        if(hightlightFieldBuilder.length() > 0) {
+          hightlightFieldBuilder.append(",");
+        }
+        hightlightFieldBuilder.append(value);
+      }
+    } else {
+      throw new ApplicationException("ambra.services.search.keywordFields.field not defined " +
+          "in configuration.");
+    }
+
+    this.highlightFields = hightlightFieldBuilder.toString();
+  }
 
   /**
    * @param searchParameters the feedAction data model
@@ -347,11 +506,6 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   @Required
   public void setSolrHttpService(SolrHttpService solrHttpService) {
     this.solrHttpService = solrHttpService;
-  }
-
-  @Required
-  public void setConfiguration(Configuration configuration) {
-    this.configuration = configuration;
   }
 
   @Required

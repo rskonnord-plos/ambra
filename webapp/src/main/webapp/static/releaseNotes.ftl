@@ -35,6 +35,13 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.4.7</h2>
+  <p>Released October 25, 2012</p>
+  <h3>Features Implemented in Ambra 2.4.7</h3>
+  <ul>
+    <li>Fixing bug related to RSS feeds on the search results page.</li>
+  </ul>
+
   <h2>Ambra 2.4.6</h2>
   <p>Released October 23, 2012</p>
   <h3>Features Implemented in Ambra 2.4.6</h3>

@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @see       FeedService
  * @see       FeedService.FEED_TYPES
- * @see       org.ambraproject.struts.AmbraFeedResult
+ * @see       org.ambraproject.struts2.AmbraFeedResult
  */
 
 public class FeedSearchParameters implements Serializable  {
@@ -375,7 +375,8 @@ public class FeedSearchParameters implements Serializable  {
     return filterSubjects;
   }
 
-  public void setFilterSubjects(String[] subjects) {
+  public void setFilterSubjects(String subjectString) {
+    String[] subjects = subjectString.split(",");
     if (subjects == null || subjects.length < 1) {
       this.filterSubjects = new String[]{};
     } else {
@@ -415,7 +416,8 @@ public class FeedSearchParameters implements Serializable  {
     return filterJournals;
   }
 
-  public void setFilterJournals(String[] journals) {
+  public void setFilterJournals(String journalString) {
+    String[] journals = journalString.split(",");
     if (journals == null || journals.length < 1) {
       this.filterJournals = new String[]{};
     } else {

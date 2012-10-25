@@ -44,5 +44,6 @@ public interface SolrHttpService {
    */
   public Document makeSolrRequest(Map<String, String> params) throws SolrException;
 
+  public Document makeSolrRequestForRss(String queryString) throws SolrException;
 
 }
