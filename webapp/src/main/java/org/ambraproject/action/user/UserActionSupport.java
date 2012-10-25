@@ -107,11 +107,11 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
       isValid = false;
     }
 
-    if (isInvalidUrl(homePage)) {
+    if (!isValidUrl(homePage)) {
       addFieldError(HOME_PAGE, "Home page URL is not valid");
       isValid = false;
     }
-    if (isInvalidUrl(weblog)) {
+    if (!isValidUrl(weblog)) {
       addFieldError(WEBLOG, "Weblog URL is not valid");
       isValid = false;
     }
@@ -152,13 +152,9 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
     return isValid;
   }
 
-  private boolean isInvalidUrl(final String url) {
+  private boolean isValidUrl(final String url) {
     //allow null or or empty value for urls
-    if (url == null || url.isEmpty()) {
-      return false;
-    } else {
-      return !TextUtils.verifyUrl(url) && !TextUtils.verifyUrl(HTTP_PREFIX + url);
-    }
+    return StringUtils.isEmpty(url) || TextUtils.verifyUrl(url) || TextUtils.verifyUrl(HTTP_PREFIX + url);
   }
 
   protected void setFieldsFromProfile(UserProfile ambraUser) {
