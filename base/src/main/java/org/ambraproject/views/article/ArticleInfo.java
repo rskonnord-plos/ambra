@@ -113,11 +113,15 @@ public class ArticleInfo implements Serializable {
       URI articleTypeUri = URI.create(artType);
       ArticleType typeForURI = ArticleType.getKnownArticleTypeForURI(articleTypeUri);
       if (typeForURI != null) {
-        if (knownType != null && !knownType.equals(typeForURI) && log.isErrorEnabled()) {
+        if (knownType == null) {
+          knownType = typeForURI;
+        } else if (!knownType.equals(typeForURI) && log.isErrorEnabled()) {
+          /*
+           * The old behavior was to return the first value matched from the Set iterator.
+           * To avoid introducing bugs, continue without changing the value of knownType.
+           */
           log.error("Multiple article types ({}, {}) matched from: {}",
               new String[]{knownType.getHeading(), typeForURI.getHeading(), types.toString()});
-        } else {
-          knownType = typeForURI;
         }
       }
     }
