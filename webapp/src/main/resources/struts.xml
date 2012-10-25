@@ -172,7 +172,7 @@
       <interceptor-ref name="minimalStack"/>
       <result name="success" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
 
@@ -324,7 +324,7 @@
       </result>
       <result name="none" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
   </package>
@@ -600,12 +600,12 @@
       </result>
       <result name="none" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
       <!-- TODO: Make a real error page -->
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
 
@@ -615,7 +615,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
 
@@ -718,7 +718,7 @@
       <result name="success">/annotation/listReply.ftl</result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
 
@@ -726,7 +726,7 @@
       <result name="success">/annotation/listReply.ftl</result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
 
@@ -734,7 +734,7 @@
       <result name="success">/annotation/listThreadedReply.ftl</result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
 
@@ -745,7 +745,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
 
@@ -756,7 +756,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/pageNotFound.ftl</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
   </package>
