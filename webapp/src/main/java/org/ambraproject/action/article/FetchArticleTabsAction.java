@@ -82,6 +82,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private List<String> authorContributions;
   private List<String> competingInterest;
   private int pageCount = 0;
+  private boolean isPeerReviewed;
 
   private int totalNumAnnotations = 0;
   private int numCorrections = 0;
@@ -391,6 +392,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
     articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
+    isPeerReviewed = this.fetchArticleService.isPeerReviewed(articleURI, doc);
 
     /**
      An article can be cross published, but we want the source journal.
@@ -677,6 +679,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
 
   public boolean getIsRetracted() {
     return isRetracted;
+  }
+
+  public boolean getIsPeerReviewed() {
+    return isPeerReviewed;
   }
 
   /**

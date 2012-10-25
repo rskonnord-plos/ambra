@@ -520,6 +520,21 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     return journalAbbrev;
   }
 
+  @Override
+  public boolean isPeerReviewed(String doi, Document doc) {
+    if (doi.contains("image")) {
+      return false;
+    }
+    List<String> textFromNodes = findTextFromNodes(doc, "//fn[@fn-type='other']");
+    if (textFromNodes != null) {
+      String fnText = StringUtils.join(textFromNodes, ';');
+      if (fnText.contains("not externally peer reviewed") || fnText.contains("not peer reviewed")) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * Indicates whether the given cited article has enough data to render a "find this article online" link.
    *

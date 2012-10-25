@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 
-public class FetchArticleServiceImplTest extends BaseTest {
+public class FetchArticleServiceTest extends BaseTest {
 
   @Autowired
   protected FetchArticleService fetchArticleService;
@@ -133,7 +133,6 @@ public class FetchArticleServiceImplTest extends BaseTest {
     for (HtmlChecker validator : HtmlChecker.values()) {
       validator.check(doc);
     }
-
   }
 }
 

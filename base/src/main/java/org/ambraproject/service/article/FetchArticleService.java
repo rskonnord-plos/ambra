@@ -98,4 +98,14 @@ public interface FetchArticleService extends HibernateService {
    * @return abbreviated journal name
    */
   public String getJournalAbbreviation(Document doc);
+
+  /**
+   * Indicates whether the article was peer reviewed
+   *
+   *
+   * @param doi the article doi
+   * @param doc the article xml
+   * @return true if the article was peer reviewed, false otherwise
+   */
+  public boolean isPeerReviewed(String doi, Document doc);
 }
