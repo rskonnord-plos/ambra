@@ -96,6 +96,13 @@ $.fn.alm = function () {
     this.getData(request, callBack, errorCallback);
   }
 
+  this.getCitesScopusOnly = function(doi, callBack, errorCallback) {
+    doi = this.validateDOI(doi);
+
+    var request = "articles/" + doi + ".json?events=1&source=Scopus";
+    this.getData(request, callBack, errorCallback);
+  }
+
   this.getCitesCrossRefOnly = function(doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
@@ -1236,3 +1243,51 @@ $.fn.alm = function () {
     }
   }
 }
+
+$(document).ready(
+  function() {
+    //If the almViews node exists, assume almCitations exists as well and populate them with
+    //TODO: Review if this should go into it's own file or not.
+    //Appropriate results.
+    if($('#almViews')) {
+      var almService = new $.fn.alm(),
+        doi = $('meta[name=citation_doi]').attr("content"),
+        publishDate = $.datepicker.parseDate("yy/m/d", $('meta[name=citation_date]').attr("content")),
+        publishDatems = publishDate.getTime();
+
+      var almChartError = function(message) {
+        $("#almViews").css("display","none");
+        $("#almViews").html(message);
+        $("#almViews").fadeIn(500);
+      };
+
+      var almChartSuccess = function(response) {
+        var data = almService.massageChartData(response.article.source, publishDatems);
+        $("#almViews").css("display","none");
+        $("#almViews").html(data.total.format(0,'.',','));
+        $("#almViews").fadeIn(500);
+      };
+
+      almService.getChartData(doi, almChartSuccess, almChartError);
+
+      var almCitationError = function(message) {
+        //$("#almCitationsSpinny").fadeOut('slow');
+        $("#almCitations").css("display","none");
+        $("#almCitations").html(message);
+        $("#almCitations").fadeIn(500);
+      };
+
+      var almCitationSuccess = function(response) {
+        //slight pause so the rendering doesn't appear awkward
+        setTimeout(function() {
+          var count = response.article.source[0].count;
+          $("#almCitations").css("display","none");
+          $("#almCitations").html(count.format(0,'.',','));
+          $("#almCitations").fadeIn(500);
+        }, 150);
+      };
+
+      almService.getCitesScopusOnly(doi, almCitationSuccess, almCitationError);
+    }
+  }
+);
