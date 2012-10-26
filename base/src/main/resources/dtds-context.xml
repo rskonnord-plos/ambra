@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="dtds" class="org.springframework.beans.factory.config.MapFactoryBean">
+    <property name="targetMapClass" value="java.util.concurrent.ConcurrentHashMap"/>
+    <property name="sourceMap">
+      <map>
+        <!--NLM 3-->
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd" value="dtds/nlm3/journalpublishing3.dtd"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/journalpubcustom-modules3.ent" value="dtds/nlm3/custom_modules.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/modules3.ent" value="dtds/nlm3/modules.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/journalpubcustom-classes3.ent" value="dtds/nlm3/custom_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/default-classes3.ent" value="dtds/nlm3/default_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/journalpubcustom-mixes3.ent" value="dtds/nlm3/custom_mixes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/default-mixes3.ent" value="dtds/nlm3/default_mixes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/journalpubcustom-models3.ent" value="dtds/nlm3/custom_models.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/common3.ent" value="dtds/nlm3/commons.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/articlemeta3.ent" value="dtds/nlm3/article_meta.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/backmatter3.ent" value="dtds/nlm3/backmatter.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/display3.ent" value="dtds/nlm3/display.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/format3.ent" value="dtds/nlm3/format.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/funding3.ent" value="dtds/nlm3/funding.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/journalmeta3.ent" value="dtds/nlm3/journal_meta.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/link3.ent" value="dtds/nlm3/link.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/list3.ent" value="dtds/nlm3/list.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/math3.ent" value="dtds/nlm3/math.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/nlmcitation3.ent" value="dtds/nlm3/citation.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/para3.ent" value="dtds/nlm3/para.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/phrase3.ent" value="dtds/nlm3/phrase.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/references3.ent" value="dtds/nlm3/references.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/related-object3.ent" value="dtds/nlm3/related_object.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/section3.ent" value="dtds/nlm3/section.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/mathmlsetup3.ent" value="dtds/nlm3/math_ml.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/mathml/mmlextra.ent" value="dtds/nlm3/math_ml_extra.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/mathml/mmlalias.ent" value="dtds/nlm3/math_ml_alias.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/mathml2.dtd" value="dtds/nlm3/math_ml2.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/mathml2-qname-1.mod" value="dtds/nlm3/math_ml2_qname.mod"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/XHTMLtablesetup3.ent" value="dtds/nlm3/table_setup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/xmlspecchars3.ent" value="dtds/nlm3/spec_chars.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/chars3.ent" value="dtds/nlm3/chars.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/notat3.ent" value="dtds/nlm3/notat.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/xhtml-inlstyle-1.mod" value="dtds/nlm3/xhtml_inlstyle_1.mod"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/xhtml-table-1.mod" value="dtds/nlm3/xhtml_table_1.mod"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isolat1.ent" value="dtds/nlm3/isolat1.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isolat2.ent" value="dtds/nlm3/isolat2.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isobox.ent" value="dtds/nlm3/isobox.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isodia.ent" value="dtds/nlm3/isodia.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isonum.ent" value="dtds/nlm3/isonum.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isopub.ent" value="dtds/nlm3/isopub.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isocyr1.ent" value="dtds/nlm3/isocyr1.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso8879/isocyr2.ent" value="dtds/nlm3/isocyr2.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/xmlchars/isogrk1.ent" value="dtds/nlm3/isogrk1.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/xmlchars/isogrk2.ent" value="dtds/nlm3/isogrk2.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/xmlchars/isogrk4.ent" value="dtds/nlm3/isogrk4.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isotech.ent" value="dtds/nlm3/isotech.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isogrk3.ent" value="dtds/nlm3/isogrk3.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isoamsa.ent" value="dtds/nlm3/isoamsa.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isoamsb.ent" value="dtds/nlm3/isoamsb.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isoamsc.ent" value="dtds/nlm3/isoamsc.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isoamsn.ent" value="dtds/nlm3/isoamsn.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isoamso.ent" value="dtds/nlm3/isoamso.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isoamsr.ent" value="dtds/nlm3/isoamsr.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isomscr.ent" value="dtds/nlm3/isomscr.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isomfrk.ent" value="dtds/nlm3/isomfrk.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/3.0/iso9573-13/isomopf.ent" value="dtds/nlm3/isomopf.ent"/>
+
+        <!--NLM 2-->
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpublishing.dtd" value="dtds/nlm2/journalpublishing.dtd"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/archivecustomize.ent" value="dtds/nlm2/archivecustomize.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/articlemeta.ent" value="dtds/nlm2/articlemeta.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/backmatter.ent" value="dtds/nlm2/backmatter.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/chars.ent" value="dtds/nlm2/chars.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/common.ent" value="dtds/nlm2/common.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/default-classes.ent" value="dtds/nlm2/default_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/default-mixes.ent" value="dtds/nlm2/default_mixes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/display.ent" value="dtds/nlm2/display.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/exchange.ent" value="dtds/nlm2/exchange.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/format.ent" value="dtds/nlm2/format.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isoamsa.ent" value="dtds/nlm2/isoamsa.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isoamsb.ent" value="dtds/nlm2/isoamsb.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isoamsc.ent" value="dtds/nlm2/isoamsc.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isoamsn.ent" value="dtds/nlm2/isoamsn.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isoamso.ent" value="dtds/nlm2/isoamso.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isoamsr.ent" value="dtds/nlm2/isoamsr.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isobox.ent" value="dtds/nlm2/isobox.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isodia.ent" value="dtds/nlm2/isodia.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isomfrk.ent" value="dtds/nlm2/isomfrk.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isomopf.ent" value="dtds/nlm2/isomopf.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isomscr.ent" value="dtds/nlm2/isomscr.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isonum.ent" value="dtds/nlm2/isonum.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isopub.ent" value="dtds/nlm2/isopub.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/isotech.ent" value="dtds/nlm2/isotech.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalmeta.ent" value="dtds/nlm2/journalmeta.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalpub-classes.ent" value="dtds/nlm2/journalpub_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalpubcustom-classes.ent" value="dtds/nlm2/journalpubcustom_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalpubcustomize.ent" value="dtds/nlm2/journalpubcustomize.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalpubcustom-mix.ent" value="dtds/nlm2/journalpubcustom_mix.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalpubcustom-mixes.ent" value="dtds/nlm2/journalpubcustom_mixes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalpubcustom-models.ent" value="dtds/nlm2/journalpubcustom_models.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/journalpubcustom-modules.ent" value="dtds/nlm2/journalpubcustom_modules.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/link.ent" value="dtds/nlm2/link.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/list.ent" value="dtds/nlm2/list.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/math.ent" value="dtds/nlm2/math.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/modules.ent" value="dtds/nlm2/modules.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/nlm-citation.ent" value="dtds/nlm2/nlm_citation.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/nlmcitation.ent" value="dtds/nlm2/nlmcitation.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/notat.ent" value="dtds/nlm2/notat.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/oasis-exchange.ent" value="dtds/nlm2/oasis_exchange.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/oasis-tablesetup.ent" value="dtds/nlm2/oasis_tablesetup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/para.ent" value="dtds/nlm2/para.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/phrase.ent" value="dtds/nlm2/phrase.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/references.ent" value="dtds/nlm2/references.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/section.ent" value="dtds/nlm2/section.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/tablesetup.ent" value="dtds/nlm2/tablesetup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/tbl.ent" value="dtds/nlm2/tbl.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/XHTMLtablesetup.ent" value="dtds/nlm2/XHTMLtablesetup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/xmlspecchars.ent" value="dtds/nlm2/xmlspecchars.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlspecchars.ent" value="dtds/nlm2/xmlspecchars.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/archivecustomize.ent" value="dtds/nlm2/archivecustomize.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/articlemeta.ent" value="dtds/nlm2/articlemeta.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/backmatter.ent" value="dtds/nlm2/backmatter.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/chars.ent" value="dtds/nlm2/chars.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/common.ent" value="dtds/nlm2/common.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/default-classes.ent" value="dtds/nlm2/default_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/default-mixes.ent" value="dtds/nlm2/default_mixes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/display.ent" value="dtds/nlm2/display.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/exchange.ent" value="dtds/nlm2/exchange.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/format.ent" value="dtds/nlm2/format.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isoamsa.ent" value="dtds/nlm2/isoamsa.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isoamsb.ent" value="dtds/nlm2/isoamsb.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isoamsc.ent" value="dtds/nlm2/isoamsc.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isoamsn.ent" value="dtds/nlm2/isoamsn.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isoamso.ent" value="dtds/nlm2/isoamso.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isoamsr.ent" value="dtds/nlm2/isoamsr.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isobox.ent" value="dtds/nlm2/isobox.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isodia.ent" value="dtds/nlm2/isodia.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isomfrk.ent" value="dtds/nlm2/isomfrk.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isomopf.ent" value="dtds/nlm2/isomopf.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isomscr.ent" value="dtds/nlm2/isomscr.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isonum.ent" value="dtds/nlm2/isonum.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isopub.ent" value="dtds/nlm2/isopub.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/isotech.ent" value="dtds/nlm2/isotech.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalmeta.ent" value="dtds/nlm2/journalmeta.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpub-classes.ent" value="dtds/nlm2/journalpub_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpubcustom-classes.ent" value="dtds/nlm2/journalpubcustom_classes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpubcustomize.ent" value="dtds/nlm2/journalpubcustomize.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpubcustom-mix.ent" value="dtds/nlm2/journalpubcustom_mix.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpubcustom-mixes.ent" value="dtds/nlm2/journalpubcustom_mixes.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpubcustom-models.ent" value="dtds/nlm2/journalpubcustom_models.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpubcustom-modules.ent" value="dtds/nlm2/journalpubcustom_modules.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/link.ent" value="dtds/nlm2/link.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/list.ent" value="dtds/nlm2/list.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/math.ent" value="dtds/nlm2/math.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/modules.ent" value="dtds/nlm2/modules.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/nlm-citation.ent" value="dtds/nlm2/nlm_citation.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/nlmcitation.ent" value="dtds/nlm2/nlmcitation.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/notat.ent" value="dtds/nlm2/notat.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/oasis-exchange.ent" value="dtds/nlm2/oasis_exchange.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/oasis-tablesetup.ent" value="dtds/nlm2/oasis_tablesetup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/para.ent" value="dtds/nlm2/para.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/phrase.ent" value="dtds/nlm2/phrase.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/references.ent" value="dtds/nlm2/references.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/section.ent" value="dtds/nlm2/section.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/tablesetup.ent" value="dtds/nlm2/tablesetup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/tbl.ent" value="dtds/nlm2/tbl.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/journalpubcustom-modules.ent" value="dtds/nlm2/journalpubcustom_modules.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/XHTMLtablesetup.ent" value="dtds/nlm2/xhtml_tablesetup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/htmltable.dtd" value="dtds/nlm2/htmltable.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isolat1.ent" value="dtds/nlm2/isolat1.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isolat2.ent" value="dtds/nlm2/isolat2.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isobox.ent" value="dtds/nlm2/xmlchars_isobox.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isodia.ent" value="dtds/nlm2/xmlchars_isodia.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isonum.ent" value="dtds/nlm2/xmlchars_isonum.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isopub.ent" value="dtds/nlm2/xmlchars_isopub.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isotech.ent" value="dtds/nlm2/xmlchars_isotech.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isogrk1.ent" value="dtds/nlm2/xmlchars_isogrk1.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isogrk2.ent" value="dtds/nlm2/xmlchars_isogrk2.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isogrk3.ent" value="dtds/nlm2/xmlchars_isogrk3.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isogrk4.ent" value="dtds/nlm2/xmlchars_isogrk4.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isogrk5.ent" value="dtds/nlm2/xmlchars_isogrk5.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isocyr1.ent" value="dtds/nlm2/xmlchars_isocyr1.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isocyr2.ent" value="dtds/nlm2/xmlchars_isocyr2.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isoamsa.ent" value="dtds/nlm2/xmlchars_isoamsa.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isoamsb.ent" value="dtds/nlm2/xmlchars_isoamsb.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isoamsc.ent" value="dtds/nlm2/xmlchars_isoamsc.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isoamsn.ent" value="dtds/nlm2/xmlchars_isoamsn.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isoamso.ent" value="dtds/nlm2/xmlchars_isoamso.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isoamsr.ent" value="dtds/nlm2/xmlchars_isoamsr.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isomscr.ent" value="dtds/nlm2/xmlchars_isomscr.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isomfrk.ent" value="dtds/nlm2/xmlchars_isomfrk.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/xmlchars/isomopf.ent" value="dtds/nlm2/xmlchars_isomopf.ent" />
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/mathml2.dtd" value="dtds/nlm2/mathml2.dtd"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/mathmlsetup.ent" value="dtds/nlm2/mathmlsetup.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/mathml/mathml2-qname-1.mod" value="dtds/nlm2/mathml2_qname1.mod"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/mathml/mmlalias.ent" value="dtds/nlm2/mathml_mmlalias.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/publishing/2.0/mathml/mmlextra.ent" value="dtds/nlm2/mmlextra.ent"/>
+        <entry key="http://dtd.nlm.nih.gov/2.0/mathmlsetup.ent" value="dtds/nlm2/mathmlsetup.ent"/>
+      </map>
+    </property>
+  </bean>
+
+</beans>

@@ -22,6 +22,7 @@
 package org.ambraproject.service.xml;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,6 @@ public class XMLServiceImpl implements XMLService {
   private Map<String, String> xslTemplateMap;
   private DocumentBuilderFactory factory;
   private String articleRep;
-  private Map<String, String> xmlFactoryProperty;
 
   // designed for Singleton use, set in init(), then Templates are threadsafe for reuse
   private Templates translet;             // initialized from xslTemplate, per bean property
@@ -76,20 +76,12 @@ public class XMLServiceImpl implements XMLService {
    * @throws org.ambraproject.ApplicationException On Template creation Exceptions.
    */
   public void init() throws ApplicationException {
-    // set JAXP properties
-    System.getProperties().putAll(xmlFactoryProperty);
-
-    // Create a document builder factory and set the defaults
-    factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware(true);
-    factory.setValidating(false);
-
     // set the Templates
     final TransformerFactory tFactory = TransformerFactory.newInstance();
 
     //Because we have XSL sheets with import statements.  I override the URI resolver
     //here so the factory knows to look inside the jar files for these files
-    tFactory.setURIResolver(new XMLServiceURIResolver());
+    tFactory.setURIResolver(new XMLServiceURIResolver(factory));
 
     try {
       log.debug("Loading XSL: {}", xslDefaultTemplate);
@@ -112,7 +104,7 @@ public class XMLServiceImpl implements XMLService {
   @Override
   public String getTransformedDocument(String description) throws ApplicationException {
     try {
-      final DocumentBuilder builder = createDocBuilder();
+      final DocumentBuilder builder = factory.newDocumentBuilder();
       Document desc =
           builder.parse(new InputSource(new StringReader("<desc>" + description + "</desc>")));
       return getTransformedDocument (desc);
@@ -155,7 +147,7 @@ public class XMLServiceImpl implements XMLService {
   public byte[] getTransformedByArray(byte[] xml) throws ApplicationException {
     try {
 
-      Document doc = createDocBuilder().parse(new ByteArrayInputStream(xml));
+      Document doc = factory.newDocumentBuilder().parse(new ByteArrayInputStream(xml));
       Transformer transformer = this.getTranslet(doc);
       DOMSource domSource = new DOMSource(doc);
 
@@ -172,7 +164,7 @@ public class XMLServiceImpl implements XMLService {
     try {
       final Writer writer = new StringWriter(1000);
 
-      Document doc = createDocBuilder().parse(xml);
+      Document doc = factory.newDocumentBuilder().parse(xml);
       Transformer transformer = this.getTranslet(doc);
       DOMSource domSource = new DOMSource(doc);
       transformer.transform(domSource, new StreamResult(writer));
@@ -194,7 +186,7 @@ public class XMLServiceImpl implements XMLService {
   public String getTransformedDescription(String description) throws ApplicationException {
     String transformedString;
     try {
-      final DocumentBuilder builder = createDocBuilder();
+      final DocumentBuilder builder = factory.newDocumentBuilder();
       Document desc = builder.parse(new InputSource(new StringReader("<desc>" + description + "</desc>")));
       final DOMSource domSource = new DOMSource(desc);
       final Transformer transformer = getTranslet(desc);
@@ -209,21 +201,6 @@ public class XMLServiceImpl implements XMLService {
     // Ambra stylesheet leaves "END_TITLE" as a marker for other processes
     transformedString = transformedString.replace("END_TITLE", "");
     return transformedString;
-  }
-
-  /**
-   * Convenience method to create a DocumentBuilder with the factory configs
-   *
-   * @return Document Builder
-   * @throws javax.xml.parsers.ParserConfigurationException
-   */
-  @Override
-  public DocumentBuilder createDocBuilder() throws ParserConfigurationException {
-    // Create the builder and parse the file
-    final DocumentBuilder builder = factory.newDocumentBuilder();
-    builder.setEntityResolver(CachedSource.getResolver());
-
-    return builder;
   }
 
   /**
@@ -251,7 +228,7 @@ public class XMLServiceImpl implements XMLService {
       final TransformerFactory tFactory = TransformerFactory.newInstance();
       //Because we have XSL sheets with import statements.  I override the URI resolver
       //here so the factory knows to look inside the jar files for these files
-      tFactory.setURIResolver(new XMLServiceURIResolver());
+      tFactory.setURIResolver(new XMLServiceURIResolver(factory));
 
       //TODO: (performace) We should cache the translets when this class is initialized.  We don't need
       //to parse the XSLs for every transform.
@@ -307,12 +284,9 @@ public class XMLServiceImpl implements XMLService {
     this.articleRep = articleRep;
   }
 
-  /**
-   * @param xmlFactoryProperty The xmlFactoryProperty to set.
-   */
   @Required
-  public void setXmlFactoryProperty(Map<String, String> xmlFactoryProperty) {
-    this.xmlFactoryProperty = xmlFactoryProperty;
+  public void setFactory(DocumentBuilderFactory factory) {
+    this.factory = factory;
   }
 
   /**
@@ -348,13 +322,24 @@ public class XMLServiceImpl implements XMLService {
   }
 
   class XMLServiceURIResolver implements URIResolver {
+    private final DocumentBuilderFactory documentBuilderFactory;
+
+    XMLServiceURIResolver(DocumentBuilderFactory documentBuilderFactory) {
+      this.documentBuilderFactory = documentBuilderFactory;
+    }
+
     @Override
     public Source resolve(String href, String base) throws TransformerException {
+      InputStream inputStream = null;
       try {
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(href);
-        return new StreamSource(inputStream);
+        inputStream = this.getClass().getClassLoader().getResourceAsStream(href);
+        return new DOMSource(documentBuilderFactory.newDocumentBuilder().parse(inputStream));
       } catch(Exception ex) {
         throw new TransformerException(ex.getMessage(), ex);
+      } finally {
+        if (inputStream != null) {
+          IOUtils.closeQuietly(inputStream);
+        }
       }
     }
   }

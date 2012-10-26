@@ -27,10 +27,12 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
-
   <!-- Set up XML factories -->
-  <bean id="documentBuilderFactory" class="org.ambraproject.util.DocumentBuilderFactoryCreator"
-        factory-method="createFactory"/>
+  <import resource="classpath:dtds-context.xml"/>
+
+  <bean id="documentBuilderFactory" class="org.ambraproject.util.DocumentBuilderFactoryCreator" factory-method="createFactory">
+    <constructor-arg ref="dtds"/>
+  </bean>
 
   <!--Ambra developer beans here -->
   <bean id="configurationStore" class="org.topazproject.ambra.configuration.ConfigurationStore"
@@ -43,6 +45,7 @@
     <property name="annotationService" ref="annotationService"/>
     <property name="fileStoreService" ref="fileStoreService"/>
     <property name="articleTransformService" ref="articleTransformService"/>
+    <property name="documentBuilderFactory" ref="documentBuilderFactory"/>
   </bean>
 
   <bean id="articleAssetService" class="org.ambraproject.service.article.ArticleAssetServiceImpl">
@@ -81,7 +84,7 @@
     <property name="xslDefaultTemplate" value="${ambra.services.articletransform.default}"/>
     <property name="xslTemplateMap" ref="xslArticleTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="factory" ref="documentBuilderFactory"/>
   </bean>
 
   <!-- Defined in webapp/src/main/resources/ambra/configuration/defaults.xml -->
@@ -99,7 +102,7 @@
     <property name="xslDefaultTemplate" value="${ambra.services.fulldoitransform.default}"/>
     <property name="xslTemplateMap" ref="xslFullDoiStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="factory" ref="documentBuilderFactory"/>
   </bean>
 
   <!-- Defined in webapp/src/main/resources/ambra/configuration/defaults.xml -->
@@ -117,15 +120,8 @@
     <property name="xslDefaultTemplate" value="${ambra.services.objinfotransform.default}"/>
     <property name="xslTemplateMap" ref="xslObjInfoStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="factory" ref="documentBuilderFactory"/>
   </bean>
-
-  <util:map id="xmlFactoryProperties">
-    <entry key="javax.xml.transform.TransformerFactory"
-           value="net.sf.saxon.TransformerFactoryImpl"/>
-    <entry key="javax.xml.transform.Transformer"
-           value="net.sf.saxon.Controller"/>
-  </util:map>
 
   <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>

@@ -52,6 +52,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.activation.DataSource;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -79,19 +80,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   private AnnotationService annotationService;
   private FileStoreService fileStoreService;
   private Cache articleHtmlCache;
+  private DocumentBuilderFactory documentBuilderFactory;
 
   private String getTransformedArticle(final ArticleInfo article)
       throws ApplicationException, NoSuchArticleIdException {
     try {
-//      Document dom = getAnnotatedContentAsDocument(article);
-//
-//      if(log.isDebugEnabled()) {
-//        DOMImplementationLS domImplLS = (DOMImplementationLS) dom
-//          .getImplementation();
-//        LSSerializer serializer = domImplLS.createLSSerializer();
-//        log.debug(serializer.writeToString(dom));
-//      }
-
       // There are two cases where we need to render content in the HTML that's not in the XML (or that's difficult
       // to get from the XML): annotations and extra links in the citations.  In these cases, we first load the DOM
       // representation of the XML, then decorate it with the extra info before the XSLT.
@@ -186,7 +179,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       log.debug("Parsing article xml ...");
 
     try {
-      doc = articleTransformService.createDocBuilder().parse(content.getInputStream());
+      doc = documentBuilderFactory.newDocumentBuilder().parse(content.getInputStream());
     } catch (Exception e){
       throw new ApplicationException(e.getMessage(), e);
     }
@@ -245,7 +238,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     }
 
     try {
-      doc = articleTransformService.createDocBuilder().parse(content.getInputStream());
+      doc = documentBuilderFactory.newDocumentBuilder().parse(content.getInputStream());
     } catch (Exception e) {
       log.error("Error parsing the article xml for article " + articleURI, e);
       return null;
@@ -619,6 +612,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   @Required
   public void setFileStoreService(FileStoreService fileStoreService) {
     this.fileStoreService = fileStoreService;
+  }
+
+  @Required
+  public void  setDocumentBuilderFactory(DocumentBuilderFactory documentBuilderFactory) {
+    this.documentBuilderFactory = documentBuilderFactory;
   }
 
   private static class ByteArrayDataSource implements DataSource {

@@ -21,6 +21,9 @@
 
 package org.ambraproject.util;
 
+import org.ambraproject.action.BaseTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -28,8 +31,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -37,22 +40,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick Date: 6/6/11
  *         <p/>
  *         org.ambraproject.util
  */
-public class XPathUtilTest {
+public class XPathUtilTest extends BaseTest {
 
-  private final File testXmlFile;
-  private final Document testXml;
+  private File testXmlFile;
+  private Document testXml;
   private XPathUtil xPathUtil = new XPathUtil();
 
-  public XPathUtilTest() throws Exception {
+  @Autowired
+  protected DocumentBuilderFactory documentBuilderFactory;
+
+  @BeforeMethod
+  public void init() throws Exception {
     testXmlFile = new File(getClass().getClassLoader().getResource("ambra-test-config.xml").toURI());
-    DocumentBuilder documentBuilder = DocumentBuilderFactoryCreator.createFactory().newDocumentBuilder();
+    DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
     testXml = documentBuilder.parse(testXmlFile);
   }
 

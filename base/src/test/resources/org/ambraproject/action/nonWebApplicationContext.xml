@@ -56,8 +56,11 @@
   <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
 
   <!-- Set up XML factories -->
+  <import resource="classpath:dtds-context.xml"/>
   <bean id="documentBuilderFactory" class="org.ambraproject.util.DocumentBuilderFactoryCreator"
-        factory-method="createFactory"/>
+        factory-method="createFactory">
+    <constructor-arg ref="dtds"/>
+  </bean>
   <bean id="documentBuilder" factory-bean="documentBuilderFactory" factory-method="newDocumentBuilder"/>
 
   <!--Service Beans-->
@@ -161,7 +164,7 @@
     <property name="xslDefaultTemplate" value="${project.basedir}/target/classes/articleTransform.xsl"/>
     <property name="xslTemplateMap" ref="xslArticleTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="factory" ref="documentBuilderFactory"/>
   </bean>
 
   <bean id="xmlService" class="org.ambraproject.service.xml.XMLServiceImpl" init-method="init">
@@ -169,7 +172,7 @@
     <property name="xslDefaultTemplate" value="${project.basedir}/target/classes/articleTransform.xsl"/>
     <property name="xslTemplateMap" ref="xslArticleTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="factory" ref="documentBuilderFactory"/>
   </bean>
 
   <util:map id="xslObjTransformStyleSheetMap">
@@ -186,7 +189,7 @@
     <property name="xslDefaultTemplate" value="${project.basedir}/src/main/resources/objInfo.xsl"/>
     <property name="xslTemplateMap" ref="xslObjTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="factory" ref="documentBuilderFactory"/>
   </bean>
 
   <util:map id="xmlFactoryProperties">
@@ -212,6 +215,7 @@
     <property name="annotationService" ref="annotationService"/>
     <property name="fileStoreService" ref="fileStoreService"/>
     <property name="articleTransformService" ref="xmlService"/>
+    <property name="documentBuilderFactory" ref="documentBuilderFactory"/>
   </bean>
 
   <bean id="passwordDigestService" class="org.topazproject.ambra.service.password.PasswordDigestService">

@@ -68,6 +68,9 @@ public class XMLServiceTest extends BaseTest {
   @Qualifier("viewNLMService")
   protected XMLServiceImpl viewNLMService;
 
+  @Autowired
+  protected DocumentBuilderFactory documentBuilderFactory;
+
   @BeforeClass
   protected void setUp() throws Exception {
 
@@ -112,7 +115,7 @@ public class XMLServiceTest extends BaseTest {
       throws URISyntaxException, ApplicationException, SAXException, IOException,
       ParserConfigurationException {
 
-    final DocumentBuilder builder = viewNLMService.createDocBuilder();
+    final DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
     Document doc = builder.parse(new InputSource(new StringReader(source)));
     String result = secondaryObjectService.getTransformedDocument(doc);
 

@@ -76,15 +76,6 @@ public interface XMLService {
   public String getTransformedDescription(String description) throws ApplicationException;
 
   /**
-   * Convenience method to create a DocumentBuilder with the factory configs
-   *
-   * @return Document Builder
-   * @throws ParserConfigurationException
-   */
-  public DocumentBuilder createDocBuilder() throws ParserConfigurationException;
-
-
-  /**
    * @return Returns the articleRep.
    */
   public String getArticleRep();
