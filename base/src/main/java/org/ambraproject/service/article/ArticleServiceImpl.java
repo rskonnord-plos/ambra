@@ -22,6 +22,7 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.UserProfileInfo;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
@@ -630,9 +631,24 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * {@inheritDoc}
    */
   @Override
+  @SuppressWarnings("unchecked")
   @Transactional(readOnly = true)
-  public CitedArticle getCitedArticle(long citedArticleID) {
-    return hibernateTemplate.get(CitedArticle.class, citedArticleID);
+  public CitedArticleView getCitedArticle(long citedArticleID) {
+    //TODO, unit test needed SE-133
+    List<String> results = (List<String>)hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Article.class)
+        .setProjection(Projections.property("doi"))
+        .createCriteria("citedArticles", "ca")
+        .add(Restrictions.eq("ca.ID", citedArticleID)));
+
+    if(results.size() == 0) {
+      return null;
+    }
+
+    CitedArticle citedArticle = hibernateTemplate.get(CitedArticle.class, citedArticleID);
+    String doi = results.get(0);
+
+    return new CitedArticleView(doi, citedArticle);
   }
 
   /**

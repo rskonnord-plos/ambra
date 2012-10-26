@@ -22,6 +22,7 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.CitedArticle;
@@ -180,15 +181,13 @@ public interface ArticleService {
   public ArticleInfo getBasicArticleView(String articleDoi) throws NoSuchArticleIdException;
 
   // TODO: consider moving these two methods into a new CitedArticleService.  Seems like overkill for now.
-
   /**
    * Loads a CitedArticle from the DB.
    *
    * @param citedArticleID primary key
    * @return the CitedArticle instance
-   * @throws NoSuchArticleIdException
    */
-  public CitedArticle getCitedArticle(long citedArticleID);
+  public CitedArticleView getCitedArticle(long citedArticleID);
 
   /**
    * Saves a CitedArticle's doi property.
