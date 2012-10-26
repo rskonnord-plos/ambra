@@ -59,7 +59,7 @@ public class CreateFlagAction extends BaseSessionAwareActionSupport {
     }
 
     addActionMessage("Flag created with id:" + flagId);
-    
+
     return SUCCESS;
   }
 
@@ -82,6 +82,7 @@ public class CreateFlagAction extends BaseSessionAwareActionSupport {
 
   /**
    * Set the comment of the annotation
+   *
    * @param comment comment
    */
   public void setComment(final String comment) {
@@ -94,6 +95,7 @@ public class CreateFlagAction extends BaseSessionAwareActionSupport {
 
   /**
    * Set the reason code for this flag
+   *
    * @param reasonCode reasonCode
    */
   public void setReasonCode(final String reasonCode) {

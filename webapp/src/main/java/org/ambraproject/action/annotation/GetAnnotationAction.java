@@ -32,7 +32,6 @@ import java.text.ParseException;
 
 /**
  * Used to fetch an annotation given an id.
- *
  */
 @SuppressWarnings("serial")
 public class GetAnnotationAction extends BaseActionSupport {
@@ -56,6 +55,7 @@ public class GetAnnotationAction extends BaseActionSupport {
 
   /**
    * Set the annotationId for the annotation to fetch
+   *
    * @param annotationId annotationId
    */
   public void setAnnotationId(final Long annotationId) {
@@ -80,7 +80,8 @@ public class GetAnnotationAction extends BaseActionSupport {
 
   /**
    * Returns Milliseconds representation of the CIS start date
-   * @return Milliseconds representation of the CIS start date 
+   *
+   * @return Milliseconds representation of the CIS start date
    * @throws Exception on bad config data or config entry not found.
    */
   public long getCisStartDateMillis() throws Exception {

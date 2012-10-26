@@ -59,8 +59,7 @@ public class CreateAnnotationAction extends BaseSessionAwareActionSupport {
   private static final Logger log = LoggerFactory.getLogger(CreateAnnotationAction.class);
 
   /**
-   * {@inheritDoc}
-   * Also does some profanity check for commentTitle and comment before creating the annotation.
+   * {@inheritDoc} Also does some profanity check for commentTitle and comment before creating the annotation.
    */
   @Override
   public String execute() throws Exception {

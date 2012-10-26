@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 /**
  * Basic action for the start discussion page. just fetches up article doi and title.
+ *
  * @author Alex Kudlick 4/12/12
  */
 public class StartDiscussionAction extends BaseActionSupport {

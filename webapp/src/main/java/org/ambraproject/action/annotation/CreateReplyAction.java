@@ -40,7 +40,7 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
   private String comment;
   private String ciStatement;
   private boolean isCompetingInterest = false;
-  
+
   private ProfanityCheckingService profanityCheckingService;
   private AnnotationService annotationService;
 
@@ -50,7 +50,7 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
   public String execute() throws Exception {
     if (isInvalid())
       return INPUT;
-    
+
     try {
       final List<String> profaneWordsInTitle = profanityCheckingService.validate(commentTitle);
       final List<String> profaneWordsInBody = profanityCheckingService.validate(comment);
@@ -78,12 +78,12 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
   }
 
   private boolean isInvalid() {
-   /**
-    * This is a little odd that part of validation happens here and
-    * part of it occurs as validators on the object properties
-    * TODO: Revisit and recombine?  Or perhaps author a generic validator that can handle
-    * the logic defined below
-    **/
+    /**
+     * This is a little odd that part of validation happens here and
+     * part of it occurs as validators on the object properties
+     * TODO: Revisit and recombine?  Or perhaps author a generic validator that can handle
+     * the logic defined below
+     **/
     boolean invalid = false;
 
     if (StringUtils.isEmpty(commentTitle)) {
@@ -108,14 +108,14 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
       }
     }
 
-    if(this.isCompetingInterest) {
+    if (this.isCompetingInterest) {
       if (StringUtils.isEmpty(ciStatement)) {
         addFieldError("statement", "You must say something in your competing interest statement");
         invalid = true;
       } else {
         if (ciStatement.length() > Constants.Length.CI_STATEMENT_MAX) {
           addFieldError("statement", "Your competing interest statement is " +
-              ciStatement.length() + " characters long, it can not be longer than " + 
+              ciStatement.length() + " characters long, it can not be longer than " +
               Constants.Length.CI_STATEMENT_MAX + ".");
           invalid = true;
         }
@@ -131,6 +131,7 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
 
   /**
    * Set the competing interest statement of the annotation
+   *
    * @param ciStatement Statement
    */
   public void setCiStatement(final String ciStatement) {
@@ -139,6 +140,7 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
 
   /**
    * Set wether this reply has a competing interest statement or not
+   *
    * @param isCompetingInterest does this annotation have competing interests?
    */
   public void setIsCompetingInterest(final boolean isCompetingInterest) {
@@ -152,6 +154,7 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
   public void setCommentTitle(final String commentTitle) {
     this.commentTitle = commentTitle;
   }
+
   public void setComment(final String comment) {
     this.comment = comment;
   }
