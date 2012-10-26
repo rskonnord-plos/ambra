@@ -1,6 +1,6 @@
 /*
- * $HeadURL: http://ambraproject.org/svn/ambra/ambra/branches/aggregation-hydra/base/src/main/java/org/ambraproject/views/LinkbackView.java $
- * $Id: LinkbackView.java 11439 2012-08-09 23:25:38Z akudlick $
+ * $HeadURL$
+ * $Id$
  *
  * Copyright (c) 2007-2012 by Public Library of Science
  * http://plos.org
