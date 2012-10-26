@@ -1,7 +1,7 @@
 /********** home.css **********/
 
 
-#pagebdy-wrap { background: #efefef; }
+#pagebdy-wrap { background: #efefef; }  
 #pagebdy { padding-top: 30px; }
 
 
@@ -11,7 +11,7 @@
 .tab-nav { padding: 5px 0 25px; }
 .tab-nav li { float: left; margin-right: 5px; font-size: 15px; line-height: 1; }
 .tab-nav a { display: block; background: #333; color: #fff; font-weight: bold; padding: 9px 12px 11px; border-radius: 4px; }
-.tab-nav .active a,
+.tab-nav .active a { background: #f8af2d; text-decoration: none; }
 .tab-nav a:hover { background: #3c63af; text-decoration: none; }
 #headlines .tab-content { padding-right: 20px; }
 .js .tab-pane + .tab-pane,
@@ -116,7 +116,7 @@
 
 .explore { padding: 0 5px 0 10px; margin-bottom: 30px; }
 .explore h2 { font: 30px 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; margin-bottom: 25px; }
-.explore ul { width: 285px; }
+.explore ul { width: 290px; }
 .explore li { font-size: 15px; padding-left: 15px; background: url(../images/bul.blu.png) no-repeat 0 8px; margin-bottom: 6px; }
 .explore li a img { visibility: hidden; }
 .explore li:hover a img { visibility: visible; }
