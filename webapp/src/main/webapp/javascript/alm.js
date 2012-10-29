@@ -1249,45 +1249,70 @@ $(document).ready(
     //If the almViews node exists, assume almCitations exists as well and populate them with
     //TODO: Review if this should go into it's own file or not.
     //Appropriate results.
-    if($('#almViews')) {
+    if($("#almSignPost")) {
       var almService = new $.fn.alm(),
         doi = $('meta[name=citation_doi]').attr("content"),
         publishDate = $.datepicker.parseDate("yy/m/d", $('meta[name=citation_date]').attr("content")),
         publishDatems = publishDate.getTime();
 
-      var almChartError = function(message) {
-        $("#almViews").css("display","none");
-        $("#almViews").html(message);
-        $("#almViews").fadeIn(500);
+      var almError = function(message) {
+        $("#almSignPostSpinner").css("display", "none");
+
+        var li = $('<li><span class="num">' + message + '</span> error</li>');
+        $("#almSignPost").append(li);
+        $("#almSignPost").fadeIn(500);
       };
 
-      var almChartSuccess = function(response) {
-        var data = almService.massageChartData(response.article.source, publishDatems);
-        $("#almViews").css("display","none");
-        $("#almViews").html(data.total.format(0,'.',','));
-        $("#almViews").fadeIn(500);
+      var almSuccess = function(response) {
+        $("#almSignPostPlaceHolder").css("display", "none");
+
+        if(response[0].groups.length > 0) {
+          var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
+
+          var li = $('<li><span class="num">' + viewdata.total.format(0,'.',',') + '</span> VIEWS<br/><br/></li>');
+          $("#almSignPost").append(li);
+        }
+
+        var scopus = 0;
+        var bookmarks = 0;
+        var shares = 0;
+
+        for(var curGroup = 0; curGroup < response[0].groupcounts.length; curGroup++) {
+          for(var curSource = 0; curSource < response[0].groupcounts[curGroup].sources.length; curSource++) {
+            var name = response[0].groupcounts[curGroup].sources[curSource].source;
+            var count = response[0].groupcounts[curGroup].sources[curSource].count;
+
+            if(name == "Scopus") {
+              scopus = count;
+            }
+
+            if(name == "Mendeley" || name == "CiteULike" || name == "Connotea") {
+              bookmarks += count;
+            }
+
+            if(name == "Facebook" || name == "Twitter") {
+              shares += count;
+            }
+          }
+        }
+
+        if(scopus > 0) {
+          var li = $('<li><span class="num">' + scopus.format(0,'.',',') + '</span> CITATIONS</li>');
+          $("#almSignPost").append(li);
+        }
+
+        if(bookmarks > 0) {
+          var li = $('<li><span class="num">' + bookmarks.format(0,'.',',') + '</span> ACADEMIC BOOKMARKS</li>');
+          $("#almSignPost").append(li);
+        }
+
+        if(shares > 0) {
+          var li = $('<li><span class="num">' + shares.format(0,'.',',') + '</span> SOCIAL SHARES</li>');
+          $("#almSignPost").append(li);
+        }
       };
 
-      almService.getChartData(doi, almChartSuccess, almChartError);
-
-      var almCitationError = function(message) {
-        //$("#almCitationsSpinny").fadeOut('slow');
-        $("#almCitations").css("display","none");
-        $("#almCitations").html(message);
-        $("#almCitations").fadeIn(500);
-      };
-
-      var almCitationSuccess = function(response) {
-        //slight pause so the rendering doesn't appear awkward
-        setTimeout(function() {
-          var count = response.article.source[0].count;
-          $("#almCitations").css("display","none");
-          $("#almCitations").html(count.format(0,'.',','));
-          $("#almCitations").fadeIn(500);
-        }, 150);
-      };
-
-      almService.getCitesScopusOnly(doi, almCitationSuccess, almCitationError);
+      almService.getSummaryForArticles([ doi ], almSuccess, almError);
     }
   }
 );
