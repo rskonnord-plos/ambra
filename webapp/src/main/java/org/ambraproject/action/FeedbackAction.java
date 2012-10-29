@@ -288,7 +288,7 @@ public class FeedbackAction extends UserActionSupport {
    * This field is defined in the form that the google recaptcha sends us and
    * as best as I can tell, can't be changed.
    *
-   * @param recaptcha_challenge_field
+   * @param recaptcha_response_field
    */
   public void setRecaptcha_response_field(String recaptcha_response_field) {
     captchaResponse = recaptcha_response_field;
