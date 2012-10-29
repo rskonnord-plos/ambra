@@ -85,45 +85,43 @@ public class CreateReplyAction extends BaseSessionAwareActionSupport {
      * the logic defined below
      **/
     boolean invalid = false;
-
-    if (StringUtils.isEmpty(commentTitle)) {
-      addFieldError("commentTitle", "A title is required.");
-      invalid = true;
-    } else {
-      if (commentTitle.length() > Constants.Length.COMMENT_TITLE_MAX) {
-        addFieldError("commentTitle", "Your title is " + commentTitle.length() +
-            " characters long, it can not be longer than " + Constants.Length.COMMENT_TITLE_MAX + ".");
-        invalid = true;
-      }
-    }
-
-    if (StringUtils.isEmpty(comment)) {
-      addFieldError("comment", "You must say something in your comment");
-      invalid = true;
-    } else {
-      if (comment.length() > Constants.Length.COMMENT_BODY_MAX) {
-        addFieldError("comment", "Your comment is " + comment.length() +
-            " characters long, it can not be longer than " + Constants.Length.COMMENT_BODY_MAX + ".");
-        invalid = true;
-      }
-    }
-
+    invalid |= validateField("commentTitle", commentTitle, Constants.Length.COMMENT_TITLE_MAX,
+        "title", "A title is required.");
+    invalid |= validateField("comment", comment, Constants.Length.COMMENT_BODY_MAX,
+        "comment", "You must say something in your comment.");
     if (this.isCompetingInterest) {
-      if (StringUtils.isEmpty(ciStatement)) {
-        addFieldError("statement", "You must say something in your competing interest statement");
-        invalid = true;
-      } else {
-        if (ciStatement.length() > Constants.Length.CI_STATEMENT_MAX) {
-          addFieldError("statement", "Your competing interest statement is " +
-              ciStatement.length() + " characters long, it can not be longer than " +
-              Constants.Length.CI_STATEMENT_MAX + ".");
-          invalid = true;
-        }
-      }
+      invalid |= validateField("statement", ciStatement, Constants.Length.CI_STATEMENT_MAX,
+          "competing interest statement", "You must say something in your competing interest statement.");
     }
-
     return invalid;
   }
+
+  /**
+   * Add a field error if a user-submitted string was invalid.
+   *
+   * @param fieldName              the identity of the field being checked
+   * @param fieldValue             the value that the user submitted
+   * @param maxCharacters          the maximum length of a valid value
+   * @param humanReadableFieldName how to describe the field to the user
+   * @param emptyMessage           the message to show the user if the value is blank
+   * @return {@code true} if invalid; {@code false} if valid
+   */
+  private boolean validateField(String fieldName, String fieldValue, int maxCharacters,
+                                String humanReadableFieldName, String emptyMessage) {
+    if (StringUtils.isEmpty(fieldValue)) {
+      addFieldError(fieldName, emptyMessage);
+      return true;
+    }
+    int length = fieldValue.length();
+    if (length > maxCharacters) {
+      String lengthMessage = String.format("Your %s is %d characters long; it cannot be longer than %d characters.",
+          humanReadableFieldName, length, maxCharacters);
+      addFieldError(fieldName, lengthMessage);
+      return true;
+    }
+    return false;
+  }
+
 
   public Long getReplyId() {
     return replyId;
