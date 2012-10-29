@@ -80,6 +80,7 @@
         pages varchar(255),
         eLocationId varchar(255),
         url varchar(255),
+        strkImgURI varchar(255),
         date datetime,
         volume varchar(255),
         issue varchar(255),
