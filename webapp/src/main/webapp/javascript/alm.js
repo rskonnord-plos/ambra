@@ -181,236 +181,236 @@ $.fn.alm = function () {
         return 1;
       }
     }
-  },
+  }
 
     /*
      * Massage the chart data into a more 'chartable' structure
      **/
-    this.massageChartData = function(sources, pubDateMS) {
-      //Do some final calculations on the results
-      var pubDate = new Date(pubDateMS);
-      var pubYear = pubDate.getFullYear();
-      //Add one as getMonth is zero based
-      var pubMonth = pubDate.getMonth() + 1;
-      var counterViews = null;
-      var pmcViews = null;
-      var result = {};
+  this.massageChartData = function(sources, pubDateMS) {
+    //Do some final calculations on the results
+    var pubDate = new Date(pubDateMS);
+    var pubYear = pubDate.getFullYear();
+    //Add one as getMonth is zero based
+    var pubMonth = pubDate.getMonth() + 1;
+    var counterViews = null;
+    var pmcViews = null;
+    var result = {};
 
-      for(var a = 0; a < sources.length; a++) {
-        if(sources[a].source == "Counter") {
-          counterViews = sources[a].events;
+    for(var a = 0; a < sources.length; a++) {
+      if(sources[a].source == "Counter") {
+        counterViews = sources[a].events;
+        //Make sure everything is in the right order
+        counterViews = counterViews.sort(this.sortByYearMonth);
+      }
+
+      if(sources[a].source == "PubMed Central Usage Stats") {
+        if(sources[a].events != null && sources[a].events.length > 0) {
+          pmcViews = sources[a].events;
           //Make sure everything is in the right order
-          counterViews = counterViews.sort(this.sortByYearMonth);
-        }
-
-        if(sources[a].source == "PubMed Central Usage Stats") {
-          if(sources[a].events != null && sources[a].events.length > 0) {
-            pmcViews = sources[a].events;
-            //Make sure everything is in the right order
-            pmcViews = pmcViews.sort(this.sortByYearMonth);
-          }
+          pmcViews = pmcViews.sort(this.sortByYearMonth);
         }
       }
+    }
 
-      result.totalPDF = 0;
-      result.totalXML = 0;
-      result.totalHTML = 0;
-      result.total = 0;
-      result.history = {};
+    result.totalPDF = 0;
+    result.totalXML = 0;
+    result.totalHTML = 0;
+    result.total = 0;
+    result.history = {};
 
-      //Don't display any data from counter for any date before the publication date
-      for(var a = 0; a < counterViews.length; a++) {
-        if(counterViews[a].year < pubYear || (counterViews[a].year == pubYear && counterViews[a].month < pubMonth)) {
-          counterViews.splice(a,1);
-          a--;
-        }
+    //Don't display any data from counter for any date before the publication date
+    for(var a = 0; a < counterViews.length; a++) {
+      if(counterViews[a].year < pubYear || (counterViews[a].year == pubYear && counterViews[a].month < pubMonth)) {
+        counterViews.splice(a,1);
+        a--;
       }
+    }
 
-      var cumulativeCounterPDF = 0;
-      var cumulativeCounterXML = 0;
-      var cumulativeCounterHTML = 0;
-      var cumulativeCounterTotal = 0;
+    var cumulativeCounterPDF = 0;
+    var cumulativeCounterXML = 0;
+    var cumulativeCounterHTML = 0;
+    var cumulativeCounterTotal = 0;
 
-      //Two loops here, the first one assumes there is no data structure
-      //I also assume (for the cumulative counts) that results are in order date descending
-      for(var a = 0; a < counterViews.length; a++) {
-        var totalViews = this.parseIntSafe(counterViews[a].html_views) + this.parseIntSafe(counterViews[a].xml_views) +
-          this.parseIntSafe(counterViews[a].pdf_views);
-        var yearMonth = this.getYearMonth(counterViews[a].year, counterViews[a].month);
+    //Two loops here, the first one assumes there is no data structure
+    //I also assume (for the cumulative counts) that results are in order date descending
+    for(var a = 0; a < counterViews.length; a++) {
+      var totalViews = this.parseIntSafe(counterViews[a].html_views) + this.parseIntSafe(counterViews[a].xml_views) +
+        this.parseIntSafe(counterViews[a].pdf_views);
+      var yearMonth = this.getYearMonth(counterViews[a].year, counterViews[a].month);
 
-        result.history[yearMonth] = {};
-        result.history[yearMonth].source = {};
-        result.history[yearMonth].year = counterViews[a].year;
-        result.history[yearMonth].month = counterViews[a].month;
-        result.history[yearMonth].source["counterViews"] = {};
-        result.history[yearMonth].source["counterViews"].month = counterViews[a].month;
-        result.history[yearMonth].source["counterViews"].year = counterViews[a].year;
-        result.history[yearMonth].source["counterViews"].totalPDF = this.parseIntSafe(counterViews[a].pdf_views);
-        result.history[yearMonth].source["counterViews"].totalXML = this.parseIntSafe(counterViews[a].xml_views);
-        result.history[yearMonth].source["counterViews"].totalHTML = this.parseIntSafe(counterViews[a].html_views);
-        result.history[yearMonth].source["counterViews"].total = totalViews;
+      result.history[yearMonth] = {};
+      result.history[yearMonth].source = {};
+      result.history[yearMonth].year = counterViews[a].year;
+      result.history[yearMonth].month = counterViews[a].month;
+      result.history[yearMonth].source["counterViews"] = {};
+      result.history[yearMonth].source["counterViews"].month = counterViews[a].month;
+      result.history[yearMonth].source["counterViews"].year = counterViews[a].year;
+      result.history[yearMonth].source["counterViews"].totalPDF = this.parseIntSafe(counterViews[a].pdf_views);
+      result.history[yearMonth].source["counterViews"].totalXML = this.parseIntSafe(counterViews[a].xml_views);
+      result.history[yearMonth].source["counterViews"].totalHTML = this.parseIntSafe(counterViews[a].html_views);
+      result.history[yearMonth].source["counterViews"].total = totalViews;
 
-        cumulativeCounterPDF += this.parseIntSafe(counterViews[a].pdf_views);
-        cumulativeCounterXML += this.parseIntSafe(counterViews[a].xml_views);
-        cumulativeCounterHTML += this.parseIntSafe(counterViews[a].html_views);
-        cumulativeCounterTotal += totalViews;
+      cumulativeCounterPDF += this.parseIntSafe(counterViews[a].pdf_views);
+      cumulativeCounterXML += this.parseIntSafe(counterViews[a].xml_views);
+      cumulativeCounterHTML += this.parseIntSafe(counterViews[a].html_views);
+      cumulativeCounterTotal += totalViews;
 
-        //Total views so far (for counter)
-        result.history[yearMonth].source["counterViews"].cumulativePDF = cumulativeCounterPDF;
-        result.history[yearMonth].source["counterViews"].cumulativeXML = cumulativeCounterXML;
-        result.history[yearMonth].source["counterViews"].cumulativeHTML = cumulativeCounterHTML;
-        result.history[yearMonth].source["counterViews"].cumulativeTotal = cumulativeCounterTotal;
+      //Total views so far (for counter)
+      result.history[yearMonth].source["counterViews"].cumulativePDF = cumulativeCounterPDF;
+      result.history[yearMonth].source["counterViews"].cumulativeXML = cumulativeCounterXML;
+      result.history[yearMonth].source["counterViews"].cumulativeHTML = cumulativeCounterHTML;
+      result.history[yearMonth].source["counterViews"].cumulativeTotal = cumulativeCounterTotal;
 
-        //Total views so far (for all sources)
-        result.history[yearMonth].cumulativeTotal = this.parseIntSafe(result.total) + totalViews;
-        result.history[yearMonth].cumulativePDF = result.totalPDF + this.parseIntSafe(counterViews[a].pdf_views);
-        result.history[yearMonth].cumulativeXML = result.totalXML + this.parseIntSafe(counterViews[a].xml_views);
-        result.history[yearMonth].cumulativeHTML = result.totalHTML + this.parseIntSafe(counterViews[a].html_views);
-        result.history[yearMonth].total = totalViews;
+      //Total views so far (for all sources)
+      result.history[yearMonth].cumulativeTotal = this.parseIntSafe(result.total) + totalViews;
+      result.history[yearMonth].cumulativePDF = result.totalPDF + this.parseIntSafe(counterViews[a].pdf_views);
+      result.history[yearMonth].cumulativeXML = result.totalXML + this.parseIntSafe(counterViews[a].xml_views);
+      result.history[yearMonth].cumulativeHTML = result.totalHTML + this.parseIntSafe(counterViews[a].html_views);
+      result.history[yearMonth].total = totalViews;
+
+      //The grand totals
+      result.totalPDF += this.parseIntSafe(counterViews[a].pdf_views);
+      result.totalXML += this.parseIntSafe(counterViews[a].xml_views);
+      result.totalHTML += this.parseIntSafe(counterViews[a].html_views);
+      result.total += totalViews;
+    }
+
+    result.totalCounterPDF = cumulativeCounterPDF;
+    result.totalCounterXML = cumulativeCounterXML;
+    result.totalCounterHTML = cumulativeCounterHTML;
+    result.totalCouterTotal = cumulativeCounterTotal;
+
+    var cumulativePMCPDF = 0;
+    var cumulativePMCHTML = 0;
+    var cumulativePMCTotal = 0;
+
+    if(pmcViews != null) {
+      for(var a = 0; a < pmcViews.length; a++) {
+        var totalViews = this.parseIntSafe(pmcViews[a]["full-text"]) + this.parseIntSafe(pmcViews[a].pdf);
+
+        // even if we don't display all the pmc data, the running total we display should be correct
+        cumulativePMCPDF += this.parseIntSafe(pmcViews[a].pdf);
+        cumulativePMCHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
+        cumulativePMCTotal += totalViews;
+
+        //Total views for the current period
+        var yearMonth = this.getYearMonth(pmcViews[a].year, pmcViews[a].month);
+
+        // if counter doesn't have data for this given month, we are going to ignore it.
+        // we assume that counter data doesn't have any gaps
+
+        // if we add the yearMonth here in the history,
+        // * the order of the data in the history can get messed up.
+        // * the code expects the counter data to exist for the given yearMonth in the history not just pmc data
+        // See PDEV-1074 for more information
+        if(result.history[yearMonth] == null) {
+          continue;
+        }
+
+        result.history[yearMonth].source["pmcViews"] = {};
+
+        //Total views so far (for PMC)
+        result.history[yearMonth].source["pmcViews"].month = pmcViews[a].month;
+        result.history[yearMonth].source["pmcViews"].year = pmcViews[a].year;
+        result.history[yearMonth].source["pmcViews"].cumulativePDF = cumulativePMCPDF;
+        result.history[yearMonth].source["pmcViews"].cumulativeHTML = cumulativePMCHTML;
+        result.history[yearMonth].source["pmcViews"].cumulativeTotal = cumulativePMCTotal;
+
+        result.history[yearMonth].source["pmcViews"].totalPDF = this.parseIntSafe(pmcViews[a].pdf);
+        result.history[yearMonth].source["pmcViews"].totalXML = "n.a.";
+        result.history[yearMonth].source["pmcViews"].totalHTML = this.parseIntSafe(pmcViews[a]["full-text"]);
+        result.history[yearMonth].source["pmcViews"].total = totalViews;
+
+        //Total views so far
+        result.history[yearMonth].total += totalViews;
+        result.history[yearMonth].cumulativeTotal += totalViews;
+        result.history[yearMonth].cumulativePDF += this.parseIntSafe(pmcViews[a].pdf);
+        result.history[yearMonth].cumulativeHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
 
         //The grand totals
-        result.totalPDF += this.parseIntSafe(counterViews[a].pdf_views);
-        result.totalXML += this.parseIntSafe(counterViews[a].xml_views);
-        result.totalHTML += this.parseIntSafe(counterViews[a].html_views);
+        result.totalPDF += this.parseIntSafe(pmcViews[a].pdf);
+        result.totalHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
         result.total += totalViews;
       }
+    }
 
-      result.totalCounterPDF = cumulativeCounterPDF;
-      result.totalCounterXML = cumulativeCounterXML;
-      result.totalCounterHTML = cumulativeCounterHTML;
-      result.totalCouterTotal = cumulativeCounterTotal;
+    result.totalPMCPDF = cumulativePMCPDF;
+    result.totalPMCHTML = cumulativePMCHTML;
+    result.totalPMCTotal = cumulativePMCTotal;
 
-      var cumulativePMCPDF = 0;
-      var cumulativePMCHTML = 0;
-      var cumulativePMCTotal = 0;
+    //PMC data is sometimes missing months, here let's hack around it.
+    for(year = pubYear; year <= (new Date().getFullYear()); year++) {
+      var startMonth = (year == pubYear)?pubMonth:1;
+      for(month = startMonth; month < 13; month++) {
+        //Skips months in the future of the current year
+        //Month is zero based, '(new Date().getMonth())' is 1 based.
+        if(year == (new Date().getFullYear()) && (month - 1) > (new Date().getMonth())) {
+          break;
+        }
 
-      if(pmcViews != null) {
-        for(var a = 0; a < pmcViews.length; a++) {
-          var totalViews = this.parseIntSafe(pmcViews[a]["full-text"]) + this.parseIntSafe(pmcViews[a].pdf);
+        yearMonth = this.getYearMonth(year, month);
 
-          // even if we don't display all the pmc data, the running total we display should be correct
-          cumulativePMCPDF += this.parseIntSafe(pmcViews[a].pdf);
-          cumulativePMCHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
-          cumulativePMCTotal += totalViews;
-
-          //Total views for the current period
-          var yearMonth = this.getYearMonth(pmcViews[a].year, pmcViews[a].month);
-
-          // if counter doesn't have data for this given month, we are going to ignore it.
-          // we assume that counter data doesn't have any gaps
-
-          // if we add the yearMonth here in the history,
-          // * the order of the data in the history can get messed up.
-          // * the code expects the counter data to exist for the given yearMonth in the history not just pmc data
-          // See PDEV-1074 for more information
-          if(result.history[yearMonth] == null) {
-            continue;
-          }
-
+        if(result.history[yearMonth] != null &&
+          result.history[yearMonth].source["pmcViews"] == null)
+        {
           result.history[yearMonth].source["pmcViews"] = {};
 
-          //Total views so far (for PMC)
-          result.history[yearMonth].source["pmcViews"].month = pmcViews[a].month;
-          result.history[yearMonth].source["pmcViews"].year = pmcViews[a].year;
-          result.history[yearMonth].source["pmcViews"].cumulativePDF = cumulativePMCPDF;
-          result.history[yearMonth].source["pmcViews"].cumulativeHTML = cumulativePMCHTML;
-          result.history[yearMonth].source["pmcViews"].cumulativeTotal = cumulativePMCTotal;
+          result.history[yearMonth].source["pmcViews"].month = month + 1;
+          result.history[yearMonth].source["pmcViews"].year = year;
+          result.history[yearMonth].source["pmcViews"].cumulativePDF = 0;
+          result.history[yearMonth].source["pmcViews"].cumulativeHTML = 0;
+          result.history[yearMonth].source["pmcViews"].cumulativeTotal = 0;
+          result.history[yearMonth].source["pmcViews"].totalPDF = 0;
+          result.history[yearMonth].source["pmcViews"].totalXML = 0;
+          result.history[yearMonth].source["pmcViews"].totalHTML = 0;
+          result.history[yearMonth].source["pmcViews"].total = 0;
 
-          result.history[yearMonth].source["pmcViews"].totalPDF = this.parseIntSafe(pmcViews[a].pdf);
-          result.history[yearMonth].source["pmcViews"].totalXML = "n.a.";
-          result.history[yearMonth].source["pmcViews"].totalHTML = this.parseIntSafe(pmcViews[a]["full-text"]);
-          result.history[yearMonth].source["pmcViews"].total = totalViews;
+          //Fill in the cumulatives from the previous month (If it exists)
+          var prevMonth = 0;
+          var prevYear = 0;
 
-          //Total views so far
-          result.history[yearMonth].total += totalViews;
-          result.history[yearMonth].cumulativeTotal += totalViews;
-          result.history[yearMonth].cumulativePDF += this.parseIntSafe(pmcViews[a].pdf);
-          result.history[yearMonth].cumulativeHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
-
-          //The grand totals
-          result.totalPDF += this.parseIntSafe(pmcViews[a].pdf);
-          result.totalHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
-          result.total += totalViews;
-        }
-      }
-
-      result.totalPMCPDF = cumulativePMCPDF;
-      result.totalPMCHTML = cumulativePMCHTML;
-      result.totalPMCTotal = cumulativePMCTotal;
-
-      //PMC data is sometimes missing months, here let's hack around it.
-      for(year = pubYear; year <= (new Date().getFullYear()); year++) {
-        var startMonth = (year == pubYear)?pubMonth:1;
-        for(month = startMonth; month < 13; month++) {
-          //Skips months in the future of the current year
-          //Month is zero based, '(new Date().getMonth())' is 1 based.
-          if(year == (new Date().getFullYear()) && (month - 1) > (new Date().getMonth())) {
-            break;
+          if(month == 1) {
+            prevMonth = 12;
+            prevYear = year - 1;
+          } else {
+            prevMonth = month - 1;
+            prevYear = year;
           }
 
-          yearMonth = this.getYearMonth(year, month);
+          var prevYearMonthStr = this.getYearMonth(prevYear, prevMonth);
 
-          if(result.history[yearMonth] != null &&
-            result.history[yearMonth].source["pmcViews"] == null)
-          {
-            result.history[yearMonth].source["pmcViews"] = {};
-
-            result.history[yearMonth].source["pmcViews"].month = month + 1;
-            result.history[yearMonth].source["pmcViews"].year = year;
+          if(result.history[prevYearMonthStr] != null &&
+            result.history[prevYearMonthStr].source["pmcViews"] != null) {
+            result.history[yearMonth].source["pmcViews"].cumulativePDF =
+              result.history[prevYearMonthStr].source["pmcViews"].cumulativePDF;
+            result.history[yearMonth].source["pmcViews"].cumulativeHTML =
+              result.history[prevYearMonthStr].source["pmcViews"].cumulativeHTML;
+            result.history[yearMonth].source["pmcViews"].cumulativeTotal =
+              result.history[prevYearMonthStr].source["pmcViews"].cumulativeTotal;
+            result.history[yearMonth].source["pmcViews"].totalPDF = 0;
+            result.history[yearMonth].source["pmcViews"].totalHTML = 0;
+            result.history[yearMonth].source["pmcViews"].total = 0;
+          } else {
             result.history[yearMonth].source["pmcViews"].cumulativePDF = 0;
             result.history[yearMonth].source["pmcViews"].cumulativeHTML = 0;
             result.history[yearMonth].source["pmcViews"].cumulativeTotal = 0;
             result.history[yearMonth].source["pmcViews"].totalPDF = 0;
-            result.history[yearMonth].source["pmcViews"].totalXML = 0;
             result.history[yearMonth].source["pmcViews"].totalHTML = 0;
             result.history[yearMonth].source["pmcViews"].total = 0;
-
-            //Fill in the cumulatives from the previous month (If it exists)
-            var prevMonth = 0;
-            var prevYear = 0;
-
-            if(month == 1) {
-              prevMonth = 12;
-              prevYear = year - 1;
-            } else {
-              prevMonth = month - 1;
-              prevYear = year;
-            }
-
-            var prevYearMonthStr = this.getYearMonth(prevYear, prevMonth);
-
-            if(result.history[prevYearMonthStr] != null &&
-              result.history[prevYearMonthStr].source["pmcViews"] != null) {
-              result.history[yearMonth].source["pmcViews"].cumulativePDF =
-                result.history[prevYearMonthStr].source["pmcViews"].cumulativePDF;
-              result.history[yearMonth].source["pmcViews"].cumulativeHTML =
-                result.history[prevYearMonthStr].source["pmcViews"].cumulativeHTML;
-              result.history[yearMonth].source["pmcViews"].cumulativeTotal =
-                result.history[prevYearMonthStr].source["pmcViews"].cumulativeTotal;
-              result.history[yearMonth].source["pmcViews"].totalPDF = 0;
-              result.history[yearMonth].source["pmcViews"].totalHTML = 0;
-              result.history[yearMonth].source["pmcViews"].total = 0;
-            } else {
-              result.history[yearMonth].source["pmcViews"].cumulativePDF = 0;
-              result.history[yearMonth].source["pmcViews"].cumulativeHTML = 0;
-              result.history[yearMonth].source["pmcViews"].cumulativeTotal = 0;
-              result.history[yearMonth].source["pmcViews"].totalPDF = 0;
-              result.history[yearMonth].source["pmcViews"].totalHTML = 0;
-              result.history[yearMonth].source["pmcViews"].total = 0;
-            }
           }
         }
       }
-
-      //If there are no PMC views at all, assume the data is just mising
-      if(result.totalPMCTotal == 0) {
-        result.totalPMCPDF = 0;
-        result.totalPMCHTML = 0;
-        result.totalPMCTotal = 0;
-      }
-
-      return result;
     }
+
+    //If there are no PMC views at all, assume the data is just mising
+    if(result.totalPMCTotal == 0) {
+      result.totalPMCPDF = 0;
+      result.totalPMCHTML = 0;
+      result.totalPMCTotal = 0;
+    }
+
+    return result;
+  }
 
   //Deprecated, should be removed once browse / search scripts refactored not to use
   //TODO: Confirm we can delete this
