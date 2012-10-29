@@ -50,6 +50,7 @@ public class AnnotationView {
   private final String truncatedBody;
   private final String bodyWithUrlLinkingNoPTags;
   private final String truncatedBodyWithUrlLinkingNoPTags;
+  private final String bodyWithHighlightedText;
   private final String competingInterestStatement;
   private final String truncatedCompetingInterestStatement;
   private final String annotationUri;
@@ -112,12 +113,21 @@ public class AnnotationView {
       this.truncatedBody = "";
       this.bodyWithUrlLinkingNoPTags = "";
       this.truncatedBodyWithUrlLinkingNoPTags = "";
+      this.bodyWithHighlightedText = "";
     } else {
       this.originalBody = annotation.getBody();
       this.body = TextUtils.hyperlinkEnclosedWithPTags(TextUtils.escapeHtml(annotation.getBody()), 25);
       this.truncatedBody = TextUtils.hyperlinkEnclosedWithPTags(truncateText(TextUtils.escapeHtml(annotation.getBody())), 25);
       this.bodyWithUrlLinkingNoPTags = TextUtils.hyperlink(TextUtils.escapeHtml(annotation.getBody()), 25);
       this.truncatedBodyWithUrlLinkingNoPTags = TextUtils.hyperlink(truncateText(TextUtils.escapeHtml(annotation.getBody())), 25);
+      if (annotation.getHighlightedText() != null) {
+        // highlighted text contains the highlighted text
+        // and a link to the paragraph location of where the highlighted text is located
+        String bodyWithHt = annotation.getHighlightedText() + "\n\n" + annotation.getBody();
+        this.bodyWithHighlightedText =TextUtils.hyperlinkEnclosedWithPTags(TextUtils.escapeHtml(bodyWithHt), 150);
+      } else {
+        this.bodyWithHighlightedText = this.body;
+      }
     }
 
     if (annotation.getCompetingInterestBody() == null) {
@@ -419,5 +429,9 @@ public class AnnotationView {
 
   public int getTotalNumReplies() {
     return totalNumReplies;
+  }
+
+  public String getBodyWithHighlightedText() {
+    return bodyWithHighlightedText;
   }
 }

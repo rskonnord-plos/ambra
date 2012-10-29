@@ -11,6 +11,7 @@
         title longtext,
         body longtext,
         xpath longtext,
+        highlightedText longtext,
         competingInterestBody longtext,
         annotationCitationID bigint unique,
         primary key (annotationID)
