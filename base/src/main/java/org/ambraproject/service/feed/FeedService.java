@@ -92,7 +92,7 @@ public interface FeedService {
    * @param searchParameters
    * @return solr search result that contains list of articles
    */
-  public Document getSearchArticles(final FeedSearchParameters searchParameters);
+  public Document getSearchArticles(final FeedSearchParameters searchParameters) throws ApplicationException;
 
 
 

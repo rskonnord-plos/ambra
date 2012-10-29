@@ -157,5 +157,52 @@ public class SolrHttpServiceImpl implements SolrHttpService {
     this.config = config;
   }
 
+  public Document makeSolrRequestForRss(String queryString) throws SolrException {
+
+    if (solrUrl == null || solrUrl.isEmpty()) {
+      setSolrUrl(config.getString(URL_CONFIG_PARAM));
+    }
+
+    queryString = "?"+queryString ;
+
+    URL url;
+    String urlString = solrUrl + queryString;
+    log.debug("Making Solr http request to " + urlString);
+    try {
+      url = new URL(urlString);
+    } catch (MalformedURLException e) {
+      throw new SolrException("Bad Solr Url: " + urlString, e);
+    }
+
+    InputStream urlStream = null;
+    Document doc = null;
+    try {
+      URLConnection connection = url.openConnection();
+      connection.setConnectTimeout(CONNECTION_TIMEOUT);
+      connection.connect();
+      urlStream = connection.getInputStream();
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setNamespaceAware(true);
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      doc = builder.parse(urlStream);
+    } catch (IOException e) {
+      throw new SolrException("Error connecting to the Solr server at " + solrUrl, e);
+    } catch (ParserConfigurationException e) {
+      throw new SolrException("Error configuring parser xml parser for solr response", e);
+    } catch (SAXException e) {
+      throw new SolrException("Solr Returned bad XML for url: " + urlString, e);
+    } finally {
+      //Close the input stream
+      if (urlStream != null) {
+        try {
+          urlStream.close();
+        } catch (IOException e) {
+          log.error("Error closing url stream to Solr", e);
+        }
+      }
+    }
+
+    return doc;
+  }
 
 }

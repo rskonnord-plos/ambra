@@ -21,6 +21,7 @@
 package org.ambraproject.action.feed;
 
 import com.opensymphony.xwork2.ModelDriven;
+import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.feed.AnnotationFeedSearchParameters;
 import org.ambraproject.service.feed.FeedSearchParameters;
@@ -87,7 +88,7 @@ import java.util.List;
  * @author Jeff Suttor
  * @author Eric Brown
  * @author Joe Osowski
- * @see org.ambraproject.feed.service.FeedSearchParameters
+ * @see org.ambraproject.service.feed.FeedSearchParameters
  * @see org.ambraproject.struts2.AmbraFeedResult
  */
 @SuppressWarnings("UnusedDeclaration")
@@ -147,7 +148,13 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
     return status;
   }
 
-  public String executeFeedSearch(){
+  /**
+   * RSS search feed for Simple/Advanced search.
+   *
+   * @return
+   * @throws ApplicationException
+   */
+  public String executeFeedSearch() throws ApplicationException {
     String status = SUCCESS;
 
     resultFromSolr = feedService.getSearchArticles(searchParams);
