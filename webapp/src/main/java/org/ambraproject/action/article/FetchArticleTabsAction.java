@@ -724,14 +724,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     this.userService = userService;
   }
 
-  /**
-   * Returns a list of author affiliations
-   *
-   * @return author affiliations
-   */
-  public List<AuthorExtra> getAuthorExtras() {
-    return this.authorExtras;
-  }
+//  /**
+//   * Returns a list of author affiliations
+//   *
+//   * @return author affiliations
+//   */
+//  public List<AuthorExtra> getAuthorExtras() {
+//    return this.authorExtras;
+//  }
 
   /**
    * Returns a list of citation references
