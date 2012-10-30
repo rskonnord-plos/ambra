@@ -77,18 +77,48 @@ $.fn.comments = function () {
   }
 
   /**
+   * Submit a top-level response to an article and show the result. Talks to the server over Ajax.
+   * @param articleDoi the DOI of the article to which the user is responding
+   * @param submitUrl  the URL to send the Ajax request to
+   */
+  this.submitDiscussion = function (articleDoi, submitUrl) {
+    var commentData = getCommentData(null);
+    commentData.target = articleDoi;
+    var submittedCallback = function () {
+      alert('Successfully created comment'); // TODO Show the new comment
+    }
+    sendComment(commentData, null, submitUrl, submittedCallback);
+  }
+
+  /**
    * Submit the response data from a reply's response box and show the result. Talks to the server over Ajax.
    * @param parentId  the ID of the existing reply, to which the user is responding
    * @param submitUrl  the URL to send the Ajax request to
    */
   this.submitResponse = function (parentId, submitUrl) {
+    var commentData = getCommentData(parentId);
+    commentData.inReplyTo = parentId;
+    var submittedCallback = function () {
+      putNewResponse(parentId, commentData);
+    }
+    sendComment(commentData, parentId, submitUrl, submittedCallback);
+  }
+
+  /**
+   * Send a comment to the server. The comment may be a top-level article comment, or a response to another response.
+   *
+   * @param commentData  the comment's content, as an object that can be sent to the server
+   * @param parentId  the ID of the parent reply, or null if the page doesn't show other replies
+   * @param submitUrl  the URL to send the Ajax request to
+   * @param submittedCallback  a function to call after the comment has been submitted without errors
+   */
+  function sendComment(commentData, parentId, submitUrl, submittedCallback) {
     var errorMsg = getReplyElement("responseSubmitMsg", parentId);
     errorMsg.hide(); // in case it was already shown from a previous attempt
 
-    var responseToPost = getResponseData(parentId);
     var ajax = $.ajax(submitUrl, {
         dataType:"json",
-        data:responseToPost,
+        data:commentData,
         dataFilter:function (data, type) {
           return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
         },
@@ -101,7 +131,7 @@ $.fn.comments = function () {
             errorMsg.html(errors.join('<br/>'));
             errorMsg.show("blind", DURATION);
           } else {
-            putNewResponse(parentId, responseToPost);
+            submittedCallback();
           }
         },
         error:function (jqXHR, textStatus, errorThrown) {
@@ -118,7 +148,7 @@ $.fn.comments = function () {
    * @param parentId  the ID of the parent reply, to which the user responded
    * @param newResponse  data for the new response (TODO This contract will need to change)
    */
-  this.putNewResponse = function (parentId, newResponse) {
+  function putNewResponse(parentId, newResponse) {
     // TODO Finish implementing
     var html = [
         '<div class="response">',
@@ -147,13 +177,12 @@ $.fn.comments = function () {
   }
 
   /**
-   * Pull the input for a submitted response from the page.
+   * Pull the input for a submitted comment from the page.
    * @param parentId  the ID of the existing reply, to which the user is responding
    * @return {Object}  the response data, formatted to be sent over Ajax
    */
-  function getResponseData(parentId) {
+  function getCommentData(parentId) {
     var data = {
-      inReplyTo:parentId,
       commentTitle:getReplyElement("comment_title", parentId).val(),
       comment:getReplyElement("comment", parentId).val()
     };
