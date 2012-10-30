@@ -1297,7 +1297,7 @@ $(document).ready(
         }
 
         if(scopus > 0) {
-          var li = $('<li><span class="num">' + scopus.format(0,'.',',') + '</span> CITATIONS</li>');
+          var li = $('<li><span class="num">' + scopus.format(0,'.',',') + '</span> CITATIONS<br/><br/></li>');
           $("#almSignPost").append(li);
         }
 
