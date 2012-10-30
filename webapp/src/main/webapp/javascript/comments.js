@@ -21,29 +21,71 @@
 
 $.fn.comments = function () {
 
-  var DURATION = 500; // Duration of JQuery animations, in milliseconds
+  /**
+   * Duration of JQuery animations to show and hide page elements, in milliseconds.
+   * @type {Number}
+   */
+  var DURATION = 500;
 
+  /**
+   * Return a reference to a JQuery page element.
+   * @param elementType  the prefix of the element ID
+   * @param replyId  the ID of the reply to which the element to get belongs, or null if the page has only one reply
+   * @return {*} the element
+   */
+  function getReplyElement(elementType, replyId) {
+    return (replyId == null)
+      ? $('#' + elementType)
+      : $('#' + elementType + '-' + replyId);
+  }
+
+  /**
+   * Clear the box beneath a reply (whichever one is showing, if any).
+   * @param replyId  the ID of the reply whose box should be cleared
+   */
   this.clearReply = function (replyId) {
     ["report", "respond"].forEach(function (replyType) {
-      $("#" + replyType + "-" + replyId).hide("blind", {direction:"vertical"}, DURATION)
+      getReplyElement(replyType, replyId).hide("blind", {direction:"vertical"}, DURATION)
     });
   }
 
-  this.report = function (replyId) {
-    $("#respond-" + replyId).hide();
-    $("#report-" + replyId).show("blind", DURATION);
+  /**
+   * Hide a box beneath a reply, then show one.
+   * @param from  the type of box to hide
+   * @param to  the type of box to show
+   * @param replyId  the ID of the reply to which the boxes belong
+   */
+  function switchReplyBox(from, to, replyId) {
+    getReplyElement(from, replyId).hide();
+    getReplyElement(to, replyId).show("blind", DURATION);
   }
 
-  this.respond = function (replyId) {
-    $("#report-" + replyId).hide();
-    $("#respond-" + replyId).show("blind", DURATION);
+  /**
+   * Show the "report a concern" box beneath a reply, clearing the response box first if necessary.
+   * @param replyId  the ID of the reply where the box should be shown
+   */
+  this.showReportBox = function (replyId) {
+    switchReplyBox("respond", "report", replyId);
   }
 
+  /**
+   * Show the "respond to this posting" box beneath a reply, clearing the report box first if necessary.
+   * @param replyId  the ID of the reply where the box should be shown
+   */
+  this.showRepondBox = function (replyId) {
+    switchReplyBox("report", "respond", replyId);
+  }
+
+  /**
+   * Submit the response data from a reply's response box and show the result. Talks to the server over Ajax.
+   * @param parentId  the ID of the existing reply, to which the user is responding
+   * @param submitUrl  the URL to send the Ajax request to
+   */
   this.submitResponse = function (parentId, submitUrl) {
-    var errorMsg = $('#responseSubmitMsg-' + parentId);
+    var errorMsg = getReplyElement("responseSubmitMsg", parentId);
     errorMsg.hide(); // in case it was already shown from a previous attempt
 
-    var responseToPost = this.getResponseData(parentId);
+    var responseToPost = getResponseData(parentId);
     var ajax = $.ajax(submitUrl, {
         dataType:"json",
         data:responseToPost,
@@ -71,7 +113,13 @@ $.fn.comments = function () {
     );
   }
 
+  /**
+   * Show a response, which was just submitted successfully, in the proper place in its thread.
+   * @param parentId  the ID of the parent reply, to which the user responded
+   * @param newResponse  data for the new response (TODO This contract will need to change)
+   */
   this.putNewResponse = function (parentId, newResponse) {
+    // TODO Finish implementing
     var html = [
         '<div class="response">',
         '  <div class="info">',
@@ -95,21 +143,26 @@ $.fn.comments = function () {
         '</div>'
       ]
       ;
-    $('#replies_to-' + parentId).append($(html.join(' ')));
+    getReplyElement("replies_to", parentId).append($(html.join(' ')));
   }
 
-  this.getResponseData = function (parentId) {
+  /**
+   * Pull the input for a submitted response from the page.
+   * @param parentId  the ID of the existing reply, to which the user is responding
+   * @return {Object}  the response data, formatted to be sent over Ajax
+   */
+  function getResponseData(parentId) {
     var data = {
       inReplyTo:parentId,
-      commentTitle:$('#comment_title-' + parentId).val(),
-      comment:$('#comment-' + parentId).val()
+      commentTitle:getReplyElement("comment_title", parentId).val(),
+      comment:getReplyElement("comment", parentId).val()
     };
 
-    if ($('#no_competing-' + parentId).attr("checked")) {
+    if (getReplyElement("no_competing", parentId).attr("checked")) {
       data.isCompetingInterest = false;
     } else {
       data.isCompetingInterest = true;
-      data.ciStatement = $('#competing_interests-' + parentId).val();
+      data.ciStatement = getReplyElement("competing_interests", parentId).val();
     }
 
     return data;
