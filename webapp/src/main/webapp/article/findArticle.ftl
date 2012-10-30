@@ -20,8 +20,7 @@
 -->
 <!-- begin : main contents wrapper -->
 
-<@s.url id="articleURL" action="fetchArticle" namespace="/article"
- articleURI="${originalDOI}" encode="false"/>
+<@s.url id="articleURL" action="fetchArticle" namespace="/article" articleURI="${originalDOI}"/>
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
