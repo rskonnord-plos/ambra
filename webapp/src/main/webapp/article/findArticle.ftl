@@ -3,9 +3,9 @@
   $Id$
   
   Copyright (c) 2007-2010 by Public Library of Science
-  http://plos.org
   http://ambraproject.org
-  
+  http://plos.org
+
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -19,6 +19,9 @@
   limitations under the License.
 -->
 <!-- begin : main contents wrapper -->
+
+<@s.url id="articleURL" action="fetchArticle" namespace="/article"
+ articleURI="${originalDOI}" encode="false"/>
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
@@ -46,6 +49,6 @@
   <li><a href="http://scholar.google.com/scholar?hl=en&safe=off&q=${googleAuthorQuery?url}%22${title?url}%22"
        onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in Google Scholar" class="google icon">Google Scholar</a></li>
   </ul>
-  <a href="#" onClick="history.back();return false;" class="article icon">Back to article</a>
+  <a href="${articleURL}" class="article icon">Back to article</a>
   </div>
 </div>

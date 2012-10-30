@@ -629,6 +629,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
 
   /**
    * {@inheritDoc}
+   *
    */
   @Override
   @SuppressWarnings("unchecked")
