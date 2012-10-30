@@ -21,8 +21,11 @@ package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.ArticleType;
 import org.springframework.beans.factory.annotation.Required;
+import org.w3c.dom.Document;
 
 /**
  * Basic action for the start discussion page. just fetches up article doi and title.
@@ -32,19 +35,33 @@ import org.springframework.beans.factory.annotation.Required;
 public class StartDiscussionAction extends BaseActionSupport {
 
   private ArticleService articleService;
-  private ArticleInfo articleInfo;
+  private FetchArticleService fetchArticleService;
+
   private String articleURI;
+  private ArticleInfo articleInfo;
+  private ArticleType articleType;
+  private boolean isPeerReviewed;
 
 
   @Override
   public String execute() throws Exception {
-    articleInfo = articleService.getBasicArticleView(articleURI);
+    articleInfo = articleService.getArticleInfo(articleURI, getAuthId());
+    articleType = articleInfo.getKnownArticleType();
+
+    Document doc = fetchArticleService.getArticleDocument(articleInfo);
+    isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
+
     return SUCCESS;
   }
 
   @Required
   public void setArticleService(ArticleService articleService) {
     this.articleService = articleService;
+  }
+
+  @Required
+  public void setFetchArticleService(FetchArticleService fetchArticleService) {
+    this.fetchArticleService = fetchArticleService;
   }
 
   public void setArticleURI(String articleURI) {
@@ -54,4 +71,13 @@ public class StartDiscussionAction extends BaseActionSupport {
   public ArticleInfo getArticleInfo() {
     return articleInfo;
   }
+
+  public boolean getIsPeerReviewed() {
+    return isPeerReviewed;
+  }
+
+  public ArticleType getArticleType() {
+    return articleType;
+  }
+
 }
