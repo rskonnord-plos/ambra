@@ -137,7 +137,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">500</param>
-        <param name="templateFile">/static/error.ftl</param>
+        <param name="templateFile">/error.ftl</param>
       </result>
     </global-results>
 
