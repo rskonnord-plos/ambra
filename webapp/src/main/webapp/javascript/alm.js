@@ -1249,7 +1249,8 @@ $(document).ready(
     //If the almViews node exists, assume almCitations exists as well and populate them with
     //TODO: Review if this should go into it's own file or not.
     //Appropriate results.
-    if($("#almSignPost")) {
+
+    if($("#almSignPost").length > 0) {
       var almService = new $.fn.alm(),
         doi = $('meta[name=citation_doi]').attr("content"),
         publishDate = $.datepicker.parseDate("yy/m/d", $('meta[name=citation_date]').attr("content")),
