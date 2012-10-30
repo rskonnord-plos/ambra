@@ -52,16 +52,11 @@ public class FindArticleAction extends BaseActionSupport {
   private String pubGetUrl;
   private String title;
   private String author;
-  private String articleURI;
   private String originalDOI;
 
   private CrossRefLookupService crossRefLookupService;
   private PubGetLookupService pubGetLookupService;
   private ArticleService articleService;
-
-  public String getArticleURI() {
-    return articleURI;
-  }
 
   @Override
   public String execute() throws Exception {
@@ -79,7 +74,6 @@ public class FindArticleAction extends BaseActionSupport {
     /** BEGIN BLOCK **/
     String doi = citedArticle.getDoi();
     originalDOI = citedArticleView.getArticleDoi();
-    articleURI = doi;
 
     if (doi == null || doi.isEmpty()) {
       doi = crossRefLookupService.findDoi(citedArticle.getTitle(), author);
