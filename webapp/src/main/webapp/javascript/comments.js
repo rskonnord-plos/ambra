@@ -97,12 +97,30 @@ $.fn.comments = function () {
    * @param parentId  the ID of the existing reply, to which the user is responding
    * @param submitUrl  the URL to send the Ajax request to
    */
-  this.submitResponse = function (parentId, submitUrl) {
+  this.submitResponse = function (parentId, submitUrl, getUrl) {
     var commentData = getCommentData(parentId);
     commentData.inReplyTo = parentId;
+
     var submittedCallback = function (data) {
-      putNewResponse(parentId, commentData);
+      // Make a second Ajax request to get the new comment (we need its back-end representation)
+      $.ajax(getUrl, {
+        dataType:"json",
+        data:{annotationId:data.replyId},
+        dataFilter:function (data, type) {
+          return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
+        },
+        success:function (data, textStatus, jqXHR) {
+          // Got the new comment; now add the content to the page
+          putComment(parentId, data.annotation);
+        },
+        error:function (jqXHR, textStatus, errorThrown) {
+          alert(textStatus + '\n' + errorThrown);
+        },
+        complete:function (jqXHR, textStatus) {
+        }
+      });
     }
+
     sendComment(commentData, parentId, submitUrl, submittedCallback);
   }
 
@@ -118,7 +136,7 @@ $.fn.comments = function () {
     var errorMsg = getReplyElement("responseSubmitMsg", parentId);
     errorMsg.hide(); // in case it was already shown from a previous attempt
 
-    var ajax = $.ajax(submitUrl, {
+    $.ajax(submitUrl, {
         dataType:"json",
         data:commentData,
         dataFilter:function (data, type) {
@@ -146,16 +164,16 @@ $.fn.comments = function () {
   }
 
   /**
-   * Show a response, which was just submitted successfully, in the proper place in its thread.
-   * @param parentId  the ID of the parent reply, to which the user responded
-   * @param newResponse  data for the new response (TODO This contract will need to change)
+   * Add a comment in its proper place in its thread.
+   * @param parentId  the ID of the comment's parent (defines where to put the new comment)
+   * @param newResponse  data for the new response (currently from AnnotationView; TODO finalize contract)
    */
-  function putNewResponse(parentId, newResponse) {
+  function putComment(parentId, commentData) {
     // TODO Finish implementing
     var html = [
         '<div class="response">',
         '  <div class="info">',
-        '    <h3>', newResponse.commentTitle, '</h3>',
+        '    <h3>', commentData.title, '</h3>',
         '    <h4>',
         '      <a href="{showUserURL}" class="user icon">{reply.creatorDisplayName}</a>',
         '      replied to',
@@ -165,11 +183,11 @@ $.fn.comments = function () {
         '      <div class="arrow"></div>',
         '  </div>',
         '  <div class="response_content">',
-        newResponse.comment,
+        commentData.body,
         '      <div class="competing_interests">',
-        newResponse.isCompetingInterest
-          ? '  <strong>Competing interests declared:</strong> ' + newResponse.ciStatement
-          : '  <strong>No competing interests declared.</strong>',
+//        commentData.isCompetingInterest ?
+        '  <strong>Competing interests declared:</strong> ' + commentData.competingInterestStatement,
+//          : '  <strong>No competing interests declared.</strong>',
         '      </div>',
         '  </div>',
         '</div>'
