@@ -80,12 +80,14 @@ $.fn.comments = function () {
    * Submit a top-level response to an article and show the result. Talks to the server over Ajax.
    * @param articleDoi the DOI of the article to which the user is responding
    * @param submitUrl  the URL to send the Ajax request to
+   * @param forwardUrl  the URL to which to forward the user after the server accepts the response
+   * @param forwardParam  the parameter of forwardUrl that should be the new response's ID
    */
-  this.submitDiscussion = function (articleDoi, submitUrl) {
+  this.submitDiscussion = function (articleDoi, submitUrl, forwardUrl, forwardParam) {
     var commentData = getCommentData(null);
     commentData.target = articleDoi;
-    var submittedCallback = function () {
-      alert('Successfully created comment'); // TODO Show the new comment
+    var submittedCallback = function (data) {
+      window.location = forwardUrl + '?' + forwardParam + '=' + data.annotationId;
     }
     sendComment(commentData, null, submitUrl, submittedCallback);
   }
@@ -98,7 +100,7 @@ $.fn.comments = function () {
   this.submitResponse = function (parentId, submitUrl) {
     var commentData = getCommentData(parentId);
     commentData.inReplyTo = parentId;
-    var submittedCallback = function () {
+    var submittedCallback = function (data) {
       putNewResponse(parentId, commentData);
     }
     sendComment(commentData, parentId, submitUrl, submittedCallback);
@@ -131,7 +133,7 @@ $.fn.comments = function () {
             errorMsg.html(errors.join('<br/>'));
             errorMsg.show("blind", DURATION);
           } else {
-            submittedCallback();
+            submittedCallback(data);
           }
         },
         error:function (jqXHR, textStatus, errorThrown) {
