@@ -68,38 +68,69 @@ ERROR, searchType must be defined.
   <#assign currentPage = currentPageParam + 1/>
 
   <#if (totalPages gt 1 )>
-    <#if (totalPages lt 4) >
-      <#list 1..totalPages as pageNumber>
-        <#if pageNumber == currentPage>
-        <strong>${currentPage}</strong>
+    <div class="pagination">
+      <#if (totalPages lt 4) >
+        <#if (currentPage gt 1) >
+          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage - 2] />"
+             class="prev">&lt;</a>&nbsp;
         <#else>
-        <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
+          <span class="prev">&lt;</span>
         </#if>
-      </#list>
 
-    <#else> <#-- totalPages >= 4 -->
-      <#if (currentPage gt 3) >
-      ...
-      </#if>
-
-    <#--
-      Yes the following statements are confusing,
-      but it should take care of all the use cases defined at the top
-    --->
-      <#list min(currentPage - 1,0)..max(3,(currentPage + 1)) as pageNumber>
-        <#if ((pageNumber > 1 && pageNumber < totalPages && pageNumber > (currentPage - 2)
-        || ((pageNumber == (totalPages - 2)) && (pageNumber > (currentPage - 3)))))>
-          <#if (currentPage == pageNumber)>
-          <strong>${pageNumber}</strong>
+        <#list 1..totalPages as pageNumber>
+          <#if pageNumber == currentPage>
+            <strong>${currentPage}</strong>
           <#else>
-          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
+            <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
           </#if>
+        </#list>
+
+        <#if (currentPage lt totalPages)>
+          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage] />"
+             class="next">
+            &gt;</a>
+        <#else>
+          <span class="next">&gt;</span>
         </#if>
-      </#list>
-      <#if (currentPage lt (totalPages - 2))>
-      ...
+      <#else>
+        <#if (currentPage gt 1) >
+          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage - 2] />"
+            class="prev">&lt;</a>
+          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[0] />">1</a>
+        <#else>
+          <span class="prev">&lt;</span><strong>1</strong>
+        </#if>
+        <#if (currentPage gt 3) >
+          <span>...</span>
+        </#if>
+
+      <#--
+        Yes the following statements are confusing,
+        but it should take care of all the use cases defined at the top
+      --->
+        <#list min(currentPage - 1,0)..max(3,(currentPage + 1)) as pageNumber>
+          <#if ((pageNumber > 1 && pageNumber < totalPages && pageNumber > (currentPage - 2)
+          || ((pageNumber == (totalPages - 2)) && (pageNumber > (currentPage - 3)))))>
+            <#if (currentPage == pageNumber)>
+              <strong>${pageNumber}</strong>
+            <#else>
+              <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[pageNumber - 1] />">${pageNumber}</a>
+            </#if>
+          </#if>
+        </#list>
+        <#if (currentPage lt (totalPages - 2))>
+          ...
+        </#if>
+        <#if (currentPage lt totalPages)>
+          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[totalPages - 1] />">${totalPages}</a>
+          <a href="${url}?<@URLParameters parameters=searchParameters names="startPage" values=[currentPage] />"
+             class="next">&gt;</a>
+        <#else>
+          <strong>${totalPages}</strong>
+          <span class="next">&gt;</span>
+        </#if>
       </#if>
-    </#if>
+    </div>
   </#if>
 </#macro>
 
@@ -126,11 +157,11 @@ ERROR, searchType must be defined.
       </div>
     </fieldset>
 
-    <a id="advSearch" class="btn" href="TEST" name="advSearch">advanced</a>
+    <a id="advSearch" class="btn" href="${advancedSearchURL}" name="advSearch">advanced</a>
   </div>
   <div class="options">
-    <span class="clear-filter"><a id="clearAllFilters" href="TEST" class="btn">Clear all filters</a></span>
-
+    <span class="clear-filter">
+      <a id="clearAllFilters" href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,filterArticleType,filterJournals,filterSubjects,startPage" values="" />" class="btn">Clear all filters</a></span>
     <div class="resultSort">
       <select name="sort" id="sortPicklist">
       <#list sorts as sortItem>
@@ -388,11 +419,10 @@ ERROR, searchType must be defined.
               <span class="list">List</span>
             </div>
             <div id="connect" class="nav">
-              <span class="txt">Like this collection?</span>
               <ul class="lnk-social cf">
                 <li class="lnk-alert ir"><a href="TEST" title="Alert">Alert</a></li>
-                <li class="lnk-email ir"><a href="TEST" title="E-mail">E-mail</a></li>
-                <li class="lnk-rss ir"><a href="http://www.plosone.org/article/feed" title="RSS">RSS</a></li>
+                <#-- (For the "fuuuuture") li class="lnk-email ir"><a href="TEST" title="E-mail">E-mail</a></li-->
+                <li class="lnk-rss ir"><a href="${rssSearchURL}?<@URLParameters parameters=searchParameters />" title="RSS">RSS</a></li>
               </ul>
             </div>
           </div>
@@ -430,24 +460,7 @@ ERROR, searchType must be defined.
             </#list>
             </ul>
 
-            <div class="pagination">
-            <#-- &lt; and &gt; are fallbacks for browsers without CSS. Even with CSS, they must not be blank. -->
-            <#if startPage == 0>
-              <span class="prev">&lt;</span>
-            <#else>
-              <a href="${searchURL}?<@URLParameters parameters=searchParameters names="startPage" values=[startPage - 1] />"
-                 class="prev">&lt;</a>
-            </#if>
-
             <@renderSearchPaginationLinks searchURL totalPages startPage />
-
-            <#if startPage == totalPages - 1>
-              <span class="next">&lt;</span>
-            <#else>
-              <a href="${searchURL}?<@URLParameters parameters=searchParameters names="startPage" values=[startPage + 1] />"
-                 class="next">&gt;</a>
-            </#if>
-            </div>
 
           </div>
 
@@ -477,7 +490,7 @@ ERROR, searchType must be defined.
             <!-- This block for Phase 2 development -->
             <div class="block blk-style-a blk-related-collections">
               <div class="header">
-                <h3>Related Collections</h3>
+                <h3>Related</h3>
               </div>
               <div class="body">
               <#if ((totalNoOfResults gt 0) && (fieldErrors?size == 0))>
@@ -488,13 +501,13 @@ ERROR, searchType must be defined.
                       <#if f_index < max_authors>
                         <li>
                           <a href="${advancedSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}">${f.name}</a>
-                      <span class="icons">
-                        <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-                        <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
-                                            title="Alert"></a>
-                        <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
-                                            title="E-mail"></a>
-                      </span>
+                          <span class="icons">
+                            <a href="${rssSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
+                            <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
+                                                title="Alert"></a>
+                            <#-- (For the "fuuuuture") a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
+                                                title="E-mail"></a-->
+                          </span>
                         </li>
                       </#if>
                     </#list>
@@ -508,13 +521,13 @@ ERROR, searchType must be defined.
                       <#if f_index < max_editors>
                         <li>
                           <a href="${advancedSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}">${f.name}</a>
-                      <span class="icons">
-                        <a href="TEST"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-                        <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
-                                            title="Alert"></a>
-                        <a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
-                                            title="E-mail"></a>
-                      </span>
+                          <span class="icons">
+                            <a href="${rssSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
+                            <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
+                                                title="Alert"></a>
+                            <#-- (For the "fuuuuture") a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
+                                                title="E-mail"></a-->
+                          </span>
                         </li>
                       </#if>
                     </#list>
