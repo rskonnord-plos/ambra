@@ -22,9 +22,8 @@ package org.ambraproject.views.article;
 import java.io.Serializable;
 import java.net.URI;
 
-public class RelatedArticleInfo implements Serializable {
+public class RelatedArticleInfo extends BaseArticleInfo implements Serializable {
   public URI    uri;
-  public String title;
 
   /**
    * Get the article uri.
@@ -37,19 +36,6 @@ public class RelatedArticleInfo implements Serializable {
 
   public void setUri(URI uri) {
     this.uri = uri;
-  }
-
-  /**
-   * Get the title.
-   *
-   * @return the title.
-   */
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
   }
 
   public String toString() {

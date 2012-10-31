@@ -561,6 +561,28 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           RelatedArticleInfo relatedArticleInfo = new RelatedArticleInfo();
           relatedArticleInfo.setUri(URI.create(otherArticle.getDoi()));
           relatedArticleInfo.setTitle(otherArticle.getTitle());
+          relatedArticleInfo.setDoi(otherArticle.getDoi());
+          relatedArticleInfo.setDate(otherArticle.getDate());
+          relatedArticleInfo.seteIssn(otherArticle.geteIssn());
+
+          journals = otherArticle.getJournals();
+          journalViews = new HashSet<JournalView>(journals.size());
+          for(org.ambraproject.models.Journal journal : journals) {
+            journalViews.add(new JournalView(journal));
+          }
+          relatedArticleInfo.setJournals(journalViews);
+
+          List<String> relatedArticleAuthors = new ArrayList<String>(article.getAuthors().size());
+          for (ArticleAuthor ac : article.getAuthors()) {
+            relatedArticleAuthors.add(ac.getFullName());
+          }
+          relatedArticleInfo.setAuthors(relatedArticleAuthors);
+
+          //set article type
+          if (otherArticle.getTypes() != null) {
+            relatedArticleInfo.setAt(otherArticle.getTypes());
+          }
+
           if (!articleInfo.getRelatedArticles().contains(relatedArticleInfo)) {
             articleInfo.getRelatedArticles().add(relatedArticleInfo);
           }
