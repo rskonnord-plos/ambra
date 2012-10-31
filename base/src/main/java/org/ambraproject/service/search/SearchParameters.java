@@ -65,6 +65,7 @@ public class SearchParameters implements Serializable {
 
   // Used to create query filters on any search
   private String[]      filterSubjects      = {}; // Only search in these subjects
+  private String[]      filterAuthors      = {}; // Only search in these subjects
   private String        filterKeyword         = ""; // Only search in this document part
   private String        filterArticleType     = ""; // Only search for this article type
   private String[]      filterJournals        = {}; // Only search these Journals. If no elements, then default to the current journal
@@ -169,6 +170,24 @@ public class SearchParameters implements Serializable {
       this.id = id.trim();
   }
 
+  public String[] getFilterAuthors() {
+    return filterAuthors;
+  }
+
+  public void setFilterAuthors(String[] authors) {
+    if (authors == null || authors.length < 1) {
+      this.filterAuthors = new String[]{};
+    } else {
+      List<String> filterAuthorsList = new ArrayList<String>();
+      for (String author : authors) {
+        if (author != null && author.trim().length() > 0)
+          filterAuthorsList.add(author.trim());
+      }
+      this.filterAuthors = new String[filterAuthorsList.size()];
+      filterAuthorsList.toArray(this.filterAuthors);
+    }
+  }
+
   public String[] getFilterSubjects() {
     return filterSubjects;
   }
@@ -247,6 +266,7 @@ public class SearchParameters implements Serializable {
     sp.setFilterArticleType(this.getFilterArticleType());
     sp.setFilterKeyword(this.getFilterKeyword());
     sp.setFilterSubjects(this.getFilterSubjects());
+    sp.setFilterAuthors(this.getFilterAuthors());
     sp.setFilterJournals(this.getFilterJournals().clone());
     sp.setSort(this.getSort());
     sp.setStartPage(this.getStartPage());
@@ -263,6 +283,7 @@ public class SearchParameters implements Serializable {
         ", eLocationId='" + eLocationId + "'" +
         ", id='" + id + "'" +
         ", filterSubjects=" + (filterSubjects == null ? null : Arrays.asList(filterSubjects)) +
+        ", filterAuthors=" + (filterAuthors == null ? null : Arrays.asList(filterAuthors)) +
         ", filterKeyword='" + filterKeyword + "'" +
         ", filterArticleType='" + filterArticleType + "'" +
         ", filterJournals=" + (filterJournals == null ? null : Arrays.asList(filterJournals)) +

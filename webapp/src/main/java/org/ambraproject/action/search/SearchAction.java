@@ -588,6 +588,14 @@ public class SearchAction extends BaseSessionAwareActionSupport {
     return getSearchParameters().getFilterSubjects();
   }
 
+  public String[] getFilterAuthors() {
+    return getSearchParameters().getFilterAuthors();
+  }
+
+  public void setFilterAuthors(String[] authors) {
+    getSearchParameters().setFilterAuthors(rectify(authors));
+  }
+
   public void setFilterArticleType(String type) {
     getSearchParameters().setFilterArticleType(type);
   }

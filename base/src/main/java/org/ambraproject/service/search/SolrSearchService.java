@@ -511,6 +511,11 @@ public class SolrSearchService implements SearchService {
     if (sp.getFilterArticleType() != null && sp.getFilterArticleType().length() > 0) {
       query.addFilterQuery(createFilterLimitForArticleType(sp.getFilterArticleType()));
     }
+
+    // Form field description: "Authors".  Query Filter.
+    if (sp.getFilterAuthors() != null && sp.getFilterAuthors().length > 0) {
+      query.addFilterQuery(createFilterLimitForAuthor(sp.getFilterAuthors()));
+    }
   }
 
   private String createFilterLimitForJournals(String[] journals) {
@@ -522,13 +527,22 @@ public class SolrSearchService implements SearchService {
     return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
+  private String createFilterLimitForAuthor(String[] authors) {
+    Arrays.sort(authors); // Consistent order so that each filter will only be cached once.
+    StringBuilder fq = new StringBuilder();
+    for (String author : authors) {
+      fq.append("author:\"").append(author).append("\" AND ");
+    }
+    return fq.replace(fq.length() - 5, fq.length(), "").toString(); // Remove last " AND".
+  }
+
   private String createFilterLimitForSubject(String[] subjects) {
     Arrays.sort(subjects); // Consistent order so that each filter will only be cached once.
     StringBuilder fq = new StringBuilder();
     for (String category : subjects) {
       fq.append("subject:\"").append(category).append("\" AND ");
     }
-    return fq.replace(fq.length() - 5, fq.length(), "").toString(); // Remove last " OR".
+    return fq.replace(fq.length() - 5, fq.length(), "").toString(); // Remove last " AND".
   }
 
   private String createFilterLimitForArticleType(String artycleType) {
