@@ -289,8 +289,8 @@
       re-write incoming Feed URIs.
       /article/feed?... -> /article/feed/getFeed.action?...
     </note>
-    <from>^(/.+)?/article/feed(\?.*)?</from>
-    <to>$1/article/feed/getFeed.action$2</to>
+    <from>^(/.+)?/article/feed\\?(.*)</from>
+    <to>$1/article/feed/getFeed.action?$2</to>
   </rule>
 
   <outbound-rule>
@@ -304,16 +304,16 @@
 
   <rule>
     <note>
-      re-write incoming Feed URIs.
+      re-write incoming feed search URIs.
       /article/feed/search?... -> /article/feed/executeFeedSearch.action?...
     </note>
-    <from>^(/.+)?/article/feed/search(\?.*)?</from>
-    <to>$1/article/feed/executeFeedSearch.action$2</to>
+    <from>^(/.+)?/article/feed/search\\?(.*)</from>
+    <to>$1/article/feed/executeFeedSearch.action?$2</to>
   </rule>
 
   <outbound-rule>
     <note>
-      re-write outbound Feed URIs.
+      re-write outbound feed search URIs.
       /article/feed/executeFeedSearch.action?... -> /article/feed/search?...
     </note>
     <from>^(/.+)?/article/feed/executeFeedSearch.action(.*)?</from>
