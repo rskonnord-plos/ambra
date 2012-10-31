@@ -242,6 +242,7 @@ public class SearchParametersTest {
     sp.setId("idString");
     sp.setFilterSubjects(inputStringArray);
     sp.setFilterJournals(inputStringArray);
+    sp.setFilterAuthors(inputStringArray);
     sp.setFilterKeyword("keyword");
     sp.setFilterArticleType("articleType");
     sp.setSort("sortString");
@@ -254,6 +255,7 @@ public class SearchParametersTest {
         " eLocationId='eLocationIdString'," +
         " id='idString'," +
         " filterSubjects=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
+        " filterAuthors=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
         " filterKeyword='keyword'," +
         " filterArticleType='articleType'," + 
         " filterJournals=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
