@@ -52,7 +52,7 @@ $.fn.comments = function () {
     ["report", "respond"].forEach(function (replyType) {
       getReplyElement(replyType, replyId).hide("blind", {direction:"vertical"}, DURATION)
     });
-  }
+  };
 
   /**
    * Hide a box beneath a reply, then show one.
@@ -71,7 +71,7 @@ $.fn.comments = function () {
    */
   this.showReportBox = function (replyId) {
     switchReplyBox("respond", "report", replyId);
-  }
+  };
 
   /**
    * Show the "respond to this posting" box beneath a reply, clearing the report box first if necessary.
@@ -79,7 +79,7 @@ $.fn.comments = function () {
    */
   this.showRepondBox = function (replyId) {
     switchReplyBox("report", "respond", replyId);
-  }
+  };
 
   /**
    * Submit a top-level response to an article and show the result. Talks to the server over Ajax.
@@ -90,9 +90,9 @@ $.fn.comments = function () {
     commentData.target = articleDoi;
     var submittedCallback = function (data) {
       window.location = this.addresses.listThreadURL + '?root=' + data.annotationId;
-    }
+    };
     sendComment(commentData, null, this.addresses.submitDiscussionURL, submittedCallback);
-  }
+  };
 
   /**
    * Submit the response data from a reply's response box and show the result. Talks to the server over Ajax.
@@ -120,10 +120,10 @@ $.fn.comments = function () {
         complete:function (jqXHR, textStatus) {
         }
       });
-    }
+    };
 
     sendComment(commentData, parentId, this.addresses.submitReplyURL, submittedCallback);
-  }
+  };
 
   /**
    * Send a comment to the server. The comment may be a top-level article comment, or a response to another response.
@@ -144,7 +144,7 @@ $.fn.comments = function () {
           return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
         },
         success:function (data, textStatus, jqXHR) {
-          var errors = Array();
+          var errors = new Array();
           for (var errorKey in data.fieldErrors) {
             errors.push(data.fieldErrors[errorKey]);
           }
@@ -218,4 +218,4 @@ $.fn.comments = function () {
     return data;
   }
 
-}
+};
