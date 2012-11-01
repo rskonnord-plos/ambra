@@ -269,7 +269,7 @@
         <param name="templateFile">/search/searchResults.ftl</param>
       </result>
       <result name="redirectToArticle" type="redirect">
-        ${journalURL}/article/fetchArticle.action?articleURI=${articleURI}
+        ${journalURL}/article/${articleURI}
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">500</param>
