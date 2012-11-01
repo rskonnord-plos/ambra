@@ -158,7 +158,7 @@
   </div>
 
   <div>
-    <textarea name="unformattedQuery" id="unformattedQueryId" title="Query"></textarea>
+    <textarea name="unformattedQuery" id="unformattedQueryId" title="Query">${unformattedQuery}</textarea>
   </div>
   <div class="btnwrap">
     <input type="submit" id="buttonSearchId" class="primary" value="Search" title="Search"/>
@@ -231,10 +231,10 @@ There are no results for your search query.<br/>
 <fieldset id="subjCats">
   <legend><span>Filter by Subject Category</span></legend>
   <ol>
-    <li><label><input id="subjectOption_all" type="radio" checked="checked" name="subjectCatOpt" value="all"
+    <li><label><input id="subjectOption_all" type="radio" <#if (filterSubjects?size == 0) > checked</#if> name="subjectCatOpt" value="all"
                       title="Search All Subject Categories"/> Search all subject categories</label></li>
     <li><label><input id="subjectOption_some" type="radio" name="subjectCatOpt" value="some"
-                      title="Search Selected Subject Categories"/>
+                      title="Search Selected Subject Categories" <#if (filterSubjects?size gt 0)> checked</#if>/>
       Only look for articles with the following subject categories:</label></li>
     <li class="options">
       <fieldset id="fsSubjectOpt">

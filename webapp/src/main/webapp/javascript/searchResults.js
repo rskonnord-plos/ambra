@@ -63,7 +63,6 @@ $(document).ready(
       $("#searchFormOnSearchResultsPage").submit();
     });
 
-
     //***************************************
     //UI control events linking in:
     //***************************************
@@ -71,6 +70,7 @@ $(document).ready(
     var $srch_facets = $('#search-facets');
     var $facets = $srch_facets.find('.facet');
     var $menu_itms = $srch_facets.find('div[data-facet]');
+
     $menu_itms.each(function() {
       $this = $(this);
       ref = $this.data('facet');
@@ -90,13 +90,15 @@ $(document).ready(
       ref = $this.data('facet');
       $('#' + ref).show();
     });
+
     $chkbxs = $srch_facets.find(':checkbox');
     $chkbxs.each(function() {
       chkbx = $(this);
       if (chkbx.prop('checked')) {
         chkbx.closest('dd').addClass('checked');
       }
-    })
+    });
+
     $chkbxs.on('change', function() {
       chkbx = $(this);
       if (chkbx.prop('checked')) {
@@ -106,11 +108,11 @@ $(document).ready(
       }
     });
 
-
     $srch_facets.find('.view-more').on('click', function() {
       $(this).hide()
         .closest('div.facet').find('dl.more').show();
     });
+
     $srch_facets.find('.view-less').on('click', function() {
       this_facet = $(this).closest('div.facet');
       this_facet.find('dl.more').hide();
@@ -126,6 +128,7 @@ $(document).ready(
         $('#endDateAsStringId').datepicker('option', 'minDate', selectedDate );
       }
     });
+
     $('#endDateAsStringId').datepicker({
       changeMonth: true,
       changeYear: true,

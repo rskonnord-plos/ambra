@@ -104,10 +104,10 @@ ERROR, searchType must be defined.
           <span>...</span>
         </#if>
 
-      <#--
-        Yes the following statements are confusing,
-        but it should take care of all the use cases defined at the top
-      --->
+        <#--
+          Yes the following statements are confusing,
+          but it should take care of all the use cases defined at the top
+        --->
         <#list min(currentPage - 1,0)..max(3,(currentPage + 1)) as pageNumber>
           <#if ((pageNumber > 1 && pageNumber < totalPages && pageNumber > (currentPage - 2)
           || ((pageNumber == (totalPages - 2)) && (pageNumber > (currentPage - 3)))))>
@@ -148,17 +148,28 @@ ERROR, searchType must be defined.
     <@s.hidden name="filterArticleType" />
     <@s.hidden name="filterKeyword" />
 
-    <fieldset>
-      <legend>Search</legend>
-      <label for="search">Search</label>
-      <div class="wrap">
-        <input id="search" type="text" name="query" value="${query?html}">
-        <input type="image" alt="SEARCH" src="/images/icon.search.gif">
-      </div>
-    </fieldset>
-
-    <a id="advSearch" class="btn" href="${advancedSearchURL}" name="advSearch">advanced</a>
+    <#if searchType == "simple">
+      <fieldset>
+        <legend>Search</legend>
+        <label for="search">Search</label>
+        <div class="wrap">
+          <input id="search" type="text" name="query" value="${query?html}">
+          <input type="image" alt="SEARCH" src="/images/icon.search.gif">
+        </div>
+      </fieldset>
+      <a id="advSearch" class="btn" href="${advancedSearchURL}" name="advSearch">advanced</a>
+    <#else>
+      <fieldset>
+        <legend>Search</legend>
+        <div class="wrap">
+          <textarea id="searchEdit" name="unformattedQuery">${queryAsExecuted?html}</textarea>
+        </div>
+      </fieldset>
+      <a id="advSearch" class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters />&noSearchFlag=set" name="advSearch">Edit Query</a>
+      <input type="submit" name="submit" value="Submit Search" />
+    </#if>
   </div>
+
   <div class="options">
     <span class="clear-filter">
       <a id="clearAllFilters" href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,filterArticleType,filterJournals,filterSubjects,startPage" values="" />" class="btn">Clear all filters</a></span>
@@ -178,6 +189,7 @@ ERROR, searchType must be defined.
       </select>
     </div>
   </div>
+
   <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || filterArticleType != "" ||
         (filterArticleType?length > 1) || (filterAuthors?size > 0) || filterKeyword != "")>
     <div class="filter-block cf">
@@ -326,7 +338,7 @@ ERROR, searchType must be defined.
         <dl class="more">
           <dt>More Article Types</dt>
           <#list resultsSinglePage.articleTypeFacet as f>
-          <#-- TODO: Confirm this logic works -->
+            <#-- TODO: Confirm this logic works -->
             <#if f_index gte max_articletypes_filter>
               <dd>
                 <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterArticleType,startPage" values=[f.name, 0] />&from=articleTypeFilterLink">${f.name} (${f.count})</a>
@@ -402,11 +414,12 @@ ERROR, searchType must be defined.
       </div>
     <#else>
       <#if ((totalNoOfResults == 0))>
-        <br/>
-        <br/>
-        TODO: Style ME!<br/><br/>
-        <br/>
-        NO RESULTS
+        <div id="search-results-block" class="cf">
+          <br/>
+          <h1>There are no results for the terms you entered.</h1>
+          <p>Please enter different terms
+          or try our <a href="${advancedSearchURL}">advanced search</a>.</p>
+        </div>
       <#else>
         <div id="search-results-block" class="cf">
 
