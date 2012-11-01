@@ -56,7 +56,8 @@ var isDate = function(field) {
   } else	 {
     is_date = false;
   }
-}
+};
+
 var changeField = function() {
   if (is_date && $date_el.is(':hidden')) {
     $term_el.hide();
@@ -177,7 +178,7 @@ var updateQuery = function() {
     q = query_type + ':' + q_string;
   }
   $query.val(q);
-}
+};
 
 $('#queryConjunctionAndId').on('click', updateQuery);
 $('#queryConjunctionOrId').on('click', updateQuery);
@@ -195,10 +196,3 @@ $('#clearFiltersButtonId2').on('click', function() {
 $('#clearUnformattedQueryButtonId').on('click', function() {
   $query.val('')
 });
-
-//Run change event on checkboxes to confirm selected state
-journals_all.click();
-subject_all.click();
-article_all.click();
-
-

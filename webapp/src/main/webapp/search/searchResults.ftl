@@ -136,11 +136,7 @@ ERROR, searchType must be defined.
 
 <#assign totalPages = ((totalNoOfResults + pageSize - 1) / pageSize)?int>
 
-<#if searchType == "simple">
 <form name="searchFormOnSearchResultsPage" id="searchFormOnSearchResultsPage" action="${searchURL}" method="get">
-<#else>
-<form name="searchFormOnSearchResultsPage" id="searchFormOnSearchResultsPage" action="${advancedSearchURL}" method="get">
-</#if>
 
 <div id="hdr-search-results">
   <div id="db">
@@ -161,12 +157,13 @@ ERROR, searchType must be defined.
     <#else>
       <fieldset>
         <legend>Search</legend>
+        <label for="search">Search</label>
         <div class="wrap">
           <textarea id="searchEdit" name="unformattedQuery">${queryAsExecuted?html}</textarea>
         </div>
       </fieldset>
       <a id="advSearch" class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters />&noSearchFlag=set" name="advSearch">Edit Query</a>
-      <input type="submit" name="submit" value="Submit Search" />
+      <input type="submit" name="submitSearch" value="Submit Search" />
     </#if>
   </div>
 

@@ -2,7 +2,6 @@
 <#assign slctdstr = "selected=\"selected\"">
 <#macro slctd tstr str><#if tstr == str>${slctdstr}</#if></#macro>
 <#macro chkd tstr str><#if tstr == str>${checkedstr}</#if></#macro>
-<#macro chkdlist tstr strlist><#list strlist as str><#if tstr == str>${checkedstr}</#if></#list></#macro>
 <!-- begin : unformatted search form -->
 
 <div id="pagebdy-wrap" class="bg-dk">
@@ -20,10 +19,10 @@
       <h3>Find an Article</h3>
     </div>
     <div class="body">
-    <@s.url id="findAnArticleSearchURL" includeParams="none" namespace="/search" action="findAnArticleSearch" />
-      <form id="quickFind" name="findAnArticleSearchForm" onsubmit="return true;" action="${findAnArticleSearchURL}"
-            method="get" enctype="multipart/form-data" class="advSearch" title="Find An Article Search Form">
-      <@s.hidden name="pageSize" />
+    <@s.url id="quickSearchURL" includeParams="none" namespace="/search" action="quickSearch" />
+      <form id="quickFind" name="quickSearchForm" onsubmit="return true;" action="${quickSearchURL}"
+            method="get" class="advSearch" title="Find An Article Search Form">
+        <@s.hidden name="pageSize" />
 
         <p>Use citation information to quickly find a specific article.</p>
         <fieldset>
@@ -57,7 +56,7 @@
           </ul>
         </fieldset>
         <div class="btnwrap">
-          <input type="button" id="buttonGoId" class="primary" value="Go" title="Go"/>
+          <input type="submit" id="buttonGoId" class="primary" value="Go" title="Go"/>
         </div>
       </form>
     </div>
@@ -168,42 +167,42 @@
 </fieldset>
 
 <#if filterReset>
-There are no results for your search query.<br/>
-<br/>
-        <span id="filterReset">
-          <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?length > 1))>
-            You searched for articles that have all of the following:<br/>
-          <br/>
-          </#if>
-          <#if (filterSubjects?size > 0)>
-            Subject categories:
-            <b><#list filterSubjects as subject>"${subject}
-              " <#if (subject_index) gt filterSubjects?size - 3><#if subject_has_next>
-                and </#if><#else><#if subject_has_next>, </#if></#if></#list></b>
-            <br/>
-          </#if>
-          <#if (filterJournals?size > 0)>
-            Journals:
-            <b><#list filterJournals as journal>"${freemarker_config.getDisplayName(journal)}
-              "<#if (journal_index) gt filterJournals?size - 3><#if journal_has_next>
-                and </#if><#else><#if journal_has_next>, </#if></#if></#list></b>
-            <br/>
-          </#if>
-          <#if (filterArticleType?length > 1)>
-            Article Type: ${filterArticleType}
-            <br/>
-          </#if>
-        </span>
-<br/>
-<input type="button" name="clearFiltersButton1" id="clearFiltersButtonId1" value="Clear Filters"/>
+  There are no results for your search query.<br/>
+  <br/>
+    <span id="filterReset">
+      <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?length > 1))>
+        You searched for articles that have all of the following:<br/>
+      <br/>
+      </#if>
+      <#if (filterSubjects?size > 0)>
+        Subject categories:
+        <b><#list filterSubjects as subject>"${subject}
+          " <#if (subject_index) gt filterSubjects?size - 3><#if subject_has_next>
+            and </#if><#else><#if subject_has_next>, </#if></#if></#list></b>
+        <br/>
+      </#if>
+      <#if (filterJournals?size > 0)>
+        Journals:
+        <b><#list filterJournals as journal>"${freemarker_config.getDisplayName(journal)}
+          "<#if (journal_index) gt filterJournals?size - 3><#if journal_has_next>
+            and </#if><#else><#if journal_has_next>, </#if></#if></#list></b>
+        <br/>
+      </#if>
+      <#if (filterArticleType?length > 1)>
+        Article Type: ${filterArticleType}
+        <br/>
+      </#if>
+    </span>
+  <br/>
+  <input type="button" name="clearFiltersButton1" id="clearFiltersButtonId1" value="Clear Filters"/>
 </#if>
 
 <fieldset id="journals">
   <legend><span>Filter by Journal</span></legend>
   <ol>
-    <li><label><input id="journalsOpt_all" type="radio" name="journalOpt" value="all" checked="checked"
+    <li><label><input id="journalsOpt_all" type="radio" name="journalOpt" value="all" <#if (filterJournals?size == 0)> checked</#if>
                       title="Search All Journals"/> Search all journals</label></li>
-    <li><label><input id="journalsOpt_slct" type="radio" name="journalOpt" value="some"
+    <li><label><input id="journalsOpt_slct" type="radio" name="journalOpt" value="some" <#if (filterJournals?size gt 0)> checked</#if>
                       title="Search Selected Journals"/> Only search in the following journals:</label></li>
     <li class="options">
       <fieldset id="fsJournalOpt">
@@ -212,7 +211,7 @@ There are no results for your search query.<br/>
           <#list journals as journal>
             <li>
               <input id="filterJournals_${journal.name}" name="filterJournals" value="${journal.name}"
-                     type="checkbox" <@chkdlist tstr=journal.name strlist=(filterJournals![])/>
+                     type="checkbox" <#if (filterJournals?seq_contains(journal.name)) > checked</#if>
                      title="Select ${freemarker_config.getDisplayName(journal.name)}"
                      alt="Select Journal ${freemarker_config.getDisplayName(journal.name)} Check Box"/>&nbsp;
               <label for="filterJournals_${journal.name}">${freemarker_config.getDisplayName(journal.name)}</label>
@@ -220,7 +219,7 @@ There are no results for your search query.<br/>
           </#list>
         <#else>
           <br/>
-          <span id="filterReset" style="color:red;">ERROR: There are matching journals in the system.</span>
+          <span id="filterReset" style="color:red;">ERROR: There are no matching journals in the system.</span>
         </#if>
         </ul>
       </fieldset>
@@ -257,7 +256,7 @@ There are no results for your search query.<br/>
               <#assign subjectId = subject.name?replace(" ","_","r")>
               <li>
                 <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
-                       type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked="true"</#if>
+                       type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
                        title="Select Subject Category ${subject.name}"
                        alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
                 <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
@@ -270,7 +269,7 @@ There are no results for your search query.<br/>
               <#assign subjectId = subject.name?replace(" ","_","r")>
               <li>
                 <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
-                       type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked="true"</#if>
+                       type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
                        title="Select Subject Category ${subject.name}"
                        alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
                 <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
@@ -290,9 +289,9 @@ There are no results for your search query.<br/>
   <legend><span>Filter by Article Type</span></legend>
   <ol>
     <li><label><input id="articleType_all" type="radio" checked="checked" name="filterArticleTypeOpt" value="all"
-                      title="Search All Article Types"/> Search all article types</label></li>
+      <#if (filterArticleType?length == 0)> checked</#if> title="Search All Article Types"/> Search all article types</label></li>
     <li><label><input id="articleType_one" type="radio" name="filterArticleTypeOpt" value="some"
-                      title="Search For Only Selected Article Type"/> Search for one of the following:</label></li>
+      <#if (filterArticleType?length gt 0)> checked</#if> title="Search For Only Selected Article Type"/> Search for one of the following:</label></li>
     <li class="options">
       <fieldset id="fsarticleTypOpt">
       <#if articleTypes?? && articleTypes?size gt 0>
@@ -303,7 +302,7 @@ There are no results for your search query.<br/>
               <#assign articleTypeId = articleType.name?replace(" ","_","r")>
               <li>
                 <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                       type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
+                       type="radio" <#if (filterArticleType == articleType.name) > checked</#if>
                        title="Select Article Type ${articleType.name}"
                        alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
                 <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
