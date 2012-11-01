@@ -149,4 +149,26 @@ $(document).ready(
     ).prependTo($hdr_search.find('div.options'));
 
     $('#sortPicklist').uniform();
+
+    //***************************************
+    //Wire in ALM Stats
+    //***************************************
+    var almService = new $.fn.alm(),
+      ids = new Array();
+
+    $("li[doi]").each(function(index, element) {
+      ids[ids.length] = $(element).attr("doi");
+    });
+
+    console.log(ids);
+
+    almService.getSummaryForArticles(ids, setALMSearchWidgets, setALMSearchWidgetsError);
+
+    function setALMSearchWidgets() {
+      console.log('setALMSearchWidgets');
+    }
+
+    function setALMSearchWidgetsError() {
+      console.log('setALMSearchWidgetsError');
+    }
 });
