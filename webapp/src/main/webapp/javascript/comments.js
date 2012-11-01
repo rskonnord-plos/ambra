@@ -77,7 +77,7 @@ $.fn.comments = function () {
    * Show the "respond to this posting" box beneath a reply, clearing the report box first if necessary.
    * @param replyId  the ID of the reply where the box should be shown
    */
-  this.showRepondBox = function (replyId) {
+  this.showRespondBox = function (replyId) {
     switchReplyBox("report", "respond", replyId);
   };
 
@@ -227,7 +227,7 @@ $.fn.comments = function () {
       '        report a concern\n',
       '      </a>\n',
       '      <a href="', addresses.loginURL, '"\n',
-      '         onclick="comments.showRepondBox(\'', replyId, '\'); return false;"\n',
+      '         onclick="comments.showRespondBox(\'', replyId, '\'); return false;"\n',
       '         class="respond tooltip btn" title="Click to respond">\n',
       '        respond to this posting\n',
       '      </a>\n',
