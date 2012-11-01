@@ -260,7 +260,8 @@
       </result>
     </action>
 
-    <action name="findAnArticleSearch" class="org.ambraproject.action.search.SearchAction" method="executeFindAnArticleSearch">
+    <!--Probably not the best action name here, suggestions? -->
+    <action name="quickSearch" class="org.ambraproject.action.search.SearchAction" method="executeQuickSearch">
       <result name="input" type="default_freemarker">
         <param name="templateFile">/search/searchAdvanced.ftl</param>
       </result>

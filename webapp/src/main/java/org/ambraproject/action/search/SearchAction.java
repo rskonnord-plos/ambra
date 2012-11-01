@@ -194,8 +194,8 @@ public class SearchAction extends BaseSessionAwareActionSupport {
    * @return return a search result based on the <code>unformattedSearch</code> parameter,
    * moderated by filters based on the and the journal and category properties.
    */
-  public String executeFindAnArticleSearch() {
-    searchType = "findAnArticle";
+  public String executeQuickSearch() {
+    searchType = "quickSearch";
 
     setDefaultsCommon();
 

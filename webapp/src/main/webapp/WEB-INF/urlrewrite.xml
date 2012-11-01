@@ -428,4 +428,22 @@
     <to>$1/search/advanced$2</to>
   </outbound-rule>
 
+  <rule>
+    <note>
+      re-write incoming quick searches
+      /search/quick -> search/quickSearch.action
+    </note>
+    <from>^(/.+)?/search/quick(.*)?</from>
+    <to>$1/search/quickSearch.action$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound quick search requests
+      /search/quickSearch.action -> /search/quick
+    </note>
+    <from>^(/.+)?/search/quickSearch.action(.*)?</from>
+    <to>$1/search/quick$2</to>
+  </outbound-rule>
+
 </urlrewrite>
