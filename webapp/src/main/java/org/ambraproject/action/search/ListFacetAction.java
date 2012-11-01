@@ -71,8 +71,8 @@ public class ListFacetAction extends SearchAction {
     if(searchType.equals("unformatted"))
       return executeUnformattedSearch();
 
-    if(searchType.equals("findAnArticle"))
-      return executeFindAnArticleSearch();
+    if(searchType.equals("quickSearch"))
+      return executeQuickSearch();
 
     log.error("Invalid Search Type specified of " + searchType);
 
