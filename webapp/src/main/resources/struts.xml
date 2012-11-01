@@ -249,7 +249,7 @@
 
     <action name="advancedSearch" class="org.ambraproject.action.search.SearchAction" method="executeUnformattedSearch">
       <result name="input" type="default_freemarker">
-        <param name="templateFile">/search/searchUnformatted.ftl</param>
+        <param name="templateFile">/search/searchAdvanced.ftl</param>
       </result>
       <result name="success" type="default_freemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
@@ -262,7 +262,7 @@
 
     <action name="findAnArticleSearch" class="org.ambraproject.action.search.SearchAction" method="executeFindAnArticleSearch">
       <result name="input" type="default_freemarker">
-        <param name="templateFile">/search/searchUnformatted.ftl</param>
+        <param name="templateFile">/search/searchAdvanced.ftl</param>
       </result>
       <result name="success" type="default_freemarker">
         <param name="templateFile">/search/searchResults.ftl</param>
