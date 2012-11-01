@@ -27,6 +27,11 @@ $.fn.comments = function () {
    */
   var DURATION = 500;
 
+  /* 
+   * Must be supplied from the calling page (where it would be populated by FreeMarker).
+   */
+  this.addresses = null;
+
   /**
    * Return a reference to a JQuery page element.
    * @param elementType  the prefix of the element ID
@@ -79,31 +84,27 @@ $.fn.comments = function () {
   /**
    * Submit a top-level response to an article and show the result. Talks to the server over Ajax.
    * @param articleDoi the DOI of the article to which the user is responding
-   * @param submitUrl  the URL to send the Ajax request to
-   * @param forwardUrl  the URL to which to forward the user after the server accepts the response
-   * @param forwardParam  the parameter of forwardUrl that should be the new response's ID
    */
-  this.submitDiscussion = function (articleDoi, submitUrl, forwardUrl, forwardParam) {
+  this.submitDiscussion = function (articleDoi) {
     var commentData = getCommentData(null);
     commentData.target = articleDoi;
     var submittedCallback = function (data) {
-      window.location = forwardUrl + '?' + forwardParam + '=' + data.annotationId;
+      window.location = this.addresses.listThreadURL + '?root=' + data.annotationId;
     }
-    sendComment(commentData, null, submitUrl, submittedCallback);
+    sendComment(commentData, null, this.addresses.submitDiscussionURL, submittedCallback);
   }
 
   /**
    * Submit the response data from a reply's response box and show the result. Talks to the server over Ajax.
    * @param parentId  the ID of the existing reply, to which the user is responding
-   * @param submitUrl  the URL to send the Ajax request to
    */
-  this.submitResponse = function (parentId, submitUrl, getUrl) {
+  this.submitResponse = function (parentId) {
     var commentData = getCommentData(parentId);
     commentData.inReplyTo = parentId;
 
     var submittedCallback = function (data) {
       // Make a second Ajax request to get the new comment (we need its back-end representation)
-      $.ajax(getUrl, {
+      $.ajax(this.addresses.getAnnotationURL, {
         dataType:"json",
         data:{annotationId:data.replyId},
         dataFilter:function (data, type) {
@@ -121,7 +122,7 @@ $.fn.comments = function () {
       });
     }
 
-    sendComment(commentData, parentId, submitUrl, submittedCallback);
+    sendComment(commentData, parentId, this.addresses.submitReplyURL, submittedCallback);
   }
 
   /**
