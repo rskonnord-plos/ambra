@@ -111,6 +111,39 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     if (dbVersion < 246) {
       migrate245();
     }
+
+    if (dbVersion < 247) {
+      migrate246();
+    }
+
+  }
+
+  private void migrate246() {
+
+    log.info("Migration GINZU starting");
+
+    hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        v.setName("Ambra GINZU TEMP");
+        v.setVersion(247);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        log.debug("Altering table.");
+
+        execSQLScript(session, "migrate_ambra_2_4_7.sql");
+
+        v.setUpdateInProcess(false);
+        session.update(v);
+
+        return null;
+      }
+    });
+
+    log.info("Migration GINZU TEMP complete");
+
   }
 
   private void migrate245() {
