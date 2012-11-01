@@ -88,8 +88,10 @@ $.fn.comments = function () {
   this.submitDiscussion = function (articleDoi) {
     var commentData = getCommentData(null);
     commentData.target = articleDoi;
+
+    var listThreadURL = this.addresses.listThreadURL;
     var submittedCallback = function (data) {
-      window.location = this.addresses.listThreadURL + '?root=' + data.annotationId;
+      window.location = listThreadURL + '?root=' + data.annotationId;
     };
     sendComment(commentData, null, this.addresses.submitDiscussionURL, submittedCallback);
   };
@@ -102,9 +104,10 @@ $.fn.comments = function () {
     var commentData = getCommentData(parentId);
     commentData.inReplyTo = parentId;
 
+    var getAnnotationURL = this.addresses.getAnnotationURL;
     var submittedCallback = function (data) {
       // Make a second Ajax request to get the new comment (we need its back-end representation)
-      $.ajax(this.addresses.getAnnotationURL, {
+      $.ajax(getAnnotationURL, {
         dataType:"json",
         data:{annotationId:data.replyId},
         dataFilter:function (data, type) {
