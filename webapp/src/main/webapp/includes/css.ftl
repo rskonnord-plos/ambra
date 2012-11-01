@@ -6,7 +6,7 @@
   <#if freemarker_config.debug>
     <#assign cssFileName = "${cssFile}" />
   <#else>
-    <#assign cssFileName = "${cssFile?replace('.css','-min.css')}" />
+    <#assign cssFileName = "${cssFile?replace('.css$','-min.css','r')}" />
   </#if>
 
   <#if cssFile?contains("_ie7")>
