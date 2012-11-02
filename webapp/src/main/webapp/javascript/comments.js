@@ -26,6 +26,12 @@ $.fn.comments = function () {
    */
   this.addresses = null;
 
+  /**
+   * Table mapping reply IDs to their page depths. Necessary for placing newly posted replies on the page.
+   * @type {Object}
+   */
+  var depths = {};
+
   function animatedShow(element) {
     element.show("blind", 500);
   }
@@ -43,6 +49,15 @@ $.fn.comments = function () {
     return (replyId == null)
       ? $('#reply')
       : $('#reply-' + replyId);
+  }
+
+  /**
+   * Return a reference to the JQuery div that holds the replies to a parent comment.
+   * @param parentId  the non-null ID of the parent comment
+   * @return {*} the reply list div
+   */
+  function getReplyListFor(parentId) {
+    return $('#replies_to-' + parentId);
   }
 
   /**
@@ -92,8 +107,9 @@ $.fn.comments = function () {
    * Show the "respond to this posting" box beneath a reply, clearing the report box first if necessary.
    * @param replyId  the ID of the reply where the box should be shown
    */
-  this.showRespondBox = function (replyId) {
-    var parentTitle = getReplyElement(replyId).find('h3').text();
+  this.showRespondBox = function (replyId, depth) {
+    depths[replyId] = depth;
+    var parentTitle = getReplyElement(replyId).find('.response_title').text();
     showBox(replyId, 'report', 'respond', function (box) {
       box.find('.btn_submit').attr('onclick', 'comments.submitResponse(' + replyId + ')');
       box.find('[name="comment_title"]').attr("value", 'RE: ' + parentTitle);
@@ -118,7 +134,6 @@ $.fn.comments = function () {
   /**
    * Submit the response data from a reply's response box and show the result. Talks to the server over Ajax.
    * @param parentId  the ID of the existing reply, to which the user is responding
-   * @param parentDepth  the tree depth of the parent reply (how many steps away from the root reply)
    */
   this.submitResponse = function (parentId) {
     var commentData = getCommentData(parentId);
@@ -135,7 +150,7 @@ $.fn.comments = function () {
         },
         success:function (data, textStatus, jqXHR) {
           // Got the new comment; now add the content to the page
-          putComment(parentId, parentDepth, data.annotation, addresses);
+          putComment(parentId, data.annotationId, data.annotation, addresses);
         },
         error:function (jqXHR, textStatus, errorThrown) {
           alert(textStatus + '\n' + errorThrown);
@@ -212,10 +227,31 @@ $.fn.comments = function () {
   /**
    * Add a comment in its proper place in its thread.
    * @param parentId  the ID of the comment's parent (defines where to put the new comment)
-   * @param reply  data for the new response (currently from AnnotationView; TODO finalize contract)
+   * @param childId  the ID of the new comment
+   * @param childReply  data for the new comment
    */
-  function putComment(parentId, parentDepth, reply, addresses) {
-    alert("Unimplemented"); // TODO
+  function putComment(parentId, childId, childReply, addresses) {
+    var childDepth = depths[parentId] + 1;
+    depths[childId] = childDepth;
+    var comment = $('#reply-skeleton').clone();
+
+    comment.attr('id', 'reply-' + childId);
+    comment.attr('style', 'margin-left: ' + (30 * childDepth) + 'px');
+    comment.find('.response_title').text(childReply.title);
+    comment.find('.response_body').html(childReply.body);
+
+    comment.find('.flag.btn').attr('onclick', 'comments.showReportBox(' + childId + ')');
+    comment.find('.respond.btn').attr('onclick', 'comments.showRespondBox(' + childId + ', ' + childDepth + ')');
+
+    // We need to set some of the raw HTML here because the skeletal reply only covers one mode
+    comment.find('.competing_interests').html(
+      (childReply.competingInterestStatement != null && childReply.competingInterestStatement.length > 0)
+        ? ('<strong>Competing interests declared:</strong> ' + childReply.competingInterestStatement)
+        : ('<strong>No competing interests declared.</strong>')
+    );
+
+    getReplyListFor(parentId).append(comment);
+    comment.show();
   }
 
 };

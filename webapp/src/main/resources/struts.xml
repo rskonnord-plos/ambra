@@ -715,6 +715,8 @@
           annotation.type,
           annotation.truncatedBody,
           annotation.truncatedCompetingInterestStatement
+          annotation.body,
+          annotation.competingInterestStatement
         </param>
       </result>
     </action>
