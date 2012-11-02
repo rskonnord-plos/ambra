@@ -19,11 +19,10 @@
       <h3>Find an Article</h3>
     </div>
     <div class="body">
-    <@s.url id="quickSearchURL" includeParams="none" namespace="/search" action="quickSearch" />
+      <@s.url id="quickSearchURL" includeParams="none" namespace="/search" action="quickSearch" />
       <form id="quickFind" name="quickSearchForm" onsubmit="return true;" action="${quickSearchURL}"
             method="get" class="advSearch" title="Find An Article Search Form">
         <@s.hidden name="pageSize" />
-
         <p>Use citation information to quickly find a specific article.</p>
         <fieldset>
           <legend>Enter the following:</legend>
@@ -139,7 +138,8 @@
     </select>
 
     <span id="queryTermDivBlockId" style="display:inline;">
-      <input type="text" name="queryTerm" id="queryTermId" placeholder="Enter search terms" title="Search Term"/>
+      <input type="text" name="queryTerm" id="queryTermId" placeholder="Enter search terms" title="Search Term"
+             value="${query}"/>
     </span>
     <span id="startAndEndDateDivBlockId" style="display:none;">
       <input type="text" name="startDateAsString" maxlength="10" placeholder="YYYY-MM-DD" id="startDateAsStringId"

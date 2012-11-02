@@ -153,13 +153,14 @@ ERROR, searchType must be defined.
       <input type="image" alt="SEARCH" src="/images/icon.search.gif">
     </div>
   </fieldset>
-  <a id="advSearch" class="btn" href="${advancedSearchURL}" name="advSearch">advanced</a>
+  <a id="advSearch" class="btn" href="${advancedSearchURL}?query=${query?html}&noSearchFlag=set" name="advSearch">advanced</a>
 <#else>
   <fieldset>
     <legend>Search</legend>
     <label for="search">Search</label>
     <div class="wrap">
-      <textarea id="searchEdit" name="unformattedQuery">${queryAsExecuted?html}</textarea>
+      <input id="search" type="text" name="unformattedQuery" value="${queryAsExecuted?html}">
+      <input type="image" alt="SEARCH" src="/images/icon.search.gif">
     </div>
   </fieldset>
   <a id="advSearch" class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters />&noSearchFlag=set" name="advSearch">Edit Query</a>
@@ -399,10 +400,9 @@ ERROR, searchType must be defined.
 
   <#if (fieldErrors?? && numFieldErrors > 0)>
     <div class="error">
-      <br/>
-      <br/>
-      TODO: Style ME!<br/><br/>
-      <br/>
+      <h1>There was a problem with the terms you entered.</h1>
+      <p>Please enter different terms
+        or try our <a href="${advancedSearchURL}">advanced search</a>.</p>
       <#list fieldErrors?keys as key>
         <#list fieldErrors[key] as errorMessage>
         ${errorMessage}
