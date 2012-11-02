@@ -446,4 +446,58 @@
     <to>$1/search/quick$2</to>
   </outbound-rule>
 
+  <rule>
+    <note>
+      re-write browse volume
+      /article/browse/volume -> /article/browse/volume.action
+    </note>
+    <from>^(/.+)?/article/browse/volume$</from>
+    <to>$1/article/browse/volume.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse volume
+      /article/browse/volume.action -> /article/browse/volume
+    </note>
+    <from>^(/.+)?/article/browse/volume.action</from>
+    <to>$1/article/browse/volume</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write browse issue
+      /article/browse/issue -> /article/browse/issue.action
+    </note>
+    <from>^(/.+)?/article/browse/issue/?$</from>
+    <to>$1/article/browse/issue.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse issue
+      /article/browse/issue.action -> /article/browse/issue
+    </note>
+    <from>^(/.+)?/article/browse/issue.action$</from>
+    <to>$1/article/browse/issue</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write browse issue
+      /article/browse/issue/doi -> /article/browse/issue.action?issue=doi
+    </note>
+    <from>^(/.+)?/article/browse/issue/(.*)?</from>
+    <to>$1/article/browse/issue.action?issue=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse issue
+      /article/browse/issue.action?issue=doi -> /article/browse/issue/doi
+    </note>
+    <from>^(/.+)?/article/browse/issue.action\?issue=(.*)?</from>
+    <to>$1/article/browse/issue/$2</to>
+  </outbound-rule>
+
 </urlrewrite>

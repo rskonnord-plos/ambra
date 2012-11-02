@@ -353,7 +353,7 @@
     </action>
   </package>
 
-  <package name="browse" extends="default" namespace="/browse">
+  <package name="browse" extends="default" namespace="/article/browse">
     <action name="browse" class="org.ambraproject.action.article.BrowseArticlesAction">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/browse.ftl</param>
