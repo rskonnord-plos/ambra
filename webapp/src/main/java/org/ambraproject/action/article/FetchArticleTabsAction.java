@@ -597,19 +597,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    * @return Comma delimited string of authors
    */
   public String getAuthorNames() {
-    StringBuilder sb = new StringBuilder();
-
-    //Fixed for JIRA Id: NHOPE-88
-
-    for (AuthorExtra author : authorExtras) {
-      if (sb.length() > 0) {
-        sb.append(", ");
-      }
-
-      sb.append(author.getAuthorName());
-    }
-
-    return sb.toString();
+    return AuthorExtra.buildNameList(authorExtras);
   }
 
   /**

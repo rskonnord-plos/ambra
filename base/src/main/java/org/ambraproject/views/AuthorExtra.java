@@ -21,6 +21,8 @@
 package org.ambraproject.views;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class AuthorExtra {
   private String authorName;
@@ -50,4 +52,24 @@ public class AuthorExtra {
   public void setEqualContrib(String equalContrib) {
     this.equalContrib = equalContrib;
   }
+
+  /**
+   * Build a comma-delimited list of author names.
+   *
+   * @param authors a list of non-null authors
+   * @return the list of author names, as text
+   */
+  public static String buildNameList(List<? extends AuthorExtra> authors) {
+    Iterator<? extends AuthorExtra> iterator = authors.iterator();
+    if (!iterator.hasNext()) {
+      return "";
+    }
+    StringBuilder textList = new StringBuilder();
+    textList.append(iterator.next().getAuthorName());
+    while (iterator.hasNext()) {
+      textList.append(", ").append(iterator.next().getAuthorName());
+    }
+    return textList.toString();
+  }
+
 }

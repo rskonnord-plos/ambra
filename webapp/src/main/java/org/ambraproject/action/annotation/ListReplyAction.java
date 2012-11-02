@@ -81,6 +81,15 @@ public class ListReplyAction extends BaseActionSupport {
     return SUCCESS;
   }
 
+  /**
+   * Textual view of the author names, for FreeMarker.
+   *
+   * @return a comma-delimited list of the names from author extras
+   */
+  public String getAuthorNames() {
+    return AuthorExtra.buildNameList(authorExtras);
+  }
+
   public void setRoot(final Long root) {
     this.root = root;
   }
