@@ -93,7 +93,7 @@
 </div> <!-- col-1 -->
 
 <div class="col-2">
-
+<@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp" />
 <@s.url id="unformattedSearchURL" includeParams="none" namespace="/search" action="advancedSearch" />
 <form id="unformattedSearchFormId" name="unformattedSearchForm" onsubmit="return true;" action="${unformattedSearchURL}"
       method="get" enctype="multipart/form-data" class="advSearch" title="Advanced Search">
@@ -102,7 +102,7 @@
 <@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp" />
 
 <fieldset id="queryBuilder">
-  <legend><span>Construct Your Search <a href="/static/searchHelp.action">Help</a></span></legend>
+  <legend><span>Construct Your Search <a href="${searchHelpURL}">Help</a></span></legend>
 
   <div>
     <select name="queryField" id="queryFieldId" title="Search Field">
