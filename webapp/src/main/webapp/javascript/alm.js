@@ -1298,7 +1298,12 @@ $(document).ready(
         }
 
         if(scopus > 0) {
-          var li = $('<li><span class="num">' + scopus.format(0,'.',',') + '</span> CITATIONS<br/><br/></li>');
+          var text = "CITATIONS";
+          if(scopus == 1) {
+            text = "CITATION";
+          }
+
+          var li = $('<li><span class="num">' + scopus.format(0,'.',',') + '</span> ' + text + '<br/><br/></li>');
           $("#almSignPost").append(li);
         }
 
