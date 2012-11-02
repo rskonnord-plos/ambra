@@ -24,30 +24,32 @@
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
-  <h1>Find this article online</h1>
-  <h2>${title?html}</h2>
-  <p>Use the following links to find the article:</p>
-  <ul>
-  <li><a href="${crossRefUrl}"
-   onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in CrossRef" class="crossref icon">CrossRef</a>
-    <#if pubGetUrl??>
-      <a href="${pubGetUrl}"
-   onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Get the full text PDF from PubGet">
-        <img title="Get the full text PDF from PubGet" src="${freemarker_config.context}/images/icon_pubgetpdf.gif"/></a>
-    </#if>
-  </li>
-  <#if (author?has_content)>
-    <#assign pubMedAuthorQuery = author + "[author] AND ">
-    <#assign googleAuthorQuery = "author:" + author + " ">
-  <#else>
-    <#assign pubMedAuthorQuery = "">
-    <#assign googleAuthorQuery = "">
-  </#if>
-  <li><a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&cmd=Search&doptcmdl=Citation&defaultField=Title+Word&term=${pubMedAuthorQuery?url}${title?url}"
-   onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in PubMed" class="ncbi icon">PubMed/NCBI</a></li>
-  <li><a href="http://scholar.google.com/scholar?hl=en&safe=off&q=${googleAuthorQuery?url}%22${title?url}%22"
-       onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in Google Scholar" class="google icon">Google Scholar</a></li>
-  </ul>
-  <a href="${articleURL}" class="article icon">Back to article</a>
+    <div id="static-wrap">
+      <h1>Find this article online</h1>
+      <h2>${title?html}</h2>
+      <p>Use the following links to find the article:</p>
+      <ul>
+      <li><a href="${crossRefUrl}"
+            onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in CrossRef" class="crossref icon">CrossRef</a>
+        <#if pubGetUrl??>
+          <a href="${pubGetUrl}"
+              onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Get the full text PDF from PubGet">
+            <img title="Get the full text PDF from PubGet" src="${freemarker_config.context}/images/icon_pubgetpdf.gif"/></a>
+        </#if>
+      </li>
+      <#if (author?has_content)>
+        <#assign pubMedAuthorQuery = author + "[author] AND ">
+        <#assign googleAuthorQuery = "author:" + author + " ">
+      <#else>
+        <#assign pubMedAuthorQuery = "">
+        <#assign googleAuthorQuery = "">
+      </#if>
+      <li><a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&cmd=Search&doptcmdl=Citation&defaultField=Title+Word&term=${pubMedAuthorQuery?url}${title?url}"
+       onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in PubMed" class="ncbi icon">PubMed/NCBI</a></li>
+      <li><a href="http://scholar.google.com/scholar?hl=en&safe=off&q=${googleAuthorQuery?url}%22${title?url}%22"
+           onclick="window.open(this.href, 'ambraFindArticle','');return false;" title="Go to article in Google Scholar" class="google icon">Google Scholar</a></li>
+      </ul>
+      <a href="${articleURL}" class="article icon">Back to article</a>
+    </div>
   </div>
 </div>
