@@ -926,6 +926,14 @@ Number.prototype.format = function(c, d, t){
     Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
+
+
 //******************************
 //Browse / issue page functions
 //******************************
