@@ -235,4 +235,55 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
   public void setCitedArticles(List<CitedArticle> citedArticles) {
     this.citedArticles = citedArticles;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+
+    ArticleInfo that = (ArticleInfo) o;
+
+    if (articleAssets != null ? !articleAssets.equals(that.articleAssets) : that.articleAssets != null) return false;
+    if (categories != null ? !categories.equals(that.categories) : that.categories != null) return false;
+    if (citedArticles != null ? !citedArticles.equals(that.citedArticles) : that.citedArticles != null) return false;
+    if (collaborativeAuthors != null ? !collaborativeAuthors.equals(that.collaborativeAuthors) : that.collaborativeAuthors != null)
+      return false;
+    if (description != null ? !description.equals(that.description) : that.description != null) return false;
+    if (eLocationId != null ? !eLocationId.equals(that.eLocationId) : that.eLocationId != null) return false;
+    if (id != null ? !id.equals(that.id) : that.id != null) return false;
+    if (issue != null ? !issue.equals(that.issue) : that.issue != null) return false;
+    if (journal != null ? !journal.equals(that.journal) : that.journal != null) return false;
+    if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
+    if (publisher != null ? !publisher.equals(that.publisher) : that.publisher != null) return false;
+    if (relatedArticles != null ? !relatedArticles.equals(that.relatedArticles) : that.relatedArticles != null)
+      return false;
+    if (rights != null ? !rights.equals(that.rights) : that.rights != null) return false;
+    if (unformattedTitle != null ? !unformattedTitle.equals(that.unformattedTitle) : that.unformattedTitle != null)
+      return false;
+    if (volume != null ? !volume.equals(that.volume) : that.volume != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (id != null ? id.hashCode() : 0);
+    result = 31 * result + (relatedArticles != null ? relatedArticles.hashCode() : 0);
+    result = 31 * result + (collaborativeAuthors != null ? collaborativeAuthors.hashCode() : 0);
+    result = 31 * result + (publisher != null ? publisher.hashCode() : 0);
+    result = 31 * result + (rights != null ? rights.hashCode() : 0);
+    result = 31 * result + (description != null ? description.hashCode() : 0);
+    result = 31 * result + (journal != null ? journal.hashCode() : 0);
+    result = 31 * result + (pages != null ? pages.hashCode() : 0);
+    result = 31 * result + (categories != null ? categories.hashCode() : 0);
+    result = 31 * result + (eLocationId != null ? eLocationId.hashCode() : 0);
+    result = 31 * result + (volume != null ? volume.hashCode() : 0);
+    result = 31 * result + (issue != null ? issue.hashCode() : 0);
+    result = 31 * result + (articleAssets != null ? articleAssets.hashCode() : 0);
+    result = 31 * result + (citedArticles != null ? citedArticles.hashCode() : 0);
+    result = 31 * result + (unformattedTitle != null ? unformattedTitle.hashCode() : 0);
+    return result;
+  }
 }

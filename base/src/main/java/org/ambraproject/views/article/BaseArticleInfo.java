@@ -236,4 +236,36 @@ public abstract class BaseArticleInfo {
     }
     return articleTypeForDisplay;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    BaseArticleInfo that = (BaseArticleInfo) o;
+
+    if (articleTypes != null ? !articleTypes.equals(that.articleTypes) : that.articleTypes != null) return false;
+    if (authors != null ? !authors.equals(that.authors) : that.authors != null) return false;
+    if (date != null ? !date.equals(that.date) : that.date != null) return false;
+    if (doi != null ? !doi.equals(that.doi) : that.doi != null) return false;
+    if (eIssn != null ? !eIssn.equals(that.eIssn) : that.eIssn != null) return false;
+    if (journals != null ? !journals.equals(that.journals) : that.journals != null) return false;
+    if (title != null ? !title.equals(that.title) : that.title != null) return false;
+    if (types != null ? !types.equals(that.types) : that.types != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = doi != null ? doi.hashCode() : 0;
+    result = 31 * result + (date != null ? date.hashCode() : 0);
+    result = 31 * result + (title != null ? title.hashCode() : 0);
+    result = 31 * result + (authors != null ? authors.hashCode() : 0);
+    result = 31 * result + (articleTypes != null ? articleTypes.hashCode() : 0);
+    result = 31 * result + (journals != null ? journals.hashCode() : 0);
+    result = 31 * result + (eIssn != null ? eIssn.hashCode() : 0);
+    result = 31 * result + (types != null ? types.hashCode() : 0);
+    return result;
+  }
 }
