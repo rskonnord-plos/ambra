@@ -21,27 +21,28 @@
 
 $.fn.comments = function () {
 
-  /**
-   * Duration of JQuery animations to show and hide page elements, in milliseconds.
-   * @type {Number}
-   */
-  var DURATION = 500;
-
-  /* 
+  /*
    * Must be supplied from the calling page (where it would be populated by FreeMarker).
    */
   this.addresses = null;
 
+  function animatedShow(element) {
+    element.show("blind", 500);
+  }
+
+  function animatedHide(element) {
+    element.hide("blind", {direction:"vertical"}, 500);
+  }
+
   /**
-   * Return a reference to a JQuery page element.
-   * @param elementType  the prefix of the element ID
-   * @param replyId  the ID of the reply to which the element to get belongs, or null if the page has only one reply
+   * Return a reference to the JQuery page element for a reply.
+   * @param replyId  the ID of the reply, or null if the page has only one reply
    * @return {*} the element
    */
-  function getReplyElement(elementType, replyId) {
+  function getReplyElement(replyId) {
     return (replyId == null)
-      ? $('#' + elementType)
-      : $('#' + elementType + '-' + replyId);
+      ? $('#reply')
+      : $('#reply-' + replyId);
   }
 
   /**
@@ -49,20 +50,32 @@ $.fn.comments = function () {
    * @param replyId  the ID of the reply whose box should be cleared
    */
   this.clearReply = function (replyId) {
-    ["report", "respond"].forEach(function (replyType) {
-      getReplyElement(replyType, replyId).hide("blind", {direction:"vertical"}, DURATION)
-    });
+    var reply = getReplyElement(replyId);
+    animatedHide(reply.find('.report_box'));
+    animatedHide(reply.find('.respond_box'));
   };
 
   /**
-   * Hide a box beneath a reply, then show one.
-   * @param from  the type of box to hide
-   * @param to  the type of box to show
-   * @param replyId  the ID of the reply to which the boxes belong
+   * Show a drop-down box beneath a reply to prompt a user action.
+   * @param replyId  the reply where the box should appear
+   * @param typeToHide  the type of other box to hide before showing this one
+   * @param typeToShow  the type of box to show
+   * @param setupCallback  a function (that takes the new box as an argument) to call to finish setting it up
    */
-  function switchReplyBox(from, to, replyId) {
-    getReplyElement(from, replyId).hide();
-    getReplyElement(to, replyId).show("blind", DURATION);
+  function showBox(replyId, typeToHide, typeToShow, setupCallback) {
+    var reply = getReplyElement(replyId);
+    reply.find('.' + typeToHide + '_box').hide();
+
+    // Set up the new HTML object
+    var container = reply.find('.' + typeToShow + '_box');
+    var box = $('#' + typeToShow + '_skeleton').clone();
+    box.find('.btn_cancel').attr('onclick', 'comments.clearReply(' + replyId + ')');
+    setupCallback(box);
+
+    // Display it
+    container.html(box);
+    container.show();
+    animatedShow(box);
   }
 
   /**
@@ -70,7 +83,9 @@ $.fn.comments = function () {
    * @param replyId  the ID of the reply where the box should be shown
    */
   this.showReportBox = function (replyId) {
-    switchReplyBox("respond", "report", replyId);
+    showBox(replyId, 'respond', 'report', function (box) {
+      // TODO
+    });
   };
 
   /**
@@ -78,7 +93,11 @@ $.fn.comments = function () {
    * @param replyId  the ID of the reply where the box should be shown
    */
   this.showRespondBox = function (replyId) {
-    switchReplyBox("report", "respond", replyId);
+    var parentTitle = getReplyElement(replyId).find('h3').text();
+    showBox(replyId, 'report', 'respond', function (box) {
+      box.find('.btn_submit').attr('onclick', 'comments.submitResponse(' + replyId + ')');
+      box.find('[name="comment_title"]').attr("value", 'RE: ' + parentTitle);
+    });
   };
 
   /**
@@ -101,7 +120,7 @@ $.fn.comments = function () {
    * @param parentId  the ID of the existing reply, to which the user is responding
    * @param parentDepth  the tree depth of the parent reply (how many steps away from the root reply)
    */
-  this.submitResponse = function (parentId, parentDepth) {
+  this.submitResponse = function (parentId) {
     var commentData = getCommentData(parentId);
     commentData.inReplyTo = parentId;
 
@@ -138,7 +157,7 @@ $.fn.comments = function () {
    * @param submittedCallback  a function to call after the comment has been submitted without errors
    */
   function sendComment(commentData, parentId, submitUrl, submittedCallback) {
-    var errorMsg = getReplyElement("responseSubmitMsg", parentId);
+    var errorMsg = getReplyElement(parentId).find('.error');
     errorMsg.hide(); // in case it was already shown from a previous attempt
 
     $.ajax(submitUrl, {
@@ -154,7 +173,7 @@ $.fn.comments = function () {
           }
           if (errors.length > 0) {
             errorMsg.html(errors.join('<br/>'));
-            errorMsg.show("blind", DURATION);
+            animatedShow(errorMsg);
           } else {
             submittedCallback(data);
           }
@@ -174,16 +193,17 @@ $.fn.comments = function () {
    * @return {Object}  the response data, formatted to be sent over Ajax
    */
   function getCommentData(parentId) {
+    var parent = getReplyElement(parentId);
+
     var data = {
-      commentTitle:getReplyElement("comment_title", parentId).val(),
-      comment:getReplyElement("comment", parentId).val()
+      commentTitle:parent.find('[name="comment_title"]').val(),
+      comment:parent.find('[name="comment"]').val()
     };
 
-    if (getReplyElement("no_competing", parentId).attr("checked")) {
-      data.isCompetingInterest = false;
-    } else {
-      data.isCompetingInterest = true;
-      data.ciStatement = getReplyElement("competing_interests", parentId).val();
+    var ciRadio = parent.find('input:radio[name="competing"]:checked');
+    data.isCompetingInterest = Boolean(ciRadio.val());
+    if (data.isCompetingInterest) {
+      data.ciStatement = parent.find('[name="competing_interests"]').val();
     }
 
     return data;
@@ -195,129 +215,7 @@ $.fn.comments = function () {
    * @param reply  data for the new response (currently from AnnotationView; TODO finalize contract)
    */
   function putComment(parentId, parentDepth, reply, addresses) {
-    var replyId = 0; // reply.ID; // TODO Why is this not provided from Ajax call?
-    var commentHtml = [
-      '<div class="response" style="margin-left: ', 30 * (parentDepth + 1), 'px">\n',
-      '  <div class="info">\n',
-      '    <h3>', reply.title, '</h3>\n',
-      '    <h4>\n',
-      '      <a href="', addresses.showUserURL, '" class="user icon">${reply.creatorDisplayName}</a>\n',
-      '      replied to\n',
-      '      <a href="', addresses.authorURL, '" class="user icon">${replyToAuthorName}</a>\n',
-      '      on <strong>${reply.created?string("dd MMM yyyy \'</strong>at<strong>\' HH:mm zzz")}</strong>\n',
-      '    </h4>\n',
-      '      <div class="arrow"></div>\n',
-      '  </div>\n',
-      '  <div class="response_content">\n',
-
-      // TODO: Why does the Ajax call populate "truncated" fields but not body and competingInterestStatement?
-      reply.truncatedBody,
-      '      <div class="competing_interests">\n',
-      reply.truncatedCompetingInterestStatement != null && reply.truncatedCompetingInterestStatement.length > 0
-        ? '<strong>Competing interests declared:</strong> ' + reply.truncatedCompetingInterestStatement
-        : '<strong>No competing interests declared.</strong>\n',
-
-      '      </div>\n',
-      '  </div>\n',
-
-      '  <div class="toolbar">\n',
-      '      <a href="', addresses.loginURL, '"\n',
-      '         onclick="comments.showReportBox(\'', replyId, '\'); return false;"\n',
-      '         class="flag tooltip btn" title="Report a Concern">\n',
-      '        report a concern\n',
-      '      </a>\n',
-      '      <a href="', addresses.loginURL, '"\n',
-      '         onclick="comments.showRespondBox(\'', replyId, '\'); return false;"\n',
-      '         class="respond tooltip btn" title="Click to respond">\n',
-      '        respond to this posting\n',
-      '      </a>\n',
-      '  </div>\n',
-
-      '  <div class="reply review cf" id="report-', replyId, '" style="display: none">\n',
-      '    <div id="flagForm">\n',
-      '      <h4>Why should this posting be reviewed?</h4>\n',
-      '      <div class="reply_content">\n',
-      '        <p>See also Guidelines for Notes, Comments, and Corrections:</p>\n',
-      '      </div>\n',
-      '      <form class="cf">\n',
-      '        <fieldset class="">\n',
-      '          <div class="cf">\n',
-      '            <input type="radio" name="reason" value="spam" id="spam"/>\n',
-      '            <label for="spam">Spam</label>\n',
-      '          </div>\n',
-      '          <div class="cf">\n',
-      '            <input type="radio" name="reason" value="offensive" id="offensive"/>\n',
-      '            <label for="offensive">Offensive</label>\n',
-      '          </div>\n',
-      '          <div class="cf">\n',
-      '            <input type="radio" name="reason" value="inappropriate" id="inappropriate"/>\n',
-      '            <label for="inappropriate">Inappropriate</label>\n',
-      '          </div>\n',
-      '          <div class="cf">\n',
-      '            <input type="radio" name="reason" value="other" id="other"/>\n',
-      '            <label for="other">Other</label>\n',
-      '          </div>\n',
-      '          <textarea placeholder="Add any additional information here..." name="additional_info"></textarea>\n',
-      '          <span class="btn btn_cancel" onclick="comments.clearReply(', replyId, ')">cancel</span>\n',
-      '          <span class="btn">submit</span>\n', // TODO
-      '        </fieldset>\n',
-      '      </form>\n',
-      '    </div>\n',
-      '    <div id="flagConfirm" style="display: none;">\n',
-      '      <h4>Thank You!</h4>\n',
-      '      <p>Thank you for taking the time to flag this posting; we review flagged postings on a regular basis.</p>\n',
-      '      <span class="close_confirm">close</span>\n',
-      '    </div>\n',
-      '  </div>\n',
-      '  <div class="reply cf" id="respond-', replyId, '" style="display: none">\n',
-      '    <h4>Post Your Discussion Comment</h4>\n',
-      '    <div class="reply_content">\n',
-      '      <p>Please follow our\n',
-      '        <a href="', addresses.commentGuidelinesURL, '">guidelines for notes and comments</a>\n',
-      '        and review our\n',
-      '        <a href="', addresses.competingInterestURL, '">competing interests policy</a>.\n',
-      '        Comments that do not conform to our guidelines will be promptly removed and the users account disabled. The\n',
-      '        following must be avoided:\n',
-      '      </p>\n',
-      '      <ol>\n',
-      '        <li>Remarks that could be interpreted as allegations of misconduct</li>\n',
-      '        <li>Unsupported assertions or statements</li>\n',
-      '        <li>Inflammatory or insulting language</li>\n',
-      '      </ol>\n',
-      '    </div>\n',
-      '    <div id="responseSubmitMsg-', replyId, '" class="error" style="display:none;"></div>\n',
-      '    <form class="cf">\n',
-      '      <fieldset>\n',
-      '        <input type="checkbox" name="is_correction"/><label>This is a correction.</label>\n',
-      '        <input type="text" name="comment_title" placeholder="Enter your comment title..."\n',
-      '               id="comment_title-', replyId, '" value="RE: ', reply.title, '">\n',
-      '        <textarea name="comment" placeholder="Enter your comment..." id="comment-', replyId, '"></textarea>\n',
-      '        <div class="help">\n',
-      '          <p>Comments can include the following markup tags:</p>\n',
-      '          <p><strong>Emphasis:</strong> <em>"italic"</em>""<strong><em>bold italic</em></strong>""</p>\n',
-      '          <p><strong>Other:</strong> ^^<sup>superscript</sup>^^ ~~<sub>subscript</sub>~~</p>\n',
-      '        </div>\n',
-      '      </fieldset>\n',
-      '      <fieldset>\n',
-      '        <div class="cf"><input type="radio" name="competing" id="no_competing-', replyId, '" value="0" checked/>\n',
-      '          <label for="no_competing-', replyId, '">\n',
-      '            No, I don\'t have any competing interests to declare</label></div>\n',
-      '        <div class="cf"><input type="radio" name="competing" value="1" id="yes_competing-', replyId, '"/>\n',
-      '          <label for="yes_competing-', replyId, '">Yes, I have competing interests to declare (enter below):</label></div>\n',
-      '        <textarea name="competing_interests" class="competing_interests" id="competing_interests-', replyId, '"\n',
-      '                  placeholder="Enter your competing interests..."></textarea>\n',
-      '        <span class="btn flt-r"\n',
-      '              onclick="comments.submitResponse(', replyId, ')">\n',
-      '          post</span>\n',
-      '        <span class="btn flt-r btn_cancel" onclick="comments.clearReply(', replyId, ')">cancel</span>\n',
-      '      </fieldset>\n',
-      '    </form>\n',
-      '  </div>\n',
-      '</div>\n',
-      '<div id="replies_to-', replyId, '">\n',
-      '</div>'
-    ];
-    getReplyElement("replies_to", parentId).append($(commentHtml.join('')));
+    alert("Unimplemented"); // TODO
   }
 
 };
