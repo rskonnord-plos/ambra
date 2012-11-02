@@ -353,6 +353,43 @@
     </action>
   </package>
 
+  <package name="browse" extends="default" namespace="/browse">
+    <action name="browse" class="org.ambraproject.action.article.BrowseArticlesAction">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/browse.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/static/browseError.ftl</param>
+      </result>
+    </action>
+
+    <action name="issue" class="org.ambraproject.action.article.BrowseIssueAction">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/browseIssue.ftl</param>
+      </result>
+      <result name="none" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+      <!-- TODO: Make a real error page -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="volume" class="org.ambraproject.action.article.BrowseVolumeAction">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/browseVolume.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+  </package>
+
   <package name="article" extends="default" namespace="/article">
 
     <default-action-ref name="pageNotFound"/>
@@ -585,41 +622,6 @@
       </result>
     </action>
 
-    <action name="browse" class="org.ambraproject.action.article.BrowseArticlesAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/browse.ftl</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">500</param>
-        <param name="templateFile">/static/browseError.ftl</param>
-      </result>
-    </action>
-
-    <action name="browseIssue" class="org.ambraproject.action.article.BrowseIssueAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/browseIssue.ftl</param>
-      </result>
-      <result name="none" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
-      </result>
-      <!-- TODO: Make a real error page -->
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
-      </result>
-    </action>
-
-    <action name="browseVolume" class="org.ambraproject.action.article.BrowseVolumeAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/browseVolume.ftl</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
-      </result>
-    </action>
-
     <action name="citationList" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/citationList.ftl</param>
@@ -629,6 +631,7 @@
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
+
     <action name="getRisCitation" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="citation">
         <param name="location">/article/ris.ftl</param>
@@ -640,6 +643,7 @@
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
+
     <action name="getBibTexCitation" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="citation">
         <param name="location">/article/bibtex.ftl</param>
