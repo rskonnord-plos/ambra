@@ -98,9 +98,11 @@ $.fn.comments = function () {
    * @param replyId  the ID of the reply where the box should be shown
    */
   this.showReportBox = function (replyId) {
-    showBox(replyId, 'respond', 'report', function (box) {
-      // TODO
-    });
+    showBox(replyId, 'respond', 'report',
+      function (box) {
+        box.find('.btn_submit').attr('onclick', 'comments.submitReport(' + replyId + ')');
+        box.find('.close_confirm').attr('onclick', 'comments.clearReply(' + replyId + ')');
+      });
   };
 
   /**
@@ -110,11 +112,35 @@ $.fn.comments = function () {
   this.showRespondBox = function (replyId, depth) {
     depths[replyId] = depth;
     var parentTitle = getReplyElement(replyId).find('.response_title').text();
-    showBox(replyId, 'report', 'respond', function (box) {
-      box.find('.btn_submit').attr('onclick', 'comments.submitResponse(' + replyId + ')');
-      box.find('[name="comment_title"]').attr("value", 'RE: ' + parentTitle);
-    });
+    showBox(replyId, 'report', 'respond',
+      function (box) {
+        box.find('.btn_submit').attr('onclick', 'comments.submitResponse(' + replyId + ')');
+        box.find('[name="comment_title"]').attr("value", 'RE: ' + parentTitle);
+      });
   };
+
+  /**
+   * Send an Ajax request to the server, using parameters appropriate to this page.
+   * @param url  the URL to send the Ajax request to
+   * @param data  an object to send as the request data
+   * @param success  callback for success (per $.ajax)
+   */
+  function sendAjaxRequest(url, data, success) {
+    $.ajax(url, {
+      dataType:"json",
+      data:data,
+      dataFilter:function (data, type) {
+        // Remove comment
+        return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
+      },
+      success:success,
+      error:function (jqXHR, textStatus, errorThrown) {
+        alert(textStatus + '\n' + errorThrown);
+      },
+      complete:function (jqXHR, textStatus) {
+      }
+    });
+  }
 
   /**
    * Submit a top-level response to an article and show the result. Talks to the server over Ajax.
@@ -128,7 +154,7 @@ $.fn.comments = function () {
     var submittedCallback = function (data) {
       window.location = listThreadURL + '?root=' + data.annotationId;
     };
-    sendComment(commentData, null, this.addresses.submitDiscussionURL, submittedCallback);
+    submit(null, this.addresses.submitDiscussionURL, null, commentData, submittedCallback);
   };
 
   /**
@@ -142,64 +168,64 @@ $.fn.comments = function () {
     var addresses = this.addresses; // make available in the local scope
     var submittedCallback = function (data) {
       // Make a second Ajax request to get the new comment (we need its back-end representation)
-      $.ajax(addresses.getAnnotationURL, {
-        dataType:"json",
-        data:{annotationId:data.replyId},
-        dataFilter:function (data, type) {
-          return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
-        },
-        success:function (data, textStatus, jqXHR) {
+      sendAjaxRequest(addresses.getAnnotationURL, {annotationId:data.replyId},
+        function (data, textStatus, jqXHR) {
           // Got the new comment; now add the content to the page
           putComment(parentId, data.annotationId, data.annotation, addresses);
-        },
-        error:function (jqXHR, textStatus, errorThrown) {
-          alert(textStatus + '\n' + errorThrown);
-        },
-        complete:function (jqXHR, textStatus) {
-        }
-      });
+        });
     };
+    var errorMsgElement = getReplyElement(parentId).find('.subresponse .error');
 
-    sendComment(commentData, parentId, this.addresses.submitReplyURL, submittedCallback);
+    submit(errorMsgElement, this.addresses.submitReplyURL, parentId, commentData, submittedCallback);
   };
 
   /**
-   * Send a comment to the server. The comment may be a top-level article comment, or a response to another response.
+   * Submit a report (flag) from a reply's "report a concern" button and show the result.
+   * @param replyId  the ID of the reply being flagged
+   */
+  this.submitReport = function (replyId) {
+    var reply = getReplyElement(replyId);
+    var data = {
+      target:replyId,
+      reasonCode:reply.find('input:radio[name="reason"]:checked').val(),
+      comment:reply.find('[name="additional_info"]').val()
+    };
+    var reportDialog = reply.find('.review');
+    var errorMsgElement = reportDialog.find('.error');
+    var submittedCallback = function (data) {
+      reportDialog.find('.flagForm').hide();
+      animatedShow(reportDialog.find('.flagConfirm'));
+    };
+    submit(errorMsgElement, this.addresses.submitFlagURL, replyId, data, submittedCallback);
+  };
+
+  /**
+   * Submit user input in general to the server.
    *
-   * @param commentData  the comment's content, as an object that can be sent to the server
-   * @param parentId  the ID of the parent reply, or null if the page doesn't show other replies
+   * @param errorMsgElement  the JQuery element in which to display any error messages
    * @param submitUrl  the URL to send the Ajax request to
+   * @param parentId  the ID of the parent reply, or null if the page doesn't show other replies
+   * @param data  the comment's content, as an object that can be sent to the server
    * @param submittedCallback  a function to call after the comment has been submitted without errors
    */
-  function sendComment(commentData, parentId, submitUrl, submittedCallback) {
-    var errorMsg = getReplyElement(parentId).find('.error');
-    errorMsg.hide(); // in case it was already shown from a previous attempt
+  function submit(errorMsgElement, submitUrl, parentId, data, submittedCallback) {
+    errorMsgElement.hide(); // in case it was already shown from a previous attempt
 
-    $.ajax(submitUrl, {
-        dataType:"json",
-        data:commentData,
-        dataFilter:function (data, type) {
-          return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
-        },
-        success:function (data, textStatus, jqXHR) {
-          var errors = new Array();
-          for (var errorKey in data.fieldErrors) {
-            errors.push(data.fieldErrors[errorKey]);
-          }
-          if (errors.length > 0) {
-            errorMsg.html(errors.join('<br/>'));
-            animatedShow(errorMsg);
-          } else {
-            submittedCallback(data);
-          }
-        },
-        error:function (jqXHR, textStatus, errorThrown) {
-          alert(textStatus + '\n' + errorThrown);
-        },
-        complete:function (jqXHR, textStatus) {
+    sendAjaxRequest(submitUrl, data,
+      function (data, textStatus, jqXHR) {
+        // No errors between client and server successfully, but there may be user validation errors.
+        var errors = new Array();
+        for (var errorKey in data.fieldErrors) {
+          errors.push(data.fieldErrors[errorKey]);
         }
-      }
-    );
+        if (errors.length > 0) {
+          errorMsgElement.html(errors.join('<br/>'));
+          animatedShow(errorMsgElement);
+        } else {
+          // No validation errors, meaning the comment was submitted successfully and persisted.
+          submittedCallback(data);
+        }
+      });
   }
 
   /**
@@ -254,4 +280,5 @@ $.fn.comments = function () {
     comment.show();
   }
 
-};
+}
+;
