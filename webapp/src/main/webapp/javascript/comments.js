@@ -130,7 +130,7 @@ $.fn.comments = function () {
       dataType:"json",
       data:data,
       dataFilter:function (data, type) {
-        // Remove comment
+        // Remove block comment from around JSON, if present
         return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
       },
       success:success,
@@ -280,5 +280,4 @@ $.fn.comments = function () {
     comment.show();
   }
 
-}
-;
+};
