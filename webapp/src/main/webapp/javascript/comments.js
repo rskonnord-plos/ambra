@@ -47,7 +47,7 @@ $.fn.comments = function () {
    */
   function getReplyElement(replyId) {
     return (replyId == null)
-      ? $('#reply')
+      ? $('.reply')
       : $('#reply-' + replyId);
   }
 
@@ -154,7 +154,7 @@ $.fn.comments = function () {
     var submittedCallback = function (data) {
       window.location = listThreadURL + '?root=' + data.annotationId;
     };
-    submit(null, this.addresses.submitDiscussionURL, null, commentData, submittedCallback);
+    submit($('.error'), this.addresses.submitDiscussionURL, null, commentData, submittedCallback);
   };
 
   /**
