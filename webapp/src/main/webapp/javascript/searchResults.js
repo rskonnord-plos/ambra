@@ -154,21 +154,257 @@ $(document).ready(
     //Wire in ALM Stats
     //***************************************
     var almService = new $.fn.alm(),
-      ids = new Array();
+      ids = new Array(),
+      //When we get the results back, we put those IDs into this list.
+      confirmed_ids = new Array();
 
     $("li[doi]").each(function(index, element) {
       ids[ids.length] = $(element).attr("doi");
     });
 
-    console.log(ids);
-
     almService.getSummaryForArticles(ids, setALMSearchWidgets, setALMSearchWidgetsError);
 
-    function setALMSearchWidgets() {
-      console.log('setALMSearchWidgets');
+    function setALMSearchWidgets(articles) {
+      for(a = 0; a < articles.length; a++) {
+        var article = articles[a];
+        var doi = article.article.article.doi;
+        var bookmarks = null;
+        var cites = null;
+        var viewsData = null;
+
+        for(b = 0; b < article.groupcounts.length; b++) {
+          if(article.groupcounts[b].name.toLowerCase() === "citations" &&
+            article.groupcounts[b].count > 0) {
+            cites = article.groupcounts[b].sources;
+          }
+
+          if(article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
+            article.groupcounts[b].count > 0) {
+            bookmarks = article.groupcounts[b].sources;
+          }
+        }
+
+        for(b = 0; b < article.groups.length; b++) {
+          if(article.groups[b].name.toLowerCase() === "statistics") {
+            //Attempt to find the pub date
+            var nodeList = $("li[doi='" + doi + "']");
+            var pubDateNode = nodeList[0];
+            var pubDate = $(pubDateNode).attr("pdate");
+
+            if(pubDate == null) {
+              throw new Error('Can not find publish date attribute for doi:' + article.article.article.doi);
+            } else {
+              //Total and perform business logic
+              viewsData = almService.massageChartData(article.groups[b].sources, pubDate);
+            }
+          }
+        }
+
+        //show widgets only when you have data
+        if(cites != null ||  bookmarks != null || viewsData !=null) {
+          confirmed_ids[confirmed_ids.length] = doi;
+          makeALMSearchWidget(doi, cites, bookmarks, viewsData);
+        }
+      }
+      confirmALMDataDisplayed();
+    }
+
+    function makeALMSearchWidget(doi, cites, bookmarks, data) {
+      var nodeList = getSearchWidgetByDOI(doi);
+      var spanNode = nodeList[0];
+      var metricsURL = getMetricsURL(doi);
+
+      var anim = $(spanNode).fadeOut(250, function() {
+        var searchWidget = $("<span></span>");
+        searchWidget.addClass("almSearchWidget");
+
+        buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data);
+
+        $(spanNode).html("");
+        $(spanNode).append(searchWidget);
+        $(spanNode).fadeIn(250);
+      });
+    }
+
+    //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a>
+    function buildWidgetText(node, metricsURL, cites, bookmarks, data) {
+      var newNode = null;
+
+      if(data != null) {
+        newNode = $("<a></a>")
+          .attr("href",metricsURL + "#usage")
+          .html("Views: " + data.total.format(0,'.',','))
+          .addClass("data");
+
+        newNode.tooltip({
+          delay: 250,
+          fade: 250,
+          top: -40,
+          left: 20,
+          track: true,
+          showURL: false,
+          bodyHandler: function() {
+            return "<span class=\"searchResultsTip\">HTML: <b>" + data.totalHTML + "</b>"
+              + ", PDF: <b>" + data.totalPDF + "</b>";
+            + ", XML: <b>" + data.totalXML + "</b>";
+            + ", Grand Total: <b>" + data.total + "</b></span>";
+          }
+        });
+
+        node.append(newNode);
+      } else {
+        node.appendChild($("<span></span>")
+          .addClass("no-data")
+          .html("Views: Not available"));
+      }
+
+      if(cites != null) {
+        // Citation Sources should always start with Scopus (if an entry for Scopus exists)
+        //   followed by the rest of the sources in alphabetical order.
+        cites = cites.sort(sortCitesByName);
+
+        newNode = $("<a></a>")
+          .attr("href", metricsURL + "#citations")
+          .html("Citations: Yes")
+          .addClass("data");
+
+        newNode.tooltip({
+          delay: 250,
+          fade: 250,
+          top: -40,
+          left: 20,
+          track: true,
+          showURL: false,
+
+          bodyHandler: function() {
+            var tipText = "";
+
+            for(a = 0; a < cites.length; a++) {
+              if(tipText != "") {
+                tipText += ", "
+              }
+              tipText += cites[a].source + ": <b>" + cites[a].count.format(0,'.',',') + "</b>";
+            }
+
+            return "<span class=\"searchResultsTip\">" + tipText + "</span>";
+          }
+        });
+
+        //new dijit.Tooltip({ connectId: newNode, label: tipText });
+        appendBullIfNeeded(node);
+        node.append(newNode);
+      } else {
+        appendBullIfNeeded(node);
+        node.append($("<span></span>")
+          .html("Citations: None")
+          .addClass("no-data"));
+      }
+
+      if(bookmarks != null) {
+        newNode = $("<a></a>")
+          .attr("href", metricsURL + "#other")
+          .html("Bookmarks: Yes")
+          .addClass("data");
+        //new dijit.Tooltip({ connectId: newNode, label: tipText });
+
+        appendBullIfNeeded(node);
+
+        newNode.tooltip({
+          delay: 250,
+          fade: 250,
+          top: -40,
+          left: 20,
+          track: true,
+          showURL: false,
+          bodyHandler: function() {
+            var tipText = "";
+
+            for(a = 0; a < bookmarks.length; a++) {
+              if(tipText != "") {
+                tipText += ", "
+              }
+              tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0,'.',',') + "</b>";
+            }
+
+            return "<span class=\"searchResultsTip\">" + tipText + "</span>";
+          }
+        });
+
+        node.append(newNode);
+      } else {
+        appendBullIfNeeded(node);
+        node.append($("<span></span>")
+          .html("Bookmarks: None")
+          .addClass("no-data"));
+      }
+    }
+
+    function appendBullIfNeeded(node) {
+      if(node.size() > 0) {
+        node.append("&nbsp;&bull;&nbsp;");
+      }
+    }
+
+
+    function getSearchWidgetByDOI(doi) {
+      return $("li[doi='" + doi  + "'] span.metrics");
+    }
+
+    function getMetricsURL(doi)
+    {
+      return $($("li[doi='" + doi  + "']")[0]).attr("metricsURL");
     }
 
     function setALMSearchWidgetsError() {
-      console.log('setALMSearchWidgetsError');
+      confirmALMDataDisplayed();
+    }
+
+    function makeALMSearchWidgetError(doi, message) {
+      var nodeList = getSearchWidgetByDOI(doi);
+      var spanNode = nodeList[0];
+
+      var errorMsg = $("<span></span>");
+      errorMsg.addClass("inlineError");
+      errorMsg.css("display","none");
+      errorMsg.html("<img src=\"../images/icon_error.gif\"/>&nbsp;" + message);
+
+      $(spanNode).find("span").fadeOut(250, function() {
+        $(spanNode).append(errorMsg);
+        $(errorMsg).fadeIn(250);
+      });
+    }
+
+    /*
+     * Walk through the ids and confirmed_ids list.  If
+     * If some ids are not confirmed.  Lets let the
+     * front end know that no data was received.
+     * */
+    function confirmALMDataDisplayed() {
+      if(confirmed_ids != null) {
+        for(a = 0; a < confirmed_ids.length; a++) {
+          for(b = 0; b < ids.length; b++) {
+            if(confirmed_ids[a] == ids[b]) {
+              ids.remove(b);
+            }
+          }
+        }
+      }
+
+      //if any confirmed_ids are left.  We know there is no data
+      //Make note of that now.
+      for(a = 0; a < ids.length; a++) {
+        makeALMSearchWidgetError(ids[a], "Article metrics data not available - please check back later.");
+      }
+    }
+
+    function sortCitesByName(a,b) {
+      if (b.source.toLowerCase() === 'scopus') {
+        return 1;
+      } else if (a.source.toLowerCase() === 'scopus' || a.source.toLowerCase() < b.source.toLowerCase()) {
+        return -1;
+      } else if (a.source.toLowerCase() > b.source.toLowerCase()) {
+        return 1;
+      }
+      return 0;
     }
 });
