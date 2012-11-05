@@ -163,70 +163,73 @@ ERROR, searchType must be defined.
       <input type="image" alt="SEARCH" src="/images/icon.search.gif">
     </div>
   </fieldset>
-  <a id="advSearch" class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters />&noSearchFlag=set" name="advSearch">Edit Query</a>
-  <input type="submit" name="submitSearch" value="Submit Search" />
+  <a id="advSearch" class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters />&noSearchFlag=set" name="advSearch">advanced</a>
 </#if>
 </div>
 
+<#if (totalNoOfResults > 0)>
 <div class="options">
     <span class="clear-filter">
-      <a id="clearAllFilters" href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,filterArticleType,filterJournals,filterSubjects,startPage" values="" />" class="btn">Clear all filters</a></span>
+      <a id="clearAllFilters" href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,filterArticleType,filterJournals,filterSubjects,startPage" values="" />" class="btn">Clear all filters</a>
+    </span>
   <div class="resultSort">
     <select name="sort" id="sortPicklist">
-    <#list sorts as sortItem>
-      <#if ((!sort?? || (sort?? && sort == "")) && (sortItem_index == 0))>
-        <option selected value="${sortItem}">${sortItem}</option>
-      <#else>
-        <#if (sort?? && (sort == sortItem))>
+      <#list sorts as sortItem>
+        <#if ((!sort?? || (sort?? && sort == "")) && (sortItem_index == 0))>
           <option selected value="${sortItem}">${sortItem}</option>
         <#else>
-          <option value="${sortItem}">${sortItem}</option>
+          <#if (sort?? && (sort == sortItem))>
+            <option selected value="${sortItem}">${sortItem}</option>
+          <#else>
+            <option value="${sortItem}">${sortItem}</option>
+          </#if>
         </#if>
-      </#if>
-    </#list>
+      </#list>
     </select>
   </div>
 </div>
 
-<#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || filterArticleType != "" ||
-(filterArticleType?length > 1) || (filterAuthors?size > 0) || filterKeyword != "")>
-<div class="filter-block cf">
-  <#if (filterJournals?size > 0)>
-    <div class="filter-item">
-    ${filterJournalsAsString}&nbsp;
-      <img id="clearJournalFilter" src="/images/btn.close.png" class="clear-filter" title="Clear journals filter" alt="Clear journals filter">
-    </div>
+
+  <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || filterArticleType != "" ||
+  (filterArticleType?length > 1) || (filterAuthors?size > 0) || filterKeyword != "")>
+  <div class="filter-block cf">
+    <#if (filterJournals?size > 0)>
+      <div class="filter-item">
+      ${filterJournalsAsString}&nbsp;
+        <img id="clearJournalFilter" src="/images/btn.close.png" class="clear-filter" title="Clear journals filter" alt="Clear journals filter">
+      </div>
+    </#if>
+    <#if (filterSubjects?size > 0)>
+      <div class="filter-item">
+        Subject categories:
+        <#list filterSubjects as subject>"${subject}" <#if (subject_index) gt filterSubjects?size - 3><#if subject_has_next> and </#if><#else><#if subject_has_next>, </#if></#if></#list>
+        &nbsp;<img id="clearSubjectFilter" src="/images/btn.close.png" class="clear-filter" title="Clear topics filter" alt="Clear topics filter">
+      </div>
+    </#if>
+    <#if (filterAuthors?size > 0)>
+      <div class="filter-item">
+        Authors:
+        <#list filterAuthors as author>"${author}" <#if (author_index) gt filterAuthors?size - 3><#if author_has_next> and </#if><#else><#if author_has_next>, </#if></#if></#list>
+        &nbsp;<img id="clearAuthorFilter" src="/images/btn.close.png" class="clear-filter" title="Clear authors filter" alt="Clear authors filter">
+      </div>
+    </#if>
+    <#if (filterArticleType != "")>
+      <div class="filter-item">
+        Article Type: ${filterArticleType}&nbsp;
+        <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterArticleType,startPage" values="" />&from=articleTypeClearFilterLink">
+          <img src="/images/btn.close.png" class="clear-filter" title="Clear article type filter" alt="Clear article type filter"></a>
+      </div>
+    </#if>
+    <#if (filterKeyword != "")>
+      <div class="filter-item">
+        Searching in: ${filterKeyword}&nbsp;
+        <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,startPage" values="" />&from=keywordFilterClearLink">
+          <img src="/images/btn.close.png" class="clear-filter" title="Clear searching in filter" alt="Clear searching in filter"></a>
+      </div>
+    </#if>
+  </div>
   </#if>
-  <#if (filterSubjects?size > 0)>
-    <div class="filter-item">
-      Subject categories:
-      <#list filterSubjects as subject>"${subject}" <#if (subject_index) gt filterSubjects?size - 3><#if subject_has_next> and </#if><#else><#if subject_has_next>, </#if></#if></#list>
-      &nbsp;<img id="clearSubjectFilter" src="/images/btn.close.png" class="clear-filter" title="Clear topics filter" alt="Clear topics filter">
-    </div>
-  </#if>
-  <#if (filterAuthors?size > 0)>
-    <div class="filter-item">
-      Authors:
-      <#list filterAuthors as author>"${author}" <#if (author_index) gt filterAuthors?size - 3><#if author_has_next> and </#if><#else><#if author_has_next>, </#if></#if></#list>
-      &nbsp;<img id="clearAuthorFilter" src="/images/btn.close.png" class="clear-filter" title="Clear authors filter" alt="Clear authors filter">
-    </div>
-  </#if>
-  <#if (filterArticleType != "")>
-    <div class="filter-item">
-      Article Type: ${filterArticleType}&nbsp;
-      <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterArticleType,startPage" values="" />&from=articleTypeClearFilterLink">
-        <img src="/images/btn.close.png" class="clear-filter" title="Clear article type filter" alt="Clear article type filter"></a>
-    </div>
-  </#if>
-  <#if (filterKeyword != "")>
-    <div class="filter-item">
-      Searching in: ${filterKeyword}&nbsp;
-      <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,startPage" values="" />&from=keywordFilterClearLink">
-        <img src="/images/btn.close.png" class="clear-filter" title="Clear searching in filter" alt="Clear searching in filter"></a>
-    </div>
-  </#if>
-</div>
-</#if>
+
 
 <div id="search-facets">
   <div class="menu">
@@ -239,94 +242,42 @@ ERROR, searchType must be defined.
   </div>
 
   <!--
-  <div id="dateFacet" class="facet">
-    <label for="startDateAsStringId">Content posted between:</label>
-    <input type="text" name="startDateAsString" maxlength="10" placeholder="YYYY-MM-DD" id="startDateAsStringId" />
-    <label for="endDateAsStringId">and</label>
-    <input type="text" name="endDateAsString" maxlength="10" placeholder="YYYY-MM-DD" id="endDateAsStringId" />
-    <input type="button" class="btn" value="apply" title="apply" />
-  </div>    -->
+<div id="dateFacet" class="facet">
+<label for="startDateAsStringId">Content posted between:</label>
+<input type="text" name="startDateAsString" maxlength="10" placeholder="YYYY-MM-DD" id="startDateAsStringId" />
+<label for="endDateAsStringId">and</label>
+<input type="text" name="endDateAsString" maxlength="10" placeholder="YYYY-MM-DD" id="endDateAsStringId" />
+<input type="button" class="btn" value="apply" title="apply" />
+</div>    -->
 
-<#if (resultsSinglePage.journalFacet??)>
-  <div id="journalFacet" class="facet">
-    <dl>
-      <dt>Journals</dt>
-      <#list resultsSinglePage.journalFacet as f>
-        <dd>
-          <label><input type="checkbox" name="filterJournals" value="${f.name}"
-            <#if (filterJournals?seq_contains(f.name)) > checked="true"</#if>> ${freemarker_config.getDisplayName(f.name)}
-            (${f.count})</label>
-        </dd>
-      </#list>
-    </dl>
-  </div>
-</#if>
-
-<#if (resultsSinglePage.subjectFacet??)>
-  <div id="topicFacet" class="facet">
-    <dl>
-      <dt>Topics</dt>
-      <#list resultsSinglePage.subjectFacet as f>
-        <#if f_index lt max_subjects_filter>
-          <dd>
-            <label><input type="checkbox" name="filterSubjects" value="${f.name}"
-              <#if (filterSubjects?seq_contains(f.name)) > checked="true"</#if>> ${f.name} (${f.count})</label>
-          </dd>
-        </#if>
-      </#list>
-      <#if resultsSinglePage.subjectFacet?size gt max_subjects_filter>
-        <dd>
-          <label><span class="view-more">See more...</span></label>
-        </dd>
-      </#if>
-    </dl>
-
-    <dl class="more">
-      <dt>More Topics</dt>
-      <#list resultsSinglePage.subjectFacet as f>
-      <#-- TODO: Confirm this logic works -->
-        <#if f_index gte max_subjects_filter>
-          <dd>
-            <label><input type="checkbox" name="filterSubjects" value="${f.name}"
-              <#if (filterSubjects?seq_contains(f.name)) > checked="true"</#if>> ${f.name} (${f.count})</label>
-          </dd>
-        </#if>
-      </#list>
-      <dd>
-        <label><a href="#hdr-search-results" class="view-less">See less...</a></label>
-      </dd>
-    </dl>
-  </div>
-</#if>
-
-<#if (resultsSinglePage.keywordFacet??)>
-  <div id="keywordFacet" class="facet">
-    <dl>
-      <dt>Where my keywords appear</dt>
-      <#list resultsSinglePage.keywordFacet as f>
-        <dd>
-          <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,startPage" values=[f.name, 0] />&from=keywordFilterLink">${f.name}
-            (${f.count})</a>
-        </dd>
-      </#list>
-    </dl>
-  </div>
-</#if>
-
-<#if filterArticleType == "">
-  <#if (resultsSinglePage.articleTypeFacet??)>
-    <div id="articleTypeFacet" class="facet">
+  <#if (resultsSinglePage.journalFacet??)>
+    <div id="journalFacet" class="facet">
       <dl>
-        <dt>Article Type</dt>
-        <#list resultsSinglePage.articleTypeFacet as f>
-          <#if f_index lt max_articletypes_filter>
+        <dt>Journals</dt>
+        <#list resultsSinglePage.journalFacet as f>
+          <dd>
+            <label><input type="checkbox" name="filterJournals" value="${f.name}"
+              <#if (filterJournals?seq_contains(f.name)) > checked="true"</#if>> ${freemarker_config.getDisplayName(f.name)}
+              (${f.count})</label>
+          </dd>
+        </#list>
+      </dl>
+    </div>
+  </#if>
+
+  <#if (resultsSinglePage.subjectFacet??)>
+    <div id="topicFacet" class="facet">
+      <dl>
+        <dt>Topics</dt>
+        <#list resultsSinglePage.subjectFacet as f>
+          <#if f_index lt max_subjects_filter>
             <dd>
-              <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterArticleType,startPage" values=[f.name, 0] />&from=articleTypeFilterLink">${f.name} (${f.count})</a>
+              <label><input type="checkbox" name="filterSubjects" value="${f.name}"
+                <#if (filterSubjects?seq_contains(f.name)) > checked="true"</#if>> ${f.name} (${f.count})</label>
             </dd>
           </#if>
         </#list>
-      <#-- TODO: Confirm this logic works -->
-        <#if resultsSinglePage.articleTypeFacet?size gt max_articletypes_filter>
+        <#if resultsSinglePage.subjectFacet?size gt max_subjects_filter>
           <dd>
             <label><span class="view-more">See more...</span></label>
           </dd>
@@ -334,12 +285,105 @@ ERROR, searchType must be defined.
       </dl>
 
       <dl class="more">
-        <dt>More Article Types</dt>
-        <#list resultsSinglePage.articleTypeFacet as f>
+        <dt>More Topics</dt>
+        <#list resultsSinglePage.subjectFacet as f>
         <#-- TODO: Confirm this logic works -->
-          <#if f_index gte max_articletypes_filter>
+          <#if f_index gte max_subjects_filter>
             <dd>
-              <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterArticleType,startPage" values=[f.name, 0] />&from=articleTypeFilterLink">${f.name} (${f.count})</a>
+              <label><input type="checkbox" name="filterSubjects" value="${f.name}"
+                <#if (filterSubjects?seq_contains(f.name)) > checked="true"</#if>> ${f.name} (${f.count})</label>
+            </dd>
+          </#if>
+        </#list>
+        <dd>
+          <label><a href="#hdr-search-results" class="view-less">See less...</a></label>
+        </dd>
+      </dl>
+    </div>
+  </#if>
+
+  <#if (resultsSinglePage.keywordFacet??)>
+    <div id="keywordFacet" class="facet">
+      <dl>
+        <dt>Where my keywords appear</dt>
+        <#list resultsSinglePage.keywordFacet as f>
+          <dd>
+            <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,startPage" values=[f.name, 0] />&from=keywordFilterLink">${f.name}
+              (${f.count})</a>
+          </dd>
+        </#list>
+      </dl>
+    </div>
+  </#if>
+
+  <#if filterArticleType == "">
+    <#if (resultsSinglePage.articleTypeFacet??)>
+      <div id="articleTypeFacet" class="facet">
+        <dl>
+          <dt>Article Type</dt>
+          <#list resultsSinglePage.articleTypeFacet as f>
+            <#if f_index lt max_articletypes_filter>
+              <dd>
+                <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterArticleType,startPage" values=[f.name, 0] />&from=articleTypeFilterLink">${f.name} (${f.count})</a>
+              </dd>
+            </#if>
+          </#list>
+        <#-- TODO: Confirm this logic works -->
+          <#if resultsSinglePage.articleTypeFacet?size gt max_articletypes_filter>
+            <dd>
+              <label><span class="view-more">See more...</span></label>
+            </dd>
+          </#if>
+        </dl>
+
+        <dl class="more">
+          <dt>More Article Types</dt>
+          <#list resultsSinglePage.articleTypeFacet as f>
+          <#-- TODO: Confirm this logic works -->
+            <#if f_index gte max_articletypes_filter>
+              <dd>
+                <a href="${searchURL}?<@URLParameters parameters=searchParameters names="filterArticleType,startPage" values=[f.name, 0] />&from=articleTypeFilterLink">${f.name} (${f.count})</a>
+              </dd>
+            </#if>
+          </#list>
+          <dd>
+            <label><a href="#hdr-search-results" class="view-less">See less...</a></label>
+          </dd>
+        </dl>
+
+      </div>
+    </#if>
+  </#if>
+
+  <#if (resultsSinglePage.authorFacet??)>
+    <div id="authorFacet" class="facet">
+      <dl>
+        <dt>Authors</dt>
+        <#list resultsSinglePage.authorFacet as f>
+          <#if f_index lt max_authors_filter>
+            <dd>
+              <label><input type="checkbox" name="filterAuthors" value="${f.name}"
+                <#if (filterAuthors?seq_contains(f.name)) > checked="true"</#if>> ${f.name}
+                (${f.count})</label>
+            </dd>
+          </#if>
+        </#list>
+      <#-- TODO: Confirm this logic works -->
+        <#if resultsSinglePage.authorFacet?size gt max_authors_filter>
+          <dd>
+            <label><span class="view-more">See more...</span></label>
+          </dd>
+        </#if>
+      </dl>
+
+      <dl class="more">
+        <dt>More Authors</dt>
+        <#list resultsSinglePage.authorFacet as f>
+        <#-- TODO: Confirm this logic works -->
+          <#if f_index gte max_authors_filter>
+            <dd>
+              <label><input type="checkbox" name="filterAuthors" value="${f.name}"
+                <#if (filterAuthors?seq_contains(f.name)) > checked="true"</#if>> ${f.name} (${f.count})</label>
             </dd>
           </#if>
         </#list>
@@ -350,48 +394,8 @@ ERROR, searchType must be defined.
 
     </div>
   </#if>
-</#if>
-
-<#if (resultsSinglePage.authorFacet??)>
-  <div id="authorFacet" class="facet">
-    <dl>
-      <dt>Authors</dt>
-      <#list resultsSinglePage.authorFacet as f>
-        <#if f_index lt max_authors_filter>
-          <dd>
-            <label><input type="checkbox" name="filterAuthors" value="${f.name}"
-              <#if (filterAuthors?seq_contains(f.name)) > checked="true"</#if>> ${f.name}
-              (${f.count})</label>
-          </dd>
-        </#if>
-      </#list>
-    <#-- TODO: Confirm this logic works -->
-      <#if resultsSinglePage.authorFacet?size gt max_authors_filter>
-        <dd>
-          <label><span class="view-more">See more...</span></label>
-        </dd>
-      </#if>
-    </dl>
-
-    <dl class="more">
-      <dt>More Authors</dt>
-      <#list resultsSinglePage.authorFacet as f>
-      <#-- TODO: Confirm this logic works -->
-        <#if f_index gte max_authors_filter>
-          <dd>
-            <label><input type="checkbox" name="filterAuthors" value="${f.name}"
-              <#if (filterAuthors?seq_contains(f.name)) > checked="true"</#if>> ${f.name} (${f.count})</label>
-          </dd>
-        </#if>
-      </#list>
-      <dd>
-        <label><a href="#hdr-search-results" class="view-less">See less...</a></label>
-      </dd>
-    </dl>
-
-  </div>
-</#if>
 </div>
+</#if>
 </div><!-- hdr-fig-search -->
 </form>
 
@@ -400,9 +404,11 @@ ERROR, searchType must be defined.
 
   <#if (fieldErrors?? && numFieldErrors > 0)>
     <div class="error">
+      <br/>
       <h1>There was a problem with the terms you entered.</h1>
       <p>Please enter different terms
         or try our <a href="${advancedSearchURL}">advanced search</a>.</p>
+
       <#list fieldErrors?keys as key>
         <#list fieldErrors[key] as errorMessage>
         ${errorMessage}
@@ -412,10 +418,41 @@ ERROR, searchType must be defined.
   <#else>
     <#if ((totalNoOfResults == 0))>
       <div id="search-results-block" class="cf">
+        <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?length > 1))>
+          <br/>
+          <h1>You searched for articles that have all of the following:</h1>
+
+          <p>Search Term(s): <strong>"${queryAsExecuted?html}"</strong></p>
+        </#if>
+        <#if (filterAuthors?size > 0)>
+          Author(s):
+          <b><#list filterAuthors as author>"${author}
+            " <#if (author_index) gt filterAuthors?size - 3><#if author_has_next>
+              and </#if><#else><#if author_has_next>, </#if></#if></#list></b>
+          <br/>
+        </#if>
+        <#if (filterSubjects?size > 0)>
+          Subject categories:
+          <b><#list filterSubjects as subject>"${subject}
+            " <#if (subject_index) gt filterSubjects?size - 3><#if subject_has_next>
+              and </#if><#else><#if subject_has_next>, </#if></#if></#list></b>
+          <br/>
+        </#if>
+        <#if (filterJournals?size > 0)>
+          Journal(s):
+          <b><#list filterJournals as journal>"${freemarker_config.getDisplayName(journal)}
+            "<#if (journal_index) gt filterJournals?size - 3><#if journal_has_next>
+              and </#if><#else><#if journal_has_next>, </#if></#if></#list></b>
+          <br/>
+        </#if>
+        <#if (filterArticleType?length > 1)>
+          Article Type: ${filterArticleType}
+          <br/>
+        </#if>
         <br/>
-        <h1>There are no results for the terms you entered.</h1>
-        <p>Please enter different terms
-          or try our <a href="${advancedSearchURL}">advanced search</a>.</p>
+        There were no results, please <a href="${advancedSearchURL}?<@URLParameters parameters=searchParameters />&noSearchFlag=set">refine your search</a> and try again. <br/>
+        <br/>
+        <br/>
       </div>
     <#else>
       <div id="search-results-block" class="cf">
