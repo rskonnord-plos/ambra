@@ -1199,8 +1199,7 @@ table#pageViewsTable td.source1 { background-color:#3c63af;font-weight: bold; co
 table#pageViewsTable td.source2 { background-color:#000; font-weight: bold; color: #fff; }
 table#pageViewsTable td.total { font-weight: bold; color: black; }
 
-
-#in-news a.ir { display: inline-block; text-indent: -9999px; background-image:url(../images/button_info.png); width: 17px; height: 17px; }
+a.ir { display: inline-block; text-indent: -9999px; background-image:url(../images/button_info.png); width: 17px; height: 17px; }
 
 #usage #chart { width:600px; height:200px; }
 .topstroke { padding: 10px; border-top: 1px solid #D1D1D1; }
