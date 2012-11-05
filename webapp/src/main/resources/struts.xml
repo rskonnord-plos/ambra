@@ -709,14 +709,15 @@
           annotation.id,
           annotation.annotationUri,
           annotation.title,
-          annotation.creatorName,
+          annotation.creatorDisplayName,
           annotation.creatorID,
           annotation.createdAsMillis,
           annotation.type,
           annotation.truncatedBody,
-          annotation.truncatedCompetingInterestStatement
+          annotation.truncatedCompetingInterestStatement,
           annotation.body,
-          annotation.competingInterestStatement
+          annotation.competingInterestStatement,
+          annotation.created,
         </param>
       </result>
     </action>

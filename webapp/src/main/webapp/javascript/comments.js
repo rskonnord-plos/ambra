@@ -251,12 +251,23 @@ $.fn.comments = function () {
     var comment = $('#reply-skeleton').clone();
     comment.attr('id', 'reply-' + childId);
 
-    var childDepth = getReplyElement(parentId).data('depth') + 1;
+    var parentReply = getReplyElement(parentId);
+    var childDepth = parentReply.data('depth') + 1;
     comment.data('depth', childDepth);
     comment.attr('style', 'margin-left: ' + (30 * childDepth) + 'px');
 
     comment.find('.response_title').text(childReply.title);
     comment.find('.response_body').html(childReply.body);
+
+    var authorLink = comment.find('a.replyCreator');
+    authorLink.text(childReply.creatorDisplayName);
+    var authorHref = authorLink.attr('href');
+    authorLink.attr('href', authorHref.replace(/\/\d*$/, '/' + childReply.creatorID));
+
+    var parentAuthor = parentReply.find('a.replyCreator');
+    var repliedTo = comment.find('a.repliedTo');
+    repliedTo.text(parentAuthor.text());
+    repliedTo.attr('href', parentAuthor.attr('href'));
 
     comment.find('.flag.btn').attr('onclick', 'comments.showReportBox(' + childId + ')');
     comment.find('.respond.btn').attr('onclick', 'comments.showRespondBox(' + childId + ', ' + childDepth + ')');
