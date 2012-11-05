@@ -26,12 +26,6 @@ $.fn.comments = function () {
    */
   this.addresses = null;
 
-  /**
-   * Table mapping reply IDs to their page depths. Necessary for placing newly posted replies on the page.
-   * @type {Object}
-   */
-  var depths = {};
-
   function animatedShow(element) {
     element.show("blind", 500);
   }
@@ -108,8 +102,9 @@ $.fn.comments = function () {
    * @param replyId  the ID of the reply where the box should be shown
    */
   this.showRespondBox = function (replyId, depth) {
-    depths[replyId] = depth;
-    var parentTitle = getReplyElement(replyId).find('.response_title').text();
+    var replyElement = getReplyElement(replyId);
+    replyElement.data('depth', depth);
+    var parentTitle = replyElement.find('.response_title').text();
     showBox(replyId, 'report', 'respond',
       function (box) {
         box.find('.btn_submit').attr('onclick', 'comments.submitResponse(' + replyId + ')');
@@ -253,12 +248,13 @@ $.fn.comments = function () {
    * @param childReply  data for the new comment
    */
   function putComment(parentId, childId, childReply, addresses) {
-    var childDepth = depths[parentId] + 1;
-    depths[childId] = childDepth;
     var comment = $('#reply-skeleton').clone();
-
     comment.attr('id', 'reply-' + childId);
+
+    var childDepth = getReplyElement(parentId).data('depth') + 1;
+    comment.data('depth', childDepth);
     comment.attr('style', 'margin-left: ' + (30 * childDepth) + 'px');
+
     comment.find('.response_title').text(childReply.title);
     comment.find('.response_body').html(childReply.body);
 
