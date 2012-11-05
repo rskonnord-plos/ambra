@@ -33,6 +33,7 @@ import java.util.Set;
 
 public abstract class BaseArticleInfo {
   private static final Logger log = LoggerFactory.getLogger(BaseArticleInfo.class);
+  private static final int RELATED_AUTHOR_LINK_SIZE = 5;
 
   public String doi;
   public Date date;
@@ -103,6 +104,29 @@ public abstract class BaseArticleInfo {
    */
   public List<String> getAuthors() {
     return authors;
+  }
+
+  /**
+   * Get the list of authors for related content (for the related section of the page)
+   * @return authors for related section
+   */
+  public List<String> getAuthorsForRelatedSearch() {
+    int authorSize = authors.size();
+    List<String> authorsForRelated;
+    if (authorSize <= RELATED_AUTHOR_LINK_SIZE) {
+      authorsForRelated = authors;
+    } else {
+      authorsForRelated = new ArrayList<String>(RELATED_AUTHOR_LINK_SIZE);
+      // get the first 3
+      authorsForRelated.add(authors.get(0));
+      authorsForRelated.add(authors.get(1));
+      authorsForRelated.add(authors.get(2));
+      // get the last 2
+      authorsForRelated.add(authors.get(authorSize - 2));
+      authorsForRelated.add(authors.get(authorSize - 1));
+    }
+
+    return authorsForRelated;
   }
 
   /**
