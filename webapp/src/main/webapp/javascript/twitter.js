@@ -74,9 +74,9 @@ $.fn.twitter = function () {
         var tweet = events[i].event;
         var tweet_url = events[i].event_url;
 
-        var created_dt = isNaN($.format.date(tweet.created_at, "MMM d, yyyy"))?
-            $.format.date(this.parseTwitterDate(tweet.created_at), "MMM d, yyyy"):
-            $.format.date(tweet.created_at, "MMM d, yyyy");
+        var created_dt = isNaN($.datepicker.formatDate("MMM d, yyyy", tweet.created_at))?
+          $.datepicker.formatDate("MMM d, yyyy", this.parseTwitterDate(tweet.created_at)):
+          $.datepicker.formatDate("MMM d, yyyy", tweet.created_at);
 
         ol.append("<li><div><img src=\"" + tweet.user_profile_image
           + "\"/><span class=\"text\"><a href=\"https://twitter.com/#!/" + tweet.user
