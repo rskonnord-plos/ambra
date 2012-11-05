@@ -489,7 +489,7 @@ $.fn.alm = function () {
     $.jsonp({
       url: url,
       context: document.body,
-      timeout: 10000,
+      timeout: 20000,
       callbackParameter: "callback",
       success: callBack,
       error: errorCallback
