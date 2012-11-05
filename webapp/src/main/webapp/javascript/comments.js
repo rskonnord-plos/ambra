@@ -42,13 +42,11 @@ $.fn.comments = function () {
 
   /**
    * Return a reference to the JQuery page element for a reply.
-   * @param replyId  the ID of the reply, or null if the page has only one reply
+   * @param replyId  the ID of the reply
    * @return {*} the element
    */
   function getReplyElement(replyId) {
-    return (replyId == null)
-      ? $('.reply')
-      : $('#reply-' + replyId);
+    return  $('#reply-' + replyId);
   }
 
   /**
@@ -147,14 +145,14 @@ $.fn.comments = function () {
    * @param articleDoi the DOI of the article to which the user is responding
    */
   this.submitDiscussion = function (articleDoi) {
-    var commentData = getCommentData(null);
+    var commentData = getCommentData($('.reply'));
     commentData.target = articleDoi;
 
     var listThreadURL = this.addresses.listThreadURL; // make available in the local scope
     var submittedCallback = function (data) {
       window.location = listThreadURL + '?root=' + data.annotationId;
     };
-    submit($('.error'), this.addresses.submitDiscussionURL, null, commentData, submittedCallback);
+    submit($('.error'), this.addresses.submitDiscussionURL, commentData, submittedCallback);
   };
 
   /**
@@ -162,7 +160,8 @@ $.fn.comments = function () {
    * @param parentId  the ID of the existing reply, to which the user is responding
    */
   this.submitResponse = function (parentId) {
-    var commentData = getCommentData(parentId);
+    var replyElement = getReplyElement(parentId);
+    var commentData = getCommentData(replyElement);
     commentData.inReplyTo = parentId;
 
     var addresses = this.addresses; // make available in the local scope
@@ -174,9 +173,9 @@ $.fn.comments = function () {
           putComment(parentId, data.annotationId, data.annotation, addresses);
         });
     };
-    var errorMsgElement = getReplyElement(parentId).find('.subresponse .error');
+    var errorMsgElement = replyElement.find('.subresponse .error');
 
-    submit(errorMsgElement, this.addresses.submitReplyURL, parentId, commentData, submittedCallback);
+    submit(errorMsgElement, this.addresses.submitReplyURL, commentData, submittedCallback);
   };
 
   /**
@@ -196,7 +195,7 @@ $.fn.comments = function () {
       reportDialog.find('.flagForm').hide();
       animatedShow(reportDialog.find('.flagConfirm'));
     };
-    submit(errorMsgElement, this.addresses.submitFlagURL, replyId, data, submittedCallback);
+    submit(errorMsgElement, this.addresses.submitFlagURL, data, submittedCallback);
   };
 
   /**
@@ -204,11 +203,10 @@ $.fn.comments = function () {
    *
    * @param errorMsgElement  the JQuery element in which to display any error messages
    * @param submitUrl  the URL to send the Ajax request to
-   * @param parentId  the ID of the parent reply, or null if the page doesn't show other replies
    * @param data  the comment's content, as an object that can be sent to the server
    * @param submittedCallback  a function to call after the comment has been submitted without errors
    */
-  function submit(errorMsgElement, submitUrl, parentId, data, submittedCallback) {
+  function submit(errorMsgElement, submitUrl, data, submittedCallback) {
     errorMsgElement.hide(); // in case it was already shown from a previous attempt
 
     sendAjaxRequest(submitUrl, data,
@@ -230,21 +228,19 @@ $.fn.comments = function () {
 
   /**
    * Pull the input for a submitted comment from the page.
-   * @param parentId  the ID of the existing reply, to which the user is responding
+   * @param replyElement  the existing reply, to which the user is responding, as a JQuery element
    * @return {Object}  the response data, formatted to be sent over Ajax
    */
-  function getCommentData(parentId) {
-    var parent = getReplyElement(parentId);
-
+  function getCommentData(replyElement) {
     var data = {
-      commentTitle:parent.find('[name="comment_title"]').val(),
-      comment:parent.find('[name="comment"]').val()
+      commentTitle:replyElement.find('[name="comment_title"]').val(),
+      comment:replyElement.find('[name="comment"]').val()
     };
 
-    var ciRadio = parent.find('input:radio[name="competing"]:checked');
+    var ciRadio = replyElement.find('input:radio[name="competing"]:checked');
     data.isCompetingInterest = Boolean(ciRadio.val());
     if (data.isCompetingInterest) {
-      data.ciStatement = parent.find('[name="competing_interests"]').val();
+      data.ciStatement = replyElement.find('[name="competing_interests"]').val();
     }
 
     return data;
