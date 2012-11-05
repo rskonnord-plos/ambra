@@ -75,6 +75,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private static final Logger log = LoggerFactory.getLogger(FetchArticleTabsAction.class);
   private final ArrayList<String> messages = new ArrayList<String>();
 
+  private static final int RELATED_AUTHOR_SEARCH_QUERY_SIZE = 4;
+
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
@@ -108,6 +110,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private List<AuthorExtra> authorExtras;
   private List<CitationReference> references;
   private String journalAbbrev;
+  private String relatedAuthorSearchQuery;
 
   private FetchArticleService fetchArticleService;
   private AnnotationService annotationService;
@@ -306,6 +309,26 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       setCommonData();
 
       trackbackList = trackbackService.getTrackbacksForArticle(articleURI);
+
+      // get the first two and the last two authors
+      List<String> authors = articleInfoX.getAuthors();
+      int authorSize = authors.size();
+      relatedAuthorSearchQuery = "";
+      if (authorSize <= RELATED_AUTHOR_SEARCH_QUERY_SIZE) {
+        for (String author : authors) {
+          relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + author + "\" OR ";
+        }
+        // remove the last ", OR "
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
+
+      } else {
+        // get first 2
+        relatedAuthorSearchQuery = "\"" + authors.get(0) + "\" OR ";
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(1) + "\" OR ";
+        // get last 2
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 2) + "\" OR ";
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 1) + "\"";
+      }
 
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
@@ -751,4 +774,12 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     return TextUtils.transformXMLtoHtmlText(articleInfoX.getDescription());
   }
 
+  /**
+   * Returns related article author search query
+   *
+   * @return author name query
+   */
+  public String getRelatedAuthorSearchQuery() {
+    return relatedAuthorSearchQuery;
+  }
 }
