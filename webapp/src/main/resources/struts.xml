@@ -400,7 +400,7 @@
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -416,7 +416,7 @@
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -435,7 +435,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -446,7 +446,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -457,7 +457,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -468,7 +468,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -479,7 +479,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -490,7 +490,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -501,7 +501,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -523,7 +523,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -533,11 +533,11 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -547,7 +547,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -557,7 +557,7 @@
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -569,7 +569,7 @@
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -579,7 +579,7 @@
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -589,7 +589,7 @@
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -599,7 +599,7 @@
       </result>
       <result name="input" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -607,7 +607,7 @@
       <result name="success">/article/displayArticle.ftl</result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -618,7 +618,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -628,7 +628,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -640,7 +640,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
 
@@ -652,7 +652,7 @@
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
-        <param name="templateFile">/static/articleNotFound.ftl</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
     </action>
   </package>
