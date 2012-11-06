@@ -666,7 +666,7 @@ var launchModal = function(doi, ref, state, el) {
       }
     });
   }();
-  
+
   var buildAbs = function() {
     $.jsonp({
       url: 'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/","") + '%22' + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
@@ -680,7 +680,7 @@ var launchModal = function(doi, ref, state, el) {
           + '<div class="txt"><p>' + this["abstract"] + '</p></div>'
           + '<div class="lnks">'
           + '<p class="dl">Download'
-          + ' <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Artilce PDF Version</a>'
+          + ' <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Artilce PDF Version</a>'
           + '</p><p>'
           + '<span class="btn" onclick="toggleModalState();">browse figures</span>'
           + '<span class="btn active">view abstract</span>'
@@ -953,7 +953,7 @@ $(window).load(function(){
     defaults = {
       navID : '',
       slidesContainer : '',
-      initialTab : 0,
+      initialTab : 0
     };
     var options = $.extend(defaults, options);
     var $navContainer = $(options.navID);
