@@ -21,10 +21,9 @@
 
 $.fn.comments = function () {
 
-  /*
-   * Must be supplied from the calling page (where it would be populated by FreeMarker).
-   */
+  // Constants filled in by FreeMarker and supplied to here from the webpage.
   this.addresses = null;
+  this.indentationWidth = null;
 
   /**
    * Show an element with a user-friendly animation.
@@ -296,7 +295,7 @@ $.fn.comments = function () {
     parentReply.find('.subresponse').remove();
     var childDepth = parentReply.data('depth') + 1;
     comment.data('depth', childDepth);
-    comment.attr('style', 'margin-left: ' + (30 * childDepth) + 'px');
+    comment.attr('style', 'margin-left: ' + (childDepth * this.indentationWidth) + 'px');
 
     comment.find('.response_title').text(childReply.title);
     comment.find('.response_body').html(childReply.body);
