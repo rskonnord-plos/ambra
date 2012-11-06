@@ -340,6 +340,17 @@
 
   <rule>
     <note>
+      Catch all for old style static links and non FTL static resources served out
+      of the static folder.  Let's just pass through these requests:
+
+      /static/whatever.whatever -> /static/whatever.whatever
+    </note>
+    <from>^/static/(.*\.[\w\d]+)$</from>
+    <to>/static/$1</to>
+  </rule>
+
+  <rule>
+    <note>
       re-write incoming requests for static pages
       /static/whatever? -> /static/whatever.action
     </note>
