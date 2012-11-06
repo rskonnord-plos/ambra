@@ -53,6 +53,17 @@ $.fn.comments = function () {
   }
 
   /**
+   * Produce a clone of a JQuery element with a new "id" attribute.
+   * @param selector  a selector that will find the element to clone
+   * @param id  the ID to assign to the new clone, or a false/null value to remove the clone's ID
+   * @return {*}  the clone
+   */
+  function cloneWithId(selector, id) {
+    var clone = $(selector).clone();
+    return (id ? clone.attr('id', id) : clone.removeAttr('id'));
+  }
+
+  /**
    * Clear the box beneath a reply (whichever one is showing, if any).
    * @param replyId  the ID of the reply whose box should be cleared
    */
@@ -87,7 +98,7 @@ $.fn.comments = function () {
 
     // Set up the new HTML object
     var container = reply.find('.' + typeToShow + '_box');
-    var box = $('#' + typeToShow + '_skeleton').clone();
+    var box = cloneWithId('#' + typeToShow + '_skeleton', null);
 
     this.wireClearButton(box.find('.btn_cancel'), replyId);
     setupCallback(box);
@@ -275,10 +286,10 @@ $.fn.comments = function () {
    * @param childReply  data for the new comment
    */
   this.putComment = function (parentId, childId, childReply) {
-    var comment = $('#reply-skeleton').clone();
-    comment.attr('id', 'reply-' + childId);
+    var comment = cloneWithId('#reply-skeleton', 'reply-' + childId);
 
     var parentReply = getReplyElement(parentId);
+    parentReply.find('.subresponse').remove();
     var childDepth = parentReply.data('depth') + 1;
     comment.data('depth', childDepth);
     comment.attr('style', 'margin-left: ' + (30 * childDepth) + 'px');
@@ -312,13 +323,15 @@ $.fn.comments = function () {
     });
 
     // We need to set some of the raw HTML here because the skeletal reply only covers one mode
-    comment.find('.competing_interests').html(
+    comment.find('.competing_interests').not('textarea').html(
       (childReply.competingInterestStatement != null && childReply.competingInterestStatement.length > 0)
         ? ('<strong>Competing interests declared:</strong> ' + childReply.competingInterestStatement)
         : ('<strong>No competing interests declared.</strong>')
     );
 
-    getReplyListFor(parentId).append(comment);
+    var replyList = getReplyListFor(parentId);
+    replyList.append(comment);
+    replyList.append(cloneWithId('#replies_to-skeleton', 'replies_to-' + childId));
     comment.show();
   };
 
