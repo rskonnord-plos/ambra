@@ -717,7 +717,7 @@
           annotation.truncatedCompetingInterestStatement,
           annotation.body,
           annotation.competingInterestStatement,
-          annotation.created,
+          annotation.createdFormatted
         </param>
       </result>
     </action>

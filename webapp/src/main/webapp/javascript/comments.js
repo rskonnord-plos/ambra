@@ -241,6 +241,14 @@ $.fn.comments = function () {
     return data;
   }
 
+  function padZeroes(value, width) {
+    value = value.toString();
+    while (value.length < width) {
+      value = '0' + value;
+    }
+    return value;
+  }
+
   /**
    * Add a comment in its proper place in its thread.
    * @param parentId  the ID of the comment's parent (defines where to put the new comment)
@@ -268,6 +276,13 @@ $.fn.comments = function () {
     var repliedTo = comment.find('a.repliedTo');
     repliedTo.text(parentAuthor.text());
     repliedTo.attr('href', parentAuthor.attr('href'));
+
+    var timestamp = new Date(childReply.createdFormatted); // UTC
+    var timestampFormat
+      = '<strong>' + $.datepicker.formatDate('dd M yy', timestamp) + '</strong> at <strong>'
+      + padZeroes(timestamp.getUTCHours(), 2) + ':' + padZeroes(timestamp.getUTCMinutes(), 2)
+      + ' GMT</strong>';
+    comment.find('.replyTimestamp').html($(timestampFormat));
 
     comment.find('.flag.btn').attr('onclick', 'comments.showReportBox(' + childId + ')');
     comment.find('.respond.btn').attr('onclick', 'comments.showRespondBox(' + childId + ', ' + childDepth + ')');
