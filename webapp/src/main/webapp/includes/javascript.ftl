@@ -2,7 +2,7 @@
   <#if freemarker_config.debug>
     <#assign jsFileName = "${jsFile}" />
   <#else>
-    <#assign jsFileName = "${jsFile?replace('.js','-min.js')}" />
+    <#assign jsFileName = "${jsFile?replace('.js$','-min.js','r')}" />
   </#if>
   <@versionedJS file="${jsFileName}" />
 </#list>
