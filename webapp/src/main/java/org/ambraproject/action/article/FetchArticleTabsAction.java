@@ -319,7 +319,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
           relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + author + "\" OR ";
         }
         // remove the last ", OR "
-        relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
+        if (relatedAuthorSearchQuery.length() > 0) {
+          relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
+        }
 
       } else {
         // get first 2
