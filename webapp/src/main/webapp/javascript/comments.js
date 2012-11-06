@@ -63,37 +63,53 @@ $.fn.comments = function () {
   };
 
   /**
+   * Set up an element to clear a reply box when clicked.
+   * @param button  the element
+   * @param replyId  the reply to clear
+   */
+  this.wireClearButton = function (button, replyId) {
+    var outer = this; // putting it in scope
+    button.click(function () {
+      outer.clearReply(replyId);
+    });
+  }
+
+  /**
    * Show a drop-down box beneath a reply to prompt a user action.
    * @param replyId  the reply where the box should appear
    * @param typeToHide  the type of other box to hide before showing this one
    * @param typeToShow  the type of box to show
    * @param setupCallback  a function (that takes the new box as an argument) to call to finish setting it up
    */
-  function showBox(replyId, typeToHide, typeToShow, setupCallback) {
+  this.showBox = function (replyId, typeToHide, typeToShow, setupCallback) {
     var reply = getReplyElement(replyId);
     reply.find('.' + typeToHide + '_box').hide();
 
     // Set up the new HTML object
     var container = reply.find('.' + typeToShow + '_box');
     var box = $('#' + typeToShow + '_skeleton').clone();
-    box.find('.btn_cancel').attr('onclick', 'comments.clearReply(' + replyId + ')');
+
+    this.wireClearButton(box.find('.btn_cancel'), replyId);
     setupCallback(box);
 
     // Display it
     container.html(box);
     container.show();
     animatedShow(box);
-  }
+  };
 
   /**
    * Show the "report a concern" box beneath a reply, clearing the response box first if necessary.
    * @param replyId  the ID of the reply where the box should be shown
    */
   this.showReportBox = function (replyId) {
-    showBox(replyId, 'respond', 'report',
+    var outer = this;
+    this.showBox(replyId, 'respond', 'report',
       function (box) {
-        box.find('.btn_submit').attr('onclick', 'comments.submitReport(' + replyId + ')');
-        box.find('.close_confirm').attr('onclick', 'comments.clearReply(' + replyId + ')');
+        box.find('.btn_submit').click(function () {
+          outer.submitReport(replyId);
+        });
+        outer.wireClearButton(box.find('.close_confirm'), replyId);
       });
   };
 
@@ -104,10 +120,13 @@ $.fn.comments = function () {
   this.showRespondBox = function (replyId, depth) {
     var replyElement = getReplyElement(replyId);
     replyElement.data('depth', depth);
+    var outer = this;
     var parentTitle = replyElement.find('.response_title').text();
-    showBox(replyId, 'report', 'respond',
+    this.showBox(replyId, 'report', 'respond',
       function (box) {
-        box.find('.btn_submit').attr('onclick', 'comments.submitResponse(' + replyId + ')');
+        box.find('.btn_submit').click(function () {
+          outer.submitResponse(replyId);
+        });
         box.find('[name="comment_title"]').attr("value", 'RE: ' + parentTitle);
       });
   };
@@ -159,13 +178,13 @@ $.fn.comments = function () {
     var commentData = getCommentData(replyElement);
     commentData.inReplyTo = parentId;
 
-    var addresses = this.addresses; // make available in the local scope
+    var outer = this;
     var submittedCallback = function (data) {
       // Make a second Ajax request to get the new comment (we need its back-end representation)
-      sendAjaxRequest(addresses.getAnnotationURL, {annotationId:data.replyId},
+      sendAjaxRequest(outer.addresses.getAnnotationURL, {annotationId:data.replyId},
         function (data, textStatus, jqXHR) {
           // Got the new comment; now add the content to the page
-          putComment(parentId, data.annotationId, data.annotation, addresses);
+          outer.putComment(parentId, data.annotationId, data.annotation);
         });
     };
     var errorMsgElement = replyElement.find('.subresponse .error');
@@ -255,7 +274,7 @@ $.fn.comments = function () {
    * @param childId  the ID of the new comment
    * @param childReply  data for the new comment
    */
-  function putComment(parentId, childId, childReply, addresses) {
+  this.putComment = function (parentId, childId, childReply) {
     var comment = $('#reply-skeleton').clone();
     comment.attr('id', 'reply-' + childId);
 
@@ -284,8 +303,13 @@ $.fn.comments = function () {
       + ' GMT</strong>';
     comment.find('.replyTimestamp').html($(timestampFormat));
 
-    comment.find('.flag.btn').attr('onclick', 'comments.showReportBox(' + childId + ')');
-    comment.find('.respond.btn').attr('onclick', 'comments.showRespondBox(' + childId + ', ' + childDepth + ')');
+    var outer = this;
+    comment.find('.flag.btn').click(function () {
+      outer.showReportBox(childId);
+    });
+    comment.find('.respond.btn').click(function () {
+      outer.showRespondBox(childId);
+    });
 
     // We need to set some of the raw HTML here because the skeletal reply only covers one mode
     comment.find('.competing_interests').html(
@@ -296,6 +320,6 @@ $.fn.comments = function () {
 
     getReplyListFor(parentId).append(comment);
     comment.show();
-  }
+  };
 
 };
