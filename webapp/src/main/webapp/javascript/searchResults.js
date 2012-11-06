@@ -366,7 +366,7 @@ $(document).ready(
       var errorMsg = $("<span></span>");
       errorMsg.addClass("inlineError");
       errorMsg.css("display","none");
-      errorMsg.html("<img src=\"../images/icon_error.gif\"/>&nbsp;" + message);
+      errorMsg.html(message);
 
       $(spanNode).find("span").fadeOut(250, function() {
         $(spanNode).append(errorMsg);
@@ -390,10 +390,21 @@ $(document).ready(
         }
       }
 
-      //if any confirmed_ids are left.  We know there is no data
+      //if any ids are left.  We know there is no data
       //Make note of that now.
       for(a = 0; a < ids.length; a++) {
-        makeALMSearchWidgetError(ids[a], "Article metrics data not available - please check back later.");
+        var nodeList = $("li[doi='" + ids[a] + "']");
+        var pubDate = $(nodeList[0]).attr("pdate");
+
+        //If the article is less then two days old and there is no data,
+        //it's not really an error, alm is a few days behind
+        if(pubDate > ((new Date().getTime()) -  172800000)) {
+          makeALMSearchWidgetError(ids[a],
+            "Metrics unavailable for recently published articles. Please check back later.");
+        } else {
+          makeALMSearchWidgetError(ids[a],
+            "<img src=\"../images/icon_error.gif\"/>&nbsp;Metrics unavailable. Please check back later.");
+        }
       }
     }
 
