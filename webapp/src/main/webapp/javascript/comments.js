@@ -290,9 +290,12 @@ $.fn.comments = function () {
    */
   this.putComment = function (parentId, childId, childReply) {
     var comment = cloneWithId('#reply-skeleton', 'reply-' + childId);
-
     var parentReply = getReplyElement(parentId);
+
+    // Clear and hide the old response box
+    parentReply.find('.respond_box').hide().data('populated', false);
     parentReply.find('.subresponse').remove();
+
     var childDepth = parentReply.data('depth') + 1;
     comment.data('depth', childDepth);
     comment.attr('style', 'margin-left: ' + (childDepth * this.indentationWidth) + 'px');
@@ -331,6 +334,9 @@ $.fn.comments = function () {
         ? ('<strong>Competing interests declared:</strong> ' + childReply.competingInterestStatement)
         : ('<strong>No competing interests declared.</strong>')
     );
+
+    // Kludge to forcibly remove junk values from the new comment's response container. TODO: Prevent junk.
+    comment.find('.respond_box').hide().html('').data('populated', false);
 
     var replyList = getReplyListFor(parentId);
     replyList.append(comment);
