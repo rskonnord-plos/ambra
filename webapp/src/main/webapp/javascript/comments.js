@@ -26,12 +26,21 @@ $.fn.comments = function () {
    */
   this.addresses = null;
 
+  /**
+   * Show an element with a user-friendly animation.
+   * @param element  the element to show
+   */
   function animatedShow(element) {
     element.show("blind", 500);
   }
 
-  function animatedHide(element) {
-    element.hide("blind", {direction:"vertical"}, 500);
+  /**
+   * Hide an element with a user-friendly animation.
+   * @param toHide  the JQuery element to hide
+   * @param callback  a callback to execute (if not null/false) after finishing the animation
+   */
+  function animatedHide(toHide, callback) {
+    toHide.hide("blind", {direction:"vertical"}, 500, callback);
   }
 
   /**
@@ -64,49 +73,45 @@ $.fn.comments = function () {
   }
 
   /**
-   * Clear the box beneath a reply (whichever one is showing, if any).
-   * @param replyId  the ID of the reply whose box should be cleared
-   */
-  this.clearReply = function (replyId) {
-    var reply = getReplyElement(replyId);
-    animatedHide(reply.find('.report_box'));
-    animatedHide(reply.find('.respond_box'));
-  };
-
-  /**
-   * Set up an element to clear a reply box when clicked.
-   * @param button  the element
-   * @param replyId  the reply to clear
-   */
-  this.wireClearButton = function (button, replyId) {
-    var outer = this; // putting it in scope
-    button.click(function () {
-      outer.clearReply(replyId);
-    });
-  }
-
-  /**
    * Show a drop-down box beneath a reply to prompt a user action.
+   *
    * @param replyId  the reply where the box should appear
    * @param typeToHide  the type of other box to hide before showing this one
    * @param typeToShow  the type of box to show
+   * @param closeSelectors  JQuery selectors for everything that should close the box when clicked
    * @param setupCallback  a function (that takes the new box as an argument) to call to finish setting it up
    */
-  this.showBox = function (replyId, typeToHide, typeToShow, setupCallback) {
+  this.showBox = function (replyId, typeToHide, typeToShow, closeSelectors, setupCallback) {
     var reply = getReplyElement(replyId);
-    reply.find('.' + typeToHide + '_box').hide();
+    reply.find('.' + typeToHide + '_box').hide(); // Keep its input in case the user switches back
 
     // Set up the new HTML object
     var container = reply.find('.' + typeToShow + '_box');
-    var box = cloneWithId('#' + typeToShow + '_skeleton', null);
+    if (container.data('populated')) {
+      // The HTML, and possibly some user input, is already in the container. Just display it.
+      animatedShow(container);
+      return;
+    }
+    container.data('populated', true); // so that the HTML won't get overwritten if the button is clicked again
 
-    this.wireClearButton(box.find('.btn_cancel'), replyId);
+    var box = cloneWithId('#' + typeToShow + '_skeleton', null);
     setupCallback(box);
+
+    // How to close the box and clear any input
+    var closeFunction = function () {
+      container.data('populated', false); // so that the HTML gets rebuilt the next time it's opened
+      animatedHide(container, function () {
+        box.remove(); // Avoid holding the input in memory until the box is re-opened (it would be overwritten anyway)
+      });
+    };
+    for (var i = 0; i < closeSelectors.length; i++) {
+      box.find(closeSelectors[i]).click(closeFunction);
+    }
 
     // Display it
     container.html(box);
-    container.show();
-    animatedShow(box);
+    box.show();
+    animatedShow(container);
   };
 
   /**
@@ -115,12 +120,11 @@ $.fn.comments = function () {
    */
   this.showReportBox = function (replyId) {
     var outer = this;
-    this.showBox(replyId, 'respond', 'report',
+    this.showBox(replyId, 'respond', 'report', ['.btn_cancel', '.close_confirm'],
       function (box) {
         box.find('.btn_submit').click(function () {
           outer.submitReport(replyId);
         });
-        outer.wireClearButton(box.find('.close_confirm'), replyId);
       });
   };
 
@@ -133,7 +137,7 @@ $.fn.comments = function () {
     replyElement.data('depth', depth);
     var outer = this;
     var parentTitle = replyElement.find('.response_title').text();
-    this.showBox(replyId, 'report', 'respond',
+    this.showBox(replyId, 'report', 'respond', ['.btn_cancel'],
       function (box) {
         box.find('.btn_submit').click(function () {
           outer.submitResponse(replyId);
