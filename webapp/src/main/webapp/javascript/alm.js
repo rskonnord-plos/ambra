@@ -1250,6 +1250,8 @@ $(document).ready(
     //TODO: Review if this should go into it's own file or not.
     //Appropriate results.
 
+    var fadeInDuration = 300, twoDaysInMilliseconds = 172800000;
+
     if($("#almSignPost").length > 0) {
       var almService = new $.fn.alm(),
         doi = $('meta[name=citation_doi]').attr("content"),
@@ -1259,14 +1261,17 @@ $(document).ready(
       var almError = function(message) {
         $("#almSignPostSpinner").css("display", "none");
 
-        var li = $('<li><span class="num">' + message + '</span> error</li>');
-        $("#almSignPost").append(li);
-        $("#almSignPost").fadeIn(500);
+        if(publishDatems > ((new Date().getTime()) -  twoDaysInMilliseconds)) {
+          //If the article is less then two days old and there might not be any data for the article
+          // do not display anything
+        } else {
+          // TODO: should come up with a better way to caluclate the height of the li element
+          $('#almSignPost').append($('<li></li>').text("metrics unavailable").css('vertical-align', 'middle').css('height', '65px'));
+          $('#almSignPost').fadeIn(fadeInDuration);
+        }
       };
 
       var almSuccess = function(response) {
-        $("#almSignPostPlaceHolder").css("display", "none");
-
         if(response[0].groups.length > 0) {
           var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
 
@@ -1316,6 +1321,8 @@ $(document).ready(
           var li = $('<li><span class="num">' + shares.format(0,'.',',') + '</span> SOCIAL SHARES</li>');
           $("#almSignPost").append(li);
         }
+
+        $('#almSignPost').fadeIn(fadeInDuration);
       };
 
       almService.getSummaryForArticles([ doi ], almSuccess, almError);
