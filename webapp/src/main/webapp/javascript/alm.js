@@ -872,7 +872,7 @@ $.fn.alm = function () {
     };
 
     this.getRelatedBlogs(doi, jQuery.proxy(success, this), jQuery.proxy(almError, this));
-  }
+  };
 
   this.setRelatedBlogs = function(response, relatedBlogPostsID) {
     var html = "";
@@ -899,7 +899,7 @@ $.fn.alm = function () {
           if(tileName == "research-blogging") {
             if(count > 0) {
               //Research blogging wants the DOI to search on
-              html = html + createMetricsTile(tileName,
+              html = html + this.createMetricsTile(tileName,
                 url,
                 "/images/logo-" + tileName + ".png",
                 count + '\n');
@@ -907,14 +907,14 @@ $.fn.alm = function () {
           } else {
             //Only list links that HAVE DEFINED URLS
             if (url && count > 0) {
-              html = html + createMetricsTile(tileName,
+              html = html + this.createMetricsTile(tileName,
                 url,
                 "/images/logo-" + tileName + ".png",
                 count + '\n');
             } else if (response.article.source[a].search_url != null
               && response.article.source[a].search_url.length > 0) {
 
-              html = html + createMetricsTile(tileName,
+              html = html + this.createMetricsTile(tileName,
                 response.article.source[a].search_url + articleTitle,
                 "/images/logo-" + tileName + ".png",
                 count + '\n');
@@ -926,7 +926,7 @@ $.fn.alm = function () {
 
     //  If the count for Nature is positive, then show the Nature tile.
     if (natureViews > 0) {
-      html = html + createMetricsTileNoLink("nature",
+      html = html + this.createMetricsTileNoLink("nature",
         "/images/logo-nature.png",
         natureViews)
         + '\n';
@@ -948,7 +948,7 @@ $.fn.alm = function () {
 
     $("#" + relatedBlogPostsID).html($("#" + relatedBlogPostsID).html() + html);
     $("#" + relatedBlogPostsID).show( "blind", 500 );
-  }
+  };
 
   this.setRelatedBlogError = function(message, successID, errorID) {
     $("#" + successID).css("display","none");
@@ -962,7 +962,7 @@ $.fn.alm = function () {
 
     $("#" + errorID).text(message);
     $("#" + errorID).show( "blind", 500 );
-  }
+  };
 
   this.setCitesText = function(doi, citesID, loadingID) {
     var almError = function(message) {
@@ -980,7 +980,7 @@ $.fn.alm = function () {
     };
 
     this.getCites(doi, jQuery.proxy(success, this), almError);
-  }
+  };
 
   // Sort into ascending order by the "source" variable of each element.  ALWAYS put Scopus first.
   this.sortCitesBySource = function(a,b) {
@@ -992,7 +992,7 @@ $.fn.alm = function () {
       return 1;
     }
     return 0;
-  }
+  };
 
   this.setCites = function(response, citesID) {
     var numCitesRendered = 0;
@@ -1046,7 +1046,7 @@ $.fn.alm = function () {
     }
 
     $("#" + citesID).html(html);
-  }
+  };
 
   this.setChartData = function(doi, usageID, loadingID) {
     //citation_date format = 2006/12/20
@@ -1094,6 +1094,12 @@ $.fn.alm = function () {
             '<tr class="percent"><td colspan="5"><b>' + ((data.totalPDF / data.totalHTML) * 100).format(2, '.', ',') +
             '%</b> of article views led to PDF downloads</td></tr></tbody></table></div></div>');
 
+          // in IE, Object.keys function is supported in IE 9 and onward
+          // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/keys
+          var dataHistoryKeys = $.map(data.history, function(value, key) {
+            return key;
+          });
+
           var options = {
             chart: {
               renderTo: "chart",
@@ -1122,8 +1128,7 @@ $.fn.alm = function () {
                 align: "high"
               },
               labels: {
-                step: (Object.keys(data.history).length) < 15?1:
-                  Math.round(Object.keys(data.history).length / 15),
+                step: (dataHistoryKeys.length < 15)?1:Math.round(dataHistoryKeys.length / 15),
                 formatter: function() {
                   return this.value + 1;
                 }
@@ -1216,7 +1221,7 @@ $.fn.alm = function () {
                   + '</table>';
               }
             }
-          }
+          };
 
           for (var key in data.history) {
             if(data.history[key].source.pmcViews != null) {
@@ -1241,7 +1246,7 @@ $.fn.alm = function () {
         this.getChartData(doi, jQuery.proxy(success, this), almError);
       }
     }
-  }
+  };
 }
 
 $(document).ready(
