@@ -366,7 +366,7 @@ $.fn.comments = function () {
     // Insert the new comment and display it to the user
     var replyList = getReplyListFor(parentId);
     replyList.append(comment);
-    replyList.append(cloneWithId('#replies_to-skeleton', 'replies_to-' + childId));
+    replyList.append(cloneWithId('#replies_to-prototype', 'replies_to-' + childId));
     comment.show();
     $(window).scrollTop(comment.position().top);
   };
