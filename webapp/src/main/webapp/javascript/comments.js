@@ -176,6 +176,9 @@ $.fn.comments = function () {
     var replyElement = $('.reply');
     var commentData = getCommentData(replyElement);
     commentData.target = articleDoi;
+    if (replyElement.find('input:checkbox[name="is_correction"]').is(':checked')) {
+      commentData.noteType = "correction";
+    }
 
     var listThreadURL = this.addresses.listThreadURL; // make available in the local scope
     var submittedCallback = function (data) {
