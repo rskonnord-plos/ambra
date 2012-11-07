@@ -244,7 +244,8 @@ $.fn.comments = function () {
     if (parentReply.data('submitting')) return;
     parentReply.data('submitting', true);
 
-    // TODO Set a "submission in progress" visual cue here
+    var overlay = $(".loading_overlay").overlay({api:true});
+    overlay.load();
 
     errorMsgElement.hide(); // in case it was already shown from a previous attempt
 
@@ -265,7 +266,7 @@ $.fn.comments = function () {
         parentReply.data('submitting', false);
         parentReply.find('.submissionInProgress').remove();
 
-        // TODO Clear the "submission in progress" visual cue here
+        overlay.close();
       });
   }
 
@@ -357,6 +358,8 @@ $.fn.comments = function () {
     replyList.append(comment);
     replyList.append(cloneWithId('#replies_to-skeleton', 'replies_to-' + childId));
     comment.show();
+
+
   };
 
 };
