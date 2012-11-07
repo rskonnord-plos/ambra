@@ -347,3 +347,38 @@ $.fn.edBoard = function () {
     });
   };
 };
+
+$(function () {
+
+  var edBoard = new $.fn.edBoard();
+
+  edBoard.getEditors();
+
+  edBoard.initializeAutoSuggest(
+    {
+      textBox: "searchBox",
+      searchButton: "searchButton",
+      resetButton: "clearFilter",
+
+      searchFunction: function(userString) {
+        var query = [];
+
+        $.each(userString.split(","), function(index, subject) {
+          if(subject.trim().length > 0) {
+            query.push("ae_subject:\"" + subject.trim() + "\"");
+          }
+        });
+
+        edBoard.getEditors({
+          "query": query.join(" AND "),
+          highlight: true
+        });
+      }
+    }
+  );
+
+  $("#clearFilter").click(function(eventObj) {
+    $("#searchBox").val("");
+    edBoard.getEditors();
+  });
+});
