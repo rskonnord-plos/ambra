@@ -19,6 +19,10 @@
  * limitations under the License.
  */
 
+if (!window.console) {
+  console = {log: function() {}};
+}
+
 var $win = $(window);
 var $pagebdy = $('#pagebdy');
 
