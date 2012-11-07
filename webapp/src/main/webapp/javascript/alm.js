@@ -1302,23 +1302,34 @@ $(document).ready(
           }
         }
 
+        var text, li;
         if(scopus > 0) {
-          var text = "CITATIONS";
+          text = "CITATIONS";
           if(scopus == 1) {
             text = "CITATION";
           }
 
-          var li = $('<li><span class="num">' + scopus.format(0,'.',',') + '</span> ' + text + '<br/><br/></li>');
+          li = $('<li><span class="num">' + scopus.format(0,'.',',') + '</span> ' + text + '<br/><br/></li>');
           $("#almSignPost").append(li);
         }
 
         if(bookmarks > 0) {
-          var li = $('<li><span class="num">' + bookmarks.format(0,'.',',') + '</span> ACADEMIC BOOKMARKS</li>');
+          text = "ACADEMIC BOOKMARKS";
+          if (bookmarks == 1) {
+            text = "ACADEMIC BOOKMARK";
+          }
+
+          li = $('<li><span class="num">' + bookmarks.format(0,'.',',') + '</span> ' + text + '</li>');
           $("#almSignPost").append(li);
         }
 
         if(shares > 0) {
-          var li = $('<li><span class="num">' + shares.format(0,'.',',') + '</span> SOCIAL SHARES</li>');
+          text = "SOCIAL SHARES";
+          if (shares == 1) {
+            text = "SOCIAL SHARE";
+          }
+
+          li = $('<li><span class="num">' + shares.format(0,'.',',') + '</span> ' + text + '</li>');
           $("#almSignPost").append(li);
         }
 
