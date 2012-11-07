@@ -19,6 +19,9 @@
  * limitations under the License.
  */
 
+/**
+ * @author Ryan Skonnord
+ */
 $.fn.comments = function () {
 
   // Constants filled in by FreeMarker and supplied to here from the webpage.
@@ -43,7 +46,7 @@ $.fn.comments = function () {
   }
 
   /**
-   * Return a reference to the JQuery page element for a reply.
+   * Return the JQuery element for a reply.
    * @param replyId  the ID of the reply
    * @return {*} the element
    */
@@ -52,7 +55,7 @@ $.fn.comments = function () {
   }
 
   /**
-   * Return a reference to the JQuery div that holds the replies to a parent comment.
+   * Return the JQuery div that holds the replies to a parent comment.
    * @param parentId  the non-null ID of the parent comment
    * @return {*} the reply list div
    */
@@ -63,7 +66,7 @@ $.fn.comments = function () {
   /**
    * Produce a clone of a JQuery element with a new "id" attribute.
    * @param selector  a selector that will find the element to clone
-   * @param id  the ID to assign to the new clone, or a false/null value to remove the clone's ID
+   * @param id  the ID to assign to the new clone, or a false/null value for the clone to have no ID
    * @return {*}  the clone
    */
   function cloneWithId(selector, id) {
@@ -82,10 +85,10 @@ $.fn.comments = function () {
    */
   this.showBox = function (replyId, typeToHide, typeToShow, closeSelectors, setupCallback) {
     var reply = getReplyElement(replyId);
-    reply.find('.' + typeToHide + '_box').hide(); // Keep its input in case the user switches back
+    reply.find('.' + typeToHide + '_container').hide(); // Keep its input in case the user switches back
 
     // Set up the new HTML object
-    var container = reply.find('.' + typeToShow + '_box');
+    var container = reply.find('.' + typeToShow + '_container');
     if (container.data('populated')) {
       // The HTML, and possibly some user input, is already in the container. Just display it.
       animatedShow(container);
@@ -93,7 +96,7 @@ $.fn.comments = function () {
     }
     container.data('populated', true); // so that the HTML won't get overwritten if the button is clicked again
 
-    var box = cloneWithId('#' + typeToShow + '_skeleton', null);
+    var box = cloneWithId('#' + typeToShow + '_prototype', null);
     setupCallback(box);
 
     // How to close the box and clear any input
@@ -169,7 +172,7 @@ $.fn.comments = function () {
   }
 
   /**
-   * Submit a top-level response to an article and show the result. Talks to the server over Ajax.
+   * Submit a top-level response to an article over Ajax and show the result.
    * @param articleDoi the DOI of the article to which the user is responding
    */
   this.submitDiscussion = function (articleDoi) {
@@ -251,8 +254,8 @@ $.fn.comments = function () {
 
     sendAjaxRequest(submitUrl, data,
       function (data, textStatus, jqXHR) {
-        // No errors between client and server successfully, but there may be user validation errors.
-        var errors = new Array();
+        // The Ajax request had no errors, but the server may have sent back user validation errors.
+        var errors = [];
         for (var errorKey in data.fieldErrors) {
           errors.push(data.fieldErrors[errorKey]);
         }
@@ -264,7 +267,6 @@ $.fn.comments = function () {
           submittedCallback(data);
         }
         parentReply.data('submitting', false);
-        parentReply.find('.submissionInProgress').remove();
 
         overlay.close();
       });
@@ -290,6 +292,12 @@ $.fn.comments = function () {
     return data;
   }
 
+  /**
+   * Pad a number to a certain width by adding leading zeroes.
+   * @param value  a number
+   * @param width  desired string width
+   * @return {String}  the padded number
+   */
   function padZeroes(value, width) {
     value = value.toString();
     while (value.length < width) {
@@ -305,11 +313,11 @@ $.fn.comments = function () {
    * @param childReply  data for the new comment
    */
   this.putComment = function (parentId, childId, childReply) {
-    var comment = cloneWithId('#reply-skeleton', 'reply-' + childId);
+    var comment = cloneWithId('#reply-prototype', 'reply-' + childId);
     var parentReply = getReplyElement(parentId);
 
     // Clear and hide the old response box
-    parentReply.find('.respond_box').hide().data('populated', false);
+    parentReply.find('.respond_container').hide().data('populated', false);
     parentReply.find('.subresponse').remove();
 
     var childDepth = parentReply.data('depth') + 1;
@@ -329,6 +337,7 @@ $.fn.comments = function () {
     repliedTo.text(parentAuthor.text());
     repliedTo.attr('href', parentAuthor.attr('href'));
 
+    // Format the date. We need to duplicate the FreeMarker date formatting.
     var timestamp = new Date(childReply.createdFormatted); // UTC
     var timestampFormat
       = '<strong>' + $.datepicker.formatDate('dd M yy', timestamp) + '</strong> at <strong>'
@@ -344,7 +353,7 @@ $.fn.comments = function () {
       outer.showRespondBox(childId);
     });
 
-    // We need to set some of the raw HTML here because the skeletal reply only covers one mode
+    // We need to set some of the raw HTML here because the prototype reply only covers one mode
     comment.find('.competing_interests').not('textarea').html(
       (childReply.competingInterestStatement != null && childReply.competingInterestStatement.length > 0)
         ? ('<strong>Competing interests declared:</strong> ' + childReply.competingInterestStatement)
@@ -352,14 +361,12 @@ $.fn.comments = function () {
     );
 
     // Kludge to forcibly remove junk values from the new comment's response container. TODO: Prevent junk.
-    comment.find('.respond_box').hide().html('').data('populated', false);
+    comment.find('.respond_container').hide().html('').data('populated', false);
 
     var replyList = getReplyListFor(parentId);
     replyList.append(comment);
     replyList.append(cloneWithId('#replies_to-skeleton', 'replies_to-' + childId));
     comment.show();
-
-
   };
 
 };
