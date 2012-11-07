@@ -173,14 +173,15 @@ $.fn.comments = function () {
    * @param articleDoi the DOI of the article to which the user is responding
    */
   this.submitDiscussion = function (articleDoi) {
-    var commentData = getCommentData($('.reply'));
+    var replyElement = $('.reply');
+    var commentData = getCommentData(replyElement);
     commentData.target = articleDoi;
 
     var listThreadURL = this.addresses.listThreadURL; // make available in the local scope
     var submittedCallback = function (data) {
       window.location = listThreadURL + '?root=' + data.annotationId;
     };
-    submit($('.error'), this.addresses.submitDiscussionURL, commentData, submittedCallback);
+    submit(replyElement, $('.error'), this.addresses.submitDiscussionURL, commentData, submittedCallback);
   };
 
   /**
@@ -203,7 +204,7 @@ $.fn.comments = function () {
     };
     var errorMsgElement = replyElement.find('.subresponse .error');
 
-    submit(errorMsgElement, this.addresses.submitReplyURL, commentData, submittedCallback);
+    submit(replyElement, errorMsgElement, this.addresses.submitReplyURL, commentData, submittedCallback);
   };
 
   /**
@@ -223,18 +224,25 @@ $.fn.comments = function () {
       reportDialog.find('.flagForm').hide();
       animatedShow(reportDialog.find('.flagConfirm'));
     };
-    submit(errorMsgElement, this.addresses.submitFlagURL, data, submittedCallback);
+    submit(reply, errorMsgElement, this.addresses.submitFlagURL, data, submittedCallback);
   };
 
   /**
    * Submit user input in general to the server.
    *
+   * @param parentReply  the reply (as a JQuery element) under which the user gave input
    * @param errorMsgElement  the JQuery element in which to display any error messages
    * @param submitUrl  the URL to send the Ajax request to
    * @param data  the comment's content, as an object that can be sent to the server
    * @param submittedCallback  a function to call after the comment has been submitted without errors
    */
-  function submit(errorMsgElement, submitUrl, data, submittedCallback) {
+  function submit(parentReply, errorMsgElement, submitUrl, data, submittedCallback) {
+    // If another submission is unfinished, ignore the input
+    if (parentReply.data('submitting')) return;
+    parentReply.data('submitting', true);
+
+    // TODO Set a "submission in progress" visual cue here
+
     errorMsgElement.hide(); // in case it was already shown from a previous attempt
 
     sendAjaxRequest(submitUrl, data,
@@ -251,6 +259,10 @@ $.fn.comments = function () {
           // No validation errors, meaning the comment was submitted successfully and persisted.
           submittedCallback(data);
         }
+        parentReply.data('submitting', false);
+        parentReply.find('.submissionInProgress').remove();
+
+        // TODO Clear the "submission in progress" visual cue here
       });
   }
 
