@@ -46,6 +46,14 @@ $.fn.comments = function () {
   }
 
   /**
+   * Show an element with a user-friendly animation, to highlight that the element is newly inserted.
+   * @param element  the element that's appearing
+   */
+  function animatedAppear(element) {
+    element.fadeIn(1000);
+  }
+
+  /**
    * Return the JQuery element for a reply.
    * @param replyId  the ID of the reply
    * @return {*} the element
@@ -360,14 +368,16 @@ $.fn.comments = function () {
         : ('<strong>No competing interests declared.</strong>')
     );
 
-    // Kludge to forcibly remove junk values from the new comment's response container. TODO: Prevent junk.
+    // Kludge to forcibly remove junk values from the new comment's containers. TODO: Prevent junk.
+    comment.find('.report_container').hide().html('').data('populated', false);
     comment.find('.respond_container').hide().html('').data('populated', false);
 
     // Insert the new comment and display it to the user
     var replyList = getReplyListFor(parentId);
+    comment.hide(); // so we can use animatedAppear
     replyList.append(comment);
     replyList.append(cloneWithId('#replies_to-prototype', 'replies_to-' + childId));
-    comment.show();
+    animatedAppear(comment);
     $(window).scrollTop(comment.position().top);
   };
 
