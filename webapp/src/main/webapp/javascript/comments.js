@@ -145,7 +145,20 @@ $.fn.comments = function () {
           outer.submitResponse(replyId);
         });
         box.find('[name="comment_title"]').attr("value", 'RE: ' + parentTitle);
+        outer.wireCompetingInterestRadioButtons(box);
       });
+  };
+
+  /**
+   * Under "competing interests", set up the radio buttons to disable the input text area when set to "no".
+   * @param replyElement  the reply to set up
+   */
+  this.wireCompetingInterestRadioButtons = function (replyElement) {
+    replyElement.find('input:radio[name="competing"]').change(function (event) {
+      var ciIsYes = event.target.value;
+      var ciText = replyElement.find('textarea[name="competing_interests"]');
+      ciText.attr('disabled', (ciIsYes ? null : 'disabled'));
+    });
   };
 
   /**
