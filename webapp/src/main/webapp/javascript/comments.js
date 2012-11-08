@@ -256,7 +256,7 @@ $.fn.comments = function () {
       api:true, // Control it with .load() and .close() calls instead of user action
       closeOnClick:false, closeOnEsc:false,
       mask:{ // Freezes the screen, with a visual graying-out effect
-        opacity:0.0, // Set to 0 for no visible effect (maximum 1.0)
+        opacity:0.25, // Set to 0 for no visible effect (maximum 1.0)
         color:'#fff', // Ignored if opacity is 0
         loadSpeed:250 // Ignored if opacity is 0
       }
