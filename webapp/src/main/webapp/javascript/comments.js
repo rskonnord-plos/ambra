@@ -234,6 +234,25 @@ $.fn.comments = function () {
   };
 
   /**
+   * Indicate that the client is waiting to contact the server by freezing the screen and showing the loading overlay.
+   * Call {@code .close()} on the returned object to end.
+   * @return {Object}  the overlay object from the "JQuery TOOLS Overlay" library
+   */
+  function freezeForLoading() {
+    var overlay = $(".loading_overlay").overlay({
+      api:true, // Control it with .load() and .close() calls instead of user action
+      closeOnClick:false, closeOnEsc:false,
+      mask:{ // Freezes the screen, with a visual graying-out effect
+        opacity:0.0, // Set to 0 for no visible effect (maximum 1.0)
+        color:'#fff', // Ignored if opacity is 0
+        loadSpeed:250 // Ignored if opacity is 0
+      }
+    });
+    overlay.load();
+    return overlay;
+  }
+
+  /**
    * Submit user input in general to the server.
    *
    * @param parentReply  the reply (as a JQuery element) under which the user gave input
@@ -246,9 +265,7 @@ $.fn.comments = function () {
     // If another submission is unfinished, ignore the input
     if (parentReply.data('submitting')) return;
     parentReply.data('submitting', true);
-
-    var overlay = $(".loading_overlay").overlay({api:true});
-    overlay.load();
+    var overlay = freezeForLoading();
 
     errorMsgElement.hide(); // in case it was already shown from a previous attempt
 
