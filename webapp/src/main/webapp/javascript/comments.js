@@ -46,14 +46,6 @@ $.fn.comments = function () {
   }
 
   /**
-   * Show an element with a user-friendly animation, to highlight that the element is newly inserted.
-   * @param element  the element that's appearing
-   */
-  function animatedAppear(element) {
-    element.fadeIn(1000);
-  }
-
-  /**
    * Return the JQuery element for a reply.
    * @param replyId  the ID of the reply
    * @return {*} the element
@@ -377,7 +369,7 @@ $.fn.comments = function () {
     comment.hide(); // so we can use animatedAppear
     replyList.append(comment);
     replyList.append(cloneWithId('#replies_to-prototype', 'replies_to-' + childId));
-    animatedAppear(comment);
+    comment.fadeIn(1000); // to help the user notice where the new content is inserted
     $(window).scrollTop(comment.position().top);
   };
 
