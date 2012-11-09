@@ -38,7 +38,7 @@ $(function() {
         fq: 'doc_type:full AND !article_type_facet:"Issue Image"',
         fl: 'counter_total_all,alm_scopusCiteCount,title_display,author_display,article_type,publication_date,id,journal',
         sort: 'alm_scopusCiteCount desc',
-        row: '5'
+        rows: '5'
       },
       success: function(json) {
 
