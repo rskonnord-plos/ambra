@@ -383,12 +383,12 @@ $.fn.comments = function () {
       outer.showRespondBox(childId);
     });
 
-    // We need to set some of the raw HTML here because the prototype reply only covers one mode
-    comment.find('.competing_interests').not('textarea').html(
-      (childReply.competingInterestStatement != null && childReply.competingInterestStatement.length > 0)
-        ? ('<strong>Competing interests declared:</strong> ' + childReply.competingInterestStatement)
-        : ('<strong>No competing interests declared.</strong>')
-    );
+    if (childReply.competingInterestStatement != null && childReply.competingInterestStatement.length > 0) {
+      comment.find('.competing_interests.absent').remove();
+      comment.find('.competing_interests.present .ciStmt').html(childReply.competingInterestStatement);
+    } else {
+      comment.find('.competing_interests.present').remove();
+    }
 
     // Kludge to forcibly remove junk values from the new comment's containers. TODO: Prevent junk.
     comment.find('.report_container').hide().html('').data('populated', false);
