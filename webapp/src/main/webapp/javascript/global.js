@@ -26,6 +26,7 @@ if (!window.console) {
 var $win = $(window);
 var $pagebdy = $('#pagebdy');
 
+// on document ready
 $(document).ready(function() { 
   
   // detect touch screen
@@ -54,7 +55,7 @@ $(document).ready(function() {
     this.placeholder();
   });
 
-  $('#hdr-article p.authors').doOnce(function(){
+  $('#hdr-article ul.authors').doOnce(function(){
     this.authorDisplay();
   });
   
@@ -111,6 +112,11 @@ $(document).ready(function() {
     });
   });
 
+
+  $('.authors').doOnce(function(){
+    this.authorsMeta();
+  })
+
   if (!$.support.touchEvents) {
     $article.doOnce(function(){
       this.scrollFrame();
@@ -124,6 +130,41 @@ if ($nav_article.length) {
   items_l = $nav_article.find('li').length
   $nav_article.addClass('items-' + items_l);
 }
+
+
+(function($){
+  $.fn.authorsMeta = function(options){
+    $this = this;
+    $authors = $this.find('li').not('.ignore');
+    $ignores = $this.find('li.ignore');
+    $authors.on('click', function(e){
+      e.stopPropagation();
+      $this = $(this);
+      var position = $this.position();
+      var $author_meta = $this.find('.author_meta'); 
+      $authors.removeClass('on');
+
+      if($this.position().left > ($(window).outerWidth() / 2)){
+        $author_meta.css({
+          'left' : 'auto',
+          'right' : -3
+        });
+      }
+      $this.addClass('on');
+      $author_meta.find('.close').one('click', function(e){
+        e.stopPropagation();
+        $this.removeClass('on');
+      });
+      $('html body').one('click',function(){
+        $authors.removeClass('on');
+      });
+       $($ignores).one('click',function(){
+        $authors.removeClass('on');
+      });
+    })
+  };
+
+})(jQuery);
 
 (function($){
   $.fn.navmain = function() {  
@@ -178,8 +219,8 @@ if ($nav_article.length) {
         win_top = $win.scrollTop();
         if (
           (win_top > (el_top - options.margin)) //the top of the element is out of the viewport
-          && ((el_h + options.margin + bnr_h) < $win.height()) //the viewport is tall enough-          
-          // && (win_top < (ftr_top - (el_h + options.margin))) //the element is not overlapping the footer
+          && ((el_h + options.margin + bnr_h) < $win.height()) //the viewport is tall enough-         
+          && (win_top < (ftr_top - (el_h + options.margin))) //the element is not overlapping the footer
           && ($win.width() >= 960) //the viewport is wide enough
         ) {
           $this.css({ 'position' : 'fixed', 'top' : options.margin + 'px' });
@@ -219,7 +260,7 @@ if ($nav_article.length) {
 })(jQuery);
 
 (function($){
-  $.fn.buildNav = function(options) {  
+  $.fn.buildNav = function(options) {
     defaults = {
       content : '',
       margin : 70
@@ -254,7 +295,7 @@ if ($nav_article.length) {
 
 
 (function($){
-  $.fn.scrollFrame = function() {  
+  $.fn.scrollFrame = function() {
     return this.each(function() {
       var $hdr = $('#hdr-article');
       var el_top = $hdr.offset().top;
@@ -265,11 +306,12 @@ if ($nav_article.length) {
       var hdr_view = true;
       var ftr_view = false;
       var speed = 'slow';
+//      var $btn = $('<div class="btn-g"><img src="images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function() {
       var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function() {
         $title.remove();
         $bnr.hide();
         $win.unbind('scroll.sf');
-        $win.unbind('resize.sf');      
+        $win.unbind('resize.sf');
       })
       var $title = $('<div id="title-banner" />').prepend($hdr.html())
       .prepend($btn)
@@ -355,20 +397,20 @@ if ($nav_article.length) {
     var options = $.extend(defaults, options);
     return this.each(function() {
       var $this = $(this);
-      var $authors = $this.find('span.author');
+      var $authors = $this.find('span.author').parent('li');
       if ($authors.length > options.display) {
         overflow = $authors.eq(options.display -2).nextUntil($authors.last());
         overflow.hide();
-        $ellipsis = $('<span class="ellipsis"> [ ... ] </span>');
+        $ellipsis = $('<li class="ignore"><span class="ellipsis">&nbsp;[ ... ], </span> </li>');
         $authors.eq(options.display -2).after($ellipsis);
-        $action = $('<span class="action">, <a>[ view all ]</a></span>').toggle(function() {
+        $action = $('<li class="ignore"><span class="action">, <a>[ view all ]</a></span></li>').toggle(function() {
           $ellipsis.hide();
           overflow.show();
-          $action.html('<span class="action"> <a>[ view less ]</a></span>')
+          $action.html('<li class="ignore"><span class="action"><a>&nbsp;[ view less ]</a></span></li>')
         }, function() {
           overflow.hide();
           $ellipsis.show();
-          $action.html('<span class="action"> <a>[ view all ]</a></span>')
+          $action.html('<li class="ignore"><span class="action">, <a>[ view all ]</a></span></li>')
         }
         ).insertAfter($authors.last());
       }
@@ -389,7 +431,7 @@ if ($nav_article.length) {
       $panes.eq(0).nextAll('div.tab-pane').hide();
       $tab_nav.on('click', 'a', function(e) {
         e.preventDefault();
-        var this_lnk = $(this);    
+        var this_lnk = $(this);
         var this_href = this_lnk.attr('href');
         $panes.hide();
         if (this_lnk.is('[data-loadurl]')) {
@@ -437,7 +479,7 @@ if ($nav_article.length) {
 
 
 (function($){
-  $.fn.carousel = function(options) {  
+  $.fn.carousel = function(options) {
     defaults = {
       speed : 500,
       access : false,
@@ -447,7 +489,7 @@ if ($nav_article.length) {
       
     };
     var options = $.extend(defaults, options);
-    return this.each(function() {  
+    return this.each(function() {
       var $this = $(this),
         $wrapper = $this.find('div.wrapper'),
         $slider = $wrapper.find('div.slider'),
@@ -519,7 +561,7 @@ if ($nav_article.length) {
           });                
         }
         
-        var controls = $('<div class="controls" />');        
+        var controls = $('<div class="controls" />');
         var btn_prev = $('<span class="button prev" />')
         .on('click', function() {
           gotoPage(current_page - 1);  
@@ -557,7 +599,7 @@ if ($nav_article.length) {
               function () {
                 play = false;
               }, 
-              function () {    
+              function () {
                 play = true;
               }
             );
@@ -589,7 +631,7 @@ var launchModal = function(doi, ref, state, el) {
   var modal_h;
   var slides_h;
   var $figs;
-  var figs_h;  
+  var figs_h;
   var thmbs_h;
   var abst_h;
   var $abs_txt;
@@ -598,6 +640,7 @@ var launchModal = function(doi, ref, state, el) {
   var buildFigs = function() {
     $.ajax({
       url: '/article/lightbox.action?uri='+ doi,
+      // url: 'article/' + doi,
       dataFilter: function (data, type) {
         return data.replace(/(\/\*|\*\/)/g, '');
       },
@@ -607,7 +650,7 @@ var launchModal = function(doi, ref, state, el) {
         $.each(data.secondaryObjects, function(){
           title_txt = (this.title ? this.title + '. ' : '')  + this.transformedCaptionTitle;
           $thmb = $('<div class="thmb"'  + ' data-uri="' + this.uri +'"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_txt  + '" title="' + title_txt + '"></div>').on('click', function() {
-            changeSlide($(this));  
+            changeSlide($(this));
           })
           $thmbs.append($thmb);
           slide = $('<div class="slide" />');
@@ -627,15 +670,17 @@ var launchModal = function(doi, ref, state, el) {
           }
           desc = '<div class="desc">' + this.transformedDescription + '</div>';
           img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_txt + '"></div>'
-          lnks_txt = '<p class="dl">Download'
-          + ' <div class="icon">PPT</div> <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a>'
-          + ' <div class="icon">PNG</div> <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a>'
-          + ' <div class="icon">TIFF</div> <a href="' + "/article/" + this.uri + "/originalimage" + '" class="tiff">original image (' + displaySize(this.sizeTiff) + ')</a>'
-          + '</p><p>'
-          + '<span class="btn active">browse figures</span>'
-          + '<span class="btn" onclick="toggleModalState();">view abstract</span>'
-          + '<a class="btn" href="' + context_hash + '" onclick="killModal();">show in context</a>'
-          + '</p>';
+          lnks_txt = '<ul class="download">'
+          + '<li class="label">Download: </li>'
+          + '<li><span class="icon">PPT</span> <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a></li>'
+          + '<li><span class="icon">PNG</span> <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a></li>'
+          + '<li><span class="icon">TIFF</span> <a href="' + "/article/" + this.uri + "/originalimage" + '" class="tiff">original image (' + displaySize(this.sizeTiff) + ')</a></li>'
+          + '</ul>'
+          + '<ul class="figure_navigation">'
+          + '<li><span class="btn active">browse figures</span></li>'
+          + '<li><span class="btn" onclick="toggleModalState();">view abstract</span></li>'
+          + '<li><a class="btn" href="' + context_hash + '" onclick="killModal();">show in context</a></li>'
+          + '</ul>'
           slide.append(img);
           txt.append(title);
           // only append the toggle + description if the description isn't blank
@@ -662,11 +707,8 @@ var launchModal = function(doi, ref, state, el) {
           $thmbs.find('div[data-uri="' + ref + '"]').trigger('click');
         } else {
           $thmbs.find('div.thmb').eq(0).trigger('click');
-        }  
- 
+        }
         buildAbs();
-          
-
       }
     });
   }();
@@ -683,13 +725,16 @@ var launchModal = function(doi, ref, state, el) {
           abstract_html ='<div id="fig-viewer-abst">'
           + '<div class="txt"><p>' + this["abstract"] + '</p></div>'
           + '<div class="lnks">'
-          + '<p class="dl">Download'
-          + ' <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Artilce PDF Version</a>'
-          + '</p><p>'
-          + '<span class="btn" onclick="toggleModalState();">browse figures</span>'
-          + '<span class="btn active">view abstract</span>'
-          + '<a class="btn" href="' + '/article/' + page_url + '">full text</a>'
-          + '</p>'
+          + '<ul class="download">'
+          + '<li class="label">Download: </li>'
+//          + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
+          + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
+          + '</ul>'
+          + '<ul class="figure_navigation">'
+          + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
+          + '<li><span class="btn active">view abstract</span></li>'
+          + '<li><a class="btn" href="' + '/article/' + page_url + '">full text</a></li>'
+          + '</ul>'
           + '</div>'
           + '</div>';
           $modal.append(abstract_html);
@@ -760,7 +805,7 @@ var launchModal = function(doi, ref, state, el) {
       active_thmb.removeClass('active');
     }
     active_thmb = thmb;
-    active_thmb.addClass('active');        
+    active_thmb.addClass('active');
     active_thmb.next().length ? btn_next.show() : btn_next.hide();
     active_thmb.prev().length ? btn_prev.show() : btn_prev.hide();
 
@@ -824,7 +869,7 @@ if ($figure_thmbs.length) {
   $wrap = $figure_thmbs.find('div.wrapper');
   if ($lnks.length) {
     $lnks.on('click', function(e) {
-      e.preventDefault();    
+      e.preventDefault();
       doi= $(this).data('doi');
       ref= $(this).data('uri');
       launchModal(doi, ref, 'fig');
