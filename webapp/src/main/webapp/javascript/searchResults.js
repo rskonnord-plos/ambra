@@ -158,7 +158,7 @@ $(document).ready(
       //When we get the results back, we put those IDs into this list.
       confirmed_ids = new Array();
 
-    $("li[doi]").each(function(index, element) {
+    $("li[doi]:visible").each(function(index, element) {
       ids[ids.length] = $(element).attr("doi");
     });
 
@@ -211,18 +211,17 @@ $(document).ready(
 
     function makeALMSearchWidget(doi, cites, bookmarks, data) {
       var nodeList = getSearchWidgetByDOI(doi);
-      var spanNode = nodeList[0];
       var metricsURL = getMetricsURL(doi);
 
-      var anim = $(spanNode).fadeOut(250, function() {
+      var anim = $(nodeList).fadeOut(250, function() {
         var searchWidget = $("<span></span>");
         searchWidget.addClass("almSearchWidget");
 
         buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data);
 
-        $(spanNode).html("");
-        $(spanNode).append(searchWidget);
-        $(spanNode).fadeIn(250);
+        $(nodeList).html("");
+        $(nodeList).append(searchWidget);
+        $(nodeList).fadeIn(250);
       });
     }
 
@@ -418,4 +417,21 @@ $(document).ready(
       }
       return 0;
     }
-});
+
+    $('#search-view > span[class="list"]').click(function() {
+      $('#fig-search-block').hide();
+      $('#search-results-block').show();
+    });
+
+    $('#search-view > span[class="figs"]').click(function() {
+      $('#search-results-block').hide();
+      $('#fig-search-block').show();
+
+
+      $('div[class="figure"] > img[fakesrc]').each(function () {
+        $(this).attr("src", $(this).attr("fakesrc"));
+        $(this).removeAttr("fakesrc");
+      });
+    });
+
+  });
