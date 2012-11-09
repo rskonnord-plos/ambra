@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ $HeadURL$
+  ~ $Id$
+  ~ Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!-- Configures the Camel Context-->
+
+<beans default-autowire="byName" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+
+  <bean id="placeholderConfig"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:senduseralerts.properties</value>
+      </list>
+    </property>
+    <property name="ignoreResourceNotFound" value="true"/>
+  </bean>
+
+  <context:component-scan base-package="org.ambraproject"/>
+
+  <!-- beans-->
+  <bean id="emailRouteBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
+    <property name="weeklyCron" value="${ambra.sendemail.weekly}"></property>
+    <property name="monthlyCron" value="${ambra.sendemail.monthly}"></property>
+    <property name="mailEndpoint" value="${plos.camel.mail}"></property>
+    <property name="fromEmailAddress" value="${ambra.queue.fromEmailAddress}"></property>
+    <property name="imagePath" value="${ambra.queue.image.path}"/>
+
+  </bean>
+
+  <bean id="solrServerFactory" class="org.ambraproject.service.search.SolrServerFactory">
+    <constructor-arg ref="ambraConfiguration"/>
+  </bean>
+
+  <bean id="hibernateSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    <property name="dataSource" ref="hibernateDataSource"/>
+    <property name="mappingLocations">
+      <list>
+        <value>classpath:org/ambraproject/models/*.hbm.xml</value>
+      </list>
+    </property>
+    <property name="hibernateProperties">
+      <props>
+        <!-- We might use MySQLInnoDBDialect instead -->
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+        <!--<prop key="hibernate.show_sql">true</prop>-->
+        <!--<prop key="hibernate.format_sql">true</prop>-->
+      </props>
+    </property>
+  </bean>
+
+  <bean id="hibernateDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:comp/env/jdbc/AmbraDS"/>
+  </bean>
+
+  <bean id="ambraConfiguration" factory-bean="configurationStore" factory-method="getConfiguration"/>
+  <bean id="configurationStore" class="org.topazproject.ambra.configuration.ConfigurationStore"
+        factory-method="getInstance"/>
+
+  <bean id="searchService" class="org.ambraproject.service.search.SolrSearchService">
+    <property name="configuration" ref="ambraConfiguration"/>
+    <property name="serverFactory" ref="solrServerFactory"/>
+  </bean>
+
+  <bean id="savedSearchRetriever" class="org.ambraproject.search.SavedSearchRetrieverImpl">
+    <property name="sessionFactory" ref="hibernateSessionFactory"/>
+  </bean>
+
+  <bean id="savedSearchRunner" class="org.ambraproject.search.SavedSearchRunnerImpl">
+    <property name="searchService"   ref="searchService" />
+  </bean>
+
+  <bean id="quartz" class="org.apache.camel.component.quartz.QuartzComponent">
+  </bean>
+
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+    <jmxAgent id="ambra-queue" disabled="true"/>
+    <routeBuilder ref="emailRouteBuilder"/>
+  </camelContext>
+
+
+
+</beans>

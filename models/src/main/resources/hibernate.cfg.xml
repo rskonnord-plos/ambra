@@ -66,5 +66,6 @@
     <mapping resource="org/ambraproject/models/RatingSummary.hbm.xml" />
     <mapping resource="org/ambraproject/models/Trackback.hbm.xml" />
     <mapping resource="org/ambraproject/models/Pingback.hbm.xml"/>
+    <mapping resource="org/ambraproject/models/SavedSearch.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

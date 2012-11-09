@@ -34,10 +34,18 @@ tabsListMap[tabsListMap.length] = {
 
 tabsListMap[tabsListMap.length] = {
   tabKey:   "alerts",
-  title:    "Alerts",
+  title:    "Journal Alerts",
   formName: "userAlerts",
   urlLoad:  "/user/secure/editAjaxAlerts.action",
   urlSave:  "/user/secure/saveAjaxAlerts.action"
+};
+
+tabsListMap[tabsListMap.length] = {
+  tabKey:   "searchalerts",
+  title:    "Search Alerts",
+  formName: "userSearchAlerts",
+  urlLoad:  "/user/secure/editAjaxSearchAlerts.action",
+  urlSave:  "/user/secure/saveAjaxSearchAlerts.action"
 };
 
 for (var i=0; i<querystring.length; i++) {
@@ -68,6 +76,12 @@ dojo.addOnLoad(function() {
     var alertsForm = document.userAlerts;
     ambra.formUtil.selectCheckboxPerCollection(alertsForm.checkAllWeekly, alertsForm.weeklyAlerts);
     ambra.formUtil.selectCheckboxPerCollection(alertsForm.checkAllMonthly, alertsForm.monthlyAlerts);
+  }
+
+  if (tabSelectId == "searchalerts") {
+    var searchAlertsForm = document.searchAlerts;
+    ambra.formUtil.selectCheckboxPerCollection(searchAlertsForm.checkAllWeekly, searchAlertsForm.weeklyAlerts);
+    ambra.formUtil.selectCheckboxPerCollection(searchAlertsForm.checkAllMonthly, searchAlertsForm.monthlyAlerts);
   }
   
   _ldc.hide();

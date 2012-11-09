@@ -61,6 +61,11 @@
       <many-to-many column="userRoleID" class="UserRole"/>
     </set>
 
+    <bag name="savedSearches" cascade="all-delete-orphan" lazy="false">
+      <key column="userProfileID" not-null="true" />
+      <one-to-many class="SavedSearch"/>
+    </bag>
+
   </class>
 
 </hibernate-mapping>

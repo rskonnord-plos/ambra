@@ -22,8 +22,10 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +42,8 @@ public interface SearchService {
   SearchResultSinglePage findAnArticleSearch(SearchParameters searchParameters) throws ApplicationException;
 
   SearchResultSinglePage getFilterData(SearchParameters searchParameters) throws ApplicationException;
+
+  List<SearchHit> savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException;
 
   /**
    * The map of sorts that are valid for this provider

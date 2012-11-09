@@ -161,6 +161,12 @@
     <property name="ambraFreemarkerConfig" ref="ambraFreemarkerConfig"/>
   </bean>
 
+  <bean id="saveSearchAction" class="org.ambraproject.action.search.SaveSearchAction">
+    <property name="userService" ref="userService"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+  </bean>
+
   <bean id="createPingbackAction" class="org.ambraproject.action.trackback.CreatePingbackAction">
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>

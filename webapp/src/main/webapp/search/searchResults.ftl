@@ -239,6 +239,10 @@
     <form name="searchFormOnSearchResultsPage" id="searchFormOnSearchResultsPage" action="${advancedSearchURL}" method="get">
   </#if>
 
+  <@s.hidden name="searchName" />
+  <@s.hidden name="weekly" />
+  <@s.hidden name="monthly" />
+
   <@s.hidden name="startPage" />
 
   <#--  Find An Article Search fields  -->
@@ -327,9 +331,14 @@
           <div class="simple">
             <label for="searchEdit">You searched for:</label>
             <input type="text" value="${query?html}" id="searchEdit" name="query"/>
-            <input type="submit"  value="Search again" class="button"/>
+            <input type="submit"  value="Search" class="button"/>
+            <#if Session?exists && Session[freemarker_config.userAttributeKey]?exists>
+              <a href="javascript:void(0);" onclick="return ambra.savedSearch.show();">Save this search</a>
+            <#else>
+              <a href="${freemarker_config.context}/user/secure/secureRedirect.action?goTo=${global.thisPage}">Save this search</a>
+            </#if>
             <div>
-              <a href="#" onclick="document.reviseSearch.submit();return false;">Advanced Search</a> | <a href="${searchHelpURL}">Help</a>
+              <a href="javascript:void(0);" onclick="document.reviseSearch.submit();return false;">Advanced Search</a> | <a href="${searchHelpURL}">Help</a>
             </div>
           </div>
         <#else>
@@ -340,8 +349,13 @@
             <label for="searchEdit">You searched for:</label>
             <textarea id="searchEdit" name="unformattedQuery">${queryAsExecuted?html}</textarea>
             <div>
-              <input type="submit"  value="Search again" class="button"/> or
-              <a href="#" onclick="document.reviseSearch.unformattedQuery.value=document.searchFormOnSearchResultsPage.unformattedQuery.value;document.reviseSearch.submit();return false;">Edit on Advanced Search page</a> | <a href="${searchHelpURL}">Help</a>
+              <input type="submit"  value="Search" class="button"/>
+              <#if Session?exists && Session[freemarker_config.userAttributeKey]?exists>
+                <a href="javascript:void(0);" onclick="return ambra.savedSearch.show();">Save this search</a> |
+              <#else>
+                <a href="${freemarker_config.context}/user/secure/secureRedirect.action?goTo=${global.thisPage}">Save this search</a> |
+              </#if>
+              <a href="javascript:void(0);" onclick="document.reviseSearch.unformattedQuery.value=document.searchFormOnSearchResultsPage.unformattedQuery.value;document.reviseSearch.submit();return false;">Edit on Advanced Search page</a> | <a href="${searchHelpURL}">Help</a>
             </div>
           </div>
         </#if>
@@ -553,4 +567,5 @@
 
 <div style="display:none">
 <#include "/widget/loadingCycle.ftl">
+<#include "/widget/savedSearchDialog.ftl">
 </div>

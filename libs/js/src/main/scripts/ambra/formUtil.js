@@ -233,7 +233,7 @@ ambra.formUtil = {
             
             formValueObject[checkboxName] = cbArray;
           }
-          else {
+          else if(checkboxObj.checked) {
             formValueObject[checkboxObj.name] = checkboxObj.value;
           }
         }
@@ -381,13 +381,25 @@ ambra.formUtil = {
    */
   selectAllCheckboxes: function (srcObj, targetCheckboxObj) {
     if (srcObj.checked) {
-      for (var i=0; i<targetCheckboxObj.length; i++) {
-        targetCheckboxObj[i].checked = true;
+      //if user has only one row of data, targetCheckboxObj is not array
+      // and hence there is no length property.
+      if(targetCheckboxObj.length) {
+        for (var i=0; i<targetCheckboxObj.length; i++) {
+          targetCheckboxObj[i].checked = true;
+        }
+      }
+      else {
+        targetCheckboxObj.checked = true;
       }
     }
     else {
-      for (var i=0; i<targetCheckboxObj.length; i++) {
-        targetCheckboxObj[i].checked = false;
+      if(targetCheckboxObj.length) {
+        for (var i=0; i<targetCheckboxObj.length; i++) {
+          targetCheckboxObj[i].checked = false;
+        }
+      }
+      else {
+        targetCheckboxObj.checked = false;
       }
     }
   },

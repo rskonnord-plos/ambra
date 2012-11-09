@@ -39,7 +39,8 @@ dependencies = {
         "ambra.responsePanel",
         "ambra.rating",
         "ambra.slideshow",
-        "ambra.lightBox"
+        "ambra.lightBox",
+        "ambra.savedSearch"
       ]
     }
   ],

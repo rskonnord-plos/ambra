@@ -20,20 +20,19 @@
  */
 package org.ambraproject.util;
 
+import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
-import org.ambraproject.util.URIGenerator;
-import org.hibernate.engine.SessionImplementor;
-import org.testng.annotations.DataProvider;
 import org.ambraproject.models.Rating;
 import org.ambraproject.models.UserProfile;
-import org.ambraproject.models.Annotation;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.topazproject.ambra.configuration.ConfigurationStore;
 
 import java.io.Serializable;
-import java.net.URI;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test class for the URIGenerator
