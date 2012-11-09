@@ -864,30 +864,30 @@
     </action>
 
     <action name="editAjaxSearchAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveSearchAlerts">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/user/searchAlerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="location">/user/searchAlerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="location">/user/searchAlerts.ftl</param>
         <param name="noCache">true</param>
       </result>
     </action>
 
     <action name="saveAjaxSearchAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="saveSearchAlerts">
-      <result name="success" type="ambraFreemarker">
+      <result name="success" type="default_freemarker">
         <param name="location">/user/searchAlerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="input" type="ambraFreemarker">
+      <result name="input" type="default_freemarker">
         <param name="location">/user/searchAlerts.ftl</param>
         <param name="noCache">true</param>
       </result>
-      <result name="error" type="ambraFreemarker">
+      <result name="error" type="default_freemarker">
         <param name="location">/user/searchAlerts.ftl</param>
         <param name="noCache">true</param>
       </result>
