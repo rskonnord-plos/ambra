@@ -288,6 +288,20 @@
         primary key (ratingSummaryID)
     );
 
+    create table savedSearch (
+        savedSearchID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        searchParams varchar(255) not null,
+        lastWeeklySearchTime datetime not null,
+        lastMonthlySearchTime datetime not null,
+        searchName varchar(255),
+        weekly bit,
+        monthly bit,
+        userProfileID bigint not null,
+        primary key (savedSearchID)
+    );
+
     create table syndication (
         syndicationID bigint not null auto_increment,
         lastModified datetime not null,
@@ -551,6 +565,12 @@
         add constraint FKC815B19DB123DFCD 
         foreign key (annotationID) 
         references annotation (annotationID);
+
+    alter table savedSearch 
+        add index FK3407F0F78B0DAE3 (userProfileID), 
+        add constraint FK3407F0F78B0DAE3 
+        foreign key (userProfileID) 
+        references userProfile (userProfileID);
 
     alter table userProfileRoleJoinTable 
         add index FK57F48A3078B0DAE3 (userProfileID), 

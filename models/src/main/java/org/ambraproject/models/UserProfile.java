@@ -67,6 +67,8 @@ public class UserProfile extends AmbraEntity {
   private boolean organizationVisibility;
 
   private Set<UserRole> roles;
+  
+  private List<SavedSearch> savedSearches;
 
   public UserProfile() {
     super();
@@ -275,6 +277,14 @@ public class UserProfile extends AmbraEntity {
 
   public void setRoles(Set<UserRole> roles) {
     this.roles = roles;
+  }
+
+  public List<SavedSearch> getSavedSearches() {
+    return savedSearches;
+  }
+
+  public void setSavedSearches(List<SavedSearch> savedSearches) {
+    this.savedSearches = savedSearches;
   }
 
   public String getProfileUri() {

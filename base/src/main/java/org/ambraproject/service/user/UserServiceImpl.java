@@ -21,17 +21,23 @@
 
 package org.ambraproject.service.user;
 
+import com.google.gson.Gson;
 import org.ambraproject.models.ArticleView;
+import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserSearch;
-import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.permission.PermissionsService;
+import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.util.TextUtils;
+import org.ambraproject.views.SavedSearchView;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -39,12 +45,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.topazproject.ambra.configuration.ConfigurationStore;
 
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -132,6 +141,124 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     user.setAlertsList(allAlerts);
     hibernateTemplate.update(user);
     return user;
+  }
+
+  @Override
+  @Transactional
+  public void setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts) {
+    UserProfile user = getUserByAuthId(userAuthId);
+
+    log.debug("updating alerts for user: {}; Montly alerts: {}; weekly alerts: {}; delete alerts: {}",
+        new Object[]{user.getDisplayName(), StringUtils.join(monthlyAlerts, ","), StringUtils.join(weeklyAlerts, ","), StringUtils.join(deleteAlerts, ",")});
+    List<SavedSearchView> searches = getSavedSearches(user.getID());
+
+    Set<String> weeklyItems = new HashSet<String>(weeklyAlerts);
+    Set<String> monthlyItems = new HashSet<String>(monthlyAlerts);
+    Set<String> deleteItems = new HashSet<String>(deleteAlerts);
+
+    for (SavedSearchView savedSearch: searches) {
+      String idstr = String.valueOf(savedSearch.getSavedSearchId());
+      boolean delete = deleteItems.contains(idstr);
+      if (delete) {
+        deleteSavedSearch(user.getID(), savedSearch.getSavedSearchId());
+      }
+      else {
+        boolean weekly = weeklyItems.contains(idstr);
+        boolean monthly = monthlyItems.contains(idstr);
+        if (weekly != savedSearch.getWeekly() || monthly != savedSearch.getMonthly()) {
+          updateSavedSearch(savedSearch.getSavedSearchId(), weekly, monthly);
+        }
+      }
+    }
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public void saveSearch(Long userProfileId,
+                         SearchParameters searchParameters,
+                         String name,
+                         boolean weekly,
+                         boolean monthly) {
+
+    Gson gson = new Gson();
+
+    //We store the saved search here as JSON instead of serializing the object.
+    //Because you may ask?  Because this way, when we add new parameters to the
+    //search parameters object, we'll still be able to de-serialize it properly
+    String searchParametersString = gson.toJson(searchParameters);
+
+    UserProfile user = hibernateTemplate.get(UserProfile.class, userProfileId);
+
+    SavedSearch savedSearch = new SavedSearch(name, searchParametersString);
+
+    savedSearch.setWeekly(weekly);
+    savedSearch.setMonthly(monthly);
+
+    user.getSavedSearches().add(savedSearch);
+
+    hibernateTemplate.save(user);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public List<SavedSearchView> getSavedSearches(Long userProfileId) {
+    UserProfile userProfile = (UserProfile) DataAccessUtils.uniqueResult(
+        hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserProfile.class)
+        .add(Restrictions.eq("ID", userProfileId))
+        .setFetchMode("savedSearches", FetchMode.JOIN)
+        .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+    ));
+
+    List<SavedSearch> searches = userProfile.getSavedSearches();
+    List<SavedSearchView> searchViews = new ArrayList<SavedSearchView>(searches.size());
+
+    for(SavedSearch savedSearch : searches) {
+      searchViews.add(new SavedSearchView(savedSearch));
+    }
+
+    return searchViews;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public void deleteSavedSearch(Long userProfileId, Long savedSearchId) {
+
+    UserProfile userProfile = (UserProfile) DataAccessUtils.uniqueResult(
+        hibernateTemplate.findByCriteria(
+            DetachedCriteria.forClass(UserProfile.class)
+                .add(Restrictions.eq("ID", userProfileId))
+                .setFetchMode("savedSearches", FetchMode.JOIN)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+        ));
+    List<SavedSearch> savedSearches = userProfile.getSavedSearches();
+    for (Iterator<SavedSearch> it=savedSearches.iterator(); it.hasNext(); ) {
+      SavedSearch savedSearch = it.next();
+      if (savedSearch.getID().equals(savedSearchId)) {
+        it.remove();
+      }
+    }
+    hibernateTemplate.update(userProfile);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public void updateSavedSearch(Long savedSearchId, boolean weekly, boolean monthly) {
+    SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, savedSearchId);
+
+    savedSearch.setMonthly(monthly);
+    savedSearch.setWeekly(weekly);
+
+    hibernateTemplate.update(savedSearch);
   }
 
   /**

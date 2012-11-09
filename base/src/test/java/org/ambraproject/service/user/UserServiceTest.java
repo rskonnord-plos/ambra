@@ -26,6 +26,8 @@ import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
 import org.ambraproject.models.UserSearch;
+import org.ambraproject.service.search.SearchParameters;
+import org.ambraproject.views.SavedSearchView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -36,11 +38,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 public class UserServiceTest extends BaseTest {
 
@@ -60,6 +60,49 @@ public class UserServiceTest extends BaseTest {
         {id, userProfile}
     };
   }
+
+  @DataProvider(name = "userProfileSave")
+  private Object[][] getUserProfileForSave() {
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("saveTestLogin");
+    userProfile.setEmail("emailForTest@Login.org");
+    userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setPassword("pass");
+    Long id = Long.valueOf(dummyDataStore.store(userProfile));
+
+    return new Object[][]{
+        {id, userProfile}
+    };
+  }
+
+  @DataProvider(name = "userProfileUpdate")
+  private Object[][] getUserProfileForUpdate() {
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("updateTestLogin");
+    userProfile.setEmail("emailForTest@Login.org");
+    userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setPassword("pass");
+    Long id = Long.valueOf(dummyDataStore.store(userProfile));
+
+    return new Object[][]{
+        {id, userProfile}
+    };
+  }
+
+  @DataProvider(name = "userProfileDelete")
+  private Object[][] getUserProfileForDelete() {
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("deleteTestLogin");
+    userProfile.setEmail("emailForTest@Login.org");
+    userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setPassword("pass");
+    Long id = Long.valueOf(dummyDataStore.store(userProfile));
+
+    return new Object[][]{
+        {id, userProfile}
+    };
+  }
+
 
   @Test(dataProvider = "userProfile")
   public void testGetUser(Long id, UserProfile userProfile) {
@@ -120,6 +163,77 @@ public class UserServiceTest extends BaseTest {
     assertEquals(allSearches.get(0).getSearchTerms(), "search terms");
   }
 
+  @Test(dataProvider = "userProfileSave")
+  public void testSaveSearch(Long id, UserProfile userProfile) {
+    SearchParameters searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("test query");
+    searchParameters.setStartPage(5);
+    searchParameters.setVolume("volumne");
+
+    userService.saveSearch(id, searchParameters, "testSave", true, false);
+
+    List<SavedSearchView> savedSearch = userService.getSavedSearches(id);
+
+    assertEquals(savedSearch.size(), 1);
+    assertEquals(savedSearch.get(0).getSearchName(), "test");
+    assertEquals(savedSearch.get(0).getMonthly(), false);
+    assertEquals(savedSearch.get(0).getWeekly(), true);
+
+    SearchParameters params = savedSearch.get(0).getSearchParameters();
+
+    assertEquals(params.getQuery(), "test query", "Search params not parsed correctly");
+    assertEquals(params.getStartPage(), 5, "Search params not parsed correctly");
+    assertEquals(params.getVolume(), "volumne", "Search params not parsed correctly");
+  }
+
+  @Test(dataProvider = "userProfileDelete")
+  public void testDeleteSearch(Long id, UserProfile userProfile) {
+    SearchParameters searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("test query");
+    searchParameters.setStartPage(5);
+    searchParameters.setVolume("volumne");
+
+    userService.saveSearch(id, searchParameters, "testDelete", true, false);
+
+    List<SavedSearchView> savedSearches = userService.getSavedSearches(id);
+    assertEquals(savedSearches.size(), 1, "Saved search not saved");
+
+    userService.deleteSavedSearch(userProfile.getID(), savedSearches.get(0).getSavedSearchId());
+
+    savedSearches = userService.getSavedSearches(id);
+    assertEquals(savedSearches.size(), 0, "Saved search not deleted");
+  }
+
+  @Test(dataProvider = "userProfileUpdate")
+  public void testUpdateSearch(Long id, UserProfile userProfile) {
+    SearchParameters searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("test query");
+    searchParameters.setStartPage(5);
+    searchParameters.setVolume("volumne");
+
+    userService.saveSearch(id, searchParameters, "testUpdate", true, true);
+
+    List<SavedSearchView> savedSearches = userService.getSavedSearches(id);
+
+    assertEquals(savedSearches.size(), 1, "Saved search not saved");
+
+    SavedSearchView ss = savedSearches.get(0);
+    assertEquals(ss.getMonthly(), true, "Saved search not saved correctly");
+    assertEquals(ss.getWeekly(), true, "Saved search not saved correctly");
+
+    userService.updateSavedSearch(ss.getSavedSearchId(), false, false);
+
+    savedSearches = userService.getSavedSearches(id);
+    assertEquals(savedSearches.size(),1, "Saved search not updated");
+    ss = savedSearches.get(0);
+
+    assertEquals(ss.getMonthly(), false, "Saved search not updated correctly");
+    assertEquals(ss.getWeekly(), false, "Saved search not updated correctly");
+  }
+
   @Test
   public void testLoginWithNonexistentUser() {
     UserProfile login = userService.login("this-isnot-areal-authid", new UserLogin());
@@ -148,11 +262,11 @@ public class UserServiceTest extends BaseTest {
     String storedBio = dummyDataStore.get(UserProfile.class, id).getBiography();
     assertEquals(storedBio, newBio, "User didn't get biography updated");
   }
-  
+
   @Test
   public void testUpdateUserDoesNotOverwriteRoles() throws DuplicateUserException, NoSuchUserException {
     UserProfile user = new UserProfile(
-        "email@overwriteRoles.org", 
+        "email@overwriteRoles.org",
         "displayNameForOverwriteRoles",
         "pass");
     user.setRoles(new HashSet<UserRole>(dummyDataStore.getAll(UserRole.class)));
@@ -160,7 +274,7 @@ public class UserServiceTest extends BaseTest {
     assertTrue(numRoles > 0, "There were no stored roles to assign"); //shouldn't happen
 
     Long id = Long.valueOf(dummyDataStore.store(user));
-    
+
     user.setRoles(new HashSet<UserRole>());
 
     userService.updateProfile(user);

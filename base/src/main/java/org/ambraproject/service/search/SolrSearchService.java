@@ -20,6 +20,9 @@
  */
 package org.ambraproject.service.search;
 
+import org.ambraproject.ApplicationException;
+import org.ambraproject.views.SearchHit;
+import org.ambraproject.views.SearchResultSinglePage;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -31,9 +34,8 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ambraproject.ApplicationException;
-import org.ambraproject.views.SearchHit;
-import org.ambraproject.views.SearchResultSinglePage;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -881,6 +883,71 @@ public class SolrSearchService implements SearchService {
       return null;
     }
   }
+
+  /**
+   * Returns articles list that are published between the last search time and the current search time for saved search alerts.
+   * @param sParams
+   * @param lastSearchTime
+   * @param currentSearchTime
+   * @return
+   * @throws ApplicationException
+   */
+   public List savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException {
+     SolrQuery query = null;
+     SearchParameters sp = null;
+
+     if(sParams.getUnformattedQuery() == null || sParams.getUnformattedQuery().equals("")){
+       if (log.isDebugEnabled()) {
+         log.debug("Simple Saved Search performed on the unformattedSearch String: "
+             + sParams.getQuery().trim());
+       }
+
+       query = createQuery(sParams.getQuery(), sParams.getStartPage(), sParams.getPageSize(), false);
+       query.setQuery(sParams.getQuery());
+       //If the keywords parameter is specified, we need to change what field we're querying against
+       //aka, body, conclusions, materials and methods ... etc ...
+       if(sParams.getFilterKeyword().length() > 0) {
+         String fieldkey = sParams.getFilterKeyword();
+
+         if(!validKeywords.containsKey(fieldkey)) {
+           throw new ApplicationException("Invalid filterKeyword value of " +
+               fieldkey + " specified");
+         }
+
+         String fieldName = (String)validKeywords.get(fieldkey);
+
+         //Set the field for dismax to use
+         query.set("qf", fieldName);
+         setFilters(query, sParams, true);
+       }
+
+     }else{
+
+       if (log.isDebugEnabled()) {
+         log.debug("Advanced Saved Search performed on the unformattedSearch String: "
+             + sParams.getUnformattedQuery().trim());
+       }
+       sp = cleanStrings(sParams);
+       query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
+       query.setQuery(sParams.getUnformattedQuery());
+       setFilters(query, sp, true);
+     }
+
+     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+     String lastSavedSearchTime = sdf.format(lastSearchTime);
+     String currentTime = sdf.format(currentSearchTime);
+
+     lastSavedSearchTime = lastSavedSearchTime + "T00:00:00Z";
+     currentTime = currentTime + "T00:00:00Z";
+
+     query.addFilterQuery("publication_date:[" + lastSavedSearchTime + " TO " + currentTime + "]");
+
+
+     SearchResultSinglePage results = search(query);
+
+     return results.getHits();
+   }
+
 
   /**
    * Remove dangerous and unwanted values from the Strings in selected fields in the SearchParameters parameter.

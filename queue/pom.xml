@@ -1,0 +1,237 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>ambra</artifactId>
+    <groupId>org.ambraproject</groupId>
+    <version>2.4.9-GIZU-SNAPSHOT</version>
+  </parent>
+
+  <groupId>org.ambraproject</groupId>
+  <artifactId>ambra-queue</artifactId>
+  <packaging>jar</packaging>
+  <version>2.4.9-GIZU-SNAPSHOT</version>
+
+  <name>Ambra Queue</name>
+  <url>http://www.plos.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <camel.version>2.6.0</camel.version>
+    <activemq.version>5.6.0</activemq.version>
+  </properties>
+
+  <dependencies>
+
+    <!-- Ambra dependencies -->
+    <dependency>
+      <groupId>org.ambraproject</groupId>
+      <artifactId>ambra-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Ambra dependencies -->
+
+    <dependency>
+      <groupId>org.ambraproject</groupId>
+      <artifactId>ambra-base</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.ambraproject</groupId>
+      <artifactId>ambra-models</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+
+    <!-- camel dependencies -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
+      <version>${camel.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jms</artifactId>
+      <version>${camel.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-mail</artifactId>
+      <version>${camel.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring</artifactId>
+      <version>${camel.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-quartz</artifactId>
+      <version>${camel.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.apache.xbean</groupId>
+      <artifactId>xbean-spring</artifactId>
+      <version>3.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-freemarker</artifactId>
+      <version>${camel.version}</version>
+    </dependency>
+
+
+
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- testing dependencies -->
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+      <version>1.4</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-test-framework</artifactId>
+      <version>3.6.0</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <!-- testing -->
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-test-spring</artifactId>
+      <version>2.10.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <classifier>jdk15</classifier>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>ambra-queue</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources/</directory>
+        <targetPath> ${project.basedir}/target/test-classes/</targetPath>
+      </resource>
+    </resources>
+
+    <plugins>
+      <!-- allows the route to be ran via 'mvn camel:run' -->
+      <plugin>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-maven-plugin</artifactId>
+        <version>${camel.version}</version>
+        <configuration>
+          <systemProperties>
+            <property>
+              <key>version</key>
+              <value>${project.version}</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+    <!--Turn on filtering of test resource to set up directories -->
+    <testResources>
+      <!-- Do not "filter" binary files when copying, since text substitutions will break binary files -->
+      <testResource>
+        <filtering>true</filtering>
+        <directory>${project.basedir}/src/test/resources</directory>
+        <excludes>
+          <exclude>*.zip</exclude>
+          <exclude>**/*.zip</exclude>
+        </excludes>
+      </testResource>
+
+      <!-- Copy over binary files without "filtering", since text substitutions will break binary files -->
+      <testResource>
+        <directory>${project.basedir}/src/test/resources</directory>
+        <includes>
+          <include>*.zip</include>
+          <include>**/*.zip</include>
+        </includes>
+      </testResource>
+
+    </testResources>
+
+    <defaultGoal>install</defaultGoal>
+
+  </build>
+
+</project>

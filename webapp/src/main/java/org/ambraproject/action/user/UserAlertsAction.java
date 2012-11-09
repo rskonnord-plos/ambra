@@ -21,8 +21,10 @@ package org.ambraproject.action.user;
 
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.user.UserAlert;
+import org.ambraproject.views.SavedSearchView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import java.util.Arrays;
@@ -39,6 +41,8 @@ public abstract class UserAlertsAction extends UserActionSupport {
   private String displayName;
   private String[] monthlyAlerts = new String[]{};
   private String[] weeklyAlerts = new String[]{};
+  private String[] deleteAlerts = new String[]{};
+  private List<SavedSearchView> savedSearches;
 
   /**
    * Subclasses must override this to provide the id of the user being edited
@@ -57,6 +61,7 @@ public abstract class UserAlertsAction extends UserActionSupport {
    * @return webwork status
    * @throws Exception Exception
    */
+  @Transactional(rollbackFor = {Throwable.class})
   public String saveAlerts() throws Exception {
     final String authId = getUserAuthId();
     if (authId == null) {
@@ -72,6 +77,7 @@ public abstract class UserAlertsAction extends UserActionSupport {
    * @return webwork status
    * @throws Exception Exception
    */
+  @Transactional(readOnly = true)
   public String retrieveAlerts() throws Exception {
     final String authId = getUserAuthId();
     if (authId == null) {
@@ -85,6 +91,42 @@ public abstract class UserAlertsAction extends UserActionSupport {
     monthlyAlerts = monthlyAlertsList.toArray(new String[monthlyAlertsList.size()]);
     weeklyAlerts = weeklyAlertsList.toArray(new String[weeklyAlertsList.size()]);
     displayName = user.getDisplayName();
+
+    return SUCCESS;
+  }
+
+  public Collection<SavedSearchView> getUserSearchAlerts() throws Exception{
+    final String authId = getUserAuthId();
+    if (authId == null) {
+      throw new ServletException("Unable to resolve ambra user");
+    }
+    final UserProfile user = userService.getUserByAuthId(authId);
+    return userService.getSavedSearches(user.getID());
+  }
+
+  /**
+   * save the user search alerts
+   * @return webwork status
+   * @throws Exception
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public String saveSearchAlerts() throws Exception {
+    final String authId = getUserAuthId();
+    if (authId == null) {
+      throw new ServletException("Unable to resolve ambra user");
+    }
+    userService.setSavedSearchAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts), Arrays.asList(deleteAlerts));
+    return SUCCESS;
+  }
+
+  @Transactional(readOnly = true)
+  public String retrieveSearchAlerts() throws Exception {
+    final String authId = getUserAuthId();
+    if (authId == null) {
+      throw new ServletException("Unable to resolve ambra user");
+    }
+    final UserProfile user = userService.getUserByAuthId(authId);
+    savedSearches = userService.getSavedSearches(user.getID());
 
     return SUCCESS;
   }
@@ -135,4 +177,11 @@ public abstract class UserAlertsAction extends UserActionSupport {
     this.displayName = displayName;
   }
 
+  public String[] getDeleteAlerts() {
+    return deleteAlerts;
+  }
+
+  public void setDeleteAlerts(String[] deleteAlerts) {
+    this.deleteAlerts = deleteAlerts;
+  }
 }
