@@ -214,4 +214,12 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   public void setFilterAuthors(String[] authors) {
     getSearchParameters().setFilterAuthors(rectify(authors));
   }
+
+  public String getResultView() {
+    return getSearchParameters().getResultView();
+  }
+
+  public void setResultView(String resultView) {
+    getSearchParameters().setResultView(resultView);
+  }
 }

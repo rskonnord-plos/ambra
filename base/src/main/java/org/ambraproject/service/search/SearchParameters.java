@@ -77,6 +77,9 @@ public class SearchParameters implements Serializable {
   private int           startPage = 0;
   private int           pageSize = 0;
 
+  // indicator for list view vs figure view
+  private String resultView;
+
   public String getQuery() {
     return query;
   }
@@ -251,6 +254,14 @@ public class SearchParameters implements Serializable {
     this.pageSize = pageSize;
   }
 
+  public String getResultView() {
+    return resultView;
+  }
+
+  public void setResultView(String resultView) {
+    this.resultView = resultView;
+  }
+
   /**
    * Creates a deep copy of this SearchParameters object.
    *
@@ -271,6 +282,7 @@ public class SearchParameters implements Serializable {
     sp.setSort(this.getSort());
     sp.setStartPage(this.getStartPage());
     sp.setPageSize(this.getPageSize());
+    sp.setResultView(this.getResultView());
     return sp;
   }
 
@@ -290,6 +302,7 @@ public class SearchParameters implements Serializable {
         ", sort='" + sort + "'" +
         ", startPage=" + startPage +
         ", pageSize=" + pageSize +
+        ", resultView=" + resultView +
         '}';
   }
 }

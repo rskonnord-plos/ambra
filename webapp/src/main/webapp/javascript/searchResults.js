@@ -418,20 +418,57 @@ $(document).ready(
       return 0;
     }
 
-    $('#search-view > span[class="list"]').click(function() {
-      $('#fig-search-block').hide();
-      $('#search-results-block').show();
-    });
-
-    $('#search-view > span[class="figs"]').click(function() {
+    function showFigSearchView() {
       $('#search-results-block').hide();
       $('#fig-search-block').show();
 
+      $('#resultView').val("fig");
 
       $('div[class="figure"] > img[fakesrc]').each(function () {
         $(this).attr("src", $(this).attr("fakesrc"));
         $(this).removeAttr("fakesrc");
       });
+
+      $('a[href]').attr('href', function(index, href) {
+        var startIndex = href.indexOf('resultView=');
+        var endIndex = 0;
+        var newResultView = "";
+        if (startIndex >= 0) {
+          endIndex = href.indexOf('&', startIndex);
+          if (endIndex >= 0) {
+            href = href.replace(href.substring(startIndex, endIndex), 'resultView=fig')
+          }
+        }
+        return href;
+      });
+    }
+
+    if ($('#resultView').val() === "fig") {
+      showFigSearchView();
+    }
+
+    $('#search-view > span[class="list"]').click(function() {
+      $('#fig-search-block').hide();
+      $('#search-results-block').show();
+
+      $('#resultView').val("");
+
+      $('a[href]').attr('href', function(index, href) {
+        var startIndex = href.indexOf('resultView=');
+        var endIndex = 0;
+        var newResultView = "";
+        if (startIndex >= 0) {
+          endIndex = href.indexOf('&', startIndex);
+          if (endIndex >= 0) {
+            href = href.replace(href.substring(startIndex, endIndex), 'resultView=')
+          }
+        }
+        return href;
+      });
+    });
+
+    $('#search-view > span[class="figs"]').click(function() {
+      showFigSearchView();
     });
 
   });
