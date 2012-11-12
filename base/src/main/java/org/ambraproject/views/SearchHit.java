@@ -45,6 +45,7 @@ public class SearchHit implements Serializable {
   private final String journalTitle;
   private final String articleTypeForDisplay;
   private String abstractPrimary;
+  private String strikingImage;
 
   /**
    * Create a search hit with the values set
@@ -174,6 +175,14 @@ public class SearchHit implements Serializable {
     return this.listOfCreators;
   }
 
+  public String getStrikingImage() {
+    return strikingImage;
+  }
+
+  public void setStrikingImage(String strikingImage) {
+    this.strikingImage = strikingImage;
+  }
+
   @Override
   public String toString() {
     return "SearchHit{" +
@@ -187,6 +196,7 @@ public class SearchHit implements Serializable {
         ", journalTitle='" + journalTitle + '\'' +
         ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
         ", abstractPrimaryDisplay='" + abstractPrimary + '\'' +
+        ", strikingImage='" + strikingImage + '\'' +
         '}';
   }
 

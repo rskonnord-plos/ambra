@@ -644,7 +644,7 @@ public class SolrSearchService implements SearchService {
     query.setStart(startPage * pageSize); // Which results element to return first in this batch.
     query.setRows(pageSize); // The number of results elements to return.
     // request only fields that we need to display
-    query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type", "author_display");
+    query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type", "author_display", "striking_image");
     query.addFacetField("subject_facet");
     query.addFacetField("author_facet");
     query.addFacetField("editor_facet");
@@ -759,6 +759,7 @@ public class SolrSearchService implements SearchService {
       String eissn = getFieldValue(document, "eissn", String.class, message);
       String journal = getFieldValue(document, "journal", String.class, message);
       String articleType = getFieldValue(document, "article_type", String.class, message);
+      String strikingImage = getFieldValue(document, "striking_image", String.class, message);
 
       List<String> authorList = getFieldMultiValue(document, message, String.class, "author_display");
 
@@ -770,6 +771,7 @@ public class SolrSearchService implements SearchService {
 
       SearchHit hit = new SearchHit(
           score, id, title, highlights, authorList, publicationDate, eissn, journal, articleType);
+      hit.setStrikingImage(strikingImage);
 
       if (log.isDebugEnabled())
         log.debug(hit.toString());
