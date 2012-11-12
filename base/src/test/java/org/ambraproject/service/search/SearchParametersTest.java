@@ -248,6 +248,7 @@ public class SearchParametersTest {
     sp.setSort("sortString");
     sp.setStartPage(473);
     sp.setPageSize(216);
+    sp.setResultView("fig");
 
     assertEquals(sp.toString(), "SearchParameters{query='queryString'," +
         " unformattedQuery='unformattedQueryString'," +
@@ -261,6 +262,7 @@ public class SearchParametersTest {
         " filterJournals=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
         " sort='sortString'," +
         " startPage=473," +
-        " pageSize=216}");
+        " pageSize=216," +
+        " resultView='fig'}");
   }
 }

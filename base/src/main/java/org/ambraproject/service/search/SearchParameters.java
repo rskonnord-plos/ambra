@@ -302,7 +302,7 @@ public class SearchParameters implements Serializable {
         ", sort='" + sort + "'" +
         ", startPage=" + startPage +
         ", pageSize=" + pageSize +
-        ", resultView=" + resultView +
+        ", resultView='" + resultView + "'" +
         '}';
   }
 }
