@@ -50,7 +50,7 @@ $(function() {
             title = $('<h4></h4>').append('<a href="http://dx.plos.org/' + docs[i].id + '">' + docs[i].title_display + "</a>");
             meta = $('<div></div>').attr("class", "meta").append(docs[i].article_type + " | " +
                 docs[i].publication_date + " | " + docs[i].journal + "<br> doi:" + docs[i].id);
-            info = $('<div></div>').attr('class', 'info').append(title, docs[i].author_display.toString(), meta);
+            info = $('<div></div>').attr('class', 'info').append(title, docs[i].author_display.join(", "), meta);
             li = $('<li></li>').attr("class", "cf").append(views, citations, info);
             $('div[id="more_by_authors"] > ul').append(li);
           }
