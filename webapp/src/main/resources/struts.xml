@@ -415,16 +415,6 @@
       </result>
     </action>
 
-    <action name="emailThisArticleCreate" class="org.ambraproject.action.article.EmailArticleAction" method="executeRender">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/emailArticle/emailArticle.ftl</param>
-      </result>
-      <result name="input" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/article/article_not_found.ftl</param>
-      </result>
-    </action>
-
     <action name="emailThisArticleSubmit" class="org.ambraproject.action.article.EmailArticleAction" method="executeSend">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/emailSuccess.ftl</param>
