@@ -471,4 +471,8 @@ $(document).ready(
       showFigSearchView();
     });
 
+    $('a.save-search').click(function() {
+      //logic to show the pop-up
+    });
+
   });

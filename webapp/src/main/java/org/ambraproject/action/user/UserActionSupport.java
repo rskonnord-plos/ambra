@@ -84,6 +84,7 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   private String alertsJournals;
   protected String[] monthlyAlerts = new String[]{};
   protected String[] weeklyAlerts = new String[]{};
+  protected String[] deleteAlerts = new String[]{};
   //Need to hide the username text box field on the edit Profile page. Should display the text box only on create profile page.
   protected boolean showDisplayName = true;
   private ProfanityCheckingService profanityCheckingService;
@@ -403,5 +404,13 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
    */
   public void setWeeklyAlerts(String[] weeklyAlerts) {
     this.weeklyAlerts = weeklyAlerts;
+  }
+
+  public String[] getDeleteAlerts() {
+    return deleteAlerts;
+  }
+
+  public void setDeleteAlerts(String[] deleteAlerts) {
+    this.deleteAlerts = deleteAlerts;
   }
 }

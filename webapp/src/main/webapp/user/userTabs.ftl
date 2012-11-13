@@ -41,7 +41,8 @@
   <div id="user-tabs">
     <ul>
       <li><a href="#profile">Profile</a></li>
-      <li><a href="#alerts">Alerts</a></li>
+      <li><a href="#alerts">Journal Alerts</a></li>
+      <li><a href="#savedSearchAlerts">Search Alerts</a></li>
     </ul>
   </div>
 
@@ -50,5 +51,8 @@
   </div>
   <div id="alerts">
     <#include "alertsForm.ftl">
+  </div>
+  <div id="savedSearchAlerts">
+    <#include "searchAlertsForm.ftl">
   </div>
 </div>

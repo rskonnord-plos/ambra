@@ -853,33 +853,21 @@
       </result>
     </action>
 
-    <action name="editAjaxSearchAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="retrieveSearchAlerts">
-      <result name="success" type="default_freemarker">
-        <param name="location">/user/searchAlerts.ftl</param>
-        <param name="noCache">true</param>
+    <action name="editSearchAlerts" class="org.ambraproject.action.user.EditUserAction" method="retrieveSearchAlerts">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
-      <result name="input" type="default_freemarker">
-        <param name="location">/user/searchAlerts.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="location">/user/searchAlerts.ftl</param>
-        <param name="noCache">true</param>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
     </action>
 
-    <action name="saveAjaxSearchAlerts" class="org.ambraproject.action.user.MemberUserAlertsAction" method="saveSearchAlerts">
-      <result name="success" type="default_freemarker">
-        <param name="location">/user/searchAlerts.ftl</param>
-        <param name="noCache">true</param>
+    <action name="saveSearchAlerts" class="org.ambraproject.action.user.EditUserAction" method="saveSearchAlerts">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
-      <result name="input" type="default_freemarker">
-        <param name="location">/user/searchAlerts.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="location">/user/searchAlerts.ftl</param>
-        <param name="noCache">true</param>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
     </action>
 

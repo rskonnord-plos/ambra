@@ -467,7 +467,7 @@ ERROR, searchType must be defined.
           </div>
           <div id="connect" class="nav">
             <ul class="lnk-social cf">
-              <li class="lnk-alert ir"><a href="TEST" title="Alert">Alert</a></li>
+              <li class="lnk-alert ir"><a href="#save-search-box" class="save-search" title="Alert">Alert</a></li>
             <#-- (For the "fuuuuture") li class="lnk-email ir"><a href="TEST" title="E-mail">E-mail</a></li-->
               <li class="lnk-rss ir"><a href="${rssSearchURL}?<@URLParameters parameters=searchParameters />" title="RSS">RSS</a></li>
             </ul>
@@ -541,7 +541,9 @@ ERROR, searchType must be defined.
                           <a href="${advancedSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}">${f.name}</a>
                           <span class="icons">
                             <a href="${rssSearchURL}?unformattedQuery=author%3A%22${f.name?url}%22&from=authorLink&sort=${sorts[0]?url}"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-                            <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
+                            <a href="#save-search-box" class="save-search"><img src="/images/icon.alert.16.png"
+                                                                             width="16" height="17"
+                                                      alt="Alert"
                                                 title="Alert"></a>
                           <#-- (For the "fuuuuture") a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
                           title="E-mail"></a-->
@@ -561,7 +563,7 @@ ERROR, searchType must be defined.
                           <a href="${advancedSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}">${f.name}</a>
                           <span class="icons">
                             <a href="${rssSearchURL}?unformattedQuery=editor%3A%22${f.name?url}%22&from=editorLink&sort=${sorts[0]?url}"><img src="/images/icon.rss.16.png" width="16" height="17" alt="RSS" title="RSS"></a>
-                            <a href="TEST"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
+                            <a href="#save-search-box" class="save-search"><img src="/images/icon.alert.16.png" width="16" height="17" alt="Alert"
                                                 title="Alert"></a>
                           <#-- (For the "fuuuuture") a href="TEST"><img src="/images/icon.email.16.b.png" width="16" height="17" alt="E-mail"
                           title="E-mail"></a-->
