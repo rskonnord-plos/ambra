@@ -228,13 +228,13 @@
 </fieldset>
 
 <fieldset id="subjCats">
-  <legend><span>Filter by Subject Category</span></legend>
+  <legend><span>Filter by Subject Area</span></legend>
   <ol>
     <li><label><input id="subjectOption_all" type="radio" <#if (filterSubjects?size == 0) > checked</#if> name="subjectCatOpt" value="all"
-                      title="Search All Subject Categories"/> Search all subject categories</label></li>
+                      title="Search All Subject Categories"/> Search all subject areas</label></li>
     <li><label><input id="subjectOption_some" type="radio" name="subjectCatOpt" value="some"
                       title="Search Selected Subject Categories" <#if (filterSubjects?size gt 0)> checked</#if>/>
-      Only look for articles with the following subject categories:</label></li>
+      Only look for articles with the following subject areas:</label></li>
     <li class="options">
       <fieldset id="fsSubjectOpt">
 
