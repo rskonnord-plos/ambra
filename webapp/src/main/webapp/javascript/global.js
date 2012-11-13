@@ -933,6 +933,21 @@ if ($nav_figs.length) {
   });
 }
 
+// figure link in the toc
+var $toc_block_links = $('#toc-block div.links');
+if ($toc_block_links.length) {
+  $toc_block_links.find('a.figures').on('click', function() {
+    doi= $(this).data('doi');
+    el = $(this).closest('ul').closest('li');
+    launchModal(doi, null, 'fig', el);
+  });
+
+  $toc_block_links.find('a.abstract').on('click', function() {
+    doi= $(this).data('doi');
+    el = $(this).closest('ul').closest('li');
+    launchModal(doi, null, 'abstract', el);
+  });
+}
 
 var killModal = function(){
   $('div.modal').remove();
