@@ -468,6 +468,15 @@
 
   <rule>
     <note>
+      re-write old browse volume links
+      /article/browseVolume.action -> /article/browse/volume.action
+    </note>
+    <from>^(/.+)?/article/browseVolume.action(.*)$</from>
+    <to>$1/article/browse/volume.action$2</to>
+  </rule>
+
+  <rule>
+    <note>
       re-write browse volume
       /article/browse/volume -> /article/browse/volume.action
     </note>
@@ -483,6 +492,15 @@
     <from>^(/.+)?/article/browse/volume.action</from>
     <to>$1/article/browse/volume</to>
   </outbound-rule>
+
+  <rule>
+    <note>
+      re-write old browse issue links
+      /article/browseIssue.action -> /article/browse/issue.action
+    </note>
+    <from>^(/.+)?/article/browseIssue.action(.*)$</from>
+    <to>$1/article/browse/issue.action$2</to>
+  </rule>
 
   <rule>
     <note>
