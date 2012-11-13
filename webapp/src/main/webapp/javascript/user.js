@@ -6,8 +6,8 @@ $(function () {
   };
   var activeIndex = indexes[getParameterByName("tabId")] || 0;
 
-//  setup tabs
-  $("#user-forms").tabs({
+  //setup tabs
+  $("user-forms").tabs({
     selected:activeIndex,
     beforeLoad:function (event, ui) {
       ui.jqXHR.error(function () {
@@ -16,8 +16,7 @@ $(function () {
     }
   });
 
-
-//  checkboxes on the alerts form
+  //checkboxes on the alerts form
   $("#checkAllWeekly").change(function () {
     $("li.alerts-weekly input").not(":first")
       .attr("checked", $(this).is(":checked"));
@@ -26,5 +25,4 @@ $(function () {
     $("li.alerts-monthly input").not(":first")
       .attr("checked", $(this).is(":checked"));
   });
-
 });
