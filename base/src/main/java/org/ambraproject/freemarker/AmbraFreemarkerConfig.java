@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,6 +58,8 @@ public class AmbraFreemarkerConfig {
   private final boolean debug;
   private Map<String, JournalConfig> journals;
   private Map<String, JournalConfig> journalsByIssn;
+  private Map<String, String> journalUrls;
+  private Map<String, String> journalsUrlsByIssn;
   private Configuration freemarkerProperties;
   private String dirPrefix;
   private String subdirPrefix;
@@ -138,6 +141,9 @@ public class AmbraFreemarkerConfig {
         journalsByIssn.put(j.getIssn(), j);
       }
     }
+
+    journalUrls = buildUrlMap(journals);
+    journalsUrlsByIssn = buildUrlMap(journalsByIssn);
 
     if (log.isTraceEnabled()) {
       for (Entry<String, JournalConfig> e : journals.entrySet()) {
@@ -636,6 +642,20 @@ public class AmbraFreemarkerConfig {
 
   public String getContext() {
     return dirPrefix + subdirPrefix;
+  }
+
+  /**
+   * Build a map from the provided map's keys to the journal URLs.
+   *
+   * @param journals a map of journals with arbitrary keys
+   * @return an unmodifiable map from the same keys to journal URLs
+   */
+  private static Map<String, String> buildUrlMap(Map<String, JournalConfig> journals) {
+    Map<String, String> urls = new HashMap<String, String>(journals.size() * 4 / 3);
+    for (Entry<String, JournalConfig> entry : journals.entrySet()) {
+      urls.put(entry.getKey(), entry.getValue().getUrl());
+    }
+    return Collections.unmodifiableMap(urls);
   }
 
   /**
@@ -1156,4 +1176,25 @@ public class AmbraFreemarkerConfig {
   public int getTemplateUpdateDelay() {
     return templateUpdateDelay;
   }
+
+  /**
+   * Return a full map of journal URLs. Getting values from this map is functionally interchangeable with {@link
+   * #getJournalUrl(String)} (assuming the key is present). This method is a convenience in FreeMarker, where the map
+   * can be accessed as a FreeMarker hash variable.
+   *
+   * @return the map from journal keys to URLs
+   */
+  public Map<String, String> getJournalUrls() {
+    return journalUrls;
+  }
+
+  /**
+   * Return a full map of journal URLs, keyed by eIssn.
+   *
+   * @return the map from eIssns to URLs
+   */
+  public Map<String, String> getJournalsUrlsByIssn() {
+    return journalsUrlsByIssn;
+  }
+
 }
