@@ -75,8 +75,8 @@ $.fn.twitter = function () {
         var tweet_url = events[i].event_url;
 
         var created_dt = isNaN(Date.parse(tweet.created_at))?
-          $.datepicker.formatDate("MMM d, yyyy", this.parseTwitterDate(tweet.created_at)):
-          $.datepicker.formatDate("MMM d, yyyy", new Date(tweet.created_at));
+          $.datepicker.formatDate("M d, yy", this.parseTwitterDate(tweet.created_at)):
+          $.datepicker.formatDate("M d, yy", new Date(tweet.created_at));
 
         ol.append("<li><div><img src=\"" + tweet.user_profile_image
           + "\"/><span class=\"text\"><a href=\"https://twitter.com/#!/" + tweet.user
@@ -103,9 +103,9 @@ $.fn.twitter = function () {
 
       statusMsg = numTweets + " tweet" + pluralization
           + " as recorded by Twitter.  Article published "
-          + $.datepicker.formatDate("MMM d, yyyy", new Date(json.article.published))
+          + $.datepicker.formatDate("M d, yy", new Date(json.article.published))
           + ". Tweets updated "
-          + $.datepicker.formatDate("MMM d, yyyy", new Date(json.article.source[0].updated_at));
+          + $.datepicker.formatDate("M d, yy", new Date(json.article.source[0].updated_at));
     }
     var h3 = $('<h3></h3>').html(statusMsg);
 
