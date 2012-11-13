@@ -38,12 +38,12 @@ title="Alert Form" name="userAlerts">
       <ol>
         <li class="alerts-weekly">
           <label for="checkAllWeekly">
-              <input type="checkbox" value="checkAllWeekly" name="checkAllWeekly" id="checkAllWeekly"/> Select All
+            <input type="checkbox" value="checkAllWeekly" name="checkAllWeekly" id="checkAllWeekly"/> Select All
           </label>
         </li>
         <li class="alerts-monthly">
           <label for="checkAllMonthly">
-              <input type="checkbox" value="checkAllMonthly" name="checkAllMonthly"  id="checkAllMonthly"/> Select All
+            <input type="checkbox" value="checkAllMonthly" name="checkAllMonthly"  id="checkAllMonthly"/> Select All
           </label>
         </li>
       </ol>
@@ -55,7 +55,7 @@ title="Alert Form" name="userAlerts">
         <li class="alerts-weekly">
           <#if ua.weeklyAvailable>
             <label for="${ua.key}">
-                <@s.checkbox name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
+              <@s.checkbox name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
               Weekly </label>
           </#if>
         </li>
@@ -63,7 +63,7 @@ title="Alert Form" name="userAlerts">
         <li class="alerts-monthly">
           <#if ua.monthlyAvailable>
             <label for="${ua.key}">
-                <@s.checkbox name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
+              <@s.checkbox name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
               Monthly </label>
           </#if>
         </li>
