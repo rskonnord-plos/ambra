@@ -520,4 +520,40 @@
     <to>$1/article/browse/issue/$2</to>
   </outbound-rule>
 
+  <rule>
+    <note>
+      re-write email article submit
+      /article/email/send -> /article/emailThisArticleSubmit.action
+    </note>
+    <from>^(/.+)?/article/email/send/?$</from>
+    <to>$1/article/emailThisArticleSubmit.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound email article submit
+      /article/emailThisArticleSubmit.action -> /article/email/send
+    </note>
+    <from>^(/.+)?/article/emailThisArticleSubmit.action$</from>
+    <to>$1/article/email/send</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write email article
+      /article/email/doi -> /article/emailArticle.action?articleURI=doi
+    </note>
+    <from>^(/.+)?/article/email/(.*)?</from>
+    <to>$1/article/emailArticle.action?articleURI=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound email article
+      /article/emailArticle.action?articleURI=doi -> /article/email/doi
+    </note>
+    <from>^(/.+)?/article/emailArticle.action\?articleURI=(.*)?</from>
+    <to>$1/article/email/$2</to>
+  </outbound-rule>
+
 </urlrewrite>
