@@ -29,7 +29,7 @@ import org.ambraproject.models.CitedArticle;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.xml.XMLService;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
 import org.apache.commons.lang.StringUtils;
@@ -163,16 +163,19 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   * Get the author affiliations for a given article
+   * Get the authors and some meta data for a given article.  I wanted to make this method bigger, but
+   * I ran out of time.
    *
    * @param doc article xml
    * @param doc article xml
    * @return author affiliations
    */
-  public ArrayList<AuthorExtra> getAuthorAffiliations(Document doc) {
+  public ArrayList<AuthorView> getAuthors(Document doc) {
 
-    ArrayList<AuthorExtra> list = new ArrayList<AuthorExtra>();
+    ArrayList<AuthorView> list = new ArrayList<AuthorView>();
     Map<String, String> affiliateMap = new HashMap<String, String>();
+    Map<String, String> addressMap = new HashMap<String, String>();
+    Map<String, String> otherFootnotesMap = new HashMap<String, String>();
 
     if (doc == null) {
       return list;
@@ -182,65 +185,211 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       XPathFactory factory = XPathFactory.newInstance();
       XPath xpath = factory.newXPath();
 
+      //Affiliations xpaths
       XPathExpression affiliationListExpr = xpath.compile("//aff");
+      XPathExpression affiliationInstitutionExpr = xpath.compile("//institution");
       XPathExpression affiliationAddrExpr = xpath.compile("//addr-line");
 
+      //Current affiliation addresses
+      XPathExpression currentAffiliationListAddrExpr = xpath.compile("//fn[@fn-type='current-aff']");
+      XPathExpression currentAffiliationAddrExpr = xpath.compile("//p");
+
+      //Author name xpaths
+      XPathExpression authorExpr = xpath.compile("//contrib-group/contrib[@contrib-type='author']");
+      XPathExpression surNameExpr = xpath.compile("//name/surname");
+      XPathExpression givenNameExpr = xpath.compile("//name/given-names");
+      XPathExpression suffixExpr = xpath.compile("//name/suffix");
+      XPathExpression collabExpr = xpath.compile("//collab");
+
+      //Footnotes
+      //Note this web page for notes on author footnotes:
+      //http://wiki.plos.org/pmwiki.php/Publications/FootnoteSymbolOrder
+      XPathExpression affiliationsExpr = xpath.compile("//xref[@ref-type='aff']");
+      XPathExpression currentAddressExpr = xpath.compile("//xref[@ref-type='fn']/sup[contains(text(),'¤')]/..");
+      XPathExpression equalContribExpr = xpath.compile("//@equal-contrib");
+      XPathExpression corresAuthorExpr = xpath.compile("//xref[@ref-type='corresp']");
+      XPathExpression deceasedExpr = xpath.compile("//@deceased");
+      XPathExpression otherFootnoteExpr = xpath.compile("//fn[@fn-type='other']");
+      XPathExpression otherFootnoteValueExpr = xpath.compile("//p");
+      XPathExpression otherFootnotesNodeListExpr = xpath.compile("//xref[@ref-type='fn']");
+
+      //Grab all affiliations and put them into their own map
       NodeList affiliationNodeList = (NodeList) affiliationListExpr.evaluate(doc, XPathConstants.NODESET);
 
-      // Map all affiliation id's to their affiliation strings
-      for (int i = 0; i < affiliationNodeList.getLength(); i++) {
-        Node node = affiliationNodeList.item(i);
+      //Map all affiliation id's to their affiliation strings
+      for (int a = 0; a < affiliationNodeList.getLength(); a++) {
+        Node node = affiliationNodeList.item(a);
         // Not all <aff>'s have the 'id' attribute.
-        String id = (node.getAttributes().getNamedItem("id") == null) ? "" : node.getAttributes().getNamedItem("id").getTextContent();
+        String id = (node.getAttributes().getNamedItem("id") == null) ? "" :
+          node.getAttributes().getNamedItem("id").getTextContent();
+
+        log.debug("Found affiliation node:" + id);
+
         // Not all <aff> id's are affiliations.
         if (id.startsWith("aff")) {
           DocumentFragment df = doc.createDocumentFragment();
           df.appendChild(node);
-          String address = ((Node) affiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
-          affiliateMap.put(id, address);
+
+          StringBuilder res = new StringBuilder();
+
+          if(affiliationInstitutionExpr.evaluate(df, XPathConstants.NODE) != null) {
+            res.append(((Node)affiliationInstitutionExpr.evaluate(df, XPathConstants.NODE)).getTextContent());
+          }
+
+          if(affiliationAddrExpr.evaluate(df, XPathConstants.NODE) != null) {
+            if(res.length() > 0) {
+              res.append(" ");
+            }
+            res.append(((Node) affiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent());
+          }
+
+          affiliateMap.put(id, res.toString());
         }
       }
 
-      XPathExpression authorExpr = xpath.compile("//contrib-group/contrib[@contrib-type='author']");
-      XPathExpression equalContribExpr = xpath.compile("//@equal-contrib");
-      XPathExpression surNameExpr = xpath.compile("//name/surname");
-      XPathExpression givenNameExpr = xpath.compile("//name/given-names");
-      XPathExpression affExpr = xpath.compile("//xref[@ref-type='aff']");
+      //Grab all 'other' footnotes and put them into their own map
+      NodeList footnoteNodeList = (NodeList) otherFootnoteExpr.evaluate(doc, XPathConstants.NODESET);
 
+      for (int a = 0; a < footnoteNodeList.getLength(); a++) {
+        Node node = footnoteNodeList.item(a);
+        // Not all <aff>'s have the 'id' attribute.
+        String id = (node.getAttributes().getNamedItem("id") == null) ? "" :
+          node.getAttributes().getNamedItem("id").getTextContent();
+
+        log.debug("Found footnote node:" + id);
+
+        DocumentFragment df = doc.createDocumentFragment();
+        df.appendChild(node);
+
+        String footnote = ((Node) otherFootnoteValueExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
+        otherFootnotesMap.put(id, footnote);
+      }
+
+      //Grab all the Current address information and place them into a map
+      NodeList currentAddressNodeList = (NodeList) currentAffiliationListAddrExpr.evaluate(doc, XPathConstants.NODESET);
+      for (int a = 0; a < currentAddressNodeList.getLength(); a++) {
+        Node node = currentAddressNodeList.item(a);
+        String id = (node.getAttributes().getNamedItem("id") == null) ? "" :
+          node.getAttributes().getNamedItem("id").getTextContent();
+
+        log.debug("Current address node:" + id);
+
+        DocumentFragment df = doc.createDocumentFragment();
+        df.appendChild(node);
+
+        String address = ((Node) currentAffiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
+        addressMap.put(id, address);
+      }
+
+      //Get all the authors
       NodeList authorList = (NodeList) authorExpr.evaluate(doc, XPathConstants.NODESET);
 
       for (int i = 0; i < authorList.getLength(); i++) {
-        Node cnode = authorList.item(i);
-        DocumentFragment df = doc.createDocumentFragment();
-        df.appendChild(cnode);
-        Node sNode = (Node) surNameExpr.evaluate(df, XPathConstants.NODE);
-        Node gNode = (Node) givenNameExpr.evaluate(df, XPathConstants.NODE);
-        Node ecNode = (Node) equalContribExpr.evaluate(df, XPathConstants.NODE);
+        Node authorNode = authorList.item(i);
 
-        // Either surname or givenName can be blank
-        String surname = (sNode == null) ? "" : sNode.getTextContent();
-        String givenName = (gNode == null) ? "" : gNode.getTextContent();
-        // If both are null then don't bother to add
-        if ((sNode != null) || (gNode != null)) {
-          NodeList affList = (NodeList) affExpr.evaluate(df, XPathConstants.NODESET);
-          ArrayList<String> affiliations = new ArrayList<String>();
+        //Create temp author document fragment to search out of
+        DocumentFragment authorDoc = doc.createDocumentFragment();
+        authorDoc.appendChild(authorNode);
+
+        Node surNameNode = (Node) surNameExpr.evaluate(authorDoc, XPathConstants.NODE);
+        Node givenNameNode = (Node) givenNameExpr.evaluate(authorDoc, XPathConstants.NODE);
+        Node collabNameNode = (Node) collabExpr.evaluate(authorDoc, XPathConstants.NODE);
+
+        //Sometimes, an author is not a person, but a collab
+        //Note:10.1371/journal.pone.0032315
+        if (surNameNode == null && givenNameNode == null) {
+          givenNameNode = collabNameNode;
+        }
+
+        log.debug("Author node");
+
+        // If both of these are null then don't bother to add
+        if (surNameNode != null || givenNameNode != null) {
+          Node suffixNode = (Node) suffixExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node equalContribNode = (Node) equalContribExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node deceasedNode = (Node) deceasedExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node addressNode = (Node) currentAddressExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node corresAuthorNode = (Node) corresAuthorExpr.evaluate(authorDoc, XPathConstants.NODE);
+          NodeList otherFootnotesNodeList = (NodeList) otherFootnotesNodeListExpr.evaluate(authorDoc, XPathConstants.NODESET);
+          NodeList affList = (NodeList) affiliationsExpr.evaluate(authorDoc, XPathConstants.NODESET);
+
+          // Either surname or givenName can be blank
+          String surname = (surNameNode == null) ? null : surNameNode.getTextContent();
+          String givenName = (givenNameNode == null) ? null : givenNameNode.getTextContent();
+          String suffix = (suffixNode == null) ? null : suffixNode.getTextContent();
+          boolean equalContrib = (equalContribNode != null);
+          boolean deceased = (deceasedNode != null);
+
+          String corresponding = null;
+          String currentAddress = null;
+
+          if(addressNode != null) {
+            if(addressNode.getAttributes().getNamedItem("rid") != null) {
+              String fnId = addressNode.getAttributes().getNamedItem("rid").getTextContent();
+              currentAddress = addressMap.get(fnId);
+            }
+          }
+
+          List<String> otherFootnotes = new ArrayList<String>();
+          for(int a = 0; a < otherFootnotesNodeList.getLength(); a++) {
+            Node node = otherFootnotesNodeList.item(a);
+
+            if(node.getAttributes().getNamedItem("rid") != null) {
+              String id = node.getAttributes().getNamedItem("rid").getTextContent();
+
+              String value = otherFootnotesMap.get(id);
+
+              if(value != null) {
+                //Sometimes the "other" node is used to contrib equally as well
+                //Is there a better way to do this?
+                if(value.contains("contributed equally")) {
+                  equalContrib = true;
+                }
+
+                otherFootnotes.add(value);
+              }
+            }
+          }
+
+          if(corresAuthorNode != null) {
+            Node attr = corresAuthorNode.getAttributes().getNamedItem("rid");
+
+            if(attr == null) {
+              log.warn("No rid attribute found for xref ref-type=\"corresp\" node.");
+            } else {
+              String rid = attr.getTextContent();
+
+              XPathExpression correspondAddrExpr = xpath.compile("//author-notes/corresp[@id='" + rid + "']/email");
+              Node correspondAddrNode = (Node) correspondAddrExpr.evaluate(doc, XPathConstants.NODE);
+
+              if(correspondAddrNode == null) {
+                log.warn("No node found for corrsponding author: author-notes/corresp[@id='\" + rid + \"']/email");
+              } else {
+                corresponding = correspondAddrNode.getTextContent();
+              }
+            }
+          }
+
+          List<String> affiliations = new ArrayList<String>();
 
           // Build a list of affiliations for this author
           for (int j = 0; j < affList.getLength(); j++) {
             Node anode = affList.item(j);
-            String affId = anode.getAttributes().getNamedItem("rid").getTextContent();
-            affiliations.add(affiliateMap.get(affId));
-          }
-          String equalContrib = (ecNode == null) ? "" : ecNode.getTextContent();
 
-          AuthorExtra authorEx = new AuthorExtra();
-          authorEx.setAuthorName(surname, givenName);
-          authorEx.setAffiliations(affiliations);
-          authorEx.setEqualContrib(equalContrib);
-          list.add(authorEx);
+            if(anode.getAttributes().getNamedItem("rid") != null) {
+              String affId = anode.getAttributes().getNamedItem("rid").getTextContent();
+              affiliations.add(affiliateMap.get(affId));
+            }
+          }
+
+          AuthorView author = new AuthorView(givenName, surname, suffix,
+            currentAddress, equalContrib, deceased, corresponding, affiliations, otherFootnotes);
+
+          list.add(author);
         }
       }
     } catch (Exception e) {
+      //TODO: Why does this die silently?
       log.error("Error occurred while gathering the author affiliations.", e);
     }
 

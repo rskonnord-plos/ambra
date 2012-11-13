@@ -22,7 +22,7 @@ package org.ambraproject.action.annotation;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.springframework.beans.factory.annotation.Required;
@@ -52,7 +52,7 @@ public class StartDiscussionAction extends BaseActionSupport {
 
     Document doc = fetchArticleService.getArticleDocument(articleInfo);
     isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
-    authorNames = AuthorExtra.buildNameList(fetchArticleService.getAuthorAffiliations(doc));
+    authorNames = AuthorView.buildNameList(fetchArticleService.getAuthors(doc));
 
     return SUCCESS;
   }

@@ -25,7 +25,7 @@ import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.AnnotationView;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class ListReplyAction extends BaseActionSupport {
   private AnnotationView baseAnnotation;
   private ArticleInfo articleInfo;
   private ArticleType articleType;
-  private List<AuthorExtra> authorExtras;
+  private List<AuthorView> authors;
   private int numComments;
   private boolean isPeerReviewed;
 
@@ -70,7 +70,7 @@ public class ListReplyAction extends BaseActionSupport {
       numComments = annotationService.countAnnotations(articleID, COMMENT_TYPES);
 
       Document doc = fetchArticleService.getArticleDocument(articleInfo);
-      authorExtras = fetchArticleService.getAuthorAffiliations(doc);
+      authors = fetchArticleService.getAuthors(doc);
       isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
     } catch (Exception ae) {
       log.error("Could not list all replies for root: " + root, ae);
@@ -87,7 +87,7 @@ public class ListReplyAction extends BaseActionSupport {
    * @return a comma-delimited list of the names from author extras
    */
   public String getAuthorNames() {
-    return AuthorExtra.buildNameList(authorExtras);
+    return AuthorView.buildNameList(authors);
   }
 
   public void setRoot(final Long root) {
@@ -105,8 +105,8 @@ public class ListReplyAction extends BaseActionSupport {
     return articleInfo;
   }
 
-  public List<AuthorExtra> getAuthorExtras() {
-    return authorExtras;
+  public List<AuthorView> getAuthors() {
+    return authors;
   }
 
   public int getNumComments() {

@@ -1,0 +1,1820 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="3.0" xml:lang="EN">
+  <front>
+    <journal-meta><journal-id journal-id-type="nlm-ta">PLoS Negl Trop Dis</journal-id><journal-id journal-id-type="publisher-id">plos</journal-id><journal-id journal-id-type="pmc">plosntds</journal-id><!--===== Grouping journal title elements =====--><journal-title-group><journal-title>PLoS Neglected Tropical Diseases</journal-title></journal-title-group><issn pub-type="epub">1935-2735</issn><publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, USA</publisher-loc>
+      </publisher></journal-meta>
+    <article-meta><article-id pub-id-type="publisher-id">PNTD-D-10-00083</article-id><article-id pub-id-type="doi">10.1371/journal.pntd.0001165</article-id><article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Medicine</subject>
+          <subj-group>
+            <subject>Clinical research design</subject>
+            <subj-group>
+              <subject>Clinical trials</subject>
+              <subject>Meta-analyses</subject>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Infectious diseases</subject>
+            <subj-group>
+              <subject>Neglected tropical diseases</subject>
+              <subj-group>
+                <subject>Schistosomiasis</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Parasitic diseases</subject>
+              <subj-group>
+                <subject>Schistosomiasis</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Public health</subject>
+            <subj-group>
+              <subject>Drug policy</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline">
+          <subject>Infectious Diseases</subject>
+          <subject>Public Health and Epidemiology</subject>
+        </subj-group>
+      </article-categories><title-group><article-title>A Multicentre Randomized Controlled Trial of the Efficacy and Safety of Single-Dose Praziquantel at 40 mg/kg vs. 60 mg/kg for Treating Intestinal Schistosomiasis in the Philippines, Mauritania, Tanzania and Brazil</article-title><alt-title alt-title-type="running-head">A Praziquantel RCT for Intestinal Schistosomiasis</alt-title></title-group><contrib-group>
+        <contrib contrib-type="author" deceased="yes" xlink:type="simple">
+          <name name-style="western">
+            <surname>Lwambo</surname>
+            <given-names>Nicholas J. S.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff4">
+            <sup>4</sup>
+          </xref>
+        </contrib>
+      </contrib-group><aff id="aff1"><label>1</label><addr-line>UNICEF/UNDP/World Bank/WHO Special Programme on Research and Training in Tropical Diseases (TDR), World Health Organization, Geneva, Switzerland</addr-line>       </aff><aff id="aff2"><label>2</label><addr-line>Methodology and Statistical Unit, Center for Health Studies, Centre de Recherche – Santé, Strassen, Luxembourg</addr-line>       </aff><aff id="aff3"><label>3</label><addr-line>National Institutes of Health, University of the Philippines Manila, Manila, Philippines</addr-line>       </aff><aff id="aff4"><label>4</label><addr-line>National Institute for Medical Research, Mwanza Medical Research Centre, Mwanza, Tanzania</addr-line>       </aff><aff id="aff5"><label>5</label><addr-line>Nutrition et Actes Médicaux, Institut National de Recherches en Santé Publique (INRSP), Nouakchott, Mauritania</addr-line>       </aff><aff id="aff6"><label>6</label><addr-line>Laboratorio de Eco-Epidemiologia e Controle da Esquistossomose e Geohelmintoses, Instituto Oswaldo Cruz, FIOCRUZ, Rio de Janeiro, Brazil</addr-line>       </aff><aff id="aff7"><label>7</label><addr-line>Department of Clinical Epidemiology, College of Medicine, University of the Philippines, Manila, Philippines</addr-line>       </aff><aff id="aff8"><label>8</label><addr-line>Ministère de la Santé/P.E.V., Nouakchott, Mauritania</addr-line>       </aff><aff id="aff9"><label>9</label><addr-line>Departamento de Medicina Clinica, Centro de Ciencias da Saude, UFPE, Hospital das Clinicas, Recife, Brazil</addr-line>       </aff><aff id="aff10"><label>10</label><addr-line>Latin America Regional Office, Drugs for Neglected Diseases Initiative, Rio de Janeiro, Brazil</addr-line>       </aff><aff id="aff11"><label>11</label><addr-line>Preventive Chemotherapy and Transmission Control Unit, Control of Neglected Tropical Diseases, World Health Organization, Geneva, Switzerland</addr-line>       </aff><contrib-group>
+        <contrib contrib-type="editor" xlink:type="simple">
+          <name name-style="western">
+            <surname>McCarthy</surname>
+            <given-names>James S.</given-names>
+          </name>
+          <role>Editor</role>
+          <xref ref-type="aff" rid="edit1"/>
+        </contrib>
+      </contrib-group><aff id="edit1">Queensland Institute for Medical Research, Australia</aff><author-notes>
+        <corresp id="cor1">* E-mail: <email xlink:type="simple">michel.vaillant@crp-sante.lu</email></corresp>
+        <fn fn-type="con">
+          <p>Conceived and designed the experiments: LC PLO FA OL. Performed the experiments: VJB NJSL MO OSP. Analyzed the data: MTV PLO. Wrote the paper: PLO MTV. Principal investigators: VJB NJSL MO OSP. Protocol preparation, supervision of clinical and parasitological conduct, contribution to interpretation of results: ALCD TCF. Participation in finalization of master protocol (GCP) and GCP training of sites: OL. Preparation of master study protocol and sites preparation: FA. Initiation and coordination of the study, contribution to the preparation of the manuscipt: LC. Analytical protocol, report: MTV. Coordination and supervision of study conduct, analytical protocol, report: PLO.</p>
+        </fn>
+      <fn fn-type="conflict">
+        <p>The authors have declared that no competing interests exist.</p>
+      </fn></author-notes><pub-date pub-type="collection">
+        <month>6</month>
+        <year>2011</year>
+      </pub-date><pub-date pub-type="epub">
+        <day>14</day>
+        <month>6</month>
+        <year>2011</year>
+      </pub-date><volume>5</volume><issue>6</issue><elocation-id>e1165</elocation-id><history>
+        <date date-type="received">
+          <day>20</day>
+          <month>10</month>
+          <year>2010</year>
+        </date>
+        <date date-type="accepted">
+          <day>12</day>
+          <month>4</month>
+          <year>2011</year>
+        </date>
+      </history><!--===== Grouping copyright info into permissions =====--><permissions><copyright-year>2011</copyright-year><copyright-holder>Olliaro et al</copyright-holder><license><license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p></license></permissions><abstract>
+        <sec>
+          <title>Background</title>
+          <p>Praziquantel at 40 mg/kg in a single dose is the WHO recommended treatment for all forms of schistosomiasis, but 60 mg/kg is also deployed nationally.</p>
+        </sec>
+        <sec>
+          <title>Methodology/Principal Findings</title>
+          <p>Four trial sites in the Philippines, Mauritania, Tanzania and Brazil enrolled 856 patients using a common protocol, who were randomised to receive praziquantel 40 mg/kg (n = 428) or 60 mg/kg (n = 428). While the sites differed for transmission and infection intensities (highest in Tanzania and lowest in Mauritania), no bias or heterogeneity across sites was detected for the main efficacy outcomes. The primary efficacy analysis was the comparison of cure rates on Day 21 in the intent-to-treat population for the pooled data using a logistic model to calculate Odd Ratios allowing for baseline characteristics and study site. Both doses were highly effective: the Day 21 cure rates were 91.7% (86.6%–98% at individual sites) with 40 mg/kg and 92.8% (88%–97%) with 60 mg/kg. Secondary parameters were eggs reduction rates (ERR), change in intensity of infection and reinfection rates at 6 and 12 months. On Day 21 the pooled estimate of the ERR was 91% in both arms. The Hazard Ratio for reinfections was only significant in Brazil, and in favour of 60 mg/kg on the pooled estimate (40 mg/kg: 34.3%, 60 mg/kg: 23.9%, HR = 0.78, 95%CI = [0.63;0.96]). Analysis of safety could not distinguish between disease- and drug-related events. 666 patients (78%) reported 1327 adverse events (AE) 4 h post-dosing. The risk of having at least one AE was higher in the 60 than in the 40 mg/kg group (83% vs. 73%, p&lt;0.001). At 24 h post-dosing, 456 patients (54%) had 918 AEs with no difference between arms. The most frequent AE was abdominal pain at both 4 h and 24 h (40% and 24%).</p>
+        </sec>
+        <sec>
+          <title>Conclusion</title>
+          <p>A higher dose of 60 mg/kg of praziquantel offers no significant efficacy advantage over standard 40 mg/kg for treating intestinal schistosomiasis caused by either <italic>S. mansoni</italic> or <italic>S. japonicum</italic>. The results of this study support WHO recommendation and should be used to inform policy decisions in the countries.</p>
+        </sec>
+        <sec>
+          <title>Trial Registration</title>
+          <p><ext-link ext-link-type="uri" xlink:href="http://Controlled-Trials.com" xlink:type="simple">Controlled-Trials.com</ext-link> <ext-link ext-link-type="uri" xlink:href="http://www.controlled-trials.com/ISRCTN29273316" xlink:type="simple">ISRCTN29273316</ext-link> <ext-link ext-link-type="uri" xlink:href="http://ClinicalTrials.gov" xlink:type="simple">ClinicalTrials.gov</ext-link> <ext-link ext-link-type="uri" xlink:href="http://clinicaltrials.gov/ct2/show/NCT00403611" xlink:type="simple">NCT00403611</ext-link></p>
+        </sec>
+      </abstract><abstract abstract-type="summary">
+        <title>Author Summary</title>
+        <p>Control of urinary and intestinal schistosomiasis is based on mass administration of praziquantel at the World Health Organization (WHO) recommended dose of 40 mg/kg, though some countries use 60 mg/kg. This multi-country randomized clinical trial compared the efficacy (cure and egg reduction rates three weeks post-treatment) and safety of these two doses for treating intestinal schistosomiasis in 856 patients in Brazil, Mauritania and Tanzania (<italic>Schistosoma mansoni</italic>), and The Philippines (<italic>S. japonicum</italic>). Transmission and infection intensities varied across the sites, but there was no bias or heterogeneity in efficacy outcomes. The two doses are equally effective in curing intestinal schistosomiasis; the higher dose may be less well tolerated, though effects are generally mild and transient. In endemic areas people can be re-infected; one year post-treatment patients on 60 mg/kg had fewer re-infections but this finding is difficult to explain. This study was conducted to respond to the demand for evidence about the dose of praziquantel when deployed in endemic countries. The results, along with those of systematic reviews, support the current WHO recommendation for using praziquantel at 40 mg/kg and should inform policy decisions in countries. The Philippines has already changed from 60 to 40 mg/kg after this study.</p>
+      </abstract><funding-group><funding-statement>This study was supported by grants of the UNICEF/UNDP/World Bank/WHO Special Programme for Research and Training in Tropical Diseases given to the study sites, to the study monitors and to MV for analyses. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.</funding-statement></funding-group><counts>
+        <page-count count="15"/>
+      </counts></article-meta>
+  </front>
+  <body>
+    <sec id="s1">
+      <title>Introduction</title>
+      <p>Schistosomiasis is a parasitic infection caused by blood flukes (flatworms) of the class Trematoda: <italic>Schistosoma haematobium</italic> (causing urinary schistosomiasis), <italic>S. mansoni</italic>, <italic>S. japonicum</italic>, <italic>S. intercalatum</italic> and <italic>S. mekongi</italic> (causing intestinal schistosomiasis). A recent systematic review of evidence estimates that ∼207 million people (97% in Africa) are affected and ∼779 million people are at risk (85% in Africa) in 76 countries (46 in Africa). With respect to the mid 1990s, there has been an increase of ∼7.3% and 10.9% in infections and population at risk (mostly accounted for by Africa) but a concomitant (slight) decrease from 29.6% to 26.6% of the ratio between people infected and people at risk, primarily as the combined result of socio-economic development and interventions such as sanitation and broader distribution of praziquantel <xref ref-type="bibr" rid="pntd.0001165-Steinmann1">[1]</xref>.</p>
+      <p>Traditionally, schistosomiasis has been attributed a low burden of disease as quantified by DALY (disability adjusted life years) lost (1,760,000 estimated in 2002 <xref ref-type="bibr" rid="pntd.0001165-World1">[2]</xref>). However, the real impact of schistosomiasis infection on people's health and performance is more difficult to quantitate. A systematic review and meta-analysis of disability-related effects of schistosomiasis indicates that the disability weight of schistosomiasis (2–15%) is much greater than the previous estimation of 0.5% <xref ref-type="bibr" rid="pntd.0001165-King1">[3]</xref>. Specifically for <italic>S. japonicum</italic>, a disability rate of 13% has been calculated (7–46 times greater than current estimates) <xref ref-type="bibr" rid="pntd.0001165-Finkelstein1">[4]</xref>.</p>
+      <p>Today praziquantel is the mainstay of schistosomiasis control. However, while the World Health Organization (WHO) currently recommends that it should be used in a single dose of 40 mg/kg for the treatment of both urinary and intestinal schistosomiasis <xref ref-type="bibr" rid="pntd.0001165-World2">[5]</xref>, different doses of praziquantel are being deployed by national control programmes.</p>
+      <p>Studies of the dose-response of praziquantel in urinary and intestinal schistosomiasis are few and incomplete. In particular, no obvious dose-effect was apparent in a Cochrane systematic review and meta-analysis of randomised controlled trials of praziquantel between the doses of 20 to 40 mg/kg for urinary schistosomiasis <xref ref-type="bibr" rid="pntd.0001165-DansoAppiah1">[6]</xref>. A Cochrane systematic review and meta-analysis of treatments for intestinal schistosomiasis is under way. Here, contrary to urinary schistosomiasis, preliminary results (which were not available when this study was being planned and conducted) show a dose-response effect between the doses of 20, 30 and 40 mg/kg with no further gain with doses &gt;40 mg/kg.</p>
+      <p>This study was set up to assess whether using praziquantel at 60 mg/kg for intestinal schistosomiasis (caused by either <italic>S. japonicum</italic> or <italic>S. mansoni</italic>) offers advantages over 40 mg/kg. Four trial sites in the Philippines, Mauritania, Tanzania and Brazil enrolled patients using a common protocol. The study at each site was powered to show a difference in cure rates between dosage groups. The analytical plan was prospectively designed to allow for reporting the results both for each study site and combined by individual patients' data meta-analysis (IPD).</p>
+    </sec>
+    <sec id="s2" sec-type="materials|methods">
+      <title>Materials and Methods</title>
+      <sec id="s2a">
+        <title>Study sites</title>
+        <p>The studies were conducted in:</p>
+        <list list-type="bullet">
+          <list-item>
+            <p>the province of Agusan del Sur in Mindanao Island, Philippines (rural, <italic>S. japonicum</italic> with year round transmission during June to September, prevalence 7–11%)</p>
+          </list-item>
+          <list-item>
+            <p>the Mwanza region, Tanzania (rural, <italic>S. mansoni</italic> (year-round) and <italic>S. haematobium</italic> (February to March), prevalence 34 to 65%)</p>
+          </list-item>
+          <list-item>
+            <p>the Trarza region, Mauritania (rural, <italic>S. mansoni</italic>, prevalence 18.7%, <italic>S.haematobium</italic> prevalence 30.9%, Coinfection 7.3% and total prevalence 57%)</p>
+          </list-item>
+          <list-item>
+            <p>Municipality of São Lourenço da Mata, Pernambuco state, North-eastern Brazil (urban, <italic>S. mansoni</italic> (year round), prevalence 25%).</p>
+          </list-item>
+        </list>
+        <p>The prevalences above are from historical data. The actual point prevalence found on screening for this study for each site is reported in the <xref ref-type="sec" rid="s3">Results</xref> section.</p>
+      </sec>
+      <sec id="s2b">
+        <title>Patients</title>
+        <sec id="s2b1">
+          <title>Inclusion criteria</title>
+          <p>Aged 10–19 years; confirmed <italic>Schistosoma</italic> infection with ≥100 eggs per gram of faeces (epg) using Kato Katz technique (<italic>S. japonicum</italic> in the Philippines; <italic>S. mansoni</italic> in the others, with mixed infections with <italic>S. haematobium</italic> allowed in Mauritania); written informed consent; able and willing to be examined on follow-up visits and to provide stool samples.</p>
+        </sec>
+        <sec id="s2b2">
+          <title>Exclusion criteria</title>
+          <p>Pregnant or lactating; previous history of adverse reaction associated with praziquantel; history of acute or chronic severe disease including hepato-splenic schistosomiasis; use of praziquantel within the last 30 days or any other medication that may affect the results of trial (e.g. antibiotics) within the past week; symptomatic malaria; mixed <italic>S. mansoni</italic> and <italic>S. haematobium</italic> infections in Tanzania.</p>
+        </sec>
+      </sec>
+      <sec id="s2c">
+        <title>Parasitological diagnosis</title>
+        <p>At baseline, Day 21, 6 months and 12 months, stool samples were taken on two consecutive days and each tested twice. The mean egg counts are reported.</p>
+      </sec>
+      <sec id="s2d">
+        <title>Study drug</title>
+        <p>Praziquantel (Distocide® by Shin-Poong, Korea) was procured by WHO and administered with food after weighing the participants on a scale by the nearest half tablet according to the randomization schedule.</p>
+      </sec>
+      <sec id="s2e">
+        <title>Study outcomes</title>
+        <p>Efficacy. (i) Primary: cure rates (“complete cure” defined as negative stools for <italic>Schistosoma</italic> eggs) and egg reduction rates (ERR, “partial cure”) with the two regimens on Day 21; (ii) Secondary: reinfection rates at 6 months and 12 months after treatment. <underline>Safety and tolerability</underline>: prevalence and intensity of adverse events (AEs).</p>
+        <p>The choice of Day 21 as the main efficacy outcome is justified by the fact that, as praziquantel is not active on immature schistosomes of less than 24 days, by Day 21 immature <italic>S. mansoni</italic> worms will not have yet matured into patent egg-producing infections. The evaluation of praziquantel efficacy, using duplicate Kato-Katz slides from two different stool samples, at 3 weeks showed the highest cure and egg-reduction rates <xref ref-type="bibr" rid="pntd.0001165-Gryseels1">[7]</xref>.</p>
+      </sec>
+      <sec id="s2f">
+        <title>Recruitment procedures</title>
+        <p>Screening occurred in the village in Brazil and Mauritania and at school in the Philippines and Tanzania.</p>
+      </sec>
+      <sec id="s2g">
+        <title>Randomization</title>
+        <p>Computer generated randomization list with blocks of 4 in a ratio 1∶1 for each regimen.</p>
+      </sec>
+      <sec id="s2h">
+        <title>Allocation concealment</title>
+        <p>Sealed and numbered envelopes were kept in a locked cabinet by one responsible person; two different people preparing treatment and evaluating patients; stool specimens read by a technician blinded as to the treatment.</p>
+      </sec>
+      <sec id="s2i">
+        <title>Sample size calculation</title>
+        <p>The sample size required at each site was computed at 91 patients per treatment group using 60% and 80% as the cure rates of praziquantel 40 mg/kg and 60 mg/kg respectively, with 80% power and 95% confidence. The sample size was adjusted to 109 individuals per treatment group for a total of 218 participants in consideration of the anticipated 20% of participants who might be lost to follow-up.</p>
+      </sec>
+      <sec id="s2j">
+        <title>Assessment of risk of bias</title>
+        <p>The results were expressed as Odds Ratios (OR and 95% confidence intervals (CI)) for dichotomous outcomes. Adjusted outcomes (such as cure rates and hazard ratios [HR]) were analysed by using an inverse variance methodology. Continuous outcomes were expressed as means and standard deviations.</p>
+        <p>Study bias was examined through the use of a funnel plot of the log-transformed OR/HR [log(OR)/Log(HR)] of individual studies against the precision (1/SE, standard error). Funnel plot asymmetry was further tested by using the Egger's method.</p>
+        <p>For the assessment of heterogeneity, the Cochran's Q and I<sup>2</sup> test of heterogeneity were performed to detect non-homogeneity between the estimates of individual studies and by using fixed effects models. The Mantel-Haenszel method was used to analyse cure rates. ORs of adjusted cure rates allowing for age, gender, baseline diarrhoea and nausea were obtained by the generic inverse variance method. An inverse variance method was also used to analyse the difference between groups in the mean of the difference between eggs-per-gram (epg) at Day 21 and Day 0.</p>
+        <p>The Mantel-Haenszel method was used to analyse the reinfection rates at day 180 and day 360. The HRs of reinfection provided by a Cox proportional hazard model were aggregated by using the generic inverse variance method.</p>
+      </sec>
+      <sec id="s2k">
+        <title>Analyses</title>
+        <p>While the data were also analysed for each individual study, in this paper we present specifically the results of the prospectively defined individual patient data meta-analysis whereby the analysis was performed by using the same methods as for each study site (see below) adjusted for the site.</p>
+        <sec id="s2k1">
+          <title>Population</title>
+          <p>Efficacy and safety analyses were conducted on the Intent-to-Treat (ITT) population. Missing or incomplete data were considered as missing.</p>
+          <p>The same analyses were also conducted on per-protocol populations (PP1 = All patients randomized and evaluable at the Day 21 visit with no major protocol violations; PP2 = All patients randomized and evaluable at the 12 months visit with no major protocol deviations) - not reported in this paper as results are comparable with the ITT analysis.</p>
+        </sec>
+        <sec id="s2k2">
+          <title>Study profile and baseline characteristics</title>
+          <p>Patient attrition throughout the study was reported according to the Consort guidelines, accounting for drop-outs and exclusions (in diagrammatic form).</p>
+          <p>The baseline characteristics of the patients enrolled are reported, including basic demography (sex and age) and pre-treatment values for egg counts and intensities of infection by treatment group. Continuous variables are presented as mean +/− standard deviation.</p>
+          <p>While allocation to treatment was by computer-generated random assignment, we checked for possible imbalance between the groups in terms of baseline conditions and drop-out rates. Group comparison was carried out using the Student t-test. In the case of a non-significant Kolmogorov-Smirnov test for normal data or non-homogeneity of the variances (folded F-test) between groups, a logarithmic transformation was used. A non-parametric Wilcoxon sign rank test for matched pairs was performed if the student t-test applying conditions were still not respected. The Chi-square test was used to compare frequencies.</p>
+        </sec>
+      </sec>
+      <sec id="s2l">
+        <title>Analyses of efficacy</title>
+        <sec id="s2l1">
+          <title>Data presentation</title>
+          <p>Continuous data are presented as mean and standard deviation. Dichotomous or multiple categories data are presented as frequencies and %.</p>
+          <p>Cure rates are presented as % cured with 95% confidence intervals (CIs).</p>
+          <p>Egg count reduction was estimated as: [1−(epg2/epg1)×100] where epg1 and epg2 are the geometric mean of log10 transformed (x+1) numbers of eggs per gram of faeces at pre-treatment (D0) and Day 21 post-treatment, respectively.</p>
+          <p>A logarithmic transformation of the egg count values at Day 0 and Day 21 was done. A value of 1 was added to each egg count value so that the logarithm of zero egg count (for negative result) could be computed.</p>
+        </sec>
+        <sec id="s2l2">
+          <title>Cure rates</title>
+          <p>A Chi-square test (with correction for continuity) was used to compare the cure rates at day 21 with 60 mg/kg vs. 40 mg/kg of praziquantel. The relative rates on Day 21 between the two groups are presented as OR with 95% CIs. A logistic model was used to evaluate the adjusted OR and 95%CIs on baseline characteristics such as sex, age, egg counts, intensity of infection and highly frequent signs, symptoms or positive physical examination.</p>
+          <p>For the IPD meta-analysis, the study site was included in the model. A generalized linear model using a logit link function was used if heterogeneity was not found; otherwise, a generalized linear mixed model including random effects was used. In the latter, treatment effect and the interaction of treatment and study site were tested as random effects in the model.</p>
+        </sec>
+        <sec id="s2l3">
+          <title>Egg counts</title>
+          <p>The mean log egg counts at Day 0 and Day 21 were compared using the analysis of variance for repeat measures to determine if there was a difference between the two treatment regimens at baseline (D0) and Day 21. An ANCOVA model of the D21 and D0 difference with the D0 value as covariate and treatment group as factor was used as a sensitivity analysis of the repeated measures ANOVA. The egg reduction rates (ERR) at Day 21 were calculated and presented descriptively for the two arms.</p>
+          <p>For the IPD meta-analysis a general linear model including study site effect was used. In case of heterogeneity, a model with random effects was used.</p>
+        </sec>
+        <sec id="s2l4">
+          <title>Intensity of infection</title>
+          <p>The intensity of infection at Day 0 and Day 21 of patients given praziquantel 60 mg/kg or 40 mg/kg was compared using the ordered logistic regression analysis. The categories used were: light (1–100 eggs per gram of faeces); moderate (101–400 epg); heavy (&gt;400 epg).</p>
+          <p>For the IPD meta-analysis the intensity of infection at Day 0 and Day 21 of patients given praziquantel 60 mg/kg single dose regimen and praziquantel 40 mg/kg single dose regimen was compared using a linear model for polytomous dependent variable using a logit link function and mixed effects if heterogeneity was found between study sites and adjusted for the study site.</p>
+        </sec>
+        <sec id="s2l5">
+          <title>Reinfections</title>
+          <p>Two approaches were used.</p>
+          <p>The time to reinfection post-Day 21 was investigated by using Kaplan-Meier product limit estimates. The median infection-free survival time was calculated with 95%CIs. Hazard ratios (HR) of reinfection adjusted by baseline characteristics such as sex, age, egg counts, intensity of infection and frequently reported signs, symptoms or positive physical examination was examined with a Cox proportional hazard model (adjusted for the study site for the pooled estimate).</p>
+          <p>We also calculated the rate of infections on Day 180 and on Day 360 at each site and on the pooled data and compared treatment arms using the Mantel-Haenszel fixed effect OR with 95% CIs.</p>
+          <p>In addition we calculated the intensity of infection occurring during follow-up as described above.</p>
+        </sec>
+      </sec>
+      <sec id="s2m">
+        <title>Analysis of safety</title>
+        <p>Safety data were gathered through a questionnaire enquiring on the occurrence of adverse events (AEs) on Day 0 at 4 hours, Day 1 and Day 21 post-dosing. An AE was defined as any unfavourable and unintended sign (including an abnormal laboratory finding), symptom, or disease temporally associated with the use of a medicinal or investigational product, whether or not related to that product. It is clear that this approach does not allow to distinguish between disease-related and drug-related events, but only allows comparing arms for frequency of events, independent of causality.</p>
+        <p>Recording of the AEs included: (1) date and time of onset, (2) duration, (3) severity, (4) severity and (5) relationship to treatment. The report also includes a probable explanation from the investigator as to the cause of the AE.</p>
+        <p>The prevalence and intensity of the following signs and symptoms are assessed: abdominal discomfort, nausea, vomiting, diarrhoea, anorexia, fever (using an oral thermometer), headache, dizziness and allergic reaction. The severity of the signs and symptoms was categorized as “mild”, “moderate”, “severe” and “life-threatening”. The relationship of the signs and symptoms to treatment was categorized as “not related”, “unlikely”, “possible”, “probable” and “most probable”. For the purpose of this study, the cumulative prevalence of AEs is defined as the proportion of those followed-up reporting one or more AEs.</p>
+        <p>The cumulative prevalence of AEs, defined as the presence of at least one AE in a patient, was determined at 4 hours on Day 0, Day 1 and Day 21 post-treatment.</p>
+        <p>AEs, signs and symptoms were classified according to the WHO Adverse Reaction Terminology dictionary.</p>
+      </sec>
+      <sec id="s2n">
+        <title>Ethics</title>
+        <p>Patients were explained the scope of the study and signed a written informed consent (if under 18 years of age, written informed consent from parents/guardians and individual verbal assent) before inclusion in the study. The studies were conducted according to the Helsinki declaration and were approved by the local (University of the Philippines Manila - College of Medicine Institutional Review Board, ethics committee of the Institut National de Recherches en Santé Publique in Mauritania, National Medical Research Coordinating Committee in Tanzania, Research Ethics Committee of the Aggeu Magalhaes Research Centre, Oswaldo Cruz Foundation (Fiocruz) in Brazil) as well as the WHO ethics committees. All sites except Tanzania were independently monitored.</p>
+      </sec>
+    </sec>
+    <sec id="s3">
+      <title>Results</title>
+      <p>First Patient First Visit and Last Patient Last Visit were August 2005–August 2006 in the Philippines, August 2005–December 2006 in Mauritania, August 2005–September 2006 in Tanzania and March 2006–December 2007 in Brazil. A total of 856 patients were randomised at the four sites to receive praziquantel 40 mg/kg (n = 428) or 60 mg/kg (n = 428). The details by site along with patients' attrition and baseline characteristics are presented in <xref ref-type="fig" rid="pntd-0001165-g001">Figure 1</xref> and <xref ref-type="table" rid="pntd-0001165-t001">Table 1</xref> respectively.</p>
+      <fig id="pntd-0001165-g001" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pntd.0001165.g001</object-id>
+        <label>Figure 1</label>
+        <caption>
+          <title>Patient attrition.</title>
+          <p>Consort flow diagram of patient attrition * One protocol violation at Day 21 had no data.</p>
+        </caption>
+        <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.g001" xlink:type="simple"/>
+      </fig>
+      <table-wrap id="pntd-0001165-t001" position="float"><object-id pub-id-type="doi">10.1371/journal.pntd.0001165.t001</object-id><label>Table 1</label><caption>
+          <title>Baseline characteristics.</title>
+        </caption><!--===== Grouping alternate versions of objects =====--><alternatives><graphic id="pntd-0001165-t001-1" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.t001" xlink:type="simple"/><table>
+          <colgroup span="1">
+            <col align="left" span="1"/>
+            <col align="center" span="1"/>
+            <col align="center" span="1"/>
+            <col align="center" span="1"/>
+            <col align="center" span="1"/>
+            <col align="center" span="1"/>
+            <col align="center" span="1"/>
+          </colgroup>
+          <thead>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="2" rowspan="1">40 mg/kg</td>
+              <td align="left" colspan="2" rowspan="1">60 mg/kg</td>
+              <td align="left" colspan="1" rowspan="1">p-value</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Age (mean ± SD)</td>
+              <td align="left" colspan="1" rowspan="1">Philippines</td>
+              <td align="left" colspan="1" rowspan="1">12.5</td>
+              <td align="left" colspan="1" rowspan="1">±2.0</td>
+              <td align="left" colspan="1" rowspan="1">12.4</td>
+              <td align="left" colspan="1" rowspan="1">±2.0</td>
+              <td align="left" colspan="1" rowspan="1">0.64</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Brazil</td>
+              <td align="left" colspan="1" rowspan="1">15.2</td>
+              <td align="left" colspan="1" rowspan="1">±2.8</td>
+              <td align="left" colspan="1" rowspan="1">15.0</td>
+              <td align="left" colspan="1" rowspan="1">±2.5</td>
+              <td align="left" colspan="1" rowspan="1">0.57</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Mauritania</td>
+              <td align="left" colspan="1" rowspan="1">12.6</td>
+              <td align="left" colspan="1" rowspan="1">±2.0</td>
+              <td align="left" colspan="1" rowspan="1">12.6</td>
+              <td align="left" colspan="1" rowspan="1">±2.1</td>
+              <td align="left" colspan="1" rowspan="1">1.00</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Tanzania</td>
+              <td align="left" colspan="1" rowspan="1">12.3</td>
+              <td align="left" colspan="1" rowspan="1">±1.8</td>
+              <td align="left" colspan="1" rowspan="1">12.7</td>
+              <td align="left" colspan="1" rowspan="1">±2.1</td>
+              <td align="left" colspan="1" rowspan="1">0.07</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">ALL</td>
+              <td align="left" colspan="1" rowspan="1">13.1</td>
+              <td align="left" colspan="1" rowspan="1">±2.4</td>
+              <td align="left" colspan="1" rowspan="1">13.1</td>
+              <td align="left" colspan="1" rowspan="1">±2.4</td>
+              <td align="left" colspan="1" rowspan="1">0.71<xref ref-type="table-fn" rid="nt101">*</xref></td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Gender N (%)</td>
+              <td align="left" colspan="1" rowspan="1">Philippines</td>
+              <td align="left" colspan="1" rowspan="1">52.0</td>
+              <td align="left" colspan="1" rowspan="1">(51.0%)</td>
+              <td align="left" colspan="1" rowspan="1">53.0</td>
+              <td align="left" colspan="1" rowspan="1">(52.5%)</td>
+              <td align="left" colspan="1" rowspan="1">0.83</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">(Males)</td>
+              <td align="left" colspan="1" rowspan="1">Brazil</td>
+              <td align="left" colspan="1" rowspan="1">55.0</td>
+              <td align="left" colspan="1" rowspan="1">(56.1%)</td>
+              <td align="left" colspan="1" rowspan="1">53.0</td>
+              <td align="left" colspan="1" rowspan="1">(54.1%)</td>
+              <td align="left" colspan="1" rowspan="1">0.96</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Mauritania</td>
+              <td align="left" colspan="1" rowspan="1">40.0</td>
+              <td align="left" colspan="1" rowspan="1">(43.0%)</td>
+              <td align="left" colspan="1" rowspan="1">45.0</td>
+              <td align="left" colspan="1" rowspan="1">(48.4%)</td>
+              <td align="left" colspan="1" rowspan="1">0.46</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Tanzania</td>
+              <td align="left" colspan="1" rowspan="1">50.0</td>
+              <td align="left" colspan="1" rowspan="1">(37.0%)</td>
+              <td align="left" colspan="1" rowspan="1">67.0</td>
+              <td align="left" colspan="1" rowspan="1">(49.3%)</td>
+              <td align="left" colspan="1" rowspan="1">0.04</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">ALL</td>
+              <td align="left" colspan="1" rowspan="1">197.0</td>
+              <td align="left" colspan="1" rowspan="1">(46.0%)</td>
+              <td align="left" colspan="1" rowspan="1">218.0</td>
+              <td align="left" colspan="1" rowspan="1">(50.9%)</td>
+              <td align="left" colspan="1" rowspan="1">0.15<xref ref-type="table-fn" rid="nt101">*</xref></td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Weight (mean ± SD)</td>
+              <td align="left" colspan="1" rowspan="1">Philippines</td>
+              <td align="left" colspan="1" rowspan="1">32.2</td>
+              <td align="left" colspan="1" rowspan="1">±8.8</td>
+              <td align="left" colspan="1" rowspan="1">31.4</td>
+              <td align="left" colspan="1" rowspan="1">±9.6</td>
+              <td align="left" colspan="1" rowspan="1">0.53</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Brazil</td>
+              <td align="left" colspan="1" rowspan="1">49.0</td>
+              <td align="left" colspan="1" rowspan="1">±12.8</td>
+              <td align="left" colspan="1" rowspan="1">48.2</td>
+              <td align="left" colspan="1" rowspan="1">±12.1</td>
+              <td align="left" colspan="1" rowspan="1">0.67</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Mauritania</td>
+              <td align="left" colspan="1" rowspan="1">32.7</td>
+              <td align="left" colspan="1" rowspan="1">±9.4</td>
+              <td align="left" colspan="1" rowspan="1">32.6</td>
+              <td align="left" colspan="1" rowspan="1">±9.0</td>
+              <td align="left" colspan="1" rowspan="1">0.89</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Tanzania</td>
+              <td align="left" colspan="1" rowspan="1">33.3</td>
+              <td align="left" colspan="1" rowspan="1">±6.9</td>
+              <td align="left" colspan="1" rowspan="1">33.3</td>
+              <td align="left" colspan="1" rowspan="1">±7.7</td>
+              <td align="left" colspan="1" rowspan="1">1.00</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">ALL</td>
+              <td align="left" colspan="1" rowspan="1">36.5</td>
+              <td align="left" colspan="1" rowspan="1">±11.7</td>
+              <td align="left" colspan="1" rowspan="1">36.1</td>
+              <td align="left" colspan="1" rowspan="1">±11.6</td>
+              <td align="left" colspan="1" rowspan="1">0.53<xref ref-type="table-fn" rid="nt101">*</xref></td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Epg (mean ± SD)</td>
+              <td align="left" colspan="1" rowspan="1">Philippines</td>
+              <td align="left" colspan="1" rowspan="1">339.6</td>
+              <td align="left" colspan="1" rowspan="1">±381.0</td>
+              <td align="left" colspan="1" rowspan="1">337.2</td>
+              <td align="left" colspan="1" rowspan="1">±345.6</td>
+              <td align="left" colspan="1" rowspan="1">0.91</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Brazil</td>
+              <td align="left" colspan="1" rowspan="1">441.6</td>
+              <td align="left" colspan="1" rowspan="1">±455.8</td>
+              <td align="left" colspan="1" rowspan="1">476.6</td>
+              <td align="left" colspan="1" rowspan="1">±475.1</td>
+              <td align="left" colspan="1" rowspan="1">0.72</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Mauritania</td>
+              <td align="left" colspan="1" rowspan="1">278.3</td>
+              <td align="left" colspan="1" rowspan="1">±273.0</td>
+              <td align="left" colspan="1" rowspan="1">378.4</td>
+              <td align="left" colspan="1" rowspan="1">±510.2</td>
+              <td align="left" colspan="1" rowspan="1">0.08</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">Tanzania</td>
+              <td align="left" colspan="1" rowspan="1">813.5</td>
+              <td align="left" colspan="1" rowspan="1">±713.0</td>
+              <td align="left" colspan="1" rowspan="1">838.8</td>
+              <td align="left" colspan="1" rowspan="1">±789.1</td>
+              <td align="left" colspan="1" rowspan="1">0.83</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">ALL</td>
+              <td align="left" colspan="1" rowspan="1">488.4</td>
+              <td align="left" colspan="1" rowspan="1">±542.7</td>
+              <td align="left" colspan="1" rowspan="1">531.3</td>
+              <td align="left" colspan="1" rowspan="1">±610.1</td>
+              <td align="left" colspan="1" rowspan="1">0.59<xref ref-type="table-fn" rid="nt101">*</xref></td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Intensity of infection</td>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Philippines</td>
+              <td align="left" colspan="1" rowspan="1">moderate</td>
+              <td align="left" colspan="1" rowspan="1">77</td>
+              <td align="left" colspan="1" rowspan="1">(76.2%)</td>
+              <td align="left" colspan="1" rowspan="1">78</td>
+              <td align="left" colspan="1" rowspan="1">(76.5%)</td>
+              <td align="left" colspan="1" rowspan="1">0.97</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">heavy</td>
+              <td align="left" colspan="1" rowspan="1">24</td>
+              <td align="left" colspan="1" rowspan="1">(23.8%)</td>
+              <td align="left" colspan="1" rowspan="1">24</td>
+              <td align="left" colspan="1" rowspan="1">(23.5%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Brazil</td>
+              <td align="left" colspan="1" rowspan="1">light</td>
+              <td align="left" colspan="1" rowspan="1">0.0</td>
+              <td align="left" colspan="1" rowspan="1">(0.0%)</td>
+              <td align="left" colspan="1" rowspan="1">1.0</td>
+              <td align="left" colspan="1" rowspan="1">(1.0%)</td>
+              <td align="left" colspan="1" rowspan="1">0.83</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">moderate</td>
+              <td align="left" colspan="1" rowspan="1">65.0</td>
+              <td align="left" colspan="1" rowspan="1">(66.3%)</td>
+              <td align="left" colspan="1" rowspan="1">63.0</td>
+              <td align="left" colspan="1" rowspan="1">(64.3%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">heavy</td>
+              <td align="left" colspan="1" rowspan="1">33.0</td>
+              <td align="left" colspan="1" rowspan="1">(33.7%)</td>
+              <td align="left" colspan="1" rowspan="1">34.0</td>
+              <td align="left" colspan="1" rowspan="1">(34.7%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Mauritania</td>
+              <td align="left" colspan="1" rowspan="1">light</td>
+              <td align="left" colspan="1" rowspan="1">0.0</td>
+              <td align="left" colspan="1" rowspan="1">(0.0%)</td>
+              <td align="left" colspan="1" rowspan="1">0.0</td>
+              <td align="left" colspan="1" rowspan="1">(0.0%)</td>
+              <td align="left" colspan="1" rowspan="1">0.38</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">moderate</td>
+              <td align="left" colspan="1" rowspan="1">75.0</td>
+              <td align="left" colspan="1" rowspan="1">(80.6%)</td>
+              <td align="left" colspan="1" rowspan="1">70.0</td>
+              <td align="left" colspan="1" rowspan="1">(75.3%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">heavy</td>
+              <td align="left" colspan="1" rowspan="1">18.0</td>
+              <td align="left" colspan="1" rowspan="1">(19.4%)</td>
+              <td align="left" colspan="1" rowspan="1">23.0</td>
+              <td align="left" colspan="1" rowspan="1">(24.7%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">Tanzania</td>
+              <td align="left" colspan="1" rowspan="1">light</td>
+              <td align="left" colspan="1" rowspan="1">0.0</td>
+              <td align="left" colspan="1" rowspan="1">(0.0%)</td>
+              <td align="left" colspan="1" rowspan="1">0.0</td>
+              <td align="left" colspan="1" rowspan="1">(0.0%)</td>
+              <td align="left" colspan="1" rowspan="1">0.48</td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">moderate</td>
+              <td align="left" colspan="1" rowspan="1">48.0</td>
+              <td align="left" colspan="1" rowspan="1">(35.6%)</td>
+              <td align="left" colspan="1" rowspan="1">54.0</td>
+              <td align="left" colspan="1" rowspan="1">(39.7%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">heavy</td>
+              <td align="left" colspan="1" rowspan="1">87.0</td>
+              <td align="left" colspan="1" rowspan="1">(64.4%)</td>
+              <td align="left" colspan="1" rowspan="1">82.0</td>
+              <td align="left" colspan="1" rowspan="1">(60.3%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1">ALL</td>
+              <td align="left" colspan="1" rowspan="1">light</td>
+              <td align="left" colspan="1" rowspan="1">0.0</td>
+              <td align="left" colspan="1" rowspan="1">(0.0%)</td>
+              <td align="left" colspan="1" rowspan="1">1.0</td>
+              <td align="left" colspan="1" rowspan="1">(0.2%)</td>
+              <td align="left" colspan="1" rowspan="1">0.94<xref ref-type="table-fn" rid="nt101">*</xref></td>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">moderate</td>
+              <td align="left" colspan="1" rowspan="1">266.0</td>
+              <td align="left" colspan="1" rowspan="1">(62.1%)</td>
+              <td align="left" colspan="1" rowspan="1">264.0</td>
+              <td align="left" colspan="1" rowspan="1">(61.7%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+            <tr>
+              <td align="left" colspan="1" rowspan="1"/>
+              <td align="left" colspan="1" rowspan="1">heavy</td>
+              <td align="left" colspan="1" rowspan="1">162.0</td>
+              <td align="left" colspan="1" rowspan="1">(37.9%)</td>
+              <td align="left" colspan="1" rowspan="1">163.0</td>
+              <td align="left" colspan="1" rowspan="1">(38.1%)</td>
+              <td align="left" colspan="1" rowspan="1"/>
+            </tr>
+          </tbody>
+        </table></alternatives><table-wrap-foot>
+          <fn id="nt101">
+            <label/>
+            <p>*General linear mixed models were used to account for the country.</p>
+          </fn>
+        </table-wrap-foot></table-wrap>
+      <p>The point prevalence of intestinal schistosomiasis as derived from the screening logs was: in Brazil 309/636 (48%); in Tanzania 466/501 (93%); in Mauritania 112/598 (18.7%) for <italic>S. mansoni</italic> pure infection (<italic>S. haematobium</italic> was 185/598 (30.9%) and co-infections were 44/598 (7.3%) for an overall prevalence of schistosomiasis of 341/598 (57%); in the Philippines 588/1848 (32%).</p>
+      <p>The age distribution in each treatment group and gender category showed that patients aged 10–15 years were over-represented with respect to a normal distribution in the Philippines, Mauritania and Tanzania whereas in Brazil the age distribution was more homogeneous across all ages (10–19 years). There was no significant difference in age distribution between treatment groups.</p>
+      <p>No gender imbalance was apparent except in Tanzania where males were more prevalent in the 60 mg/kg group (borderline significance). Fewer males were recruited in Mauritania than in the other countries (40–45% vs. 50–55%).</p>
+      <p>Weight was not significantly different between treatment groups. Patients in Brazil were 3 years older and 15 kg heavier than in the other countries.</p>
+      <p>Pre-treatment eggs of schistosoma per gram (epg) of faeces and intensity of infection were similar between the treatment groups in the four countries and between the pooled estimates (see below).</p>
+      <sec id="s3a">
+        <title>Analysis of bias and heterogeneity</title>
+        <p>While there are only four points to draw the funnel plot, the cure rates are symmetrical and their distribution is narrow - that is, a low risk of bias. The funnel plot of the adjusted Day 21 cure rates is presented as an annex (<xref ref-type="supplementary-material" rid="pntd.0001165.s002">Figure S1</xref>). Similar results were obtained with the crude rates, the epg, and the hazard ratios of reinfection (not shown). As for the reinfection rates on follow-up, there was no bias on Day 180 but bias was found on Day 360.</p>
+        <p>No substantial heterogeneity (defined as I<sup>2</sup>&gt;50%) existed in the pooled analysis of the 4 study sites for the primary outcome: I<sup>2</sup> for crude cure rates = 8%; adjusted cure rates = 47%; epg differences between Day 21 and Day 0 = 0%, HR of reinfection = 19%, reinfection rates at Day 180 = 23%. Instead, the Higgins I<sup>2</sup> for reinfection rates at Day 360 was 76%. (see reinfection rates analysis below)</p>
+      </sec>
+      <sec id="s3b">
+        <title>Efficacy analysis - Day 21</title>
+        <sec id="s3b1">
+          <title>Cure rates</title>
+          <p>The crude (unadjusted) cure rates were 91.7% (from 86.6% in Tanzania to 98% in Brazil) with 40 mg/kg and 92.8% (from 88% in Tanzania to 97% in the Philippines) with 60 mg/kg (p = 0.54 using a general linear mixed model to account for the study site effect) (<xref ref-type="table" rid="pntd-0001165-t002">Table 2</xref>).</p>
+          <table-wrap id="pntd-0001165-t002" position="float"><object-id pub-id-type="doi">10.1371/journal.pntd.0001165.t002</object-id><label>Table 2</label><caption>
+              <title>Crude (unadjusted) Day 21 cure rates and reduction rates between Day 0 and Day 21.</title>
+            </caption><!--===== Grouping alternate versions of objects =====--><alternatives><graphic id="pntd-0001165-t002-2" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.t002" xlink:type="simple"/><table>
+              <colgroup span="1">
+                <col align="left" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="3" rowspan="1">40 mg/kg</td>
+                  <td align="left" colspan="3" rowspan="1">60 mg/kg</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">95%CI</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">95%CI</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">p-value</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Philippines</td>
+                  <td align="left" colspan="1" rowspan="1">92.16%</td>
+                  <td align="left" colspan="1" rowspan="1">(85.28%;</td>
+                  <td align="left" colspan="1" rowspan="1">95.97%)</td>
+                  <td align="left" colspan="1" rowspan="1">97.03%</td>
+                  <td align="left" colspan="1" rowspan="1">(91.63%;</td>
+                  <td align="left" colspan="1" rowspan="1">98.98%)</td>
+                  <td align="left" colspan="1" rowspan="1">0.13</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Brazil</td>
+                  <td align="left" colspan="1" rowspan="1">97.96%</td>
+                  <td align="left" colspan="1" rowspan="1">(92.86%;</td>
+                  <td align="left" colspan="1" rowspan="1">99.44%)</td>
+                  <td align="left" colspan="1" rowspan="1">94.90%</td>
+                  <td align="left" colspan="1" rowspan="1">(88.61%;</td>
+                  <td align="left" colspan="1" rowspan="1">97.80%)</td>
+                  <td align="left" colspan="1" rowspan="1">0.25</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Mauritania</td>
+                  <td align="left" colspan="1" rowspan="1">91.40%</td>
+                  <td align="left" colspan="1" rowspan="1">(83.93%;</td>
+                  <td align="left" colspan="1" rowspan="1">95.58%)</td>
+                  <td align="left" colspan="1" rowspan="1">92.47%</td>
+                  <td align="left" colspan="1" rowspan="1">(85.27%;</td>
+                  <td align="left" colspan="1" rowspan="1">96.31%)</td>
+                  <td align="left" colspan="1" rowspan="1">0.79</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Tanzania</td>
+                  <td align="left" colspan="1" rowspan="1">86.55%</td>
+                  <td align="left" colspan="1" rowspan="1">(79.27%;</td>
+                  <td align="left" colspan="1" rowspan="1">91.55%)</td>
+                  <td align="left" colspan="1" rowspan="1">88.00%</td>
+                  <td align="left" colspan="1" rowspan="1">(81.14%;</td>
+                  <td align="left" colspan="1" rowspan="1">92.59%)</td>
+                  <td align="left" colspan="1" rowspan="1">0.73</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">ALL</td>
+                  <td align="left" colspan="1" rowspan="1">91.75%</td>
+                  <td align="left" colspan="1" rowspan="1">(88.69%;</td>
+                  <td align="left" colspan="1" rowspan="1">94.03%)</td>
+                  <td align="left" colspan="1" rowspan="1">92.81%</td>
+                  <td align="left" colspan="1" rowspan="1">(89.92%;</td>
+                  <td align="left" colspan="1" rowspan="1">94.91%)</td>
+                  <td align="left" colspan="1" rowspan="1">0.54<xref ref-type="table-fn" rid="nt102">*</xref></td>
+                </tr>
+              </tbody>
+            </table><table>
+              <colgroup span="1">
+                <col align="left" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">Day 21</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">Egg</td>
+                  <td align="left" colspan="1" rowspan="1">Day 21</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">Egg</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">GeoMean</td>
+                  <td align="left" colspan="1" rowspan="1">Reduction</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">GeoMean</td>
+                  <td align="left" colspan="1" rowspan="1">Reduction</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Philippines</td>
+                  <td align="left" colspan="1" rowspan="1">101</td>
+                  <td align="left" colspan="1" rowspan="1">1.09</td>
+                  <td align="left" colspan="1" rowspan="1">90.1%</td>
+                  <td align="left" colspan="1" rowspan="1">99</td>
+                  <td align="left" colspan="1" rowspan="1">1.01</td>
+                  <td align="left" colspan="1" rowspan="1">90.8%</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Brazil</td>
+                  <td align="left" colspan="1" rowspan="1">96</td>
+                  <td align="left" colspan="1" rowspan="1">1.00</td>
+                  <td align="left" colspan="1" rowspan="1">91.7%</td>
+                  <td align="left" colspan="1" rowspan="1">94</td>
+                  <td align="left" colspan="1" rowspan="1">1.01</td>
+                  <td align="left" colspan="1" rowspan="1">91.8%</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Mauritania</td>
+                  <td align="left" colspan="1" rowspan="1">92</td>
+                  <td align="left" colspan="1" rowspan="1">1.10</td>
+                  <td align="left" colspan="1" rowspan="1">89.2%</td>
+                  <td align="left" colspan="1" rowspan="1">93</td>
+                  <td align="left" colspan="1" rowspan="1">1.13</td>
+                  <td align="left" colspan="1" rowspan="1">89.6%</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Tanzania</td>
+                  <td align="left" colspan="1" rowspan="1">119</td>
+                  <td align="left" colspan="1" rowspan="1">1.27</td>
+                  <td align="left" colspan="1" rowspan="1">91.9%</td>
+                  <td align="left" colspan="1" rowspan="1">125</td>
+                  <td align="left" colspan="1" rowspan="1">1.20</td>
+                  <td align="left" colspan="1" rowspan="1">92.3%</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">ALL</td>
+                  <td align="left" colspan="1" rowspan="1">408</td>
+                  <td align="left" colspan="1" rowspan="1">1.12</td>
+                  <td align="left" colspan="1" rowspan="1">90.9%</td>
+                  <td align="left" colspan="1" rowspan="1">411</td>
+                  <td align="left" colspan="1" rowspan="1">1.09</td>
+                  <td align="left" colspan="1" rowspan="1">91.3%</td>
+                </tr>
+              </tbody>
+            </table></alternatives><table-wrap-foot>
+              <fn id="nt102">
+                <label/>
+                <p>*General linear mixed models were used to account for the country.</p>
+              </fn>
+              <fn id="nt103">
+                <label/>
+                <p>ERR: eggs reduction rate.</p>
+              </fn>
+            </table-wrap-foot></table-wrap>
+          <p>No significant difference was seen in the adjusted (for sex, age, pre-treatment diarrhoea and nausea) ORs of treatment efficacy on Day 21 (complete cure) between 60 mg/kg and 40 mg/kg both for the individual studies and for the pooled estimate. In all cases the 95%CI around each estimate crossed the null boundary (<xref ref-type="fig" rid="pntd-0001165-g002">Figure 2</xref>). Similarly, no difference was seen with crude (unadjusted) rates in the ITT as well as the per-protocol populations (not shown).</p>
+          <fig id="pntd-0001165-g002" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pntd.0001165.g002</object-id>
+            <label>Figure 2</label>
+            <caption>
+              <title>Day 21 crude and adjusted cure rates.</title>
+              <p>Forest plot of the Day 21 crude and adjusted cure rates.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.g002" xlink:type="simple"/>
+          </fig>
+        </sec>
+        <sec id="s3b2">
+          <title>Egg counts</title>
+          <p>(<xref ref-type="fig" rid="pntd-0001165-g003">Figure 3</xref>) At Day 0 (pre-treatment) the mean eggs per gram (epg) of faeces ranged between 278±273 and 441±456 in the Philippines, Brazil and Mauritania for the 40 mg/kg arm and between 337±345 and 476±475 for the 60 mg/kg. The epg was highest in Tanzania with 813±713 and 838±789 respectively. Overall, the mean counts were slightly higher in the 60 mg/kg group in Brazil, Mauritania and Tanzania and similar in the Philippines.</p>
+          <fig id="pntd-0001165-g003" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pntd.0001165.g003</object-id>
+            <label>Figure 3</label>
+            <caption>
+              <title>Egg counts between treatment groups at Day 0 and Day 21.</title>
+              <p>Boxplot of egg counts (epg) between treatment groups at Day 0 and Day 21c.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.g003" xlink:type="simple"/>
+          </fig>
+          <p>At Day 21 post-treatment the counts decreased dramatically. For the 40 mg/kg arm the counts ranged 0 to 3±22 in the Philippines, Brazil and Mauritania but were higher in Tanzania (33±168). In the 60 mg/kg arm, epg in the Philippines and Brazil decreased to almost 0 (0.1±1 and 0.1±0.6, respectively), while in Mauritania and in Tanzania the counts reached 23±161 and 11±66 respectively.</p>
+        </sec>
+        <sec id="s3b3">
+          <title>Egg reduction rates (ERR)</title>
+          <p>(<xref ref-type="table" rid="pntd-0001165-t002">Table 2</xref>) The highest ERR on Day 21 as compared with Day 0 were 92% for the 40 and the 60 mg/kg treatment group in Brazil and Tanzania. In the other countries they were at least 89%. The pooled estimate was 91%.</p>
+        </sec>
+        <sec id="s3b4">
+          <title>Intensity of Infection</title>
+          <p>(<xref ref-type="fig" rid="pntd-0001165-g004">Figure 4</xref>) At Day 0, the intensity of infection was mostly moderate in all countries (&gt;60% in the Philippines, Brazil and Mauritania) except Tanzania which had &gt;60% heavy infections. One case of light infection was recorded in Brazil. The pooled estimate has 62% for moderate and 38% for heavy intensity in both the 40 mg/kg and 60 mg/kg groups. There was no significant difference between the treatment groups.</p>
+          <fig id="pntd-0001165-g004" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pntd.0001165.g004</object-id>
+            <label>Figure 4</label>
+            <caption>
+              <title>Intensity of infection at Day 0 (pre-treatment) and Day 21.</title>
+              <p>Intensity of infection at Day 0 (pre-treatment) and Day 21 post-treatment by site and treatment group.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.g004" xlink:type="simple"/>
+          </fig>
+          <p>At Day 21 in the Philippines there were 7 light infections in the 40 and 1 in the 60 mg/kg group; in Brazil 1 light infection on 60 mg/kg; in Mauritania the 40 mg/kg group had 6 light and 1 moderate infection, the 60 mg/kg group had 5 light and 2 heavy infections; in Tanzania the 40 mg/kg group had 9 light, 4 moderate and 3 heavy infections and the 60 mg/kg group 13, 1 and 1 respectively left. The pooled estimate has 5% for light in both the 40 mg/kg and 60 mg/kg groups and 1% (40 mg/kg) and 0.2% (60 mg/kg) for moderate intensity. There was no significant difference between the treatment groups.</p>
+        </sec>
+      </sec>
+      <sec id="s3c">
+        <title>6-month and 12-month follow-up reinfection rates</title>
+        <p>The product-limit estimate of the time to reinfection was calculated starting from Day 21 restricted to the patients who were free of parasites throughout Day 360 (12 months).</p>
+        <p><xref ref-type="supplementary-material" rid="pntd.0001165.s007">Table S1</xref> presents mean epg comparisons between groups and over time. The median infection-free survival and reinfection rates for each study site are presented as an annex (<xref ref-type="supplementary-material" rid="pntd.0001165.s008">Table S2</xref>). The Kaplan-Meier curves for the global estimate are presented in <xref ref-type="fig" rid="pntd-0001165-g005">Figure 5</xref>.</p>
+        <fig id="pntd-0001165-g005" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pntd.0001165.g005</object-id>
+          <label>Figure 5</label>
+          <caption>
+            <title>Infection-free survival curves.</title>
+            <p>Kaplan-Meier infection-free survival curves for all sites combined.</p>
+          </caption>
+          <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.g005" xlink:type="simple"/>
+        </fig>
+        <p>Reinfection rates were lowest in Mauritania (8% and 3% in the 40 and 60 mg/kg arms respectively) and highest in Tanzania (47% and 37% respectively). The median infection-free survival was similar between sites (though this may be an artefact as patients were seen only twice during follow-up: around Day 180 and Day 360). For the comparison between the two doses, the hazard ratio (HR) was not significant in all countries except Brazil in favour of 60 mg/kg, and was significant on the pooled estimates (pooled reinfection rates: 34.3% (95%CI = [29.8; 39.3]) in the 40 mg/kg arm and 23.9% (95%CI = [20.0; 28.4]) in the 60 mg/kg arm; HR = 0.78, 95%CI = [0.63;0.96])</p>
+        <p>In addition to the Kaplan-Meier estimates presented above, we also compared the reinfection rates occurring at 6 and 12 months of follow-up for each individual country as well as for the pooled data (<xref ref-type="fig" rid="pntd-0001165-g006">Figure 6</xref>). The pooled OR(95%CIs) were 1.70 (1.18, 2.46, p = 0.0047) at 6 months and 1.41 (1.02, 1.95, p = 0.0037) at 12 months, both showing a difference in favour of the 60 mg/kg group. The 76% I<sup>2</sup> on Day 360 is explained by the OR in Mauritania being in favour of the 40 mg/kg dose. Overall, 40% of the 388 total recrudescences occurred at 6 months. The difference was significant on both occasions in Brazil, and borderline in Tanzania at 6 months and the Philippines at 12 months.</p>
+        <fig id="pntd-0001165-g006" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pntd.0001165.g006</object-id>
+          <label>Figure 6</label>
+          <caption>
+            <title>Reinfection rates at 180 and 360 days of follow-up.</title>
+            <p>Forest plot of reinfection rates with 40 and 60 mg/kg at 180 and 360 days of follow-up.</p>
+          </caption>
+          <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.g006" xlink:type="simple"/>
+        </fig>
+        <p>Intensity of infection on day 180 raised again in all countries as intensity was at least light in &gt;20–25% of the patients in the Philippines, Brazil and Tanzania. In Mauritania intensity was moderate or heavy in 3% of the patients. The pooled estimate had 22.8% for light, 3.4% moderate and 1.3% for heavy intensity in the 40 mg/kg group and 12.6% for light, 3.2% moderate and 1.6% for heavy intensity in the 60 mg/kg groups (<xref ref-type="supplementary-material" rid="pntd.0001165.s009">Table S3</xref>).</p>
+        <p>At Day 360 in the Philippines the intensity of infection was more pronounced. While, compared to Day 180, the proportion of light intensity infections remained stable in all countries except in Tanzania (where it increased dramatically), there were more moderate intensity infection (9% vs 13% in the Philippines, 3% vs 6% in Brazil, 2% vs 3% in Mauritania and 8% vs 14% in Tanzania). The pooled estimate has 30% vs 23% for light intensity in the 40 mg/kg vs. 60 mg/kg groups, 8% vs. 7% for moderate intensity and 3% vs. 3% for heavy intensity.</p>
+        <p>There was no significant difference between the treatment groups in the intensity classes on either Day 180 or Day 360.</p>
+      </sec>
+      <sec id="s3d">
+        <title>Safety analysis</title>
+        <sec id="s3d1">
+          <title>Frequency of AEs</title>
+          <p>The number of patients with AEs and the number of AEs decreased over time (<xref ref-type="fig" rid="pntd-0001165-g007">Figure 7</xref>). These results reflect the fact that the definition of AE includes also signs and symptoms of the disease itself.</p>
+          <fig id="pntd-0001165-g007" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pntd.0001165.g007</object-id>
+            <label>Figure 7</label>
+            <caption>
+              <title>Adverse events at 4 hours, 24 hours and 21 days.</title>
+              <p>Number of adverse events (AEs) by treatment group at 4 hours, 24 hours and 21 days post-dosing.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.g007" xlink:type="simple"/>
+          </fig>
+          <p>Overall 666 patients (78%) reported a total of 1327 AEs 4 hours post-dosing (<xref ref-type="supplementary-material" rid="pntd.0001165.s010">Table S4</xref>). The risk of having at least one AE was higher in the 60 than in the 40 mg/kg group (83% vs. 73%, OR 0.54, 95%CI 0.39–0.76, Chi-square p-value&lt;0.001). The proportion of patients with AEs varied across sites from 66% in the Philippines to 92% in Tanzania. (<xref ref-type="table" rid="pntd-0001165-t003">Table 3</xref>)</p>
+          <table-wrap id="pntd-0001165-t003" position="float"><object-id pub-id-type="doi">10.1371/journal.pntd.0001165.t003</object-id><label>Table 3</label><caption>
+              <title>Most frequent AEs occurring with &gt;2% frequency at any visit by treatment group and intensity.</title>
+            </caption><!--===== Grouping alternate versions of objects =====--><alternatives><graphic id="pntd-0001165-t003-3" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.t003" xlink:type="simple"/><table>
+              <colgroup span="1">
+                <col align="left" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="6" rowspan="1">40 mg/kg</td>
+                  <td align="left" colspan="6" rowspan="1">60 mg/kg</td>
+                  <td align="left" colspan="1" rowspan="1">All</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="2" rowspan="1">Mild</td>
+                  <td align="left" colspan="2" rowspan="1">Moderate</td>
+                  <td align="left" colspan="2" rowspan="1">Severe</td>
+                  <td align="left" colspan="2" rowspan="1">Mild</td>
+                  <td align="left" colspan="2" rowspan="1">Moderate</td>
+                  <td align="left" colspan="2" rowspan="1">Severe</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">40</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">60</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                  <td align="left" colspan="1" rowspan="1">N</td>
+                  <td align="left" colspan="1" rowspan="1">%</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">4 Hours</td>
+                  <td align="left" colspan="1" rowspan="1">ABDOMINAL PAIN</td>
+                  <td align="left" colspan="1" rowspan="1">170</td>
+                  <td align="left" colspan="1" rowspan="1">(64.89%)</td>
+                  <td align="left" colspan="1" rowspan="1">90</td>
+                  <td align="left" colspan="1" rowspan="1">(34.35%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(0.76%)</td>
+                  <td align="left" colspan="1" rowspan="1">147</td>
+                  <td align="left" colspan="1" rowspan="1">(53.65%)</td>
+                  <td align="left" colspan="1" rowspan="1">125</td>
+                  <td align="left" colspan="1" rowspan="1">(45.62%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(0.73%)</td>
+                  <td align="left" colspan="1" rowspan="1">536</td>
+                  <td align="left" colspan="1" rowspan="1">(40.39%)</td>
+                  <td align="left" colspan="1" rowspan="1">262</td>
+                  <td align="left" colspan="1" rowspan="1">(41.65%)</td>
+                  <td align="left" colspan="1" rowspan="1">274</td>
+                  <td align="left" colspan="1" rowspan="1">(39.26%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">DiARHOEA</td>
+                  <td align="left" colspan="1" rowspan="1">83</td>
+                  <td align="left" colspan="1" rowspan="1">(72.81%)</td>
+                  <td align="left" colspan="1" rowspan="1">30</td>
+                  <td align="left" colspan="1" rowspan="1">(26.32%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(0.88%)</td>
+                  <td align="left" colspan="1" rowspan="1">83</td>
+                  <td align="left" colspan="1" rowspan="1">(70.34%)</td>
+                  <td align="left" colspan="1" rowspan="1">30</td>
+                  <td align="left" colspan="1" rowspan="1">(25.42%)</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(4.24%)</td>
+                  <td align="left" colspan="1" rowspan="1">232</td>
+                  <td align="left" colspan="1" rowspan="1">(17.48%)</td>
+                  <td align="left" colspan="1" rowspan="1">114</td>
+                  <td align="left" colspan="1" rowspan="1">(18.12%)</td>
+                  <td align="left" colspan="1" rowspan="1">118</td>
+                  <td align="left" colspan="1" rowspan="1">(16.91%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">HEADACHE</td>
+                  <td align="left" colspan="1" rowspan="1">59</td>
+                  <td align="left" colspan="1" rowspan="1">(80.82%)</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(19.18%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">55</td>
+                  <td align="left" colspan="1" rowspan="1">(79.71%)</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(20.29%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">142</td>
+                  <td align="left" colspan="1" rowspan="1">(10.70%)</td>
+                  <td align="left" colspan="1" rowspan="1">73</td>
+                  <td align="left" colspan="1" rowspan="1">(11.61%)</td>
+                  <td align="left" colspan="1" rowspan="1">69</td>
+                  <td align="left" colspan="1" rowspan="1">(9.89%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">NAUSEA</td>
+                  <td align="left" colspan="1" rowspan="1">49</td>
+                  <td align="left" colspan="1" rowspan="1">(80.33%)</td>
+                  <td align="left" colspan="1" rowspan="1">12</td>
+                  <td align="left" colspan="1" rowspan="1">(19.67%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">56</td>
+                  <td align="left" colspan="1" rowspan="1">(80.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(20.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">131</td>
+                  <td align="left" colspan="1" rowspan="1">(9.87%)</td>
+                  <td align="left" colspan="1" rowspan="1">61</td>
+                  <td align="left" colspan="1" rowspan="1">(9.70%)</td>
+                  <td align="left" colspan="1" rowspan="1">70</td>
+                  <td align="left" colspan="1" rowspan="1">(10.03%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">VOMiTiNG</td>
+                  <td align="left" colspan="1" rowspan="1">31</td>
+                  <td align="left" colspan="1" rowspan="1">(77.50%)</td>
+                  <td align="left" colspan="1" rowspan="1">8</td>
+                  <td align="left" colspan="1" rowspan="1">(20.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(2.50%)</td>
+                  <td align="left" colspan="1" rowspan="1">61</td>
+                  <td align="left" colspan="1" rowspan="1">(76.25%)</td>
+                  <td align="left" colspan="1" rowspan="1">18</td>
+                  <td align="left" colspan="1" rowspan="1">(22.50%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(1.25%)</td>
+                  <td align="left" colspan="1" rowspan="1">120</td>
+                  <td align="left" colspan="1" rowspan="1">(9.04%)</td>
+                  <td align="left" colspan="1" rowspan="1">40</td>
+                  <td align="left" colspan="1" rowspan="1">(6.36%)</td>
+                  <td align="left" colspan="1" rowspan="1">80</td>
+                  <td align="left" colspan="1" rowspan="1">(11.46%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">DiZZiNESS</td>
+                  <td align="left" colspan="1" rowspan="1">45</td>
+                  <td align="left" colspan="1" rowspan="1">(88.24%)</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(9.80%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(1.96%)</td>
+                  <td align="left" colspan="1" rowspan="1">50</td>
+                  <td align="left" colspan="1" rowspan="1">(90.91%)</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(9.09%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">106</td>
+                  <td align="left" colspan="1" rowspan="1">(7.99%)</td>
+                  <td align="left" colspan="1" rowspan="1">51</td>
+                  <td align="left" colspan="1" rowspan="1">(8.11%)</td>
+                  <td align="left" colspan="1" rowspan="1">55</td>
+                  <td align="left" colspan="1" rowspan="1">(7.88%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ALLERGY</td>
+                  <td align="left" colspan="1" rowspan="1">9</td>
+                  <td align="left" colspan="1" rowspan="1">(75.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(16.67%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(8.33%)</td>
+                  <td align="left" colspan="1" rowspan="1">9</td>
+                  <td align="left" colspan="1" rowspan="1">(64.29%)</td>
+                  <td align="left" colspan="1" rowspan="1">4</td>
+                  <td align="left" colspan="1" rowspan="1">(28.57%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(7.14%)</td>
+                  <td align="left" colspan="1" rowspan="1">26</td>
+                  <td align="left" colspan="1" rowspan="1">(1.96%)</td>
+                  <td align="left" colspan="1" rowspan="1">12</td>
+                  <td align="left" colspan="1" rowspan="1">(1.91%)</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(2.01%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ANOREXiA</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(50.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(50.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">4</td>
+                  <td align="left" colspan="1" rowspan="1">(0.30%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(0.32%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(0.29%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">FEVER</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">3</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">3</td>
+                  <td align="left" colspan="1" rowspan="1">(0.23%)</td>
+                  <td align="left" colspan="1" rowspan="1">0</td>
+                  <td align="left" colspan="1" rowspan="1">(0.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">3</td>
+                  <td align="left" colspan="1" rowspan="1">(0.43%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ALL</td>
+                  <td align="left" colspan="1" rowspan="1">457</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">177</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">10</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">474</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">227</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">13</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">1327</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">629</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">698</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">24 Hours</td>
+                  <td align="left" colspan="1" rowspan="1">ABDOMINAL PAIN</td>
+                  <td align="left" colspan="1" rowspan="1">84</td>
+                  <td align="left" colspan="1" rowspan="1">(73.68%)</td>
+                  <td align="left" colspan="1" rowspan="1">30</td>
+                  <td align="left" colspan="1" rowspan="1">(26.32%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">78</td>
+                  <td align="left" colspan="1" rowspan="1">(70.91%)</td>
+                  <td align="left" colspan="1" rowspan="1">32</td>
+                  <td align="left" colspan="1" rowspan="1">(29.09%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">224</td>
+                  <td align="left" colspan="1" rowspan="1">(24.40%)</td>
+                  <td align="left" colspan="1" rowspan="1">114</td>
+                  <td align="left" colspan="1" rowspan="1">(35.63%)</td>
+                  <td align="left" colspan="1" rowspan="1">110</td>
+                  <td align="left" colspan="1" rowspan="1">(34.38%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">DiARHOEA</td>
+                  <td align="left" colspan="1" rowspan="1">29</td>
+                  <td align="left" colspan="1" rowspan="1">(55.77%)</td>
+                  <td align="left" colspan="1" rowspan="1">21</td>
+                  <td align="left" colspan="1" rowspan="1">(40.38%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(3.85%)</td>
+                  <td align="left" colspan="1" rowspan="1">34</td>
+                  <td align="left" colspan="1" rowspan="1">(51.52%)</td>
+                  <td align="left" colspan="1" rowspan="1">27</td>
+                  <td align="left" colspan="1" rowspan="1">(40.91%)</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(7.58%)</td>
+                  <td align="left" colspan="1" rowspan="1">118</td>
+                  <td align="left" colspan="1" rowspan="1">(12.85%)</td>
+                  <td align="left" colspan="1" rowspan="1">52</td>
+                  <td align="left" colspan="1" rowspan="1">(16.25%)</td>
+                  <td align="left" colspan="1" rowspan="1">66</td>
+                  <td align="left" colspan="1" rowspan="1">(20.63%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">HEADACHE</td>
+                  <td align="left" colspan="1" rowspan="1">81</td>
+                  <td align="left" colspan="1" rowspan="1">(80.20%)</td>
+                  <td align="left" colspan="1" rowspan="1">20</td>
+                  <td align="left" colspan="1" rowspan="1">(19.80%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">84</td>
+                  <td align="left" colspan="1" rowspan="1">(82.35%)</td>
+                  <td align="left" colspan="1" rowspan="1">18</td>
+                  <td align="left" colspan="1" rowspan="1">(17.65%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">203</td>
+                  <td align="left" colspan="1" rowspan="1">(22.11%)</td>
+                  <td align="left" colspan="1" rowspan="1">101</td>
+                  <td align="left" colspan="1" rowspan="1">(31.56%)</td>
+                  <td align="left" colspan="1" rowspan="1">102</td>
+                  <td align="left" colspan="1" rowspan="1">(31.88%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">NAUSEA</td>
+                  <td align="left" colspan="1" rowspan="1">28</td>
+                  <td align="left" colspan="1" rowspan="1">(87.50%)</td>
+                  <td align="left" colspan="1" rowspan="1">4</td>
+                  <td align="left" colspan="1" rowspan="1">(12.50%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">25</td>
+                  <td align="left" colspan="1" rowspan="1">(80.65%)</td>
+                  <td align="left" colspan="1" rowspan="1">6</td>
+                  <td align="left" colspan="1" rowspan="1">(19.35%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">63</td>
+                  <td align="left" colspan="1" rowspan="1">(6.86%)</td>
+                  <td align="left" colspan="1" rowspan="1">32</td>
+                  <td align="left" colspan="1" rowspan="1">(10.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">31</td>
+                  <td align="left" colspan="1" rowspan="1">(9.69%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">VOMiTiNG</td>
+                  <td align="left" colspan="1" rowspan="1">12</td>
+                  <td align="left" colspan="1" rowspan="1">(85.71%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(14.29%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">16</td>
+                  <td align="left" colspan="1" rowspan="1">(66.67%)</td>
+                  <td align="left" colspan="1" rowspan="1">8</td>
+                  <td align="left" colspan="1" rowspan="1">(33.33%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">38</td>
+                  <td align="left" colspan="1" rowspan="1">(4.14%)</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(4.38%)</td>
+                  <td align="left" colspan="1" rowspan="1">24</td>
+                  <td align="left" colspan="1" rowspan="1">(7.50%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">DiZZiNESS</td>
+                  <td align="left" colspan="1" rowspan="1">36</td>
+                  <td align="left" colspan="1" rowspan="1">(97.30%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(2.70%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">38</td>
+                  <td align="left" colspan="1" rowspan="1">(92.68%)</td>
+                  <td align="left" colspan="1" rowspan="1">3</td>
+                  <td align="left" colspan="1" rowspan="1">(7.32%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">78</td>
+                  <td align="left" colspan="1" rowspan="1">(8.50%)</td>
+                  <td align="left" colspan="1" rowspan="1">37</td>
+                  <td align="left" colspan="1" rowspan="1">(11.56%)</td>
+                  <td align="left" colspan="1" rowspan="1">41</td>
+                  <td align="left" colspan="1" rowspan="1">(12.81%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ALLERGY</td>
+                  <td align="left" colspan="1" rowspan="1">28</td>
+                  <td align="left" colspan="1" rowspan="1">(73.68%)</td>
+                  <td align="left" colspan="1" rowspan="1">8</td>
+                  <td align="left" colspan="1" rowspan="1">(21.05%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(5.26%)</td>
+                  <td align="left" colspan="1" rowspan="1">22</td>
+                  <td align="left" colspan="1" rowspan="1">(53.66%)</td>
+                  <td align="left" colspan="1" rowspan="1">15</td>
+                  <td align="left" colspan="1" rowspan="1">(36.59%)</td>
+                  <td align="left" colspan="1" rowspan="1">4</td>
+                  <td align="left" colspan="1" rowspan="1">(9.76%)</td>
+                  <td align="left" colspan="1" rowspan="1">79</td>
+                  <td align="left" colspan="1" rowspan="1">(8.61%)</td>
+                  <td align="left" colspan="1" rowspan="1">38</td>
+                  <td align="left" colspan="1" rowspan="1">(11.88%)</td>
+                  <td align="left" colspan="1" rowspan="1">41</td>
+                  <td align="left" colspan="1" rowspan="1">(12.81%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ANOREXiA</td>
+                  <td align="left" colspan="1" rowspan="1">8</td>
+                  <td align="left" colspan="1" rowspan="1">(50.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">7</td>
+                  <td align="left" colspan="1" rowspan="1">(43.75%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(6.25%)</td>
+                  <td align="left" colspan="1" rowspan="1">7</td>
+                  <td align="left" colspan="1" rowspan="1">(50.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">7</td>
+                  <td align="left" colspan="1" rowspan="1">(50.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">30</td>
+                  <td align="left" colspan="1" rowspan="1">(3.27%)</td>
+                  <td align="left" colspan="1" rowspan="1">16</td>
+                  <td align="left" colspan="1" rowspan="1">(5.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(4.38%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">FEVER</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(93.33%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(6.67%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">15</td>
+                  <td align="left" colspan="1" rowspan="1">(93.75%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(6.25%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">31</td>
+                  <td align="left" colspan="1" rowspan="1">(3.38%)</td>
+                  <td align="left" colspan="1" rowspan="1">15</td>
+                  <td align="left" colspan="1" rowspan="1">(4.69%)</td>
+                  <td align="left" colspan="1" rowspan="1">16</td>
+                  <td align="left" colspan="1" rowspan="1">(5.00%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ALL</td>
+                  <td align="left" colspan="1" rowspan="1">342</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">99</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">337</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">125</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">10</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">918</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">446</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">472</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">21 Days</td>
+                  <td align="left" colspan="1" rowspan="1">ABDOMINAL DISTENSION</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(0.53%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(1.03%)</td>
+                  <td align="left" colspan="1" rowspan="1">0</td>
+                  <td align="left" colspan="1" rowspan="1">(0.00%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">DiARHOEA</td>
+                  <td align="left" colspan="1" rowspan="1">3</td>
+                  <td align="left" colspan="1" rowspan="1">(60.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(40.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(83.33%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(16.67%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">11</td>
+                  <td align="left" colspan="1" rowspan="1">(5.82%)</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(5.15%)</td>
+                  <td align="left" colspan="1" rowspan="1">6</td>
+                  <td align="left" colspan="1" rowspan="1">(6.52%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">HEADACHE</td>
+                  <td align="left" colspan="1" rowspan="1">13</td>
+                  <td align="left" colspan="1" rowspan="1">(54.17%)</td>
+                  <td align="left" colspan="1" rowspan="1">11</td>
+                  <td align="left" colspan="1" rowspan="1">(45.83%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">13</td>
+                  <td align="left" colspan="1" rowspan="1">(50.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">13</td>
+                  <td align="left" colspan="1" rowspan="1">(50.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">50</td>
+                  <td align="left" colspan="1" rowspan="1">(26.46%)</td>
+                  <td align="left" colspan="1" rowspan="1">24</td>
+                  <td align="left" colspan="1" rowspan="1">(24.74%)</td>
+                  <td align="left" colspan="1" rowspan="1">26</td>
+                  <td align="left" colspan="1" rowspan="1">(28.26%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">NAUSEA</td>
+                  <td align="left" colspan="1" rowspan="1">4</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(83.33%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(16.67%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">10</td>
+                  <td align="left" colspan="1" rowspan="1">(5.29%)</td>
+                  <td align="left" colspan="1" rowspan="1">4</td>
+                  <td align="left" colspan="1" rowspan="1">(4.12%)</td>
+                  <td align="left" colspan="1" rowspan="1">6</td>
+                  <td align="left" colspan="1" rowspan="1">(6.52%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">VOMiTiNG</td>
+                  <td align="left" colspan="1" rowspan="1">3</td>
+                  <td align="left" colspan="1" rowspan="1">(75.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(25.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">6</td>
+                  <td align="left" colspan="1" rowspan="1">(3.17%)</td>
+                  <td align="left" colspan="1" rowspan="1">4</td>
+                  <td align="left" colspan="1" rowspan="1">(4.12%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(2.17%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">DiZZiNESS</td>
+                  <td align="left" colspan="1" rowspan="1">11</td>
+                  <td align="left" colspan="1" rowspan="1">(91.67%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(8.33%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">10</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">22</td>
+                  <td align="left" colspan="1" rowspan="1">(11.64%)</td>
+                  <td align="left" colspan="1" rowspan="1">12</td>
+                  <td align="left" colspan="1" rowspan="1">(12.37%)</td>
+                  <td align="left" colspan="1" rowspan="1">10</td>
+                  <td align="left" colspan="1" rowspan="1">(10.87%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ALLERGY</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(100.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">6</td>
+                  <td align="left" colspan="1" rowspan="1">(3.17%)</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(5.15%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(1.09%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ANOREXiA</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(10.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">9</td>
+                  <td align="left" colspan="1" rowspan="1">(90.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(35.71%)</td>
+                  <td align="left" colspan="1" rowspan="1">9</td>
+                  <td align="left" colspan="1" rowspan="1">(64.29%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">24</td>
+                  <td align="left" colspan="1" rowspan="1">(12.70%)</td>
+                  <td align="left" colspan="1" rowspan="1">10</td>
+                  <td align="left" colspan="1" rowspan="1">(10.31%)</td>
+                  <td align="left" colspan="1" rowspan="1">14</td>
+                  <td align="left" colspan="1" rowspan="1">(15.22%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">FEVER</td>
+                  <td align="left" colspan="1" rowspan="1">3</td>
+                  <td align="left" colspan="1" rowspan="1">(60.00%)</td>
+                  <td align="left" colspan="1" rowspan="1">2</td>
+                  <td align="left" colspan="1" rowspan="1">(40.00%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(83.33%)</td>
+                  <td align="left" colspan="1" rowspan="1">1</td>
+                  <td align="left" colspan="1" rowspan="1">(16.67%)</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">11</td>
+                  <td align="left" colspan="1" rowspan="1">(5.82%)</td>
+                  <td align="left" colspan="1" rowspan="1">5</td>
+                  <td align="left" colspan="1" rowspan="1">(5.15%)</td>
+                  <td align="left" colspan="1" rowspan="1">6</td>
+                  <td align="left" colspan="1" rowspan="1">(6.52%)</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">ALL</td>
+                  <td align="left" colspan="1" rowspan="1">70</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">27</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">59</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">33</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">189</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">97</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">92</td>
+                  <td align="left" colspan="1" rowspan="1"/>
+                </tr>
+              </tbody>
+            </table></alternatives><table-wrap-foot>
+              <fn id="nt104">
+                <label/>
+                <p>AE: adverse events.</p>
+              </fn>
+            </table-wrap-foot></table-wrap>
+          <p>At 21 hours post-dosing, 456 patients (54%) reported 918 AEs. There was no difference between the two doses (OR 0.92, 95%CI 0.68–1.17), p = 0.4).</p>
+          <p>At Day 21, 114 patients (13%) had 189 AEs with no difference between the groups.</p>
+        </sec>
+        <sec id="s3d2">
+          <title>Type and severity of AEs</title>
+          <p>The most frequent AEs (those occurring with &gt;2% frequency at any visit between 4 hours, 24 hours and 21 days) are summarized in <xref ref-type="table" rid="pntd-0001165-t003">Table 3</xref> by dose and severity. The most frequent AE was abdominal pain at both 4 and 24 hours (40% and 24% respectively of all AEs at either visit). Other AEs that contributed &gt;10% on both visits were diarrhoea and headache.</p>
+          <p>At 4 hours, regarding the most prevalent AEs, respectively in the 40 and 60 mg/kg group, severe intensity was reported for abdominal pain (1% (n = 2) and 1% (n = 2)), allergy (8% (n = 1) and 7% (n = 1)), diarrhoea (1% (n = 1) and 4% (n = 5)), dizziness (2% (n = 1) and 0%), and vomiting (2% (n = 1) and 1% (n = 1)). Moderate intensity were also reported for abdominal pain (34% (n = 90) and 46% (n = 125)), allergy (17% (n = 2) and 29% (n = 4)), diarrhoea (26% (n = 30) and 25% (n = 30)), dizziness (10% (n = 5) and 9% (n = 5)), headache (19% (n = 14) and 20% (n = 14)), nausea (20% (n = 12) and 20% (n = 14)) and vomiting (20% (n = 8) and 22% (n = 18)).</p>
+          <p>At 24 hours, respectively in the 40 and 60 mg/kg, severe intensity was reported for allergy (5% (n = 2) and 10% (n = 4)), anorexia (6% (n = 1) and 0%), chest tightness (0% and 17% (n = 1/6)) and diarrhoea (4% (n = 2) and 8% (n = 5)). Moderate intensities were observed for abdominal pain (26% (n = 30) and 29% (n = 32)), allergy (21% (n = 8) and 37% (n = 15)), anorexia (44% (n = 7) and 50% (n = 7)) diarrhoea (40% (n = 21) and 41%(n = 27)), dizziness (3% (n = 1) and 7% (n = 3)), fever (7% (n = 1) and 6% (n = 1)) headache (20% (n = 20) and 18% (n = 18)), nausea (12% (n = 4) and 19% (n = 6)), and vomiting (14% (n = 2) and 33% (n = 8)).</p>
+          <p>At Day 21, there was no severe AE.</p>
+          <p>Only one event (abdominal pain in Mauritania at 4 hours) was reported as serious.</p>
+        </sec>
+        <sec id="s3d3">
+          <title>Drug-event relationship for AEs</title>
+          <p>At 4 hours post-dosing, of the most common AEs occurring in the 40 mg/kg group, the event was judged to be as “most probably” or “probably” related to the drug in 19% and 25% of cases for abdominal pain, 16% and 29% for diarrhoea, 10% and 24% for dizziness, 2% and 23% for headache, and 8% and 19% for vomiting. Most probable and probable relationships to treatment in the 60 mg/kg group were also reported for abdominal pain (21% and 25%), diarrhoea (12% and 34%), dizziness (5% and 31%), headache (1% and 21%), nausea (27% and 22%) and vomiting (18% and 36%).</p>
+          <p>At 24 hours, in the 40 mg/kg group events judged to be “most probably” and “probably” related to the drug were for abdominal pain 26% and 55%, diarrhoea 12% and 72%, dizziness 2% and 34%, headache 2% and 39% and vomiting 7% and 64%. Most probable and probable relationships to treatment in the 60 mg/kg group were also reported for abdominal pain (25% and 58%), diarrhoea (20% and 79%), dizziness (2% and 34%), headache (2% and 41%), nausea (19% and 55%) and vomiting (4% and 46%).</p>
+          <p>On Day 21 one case of dizziness in Brazil and three of chest tightness in Tanzania were judged to be probably related to treatment.</p>
+        </sec>
+      </sec>
+    </sec>
+    <sec id="s4">
+      <title>Discussion</title>
+      <p>This study shows that a higher dose of 60 mg/kg of praziquantel offers no significant efficacy advantage over standard 40 mg/kg for treating intestinal schistosomiasis caused by either <italic>S. mansoni</italic> or <italic>S. japonicum</italic> when assessed three weeks (21 Days) post-dosing. With 40 mg/kg of praziquantel cure rates are &gt;91% at all sites except Tanzania (87–88%) and egg reduction rates are &gt;89% by Day 21. During long-term follow-up at 6 and 12 months, reinfection rates were higher in the group receiving 40 mg/kg. Patients treated with 60 mg/kg had a higher risk of adverse events occurring immediately post-dosing (4 hours), while no difference was seen 24 hours or 21 days later. The results presented are based on the intent-to-treat population and are confirmed by other analyses on per-protocol population as well as various sensitivity analyses. While the sites differed in terms of transmission and infection intensities, there was no bias or heterogeneity across sites for the main efficacy outcomes except reinfection rates at one year of follow-up.</p>
+      <p>Together, these results support the current WHO recommendation of deploying praziquantel at 40 mg/kg.</p>
+      <p>These studies were conducted to respond to the demand for evidence about the correct dose of praziquantel when used by control programmes in endemic countries. The plan was to have a multicentre study with a master protocol whereby each site will follow the same protocol and be powered to show a difference between expected cure rates, and to have results combined prospectively for an individual patient meta-analysis.</p>
+      <p>Prevalence of screening of intestinal schistosomiasis infection ranged 25% (Brazil)–57% (Mauritania) and the rate of reinfection one year post-treatment ranged from 9% (Mauritania) to 44% (Tanzania) between the two treatment arms. Of all sites Tanzania had the most intense infections, the lowest cure rates (though with high egg reduction rates), and the highest reinfection rates - all testifying high transmission intensity.</p>
+      <p>Reinfections were more frequent in the 40 than in the 60 mg/kg group at each site, but the difference was significant only for Brazil and the pooled Kaplan-Meier analysis. The difference between the two arms was already significant on aggregate and for Brazil by Day 180, when 40% of reinfections had occurred. However, there was no difference between the two groups in terms of intensity classes. It is difficult to explain how a single dose of praziquantel could affect the risk of reinfection in the following 12 months. Indeed the difference could be a random effect. However, the Kato-Katz method has been reported to overestimate cure rates <xref ref-type="bibr" rid="pntd.0001165-Ferrari1">[8]</xref> (although here two duplicates were done on consecutive days were used) and it is hence possible that it failed to identify low egg counts on Day 21; the cases identified would then result from a mixture of undetected failures and true reinfections.</p>
+      <p>Praziquantel treatment of either urinary or intestinal schistosomiasis is known to modify both humoral and cellular responses (like age does). (see for instance Mutapi et al, 2003 <xref ref-type="bibr" rid="pntd.0001165-Mutapi1">[9]</xref>). It remains to be investigated whether the higher dose could elicit a greater post-treatment antibody and cytokine shift.</p>
+      <p>The dose-plasma concentration relationship of praziquantel is poorly know. A study conducted in healthy adult volunteers with 5, 10, 20, 50 mg/kg showed with increasing doses (i) higher exposure (exponential increase of C<sub>max</sub>, AUC<sub>0–24</sub>); (ii) more rapid absorption (significant reduction of T<sub>max</sub>); (iii) slightly reduced t½ <xref ref-type="bibr" rid="pntd.0001165-Leopold1">[10]</xref>. However, no study in the target population (infected school-age children) has produced pharmacokinetic and pharmacokinetic/pharmacodynamic information on dose-concentration and dose-effects.</p>
+      <p>Based on data from the above-mentioned study in volunteers the doses of 40 and 60 mg/kg (neither have data in the above study) would be expected to produce AUC<sub>0–24</sub> (ng*h/mL) of 2900 and 4600 or 2100 and 8600, respectively depending on whether a linear or exponential relationship applies - meaning that the AUC obtained with a dose of 60 mg/kg (1.5 times higher) would be 1.6 or 4 times higher than with 40 mg/kg respectively. For the 40 mg/kg dose, this is coherent with other studies: for comparison, a dose of 40 mg/kg produced AUC<sub>0–24</sub> ranging 2,110-4.098 ng*h/mL when given in fasting conditions to adult healthy volunteers, but was ∼4 times higher (15,928 ng*h/mL) in patients <xref ref-type="bibr" rid="pntd.0001165-Mandour1">[11]</xref>. However, without drug levels this remains in the realm of speculation. In addition, bioavailability (and thus exposure) is known to have high inter-individual variability, and to change between an empty stomach and with food (and the type of food: higher with carbohydrates than fat <xref ref-type="bibr" rid="pntd.0001165-Castro1">[12]</xref>) as well as the brand of the product and between health and disease. Finally, there are no data at present to correlate exposure and effects for praziquantel. It is unfortunate that this study could not collect blood samples for drug level determination. In any case, the higher exposure expected with 60 mg/kg did not translate in a sizeable efficacy advantage in this study but may entail a higher risk of toxicity (at least when given as a single dose) although adverse events were generally mild and transient.</p>
+      <p>A limitation of this trial is that it was designed with a superiority hypothesis expecting the 60 and 40 mg/kg doses to be 80% and 60% effective at each site. This assumption (which was based on the recommendations made at the 1991 WHO expert committee <xref ref-type="bibr" rid="pntd.0001165-World2">[5]</xref>) was disproved by the finding that the cure rates ranged 88–97% (92.8% on aggregate) with 60 mg/kg and 87–98% (91.7% on aggregate) with 40 mg/kg. A non-inferiority trial design would have been more appropriate. The question is whether with such design the current trial would support the non-inferiority of 40 mg/kg with respect to 60 mg/kg. Assuming the cure rate of the reference treatment (60 mg/kg) to be 93% and accepting a difference (δ) of 6%, with a precision (α) = 0.015 and a power (1-ß) = 90% a study enrolling 428 patients per arm with cure rates of 91.7% and 92.8% (difference = 1.1, 95%CI −3.63, +5.75) would be within the 6% δ margins and thus support the non-inferiority of the 40 vs. 60 mg/kg dose.</p>
+      <p>Another issue is with the safety evaluation. Here, any event occurring after drug intake (starting 4 hours after administration) was conservatively reported as an adverse event (AE), and their incidence, type and severity compared between treatment groups. However, the presence and grading before drug administration was not recorded - it is thus not possible to describe the treatment-emergent signs and symptoms (i.e. those that were not present pre-treatment or worsened with the treatment), and to differentiate between the events related to the disease and those that may be caused by the drug. Tanzania reported more events than the other sites - which may be related also to the fact that the Tanzanian patients were more heavily infected than the others.</p>
+      <p>The results of this study, along with those of systematic reviews, should be used to inform policy decisions in the countries <xref ref-type="bibr" rid="pntd.0001165-World2">[5]</xref>. Single dose treatment ensures high population compliance with treatment which would not be possible with spaced doses of 40 mk/kg praziquantel <xref ref-type="bibr" rid="pntd.0001165-DansoAppiah1">[6]</xref>. The Philippines has already changed from 60 to 40 mg/kg after considering the local results <xref ref-type="bibr" rid="pntd.0001165-Department1">[13]</xref>.</p>
+      <p>Reliable, up-to-date evidence is needed for policy decisions. As mentioned above, a yet unpublished Cochrane systematic review of treatments of schistosomiasis mansoni found a dose-effect in the cure rates of praziquantel up to 40 mg/kg and no gain beyond this dose. In contrast, no dose-effect was detected in schistosomiasis haematobia <xref ref-type="bibr" rid="pntd.0001165-DansoAppiah1">[6]</xref>. Of note, only 3 of the 10 praziquantel studies of the urinary and 8 the 20 of the mansoni review had been conducted in the past 30 years - all the others were older. One single treatment policy is practical but may not fit all cases. For areas where both intestinal and urinary schistosomiasis coexist the dose of 40 mg/kg is expected to cure both. In an area of Egypt where schistosome parasites were thought to be less responsive to a 40 mg/kg dose of praziquantel, no increase in drug failures was noted following 10 years of drug pressure at this dosage <xref ref-type="bibr" rid="pntd.0001165-Botros1">[14]</xref>. With the lower dose vigilance is required to ensure that treatment failures and possible resistance can be detected early, particularly for special cases (such as areas where praziquantel efficacy is reportedly suboptimal). There is also a need for information on exposure post-dosing (drug levels) in target populations (esp. school-age children) and how it correlates with efficacy and safety.</p>
+    </sec>
+    <sec id="s5">
+      <title>Supporting Information</title>
+      <supplementary-material id="pntd.0001165.s001" mimetype="application/msword" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s001" xlink:type="simple">
+        <label>Checklist S1</label>
+        <caption>
+          <p>
+            <bold>Consort checklist.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s002" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s002" xlink:type="simple">
+        <label>Figure S1</label>
+        <caption>
+          <p><bold>Funnel plot of log[OR] of adjusted cure rates against SE(log[OR]).</bold> Funnel plot of log[OR] of adjusted cure rates against SE(log[OR]).</p>
+          <p>(TIF)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s003" mimetype="application/pdf" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s003" xlink:type="simple">
+        <label>Protocol S1</label>
+        <caption>
+          <p>
+            <bold>Protocol of Tanzania.</bold>
+          </p>
+          <p>(PDF)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s004" mimetype="application/pdf" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s004" xlink:type="simple">
+        <label>Protocol S2</label>
+        <caption>
+          <p>
+            <bold>Protocol of the Philippines</bold>
+          </p>
+          <p>(PDF)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s005" mimetype="application/pdf" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s005" xlink:type="simple">
+        <label>Protocol S3</label>
+        <caption>
+          <p>
+            <bold>Protocol of Mauritania.</bold>
+          </p>
+          <p>(PDF)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s006" mimetype="application/pdf" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s006" xlink:type="simple">
+        <label>Protocol S4</label>
+        <caption>
+          <p>
+            <bold>Protocol of Brazil.</bold>
+          </p>
+          <p>(PDF)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s007" mimetype="application/msword" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s007" xlink:type="simple">
+        <label>Table S1</label>
+        <caption>
+          <p>
+            <bold>Eggs per gram at Day 180 and Day 360.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s008" mimetype="application/msword" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s008" xlink:type="simple">
+        <label>Table S2</label>
+        <caption>
+          <p>
+            <bold>Post-day 21 reinfections.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s009" mimetype="application/msword" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s009" xlink:type="simple">
+        <label>Table S3</label>
+        <caption>
+          <p>
+            <bold>Intensity of infection at Day 180 and Day 360.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pntd.0001165.s010" mimetype="application/msword" position="float" xlink:href="info:doi/10.1371/journal.pntd.0001165.s010" xlink:type="simple">
+        <label>Table S4</label>
+        <caption>
+          <p>
+            <bold>Summary of safety findings at Day 0, 4 hours post-dosing.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <p>Dr. Nicolas Lwambo passed away on 9<sup>th</sup> April, 2011.</p>
+      <p>The authors would like to thank the clinical monitors (M. Mbaye, W. Yupaporn, R. Palacios) and the patients and their parents, schools and communities.</p>
+      <p>Disclaimer. The opinions expressed in this paper are those of the authors and may not reflect those of their employing organizations. PO, OL and LC are staff members of the WHO, and MV is a staff member of the CRP-Santé; the authors alone are responsible for the views expressed in this publication and they do not necessarily represent the decisions, policy or views of the WHO or CRP-Santé.</p>
+    </ack>
+    <ref-list>
+      <title>References</title>
+      <ref id="pntd.0001165-Steinmann1">
+        <label>1</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Steinmann</surname><given-names>P</given-names></name><name name-style="western"><surname>Keiser</surname><given-names>J</given-names></name><name name-style="western"><surname>Bos</surname><given-names>R</given-names></name><name name-style="western"><surname>Tanner</surname><given-names>M</given-names></name><name name-style="western"><surname>Utzinger</surname><given-names>J</given-names></name></person-group>             <year>2006</year>             <article-title>Schistosomiasis and water resources development: systematic review, meta-analysis, and estimates of people at risk.</article-title>             <source>Lancet Infect Dis</source>             <volume>6</volume>             <fpage>411</fpage>             <lpage>425</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-World1">
+        <label>2</label>
+        <element-citation publication-type="other" xlink:type="simple">             <collab xlink:type="simple">World Health Organization</collab>             <year>2002</year>             <source>Reducing Risks, Promoting Health Life</source>             <publisher-loc>Geneva</publisher-loc>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-King1">
+        <label>3</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>King</surname><given-names>CH</given-names></name><name name-style="western"><surname>Dickman</surname><given-names>K</given-names></name><name name-style="western"><surname>Tisch</surname><given-names>DJ</given-names></name></person-group>             <year>2005</year>             <article-title>Reassessment of the cost of chronic helmintic infection: a meta-analysis of disability-related outcomes in endemic schistosomiasis.</article-title>             <source>Lancet</source>             <volume>365</volume>             <fpage>1561</fpage>             <lpage>1569</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Finkelstein1">
+        <label>4</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Finkelstein</surname><given-names>JL</given-names></name><name name-style="western"><surname>Schleinitz</surname><given-names>MD</given-names></name><name name-style="western"><surname>Carabin</surname><given-names>H</given-names></name><name name-style="western"><surname>McGarvey</surname><given-names>ST</given-names></name></person-group>             <year>2008</year>             <article-title>Decision-model estimation of the age-specific disability weight for schistosomiasis japonica: a systematic review of the literature.</article-title>             <source>PLoS Negl Trop Dis</source>             <volume>2</volume>             <fpage>e158</fpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-World2">
+        <label>5</label>
+        <element-citation publication-type="other" xlink:type="simple">             <collab xlink:type="simple">World Health Organization</collab>             <year>1993</year>             <source>The control of schistosomiasis: the second report of a WHO Expert Committee</source>             <publisher-loc>Geneva</publisher-loc>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-DansoAppiah1">
+        <label>6</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Danso-Appiah</surname><given-names>A</given-names></name><name name-style="western"><surname>Utzinger</surname><given-names>J</given-names></name><name name-style="western"><surname>Liu</surname><given-names>J</given-names></name><name name-style="western"><surname>Olliaro</surname><given-names>P</given-names></name></person-group>             <year>2008</year>             <article-title>Drugs for treating urinary schistosomiasis.</article-title>             <source>Cochrane Database Syst Rev</source>             <fpage>CD000053</fpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Gryseels1">
+        <label>7</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Gryseels</surname><given-names>B</given-names></name><name name-style="western"><surname>Mbaye</surname><given-names>A</given-names></name><name name-style="western"><surname>De Vlas</surname><given-names>SJ</given-names></name><name name-style="western"><surname>Stelma</surname><given-names>FF</given-names></name><name name-style="western"><surname>Guisse</surname><given-names>F</given-names></name><etal/></person-group>             <year>2001</year>             <article-title>Are poor responses to praziquantel for the treatment of Schistosoma mansoni infections in Senegal due to resistance? An overview of the evidence.</article-title>             <source>Trop Med Int Health</source>             <volume>6</volume>             <fpage>864</fpage>             <lpage>873</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Ferrari1">
+        <label>8</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Ferrari</surname><given-names>ML</given-names></name><name name-style="western"><surname>Coelho</surname><given-names>PM</given-names></name><name name-style="western"><surname>Antunes</surname><given-names>CM</given-names></name><name name-style="western"><surname>Tavares</surname><given-names>CA</given-names></name><name name-style="western"><surname>da Cunha</surname><given-names>AS</given-names></name></person-group>             <year>2003</year>             <article-title>Efficacy of oxamniquine and praziquantel in the treatment of Schistosoma mansoni infection: a controlled trial.</article-title>             <source>Bull World Health Organ</source>             <volume>81</volume>             <fpage>190</fpage>             <lpage>196</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Mutapi1">
+        <label>9</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Mutapi</surname><given-names>F</given-names></name><name name-style="western"><surname>Hagan</surname><given-names>P</given-names></name><name name-style="western"><surname>Woolhouse</surname><given-names>ME</given-names></name><name name-style="western"><surname>Mduluza</surname><given-names>T</given-names></name><name name-style="western"><surname>Ndhlovu</surname><given-names>PD</given-names></name></person-group>             <year>2003</year>             <article-title>Chemotherapy-induced, age-related changes in antischistosome antibody responses.</article-title>             <source>Parasite Immunol</source>             <volume>25</volume>             <fpage>87</fpage>             <lpage>97</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Leopold1">
+        <label>10</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Leopold</surname><given-names>G</given-names></name><name name-style="western"><surname>Ungethum</surname><given-names>W</given-names></name><name name-style="western"><surname>Groll</surname><given-names>E</given-names></name><name name-style="western"><surname>Diekmann</surname><given-names>HW</given-names></name><name name-style="western"><surname>Nowak</surname><given-names>H</given-names></name><etal/></person-group>             <year>1978</year>             <article-title>Clinical pharmacology in normal volunteers of praziquantel, a new drug against schistosomes and cestodes. An example of a complex study covering both tolerance and pharmacokinetics.</article-title>             <source>Eur J Clin Pharmacol</source>             <volume>14</volume>             <fpage>281</fpage>             <lpage>291</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Mandour1">
+        <label>11</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Mandour</surname><given-names>ME</given-names></name><name name-style="western"><surname>el Turabi</surname><given-names>H</given-names></name><name name-style="western"><surname>Homeida</surname><given-names>MM</given-names></name><name name-style="western"><surname>el Sadig</surname><given-names>T</given-names></name><name name-style="western"><surname>Ali</surname><given-names>HM</given-names></name><etal/></person-group>             <year>1990</year>             <article-title>Pharmacokinetics of praziquantel in healthy volunteers and patients with schistosomiasis.</article-title>             <source>Trans R Soc Trop Med Hyg</source>             <volume>84</volume>             <fpage>389</fpage>             <lpage>393</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Castro1">
+        <label>12</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Castro</surname><given-names>N</given-names></name><name name-style="western"><surname>Medina</surname><given-names>R</given-names></name><name name-style="western"><surname>Sotelo</surname><given-names>J</given-names></name><name name-style="western"><surname>Jung</surname><given-names>H</given-names></name></person-group>             <year>2000</year>             <article-title>Bioavailability of praziquantel increases with concomitant administration of food.</article-title>             <source>Antimicrob Agents Chemother</source>             <volume>44</volume>             <fpage>2903</fpage>             <lpage>2904</lpage>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Department1">
+        <label>13</label>
+        <element-citation publication-type="other" xlink:type="simple">             <collab xlink:type="simple">Department of Health, Republic of the Philippines</collab>             <year>2007</year>             <source>Revised Guidelines in the Management and Prevention of Schistosomiasis</source>          </element-citation>
+      </ref>
+      <ref id="pntd.0001165-Botros1">
+        <label>14</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Botros</surname><given-names>S</given-names></name><name name-style="western"><surname>Sayed</surname><given-names>H</given-names></name><name name-style="western"><surname>Amer</surname><given-names>N</given-names></name><name name-style="western"><surname>El-Ghannam</surname><given-names>M</given-names></name><name name-style="western"><surname>Bennett</surname><given-names>JL</given-names></name><etal/></person-group>             <year>2005</year>             <article-title>Current status of sensitivity to praziquantel in a focus of potential drug resistance in Egypt.</article-title>             <source>Int J Parasitol</source>             <volume>35</volume>             <fpage>787</fpage>             <lpage>791</lpage>          </element-citation>
+      </ref>
+    </ref-list>
+    
+  </back>
+</article>

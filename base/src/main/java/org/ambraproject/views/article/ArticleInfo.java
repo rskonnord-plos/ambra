@@ -58,6 +58,19 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
   private transient String unformattedTitle = null;
 
   /**
+   * Construct a new ArticleInfo info class
+   */
+  public ArticleInfo() { }
+
+  /**
+   * Construct a new ArticleInfo info class with the passed in DOI
+   * @param doi
+   */
+  public ArticleInfo(String doi) {
+    this.doi = doi;
+  }
+
+  /**
    * Get an unformatted version of the Article Title. 
    * @return Unformatted title.
    */

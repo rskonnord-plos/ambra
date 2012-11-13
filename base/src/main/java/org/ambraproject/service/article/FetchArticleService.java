@@ -21,7 +21,7 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.service.hibernate.HibernateService;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
 import org.w3c.dom.Document;
@@ -50,14 +50,13 @@ public interface FetchArticleService extends HibernateService {
    */
   public Document getArticleDocument(final ArticleInfo article);
 
-
   /**
    * Get the author affiliations for a given article
    *
    * @param doc article xml
    * @return author affiliations
    */
-  public List<AuthorExtra> getAuthorAffiliations(Document doc);
+  public List<AuthorView> getAuthors(Document doc);
 
   /**
    * Get the corresponding Author's email

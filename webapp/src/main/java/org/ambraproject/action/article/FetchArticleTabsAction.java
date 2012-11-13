@@ -32,7 +32,7 @@ import org.ambraproject.util.TextUtils;
 import org.ambraproject.util.UriUtil;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.LinkbackView;
@@ -47,9 +47,11 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.ambraproject.service.annotation.AnnotationService.AnnotationOrder;
@@ -107,7 +109,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private List<List<String>> articleIssues;
   private List<LinkbackView> trackbackList;
   private int trackbackCount;
-  private List<AuthorExtra> authorExtras;
+  private List<AuthorView> authors;
   private List<CitationReference> references;
   private String journalAbbrev;
   private String relatedAuthorSearchQuery;
@@ -206,7 +208,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
 
       //have to count the corrections so we know whether to show a 'Show All corrections' link
       numCorrections = annotationService.countAnnotations(articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
+        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
       //have to indicate if there's a retraction so we know whether to show a 'Show Retraction' link
       isRetracted = annotationService.countAnnotations(articleInfoX.getId(), EnumSet.of(AnnotationType.RETRACTION)) > 0;
 
@@ -410,12 +412,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     //to be part of articleInfo.  Rename articleInfo to articleView and populate articleView
     //In the service tier in whatever way is appropriate
     Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
-    authorExtras = this.fetchArticleService.getAuthorAffiliations(doc);
+    authors = this.fetchArticleService.getAuthors(doc);
     correspondingAuthor = this.fetchArticleService.getCorrespondingAuthors(doc);
     authorContributions = this.fetchArticleService.getAuthorContributions(doc);
     competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
+
     articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
     isPeerReviewed = this.fetchArticleService.isPeerReviewed(articleURI, doc);
 
@@ -622,7 +625,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    * @return Comma delimited string of authors
    */
   public String getAuthorNames() {
-    return AuthorExtra.buildNameList(authorExtras);
+    return AuthorView.buildNameList(authors);
   }
 
   /**
@@ -737,14 +740,59 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     this.userService = userService;
   }
 
-//  /**
-//   * Returns a list of author affiliations
-//   *
-//   * @return author affiliations
-//   */
-//  public List<AuthorExtra> getAuthorExtras() {
-//    return this.authorExtras;
-//  }
+  /**
+   * Returns a list of author affiliations
+   *
+   * @return author affiliations
+   */
+  public List<AuthorView> getAuthors() {
+    return this.authors;
+  }
+
+  /**
+   * Get a list of contributing authors
+   * @return
+   */
+  public String getContributingAuthors() {
+    StringBuilder sb = new StringBuilder();
+
+    for(AuthorView view : this.authors) {
+      if(view.getEqualContrib()) {
+        if(sb.length() > 0) {
+          sb.append(", ");
+        }
+        sb.append(view.getFullName());
+      }
+    }
+
+    return sb.toString();
+  }
+
+  /**
+   * Generate a list of authors grouped by affiliation
+   *
+   * @return a list of authors grouped by affiliation
+   */
+  public Set<Map.Entry<String, List<AuthorView>>> getAuthorsByAffiliation() {
+    Map<String, List<AuthorView>> authorsByAffil = new HashMap<String, List<AuthorView>>();
+
+    for(AuthorView ae : this.authors) {
+      for(String affilation : ae.getAffiliations()) {
+        List<AuthorView> authors;
+
+        if(authorsByAffil.containsKey(affilation)) {
+          authors = authorsByAffil.get(affilation);
+        } else {
+          authors = new ArrayList<AuthorView>();
+          authorsByAffil.put(affilation, authors);
+        }
+        authors.add(ae);
+      }
+    }
+
+    return authorsByAffil.entrySet();
+  }
+
 
   /**
    * Returns a list of citation references
