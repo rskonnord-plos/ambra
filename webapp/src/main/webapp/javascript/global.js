@@ -678,7 +678,7 @@ var launchModal = function(doi, ref, state, el) {
           + '</ul>'
           + '<ul class="figure_navigation">'
           + '<li><span class="btn active">browse figures</span></li>'
-          + '<li><span class="btn" onclick="toggleModalState();">view abstract</span></li>'
+          + '<li><span class="btn viewAbstract" onclick="toggleModalState();">view abstract</span></li>'
           + '<li><a class="btn" href="' + context_hash + '" onclick="killModal();">show in context</a></li>'
           + '</ul>'
           slide.append(img);
@@ -722,8 +722,9 @@ var launchModal = function(doi, ref, state, el) {
       callbackParameter: "json.wrf",
       success: function(data){
         $.each(data.response.docs, function(){
+          var abstractText = this["abstract"];
           abstract_html ='<div id="fig-viewer-abst">'
-          + '<div class="txt"><p>' + this["abstract"] + '</p></div>'
+          + '<div class="txt"><p>' + abstractText + '</p></div>'
           + '<div class="lnks">'
           + '<ul class="download">'
           + '<li class="label">Download: </li>'
@@ -732,12 +733,15 @@ var launchModal = function(doi, ref, state, el) {
           + '</ul>'
           + '<ul class="figure_navigation">'
           + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
-          + '<li><span class="btn active">view abstract</span></li>'
+          + '<li><span class="btn active viewAbstract">view abstract</span></li>'
           + '<li><a class="btn" href="' + '/article/' + page_url + '">full text</a></li>'
           + '</ul>'
           + '</div>'
           + '</div>';
           $modal.append(abstract_html);
+          if (!abstractText || /^\s*$/.test(abstractText)) {
+            $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
+          }
         });
         displayModal();
       },
