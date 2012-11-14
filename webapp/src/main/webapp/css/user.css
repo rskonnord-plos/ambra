@@ -1,6 +1,6 @@
 /*basic styles for user page*/
 h2.displayName { font: 30px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }
-div#user-tabs a { outline: 0; }
+
 .note { color: #999; font-style:italic; font-size:12px; line-height:15px; margin-top:2px; }
 
 /*Set a minimum height so page doesn't drastically grow when content is loaded*/

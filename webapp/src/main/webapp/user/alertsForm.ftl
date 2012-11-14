@@ -31,7 +31,7 @@
 <@s.form action="saveUserAlerts" namespace="/user/secure" method="post" cssClass="ambra-form" method="post"
 title="Alert Form" name="userAlerts">
 <fieldset id="alert-form">
-  <legend><strong>Email Alerts</strong></legend>
+  <legend>Email Alerts</legend>
   <ol>
     <li>
       <span class="alerts-title">&nbsp;</span>

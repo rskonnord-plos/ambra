@@ -7,10 +7,15 @@
 <#--include the header-->
 <#include "/includes/generic_header.ftl">
 
+<#--include global variables -->
+<#include "/global/variables.ftl">
+
 <div id="pagebdy-wrap">
   <div id="pagebdy">
-    <!--include the template-->
+    <div id="static-wrap">
+      <!--include the template-->
     <#include "${templateFile}">
+    </div>
   </div>
 </div>
 <!--include the footer-->

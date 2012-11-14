@@ -11,7 +11,7 @@
 
 <@s.form action="saveUserSearchAlerts" namespace="/user/secure" method="post" cssClass="ambra-form" method="post" title="Search Alert Form" name="userSearchAlerts">
 <fieldset id="alert-form">
-  <legend><strong>Manage your search alert emails</strong></legend>
+  <legend>Manage your search alert emails</legend>
   <ol>
     <#if userSearchAlerts?has_content>
       <li>

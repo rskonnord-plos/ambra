@@ -46,7 +46,7 @@
         </ul>
       </div>
 
-      <div class="logo">
+      <div class="logo-generic">
         <a href="${homeURL}"><img src="/images/ambra.png" alt="${freemarker_config.getDisplayName(journalContext)}"></a>
       </div>
 

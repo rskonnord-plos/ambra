@@ -21,8 +21,8 @@
 -->
 <@s.url action="privacy" namespace="/static" includeParams="none" id="privacyURL"/>
 
-<h2 class="displayName">${displayName}</h2>
-<ol id="info-list">
+<h1 class="displayName">${displayName}</h1>
+<ul class="info-list">
   <li>Display Name: <b>${displayName}</b>&nbsp;<span class="note">(Display names are permanent)</span></li>
   <li>
     Email: <b>${email}</b> <a href="${freemarker_config.changeEmailURL}"
@@ -35,24 +35,25 @@
     <a href="${freemarker_config.changePasswordURL}" title="Click here to change your password">Change your
       password</a>
   </li>
-</ol>
+</ul>
 
-<div id="user-forms">
-  <div id="user-tabs">
+<div id="user-forms" class="tab-block">
+  <div id="user-tabs" class="nav tab-nav">
     <ul>
       <li><a href="#profile">Profile</a></li>
       <li><a href="#alerts">Journal Alerts</a></li>
       <li><a href="#savedSearchAlerts">Search Alerts</a></li>
     </ul>
   </div>
-
-  <div id="profile">
-    <#include "profileForm.ftl">
-  </div>
-  <div id="alerts">
-    <#include "alertsForm.ftl">
-  </div>
-  <div id="savedSearchAlerts">
-    <#include "searchAlertsForm.ftl">
+  <div class="tab-content">
+    <div id="profile" class="tab-pane">
+      <#include "profileForm.ftl">
+    </div>
+    <div id="alerts" class="tab-pane">
+      <#include "alertsForm.ftl">
+    </div>
+    <div id="savedSearchAlerts" class="tab-pane">
+      <#include "searchAlertsForm.ftl">
+    </div>
   </div>
 </div>
