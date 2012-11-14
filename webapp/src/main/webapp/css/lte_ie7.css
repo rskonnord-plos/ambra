@@ -21,7 +21,7 @@ button { overflow: visible; }
 #nav-main a { padding-right: 10px; padding-left: 10px; }
 
 
-.article-meta { zoom: 1; }
+.article-meta { zoom: 1; height: 80px; }
 .article-meta li { float: left; width: auto; }
 .article-meta .pick { padding-top: 45px; width: 7em; }
 
