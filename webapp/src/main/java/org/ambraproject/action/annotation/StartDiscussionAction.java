@@ -20,6 +20,7 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.AuthorView;
@@ -28,12 +29,14 @@ import org.ambraproject.views.article.ArticleType;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
+import java.util.List;
+
 /**
  * Basic action for the start discussion page. just fetches up article doi and title.
  *
  * @author Alex Kudlick 4/12/12
  */
-public class StartDiscussionAction extends BaseActionSupport {
+public class StartDiscussionAction extends BaseActionSupport implements ArticleHeaderAction {
 
   private ArticleService articleService;
   private FetchArticleService fetchArticleService;
@@ -42,7 +45,7 @@ public class StartDiscussionAction extends BaseActionSupport {
   private ArticleInfo articleInfo;
   private ArticleType articleType;
   private boolean isPeerReviewed;
-  private String authorNames;
+  private List<AuthorView> authors;
 
 
   @Override
@@ -52,9 +55,24 @@ public class StartDiscussionAction extends BaseActionSupport {
 
     Document doc = fetchArticleService.getArticleDocument(articleInfo);
     isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
-    authorNames = AuthorView.buildNameList(fetchArticleService.getAuthors(doc));
+    authors = fetchArticleService.getAuthors(doc);
 
     return SUCCESS;
+  }
+
+  @Override
+  public List<AuthorView> getAuthors() {
+    return authors;
+  }
+
+  @Override
+  public String getAuthorNames() {
+    return AuthorView.buildNameList(authors);
+  }
+
+  @Override
+  public String getContributingAuthors() {
+    return AuthorView.buildContributingAuthorsList(authors);
   }
 
   @Required
@@ -81,10 +99,6 @@ public class StartDiscussionAction extends BaseActionSupport {
 
   public ArticleType getArticleType() {
     return articleType;
-  }
-
-  public String getAuthorNames() {
-    return authorNames;
   }
 
 }

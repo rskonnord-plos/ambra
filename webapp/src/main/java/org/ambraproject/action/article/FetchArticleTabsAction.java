@@ -73,7 +73,7 @@ import static org.ambraproject.service.annotation.AnnotationService.AnnotationOr
  * Struts picks this up and translates it call the FetchArticleRelated method ex: &lt;action name="fetchRelatedArticle"
  * class="org.ambraproject.article.action.FetchArticleTabsAction" method="FetchArticleRelated"&gt;
  */
-public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
+public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implements ArticleHeaderAction {
   private static final Logger log = LoggerFactory.getLogger(FetchArticleTabsAction.class);
   private final ArrayList<String> messages = new ArrayList<String>();
 
@@ -754,18 +754,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    * @return
    */
   public String getContributingAuthors() {
-    StringBuilder sb = new StringBuilder();
-
-    for(AuthorView view : this.authors) {
-      if(view.getEqualContrib()) {
-        if(sb.length() > 0) {
-          sb.append(", ");
-        }
-        sb.append(view.getFullName());
-      }
-    }
-
-    return sb.toString();
+    return AuthorView.buildContributingAuthorsList(authors);
   }
 
   /**

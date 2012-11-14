@@ -15,6 +15,7 @@ package org.ambraproject.views;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -130,6 +131,22 @@ public class AuthorView {
       textList.append(", ").append(iterator.next().getFullName());
     }
     return textList.toString();
+  }
+
+  /**
+   * Build a comma-delimited list of names of equally contributing authors.
+   *
+   * @param authors a list of non-null authors
+   * @return the list of equally contributing authors' names, as text
+   */
+  public static String buildContributingAuthorsList(List<? extends AuthorView> authors) {
+    List<AuthorView> contributingAuthors = new ArrayList<AuthorView>(authors.size());
+    for (AuthorView author : authors) {
+      if (author.getEqualContrib()) {
+        contributingAuthors.add(author);
+      }
+    }
+    return buildNameList(contributingAuthors);
   }
 
   @Override

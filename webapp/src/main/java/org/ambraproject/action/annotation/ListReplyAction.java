@@ -20,6 +20,7 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.article.ArticleService;
@@ -42,7 +43,7 @@ import java.util.Set;
  * Action class to get a list of replies to annotations.
  */
 @SuppressWarnings("serial")
-public class ListReplyAction extends BaseActionSupport {
+public class ListReplyAction extends BaseActionSupport implements ArticleHeaderAction {
   private static final Logger log = LoggerFactory.getLogger(ListReplyAction.class);
 
   private static final Set<AnnotationType> COMMENT_TYPES = Collections.unmodifiableSet(EnumSet.of(
@@ -86,8 +87,14 @@ public class ListReplyAction extends BaseActionSupport {
    *
    * @return a comma-delimited list of the names from author extras
    */
+  @Override
   public String getAuthorNames() {
     return AuthorView.buildNameList(authors);
+  }
+
+  @Override
+  public String getContributingAuthors() {
+    return AuthorView.buildContributingAuthorsList(authors);
   }
 
   public void setRoot(final Long root) {
