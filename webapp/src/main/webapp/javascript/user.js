@@ -30,4 +30,21 @@ $(function () {
     $("li.alerts-monthly input").not(":first")
       .attr("checked", $(this).is(":checked"));
   });
+
+  //checkboxes on the search alerts form
+  $("#checkAllWeeklySavedSearch").change(function () {
+    $("li.search-alerts-weekly input").not(":first")
+        .attr("checked", $(this).is(":checked"));
+  });
+
+  $("#checkAllMonthlySavedSearch").click(function () {
+    $("li.search-alerts-monthly input").not(":first")
+        .attr("checked", $(this).is(":checked"));
+  });
+
+  $("#checkAllDeleteSavedSearch").click(function () {
+    $("li.search-alerts-delete input").not(":first")
+        .attr("checked", $(this).is(":checked"));
+  });
+
 });

@@ -18,18 +18,19 @@
         <span class="search-alerts-title">&nbsp;</span>
         <ol>
           <li class="search-alerts-weekly">
-            <label for="checkAllWeekly">
-              <input type="checkbox" value="checkAllWeekly" name="checkAllWeekly" id="checkAllWeekly"/> Select All
+            <label for="checkAllWeeklySavedSearch">
+              <input type="checkbox" value="checkAllWeekly" name="checkAllWeekly" id="checkAllWeeklySavedSearch"/> Select All
             </label>
           </li>
           <li class="search-alerts-monthly">
-            <label for="checkAllMonthly">
-              <input type="checkbox" value="checkAllMonthly" name="checkAllMonthly" id="checkAllMonthly"/> Select All
+            <label for="checkAllMonthlySavedSearch">
+              <input type="checkbox" value="checkAllMonthly" name="checkAllMonthly" id="checkAllMonthlySavedSearch"/>
+              Select All
             </label>
           </li>
           <li class="search-alerts-delete">
-            <label for="checkAllDelete">
-              <input type="checkbox" value="checkAllDelete" name="checkAllDelete" id="checkAllDelete"/> Select All
+            <label for="checkAllDeleteSavedSearch">
+              <input type="checkbox" value="checkAllDelete" name="checkAllDelete" id="checkAllDeleteSavedSearch"/> Select All
             </label>
           </li>
         </ol>
