@@ -106,6 +106,14 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
   }
 
   /**
+   * Set collaborative authors
+   * @param collaborativeAuthors
+   */
+  public void setCollaborativeAuthors(List<String> collaborativeAuthors) {
+    this.collaborativeAuthors = collaborativeAuthors;
+  }
+
+  /**
    * Get the related articles.
    *
    * @return the related articles.

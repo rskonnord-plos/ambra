@@ -196,4 +196,14 @@ public interface ArticleService {
    * @param doi the DOI to save
    */
   public void setCitationDoi(CitedArticle citedArticle, String doi);
+
+  /**
+   * Throw a NoSuchArticleIdException exception if the article doesn't exist or the user does not have permission
+   * to see the article
+   *
+   * @param articleDoi article doi
+   * @param authId the authorization ID of the current user
+   * @throws NoSuchArticleIdException
+   */
+  public void checkArticleState(final String articleDoi, final String authId) throws NoSuchArticleIdException;
 }

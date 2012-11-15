@@ -337,6 +337,39 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Transactional(readOnly = true)
+  public void checkArticleState(final String articleDoi, final String authId) throws NoSuchArticleIdException {
+    //If the article is unpublished, it should not be returned if the user is not an admin
+
+    List<Integer> results = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
+        .add(Restrictions.eq("doi", articleDoi))
+        .setProjection(Projections.projectionList()
+            .add(Projections.property("state")))
+        ,0,1);
+
+    if (results.size() == 0) {
+      throw new NoSuchArticleIdException(articleDoi);
+    }
+
+    Integer articleState = results.get(0);
+
+    if (articleState == Article.STATE_UNPUBLISHED) {
+      try {
+        permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, authId);
+      } catch(SecurityException se) {
+        throw new NoSuchArticleIdException(articleDoi);
+      }
+    }
+
+    //If the article is disabled, don't display it ever
+    if (articleState == Article.STATE_DISABLED) {
+      throw new NoSuchArticleIdException(articleDoi);
+    }
+  }
+
+  /**
    * Get articles based on a list of Article id's.
    *
    * If an article is requested that the user does not have access to, it will not be returned
@@ -626,25 +659,48 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ArticleInfo getBasicArticleView(String articleDoi) throws NoSuchArticleIdException {
     if (articleDoi == null) {
       throw new NoSuchArticleIdException("Null doi");
     }
     log.debug("loading up title and doi for article: {}", articleDoi);
     Object[] results = new Object[0];
+    List<ArticleAuthor> authors;
+    List<String> collabAuthors;
+    List<String> articleTypes;
+
     try {
       results = (Object[]) hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
           .add(Restrictions.eq("doi", articleDoi))
           .setProjection(Projections.projectionList()
               .add(Projections.id())
               .add(Projections.property("title"))),0,1).get(0);
+
+      authors = hibernateTemplate.find("from ArticleAuthor where articleID = ?", results[0]);
+
+      collabAuthors = hibernateTemplate.find("select elements(article.collaborativeAuthors) from Article as article where id = ?", results[0]);
+
+      articleTypes = hibernateTemplate.find("select elements(article.types) from Article as article where id = ?", results[0]);
+
     } catch (IndexOutOfBoundsException e) {
       throw new NoSuchArticleIdException(articleDoi.toString());
     }
+
     ArticleInfo articleInfo = new ArticleInfo();
     articleInfo.setDoi(articleDoi);
     articleInfo.setId((Long) results[0]);
     articleInfo.setTitle((String) results[1]);
+
+    List<String> authors2 = new ArrayList<String>(authors.size());
+    for (ArticleAuthor ac : authors) {
+      authors2.add(ac.getFullName());
+    }
+    articleInfo.setAuthors(authors2);
+
+    articleInfo.setCollaborativeAuthors(collabAuthors);
+
+    articleInfo.setAt(new HashSet<String>(articleTypes));
 
     return articleInfo;
   }

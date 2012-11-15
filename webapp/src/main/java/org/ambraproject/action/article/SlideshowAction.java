@@ -59,11 +59,11 @@ public class SlideshowAction extends BaseActionSupport {
   @Override
   public String execute() throws Exception {
     try {
-      // TODO only load title, authors and articleType
-      ArticleInfo articleInfo = this.articleService.getArticleInfo(uri, getAuthId());
+      ArticleInfo articleInfo = this.articleService.getBasicArticleView(uri);
       this.articleTitle = articleInfo.getTitle();
       this.articleType = articleInfo.getArticleTypeForDisplay();
       this.authors = articleInfo.getAuthors();
+      this.authors.addAll(articleInfo.getCollaborativeAuthors());
 
       articleAssetWrapper = articleAssetService.listFiguresTables(uri, getAuthId());
       ArrayList<ArticleAssetWrapper> figTables = new ArrayList<ArticleAssetWrapper>(articleAssetWrapper.length);
