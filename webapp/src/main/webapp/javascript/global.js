@@ -727,8 +727,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         } else {
           $thmb_1.trigger('click');
         }
-        buildAbs();
-        displayModal(data.articleType, data.articleTitle, data.authors);
+        buildAbs(data.articleType, data.articleTitle, data.authors);
       }
     });
   }();
@@ -750,7 +749,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     return '<a class="btn" href="' + href + '" onclick="killModal();">';
   };
 
-  var buildAbs = function () {
+  var buildAbs = function (articleType, title, authors) {
     $.jsonp({
       url:'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22' + '&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=plos',
       dataType:'json',
@@ -788,6 +787,8 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           if (!abstractText || /^\s*$/.test(abstractText)) {
             $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
           }
+
+          displayModal(articleType, title, authors);
         });
 
       },
