@@ -733,6 +733,23 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     });
   }();
 
+  /**
+   * @return {String} an HTML snippet for the lightbox's "full text" button
+   */
+  var getFullTextElement = function () {
+    var articleBlock = $('#article-block');
+    if (articleBlock.length == 0) {
+      // Not on the article page, so the full text button should link there
+      return '<a class="btn" href="' + '/article/' + page_url + '">';
+    }
+    // On the article page, so "full text" closes the lightbox and jumps to the abstract
+    var href = '#abstract0';
+    if (articleBlock.find(href).length == 0) {
+      href = '#'; // article has no abstract; default to top of page
+    }
+    return '<a class="btn" href="' + href + '" onclick="killModal();">';
+  };
+
   var buildAbs = function () {
     $.jsonp({
       url:'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22' + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
@@ -754,7 +771,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             + '<ul class="figure_navigation">'
             + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
             + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-            + '<li><a class="btn" href="' + '/article/' + page_url + '">full text</a></li>'
+            + '<li>' + getFullTextElement() + 'full text</a></li>'
             + '</ul>'
             + '</div>'
             + '</div>';
