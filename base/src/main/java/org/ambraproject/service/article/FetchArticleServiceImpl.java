@@ -359,11 +359,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
             } else {
               String rid = attr.getTextContent();
 
-              XPathExpression correspondAddrExpr = xpath.compile("//author-notes/corresp[@id='" + rid + "']/email");
+              XPathExpression correspondAddrExpr = xpath.compile("//author-notes/corresp[@id='" + rid + "']");
               Node correspondAddrNode = (Node) correspondAddrExpr.evaluate(doc, XPathConstants.NODE);
 
               if(correspondAddrNode == null) {
-                log.warn("No node found for corrsponding author: author-notes/corresp[@id='\" + rid + \"']/email");
+                log.warn("No node found for corrsponding author: author-notes/corresp[@id='\" + rid + \"']");
               } else {
                 corresponding = correspondAddrNode.getTextContent();
               }

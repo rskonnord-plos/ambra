@@ -42,7 +42,7 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test an author with a suffix on their name
     ArticleInfo a1 = new ArticleInfo("info:doi/10.1371/journal.pone.0002879");
     List<AuthorView> authors1 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("John M.", "Logsdon", "Jr", null, false, false, "john-logsdon@uiowa.edu",
+      add(new AuthorView("John M.", "Logsdon", "Jr", null, false, false, "* E-mail: john-logsdon@uiowa.edu",
         new ArrayList<String>() {{ add("Department of Biology test"); }},
         new ArrayList<String>()));
     }};
@@ -50,7 +50,7 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test corresponding author
     ArticleInfo a2 = new ArticleInfo("info:doi/10.1371/journal.pbio.1001335");
     List<AuthorView> authors2 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Mariano", "Carrión-Vázquez", null, null, false, false, "mcarrion@cajal.csic.es",
+      add(new AuthorView("Mariano", "Carrión-Vázquez", null, null, false, false, "* E-mail: mcarrion@cajal.csic.es",
         new ArrayList<String>() {{ add("Instituto Cajal"); add("Instituto Madrileño"); }},
         new ArrayList<String>()));
     }};
@@ -68,7 +68,7 @@ public class FetchArticleServiceTest extends BaseTest {
     //additional sets of equally contributing authors.
     ArticleInfo a4 = new ArticleInfo("info:doi/10.1371/journal.pone.0023160");
     List<AuthorView> authors4 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Markus M.", "Bachschmid", null, null, true, false, "bach@bu.edu",
+      add(new AuthorView("Markus M.", "Bachschmid", null, null, true, false, "* E-mail: bach@bu.edu",
         new ArrayList<String>() {{
           add("Vascular Biology Section, Boston University Medical Center, Boston, Massachusetts, United States of America");
         }},
@@ -115,7 +115,7 @@ public class FetchArticleServiceTest extends BaseTest {
     ArticleInfo a7 = new ArticleInfo("info:doi/10.1371/journal.pmed.0020073");
     List<AuthorView> authors7 = new ArrayList<AuthorView>() {{
       add(new AuthorView("William", "Pao",
-        null, null, true, false, "paow@mskcc.org",
+        null, null, true, false, "*To whom correspondence should be addressed. E-mail: paow@mskcc.org",
         new ArrayList<String>() {{
           add("Program in Cancer Biology and Genetics, Memorial Sloan-Kettering Cancer Center, New York, New York, United States of America");
           add("Thoracic Oncology Service, Department of Medicine, Memorial Sloan-Kettering Cancer Center, New York, New York, United States of America");
@@ -123,9 +123,26 @@ public class FetchArticleServiceTest extends BaseTest {
         new ArrayList<String>()));
     }};
 
+    //Test for articles with multiple corresponding authors
+    ArticleInfo a8 = new ArticleInfo("info:doi/10.1371/journal.pone.0029914");
+    List<AuthorView> authors8 = new ArrayList<AuthorView>() {{
+      add(new AuthorView("Monica E.", "Embers",
+        null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
+        new ArrayList<String>() {{
+          add("Divisions of Bacteriology & Parasitology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America");
+        }},
+        new ArrayList<String>()));
+
+      add(new AuthorView("Mario T.", "Philipp",
+        null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
+        new ArrayList<String>() {{
+          add("Divisions of Bacteriology & Parasitology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America");
+        }},
+        new ArrayList<String>()));
+    }};
+
     return new Object[][] { { a1, authors1 }, { a2, authors2 }, { a3, authors3 },
-      { a4, authors4 } , { a5, authors5 }, { a6, authors6 }, { a7, authors7 }
-    };
+      { a4, authors4 } , { a5, authors5 }, { a6, authors6 }, { a7, authors7 }, { a8, authors8 } };
   }
 
   @DataProvider(name = "articleInfos")
@@ -252,13 +269,13 @@ public class FetchArticleServiceTest extends BaseTest {
     assertTrue(testAuthors.size() > 0, "No test authors found");
 
 //    //For debugging:
-//    for(AuthorView ac : testAuthors) {
-//      printAuthor(ac);
-//    }
-//
-//    for(AuthorView ac : authors) {
-//      printAuthor(ac);
-//    }
+    for(AuthorView ac : testAuthors) {
+      printAuthor(ac);
+    }
+
+    for(AuthorView ac : authors) {
+      printAuthor(ac);
+    }
 
     assertEquals(testAuthors.size(), authors.size(), "Differing count of authors");
     assertEquals(testAuthors, authors);

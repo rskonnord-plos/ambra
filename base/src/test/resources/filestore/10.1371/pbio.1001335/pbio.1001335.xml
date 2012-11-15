@@ -145,9 +145,7 @@
       <aff id="edit1">University of California San Francisco/Howard Hughes Medical Institute, United States of America
       </aff>
       <author-notes>
-        <corresp id="cor1">* E-mail:
-          <email xlink:type="simple">mcarrion@cajal.csic.es</email>
-        </corresp>
+        <corresp id="cor1">* E-mail: <email xlink:type="simple">mcarrion@cajal.csic.es</email></corresp>
         <fn fn-type="con">
           <p>The author(s) have made the following declarations about their contributions: Conceived and designed the
             experiments: MCV. Performed the experiments: RH JO AGP OG AV AMV AGS FLU MM DVL MB. Analyzed the data: RH JO
