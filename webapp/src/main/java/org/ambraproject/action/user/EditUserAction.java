@@ -84,7 +84,9 @@ public class EditUserAction extends UserActionSupport {
     if (authId == null) {
       throw new ServletException("Unable to resolve ambra user");
     }
-    userService.setSavedSearchAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts), Arrays.asList(deleteAlerts));
+    UserProfile profile = userService.setSavedSearchAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts), Arrays.asList(deleteAlerts));
+    session.put(Constants.AMBRA_USER_KEY, profile);
+    setFieldsFromProfile(profile);
     return SUCCESS;
   }
 

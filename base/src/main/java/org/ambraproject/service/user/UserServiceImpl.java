@@ -145,7 +145,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
   @Override
   @Transactional
-  public void setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts) {
+  public UserProfile setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts) {
     UserProfile user = getUserByAuthId(userAuthId);
 
     log.debug("updating alerts for user: {}; Montly alerts: {}; weekly alerts: {}; delete alerts: {}",
@@ -170,6 +170,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
         }
       }
     }
+    return user;
   }
 
 

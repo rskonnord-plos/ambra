@@ -82,7 +82,7 @@ public interface UserService {
    * @param weeklyAlerts  a list of the weekly alerts
    * @param deleteAlerts  a list of the delete alerts
    */
-  public void setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts);
+  public UserProfile setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts);
 
   /**
    * Remove the saved search

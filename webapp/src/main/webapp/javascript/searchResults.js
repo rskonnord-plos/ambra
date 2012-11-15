@@ -472,7 +472,77 @@ $(document).ready(
     });
 
     $('a.save-search').click(function() {
+      if ($('#search')) {
+        $('#text_name_savedsearch').val($('#search').val());
+      }
+      $('#span_error_savedsearch').html('');
+
       //logic to show the pop-up
+      var saveSearchBox = $(this).attr('href');
+
+      //Fade in the Popup
+      $(saveSearchBox).fadeIn(300);
+
+      //Set the center alignment padding + border see css style
+      var popMargTop = ($(saveSearchBox).height() + 24) / 2;
+      var popMargLeft = ($(saveSearchBox).width() + 24) / 2;
+
+      $(saveSearchBox).css({
+        'margin-top' : -popMargTop,
+        'margin-left' : -popMargLeft
+      });
+
+      // Add the mask to body
+      $('body').append('<div id="mask"></div>');
+      $('#mask').fadeIn(300);
+
+      return false;
+
+    });
+
+    $('#btn_save_savedsearch').click(function() {
+
+      $('#searchName').val($('#text_name_savedsearch').val());
+      $('#weekly').val($('#cb_weekly_savedsearch').is(':checked'));
+      $('#monthly').val($('#cb_monthly_savedsearch').is(':checked'));
+
+      $.ajax({
+        type: 'POST',
+        url: '/search/saveSearch.action',
+        data: $('#searchFormOnSearchResultsPage').serialize(),
+        dataFilter: function (data, type) {
+          return data.replace(/(\/\*|\*\/)/g, '');
+        },
+        dataType:'json',
+        success: function(response) {
+          if (response.exception) {
+            var errorMessage = response.exception.message;
+            $("#span_error_savedsearch").html("Exception: " + errorMessage);
+            return;
+          }
+          if (response.actionErrors && response.actionErrors.length > 0) {
+            //The action in question can only return one message
+            var errorMessage = response.actionErrors[0];
+            $("#span_error_savedsearch").html("Error: " + errorMessage);
+            return;
+          }
+
+          $('#mask , #save-search-box').fadeOut(300 , function() {
+            $('#mask').remove();
+          });
+        },
+        error: function(req, textStatus, errorThrown) {
+          $('#span_error_savedsearch').html(errorThrown.message);
+          console.log("error: " + errorThrown.message);
+        }
+      });
+
+    });
+
+    $('#btn_cancel_savedsearch').click(function() {
+      $('#mask , #save-search-box').fadeOut(300 , function() {
+        $('#mask').remove();
+      });
     });
 
   });

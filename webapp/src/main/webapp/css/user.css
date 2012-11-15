@@ -124,6 +124,9 @@ div#user-tabs ul {
 #alert-form ol li ol { position: relative; top: 0; display:inline; margin: 0; padding:0; width:auto; }
 #alert-form label { text-align: left; width: auto; font-weight: normal; margin:0; padding:0; }
 #alert-form label input { margin: 0; width: 20px; border-width: 0; position:relative; top:3px; }
+#alert-form .search-alerts-title { width: 200px; float:left; font-weight:bold; margin:0; padding:5px 0; }
+#alert-form .search-alerts-weekly { width:120px; margin:0; padding:5px 0; }
+#alert-form .search-alerts-monthly { width:120px; margin:0; padding:5px 0; }
 
 ul { margin-left:15px; padding:0; }
 

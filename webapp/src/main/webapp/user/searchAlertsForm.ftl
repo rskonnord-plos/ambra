@@ -9,7 +9,7 @@
   <#return "false">
 </#function>
 
-<@s.form action="saveUserSearchAlerts" namespace="/user/secure" method="post" cssClass="ambra-form" method="post" title="Search Alert Form" name="userSearchAlerts">
+<@s.form action="saveSearchAlerts" namespace="/user/secure" method="post" cssClass="ambra-form" method="post" title="Search Alert Form" name="userSearchAlerts">
 <fieldset id="alert-form">
   <legend>Manage your search alert emails</legend>
   <ol>
