@@ -23,22 +23,31 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleAssetService;
 import org.ambraproject.service.article.ArticleAssetWrapper;
+import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.xml.XMLService;
+import org.ambraproject.views.article.ArticleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fetch the secondary objects for a given uri
  */
 public class SlideshowAction extends BaseActionSupport {
+  private static final Logger log = LoggerFactory.getLogger(SlideshowAction.class);
+
   private String uri;
   private ArticleAssetWrapper[] articleAssetWrapper;
   private ArticleAssetService articleAssetService;
   private XMLService secondaryObjectService;
-  private static final Logger log = LoggerFactory.getLogger(SlideshowAction.class);
+  private ArticleService articleService;
+
+  private String articleTitle;
+  private String articleType;
+  private List<String> authors;
 
   /**
    * Action to return list of Secondary object for an article that are enclosed in Tables (table-warp)
@@ -50,12 +59,17 @@ public class SlideshowAction extends BaseActionSupport {
   @Override
   public String execute() throws Exception {
     try {
+      // TODO only load title, authors and articleType
+      ArticleInfo articleInfo = this.articleService.getArticleInfo(uri, getAuthId());
+      this.articleTitle = articleInfo.getTitle();
+      this.articleType = articleInfo.getArticleTypeForDisplay();
+      this.authors = articleInfo.getAuthors();
+
       articleAssetWrapper = articleAssetService.listFiguresTables(uri, getAuthId());
       ArrayList<ArticleAssetWrapper> figTables = new ArrayList<ArticleAssetWrapper>(articleAssetWrapper.length);
       String allTransformed;
       String[] elems;
       StringBuilder desc;
-      String doi;
 
       for (ArticleAssetWrapper s: articleAssetWrapper) {
         figTables.add(s);
@@ -95,6 +109,7 @@ public class SlideshowAction extends BaseActionSupport {
     }
     return SUCCESS;
   }
+
   @RequiredStringValidator(message = "Object URI is required.")
   public String getUri() {
     return uri;
@@ -116,6 +131,18 @@ public class SlideshowAction extends BaseActionSupport {
     return articleAssetWrapper;
   }
 
+  public String getArticleTitle() {
+    return articleTitle;
+  }
+
+  public String getArticleType() {
+    return articleType;
+  }
+
+  public List<String> getAuthors() {
+    return authors;
+  }
+
   /**
    * Set the secondary objects
    * @param articleAssetService articleAssetService
@@ -131,5 +158,10 @@ public class SlideshowAction extends BaseActionSupport {
   @Required
   public void setSecondaryObjectService(XMLService secondaryObjectService) {
     this.secondaryObjectService = secondaryObjectService;
+  }
+
+  @Required
+  public void setArticleService(ArticleService articleService) {
+    this.articleService = articleService;
   }
 }

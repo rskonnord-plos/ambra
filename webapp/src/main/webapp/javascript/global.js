@@ -616,7 +616,7 @@ if ($nav_article.length) {
 })(jQuery);
 
 // BEGIN Figure Viewer
-var launchModal = function(doi, ref, state, el) {
+var launchModal = function(doi, ref, state, imgNotOnPage) {
   var path = '/article/fetchObject.action?uri='
   //var path = 'article/';
   var $modal = $('<div id="fig-viewer" class="modal" />');
@@ -671,7 +671,7 @@ var launchModal = function(doi, ref, state, el) {
             $(this).html('<span class="toggle">more</span>');
           });
           context_hash = showInContext(this.uri);
-          if (el) { // the image is on another page
+          if (imgNotOnPage) { // the image is on another page
             context_hash = '/article/' + page_url + context_hash;
           }
           desc = '<div class="desc">' + this.transformedDescription + '</div>';
@@ -721,6 +721,7 @@ var launchModal = function(doi, ref, state, el) {
           $thmb_1.trigger('click');
         }
         buildAbs();
+        displayModal(data.articleType, data.articleTitle, data.authors);
       }
     });
   }();
@@ -755,7 +756,7 @@ var launchModal = function(doi, ref, state, el) {
             $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
           }
         });
-        displayModal();
+
       },
       error:function(xOptions, textStatus) {
         console.log('Error: ' + textStatus);
@@ -764,20 +765,18 @@ var launchModal = function(doi, ref, state, el) {
   };
 
     
-  var displayModal = function() {
+  var displayModal = function(articleType, title, authors) {
     $hdr = $('<div class="header" />');
-    $hdr_article = $('#hdr-article');
+    h1 = '<h1>' + title + '</h1>';
+    authorList = $('<ul class="authors"></ul>');
+    $.each(authors, function(index, author) {
+      $('<li>' + author + '</li>').appendTo(authorList);
+    })
 
-    if ($hdr_article.length) {
-      $hdr.append($hdr_article.html());
-    } else if (el) {
-      kicker = el.find('.article-kicker').clone();
-      h1 = '<h1>' + el.find('.article a').text() + '</h1>';
-      authors = el.find('.authors').clone();
-      $hdr.append(kicker);
-      $hdr.append(h1);
-      $hdr.append(authors);
-    }
+    $hdr.append(articleType);
+    $hdr.append(h1);
+    $hdr.append(authorList);
+
     $close = $('<span class="close" />').on('click', function() {
       killModal();    
     });
@@ -946,13 +945,11 @@ var $fig_results = $('#fig-search-results');
 if ($fig_results.length) {
   $fig_results.find('a.figures').on('click', function() {
     doi= $(this).data('doi');
-    el = $(this).closest('ul').closest('li');
-    launchModal(doi, null, 'fig', el);
+    launchModal(doi, null, 'fig', true);
   });
   $fig_results.find('a.abstract').on('click', function() {
     doi= $(this).data('doi');
-    el = $(this).closest('ul').closest('li');
-    launchModal(doi, null, 'abstract', el);
+    launchModal(doi, null, 'abstract', true);
   });
 }
 
@@ -970,14 +967,12 @@ var $toc_block_links = $('#toc-block div.links');
 if ($toc_block_links.length) {
   $toc_block_links.find('a.figures').on('click', function() {
     doi= $(this).data('doi');
-    el = $(this).closest('ul').closest('li');
-    launchModal(doi, null, 'fig', el);
+    launchModal(doi, null, 'fig', true);
   });
 
   $toc_block_links.find('a.abstract').on('click', function() {
     doi= $(this).data('doi');
-    el = $(this).closest('ul').closest('li');
-    launchModal(doi, null, 'abstract', el);
+    launchModal(doi, null, 'abstract', true);
   });
 }
 
