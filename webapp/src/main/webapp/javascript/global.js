@@ -780,7 +780,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       $('<li>' + author + '</li>').appendTo(authorList);
     })
 
-    $hdr.append(articleType);
+    $hdr.append('<span id="article-type-heading">' + articleType + '</span>');
     $hdr.append(h1);
     $hdr.append(authorList);
 
