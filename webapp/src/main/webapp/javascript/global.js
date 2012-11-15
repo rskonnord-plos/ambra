@@ -633,9 +633,14 @@ var launchModal = function(doi, ref, state, el) {
   var $figs;
   var figs_h;
   var thmbs_h;
+  var thmb_h;
+  var thmbs_resized_h;
+  var $thmb_1;
   var abst_h;
   var $abs_txt;
   var abs_txt_h;
+  var $all_thmb;
+  var $all_sld;
   
   var buildFigs = function() {
     $.ajax({
@@ -651,6 +656,7 @@ var launchModal = function(doi, ref, state, el) {
           title_txt = (this.title ? this.title + '. ' : '')  + this.transformedCaptionTitle;
           $thmb = $('<div class="thmb"'  + ' data-uri="' + this.uri +'"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_txt  + '" title="' + title_txt + '"></div>').on('click', function() {
             changeSlide($(this));
+            thumbPos($(this));
           })
           $thmbs.append($thmb);
           slide = $('<div class="slide" />');
@@ -695,18 +701,24 @@ var launchModal = function(doi, ref, state, el) {
         });
 
         btn_prev = $('<span class="fig-btn prev" />').on('click', function() {
-          changeSlide(active_thmb.prev());
+          t = active_thmb.prev()
+          changeSlide(t);
+          thumbPos(t);
         }).appendTo($slides);
         btn_next = $('<span class="fig-btn next" />').on('click', function() {
-          changeSlide(active_thmb.next());
+          t = active_thmb.next()
+          changeSlide(t);
+          thumbPos(t);
         }).appendTo($slides);
         $modal.append($slides);
         $modal.append($thmbs);
-
+        $thmb_1 = $thmbs.find('div.thmb').eq(0);
+        $all_thmb = $thmbs.find('div.thmb');
+        $all_sld = $slides.find('div.slide');
         if (ref) {
           $thmbs.find('div[data-uri="' + ref + '"]').trigger('click');
         } else {
-          $thmbs.find('div.thmb').eq(0).trigger('click');
+          $thmb_1.trigger('click');
         }
         buildAbs();
       }
@@ -785,14 +797,17 @@ var launchModal = function(doi, ref, state, el) {
     abst_h = $abstract.height();
     $abs_txt = $abstract.find('div.txt');
     abs_txt_h = $abs_txt.height();
+    bt = parseInt($thmb_1.css('borderTopWidth'));
+    bb = parseInt($thmb_1.css('borderBottomWidth'));
+    h = $thmb_1.innerHeight();
+    thmb_h = bt + bb + h;
+    thmbs_resized_h = thmbs_h;
     resizeModal();
     $win.bind('resize.modal', resizeModal);
 
   };
   
   var changeSlide = function(thmb) {
-    $all_thmb = $thmbs.find('div.thmb');
-    $all_sld = $slides.find('div.slide');
     $all_sld.hide();
     this_sld = $all_sld.eq($all_thmb.index(thmb));
     $fig = this_sld.find('div.figure');
@@ -812,8 +827,19 @@ var launchModal = function(doi, ref, state, el) {
     active_thmb.addClass('active');
     active_thmb.next().length ? btn_next.show() : btn_next.hide();
     active_thmb.prev().length ? btn_prev.show() : btn_prev.hide();
-
   };
+
+
+  var thumbPos = function(thmb) { 
+  pos = $all_thmb.index(thmb) + 1;
+  offset = pos * thmb_h;
+  if (offset > thmbs_resized_h) {
+    $thmbs.scrollTop(offset - thmbs_resized_h)
+  } else {
+    $thmbs.scrollTop(0);  
+  }
+  };
+
 
   var displaySize = function (num) {
     if (num < 0) {
@@ -854,15 +880,17 @@ var launchModal = function(doi, ref, state, el) {
       $thmbs.css('height', thmbs_h);
       $abstract.css('height', abst_h);
       $abs_txt.css('height', abs_txt_h);
+      thmbs_resized_h = thmbs_h;
     } else {
       $modal.css('top', 0);
       $slides.css('height', win_h - (modal_h - slides_h));
       $figs.css('height', win_h - (modal_h - figs_h));
-      $thmbs.css('height', win_h - (modal_h - thmbs_h));
+      $thmbs.css('height', thmbs_resized_h);
       $abstract.css('height', win_h - (modal_h - abst_h));
       $abs_txt.css('height', win_h - (modal_h - abs_txt_h));
     }
     $modal.css('left', Math.round(win_w/2 - $modal.width()/2));
+    thumbPos(active_thmb);
   };
 };
 
