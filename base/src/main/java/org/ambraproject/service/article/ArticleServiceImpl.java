@@ -658,9 +658,9 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
-   *
-   * @param articleIdentifier
-   * @return
+   * Returns ArticleInfo object with articleID, doi, title, authors, collaborativeAuthors and article type populated
+   * @param articleIdentifier articleID or articleDoi
+   * @return ArticleInfo object with articleID, doi, title, authors, collaborativeAuthors and article type populated
    * @throws NoSuchArticleIdException
    */
   private ArticleInfo getBasicArticleViewArticleInfo (Object articleIdentifier) throws NoSuchArticleIdException {
