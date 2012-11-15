@@ -650,7 +650,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         page_url = data.URL;
         $.each(data.secondaryObjects, function () {
           title_txt = (this.title ? this.title + '. ' : '') + this.transformedCaptionTitle;
-          // the transformedCaptionTitle that is returned is markup so we need to escape it for use in HTML attributes (alt, title, etc.)
+          // the transformedCaptionTitle that is returned is complex markup, so we need to escape it for use in HTML attributes (alt, title, etc.)
           title_plain_text = $(this.transformedCaptionTitle).text();
           $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_plain_text + '" title="' + title_plain_text + '"></div>').on('click', function () {
             changeSlide($(this));
@@ -673,7 +673,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             context_hash = '/article/' + page_url + context_hash;
           }
           desc = '<div class="desc">' + this.transformedDescription + '</div>';
-          img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_txt + '"></div>'
+          img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_plain_text + '"></div>'
           lnks_txt = '<ul class="download">'
             + '<li class="label">Download: </li>'
             + '<li><span class="icon">PPT</span> <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a></li>'
