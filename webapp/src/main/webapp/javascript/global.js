@@ -778,7 +778,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             + '<ul class="figure_navigation">'
             + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
             + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-            + '<li>' + getFullTextElement() + 'full text</a></li>'
+            + '<li>' + getFullTextElement() + 'show in context</a></li>'
             + '</ul>'
             + '</div>'
             + '</div>';
