@@ -640,21 +640,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       throw new NoSuchArticleIdException("Null id");
     }
     log.debug("loading up title and doi for article: {}", articleID);
-    Object[] results = new Object[0];
-    try {
-      results = (Object[]) hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
-          .add(Restrictions.eq("ID", articleID))
-          .setProjection(Projections.projectionList()
-              .add(Projections.property("doi"))
-              .add(Projections.property("title"))),0,1).get(0);
-    } catch (IndexOutOfBoundsException e) {
-      throw new NoSuchArticleIdException(articleID.toString());
-    }
-    ArticleInfo articleInfo = new ArticleInfo();
-    articleInfo.setDoi((String) results[0]);
-    articleInfo.setTitle((String) results[1]);
-    articleInfo.setId(articleID);
-
+    ArticleInfo articleInfo = getBasicArticleViewArticleInfo(articleID);
     return articleInfo;
   }
 
@@ -665,17 +651,41 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       throw new NoSuchArticleIdException("Null doi");
     }
     log.debug("loading up title and doi for article: {}", articleDoi);
+
+    ArticleInfo articleInfo = getBasicArticleViewArticleInfo(articleDoi);
+
+    return articleInfo;
+  }
+
+  /**
+   *
+   * @param articleIdentifier
+   * @return
+   * @throws NoSuchArticleIdException
+   */
+  private ArticleInfo getBasicArticleViewArticleInfo (Object articleIdentifier) throws NoSuchArticleIdException {
+
     Object[] results = new Object[0];
     List<ArticleAuthor> authors;
     List<String> collabAuthors;
     List<String> articleTypes;
 
     try {
-      results = (Object[]) hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
-          .add(Restrictions.eq("doi", articleDoi))
+
+      DetachedCriteria dc =  DetachedCriteria.forClass(Article.class)
           .setProjection(Projections.projectionList()
               .add(Projections.id())
-              .add(Projections.property("title"))),0,1).get(0);
+              .add(Projections.property("doi"))
+              .add(Projections.property("title"))
+          );
+
+      if (articleIdentifier instanceof Long) {
+        dc.add(Restrictions.eq("ID", articleIdentifier));
+      } else if (articleIdentifier instanceof String) {
+        dc.add(Restrictions.eq("doi", articleIdentifier));
+      }
+
+      results = (Object[]) hibernateTemplate.findByCriteria(dc,0,1).get(0);
 
       authors = hibernateTemplate.find("from ArticleAuthor where articleID = ?", results[0]);
 
@@ -683,14 +693,15 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
 
       articleTypes = hibernateTemplate.find("select elements(article.types) from Article as article where id = ?", results[0]);
 
+
     } catch (IndexOutOfBoundsException e) {
-      throw new NoSuchArticleIdException(articleDoi.toString());
+      throw new NoSuchArticleIdException(articleIdentifier.toString());
     }
 
     ArticleInfo articleInfo = new ArticleInfo();
-    articleInfo.setDoi(articleDoi);
     articleInfo.setId((Long) results[0]);
-    articleInfo.setTitle((String) results[1]);
+    articleInfo.setDoi((String) results[1]);
+    articleInfo.setTitle((String) results[2]);
 
     List<String> authors2 = new ArrayList<String>(authors.size());
     for (ArticleAuthor ac : authors) {
