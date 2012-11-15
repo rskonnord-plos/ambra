@@ -39,6 +39,7 @@ import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.RatingSummaryView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -434,6 +435,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     }
   }
 
+  @Override
+  public boolean getHasAboutAuthorContent() {
+    return AuthorView.anyHasAffiliation(authors)
+        || CollectionUtils.isNotEmpty(correspondingAuthor)
+        || CollectionUtils.isNotEmpty(authorContributions)
+        || CollectionUtils.isNotEmpty(competingInterest);
+  }
+
   /**
    * Set the fetch article service
    *
@@ -751,6 +760,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   /**
    * Get a list of contributing authors
+   *
    * @return
    */
   public String getContributingAuthors() {

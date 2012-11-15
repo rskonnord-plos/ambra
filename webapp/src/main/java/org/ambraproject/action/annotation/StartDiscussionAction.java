@@ -26,6 +26,7 @@ import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
@@ -45,6 +46,7 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
   private ArticleInfo articleInfo;
   private ArticleType articleType;
   private boolean isPeerReviewed;
+  private boolean hasAboutAuthorContent;
   private List<AuthorView> authors;
 
 
@@ -56,6 +58,10 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
     Document doc = fetchArticleService.getArticleDocument(articleInfo);
     isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
     authors = fetchArticleService.getAuthors(doc);
+    hasAboutAuthorContent = (AuthorView.anyHasAffiliation(authors)
+        || CollectionUtils.isNotEmpty(fetchArticleService.getCorrespondingAuthors(doc))
+        || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorContributions(doc))
+        || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorCompetingInterests(doc)));
 
     return SUCCESS;
   }
@@ -95,6 +101,10 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
 
   public boolean getIsPeerReviewed() {
     return isPeerReviewed;
+  }
+
+  public boolean getHasAboutAuthorContent() {
+    return hasAboutAuthorContent;
   }
 
   public ArticleType getArticleType() {

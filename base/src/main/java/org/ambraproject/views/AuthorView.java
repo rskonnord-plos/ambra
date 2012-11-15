@@ -13,6 +13,7 @@
 
 package org.ambraproject.views;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -147,6 +148,22 @@ public class AuthorView {
       }
     }
     return buildNameList(contributingAuthors);
+  }
+
+  /**
+   * Check whether any author in an iterable has any iterations. This method predicts whether {@link
+   * org.ambraproject.action.article.FetchArticleTabsAction#getAuthorsByAffiliation()} will return an empty result.
+   *
+   * @param authors an iterable of non-null authors
+   * @return {@code true} if any author in the iterable has an affiliation
+   */
+  public static boolean anyHasAffiliation(Iterable<? extends AuthorView> authors) {
+    for (AuthorView author : authors) {
+      if (CollectionUtils.isNotEmpty(author.getAffiliations())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override

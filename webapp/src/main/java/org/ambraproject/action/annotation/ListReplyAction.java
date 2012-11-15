@@ -29,6 +29,7 @@ import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -60,6 +61,7 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
   private List<AuthorView> authors;
   private int numComments;
   private boolean isPeerReviewed;
+  private boolean hasAboutAuthorContent;
 
   @Override
   public String execute() throws Exception {
@@ -73,6 +75,10 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
       Document doc = fetchArticleService.getArticleDocument(articleInfo);
       authors = fetchArticleService.getAuthors(doc);
       isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
+      hasAboutAuthorContent = (AuthorView.anyHasAffiliation(authors)
+          || CollectionUtils.isNotEmpty(fetchArticleService.getCorrespondingAuthors(doc))
+          || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorContributions(doc))
+          || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorCompetingInterests(doc)));
     } catch (Exception ae) {
       log.error("Could not list all replies for root: " + root, ae);
       addActionError("Reply fetching failed with error message: " + ae.getMessage());
@@ -122,6 +128,10 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
 
   public boolean getIsPeerReviewed() {
     return isPeerReviewed;
+  }
+
+  public boolean getHasAboutAuthorContent() {
+    return hasAboutAuthorContent;
   }
 
   public ArticleType getArticleType() {

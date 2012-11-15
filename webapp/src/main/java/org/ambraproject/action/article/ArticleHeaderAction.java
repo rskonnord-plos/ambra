@@ -19,4 +19,8 @@ public interface ArticleHeaderAction extends Action {
 
   public abstract String getContributingAuthors();
 
+  public abstract boolean getIsPeerReviewed();
+
+  public abstract boolean getHasAboutAuthorContent();
+
 }
