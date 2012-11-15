@@ -752,14 +752,21 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
   var buildAbs = function () {
     $.jsonp({
-      url:'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22' + '&fl=abstract&facet=false&hl=false&wt=json&api_key=plos',
+      url:'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22' + '&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=plos',
       dataType:'json',
       context:document.body,
       timeout:10000,
       callbackParameter:"json.wrf",
       success:function (data) {
         $.each(data.response.docs, function () {
-          var abstractText = this["abstract"];
+          var abstractText = '';
+
+          if(this["abstract_primary_display"]) {
+            abstractText = this["abstract_primary_display"];
+          } else {
+            abstractText = this["abstract"];
+          }
+
           abstract_html = '<div id="fig-viewer-abst">'
             + '<div class="txt"><p>' + abstractText + '</p></div>'
             + '<div class="lnks">'
@@ -775,7 +782,9 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             + '</ul>'
             + '</div>'
             + '</div>';
+
           $modal.append(abstract_html);
+
           if (!abstractText || /^\s*$/.test(abstractText)) {
             $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
           }
