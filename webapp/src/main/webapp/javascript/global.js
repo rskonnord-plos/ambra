@@ -650,7 +650,9 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         page_url = data.URL;
         $.each(data.secondaryObjects, function () {
           title_txt = (this.title ? this.title + '. ' : '') + this.transformedCaptionTitle;
-          $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_txt + '" title="' + title_txt + '"></div>').on('click', function () {
+          // the transformedCaptionTitle that is returned is markup so we need to escape it for use in HTML attributes (alt, title, etc.)
+          title_plain_text = $(this.transformedCaptionTitle).text();
+          $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_plain_text + '" title="' + title_plain_text + '"></div>').on('click', function () {
             changeSlide($(this));
             thumbPos($(this));
           })
