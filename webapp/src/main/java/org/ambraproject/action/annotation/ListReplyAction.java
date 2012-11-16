@@ -27,6 +27,7 @@ import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.AuthorView;
+import org.ambraproject.views.JournalView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.apache.commons.collections.CollectionUtils;
@@ -114,8 +115,28 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
     return baseAnnotation;
   }
 
+  @Override
+  public String getArticleURI() {
+    return articleInfo.getDoi();
+  }
+
   public ArticleInfo getArticleInfo() {
     return articleInfo;
+  }
+
+  /**
+   * Alias for adapting to FreeMarker.
+   * @deprecated Prefer {@link #getArticleInfo()} in Java code.
+   */
+  @Override
+  @Deprecated
+  public ArticleInfo getArticleInfoX() {
+    return getArticleInfo();
+  }
+
+  @Override
+  public Set<JournalView> getJournalList() {
+    return articleInfo.getJournals();
   }
 
   public List<AuthorView> getAuthors() {

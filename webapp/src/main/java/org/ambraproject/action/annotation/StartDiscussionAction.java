@@ -24,6 +24,7 @@ import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.AuthorView;
+import org.ambraproject.views.JournalView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.apache.commons.collections.CollectionUtils;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Basic action for the start discussion page. just fetches up article doi and title.
@@ -67,8 +69,18 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
   }
 
   @Override
+  public String getArticleURI() {
+    return articleURI;
+  }
+
+  @Override
   public List<AuthorView> getAuthors() {
     return authors;
+  }
+
+  @Override
+  public Set<JournalView> getJournalList() {
+    return articleInfo.getJournals();
   }
 
   @Override
@@ -97,6 +109,16 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
 
   public ArticleInfo getArticleInfo() {
     return articleInfo;
+  }
+
+  /**
+   * Alias for adapting to FreeMarker.
+   * @deprecated Prefer {@link #getArticleInfo()} in Java code.
+   */
+  @Override
+  @Deprecated
+  public ArticleInfo getArticleInfoX() {
+    return getArticleInfo();
   }
 
   public boolean getIsPeerReviewed() {
