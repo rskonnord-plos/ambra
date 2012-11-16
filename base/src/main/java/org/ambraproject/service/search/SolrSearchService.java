@@ -25,6 +25,7 @@ import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -644,7 +645,8 @@ public class SolrSearchService implements SearchService {
     query.setStart(startPage * pageSize); // Which results element to return first in this batch.
     query.setRows(pageSize); // The number of results elements to return.
     // request only fields that we need to display
-    query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type", "author_display", "striking_image");
+    query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type",
+      "author_display", "abstract", "abstract_primary_display", "striking_image");
     query.addFacetField("subject_facet");
     query.addFacetField("author_facet");
     query.addFacetField("editor_facet");
@@ -751,26 +753,39 @@ public class SolrSearchService implements SearchService {
     List<SearchHit> searchResults = new ArrayList<SearchHit>();
     for (SolrDocument document : documentList) {
 
-      String id = getFieldValue(document, "id", String.class, query.toString());
+      String id = SolrServiceUtil.getFieldValue(document, "id", String.class, query.toString());
       String message = id == null ? query.toString() : id;
-      Float score = getFieldValue(document, "score", Float.class, message);
-      String title = getFieldValue(document, "title_display", String.class, message);
-      Date publicationDate = getFieldValue(document, "publication_date", Date.class, message);
-      String eissn = getFieldValue(document, "eissn", String.class, message);
-      String journal = getFieldValue(document, "journal", String.class, message);
-      String articleType = getFieldValue(document, "article_type", String.class, message);
-      String strikingImage = getFieldValue(document, "striking_image", String.class, message);
-
-      List<String> authorList = getFieldMultiValue(document, message, String.class, "author_display");
+      Float score = SolrServiceUtil.getFieldValue(document, "score", Float.class, message);
+      String title = SolrServiceUtil.getFieldValue(document, "title_display", String.class, message);
+      Date publicationDate = SolrServiceUtil.getFieldValue(document, "publication_date", Date.class, message);
+      String eissn = SolrServiceUtil.getFieldValue(document, "eissn", String.class, message);
+      String journal = SolrServiceUtil.getFieldValue(document, "journal", String.class, message);
+      String articleType = SolrServiceUtil.getFieldValue(document, "article_type", String.class, message);
+      String strikingImage = SolrServiceUtil.getFieldValue(document, "striking_image", String.class, message);
+      List<String> abstractText = SolrServiceUtil.getFieldMultiValue(document, "abstract", String.class, message);
+      List<String> abstractPrimary = SolrServiceUtil.getFieldMultiValue(document, "abstract_primary_display", String.class, message);
+      List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, "author_display", String.class, message);
 
       String highlights = null;
       if (query.getHighlight()) {
         highlights = getHighlights(highlightings.get(id));
       }
 
+      String abstractResult = "";
+
+      //Use the primary abstract if it exists
+      if(abstractPrimary.size() > 0) {
+        abstractResult = StringUtils.join(abstractPrimary, ", ");
+      } else {
+        if(abstractText.size() > 0) {
+          abstractResult = StringUtils.join(abstractText, ", ");
+        }
+      }
 
       SearchHit hit = new SearchHit(
-          score, id, title, highlights, authorList, publicationDate, eissn, journal, articleType);
+          score, id, title, highlights, authorList, publicationDate, eissn, journal, articleType,
+        abstractResult);
+
       hit.setStrikingImage(strikingImage);
 
       if (log.isDebugEnabled())
@@ -808,40 +823,6 @@ public class SolrSearchService implements SearchService {
     }
 
     return results;
-  }
-
-  private <T> T getFieldValue(SolrDocument document, String fieldName, Class<T> type, String message) {
-    Object value = document.getFieldValue(fieldName);
-    if (value != null) {
-      if (type.isInstance(value)) {
-        return type.cast(value);
-      } else {
-        log.error("Field " + fieldName + " is not of type " + type.getName() + " for " + message);
-      }
-    } else {
-      log.warn("No \'" + fieldName + "\' field for " + message);
-    }
-
-    return null;
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T> List<T> getFieldMultiValue(SolrDocument document, String message, Class<T> type, String fieldName) {
-    List<T> authorList = new ArrayList<T>();
-    Object authors = document.getFieldValue(fieldName);
-    if (authors != null) {
-      if (authors instanceof Collection) {
-        authorList.addAll((Collection<T>) authors);
-      } else {
-        T value = getFieldValue(document, fieldName, type, message);
-        if (value != null) {
-          authorList.add(value);
-        }
-      }
-    } else {
-      log.warn("No \'" + fieldName + "\' field for " + message);
-    }
-    return authorList;
   }
 
   private String getHighlights(Map<String, List<String>> articleHighlights) {

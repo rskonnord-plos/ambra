@@ -44,7 +44,7 @@ public class SearchHit implements Serializable {
   private final String issn;
   private final String journalTitle;
   private final String articleTypeForDisplay;
-  private String abstractPrimary;
+  private String abstractText;
   private String strikingImage;
 
   /**
@@ -62,7 +62,7 @@ public class SearchHit implements Serializable {
    */
   public SearchHit(Float hitScore, String uri, String title, String highlight,
                    Collection<String> creators, Date date, String issn,
-                   String journalTitle, String articleTypeForDisplay) {
+                   String journalTitle, String articleTypeForDisplay, String abstractText) {
     if (hitScore == null) {
       this.hitScore   = 0f;
     } else {
@@ -77,6 +77,7 @@ public class SearchHit implements Serializable {
     this.issn      = issn;
     this.journalTitle = journalTitle;
     this.articleTypeForDisplay = articleTypeForDisplay;
+    this.abstractText = abstractText;
   }
 
   /**
@@ -151,20 +152,11 @@ public class SearchHit implements Serializable {
   }
 
   /**
-   * sets the primary abstract
-   * @param newAbstract
+   * Get the abstract
+   * @return abstract text
    */
-  public void setAbstractPrimary(String newAbstract) {
-    this.abstractPrimary = newAbstract;
-  }
-
-  /**
-   * Get the primary abstract
-   * (abstract element without any attributes)
-   * @return primary abstract
-   */
-  public String getAbstractPrimary() {
-    return abstractPrimary;
+  public String getAbstract() {
+    return abstractText;
   }
 
   /**
@@ -195,7 +187,7 @@ public class SearchHit implements Serializable {
         ", issn='" + issn + '\'' +
         ", journalTitle='" + journalTitle + '\'' +
         ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
-        ", abstractPrimaryDisplay='" + abstractPrimary + '\'' +
+        ", abstract='" + abstractText + '\'' +
         ", strikingImage='" + strikingImage + '\'' +
         '}';
   }

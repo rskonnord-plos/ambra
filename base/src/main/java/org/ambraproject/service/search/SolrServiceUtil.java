@@ -62,7 +62,7 @@ public class SolrServiceUtil {
    * @param type data type
    * @return field value
    */
-  public static <T> List<T> getFieldMultiValue(SolrDocument document, String message, Class<T> type, String fieldName) {
+  public static <T> List<T> getFieldMultiValue(SolrDocument document, String fieldName, Class<T> type, String message) {
     List<T> valueList = new ArrayList<T>();
     Object values = document.getFieldValue(fieldName);
     if (values != null) {

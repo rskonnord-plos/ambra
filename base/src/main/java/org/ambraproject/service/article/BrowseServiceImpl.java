@@ -906,12 +906,12 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     Date publicationDate = SolrServiceUtil.getFieldValue(document, "publication_date", Date.class, message);
     String eissn = SolrServiceUtil.getFieldValue(document, "eissn", String.class, message);
     String articleType = SolrServiceUtil.getFieldValue(document, "article_type", String.class, message);
-    List<String> abstractDisplayList = SolrServiceUtil.getFieldMultiValue(document, message, String.class, "abstract_primary_display");
+    List<String> abstractDisplayList = SolrServiceUtil.getFieldMultiValue(document, "abstract_primary_display", String.class, message);
 
-    List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, message, String.class, "author_display");
+    List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, "author_display", String.class, message);
 
-    SearchHit hit = new SearchHit(null, id, title, null, authorList, publicationDate, eissn, null, articleType);
-    hit.setAbstractPrimary(StringUtils.join(abstractDisplayList, ", "));
+    SearchHit hit = new SearchHit(null, id, title, null, authorList, publicationDate, eissn, null, articleType,
+      StringUtils.join(abstractDisplayList, ", "));
 
     return hit;
   }
