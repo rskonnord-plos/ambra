@@ -679,7 +679,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             title_plain_text = title_txt;
           }
 
-          $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_plain_text + '" title="' + title_plain_text + '"></div>').on('click', function () {
+          $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><div class="thmb-wrap"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_plain_text + '" title="' + title_plain_text + '"></div></div>').on('click', function () {
             changeSlide($(this));
             thumbPos($(this));
           })
