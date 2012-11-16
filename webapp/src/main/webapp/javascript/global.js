@@ -727,7 +727,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         } else {
           $thmb_1.trigger('click');
         }
-        buildAbs(data.articleType, data.articleTitle, data.authors);
+        buildAbs(data.articleType, data.articleTitle, data.authors, data.uri, imgNotOnPage);
       }
     });
   }();
@@ -749,7 +749,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     return '<a class="btn" href="' + href + '" onclick="killModal();">';
   };
 
-  var buildAbs = function (articleType, title, authors) {
+  var buildAbs = function (articleType, title, authors, articleDoi, linkTitle) {
     $.jsonp({
       url:'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22' + '&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=plos',
       dataType:'json',
@@ -788,7 +788,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
           }
 
-          displayModal(articleType, title, authors);
+          displayModal(articleType, title, authors, articleDoi, linkTitle);
         });
 
       },
@@ -799,9 +799,14 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
 
-  var displayModal = function (articleType, title, authors) {
+  var displayModal = function (articleType, title, authors, articleDoi, linkTitle) {
     $hdr = $('<div class="header" />');
-    h1 = '<h1>' + title + '</h1>';
+    if (linkTitle) {
+      var articleLink = "http://dx.plos.org/" + articleDoi.replace("info:doi/", "");
+      h1 = '<h1><a href="' + articleLink + '">' + title + '</a></h1>';
+    } else {
+      h1 = '<h1>' + title + '</h1>';
+    }
     authorList = $('<ul class="authors"></ul>');
     $.each(authors, function (index, author) {
       $('<li>' + author + '</li>').appendTo(authorList);
