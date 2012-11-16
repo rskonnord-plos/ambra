@@ -666,10 +666,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             thumbPos($(this));
           })
           $thmbs.append($thmb);
-          slide = $('<div class="slide" />');
-          txt = $('<div class="txt" />');
-          lnks = $('<div class="lnks" />');
-          title = '<span class="title">' + title_txt + '</span>';
+          var slide = $('<div class="slide" />');
+          var txt = $('<div class="txt" />');
+          var lnks = $('<div class="lnks" />');
+          var title = '<span class="title">' + title_txt + '</span>';
           $toggle = $('<span class="toggle">more</span>').toggle(function () {
             $(this).closest('div.txt').addClass('expand');
             $(this).html('<span class="toggle">less</span>');
@@ -677,13 +677,13 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             $(this).closest('div.txt').removeClass('expand');
             $(this).html('<span class="toggle">more</span>');
           });
-          context_hash = showInContext(this.uri);
+          var context_hash = showInContext(this.uri);
           if (imgNotOnPage) { // the image is on another page
             context_hash = '/article/' + page_url + context_hash;
           }
-          desc = '<div class="desc">' + this.transformedDescription + '</div>';
-          img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_plain_text + '"></div>'
-          lnks_txt = '<ul class="download">'
+          var desc = '<div class="desc">' + this.transformedDescription + '</div>';
+          var img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_plain_text + '"></div>'
+          var lnks_txt = '<ul class="download">'
             + '<li class="label">Download: </li>'
             + '<li><span class="icon">PPT</span> <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a></li>'
             + '<li><span class="icon">PNG</span> <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a></li>'
