@@ -637,6 +637,24 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   var abs_txt_h;
   var $all_thmb;
   var $all_sld;
+  var txt_expanded;
+
+  /**
+   * When the user clicks "more" or "less", change the expanded state of every slide.
+   */
+  var toggleExpand = function () {
+    var slideCaptions = $('#fig-viewer-slides .slide div.txt');
+    var toggleButtons = $('#fig-viewer-slides .slide .toggle');
+    if (txt_expanded) {
+      slideCaptions.removeClass('expand');
+      toggleButtons.text('more');
+      txt_expanded = false;
+    } else {
+      slideCaptions.addClass('expand');
+      toggleButtons.text('less');
+      txt_expanded = true;
+    }
+  };
 
   var buildFigs = function () {
     $.ajax({
@@ -670,13 +688,8 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           var txt = $('<div class="txt" />');
           var lnks = $('<div class="lnks" />');
           var title = '<span class="title">' + title_txt + '</span>';
-          $toggle = $('<span class="toggle">more</span>').toggle(function () {
-            $(this).closest('div.txt').addClass('expand');
-            $(this).html('<span class="toggle">less</span>');
-          }, function () {
-            $(this).closest('div.txt').removeClass('expand');
-            $(this).html('<span class="toggle">more</span>');
-          });
+          txt_expanded = false;
+          $toggle = $('<span class="toggle">more</span>').click(toggleExpand);
           var context_hash = showInContext(this.uri);
           if (imgNotOnPage) { // the image is on another page
             context_hash = '/article/' + page_url + context_hash;
