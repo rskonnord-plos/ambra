@@ -118,6 +118,10 @@ $(document).ready(function () {
     this.authorsMeta();
   })
 
+  $('.article-kicker').doOnce(function () {
+    this.articleType();
+  })
+
   if (!$.support.touchEvents) {
     $article.doOnce(function () {
       this.scrollFrame();
@@ -165,6 +169,21 @@ if ($nav_article.length) {
     })
   };
 
+})(jQuery);
+
+(function ($) {
+  $.fn.articleType = function () {
+    $this = $(this);
+    $this.find('.article-kicker-desc-container').css('width', $article_btn.width());
+    $this.hoverIntent(
+        function () {
+          $this.addClass('reveal');
+        },
+        function () {
+          $this.removeClass('reveal');
+        }
+      );
+  };
 })(jQuery);
 
 (function ($) {
