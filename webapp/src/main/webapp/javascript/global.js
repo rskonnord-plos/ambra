@@ -827,6 +827,11 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
     $('body').append($modal)
       .append($mask);
+
+    // add helper class to HTML element to prevent page scrolling when modal 
+    // is open
+    $('html').addClass('modal-active');
+
     modal_h = $modal.height();
     slides_h = $slides.height();
     $figs = $slides.find('div.figure');
@@ -1017,6 +1022,10 @@ if ($toc_block_links.length) {
 var killModal = function () {
   $('div.modal').remove();
   $('#modal-mask').remove();
+
+  // remove helper class added in displayModal()
+  $('html').removeClass('modal-active');
+
   $win.unbind('resize.modal');
 };
 
