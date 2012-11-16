@@ -771,19 +771,46 @@ public class ArticleServiceTest extends BaseTest {
 
   @Test
   public void testGetBasicArticleView() throws NoSuchArticleIdException {
+    // TODO add check for article type
+
     Article article = new Article("id:doi-for-get-basic-article-view");
     article.setTitle("test title for get article view");
+
+    List<ArticleAuthor> authors = new LinkedList<ArticleAuthor>();
+    ArticleAuthor author1 = new ArticleAuthor();
+    author1.setFullName("FullName");
+    author1.setGivenNames("GivenNames");
+    author1.setSuffix("Suffix");
+    author1.setSurnames("Surnames");
+    authors.add(author1);
+    article.setAuthors(authors);
+
+    List<String> collaborativeAuthors = new LinkedList<String>();
+    collaborativeAuthors.add("collab author 1");
+    article.setCollaborativeAuthors(collaborativeAuthors);
+
     dummyDataStore.store(article);
+
+    List<String> authors2 = new ArrayList<String>(authors.size());
+    for (ArticleAuthor ac : authors) {
+      authors2.add(ac.getFullName());
+    }
 
     ArticleInfo result = articleService.getBasicArticleView(article.getID());
     assertNotNull(result, "returned null result when fetching by id");
     assertEquals(result.getDoi(), article.getDoi(), "result had incorrect doi when fetching by id");
     assertEquals(result.getTitle(), article.getTitle(), "result had incorrect title when fetching by id");
+    assertEquals(result.getAuthors(),authors2, "result had incorrect authors when fetching by id");
+    assertEquals(result.getCollaborativeAuthors(), article.getCollaborativeAuthors(),
+        "result had incorrect collaborative authors when fetching by id");
 
     result = articleService.getBasicArticleView(article.getDoi());
     assertNotNull(result, "returned null result when fetching by doi");
     assertEquals(result.getDoi(), article.getDoi(), "result had incorrect doi when fetching by doi");
     assertEquals(result.getTitle(), article.getTitle(), "result had incorrect title when fetching by doi");
+    assertEquals(result.getAuthors(),authors2, "result had incorrect authors when fetching by doi");
+    assertEquals(result.getCollaborativeAuthors(), article.getCollaborativeAuthors(),
+        "result had incorrect collaborative authors when fetching by doi");
   }
 
   @Test
