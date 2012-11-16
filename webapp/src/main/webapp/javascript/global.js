@@ -1129,3 +1129,9 @@ $(window).load(function () {
     init();
   };
 })(jQuery);
+
+$(document).bind('keydown', function(e) {
+  if (e.which == 27) {
+    killModal();
+  }
+});
