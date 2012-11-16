@@ -545,4 +545,12 @@ $(document).ready(
       });
     });
 
+    $(document).bind('keydown', function(e) {
+      if (e.which == 27) {
+        $('#mask , #save-search-box').fadeOut(300 , function() {
+          $('#mask').remove();
+        });
+      }
+    });
+
   });
