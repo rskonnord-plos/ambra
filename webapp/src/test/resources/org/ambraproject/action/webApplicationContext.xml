@@ -46,6 +46,7 @@
     <property name="secondaryObjectService" ref="secondaryObjectService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="permissionsService" ref="permissionsService"/>
+    <property name="articleService" ref="articleService"/>
   </bean>
 
   <bean id="homePageAction" class="org.ambraproject.action.HomePageAction">
