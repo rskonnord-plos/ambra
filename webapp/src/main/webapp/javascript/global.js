@@ -174,6 +174,7 @@ if ($nav_article.length) {
 (function ($) {
   $.fn.articleType = function () {
     $this = $(this);
+    $article_btn = $this.find('#article-type-heading');
     $this.find('.article-kicker-desc-container').css('width', $article_btn.width());
     $this.hoverIntent(
         function () {
