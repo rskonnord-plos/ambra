@@ -175,15 +175,18 @@ if ($nav_article.length) {
   $.fn.articleType = function () {
     $this = $(this);
     $article_btn = $this.find('#article-type-heading');
-    $this.find('.article-kicker-desc-container').css('width', $article_btn.width());
-    $this.hoverIntent(
-        function () {
-          $this.addClass('reveal');
-        },
-        function () {
-          $this.removeClass('reveal');
-        }
+    var articleKickerDesc = $this.find('.article-kicker-desc-container');
+    if (articleKickerDesc.length > 0) {
+      articleKickerDesc.css('width', $article_btn.width());
+      $this.hoverIntent(
+          function () {
+            $this.addClass('reveal');
+          },
+          function () {
+            $this.removeClass('reveal');
+          }
       );
+    }
   };
 })(jQuery);
 
