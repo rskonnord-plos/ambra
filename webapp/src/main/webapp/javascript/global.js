@@ -248,10 +248,18 @@ if ($nav_article.length) {
             && ($win.width() >= 960) //the viewport is wide enough
           ) {
           $this.css({ 'position':'fixed', 'top':options.margin + 'px' });
-          hilite()
+          hilite();
         }
         else {
-          $this.css({ 'position':'static'});
+          if(win_top > (ftr_top - (el_h + options.margin))) {
+            //Adjust the position here a bit to stop the footer from being overlapped
+            var tt = ftr_top - win_top - el_h - options.margin + 35;
+            $this.css({ 'position':'fixed', 'top':tt + 'px' });
+            //$this.css({ 'position':'static'});
+          } else {
+            //We're above the article
+            $this.css({ 'position':'static'});
+          }
         }
       }
       var hilite = function () {
