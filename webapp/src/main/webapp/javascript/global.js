@@ -142,7 +142,7 @@ if ($nav_article.length) {
     $this = this;
     $authors = $this.find('li').not('.ignore');
     $ignores = $this.find('li.ignore');
-    $authors.on('click', function (e) {
+    var showAuthorMeta = function (e) {
       e.stopPropagation();
       $this = $(this);
       var position = $this.position();
@@ -166,7 +166,14 @@ if ($nav_article.length) {
       $($ignores).one('click', function () {
         $authors.removeClass('on');
       });
-    })
+    };
+    $authors.each(function (index, value) {
+      var $author = $(value);
+      // Show a metadata popup only if it would contain something
+      if ($author.find('p').length > 0) {
+        $author.on('click', showAuthorMeta);
+      }
+    });
   };
 
 })(jQuery);
