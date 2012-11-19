@@ -1065,7 +1065,14 @@
             Download:
             <ul>
               <li>
-                <div class="icon">PPT</div>
+                <div class="icon">
+                  <xsl:element name="a">
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="$pptURL"/>
+                    </xsl:attribute>
+                    PPT
+                  </xsl:element>
+                </div>
                 <xsl:element name="a">
                   <xsl:attribute name="href">
                     <xsl:value-of select="$pptURL"/>
@@ -1074,12 +1081,20 @@
                 </xsl:element>
               </li>
               <li>
-                <div class="icon">PNG</div>
+                <div class="icon">
+                  <xsl:element name="a">
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="$bigImgURL"/>
+                    </xsl:attribute>
+                    PNG
+                  </xsl:element>
+                </div>
                 <xsl:element name="a">
                   <xsl:attribute name="href">
                     <xsl:value-of select="$bigImgURL"/>
                   </xsl:attribute>
-                  larger image (<xsl:element name="span">
+                  larger image
+                  (<xsl:element name="span">
                     <xsl:attribute name="id">
                       <xsl:value-of select="$bigImgDOI"/>
                     </xsl:attribute>
@@ -1087,12 +1102,20 @@
                 </xsl:element>
               </li>
               <li>
-                <div class="icon">TIFF</div>
+                <div class="icon">
+                  <xsl:element name="a">
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="$origImgURL"/>
+                    </xsl:attribute>
+                    TIFF
+                  </xsl:element>
+                </div>
                 <xsl:element name="a">
                   <xsl:attribute name="href">
                     <xsl:value-of select="$origImgURL"/>
                   </xsl:attribute>
-                  original image (<xsl:element name="span">
+                  original image
+                  (<xsl:element name="span">
                     <xsl:attribute name="id">
                       <xsl:value-of select="$origImgDOI"/>
                     </xsl:attribute>
