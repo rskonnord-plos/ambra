@@ -43,6 +43,13 @@
     <li>Additional database fields added for features to come</li>
   </ul>
 
+  <h2>Ambra 2.4.8</h2>
+  <p>Released November 08, 2012</p>
+  <h3>Features Implemented in Ambra 2.4.8</h3>
+  <ul>
+    <li>Saved Search: The User is now able to save search criteria and receive email alerts for newly published articles matching the criteria on a weekly and monthly basis. </li>
+  </ul>
+
   <h2>Ambra 2.4.7</h2>
   <p>Released October 25, 2012</p>
   <h3>Features Implemented in Ambra 2.4.7</h3>
