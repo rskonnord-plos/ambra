@@ -186,6 +186,8 @@ if ($nav_article.length) {
             $this.removeClass('reveal');
           }
       );
+    } else {
+      $article_btn.css("cursor", "text");
     }
   };
 })(jQuery);
