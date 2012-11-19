@@ -35,6 +35,14 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.4.9</h2>
+  <p>Released November 19, 2012</p>
+  <h3>Features Implemented in Ambra 2.4.9</h3>
+  <ul>
+    <li>Database cleaup</li>
+    <li>Additional database fields added for features to come</li>
+  </ul>
+
   <h2>Ambra 2.4.7</h2>
   <p>Released October 25, 2012</p>
   <h3>Features Implemented in Ambra 2.4.7</h3>

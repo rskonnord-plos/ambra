@@ -31,6 +31,7 @@ public class Annotation extends AmbraEntity {
   private String title;
   private String body;
   private String xpath;
+  private String highlightedText;
 
   private String competingInterestBody;
 
@@ -132,6 +133,14 @@ public class Annotation extends AmbraEntity {
 
   public void setAnnotationCitation(AnnotationCitation annotationCitation) {
     this.annotationCitation = annotationCitation;
+  }
+
+  public String getHighlightedText() {
+    return highlightedText;
+  }
+
+  public void setHighlightedText(String highlightedText) {
+    this.highlightedText = highlightedText;
   }
 
   @Override

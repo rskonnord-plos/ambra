@@ -52,6 +52,7 @@ public class Article extends AmbraEntity{
   private String format;
   private String pages;
   private String eLocationId;
+  private String strkImgURI;
 
   private Date date;
 
@@ -137,6 +138,14 @@ public class Article extends AmbraEntity{
 
   public void seteLocationId(String eLocationId) {
     this.eLocationId = eLocationId;
+  }
+
+  public String getStrkImgURI() {
+    return strkImgURI;
+  }
+
+  public void setStrkImgURI(String strkImgURI) {
+    this.strkImgURI = strkImgURI;
   }
 
   public int getState() {

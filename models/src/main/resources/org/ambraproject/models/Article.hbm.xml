@@ -46,6 +46,7 @@
     <property name="pages" column="pages" type="string"/>
     <property name="eLocationId" column="eLocationId" type="string"/>
     <property name="url" column="url" type="string"/>
+    <property name="strkImgURI" column="strkImgURI" type="string"/>
 
     <property name="date" column="date" type="timestamp"/>
 

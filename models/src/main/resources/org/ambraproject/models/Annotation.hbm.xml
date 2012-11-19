@@ -44,6 +44,7 @@
     <property name="title" column="title" type="text"/>
     <property name="body" column="body" type="text"/>
     <property name="xpath" column="xpath" type="text"/>
+    <property name="highlightedText" column="highlightedText" type="text"/>
 
     <property name="competingInterestBody" type="text" column="competingInterestBody"/>
 
