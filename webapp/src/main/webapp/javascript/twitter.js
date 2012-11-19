@@ -105,11 +105,10 @@ $.fn.twitter = function () {
           + " as recorded by Twitter.  Article published "
           + $.datepicker.formatDate("M d, yy", new Date(json.article.published))
           + ". Tweets updated "
-          + $.datepicker.formatDate("M d, yy", new Date(json.article.source[0].updated_at));
+          + $.datepicker.formatDate("M d, yy", new Date(json.article.source[0].updated_at)) + ".";
     }
-    var h3 = $('<h3></h3>').html(statusMsg);
 
-    $("#tweets").prepend(h3);
+    $("#tweets").prepend(statusMsg);
   }
 
   this.parseTwitterDate = function(tweetdate) {

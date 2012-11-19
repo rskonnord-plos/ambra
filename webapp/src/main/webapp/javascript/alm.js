@@ -666,12 +666,12 @@ $.fn.alm = function () {
         pluralization = "s";
       }
 
-      html = "<h3>" + numCitations + " citation" + pluralization
+      html = numCitations + " citation" + pluralization
         + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
         + $.datepicker.formatDate("M dd, yy", new Date(response.article.published))
         + ". Citations updated on "
         + $.datepicker.formatDate("M dd, yy", new Date(response.article.source[0].updated_at))
-        + ".</h3>"
+        + "."
         + " <ol>" + html + "</ol>";
     }
 
