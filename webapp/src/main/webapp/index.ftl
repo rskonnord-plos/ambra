@@ -191,7 +191,7 @@
         <li class="lnk-twtr ir"><a href="http://twitter.com/plosone" title="PLOS ONE on Twitter" target=_blank>PLOS ONE on Twitter</a></li>
         <li class="lnk-fb ir"><a href="http://www.facebook.com/plos.org" title="PLOS on Facebook" target=_blank>PLOS on Facebook</a></li>
         <li class="lnk-in ir"><a href="http://www.linkedin.com/groups?mostPopular=&gid=3484244" title="PLOS on LinkedIn" target=_blank>PLOS on LinkedIn</a></li>
-        <li class="lnk-join ir"><a href="http://www.plos.org/support/donate.php" title="Join PLOS: Show Your Support">Join PLOS</a></li>
+        <li class="lnk-join ir"><a href="http://blogs.plos.org/" title="PLOS Blogs">PLOS Blogs</a></li>
       </ul>
     </div><!-- end : stay-connected block -->
 
