@@ -188,9 +188,9 @@
       <ul class="lnk-social cf">
         <li class="lnk-email ir"><a href="http://www.plosone.org/user/secure/editPrefsAlerts.action?tabId=alerts" title="E-mail Alerts">E-mail Alerts</a></li>
         <li class="lnk-rss ir"><a href="http://www.plosone.org/article/feed" title="RSS">RSS</a></li>
-        <li class="lnk-twtr ir"><a href="http://twitter.com/plosone" title="PLOS ONE on Twitter">PLOS ONE on Twitter</a></li>
-        <li class="lnk-fb ir"><a href="http://www.facebook.com/plos.org" title="PLOS on Facebook">PLOS on Facebook</a></li>
-        <li class="lnk-in ir"><a href="http://www.linkedin.com/groups?mostPopular=&gid=3484244" title="PLOS on LinkedIn">PLOS on LinkedIn</a></li>
+        <li class="lnk-twtr ir"><a href="http://twitter.com/plosone" title="PLOS ONE on Twitter" target=_blank>PLOS ONE on Twitter</a></li>
+        <li class="lnk-fb ir"><a href="http://www.facebook.com/plos.org" title="PLOS on Facebook" target=_blank>PLOS on Facebook</a></li>
+        <li class="lnk-in ir"><a href="http://www.linkedin.com/groups?mostPopular=&gid=3484244" title="PLOS on LinkedIn" target=_blank>PLOS on LinkedIn</a></li>
         <li class="lnk-join ir"><a href="http://www.plos.org/support/donate.php" title="Join PLOS: Show Your Support">Join PLOS</a></li>
       </ul>
     </div><!-- end : stay-connected block -->
