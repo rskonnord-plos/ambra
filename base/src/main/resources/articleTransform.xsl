@@ -353,7 +353,7 @@
                       <xsl:attribute name="id">
                         <xsl:value-of select="$bigImgDOI"/>
                       </xsl:attribute>
-                    </xsl:element>PNG)
+                    </xsl:element>)
                     </xsl:element>
                   </li>
                   <li>
@@ -366,7 +366,7 @@
                       <xsl:attribute name="id">
                         <xsl:value-of select="$origImgDOI"/>
                       </xsl:attribute>
-                    </xsl:element>TIFF)
+                    </xsl:element>)
                     </xsl:element>
                   </li>
                 </ul>
