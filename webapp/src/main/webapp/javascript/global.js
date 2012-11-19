@@ -169,8 +169,7 @@ if ($nav_article.length) {
     };
     $authors.each(function (index, value) {
       var $author = $(value);
-      // Show a metadata popup only if it would contain something
-      if ($author.find('p').length > 0) {
+      if ($author.find('.author_meta').length > 0) {
         $author.on('click', showAuthorMeta);
       }
     });
