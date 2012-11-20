@@ -708,17 +708,9 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         $.each(data.secondaryObjects, function () {
           title_txt = (this.title ? this.title + '. ' : '') + this.transformedCaptionTitle;
 
-          // transformedCaptionTitle can be either complex markup or plain 
-          // text. we need to get it as plain text for use in HTML attributes. 
-          // first we attempt to parse it using jquery and if that fails, 
-          // then we can assume it's plain text and just use that.
-          try {
-            title_plain_text = $(title_txt).text();
-          } catch (e) {
-            title_plain_text = title_txt;
-          }
+          image_title = this.title + ' ' + this.plainCaptionTitle;
 
-          $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><div class="thmb-wrap"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + title_plain_text + '" title="' + title_plain_text + '"></div></div>').on('click', function () {
+          $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><div class="thmb-wrap"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + image_title + '" title="' + image_title + '"></div></div>').on('click', function () {
             changeSlide($(this));
             thumbPos($(this));
           })
@@ -734,7 +726,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             context_hash = '/article/' + page_url + context_hash;
           }
           var desc = '<div class="desc">' + this.transformedDescription + '</div>';
-          var img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + title_plain_text + '"></div>'
+          var img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + image_title + '"></div>'
           var lnks_txt = '<ul class="download">'
             + '<li class="label">Download: </li>'
             + '<li><span class="icon"><a href="' + "/article/" + this.uri + "/powerpoint" + '">PPT</a></span> <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a></li>'
