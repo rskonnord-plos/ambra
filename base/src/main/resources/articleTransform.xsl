@@ -1239,6 +1239,9 @@
           </xsl:attribute>
           <xsl:attribute name="border">0</xsl:attribute>
         </xsl:if>
+        <xsl:attribute name="class">
+          <xsl:value-of>inline-graphic</xsl:value-of>
+        </xsl:attribute>
       </xsl:element>
     </xsl:template>
 

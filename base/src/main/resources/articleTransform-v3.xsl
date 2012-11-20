@@ -1206,6 +1206,9 @@
             <xsl:value-of select="concat($pubAppContext,'/article/fetchObject.action?uri=',$graphicDOI,'&amp;representation=PNG')"/>
           </xsl:attribute>
         </xsl:if>
+        <xsl:attribute name="class">
+          <xsl:value-of>inline-graphic</xsl:value-of>
+        </xsl:attribute>
       </xsl:element>
     </xsl:template>
 
