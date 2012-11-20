@@ -268,7 +268,7 @@ $.fn.twitter = function () {
   this.pagingAnchor = function(pageNumber, pagingText, className) {
     var anchor = $('<a></a>').attr({
       href: "#",
-      title: "(" + pageNumber + ")",
+      title: "(" + (pageNumber + 1)  + ")",
       onclick: "twitter.showTweetsPage(" + pageNumber + "); return false;"
     }).html(pagingText);
 
