@@ -195,7 +195,7 @@ $.fn.twitter = function () {
         // if less than 4 pages, do not put "..."
         // put < with or without link depending on whether this is first page.
         if (currentPage > 0) {
-          pagination.append(this.pagingAnchor(currentPage, "&lt;", "prev"));
+          pagination.append(this.pagingAnchor((currentPage - 1), "&lt;", "prev"));
         }
         else {
           pagination.append(prev);
@@ -224,7 +224,7 @@ $.fn.twitter = function () {
         // put < and first page number always.
         // The link is present if this is not the first page.
         if (currentPage > 0) {
-          pagination.append(this.pagingAnchor(currentPage - 1, "&lt;", "prev"));
+          pagination.append(this.pagingAnchor((currentPage - 1), "&lt;", "prev"));
           pagination.append(this.pagingAnchor(0, 1));
         }
         else {
