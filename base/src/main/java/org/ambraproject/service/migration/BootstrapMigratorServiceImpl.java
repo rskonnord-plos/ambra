@@ -116,8 +116,8 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
       migrate246();
     }
 
-    if (dbVersion < 248) {
-      migrate247();
+    if (dbVersion < 249) {
+      migrate248();
     }
 
   }
@@ -127,8 +127,8 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
    * For example, if earlier db version is 237,
    * next migration method name should be migrate237()
    */
-  private void migrate247() {
-    log.info("Migration from 247 starting");
+  private void migrate248() {
+    log.info("Migration from 248 starting");
 
     hibernateTemplate.execute(new HibernateCallback() {
       @Override
@@ -150,7 +150,7 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
         return null;
       }
     });
-    log.info("Migration from 247 complete");
+    log.info("Migration from 248 complete");
   }
 
   /**
