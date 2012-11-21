@@ -19,6 +19,8 @@
     <!--[if lte IE 7]>
     <@versionedCSS file="${cssFileName}" />
     <![endif]-->
+  <#elseif cssFile?contains("print.css") >
+    <@versionedCSS file="${cssFileName}" media="print" />
   <#else>
     <@versionedCSS file="${cssFileName}" />
   </#if>
