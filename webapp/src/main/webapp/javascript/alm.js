@@ -1123,6 +1123,8 @@ $.fn.alm = function () {
               title: {
                 text: "Months",
                 style: {
+                  fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
+                  fontWeight: "normal",
                   color: "#000"
                 },
                 align: "high"
@@ -1139,6 +1141,8 @@ $.fn.alm = function () {
               title: {
                 text: "Cumulative Views",
                 style: {
+                  fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
+                  fontWeight: "normal",
                   color: "#000",
                   height: "50px"
                 }
