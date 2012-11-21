@@ -825,9 +825,8 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         } else if ($modal.find('.abstractErrorMsg').length > 0) {
           $modal.find('.txt').css('text-align', 'center'); // Apply positioning for error message
         }
-
-        displayModal(articleType, title, authors, articleDoi, linkTitle);
       });
+      displayModal(articleType, title, authors, articleDoi, linkTitle);
     };
 
     var failAbstract = function (xOptions, textStatus) {
