@@ -831,7 +831,7 @@ $.fn.alm = function () {
         showURL: false,
         bodyHandler: function() {
           return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-            "<thead><tr><th>Invididuals</th><th>Groups</th></tr>" +
+            "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
             "</thead><tbody><tr><td class=\"data1\">" + mendeleyData.individuals.format(0,'.',',') + "</td>" +
             "<td class=\"data2\">" + mendeleyData.groups.format(0,'.',',') + "</td></tr>" +
             "</tbody></table></div>");
