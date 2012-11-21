@@ -833,6 +833,12 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       });
     };
 
+    var failAbstract = function (xOptions, textStatus) {
+      console.log('Error: ' + textStatus);
+      // Continue building the lightbox, with a dummy value that supplies an empty abstract
+      populateAbstract({'response':{'docs':[{'abstract':''}]}});
+    };
+
     if (solrApiKey) {
       var url = solrHost + '?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=' + solrApiKey;
       $.jsonp({
@@ -842,14 +848,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         timeout:10000,
         callbackParameter:"json.wrf",
         success:populateAbstract,
-        error:function (xOptions, textStatus) {
-          console.log('Error: ' + textStatus);
-        }
+        error:failAbstract
       });
     } else {
-      console.log('Error: config property "solrApiKey" not found');
-      // Continue building the lightbox, with a dummy value that supplies an empty abstract
-      populateAbstract({'response':{'docs':[{'abstract':''}]}});
+      failAbstract(null, 'config property "solrApiKey" not found');
     }
   };
 
