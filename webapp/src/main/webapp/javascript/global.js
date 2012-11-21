@@ -794,52 +794,63 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
   var buildAbs = function (articleType, title, authors, articleDoi, linkTitle) {
-    $.jsonp({
-      url:'http://api.plos.org/search?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22' + '&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=plos',
-      dataType:'json',
-      context:document.body,
-      timeout:10000,
-      callbackParameter:"json.wrf",
-      success:function (data) {
-        $.each(data.response.docs, function () {
-          var abstractText = '';
+    var solrHost = $('meta[name=solrHost]').attr("content");
+    var solrApiKey = $('meta[name=solrApiKey]').attr("content");
 
-          if(this["abstract_primary_display"]) {
-            abstractText = this["abstract_primary_display"];
-          } else {
-            abstractText = this["abstract"];
-          }
+    var populateAbstract = function (data) {
+      $.each(data.response.docs, function () {
+        var abstractText;
 
-          abstract_html = '<div id="fig-viewer-abst">'
-            + '<div class="txt"><p>' + abstractText + '</p></div>'
-            + '<div class="lnks">'
-            + '<ul class="download">'
-            + '<li class="label">Download: </li>'
+        if (this["abstract_primary_display"]) {
+          abstractText = this["abstract_primary_display"];
+        } else {
+          abstractText = this["abstract"];
+        }
+
+        abstract_html = '<div id="fig-viewer-abst">'
+          + '<div class="txt"><p>' + abstractText + '</p></div>'
+          + '<div class="lnks">'
+          + '<ul class="download">'
+          + '<li class="label">Download: </li>'
 //          + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-            + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
-            + '</ul>'
-            + '<ul class="figure_navigation">'
-            + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
-            + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-            + '<li>' + getFullTextElement() + 'show in context</a></li>'
-            + '</ul>'
-            + '</div>'
-            + '</div>';
+          + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
+          + '</ul>'
+          + '<ul class="figure_navigation">'
+          + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
+          + '<li><span class="btn active viewAbstract">view abstract</span></li>'
+          + '<li>' + getFullTextElement() + 'show in context</a></li>'
+          + '</ul>'
+          + '</div>'
+          + '</div>';
 
-          $modal.append(abstract_html);
+        $modal.append(abstract_html);
 
-          if (!abstractText || /^\s*$/.test(abstractText)) {
-            $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
-          }
+        if (!abstractText || /^\s*$/.test(abstractText)) {
+          $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
+        }
 
-          displayModal(articleType, title, authors, articleDoi, linkTitle);
-        });
+        displayModal(articleType, title, authors, articleDoi, linkTitle);
+      });
+    };
 
-      },
-      error:function (xOptions, textStatus) {
-        console.log('Error: ' + textStatus);
-      }
-    });
+    if (solrApiKey) {
+      var url = solrHost + '?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=' + solrApiKey;
+      $.jsonp({
+        url:url,
+        dataType:'json',
+        context:document.body,
+        timeout:10000,
+        callbackParameter:"json.wrf",
+        success:populateAbstract,
+        error:function (xOptions, textStatus) {
+          console.log('Error: ' + textStatus);
+        }
+      });
+    } else {
+      console.log('Error: config property "solrApiKey" not found');
+      // Continue building the lightbox, with a dummy value that supplies an empty abstract
+      populateAbstract({'response':{'docs':[{'abstract':''}]}});
+    }
   };
 
 
