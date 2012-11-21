@@ -769,20 +769,22 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   }();
 
   /**
+   * @param isButton {boolean} {@code true} to style as a button; {@code false} for plain-text link
    * @return {String} an HTML snippet for the lightbox's "full text" button
    */
-  var getFullTextElement = function () {
+  var getFullTextElement = function (isButton) {
     var articleBlock = $('#article-block');
+    var aClass = isButton ? 'class="btn"' : '';
     if (articleBlock.length == 0) {
       // Not on the article page, so the full text button should link there
-      return '<a class="btn" href="' + '/article/' + page_url + '">';
+      return '<a ' + aClass + ' href="' + '/article/' + page_url + '">';
     }
     // On the article page, so "full text" closes the lightbox and jumps to the abstract
     var href = '#abstract0';
     if (articleBlock.find(href).length == 0) {
       href = '#'; // article has no abstract; default to top of page
     }
-    return '<a class="btn" href="' + href + '" onclick="killModal();">';
+    return '<a ' + aClass + ' href="' + href + '" onclick="killModal();">';
   };
 
   var buildAbs = function (articleType, title, authors, articleDoi, linkTitle) {
@@ -810,7 +812,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           + '<ul class="figure_navigation">'
           + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
           + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-          + '<li>' + getFullTextElement() + 'show in context</a></li>'
+          + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
           + '</ul>'
           + '</div>'
           + '</div>';
@@ -818,7 +820,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         $modal.append(abstract_html);
 
         if (!abstractText || /^\s*$/.test(abstractText)) {
-          $modal.find('.viewAbstract').hide(); // Go back and hide the one created in buildFigs (not just here)
+          // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
+          $modal.find('.viewAbstract').hide();
+        } else if ($modal.find('.abstractErrorMsg').length > 0) {
+          $modal.find('.txt').css('text-align', 'center'); // Apply positioning for error message
         }
 
         displayModal(articleType, title, authors, articleDoi, linkTitle);
@@ -827,8 +832,11 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
     var failAbstract = function (xOptions, textStatus) {
       console.log('Error: ' + textStatus);
-      // Continue building the lightbox, with a dummy value that supplies an empty abstract
-      populateAbstract({'response':{'docs':[{'abstract':''}]}});
+      var msg = '<span class="abstractErrorMsg">Abstract preview temporarily unavailable. Please try again later, or '
+        + getFullTextElement(false) + 'read the abstract in context</a>.</span>';
+
+      // Fill in the error message, and the final displayModal call will build the rest of the lightbox
+      populateAbstract({'response':{'docs':[{'abstract':msg}]}});
     };
 
     if (solrHost && solrApiKey) {
