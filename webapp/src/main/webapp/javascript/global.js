@@ -831,7 +831,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       populateAbstract({'response':{'docs':[{'abstract':''}]}});
     };
 
-    if (solrApiKey) {
+    if (solrHost && solrApiKey) {
       var url = solrHost + '?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=' + solrApiKey;
       $.jsonp({
         url:url,
@@ -843,7 +843,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         error:failAbstract
       });
     } else {
-      failAbstract(null, 'config property "solrApiKey" not found');
+      failAbstract(null, 'config properties "solrHost" and "solrApiKey" required');
     }
   };
 
