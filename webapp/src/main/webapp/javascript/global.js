@@ -792,40 +792,40 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     var solrApiKey = $('meta[name=solrApiKey]').attr("content");
 
     var populateAbstract = function (data) {
-      $.each(data.response.docs, function () {
-        var abstractText;
+      var docs = data.response.docs;
+      if (docs.length != 1) {
+        return failAbstract(null, 'expected docs.length == 1; got docs.length == ' + docs.length);
+      }
+      var abstractText = docs[0]["abstract_primary_display"];
+      if (!abstractText) {
+        abstractText = docs[0]["abstract"];
+      }
 
-        if (this["abstract_primary_display"]) {
-          abstractText = this["abstract_primary_display"];
-        } else {
-          abstractText = this["abstract"];
-        }
-
-        abstract_html = '<div id="fig-viewer-abst">'
-          + '<div class="txt"><p>' + abstractText + '</p></div>'
-          + '<div class="lnks">'
-          + '<ul class="download">'
-          + '<li class="label">Download: </li>'
+      abstract_html = '<div id="fig-viewer-abst">'
+        + '<div class="txt"><p>' + abstractText + '</p></div>'
+        + '<div class="lnks">'
+        + '<ul class="download">'
+        + '<li class="label">Download: </li>'
 //          + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-          + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
-          + '</ul>'
-          + '<ul class="figure_navigation">'
-          + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
-          + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-          + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
-          + '</ul>'
-          + '</div>'
-          + '</div>';
+        + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
+        + '</ul>'
+        + '<ul class="figure_navigation">'
+        + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
+        + '<li><span class="btn active viewAbstract">view abstract</span></li>'
+        + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
+        + '</ul>'
+        + '</div>'
+        + '</div>';
 
-        $modal.append(abstract_html);
+      $modal.append(abstract_html);
 
-        if (!abstractText || /^\s*$/.test(abstractText)) {
-          // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
-          $modal.find('.viewAbstract').hide();
-        } else if ($modal.find('.abstractErrorMsg').length > 0) {
-          $modal.find('.txt').css('text-align', 'center'); // Apply positioning for error message
-        }
-      });
+      if (!abstractText || /^\s*$/.test(abstractText)) {
+        // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
+        $modal.find('.viewAbstract').hide();
+      } else if ($modal.find('.abstractErrorMsg').length > 0) {
+        $modal.find('.txt').css('text-align', 'center'); // Apply positioning for error message
+      }
+
       displayModal(articleType, title, authors, articleDoi, linkTitle);
     };
 
