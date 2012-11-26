@@ -309,11 +309,12 @@
 
         <xsl:if test="graphic">
             <div class="figure">
+              <!--id needs to be attached to "figure" div for proper anchor linking-->
+              <xsl:attribute name="id"><xsl:value-of select="$figId"/></xsl:attribute>
                 <div class="img">
                   <xsl:call-template name="makeXpathLocation"/>
                   <xsl:element name="a">
                       <xsl:attribute name="name"><xsl:value-of select="$figId"/></xsl:attribute>
-                      <xsl:attribute name="id"><xsl:value-of select="$figId"/></xsl:attribute>
                       <xsl:attribute name="title">Click for larger image </xsl:attribute>
                       <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
                       <xsl:attribute name="data-doi"><xsl:value-of select="$targetURI"/></xsl:attribute>
