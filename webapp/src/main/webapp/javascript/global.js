@@ -274,12 +274,15 @@ if ($nav_article.length) {
       }
 
       var marginFix = function () {
-        x = (options.sections).last().offset().top
-        y = $(document).height();
-        z = (y - x) + options.margin;
-        if (z < $win.height()) {
-          margin = Math.ceil(($win.height() - z) + options.margin);
-          (options.sections).last().css({ 'margin-bottom':margin + 'px'});
+        var lastSection = options.sections.last();
+        if (lastSection.length > 0) {
+          var offset = lastSection.offset().top;
+          var docHeight = $(document).height();
+          var z = (docHeight - offset) + options.margin;
+          if (z < $win.height()) {
+            var margin = Math.ceil(($win.height() - z) + options.margin);
+            lastSection.css({ 'margin-bottom':margin + 'px'});
+          }
         }
       }
 
