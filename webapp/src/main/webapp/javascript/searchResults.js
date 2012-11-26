@@ -472,8 +472,8 @@ $(document).ready(
     });
 
     $('a.save-search').click(function() {
-      if ($('#search')) {
-        $('#text_name_savedsearch').val($('#search').val());
+      if ($('#searchOnResult')) {
+        $('#text_name_savedsearch').val($('#searchOnResult').val());
       }
       $('#span_error_savedsearch').html('');
 

@@ -147,9 +147,9 @@ ERROR, searchType must be defined.
 <#if searchType == "simple">
   <fieldset>
     <legend>Search</legend>
-    <label for="search">Search</label>
+    <label for="searchOnResult">Search</label>
     <div class="wrap">
-      <input id="search" type="text" name="query" value="${query?html}">
+      <input id="searchOnResult" type="text" name="query" value="${query?html}">
       <input type="image" alt="SEARCH" src="/images/icon.search.gif">
     </div>
   </fieldset>
@@ -157,9 +157,9 @@ ERROR, searchType must be defined.
 <#else>
   <fieldset>
     <legend>Search</legend>
-    <label for="search">Search</label>
+    <label for="searchOnResult">Search</label>
     <div class="wrap">
-      <input id="search" type="text" name="unformattedQuery" value="${queryAsExecuted?html}">
+      <input id="searchOnResult" type="text" name="unformattedQuery" value="${queryAsExecuted?html}">
       <input type="image" alt="SEARCH" src="/images/icon.search.gif">
     </div>
   </fieldset>

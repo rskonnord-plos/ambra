@@ -1052,7 +1052,7 @@ if ($fig_results.length) {
 
 var $search_form = $('#searchForm');
 $search_form.submit(function() {
-  if($(this).find('#search').val().length == 0) {
+  if($(this).find('#searchOnResult').val().length == 0) {
     return false;
   }
 });
