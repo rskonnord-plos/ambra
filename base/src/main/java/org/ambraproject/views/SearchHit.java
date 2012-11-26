@@ -46,6 +46,7 @@ public class SearchHit implements Serializable {
   private final String articleTypeForDisplay;
   private String abstractText;
   private String strikingImage;
+  private Boolean hasAssets = Boolean.FALSE;
 
   /**
    * Create a search hit with the values set
@@ -175,6 +176,14 @@ public class SearchHit implements Serializable {
     this.strikingImage = strikingImage;
   }
 
+  public Boolean getHasAssets() {
+    return hasAssets;
+  }
+
+  public void setHasAssets(Boolean hasAssets) {
+    this.hasAssets = hasAssets;
+  }
+
   @Override
   public String toString() {
     return "SearchHit{" +
@@ -189,6 +198,7 @@ public class SearchHit implements Serializable {
         ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
         ", abstract='" + abstractText + '\'' +
         ", strikingImage='" + strikingImage + '\'' +
+        ", hasAssets='" + hasAssets + '\'' +
         '}';
   }
 

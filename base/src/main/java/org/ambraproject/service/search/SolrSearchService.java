@@ -646,7 +646,7 @@ public class SolrSearchService implements SearchService {
     query.setRows(pageSize); // The number of results elements to return.
     // request only fields that we need to display
     query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type",
-      "author_display", "abstract", "abstract_primary_display", "striking_image");
+      "author_display", "abstract", "abstract_primary_display", "striking_image", "figure_table_caption");
     query.addFacetField("subject_facet");
     query.addFacetField("author_facet");
     query.addFacetField("editor_facet");
@@ -765,6 +765,8 @@ public class SolrSearchService implements SearchService {
       List<String> abstractText = SolrServiceUtil.getFieldMultiValue(document, "abstract", String.class, message);
       List<String> abstractPrimary = SolrServiceUtil.getFieldMultiValue(document, "abstract_primary_display", String.class, message);
       List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, "author_display", String.class, message);
+      // TODO create a dedicated field for checking the existence of assets for a given article.
+      List<String> figureTableCaptions = SolrServiceUtil.getFieldMultiValue(document, "figure_table_caption", String.class, message);
 
       String highlights = null;
       if (query.getHighlight()) {
@@ -787,6 +789,9 @@ public class SolrSearchService implements SearchService {
         abstractResult);
 
       hit.setStrikingImage(strikingImage);
+      if (figureTableCaptions.size() > 0) {
+        hit.setHasAssets(true);
+      }
 
       if (log.isDebugEnabled())
         log.debug(hit.toString());
