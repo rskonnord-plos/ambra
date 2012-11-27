@@ -13,7 +13,7 @@
 
 
 
-<table width="600" cellspacing="0" cellpadding="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif;" align="center">
+<table width="728" cellspacing="0" cellpadding="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif;" align="center">
   <tbody>
   <tr>
     <td>
@@ -30,19 +30,19 @@
   </tbody>
 </table>
 
-<table width="600" cellspacing="0" cellpadding="0" border="0" align="center">
+<table width="728" cellspacing="0" cellpadding="0" border="0" align="center">
 
   <tbody>
 
   <tr>
 
-    <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=294"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=294" /></a></td>
+    <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=493"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=493" /></a></td>
 
   </tr>
 
   <tr>
 
-    <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=295"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=295" /></a></td>
+    <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=501"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=501" /></a></td>
 
   </tr>
 
@@ -50,7 +50,7 @@
 
 </table>
 
-<table width="600" cellspacing="0" cellpadding="0" border="0" align="center">
+<table width="728" cellspacing="0" cellpadding="0" border="0" align="center">
 
   <tbody>
   <tr>
@@ -58,7 +58,7 @@
 
       <div style="border: 0px solid rgb(204, 204, 204);">
         <a title="PLOS Open for Discovery" href="http://www.plosone.org">
-          <img width="600" height="73" border="0" alt="PLOS Open for Discovery" src=${headers.imagePath} /></a>
+          <img width="728" height="73" border="0" alt="PLOS Open for Discovery" src=${headers.imagePath} /></a>
 
     </td>
   </tr>
@@ -66,7 +66,7 @@
 
 </table>
 
-<table width="600" cellspacing="0" cellpadding="4" style="border-bottom: 1px solid rgb(204, 204, 204); font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 10px; color: rgb(153, 153, 153);" align="center">
+<table width="728" cellspacing="0" cellpadding="4" style="border-bottom: 1px solid rgb(204, 204, 204); font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 10px; color: rgb(153, 153, 153);" align="center">
 
   <tbody>
 
@@ -91,7 +91,7 @@
 
 <p>&nbsp;</p>
 
-<table width="600" cellspacing="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 12px;" align="center">
+<table width="728" cellspacing="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 12px;" align="center">
   <tbody>
 
   <tr>
@@ -132,7 +132,7 @@
 </table>
 
 
-<table width="600" cellspacing="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 12px;" align="center">
+<table width="728" cellspacing="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 12px;" align="center">
 
   <tbody>
 
@@ -159,16 +159,16 @@
       </p>
     </#list>
 
-      <table width="600" cellspacing="0" cellpadding="0" border="0">
+      <table width="728" cellspacing="0" cellpadding="0" border="0">
 
         <tbody>
         <tr>
-          <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=296"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=296" /></a></td>
+          <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=495"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=495" /></a></td>
         </tr>
 
         <tr>
 
-          <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=297"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=297" /></a></td>
+          <td><a href="http://ads.plos.org/www/delivery/ck.php?zoneid=497"><img vspace="6" border="0" alt="" src="http://ads.plos.org/www/delivery/avw.php?zoneid=497" /></a></td>
 
         </tr>
 
@@ -178,7 +178,7 @@
 
       <br />
 
-      <table width="600" cellspacing="0" cellpadding="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif;">
+      <table width="728" cellspacing="0" cellpadding="0" border="0" style="font-family: Verdana,Arial,Helvetica,sans-serif;">
 
         <tbody>
 
