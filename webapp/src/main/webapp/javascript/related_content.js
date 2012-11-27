@@ -55,12 +55,8 @@ $(function () {
             var li = $('<li></li>').attr("class", "cf").append(views, citations, info);
             $('div[id="more_by_authors"] > ul').append(li);
           }
-        } else {
-          $('div[id="more_by_authors"]').hide();
+          $('div[id="more_by_authors"]').show();
         }
-      },
-      error:function () {
-        $('div[id="more_by_authors"]').hide();
       }
     });
   }
