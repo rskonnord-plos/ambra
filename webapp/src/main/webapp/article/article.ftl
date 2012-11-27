@@ -18,12 +18,12 @@
       <div class="header" id="hdr-article">
         <h1 property="dc:title" datatype="" rel="dc:type" href="http://purl.org/dc/dcmitype/Text"><@articleFormat>${article.docTitle}</@articleFormat></h1>
         <p class="authors">
-        <#if authorExtras?? >
-          <#list authorExtras as author>
+        <#if authors?? >
+          <#list authors as author>
             <#if (author_has_next)>
-              <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName},</span></span>
+              <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.fullName},</span></span>
             <#else>
-              <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}</span></span>
+              <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.fullName}</span></span>
             </#if>
           </#list>
         </#if>

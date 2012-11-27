@@ -18,12 +18,12 @@
         <div class="article-kicker">RESEARCH IN TRANSLATION</div>
         <h1><@articleFormat>${article.docTitle}</@articleFormat></h1>
         <p class="authors">
-          <#if authorExtras?? >
-            <#list authorExtras as author>
+          <#if authors?? >
+            <#list authors as author>
               <#if (author_has_next)>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes">&nbsp;<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if>,</span></span>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.fullName}<#if author.equalContrib == "yes">&nbsp;<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if>,</span></span>
               <#else>
-                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.authorName}<#if author.equalContrib == "yes">&nbsp;<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if></span></span>
+                <span rel="dc:creator" class="author"><span class="person" property="foaf:name" typeof="foaf:Person">${author.fullName}<#if author.equalContrib == "yes">&nbsp;<span class="equal-contrib" title="These authors contributed equally to this work">equal contributor</span></#if></span></span>
               </#if>
             </#list>
           </#if>
@@ -46,13 +46,13 @@
           <h2>About the Authors</h2>
 
           <dl class="authors">
-            <#list authorExtras as author>
+            <#list authors as author>
               <@s.url id="searchURL" includeParams="none"
-              pagesize="10" queryField="author" unformattedQuery="author:\"${author.authorName}\""
+              pagesize="10" queryField="author" unformattedQuery="author:\"${author.fullName}\""
               journalOpt="all" subjectCatOpt="all" filterArticleTypeOpt="all"
               namespace="/search" action="advancedSearch"/>
               <dt>
-                <a href="${searchURL}">${author.authorName}</a>
+                <a href="${searchURL}">${author.fullName}</a>
               </dt>
               <dd>
                 <#list author.affiliations as affiliation>

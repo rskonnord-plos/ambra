@@ -6,9 +6,9 @@
   <meta itemprop="name" content="${articleInfoX.unformattedTitle}"/>
   </#if>
 
-  <#if authorExtras?? >
-    <#list authorExtras as author>
-    <meta name="citation_author" content="${author.authorName}" />
+  <#if authors?? >
+    <#list authors as author>
+    <meta name="citation_author" content="${author.fullName}" />
       <#if author.affiliations?? >
         <#list author.affiliations as affiliation>
           <#if affiliation?? >
