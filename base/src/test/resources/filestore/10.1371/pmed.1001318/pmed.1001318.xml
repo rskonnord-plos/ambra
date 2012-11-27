@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN"
+  "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" article-type="research-article" dtd-version="3.0"
+         xml:lang="en">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="publisher-id">PLoS</journal-id>
+      <journal-id journal-id-type="nlm-ta">PLoS Med</journal-id>
+      <journal-id journal-id-type="pmc">plosmed</journal-id>
+      <issn pub-type="epub">1549-1676</issn>
+      <publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, USA</publisher-loc>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="publisher-id">PMEDICINE-D-12-02423</article-id>
+      <article-id pub-id-type="doi">10.1371/journal.pmed.1001318</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Perspective</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Medicine</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>The Challenges and Possibilities of Reducing Deaths from Cryptococcal Meningitis in Sub-Saharan
+          Africa
+        </article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Farlow</surname>
+            <given-names>Andrew W. K.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1"/>
+          <xref ref-type="corresp" rid="cor1">
+            <sup>*</sup>
+          </xref>
+        </contrib>
+      </contrib-group>
+      <aff id="aff1">
+        <addr-line>Spatial Ecology and Epidemiology Group, Department of Zoology, University of Oxford, Oxford, United
+          Kingdom
+        </addr-line>
+      </aff>
+      <author-notes>
+        <corresp id="cor1">* E-mail:
+          <email xlink:type="simple">andrew.farlow@zoo.ox.ac.uk</email>
+        </corresp>
+        <fn fn-type="conflict">
+          <p>The author has declared that no competing interests exist.</p>
+        </fn>
+        <fn fn-type="con">
+          <p>Wrote the first draft of the manuscript: AF. Contributed to the writing of the manuscript: AF.
+            <ext-link ext-link-type="uri" xlink:href="http://www.icmje.org/" xlink:type="simple">ICMJE</ext-link>
+            criteria for authorship read and met: AF. Agree with manuscript results and conclusions: AF.
+          </p>
+        </fn>
+        <fn fn-type="other">
+          <p>
+            <bold>Provenance:</bold>
+            Commissioned; not externally peer reviewed.
+          </p>
+        </fn>
+      </author-notes>
+      <pub-date pub-type="collection">
+        <month>9</month>
+        <year>2012</year>
+      </pub-date>
+      <pub-date pub-type="epub">
+        <day>25</day>
+        <month>9</month>
+        <year>2012</year>
+      </pub-date>
+      <volume>9</volume>
+      <issue>9</issue>
+      <elocation-id>e1001318</elocation-id>
+      <permissions>
+
+        <copyright-holder>Andrew W. K. Farlow</copyright-holder>
+        <license xlink:type="simple">
+          <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution
+            License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original
+            author and source are credited.
+          </license-p>
+        </license>
+      </permissions>
+      <related-article ext-link-type="uri" id="RA1" related-article-type="companion"
+                       xlink:href="info:doi/10.1371/journal.pmed.1001316" xlink:type="simple">
+        <article-title>Cryptococcal Meningitis Treatment Strategies in Resource-Limited Settings: A Cost-Effectiveness
+          Analysis
+        </article-title>
+      </related-article>
+      <abstract abstract-type="toc">
+        <p>Andrew Farlow reflects on new research by David Boulware and colleagues, highlighting current challenges in
+          treating cryptoccocal meningitis and the relative neglect of investment in research to treat this disease.
+        </p>
+      </abstract>
+      <funding-group>
+        <funding-statement>The author received no specific funding to write this paper.</funding-statement>
+      </funding-group>
+      <counts>
+        <page-count count="2"/>
+      </counts>
+    </article-meta>
+  </front>
+  <body>
+    <boxed-text id="pmed-1001318-box001" orientation="portrait" position="float">
+      <sec id="s1a">
+        <title>Linked Research Article</title>
+        <p>This Perspective discusses the following new study published in<italic>PLOS Medicine</italic>:
+        </p>
+        <p>Rajasingham R, Rolfes MA, Birkenkamp KE, Meya DB, Boulware DR (2012) Cryptococcal Meningitis Treatment
+          Strategies in Resource-Limited Settings: A Cost-Effectiveness Analysis. PLoS Med 9(9): e1001316.
+          doi:10.1371/journal.pmed.1001316
+          <ext-link ext-link-type="uri"
+                    xlink:href="http://www.plosmedicine.org/article/info:doi/10.1371/journal.pmed.1001316"
+                    xlink:type="simple">http://www.plosmedicine.org/article/info:doi/10.1371/journal.pmed.1001316
+          </ext-link>
+        </p>
+        <p>David Boulware and colleagues assess the cost-effectiveness of different treatment strategies in low- and
+          middle-income countries for cryptococcal meningitis, one of the most common opportunistic infections of people
+          with HIV.
+        </p>
+      </sec>
+    </boxed-text>
+    <sec id="s2">
+      <title/>
+      <p>With increased access to life-saving drugs, HIV is becoming less of a death sentence in developing countries.
+        But death may still occur as a result of opportunistic infections, one of the most common being cryptococcal
+        meningitis (CM), a fungal infection of the brain and spinal cord that primarily affects people with weakened
+        immune systems. Of the estimated 960,000 people each year infected with CM worldwide—about three-quarters in
+        sub-Saharan Africa—approximately 625,000 (65%) die within 3 months of infection<xref ref-type="bibr"
+                                                                                             rid="pmed.1001318-Park1">
+          [1]</xref>. In this issue of<italic>PLOS Medicine</italic>, Radha Rajasingham and colleagues argue that, for
+        relatively little cost and with drugs that already exist, about 150,000 more CM deaths could be prevented every
+        year in sub-Saharan Africa.
+      </p>
+      <p>Using available trial data and a variety of cost evidence, the authors calculate the cost-effectiveness of six
+        CM induction treatment regimes under resource-limited conditions. Two results stand out. First, the least
+        cost-effective regimen is high-dose fluconazole monotherapy, which has been associated with a nearly 2-fold
+        higher 10-week mortality rate and about 30% greater absolute mortality than the short-course (5–7 days)
+        amphotericin-based regimen. Second, long-course (14 days) amphotericin-based regimens, as recommended by the
+        World Health Organization (WHO), are not only more costly but appear to be no more effective than short-course
+        amphotericin-based regimens. If the second finding is confirmed in further trials, the WHO will need to adjust
+        its advice.
+      </p>
+    </sec>
+    <sec id="s3">
+      <title>Doing Nothing Is Costly, Change Is Difficult, and Inertia Is Harmful</title>
+      <p>The authors provide an instructive lesson on the strengths and weaknesses of the use of cost-effectiveness
+        analysis in policy-making. All six CM regimens generate costs per quality-adjusted life-year (QALY) gained that
+        are well below the level used by the WHO to define an intervention as “highly cost-effective”<xref
+          ref-type="bibr" rid="pmed.1001318-WHO1">[2]</xref>,<xref ref-type="bibr" rid="pmed.1001318-WHO2">[3]</xref>.
+        In the case of CM, doing nothing is very costly, so even though 60% (95% CI 54%–66%) of patients die within a
+        year of fluconazole monotherapy, given its low cost it is still deemed “highly cost-effective”. The WHO
+        threshold might be necessary, but it is certainly not sufficient.
+      </p>
+      <p>We are reminded also of the importance of the specifics of health systems. Demonstrating that one treatment
+        regimen dominates another does not mean that change will automatically follow. Many clinicians in sub-Saharan
+        Africa rely on fluconazole monotherapy because the drugs are accessible, cheap, or even free, and do not require
+        the laboratory monitoring necessary for the proper functioning of amphotericin. The authors are careful to use
+        only data taken from resource-limited settings, but even this presupposes a health system functional enough to
+        generate such data. In practice: manometers for safe and accurate control of intracranial pressure are often not
+        available, necessitating improvisation; supply chains for safe lumbar punctures aren't always reliable; the use
+        of IV fluids is sometimes erratic; and health workers are thin on the ground. Health systems come with budgets
+        too. One treatment regimen might be superior to others in terms of QALYs gained, but QALYs accumulate over many
+        years, whereas a change in practice may come up against a hard budget constraint in the here and now; the
+        short-course amphotericin-based regimen achieves the lowest cost per QALY gained because of its superior
+        survival rates, but it is still US$60 more expensive per patient than fluconazole monotherapy.
+      </p>
+      <p>Awkward questions also arise regarding the potentially distorting impact of drug donation programmes, an issue
+        that the WHO has grappled with for many years. Given that fluconazole monotherapy is “highly cost-effective”,
+        the relative inertia of policy-makers and funders in making other drugs available may have inadvertently made it
+        the only regimen available in many resource-poor settings. The evidence suggests that, if used, fluconazole
+        needs at least to be combined with amphotericin if reliance on it is not to be detrimental.
+      </p>
+    </sec>
+    <sec id="s4">
+      <title>Proposed Research Strategy</title>
+      <p>The small size of some of the trials used by Rajasingham and colleagues may make readers uneasy, but it doesn't
+        undermine their study—it highlights the relative neglect of this area of research. For the past decade or more,
+        every year public, private, and philanthropic stakeholders have ploughed about US$1 billion into researching and
+        developing HIV vaccines, microbicides, and drugs. So far, no life has been saved by a HIV vaccine or a
+        microbicide. New drugs for CM are needed, but mitigating the tragedy of HIV through better treatment of CM also
+        involves the better application of existing drugs. And yet, the trial sizes being used to determine the best
+        treatment regimens are minuscule. If the results of this study hold up in further trials, the use of long-course
+        amphotericin-based treatment—expensive and difficult to sustain in resource-limited settings—could be minimized,
+        and a billion dollars spread over 30 or so years supporting short-course amphotericin-based treatment could buy
+        nearly 5 million lives in sub-Saharan Africa. By any threshold, this would be highly cost-effective. If
+        amphotericin became more affordable, the cost would be lower still.
+      </p>
+      <p>It is difficult for risk-averse policy-makers to change their advice on the basis of comparisons involving
+        underpowered evidence; the confidence intervals for mortality for all CM treatment regimes, but especially for
+        those involving short-course amphotericin (e.g., 10-week mortality 95% CI: 19%–35%), are still too wide (and
+        therefore sometimes overlapping) for comfort. This indicates, in particular, the need for bigger 5–7 day trials
+        of amphotericin, including on its own (the authors are forced to lump together all 5–7 day data to achieve
+        enough statistical power). Some head-to-head trials are in the pipeline (funded by the National Institutes of
+        Health/AIDS Clinical Trials Group and the Medical Research Council), but the results are still some years away.
+        It would be useful also to unravel the specific ways in which resource-limited settings impact upon survival
+        rates. The lower efficacy of long-course amphotericin—and the logic therefore of ending treatment earlier—is
+        related to the challenges in resource-limited settings of managing the toxicity that only really becomes a
+        problem after most of the clearance of fungi has already been achieved. Low survival rates are also partly due
+        to treatment often being delayed, to when cryptococcosis is more advanced<xref ref-type="bibr"
+                                                                                       rid="pmed.1001318-Kambugu1">
+          [4]</xref>. Therefore, trials need to include routine screening and preemptive treatment.
+      </p>
+      <p>The results of Rajasingham and colleagues suggest that spending modest levels of resources gathering better
+        evidence now—together with a policy-making process capable of overcoming the status quo, and with funders
+        willing to reconfigure their spending habits—may yield large benefits in terms of costs and lives saved in the
+        future.
+      </p>
+    </sec>
+  </body>
+  <back>
+    <ref-list>
+      <title>References</title>
+      <ref id="pmed.1001318-Park1">
+        <label>1</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Park</surname>
+            <given-names>BJ</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>Wannemuehler</surname>
+            <given-names>KA</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>Marston</surname>
+            <given-names>BJ</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>Govender</surname>
+            <given-names>N</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>Pappas</surname>
+            <given-names>PG</given-names>
+          </name>
+          ,<etal>et al</etal>. (<year>2009</year>)<article-title>Estimation of the current global burden of cryptococcal
+          meningitis among persons living with HIV/AIDS</article-title>.
+          <source>AIDS</source>
+          <volume>23</volume>
+          <supplement>(4)</supplement>:<fpage>525</fpage>–<lpage>530</lpage>.
+        </mixed-citation>
+      </ref>
+      <ref id="pmed.1001318-WHO1">
+        <label>2</label>
+        <mixed-citation publication-type="other" xlink:type="simple">WHO (2003) Making choices in health: WHO guide to
+          cost-effectiveness analysis. Geneva: WHO.
+        </mixed-citation>
+      </ref>
+      <ref id="pmed.1001318-WHO2">
+        <label>3</label>
+        <mixed-citation publication-type="other" xlink:type="simple">WHO (2001) Macroeconomics and health: investing in
+          health for economic development. Report of the Commission on Macroeconomics and Health. Geneva: WHO.
+        </mixed-citation>
+      </ref>
+      <ref id="pmed.1001318-Kambugu1">
+        <label>4</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Kambugu</surname>
+            <given-names>A</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>Meya</surname>
+            <given-names>DB</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>Rhein</surname>
+            <given-names>J</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>O'Brien</surname>
+            <given-names>M</given-names>
+          </name>
+          ,
+          <name name-style="western">
+            <surname>Janoff</surname>
+            <given-names>EN</given-names>
+          </name>
+          ,<etal>et al</etal>. (<year>2008</year>)<article-title>Outcomes of cryptococcal meningitis in Uganda before
+          and after the availability of highly active antiretroviral therapy</article-title>.
+          <source>Clin Infect Dis</source>
+          <volume>46</volume>:<fpage>1694</fpage>–<lpage>1701</lpage>.
+        </mixed-citation>
+      </ref>
+    </ref-list>
+    <glossary>
+      <title>Abbreviations</title>
+      <def-list>
+        <def-item>
+          <term>CM</term>
+          <def>
+            <p>cryptococcal meningitis</p>
+          </def>
+        </def-item>
+        <def-item>
+          <term>QALY</term>
+          <def>
+            <p>quality-adjusted life-year</p>
+          </def>
+        </def-item>
+        <def-item>
+          <term>WHO</term>
+          <def>
+            <p>World Health Organization</p>
+          </def>
+        </def-item>
+      </def-list>
+    </glossary>
+  </back>
+</article>
