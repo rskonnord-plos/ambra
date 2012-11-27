@@ -844,4 +844,58 @@ public class TextUtils {
       return "";
     }
   }
+
+  /**
+   * truncate text
+   * @param text text to truncate
+   * @param truncatedLength truncate length
+   * @return truncated text
+   */
+  public static String truncateText(String text, int truncatedLength) {
+    if (StringUtils.isBlank(text)) {
+      return text;
+    }
+
+    if (text.length() > truncatedLength) {
+      final String abrsfx = "...";
+      final int abrsfxlen = 3;
+      // attempt to truncate on a word boundary
+      int index = truncatedLength - 1;
+
+      while (!Character.isWhitespace(text.charAt(index)) ||
+          index > (truncatedLength - abrsfxlen - 1)) {
+        if (--index == 0) {
+          break;
+        }
+      }
+
+      if (index == 0) {
+        index = truncatedLength - abrsfxlen - 1;
+      }
+
+      text = text.substring(0, index) + abrsfx;
+      assert text.length() <= truncatedLength;
+    }
+
+    return text;
+  }
+
+  /**
+   * truncate text and close open tags
+   * @param text text to truncate
+   * @param truncatedLength truncate length
+   * @return truncated text
+   */
+  public static String truncateTextCloseOpenTag(String text, final int truncatedLength) {
+    String shortenedText = truncateText(text, truncatedLength);
+    int openIndex = shortenedText.lastIndexOf("<i>");
+    if (openIndex != -1) {
+      int closeIndex = shortenedText.indexOf("</i>", openIndex);
+      if (closeIndex == -1) {
+        shortenedText = shortenedText + "</i>";
+      }
+    }
+    return shortenedText;
+  }
+
 }

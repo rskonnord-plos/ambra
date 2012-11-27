@@ -117,9 +117,9 @@ public class AnnotationView {
     } else {
       this.originalBody = annotation.getBody();
       this.body = TextUtils.hyperlinkEnclosedWithPTags(TextUtils.escapeHtml(annotation.getBody()), 25);
-      this.truncatedBody = TextUtils.hyperlinkEnclosedWithPTags(truncateText(TextUtils.escapeHtml(annotation.getBody())), 25);
+      this.truncatedBody = TextUtils.hyperlinkEnclosedWithPTags(TextUtils.truncateText(TextUtils.escapeHtml(annotation.getBody()), TRUNCATED_COMMENT_LENGTH), 25);
       this.bodyWithUrlLinkingNoPTags = TextUtils.hyperlink(TextUtils.escapeHtml(annotation.getBody()), 25);
-      this.truncatedBodyWithUrlLinkingNoPTags = TextUtils.hyperlink(truncateText(TextUtils.escapeHtml(annotation.getBody())), 25);
+      this.truncatedBodyWithUrlLinkingNoPTags = TextUtils.hyperlink(TextUtils.truncateText(TextUtils.escapeHtml(annotation.getBody()), TRUNCATED_COMMENT_LENGTH), 25);
       if (annotation.getHighlightedText() != null) {
         // highlighted text contains the highlighted text
         // and a link to the paragraph location of where the highlighted text is located
@@ -135,7 +135,7 @@ public class AnnotationView {
       this.truncatedCompetingInterestStatement = "";
     } else {
       this.competingInterestStatement = TextUtils.escapeHtml(annotation.getCompetingInterestBody());
-      this.truncatedCompetingInterestStatement = truncateText(TextUtils.escapeHtml(annotation.getCompetingInterestBody()));
+      this.truncatedCompetingInterestStatement = TextUtils.truncateText(TextUtils.escapeHtml(annotation.getCompetingInterestBody()), TRUNCATED_COMMENT_LENGTH);
     }
 
     this.xpath = annotation.getXpath();
@@ -266,33 +266,6 @@ public class AnnotationView {
         ", articleTitle='" + articleTitle + '\'' +
         ", type=" + type +
         '}';
-  }
-
-  protected String truncateText(String text) {
-    if (StringUtils.isBlank(text)) {
-      return text;
-    }
-
-    if (text.length() > TRUNCATED_COMMENT_LENGTH) {
-      final String abrsfx = "...";
-      final int abrsfxlen = 3;
-      // attempt to truncate on a word boundary
-      int index = TRUNCATED_COMMENT_LENGTH - 1;
-
-      while (!Character.isWhitespace(text.charAt(index)) ||
-          index > (TRUNCATED_COMMENT_LENGTH - abrsfxlen - 1)) {
-        if (--index == 0)
-          break;
-      }
-
-      if (index == 0)
-        index = TRUNCATED_COMMENT_LENGTH - abrsfxlen - 1;
-
-      text = text.substring(0, index) + abrsfx;
-      assert text.length() <= TRUNCATED_COMMENT_LENGTH;
-    }
-
-    return text;
   }
 
   public String getTitle() {

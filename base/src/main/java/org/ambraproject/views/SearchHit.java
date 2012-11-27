@@ -20,6 +20,7 @@
  */
 package org.ambraproject.views;
 
+import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -33,6 +34,8 @@ import java.util.Date;
 public class SearchHit implements Serializable {
 
   private static final long serialVersionUID = 2450207404766168639L;
+
+  private static final int TITLE_LENGTH = 120;
 
   private final float  hitScore;
   private final String uri;
@@ -126,6 +129,14 @@ public class SearchHit implements Serializable {
    */
   public String getTitle() {
     return title;
+  }
+
+  /**
+   * Return truncated article title
+   * @return truncated article title
+   */
+  public String getTruncatedTitle() {
+    return TextUtils.truncateTextCloseOpenTag(this.title, TITLE_LENGTH);
   }
 
   /**
