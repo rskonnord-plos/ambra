@@ -31,60 +31,13 @@ public class FetchArticleServiceTest extends BaseTest {
   protected FetchArticleService fetchArticleService;
 
   @Autowired
+  protected ArticleService articleService;
+
+  @Autowired
   protected FileStoreService fileStoreService;
 
   @Autowired
   protected XMLService xmlService;
-
-  @DataProvider(name = "articlePeerReviewInfos")
-  public Object[][] getPeerReviewArticles()
-  {
-    String doi1 = "info:doi/10.1371/journal.pbio.1001417";
-
-    Article article1 = new Article();
-    article1.setState(Article.STATE_ACTIVE);
-    article1.setDoi(doi1);
-    article1.setTitle("Bleh");
-    article1.seteIssn("1932-6203");
-    article1.setArchiveName("archive name from the database");
-    article1.setDescription("description from the database");
-
-    article1.setAssets(new ArrayList<ArticleAsset>(1));
-
-    ArticleAsset asset1 = new ArticleAsset();
-    asset1.setDoi(doi1);
-    asset1.setExtension("XML");
-    asset1.setContentType("text/xml");
-    article1.getAssets().add(asset1);
-
-    dummyDataStore.store(article1);
-
-    String doi2 = "info:doi/10.1371/journal.pmed.1001318";
-
-    Article article2 = new Article();
-    article2.setState(Article.STATE_ACTIVE);
-    article2.setDoi(doi2);
-    article2.setTitle("Bleh");
-    article2.seteIssn("1932-6203");
-    article2.setArchiveName("archive name from the database");
-    article2.setDescription("description from the database");
-
-    article2.setAssets(new ArrayList<ArticleAsset>(1));
-
-    ArticleAsset asset2 = new ArticleAsset();
-    asset2.setDoi(doi2);
-    asset2.setExtension("XML");
-    asset2.setContentType("text/xml");
-    article2.getAssets().add(asset2);
-
-    dummyDataStore.store(article2);
-
-    return new Object[][] {
-      { doi1, true },
-      { doi2, false }
-    };
-  }
-
 
   @DataProvider(name = "articlesWithDummyAffils")
   public Object[][] getArticlesWithDummyAffils()
@@ -284,19 +237,6 @@ public class FetchArticleServiceTest extends BaseTest {
     return new Object[][] {
       { articleInfo1 }, { articleInfo2 }
     };
-  }
-
-  @Test(dataProvider = "articlePeerReviewInfos")
-  public void testIsPeerReviewed(String doi, boolean isPeerReviewed) {
-    ArticleInfo ai = new ArticleInfo(doi);
-
-    org.w3c.dom.Document dom = fetchArticleService.getArticleDocument(ai);
-
-    assertNotNull(dom, "Can't find test article");
-
-    boolean result = fetchArticleService.isPeerReviewed(doi, dom);
-
-    assertEquals(isPeerReviewed, result, "Article peer-reviewed value is wrong");
   }
 
   /**
