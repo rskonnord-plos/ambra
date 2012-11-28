@@ -47,7 +47,7 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
   private String articleURI;
   private ArticleInfo articleInfo;
   private ArticleType articleType;
-  private boolean isPeerReviewed;
+  private boolean isResearchArticle;
   private boolean hasAboutAuthorContent;
   private List<AuthorView> authors;
 
@@ -58,7 +58,7 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
     articleType = articleInfo.getKnownArticleType();
 
     Document doc = fetchArticleService.getArticleDocument(articleInfo);
-    isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
+    isResearchArticle = articleService.isResearchArticle(articleInfo);
     authors = fetchArticleService.getAuthors(doc);
     hasAboutAuthorContent = (AuthorView.anyHasAffiliation(authors)
         || CollectionUtils.isNotEmpty(fetchArticleService.getCorrespondingAuthors(doc))
@@ -121,8 +121,8 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
     return getArticleInfo();
   }
 
-  public boolean getIsPeerReviewed() {
-    return isPeerReviewed;
+  public boolean getIsResearchArticle() {
+    return isResearchArticle;
   }
 
   public boolean getHasAboutAuthorContent() {

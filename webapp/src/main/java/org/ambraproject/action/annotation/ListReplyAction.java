@@ -61,7 +61,7 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
   private ArticleType articleType;
   private List<AuthorView> authors;
   private int numComments;
-  private boolean isPeerReviewed;
+  private boolean isResearchArticle;
   private boolean hasAboutAuthorContent;
 
   @Override
@@ -75,7 +75,7 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
 
       Document doc = fetchArticleService.getArticleDocument(articleInfo);
       authors = fetchArticleService.getAuthors(doc);
-      isPeerReviewed = fetchArticleService.isPeerReviewed(articleInfo.getDoi(), doc);
+      isResearchArticle = articleService.isResearchArticle(articleInfo);
       hasAboutAuthorContent = (AuthorView.anyHasAffiliation(authors)
           || CollectionUtils.isNotEmpty(fetchArticleService.getCorrespondingAuthors(doc))
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorContributions(doc))
@@ -147,8 +147,8 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
     return numComments;
   }
 
-  public boolean getIsPeerReviewed() {
-    return isPeerReviewed;
+  public boolean getIsResearchArticle() {
+    return isResearchArticle;
   }
 
   public boolean getHasAboutAuthorContent() {

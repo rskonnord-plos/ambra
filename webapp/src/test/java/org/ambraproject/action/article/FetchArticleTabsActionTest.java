@@ -113,7 +113,7 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     assertEquals(action.getCommentary(), new AnnotationView[] {
         new AnnotationView(comment, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)
     }, "Action returned incorrect commentary");
-    assertTrue(action.getIsPeerReviewed(), "Expected article to be peer reviewed");
+    assertFalse(action.getIsResearchArticle(), "Expected article a research article");
 
     //TODO: Check the transformed html
   }
