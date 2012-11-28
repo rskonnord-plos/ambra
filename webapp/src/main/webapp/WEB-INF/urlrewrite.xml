@@ -574,4 +574,13 @@
     <to>$1/article/email/$2</to>
   </outbound-rule>
 
+  <rule>
+    <note>
+      re-write find this article
+      /article/findcited/ID -> /article/findArticle.action?citedArticleID=ID
+    </note>
+    <from>^(/.+)?/article/findcited/(\d*)$</from>
+    <to>$1/article/findArticle.action?citedArticleID=$2</to>
+  </rule>
+
 </urlrewrite>

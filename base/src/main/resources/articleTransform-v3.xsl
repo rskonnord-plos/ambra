@@ -785,7 +785,7 @@
                 <xsl:if test="$cit/extraCitationInfo">
                   <xsl:variable name="citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:variable>
                   <xsl:variable name="findURL">
-                    <xsl:value-of select="concat($pubAppContext,'/article/findArticle.action?citedArticleID=', $citedArticleID)" />
+                    <xsl:value-of select="concat($pubAppContext,'/article/findcited/', $citedArticleID)" />
                   </xsl:variable>
                   <!-- only output 'find this article' link if there is no ext-link already in the citation -->
                   <xsl:if test="not(element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link)">
