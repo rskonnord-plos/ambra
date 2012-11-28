@@ -114,6 +114,10 @@ $(document).ready(function () {
     this.articleType();
   })
 
+  $('.informal a').doOnce(function () {
+    this.correctionScrollTo();
+  });
+
   if (!$.support.touchEvents) {
     $article.doOnce(function () {
       this.scrollFrame();
@@ -128,6 +132,19 @@ if ($nav_article.length) {
   $nav_article.addClass('items-' + items_l);
 }
 
+
+(function ($) {
+  $.fn.correctionScrollTo = function () {
+    this.on('click', function (e) {
+      e.preventDefault();
+      $('html,body').animate(
+        { scrollTop : $('#corrections').offset().top - 100 }, 
+        500,
+        'linear'
+        )
+    });
+  };
+})(jQuery);
 
 (function ($) {
   $.fn.authorsMeta = function (options) {
