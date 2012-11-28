@@ -70,17 +70,24 @@ $(document).ready(function () {
     });
   });
 
-  $('#nav-toc').doOnce(function () {
-    this.floatingNav({
-      sections:$('#toc-block').find('div.section')
-    });
-  });
+  // enable the floating nav for non-touch-enabled devices due to issue with 
+  // zoom and position:fixed.
+  // FIXME: temp patch; needs more refinement.
+  if (!$.support.touchEvents) {
 
-  $('#nav-article-page').doOnce(function () {
-    this.floatingNav({
-      sections:$article.find('a[toc]').closest('div')
+    $('#nav-toc').doOnce(function () {
+      this.floatingNav({
+        sections:$('#toc-block').find('div.section')
+      });
     });
-  });
+
+    $('#nav-article-page').doOnce(function () {
+      this.floatingNav({
+        sections:$article.find('a[toc]').closest('div')
+      });
+    });
+
+  }
 
 
   $('#figure-thmbs').doOnce(function () {
