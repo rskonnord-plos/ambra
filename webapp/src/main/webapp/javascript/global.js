@@ -309,6 +309,7 @@ if ($nav_article.length) {
       var lnks = $this.find('a.scroll');
       var positionEl = function () {
         win_top = $win.scrollTop();
+        ftr_top = $('#pageftr').offset().top;
         if (
           (win_top > (el_top - options.margin)) //the top of the element is out of the viewport
             && ((el_h + options.margin + bnr_h) < $win.height()) //the viewport is tall enough-
