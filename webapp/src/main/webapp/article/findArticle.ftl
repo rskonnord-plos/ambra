@@ -26,7 +26,8 @@
   <div id="pagebdy">
     <div id="static-wrap">
       <h1>Find this article online</h1>
-      <h2>${title?html}</h2>
+      <br/>
+      <h4>${title?html}</h4>
       <p>Use the following links to find the article:</p>
       <ul>
       <li><a href="${crossRefUrl}"
