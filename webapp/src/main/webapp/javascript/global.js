@@ -1124,11 +1124,13 @@ if ($fig_results.length) {
   });
 }
 
-var $search_form = $('#searchForm');
-$search_form.submit(function () {
-  if ($(this).find('#searchOnResult').val().length == 0) {
-    return false;
-  }
+//if search box is empty, don't submit the form
+$('form[name="searchForm"]').each(function(index, item) {
+  $(item).submit(function() {
+    if (!$(this).find('input[name="query"]').val()) {
+      return false;
+    }
+  });
 });
 
 // figure link in article floating nav
