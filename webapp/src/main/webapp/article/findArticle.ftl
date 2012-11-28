@@ -24,9 +24,8 @@
 
 <div id="pagebdy-wrap">
   <div id="pagebdy">
-    <div id="static-wrap">
+    <div id="static-wrap" class="findArticle">
       <h1>Find this article online</h1>
-      <br/>
       <h4><@articleFormat>${title}</@articleFormat></h4>
       <p>Use the following links to find the article:</p>
       <ul>
