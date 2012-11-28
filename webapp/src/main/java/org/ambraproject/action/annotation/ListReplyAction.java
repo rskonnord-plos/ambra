@@ -147,6 +147,7 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
     return numComments;
   }
 
+  @Override
   public boolean getIsResearchArticle() {
     return isResearchArticle;
   }

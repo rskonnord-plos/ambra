@@ -29,4 +29,7 @@ public interface ArticleHeaderAction extends Action {
   public abstract String getContributingAuthors();
 
   public abstract boolean getHasAboutAuthorContent();
+
+  public abstract boolean getIsResearchArticle();
+
 }

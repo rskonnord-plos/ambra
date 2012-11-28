@@ -121,6 +121,7 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
     return getArticleInfo();
   }
 
+  @Override
   public boolean getIsResearchArticle() {
     return isResearchArticle;
   }
