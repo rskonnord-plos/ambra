@@ -1064,6 +1064,9 @@
         <xsl:when test="@list-type='bullet'">
           <xsl:call-template name="nl-1"/>
           <ul>
+            <xsl:attribute name="class">
+              <xsl:value-of select="@list-type"></xsl:value-of>
+            </xsl:attribute>
             <xsl:call-template name="nl-1"/>
             <xsl:apply-templates/>
             <xsl:call-template name="nl-1"/>
