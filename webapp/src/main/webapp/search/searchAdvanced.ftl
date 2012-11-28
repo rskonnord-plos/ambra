@@ -1,3 +1,4 @@
+<#import "search_variables.ftl" as search>
 <#assign checkedstr = "checked=\"checked\"">
 <#assign slctdstr = "selected=\"selected\"">
 <#macro slctd tstr str><#if tstr == str>${slctdstr}</#if></#macro>
@@ -167,34 +168,37 @@
 </fieldset>
 
 <#if filterReset>
-  There are no results for your search query.<br/>
-  <br/>
-    <span id="filterReset">
-      <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?length > 1))>
-        You searched for articles that have all of the following:<br/>
-      <br/>
-      </#if>
-      <#if (filterSubjects?size > 0)>
-        Subject categories:
-        <b><#list filterSubjects as subject>"${subject}
-          " <#if (subject_index) gt filterSubjects?size - 3><#if subject_has_next>
-            and </#if><#else><#if subject_has_next>, </#if></#if></#list></b>
-        <br/>
-      </#if>
-      <#if (filterJournals?size > 0)>
-        Journals:
-        <b><#list filterJournals as journal>"${freemarker_config.getDisplayName(journal)}
-          "<#if (journal_index) gt filterJournals?size - 3><#if journal_has_next>
-            and </#if><#else><#if journal_has_next>, </#if></#if></#list></b>
-        <br/>
-      </#if>
-      <#if (filterArticleType?length > 1)>
-        Article Type: ${filterArticleType}
-        <br/>
-      </#if>
-    </span>
-  <br/>
-  <input type="button" name="clearFiltersButton1" id="clearFiltersButtonId1" value="Clear Filters"/>
+  <fieldset id="filterReset">
+    <legend><span>There are no results for this search query.</span></legend>
+    <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?length > 1))>
+      <ol>
+        <li>You are filtering with the following parameters:</li>
+
+        <#if (filterSubjects?size > 0)>
+          <li>Subject categories:
+            <b><#list filterSubjects as subject>"${subject}"
+              <#if (subject_index) gt filterSubjects?size - 3><#if subject_has_next>
+              and </#if><#else><#if subject_has_next>, </#if></#if></#list></b>
+          </li>
+        </#if>
+        <#if (filterJournals?size > 0)>
+          <li>Journals:
+            <b><#list filterJournals as journal>"${freemarker_config.getDisplayName(journal)}"
+              <#if (journal_index) gt filterJournals?size - 3><#if journal_has_next>
+                and </#if><#else><#if journal_has_next>, </#if></#if></#list></b>
+          </li>
+        </#if>
+        <#if (filterArticleType?length > 1)>
+          <li>Article Type: <b>${filterArticleType}</b></li>
+        </#if>
+        <li>
+          <div class="btnwrap">
+            <a class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,filterArticleType,filterJournals,filterSubjects,startPage" values="" />&noSearchFlag=set"/>Clear Filters</a>
+          </div>
+        </li>
+      </ol>
+    </#if>
+  </fieldset>
 </#if>
 
 <fieldset id="journals">
