@@ -755,15 +755,19 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
    * When the user clicks "more" or "less", change the expanded state of every slide.
    */
   var toggleExpand = function () {
-    var slideCaptions = $('#fig-viewer-slides .slide div.txt');
-    var toggleButtons = $('#fig-viewer-slides .slide .toggle');
+    var slideCaptions = $('#fig-viewer-slides .slide .content');
+    var toggleMoreButton = $('#fig-viewer-slides .slide .more');
+    var toggleLessButton = $('#fig-viewer-slides .slide .less');
+
     if (txt_expanded) {
       slideCaptions.removeClass('expand');
-      toggleButtons.text('more');
+      toggleMoreButton.removeClass('hidden');
+      toggleLessButton.addClass('hidden');
       txt_expanded = false;
     } else {
       slideCaptions.addClass('expand');
-      toggleButtons.text('less');
+      toggleMoreButton.addClass('hidden');
+      toggleLessButton.removeClass('hidden');
       txt_expanded = true;
     }
   };
@@ -791,9 +795,11 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           var slide = $('<div class="slide" />');
           var txt = $('<div class="txt" />');
           var lnks = $('<div class="lnks" />');
-          var title = '<span class="title">' + title_txt + '</span>';
+          var content = $('<div class="content" />')
+          var title = '<div class="title">' + title_txt + '</div>';
           txt_expanded = false;
-          $toggle = $('<span class="toggle">more</span>').click(toggleExpand);
+          var toggleMore = $('<div class="toggle more">show more</div>').click(toggleExpand);
+          var toggleLess = $('<div class="toggle less hidden">show less</div>').click(toggleExpand);
           var context_hash = showInContext(this.uri);
           if (imgNotOnPage) { // the image is on another page
             context_hash = '/article/' + page_url + context_hash;
@@ -812,12 +818,15 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
             + '<li><a class="btn" href="' + context_hash + '" onclick="killModal();">show in context</a></li>'
             + '</ul>'
           slide.append(img);
-          txt.append(title);
-          // only append the toggle + description if the description isn't blank
-          if (!/^\s*$/.test(this.transformedDescription)) {
-            txt.append($toggle);
-            txt.append(desc);
+          content.append(title);
+
+          if (!/^\s*$/.test(this.transformedDescription) ||
+            $(title).text().length > 50) {
+            content.append(toggleMore);
+            content.append(desc);
           }
+          txt.append(toggleLess);
+          txt.append(content);
           lnks.append(lnks_txt);
           slide.append(txt);
           slide.append(lnks);
