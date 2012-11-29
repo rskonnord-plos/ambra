@@ -146,6 +146,13 @@ if ($nav_article.length) {
       $this = $(this);
       var position = $this.position();
       var $author_meta = $this.find('.author_meta');
+
+      // If this meta box is already open, a second click on the author name closes it
+      if ($this.hasClass('on')) {
+        $this.removeClass('on');
+        return;
+      }
+      // Else, close any other open boxes, then open this one
       $authors.removeClass('on');
 
       if ($this.position().left > ($(window).outerWidth() / 2)) {
