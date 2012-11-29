@@ -854,7 +854,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         buildAbs(data.articleType, data.articleTitle, data.authors, data.uri, imgNotOnPage);
       }
     });
-  }();
+  };
 
   /**
    * @param isButton {boolean} {@code true} to style as a button; {@code false} for plain-text link
@@ -1096,6 +1096,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     }
   });
 
+  buildFigs();
 };
 
 
