@@ -1077,6 +1077,25 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     $modal.css('left', Math.round(win_w / 2 - $modal.width() / 2));
     thumbPos(active_thmb);
   };
+
+  $(this).bind('keydown', function (e) {
+    if(e.which == 37 || e.which == 38) {
+      if(active_thmb.prev().length) {
+        t = active_thmb.prev()
+        changeSlide(t);
+        thumbPos(t);
+      }
+    }
+
+    if(e.which == 39 || e.which == 40) {
+      if(active_thmb.next().length) {
+        t = active_thmb.next()
+        changeSlide(t);
+        thumbPos(t);
+      }
+    }
+  });
+
 };
 
 
