@@ -756,16 +756,19 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
    */
   var toggleExpand = function () {
     var slideCaptions = $('#fig-viewer-slides .slide .content');
+    var titleCaptions = $('#fig-viewer-slides .slide .title');
     var toggleMoreButton = $('#fig-viewer-slides .slide .more');
     var toggleLessButton = $('#fig-viewer-slides .slide .less');
 
     if (txt_expanded) {
       slideCaptions.removeClass('expand');
+      titleCaptions.removeClass('titleexpand');
       toggleMoreButton.removeClass('hidden');
       toggleLessButton.addClass('hidden');
       txt_expanded = false;
     } else {
       slideCaptions.addClass('expand');
+      titleCaptions.addClass('titleexpand');
       toggleMoreButton.addClass('hidden');
       toggleLessButton.removeClass('hidden');
       txt_expanded = true;
