@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * BrowseIssueAction retrieves data for presentation of an issue and a table of contents. Articles
@@ -103,10 +101,9 @@ public class BrowseIssueAction extends BaseActionSupport{
 
     if (issueInfo.getDescription() != null) {
       issueFullDescription = issueInfo.getDescription();
-      String results[] = formatIssue(issueFullDescription);
-      issueTitle = results[0];
-      issueImageCredit = results[1];
-      issueDescription = results[2];
+      issueTitle = issueInfo.getIssueTitle();
+      issueImageCredit = issueInfo.getIssueImageCredit();
+      issueDescription = issueInfo.getIssueDescription();
 
       // only transform the description (title and image credit do not need to be transformed)
       try {
@@ -123,50 +120,6 @@ public class BrowseIssueAction extends BaseActionSupport{
     articleGroups = browseService.getArticleGrpList(issueInfo, getAuthId());
 
     return SUCCESS;
-  }
-
-  private String[] formatIssue(String desc) {
-    String results[] = {"", "", ""};
-    int start = 0, end = 0;
-
-    // get the title of the issue
-    Pattern p1 = Pattern.compile("<title>(.*?)</title>");
-    Matcher m1 = p1.matcher(desc);
-    if (m1.find()) {
-      // there should be one title
-      results[0] = m1.group(1);
-      // title seems to be surround by <bold> element
-      results[0] = results[0].replaceAll("<.*?>", "");
-
-      start = m1.start();
-      end = m1.end();
-
-      // remove the title from the total description
-      String descBefore = desc.substring(0, start);
-      String descAfter = desc.substring(end);
-      desc = descBefore + descAfter;
-    }
-
-    // get the image credit
-    Pattern p2 = Pattern.compile("<italic>Image Credit: (.*?)</italic>");
-    Matcher m2 = p2.matcher(desc);
-    if (m2.find()) {
-      // there should be one image credit
-      results[1] = m2.group(1);
-
-      start = m2.start();
-      end = m2.end();
-
-      // remove the image credit from the total description
-      String descBefore = desc.substring(0, start);
-      String descAfter = desc.substring(end);
-      desc = descBefore + descAfter;
-    }
-
-    // once title and image credit have been removed, the rest of the content is the issue description
-    results[2] = desc;
-
-    return results;
   }
 
   /**
@@ -217,7 +170,7 @@ public class BrowseIssueAction extends BaseActionSupport{
   public void setSecondaryObjectService(XMLService secondaryObjectService) {
     this.secondaryObjectService = secondaryObjectService;
   }
-  
+
   /**
    * Spring injected method sets the browseService.
    * @param browseService The browseService to set.
