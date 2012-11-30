@@ -117,27 +117,47 @@ public class BrowseIssueAction extends BaseActionSupport{
   }
 
   private String[] formatIssue(String desc) {
-    Pattern p1 = Pattern.compile("<title>(.*?)</title>");
-    Pattern p2 = Pattern.compile("<italic>Image Credit: (.*?)</italic>");
-    Pattern p3 = Pattern.compile("<p>(.*?)</p>");
-    Pattern patterns[] = {p1, p2, p3};
     String results[] = {"", "", ""};
-    for (int i=0; i< patterns.length; ++i) {
-      results[i] = formatSingleIssue(patterns[i], desc);
-    }
-    return results;
-  }
+    int start = 0, end = 0;
 
-  private String formatSingleIssue(Pattern p, String desc){
-    String description = "";
-    if(desc != null) {
-      Matcher m = p.matcher(desc);
-      if (m.find()) {
-        description = m.group(1);
-        description = description.replaceAll("<.*?>", "");
-      }
+    // get the title of the issue
+    Pattern p1 = Pattern.compile("<title>(.*?)</title>");
+    Matcher m = p1.matcher(desc);
+    if (m.find()) {
+      // there should be one title
+      results[0] = m.group(1);
+      // title seems to be surround by <bold> element
+      results[0] = results[0].replaceAll("<.*?>", "");
+
+      start = m.start(1);
+      end = m.end(1);
+
+      // remove the title from the total description
+      String descBefore = desc.substring(0, start);
+      String descAfter = desc.substring(end);
+      desc = descBefore + descAfter;
     }
-    return description;
+
+    // get the image credit
+    Pattern p2 = Pattern.compile("<italic>Image Credit: (.*?)</italic>");
+    m = p2.matcher(desc);
+    if (m.find()) {
+      // there should be one image credit
+      results[1] = m.group(1);
+
+      start = m.start(1);
+      end = m.end(1);
+
+      // remove the image credit from the total description
+      String descBefore = desc.substring(0, start);
+      String descAfter = desc.substring(end);
+      desc = descBefore + descAfter;
+    }
+
+    // once title and image credit have been removed, the rest of the content is the issue description
+    results[2] = desc;
+
+    return results;
   }
 
   /**
