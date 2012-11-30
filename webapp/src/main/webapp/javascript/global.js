@@ -1096,6 +1096,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         changeSlide(t);
         thumbPos(t);
       }
+      return false;
     }
 
     if(e.which == 39 || e.which == 40) {
@@ -1104,6 +1105,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         changeSlide(t);
         thumbPos(t);
       }
+      return false;
     }
   });
 
