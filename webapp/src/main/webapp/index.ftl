@@ -52,7 +52,7 @@
             <div class="more">
               <p>Recent survey of deforestation in Brazil shows faster rate of wildlife extinction than previously predicted. <a href="TEST">The New York Times Blog</a>, <a href="TEST">NBC News</a> and <a href="TEST">Nature</a> covered this <a href="TEST">study</a>.</p>
               <!--Do not delete this link-->
-              <p>Looking for a paper that has been covered by the media? Try our <a href="/search/advancedSearch.action">search functionality</a>.</p>
+              <p>Looking for a paper that has been covered by the media? Try our <a href="/search/advanced/">search functionality</a>.</p>
             </div>
           </div>
 
