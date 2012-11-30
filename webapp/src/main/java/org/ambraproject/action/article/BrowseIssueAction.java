@@ -108,6 +108,7 @@ public class BrowseIssueAction extends BaseActionSupport{
       // only transform the description (title and image credit do not need to be transformed)
       try {
         issueDescription = secondaryObjectService.getTransformedDescription(issueDescription);
+        issueImageCredit = secondaryObjectService.getTransformedDescription(issueImageCredit);
       } catch (ApplicationException e) {
         log.error("Failed to translate issue description to HTML.", e);
       }
