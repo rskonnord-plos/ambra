@@ -1,17 +1,10 @@
-/* $HeadURL::                                                                            $
+/*
+ * $HeadURL$
  * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
- *
+ * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -140,29 +133,29 @@ public class FeedbackAction extends UserActionSupport {
   private boolean validates() throws Exception {
     boolean isValid = true;
     if (StringUtils.isBlank(subject)) {
-      addFieldError("subject", "Subject cannot be empty");
+      addFieldError("subject", "This field is required.");
       isValid = false;
     }
     if (StringUtils.isBlank(name)) {
-      addFieldError("name", "Name cannot be empty");
+      addFieldError("name", "This field is required.");
       isValid = false;
     }
     if (StringUtils.isBlank(fromEmailAddress)) {
-      addFieldError(FROM_EMAIL_ADDRESS_KEY, "E-mail address cannot be empty");
+      addFieldError(FROM_EMAIL_ADDRESS_KEY, "This field is required.");
       isValid = false;
     } else if (!EmailValidator.getInstance().isValid(fromEmailAddress)) {
       addFieldError(FROM_EMAIL_ADDRESS_KEY, "Invalid e-mail address");
       isValid = false;
     }
     if (StringUtils.isBlank(note)) {
-      addFieldError("note", "Message cannot be empty");
+      addFieldError("note", "This field is required.");
       isValid = false;
     }
 
     HttpServletRequest request = ServletActionContext.getRequest();
 
     if (!captchaService.validateCaptcha(request.getRemoteAddr(), captchaChallenge, captchaResponse)) {
-      addFieldError("captcha", "Text verification is incorrect");
+      addFieldError("captcha", "Verification is incorrect. Please try again.");
       isValid = false;
     }
 
