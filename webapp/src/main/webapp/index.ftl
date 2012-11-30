@@ -199,7 +199,7 @@
       <h2>Publish with PLOS ONE</h2>
       <div class="body cf">
         <div class="item">
-          <a href="http://www.plosone.org/static/submissionInstructions.action">Submission Instructions</a>
+          <a href="http://www.plosone.org/static/submissionInstructions">Submission Instructions</a>
         </div>
         <div class="item">
           <a href="http://www.editorialmanager.com/pone/default.asp">Submit your manuscript</a>

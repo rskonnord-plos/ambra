@@ -22,7 +22,7 @@
   <div id="pagebdy">
     <div id="static-wrap">
       <div id="page-not-found">
-      <@s.url action="feedback.action" namespace="/feedback" includeParams="none" id="feedbackURL"/>
+      <@s.url action="feedback" namespace="/feedback" includeParams="none" id="feedbackURL"/>
       <@s.url action="advancedSearch" namespace="/search" includeParams="all" noSearchFlag="true" query="" id="searchAdvancedURL" />
 
         <h1>Article Not Found</h1>

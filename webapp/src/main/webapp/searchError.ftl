@@ -2,9 +2,9 @@
   <div id="pagebdy">
     <div id="static-wrap">
       <div id="error-500">
-        <@s.url action="searchHelp.action" namespace="/static" includeParams="none" id="searchHelp"/>
+        <@s.url action="searchHelp" namespace="/static" includeParams="none" id="searchHelp"/>
 
-        <@s.url action="feedback.action" namespace="/feedback" includeParams="none" id="feedbackURL"/>
+        <@s.url action="feedback" namespace="/feedback" includeParams="none" id="feedbackURL"/>
 
           <h1>Search Error!</h1>
 

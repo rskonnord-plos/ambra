@@ -32,7 +32,7 @@
 <div id="search-home">
   <p class='intro'>PLOS ONE is a <strong>peer-reviewed, open-access</strong> resource<br> from the Public Library of Science.</p>
   <div id="db">
-    <form name="searchForm" action="/search/simpleSearch.action" method="get">
+    <form name="searchForm" action="/search/simple" method="get">
       <input type="hidden" name="from" value="globalSimpleSearch"/>
       <input type="hidden" name="filterJournals" value="PLoSONE">
       <fieldset>
@@ -80,7 +80,7 @@
             <div class="more">
               <p>Recent survey of deforestation in Brazil shows faster rate of wildlife extinction than previously predicted. <a href="TEST">The New York Times Blog</a>, <a href="TEST">NBC News</a> and <a href="TEST">Nature</a> covered this <a href="TEST">study</a>.</p>
               <!--Do not delete this link-->
-              <p>Looking for a paper that has been covered by the media? Try our <a href="/search/advancedSearch.action">search functionality</a>.</p>
+              <p>Looking for a paper that has been covered by the media? Try our <a href="/search/advanced">search functionality</a>.</p>
             </div>
           </div>
 
@@ -227,7 +227,7 @@
       <h2>Publish with PLOS ONE</h2>
       <div class="body cf">
         <div class="item">
-          <a href="http://www.plosone.org/static/submissionInstructions.action">Submission Instructions</a>
+          <a href="http://www.plosone.org/static/submissionInstructions">Submission Instructions</a>
         </div>
         <div class="item">
           <a href="http://www.editorialmanager.com/pone/default.asp">Submit your manuscript</a>
