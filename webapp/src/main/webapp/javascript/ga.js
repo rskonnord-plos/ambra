@@ -1,7 +1,34 @@
 //GA TRACKING v2.0 by www.blastam.com - analytics@blastam.com
 // cross-domain/addIgnoreds list should be in here - if it needs to be updated there will be no need to modify beacons
 
-var bamGAID = 'UA-338393-1';
+//Array elements containing value of PLOS' Google Analytics web property ID for each journal and demo site
+
+var plosGApropID = new Array();
+
+//demo sites
+plosGApropId["biology-demo.plosjournals.org"]="UA-36675610-2";
+plosGApropId["compbiol-demo.plosjournals.org"]="UA-36675610-3";
+plosGApropId["genetics-demo.plosjournals.org"]="UA-36675610-4";
+plosGApropId["medicine-demo.plosjournals.org"]="UA-36675610-5";
+plosGApropId["ntds-demo.plosjournals.org"]="UA-36675610-6";
+plosGApropId["pathogens-demo.plosjournals.org"]="UA-36675610-7";
+plosGApropId["one-demo.plosjournals.org"]="UA-36675610-1";
+
+//production sites
+
+plosGApropId["plosbiology.org"]="UA-36675108-2";
+plosGApropId["ploscompbiol.org"]="UA-36675108-3";
+plosGApropId["plosgenetics.org"]="UA-36675108-4";
+plosGApropId["plosmedicine.org"]="UA-36675108-5";
+plosGApropId["plosntds.org"]="UA-36675108-6";
+plosGApropId["plospathogens.org"]="UA-36675108-7";
+plosGApropId["plosone.org"]="UA-36675108-1";
+
+//No matter which journal or demo site is served, the identifier for the correct site will be used
+var bamGAID = plosGApropId[window.location.hostname];
+
+
+// Deprecated GoogleAnalytics Prop ID.  Used for all of PLOS.org 'UA-338393-1'
 var bamGAVPV = location.pathname + location.search + location.hash;
 // cross domain list
 var bamGAcrossDomains = ["plosone-josowski.plos.org", "plosone.org", "plosbiology.org","plosmedicine.org","plosgenetics.org","ploscompbiol.org","plospathogens.org","plosntds.org","ploscollections.org","plosreports.org","ploshubs.org","plos.org"];
