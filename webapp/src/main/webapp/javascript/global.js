@@ -1183,7 +1183,7 @@ $('form[name="searchForm"]').each(function(index, item) {
 var $nav_figs = $('#nav-figures a');
 if ($nav_figs.length) {
   $nav_figs.on('click', function () {
-    doi = $(this).data('doi');
+    var doi = $(this).data('doi');
     launchModal(doi, null, 'fig');
   });
 }
@@ -1192,13 +1192,21 @@ if ($nav_figs.length) {
 var $toc_block_links = $('#toc-block div.links');
 if ($toc_block_links.length) {
   $toc_block_links.find('a.figures').on('click', function () {
-    doi = $(this).data('doi');
+    var doi = $(this).data('doi');
     launchModal(doi, null, 'fig', true);
   });
 
   $toc_block_links.find('a.abstract').on('click', function () {
-    doi = $(this).data('doi');
+    var doi = $(this).data('doi');
     launchModal(doi, null, 'abstract', true);
+  });
+}
+
+var $toc_block_cover = $('#toc-block .cover img');
+if ($toc_block_cover.length) {
+  var doi = $toc_block_cover.data('doi');
+  $toc_block_cover.click(function () {
+    launchModal(doi, null, 'fig', true);
   });
 }
 
