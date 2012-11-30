@@ -28,11 +28,11 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      $("#searchForm").submit();
+      $("#searchStripForm").submit();
     });
 
     $("input[name|='filterJournals']").click(function(eventObj) {
-      $("#searchForm").submit();
+      $("#searchStripForm").submit();
     });
 
     $("#clearSubjectFilter").click(function(eventObj) {
@@ -40,11 +40,11 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      $("#searchForm").submit();
+      $("#searchStripForm").submit();
     });
 
     $("input[name|='filterSubjects']").click(function(eventObj) {
-      $("#searchForm").submit();
+      $("#searchStripForm").submit();
     });
 
     $("#clearAuthorFilter").click(function(eventObj) {
@@ -52,15 +52,15 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      $("#searchForm").submit();
+      $("#searchStripForm").submit();
     });
 
     $("input[name|='filterAuthors']").click(function(eventObj) {
-      $("#searchForm").submit();
+      $("#searchStripForm").submit();
     });
 
     $("#sortPicklist").change(function(eventObj) {
-      $("#searchForm").submit();
+      $("#searchStripForm").submit();
     });
 
     //***************************************
@@ -509,7 +509,7 @@ $(document).ready(
       $.ajax({
         type: 'POST',
         url: '/search/saveSearch.action',
-        data: $('#searchForm').serialize(),
+        data: $('#searchStripForm').serialize(),
         dataFilter: function (data, type) {
           return data.replace(/(\/\*|\*\/)/g, '');
         },
