@@ -244,9 +244,9 @@ $(document).ready(
           showURL: false,
           bodyHandler: function() {
             return "<span class=\"searchResultsTip\">HTML: <b>" + data.totalHTML + "</b>"
-              + ", PDF: <b>" + data.totalPDF + "</b>";
-            + ", XML: <b>" + data.totalXML + "</b>";
-            + ", Grand Total: <b>" + data.total + "</b></span>";
+              + ", PDF: <b>" + data.totalPDF + "</b>"
+              + ", XML: <b>" + data.totalXML + "</b>"
+              + ", Grand Total: <b>" + data.total + "</b></span>";
           }
         });
 
