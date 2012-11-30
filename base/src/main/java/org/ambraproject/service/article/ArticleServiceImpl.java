@@ -605,8 +605,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           }
           relatedArticleInfo.setJournals(journalViews);
 
-          List<String> relatedArticleAuthors = new ArrayList<String>(article.getAuthors().size());
-          for (ArticleAuthor ac : article.getAuthors()) {
+          List<String> relatedArticleAuthors = new ArrayList<String>(otherArticle.getAuthors().size());
+          for (ArticleAuthor ac : otherArticle.getAuthors()) {
             relatedArticleAuthors.add(ac.getFullName());
           }
           relatedArticleInfo.setAuthors(relatedArticleAuthors);
