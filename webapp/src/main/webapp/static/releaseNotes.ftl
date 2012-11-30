@@ -35,11 +35,18 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.5.0</h2>
+  <p>Released December 4, 2012</p>
+  <h3>Features Implemented in Ambra 2.5.0</h3>
+  <ul>
+    <li>Implement a new taxonomy.</li>
+  </ul>
+
   <h2>Ambra 2.4.9</h2>
   <p>Released November 19, 2012</p>
   <h3>Features Implemented in Ambra 2.4.9</h3>
   <ul>
-    <li>Database cleaup</li>
+    <li>Database cleanup.</li>
     <li>Additional database fields added for features to come</li>
   </ul>
 
@@ -61,7 +68,7 @@
   <p>Released October 23, 2012</p>
   <h3>Features Implemented in Ambra 2.4.6</h3>
   <ul>
-    <li>Alm: show percentage of html views that lead to a pdf download.</li>
+    <li>ALM: show percentage of HTML views that lead to a PDF download.</li>
     <li>Registration: streamlined initial login to require fewer steps.</li>
   </ul>
 

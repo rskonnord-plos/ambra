@@ -26,7 +26,8 @@
   <@s.url action="feed" namespace="/article" includeParams="none" id="rssFeedURL"/>
   <#assign currentJournalName = freemarker_config.getDisplayName(journalContext) />
   <p>
-  <em>${currentJournalName}</em> provides the following <@s.a href="${rssURL}">RSS feeds</@s.a> which are updated as new articles are posted:
+  <em>${currentJournalName}</em> provides the following <@s.a href="${rssURL}">RSS feeds</@s.a> which are updated as new articles are published.
+    To create RSS feeds based on search results, click the "RSS" icon on any search result page.
   </p>
 
   <ul>

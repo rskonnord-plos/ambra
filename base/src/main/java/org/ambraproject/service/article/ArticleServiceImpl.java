@@ -44,6 +44,7 @@ import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AssetView;
 import org.ambraproject.views.JournalView;
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -53,6 +54,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -633,6 +635,86 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   public void setCitationDoi(CitedArticle citedArticle, String doi) {
     citedArticle.setDoi(doi);
     hibernateTemplate.update(citedArticle);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
+  public void setArticleCategories(Article article, List<String> categoryStrings) {
+    List<Category> categories = new ArrayList<Category>(categoryStrings.size());
+    int numAdded = 0;
+    for (String s : categoryStrings) {
+      String[] fields = s.split("\\/");
+      if (fields.length < 2 || !fields[0].isEmpty()) {
+        throw new IllegalArgumentException("Bad category: " + s);
+      }
+      Category category = new Category();
+      category.setMainCategory(fields[1]);
+      if (fields.length > 2) {
+        category.setSubCategory(fields[fields.length - 1]);
+      }
+      categories.add(category);
+      if (++numAdded == 8) {
+        break;
+      }
+    }
+
+    // TODO: article.categories is a set according to Hibernate, but it should be
+    // a list, since the taxonomy server returns a list of categories sorted
+    // in descending order of the match.  Need to change the ambra hibernate stuff
+    // if we want to change that.
+    article.setCategories(new HashSet<Category>(categories));
+    updateWithExistingCategories(article);
+  }
+
+  /**
+   * Update the article to reference any already existing categories in the database.
+   *
+   * @param article the article to update
+   */
+  private void updateWithExistingCategories(Article article) {
+
+    // I was having an issue where the first call to hibernateTemplate.findByCriteria below
+    // was triggering a "flush"... saving a dirty but uncommitted object to the DB.  The
+    // object being saved was a newly-created category that had a duplicate in the DB, which
+    // triggered a duplicate key exception.  Of course, this is the whole point of this
+    // method... to prevent this from happening.  The following two lines fix this, but it
+    // seems kind of wrong.  This happened from a standalone app not running in a servlet
+    // container, and I suspect that I was somehow misconfiguring my session factory
+    // or transaction manager or something (but this was the only solution I found).
+    int oldFlushMode = hibernateTemplate.getFlushMode();
+    hibernateTemplate.setFlushMode(HibernateAccessor.FLUSH_COMMIT);
+    try {
+      Set<Category> existingCategories = article.getCategories();
+      if (existingCategories != null && !existingCategories.isEmpty()) {
+        Set<Category> correctCategories = new HashSet<Category>(existingCategories.size());
+        for (Category category : existingCategories) {
+          try {
+            Category existingCategory;
+            if (category.getSubCategory() != null) {
+              existingCategory = (Category) hibernateTemplate.findByCriteria(
+                  DetachedCriteria.forClass(Category.class)
+                      .add(Restrictions.eq("mainCategory", category.getMainCategory()))
+                      .add(Restrictions.eq("subCategory", category.getSubCategory())), 0, 1).get(0);
+            } else {
+              existingCategory = (Category) hibernateTemplate.findByCriteria(
+                  DetachedCriteria.forClass(Category.class)
+                      .add(Restrictions.eq("mainCategory", category.getMainCategory()))
+                      .add(Restrictions.isNull("subCategory")), 0, 1).get(0);
+            }
+            correctCategories.add(existingCategory);
+          } catch (IndexOutOfBoundsException e) {
+            //category must not have existed
+            correctCategories.add(category);
+          }
+        }
+        article.setCategories(correctCategories);
+      }
+    } finally {
+      hibernateTemplate.setFlushMode(oldFlushMode);
+    }
   }
 
 

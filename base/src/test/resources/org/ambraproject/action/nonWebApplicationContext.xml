@@ -242,4 +242,26 @@
     <value>asses</value>
     <value>asshole</value>
   </util:list>
+
+  <!--Http Client-->
+  <bean id="httpConnectionManagerParams" class="org.apache.commons.httpclient.params.HttpConnectionManagerParams">
+    <!-- time out after 30 sec -->
+    <property name="soTimeout" value="30000"/>
+    <property name="connectionTimeout" value="30000"/>
+  </bean>
+
+  <bean id="multiThreadedHttpConnectionManager"
+        class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
+    <property name="params" ref="httpConnectionManagerParams"/>
+  </bean>
+
+  <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
+    <constructor-arg index="0" ref="multiThreadedHttpConnectionManager"/>
+  </bean>
+
+  <bean id="articleClassifier" class="org.ambraproject.service.article.AIArticleClassifier" >
+    <property name="httpClient" ref="httpClient"/>
+    <property name="serviceUrl" value="http://localhost:1234/select"/>
+  </bean>
+
 </beans>

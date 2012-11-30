@@ -645,6 +645,45 @@
         <param name="templateFile">/static/articleNotFound.ftl</param>
       </result>
     </action>
+
+    <action name="categories" class="org.ambraproject.action.article.FetchArticleCategoriesAction">
+      <result name="input" type="json">
+        <param name="excludeProperties">
+          URL,
+          authId,
+          currentJournal,
+          locale,
+          rssName,
+          rssPath,
+          texts,
+          permissions
+        </param>
+      </result>
+      <result name="success" type="json">
+        <param name="excludeProperties">
+          URL,
+          authId,
+          currentJournal,
+          locale,
+          rssName,
+          rssPath,
+          texts,
+          permissions
+        </param>
+      </result>
+      <result name="error" type="json">
+        <param name="excludeProperties">
+          URL,
+          authId,
+          currentJournal,
+          locale,
+          rssName,
+          rssPath,
+          texts,
+          permissions
+        </param>
+      </result>
+    </action>
   </package>
 
   <package name="article-feed" extends="default" namespace="/article/feed">

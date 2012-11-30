@@ -32,13 +32,16 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author stevec
@@ -202,10 +205,30 @@ public class HomePageAction extends BaseActionSupport {
    */
   @Override
   public String execute() {
-    categoryInfos = browseService.getSubjectsForJournal(this.getCurrentJournal());
+    String journal = getCurrentJournal();
 
+    // HACK: the PLOS ONE homepage displays all top-level categories.  With the
+    // old taxonomy, we got these results from solr.  However, the new taxonomy
+    // has many fewer top-level categories, so it's a lot simpler just to
+    // hard code them here.  Still, this should probably be moved somewhere else
+    // and/or be done more elegantly.
+    if ("PLoSONE".equals(journal)) {
+      Map<String, Long> topLevelCategories = new HashMap<String, Long>(10);
+      topLevelCategories.put("Physical sciences", 1L);
+      topLevelCategories.put("Earth sciences", 1L);
+      topLevelCategories.put("Computer and information sciences", 1L);
+      topLevelCategories.put("Environmental sciences and ecology", 1L);
+      topLevelCategories.put("Social sciences", 1L);
+      topLevelCategories.put("Science policy", 1L);
+      topLevelCategories.put("Research and analysis methods", 1L);
+      topLevelCategories.put("Medicine and health sciences", 1L);
+      topLevelCategories.put("Engineering and technology", 1L);
+      topLevelCategories.put("Biology and life sciences", 1L);
+      categoryInfos = new TreeMap<String, Long>(topLevelCategories);
+    } else {
+      categoryInfos = browseService.getSubjectsForJournal(journal);
+    }
     initRecentArticles();
-
     return SUCCESS;
   }
 
