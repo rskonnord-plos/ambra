@@ -1173,7 +1173,7 @@ if ($fig_results.length) {
 }
 
 //if search box is empty, don't submit the form
-$('form[name="searchForm"]').each(function(index, item) {
+$('form[name="searchForm"], form[name="searchStripForm"]').each(function(index, item) {
   $(item).submit(function() {
     if (!$(this).find('input[name="query"]').val()) {
       return false;
