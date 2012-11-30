@@ -1065,8 +1065,9 @@ $.fn.alm = function () {
         };
 
         var success = function (response) {
+          var $usage = $("#" + usageID);
           $("#" + loadingID).fadeOut('slow');
-          $("#" + usageID).css("display", "none");
+          $usage.css("display", "none");
 
           var data = this.massageChartData(response.article.source, publishDatems);
 
@@ -1093,153 +1094,158 @@ $.fn.alm = function () {
             return key;
           });
 
-          var options = {
-            chart:{
-              renderTo:"chart",
-              type:"column",
-              animation:false,
-              margin:[40, 40, 40, 80]
-            },
-            credits:{
-              enabled:false
-            },
-            exporting:{
-              enabled:false
-            },
-            title:{
-              text:null
-            },
-            legend:{
-              enabled:false
-            },
-            xAxis:{
+          $usage.append(summaryTable);
+
+          // Display the graph only if there are at least two data points (months)
+          var isGraphDisplayed = Object.keys(data.history).length > 1;
+          if (isGraphDisplayed) {
+            var options = {
+              chart:{
+                renderTo:"chart",
+                type:"column",
+                animation:false,
+                margin:[40, 40, 40, 80]
+              },
+              credits:{
+                enabled:false
+              },
+              exporting:{
+                enabled:false
+              },
               title:{
-                text:"Months",
-                style:{
-                  fontFamily:"'FS Albert Web Regular', Verdana, sans-serif",
-                  fontWeight:"normal",
-                  color:"#000"
-                },
-                align:"high"
+                text:null
               },
-              labels:{
-                step:(dataHistoryKeys.length < 15) ? 1 : Math.round(dataHistoryKeys.length / 15),
-                formatter:function () {
-                  return this.value + 1;
-                }
+              legend:{
+                enabled:false
               },
-              categories:[]
-            },
-            yAxis:[
-              {
+              xAxis:{
                 title:{
-                  text:"Cumulative Views",
+                  text:"Months",
                   style:{
                     fontFamily:"'FS Albert Web Regular', Verdana, sans-serif",
                     fontWeight:"normal",
-                    color:"#000",
-                    height:"50px"
-                  }
+                    color:"#000"
+                  },
+                  align:"high"
                 },
                 labels:{
-                  style:{
-                    color:"#000"
+                  step:(dataHistoryKeys.length < 15) ? 1 : Math.round(dataHistoryKeys.length / 15),
+                  formatter:function () {
+                    return this.value + 1;
+                  }
+                },
+                categories:[]
+              },
+              yAxis:[
+                {
+                  title:{
+                    text:"Cumulative Views",
+                    style:{
+                      fontFamily:"'FS Albert Web Regular', Verdana, sans-serif",
+                      fontWeight:"normal",
+                      color:"#000",
+                      height:"50px"
+                    }
+                  },
+                  labels:{
+                    style:{
+                      color:"#000"
+                    }
                   }
                 }
-              }
-            ],
-            plotOptions:{
-              column:{
-                stacking:"normal"
+              ],
+              plotOptions:{
+                column:{
+                  stacking:"normal"
+                },
+                animation:false,
+                series:{
+                  pointPadding:0,
+                  groupPadding:0,
+                  borderWidth:0,
+                  shadow:false
+                }
               },
-              animation:false,
-              series:{
-                pointPadding:0,
-                groupPadding:0,
+              series:[
+                {
+                  name:"PMC",
+                  data:[],
+                  color:"#6d84bf"
+                },
+                {
+                  name:"PLoS",
+                  data:[],
+                  color:"#3c63af"
+                }
+              ],
+              tooltip:{
+                //Make background invisible
+                backgroundColor:"rgba(255, 255, 255, 0.0)",
+                useHTML:true,
+                shared:true,
+                shadow:false,
                 borderWidth:0,
-                shadow:false
-              }
-            },
-            series:[
-              {
-                name:"PMC",
-                data:[],
-                color:"#6d84bf"
-              },
-              {
-                name:"PLoS",
-                data:[],
-                color:"#3c63af"
-              }
-            ],
-            tooltip:{
-              //Make background invisible
-              backgroundColor:"rgba(255, 255, 255, 0.0)",
-              useHTML:true,
-              shared:true,
-              shadow:false,
-              borderWidth:0,
-              borderRadius:0,
-              positioner:function (labelHeight, labelWidth, point) {
-                var newX = point.plotX + (labelWidth / 2) + 25,
-                  newY = point.plotY - (labelHeight / 2) + 25;
-                return { x:newX, y:newY };
-              },
-              formatter:function () {
-                var key = this.points[0].key,
-                  h = data.history;
+                borderRadius:0,
+                positioner:function (labelHeight, labelWidth, point) {
+                  var newX = point.plotX + (labelWidth / 2) + 25,
+                    newY = point.plotY - (labelHeight / 2) + 25;
+                  return { x:newX, y:newY };
+                },
+                formatter:function () {
+                  var key = this.points[0].key,
+                    h = data.history;
 
-                return '<table id="mini" cellpadding="0" cellspacing="0">'
-                  + '<tr><th></td><td colspan="2">Views in '
-                  + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                  + '</td><td colspan="2">Views since ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                  + '</td></tr><tr><th>Source</th><th class="header1">PLoS</th><th class="header2">PMC</th>'
-                  + '<th class="header1">PLoS</th><th class="header2">PMC</th></tr>'
-                  + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                  h[key].source.pmcViews.totalHTML.format(0, '.', ',') : "n.a.") + '</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML.format(0, '.', ',') + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                  h[key].source.pmcViews.cumulativeHTML.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                  + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                  h[key].source.pmcViews.totalPDF.format(0, '.', ',') : "n.a.") + '</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativePDF.format(0, '.', ',') + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                  h[key].source.pmcViews.cumulativePDF.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                  + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
-                  + '<td class="data2">n.a.</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativeXML.format(0, '.', ',') + '</td>'
-                  + '<td class="data2">n.a.</td></tr>'
-                  + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                  h[key].source.pmcViews.total.format(0, '.', ',') : "n.a.") + '</td>'
-                  + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal.format(0, '.', ',') + '</td>'
-                  + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                  h[key].source.pmcViews.cumulativeTotal.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                  + '</table>';
+                  return '<table id="mini" cellpadding="0" cellspacing="0">'
+                    + '<tr><th></td><td colspan="2">Views in '
+                    + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+                    + '</td><td colspan="2">Views since ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+                    + '</td></tr><tr><th>Source</th><th class="header1">PLoS</th><th class="header2">PMC</th>'
+                    + '<th class="header1">PLoS</th><th class="header2">PMC</th></tr>'
+                    + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
+                    + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+                    h[key].source.pmcViews.totalHTML.format(0, '.', ',') : "n.a.") + '</td>'
+                    + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML.format(0, '.', ',') + '</td>'
+                    + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+                    h[key].source.pmcViews.cumulativeHTML.format(0, '.', ',') : "n.a.") + '</td></tr>'
+                    + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
+                    + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+                    h[key].source.pmcViews.totalPDF.format(0, '.', ',') : "n.a.") + '</td>'
+                    + '<td class="data1">' + h[key].source.counterViews.cumulativePDF.format(0, '.', ',') + '</td>'
+                    + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+                    h[key].source.pmcViews.cumulativePDF.format(0, '.', ',') : "n.a.") + '</td></tr>'
+                    + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
+                    + '<td class="data2">n.a.</td>'
+                    + '<td class="data1">' + h[key].source.counterViews.cumulativeXML.format(0, '.', ',') + '</td>'
+                    + '<td class="data2">n.a.</td></tr>'
+                    + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
+                    + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+                    h[key].source.pmcViews.total.format(0, '.', ',') : "n.a.") + '</td>'
+                    + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal.format(0, '.', ',') + '</td>'
+                    + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+                    h[key].source.pmcViews.cumulativeTotal.format(0, '.', ',') : "n.a.") + '</td></tr>'
+                    + '</table>';
+                }
               }
+            };
+
+            for (var key in data.history) {
+              if (data.history[key].source.pmcViews != null) {
+                options.series[0].data.push({ name:key, y:data.history[key].source.pmcViews.cumulativeTotal });
+              } else {
+                options.series[0].data.push({ name:key, y:0 });
+              }
+              options.series[1].data.push({ name:key, y:data.history[key].source.counterViews.cumulativeTotal });
             }
-          };
 
-          for (var key in data.history) {
-            if (data.history[key].source.pmcViews != null) {
-              options.series[0].data.push({ name:key, y:data.history[key].source.pmcViews.cumulativeTotal });
-            } else {
-              options.series[0].data.push({ name:key, y:0 });
-            }
-            options.series[1].data.push({ name:key, y:data.history[key].source.counterViews.cumulativeTotal });
-          }
+            $usage.append($('<div id="chart"></div>')
+              .css("width", "600px")
+              .css("height", "200px"));
 
-          $("#" + usageID).append(summaryTable);
-          $("#" + usageID).append($('<div id="chart"></div>')
-            .css("width", "600px")
-            .css("height", "200px"));
+            var chart = new Highcharts.Chart(options);
+          } // end if (isGraphDisplayed)
 
-          var chart = new Highcharts.Chart(options);
-
-          $("#" + usageID).append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
-          $("#" + usageID).show("blind", 500);
+          $usage.append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
+          $usage.show("blind", 500);
         };
 
         this.getChartData(doi, jQuery.proxy(success, this), almError);
