@@ -396,7 +396,7 @@ $.fn.comments = function () {
 
     // Insert the new comment and display it to the user
     var replyList = getReplyListFor(parentId);
-    comment.hide(); // so we can use animatedAppear
+    comment.hide(); // so we can fade it in
     replyList.append(comment);
     replyList.append(cloneWithId('#replies_to-prototype', 'replies_to-' + childId));
     comment.fadeIn(1000); // to help the user notice where the new content is inserted
