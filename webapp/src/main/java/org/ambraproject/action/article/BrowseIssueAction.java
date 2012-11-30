@@ -19,6 +19,7 @@
  */
 package org.ambraproject.action.article;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.models.Journal;
 import org.ambraproject.service.article.BrowseService;
@@ -106,6 +107,14 @@ public class BrowseIssueAction extends BaseActionSupport{
       issueTitle = results[0];
       issueImageCredit = results[1];
       issueDescription = results[2];
+
+      // only transform the description (title and image credit do not need to be transformed)
+      try {
+        issueDescription = secondaryObjectService.getTransformedDescription(issueDescription);
+      } catch (ApplicationException e) {
+        log.error("Failed to translate issue description to HTML.", e);
+      }
+
     } else {
       log.error("The currentIssue description was null. Issue DOI='" + issueInfo.getIssueURI() + "'");
       issueFullDescription = "No description found for this issue";
@@ -122,15 +131,15 @@ public class BrowseIssueAction extends BaseActionSupport{
 
     // get the title of the issue
     Pattern p1 = Pattern.compile("<title>(.*?)</title>");
-    Matcher m = p1.matcher(desc);
-    if (m.find()) {
+    Matcher m1 = p1.matcher(desc);
+    if (m1.find()) {
       // there should be one title
-      results[0] = m.group(1);
+      results[0] = m1.group(1);
       // title seems to be surround by <bold> element
       results[0] = results[0].replaceAll("<.*?>", "");
 
-      start = m.start(1);
-      end = m.end(1);
+      start = m1.start();
+      end = m1.end();
 
       // remove the title from the total description
       String descBefore = desc.substring(0, start);
@@ -140,13 +149,13 @@ public class BrowseIssueAction extends BaseActionSupport{
 
     // get the image credit
     Pattern p2 = Pattern.compile("<italic>Image Credit: (.*?)</italic>");
-    m = p2.matcher(desc);
-    if (m.find()) {
+    Matcher m2 = p2.matcher(desc);
+    if (m2.find()) {
       // there should be one image credit
-      results[1] = m.group(1);
+      results[1] = m2.group(1);
 
-      start = m.start(1);
-      end = m.end(1);
+      start = m2.start();
+      end = m2.end();
 
       // remove the image credit from the total description
       String descBefore = desc.substring(0, start);
