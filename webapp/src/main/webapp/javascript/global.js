@@ -418,7 +418,6 @@ if ($nav_article.length) {
       var hdr_view = true;
       var ftr_view = false;
       var speed = 'slow';
-//  var $btn = $('<div class="btn-g"><img src="images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function() {
       var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function () {
         $title.remove();
         $bnr.hide();
@@ -430,6 +429,7 @@ if ($nav_article.length) {
         .wrapInner('<div class="content" />');
       $title.find('div.article-kicker').remove();
       $title.appendTo($('body'));
+      var $titleHeight = $title.height();
       var $bnr = $('#banner-ftr');
 
       var displayEl = function () {
@@ -465,6 +465,12 @@ if ($nav_article.length) {
               top:'+=100'
             }, speed);
           top_open = true;
+          //scroll the window down by the height of the banner in the event we are jumping to an image
+          //second clause covers edge-case wherein user has jumped to image, scrolled the header into view
+          //and back down again
+          if(window.location.hash && win_top > $titleHeight + el_top + el_h ){
+            window.scrollBy(0,-($titleHeight));
+          }
         }
         if (hdr_view && top_open) {
           $title.stop()
