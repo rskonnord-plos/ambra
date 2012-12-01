@@ -396,6 +396,12 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>${xerces.version}</version>
+    </dependency>
+
     <!--Using tika to test powerpoints-->
     <dependency>
       <groupId>org.apache.tika</groupId>

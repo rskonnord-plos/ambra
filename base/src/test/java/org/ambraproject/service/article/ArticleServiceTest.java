@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -867,4 +868,57 @@ public class ArticleServiceTest extends BaseTest {
     }
   }
 
+  private Set<Category> addCategory(Set<Category> categories, String mainCategory,
+      String subCategory) {
+    Category category = new Category();
+    category.setMainCategory(mainCategory);
+    if (subCategory != null) {
+      category.setSubCategory(subCategory);
+    }
+    categories.add(category);
+    return categories;
+  }
+
+  @Test(dataProvider = "savedArticlesID")
+  public void testSetArticleCategories(Long articleID, Article expectedArticle) throws Exception {
+    List<String> terms = Arrays.asList(
+        "/Biology and life sciences/Cell biology/Cellular types/Animal cells/Blood cells/White blood cells/T cells",
+        "/Biology and life sciences",
+        "/Biology and life sciences/Anatomy and physiology/Immune physiology/Spleen",
+        "/Biology and life sciences/Anatomy and physiology/Immune physiology/Antigens",
+        "/Research and analysis methods/Imaging techniques/Radiologic imaging/Gastrointestinal imaging/Liver and spleen scan",
+        "/Medicine and health sciences/Pathology and laboratory medicine/Infectious diseases/Viral diseases/Hepatitis",
+        "/Biology and life sciences/Anatomy and physiology/Liver",
+        "/Biology and life sciences/Anatomy and physiology/Lymphatic system/Lymph nodes",
+        "/Biology and life sciences/Cell biology/Cellular types/Animal cells/Antigen-presenting cells"
+        );
+    Article article = articleService.getArticle(articleID, DEFAULT_ADMIN_AUTHID);
+    articleService.setArticleCategories(article, terms);
+
+    Set<Category> expectedCategories = new HashSet<Category>(8);
+    addCategory(expectedCategories, "Biology and life sciences", "T cells");
+    addCategory(expectedCategories, "Biology and life sciences", null);
+    addCategory(expectedCategories, "Biology and life sciences", "Spleen");
+    addCategory(expectedCategories, "Biology and life sciences", "Antigens");
+    addCategory(expectedCategories, "Research and analysis methods", "Liver and spleen scan");
+    addCategory(expectedCategories, "Medicine and health sciences", "Hepatitis");
+    addCategory(expectedCategories, "Biology and life sciences", "Liver");
+    addCategory(expectedCategories, "Biology and life sciences", "Lymph nodes");
+    assertEquals(article.getCategories(), expectedCategories);
+
+    // setArticleCategories should only store the first 8 categories returned by
+    // the taxonomy server.
+    Category shouldntExist = new Category();
+    shouldntExist.setMainCategory("Biology and life sciences");
+    shouldntExist.setSubCategory("Antigen-presenting cells");
+    assertFalse(article.getCategories().contains(shouldntExist));
+  }
+
+  @Test(dataProvider = "savedArticlesID", expectedExceptions = IllegalArgumentException.class)
+  public void testSetArticleCategoriesError(Long articleID, Article expectedArticle)
+      throws Exception {
+    List<String> terms = Arrays.asList("bogus", "response", "from", "server");
+    Article article = articleService.getArticle(articleID, DEFAULT_ADMIN_AUTHID);
+    articleService.setArticleCategories(article, terms);
+  }
 }

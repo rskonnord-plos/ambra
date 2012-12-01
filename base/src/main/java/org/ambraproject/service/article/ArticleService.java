@@ -198,6 +198,14 @@ public interface ArticleService {
   public void setCitationDoi(CitedArticle citedArticle, String doi);
 
   /**
+   * Populates DB objects as necessary to assign the given categories to the given article.
+   *
+   * @param article article to update
+   * @param categories List of category strings
+   */
+  public void setArticleCategories(Article article, List<String> categories);
+
+  /**
    * Throw a NoSuchArticleIdException exception if the article doesn't exist or the user does not have permission
    * to see the article
    *
