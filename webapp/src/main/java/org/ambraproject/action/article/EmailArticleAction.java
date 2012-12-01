@@ -133,15 +133,16 @@ public class EmailArticleAction extends UserActionSupport {
     if (StringUtils.isBlank(emailFrom)) {
       addFieldError("emailFrom", "This field is required.");
       isValid = false;
-    }
+    } else {
 
-    if (!EmailValidator.getInstance().isValid(emailFrom)) {
-      addFieldError("emailFrom", "Invalid e-mail address");
-      isValid = false;
+      if (!EmailValidator.getInstance().isValid(emailFrom)) {
+          addFieldError("emailFrom", "Invalid e-mail address");
+          isValid = false;
+      }
     }
 
     isValid = checkEmails(emailTo) && isValid;
-    
+
     if (StringUtils.isBlank(senderName)) {
       addFieldError("senderName", "This field is required.");
       isValid = false;
