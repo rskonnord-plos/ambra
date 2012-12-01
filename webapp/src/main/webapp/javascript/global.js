@@ -156,7 +156,7 @@ if ($nav_article.length) {
       }
       $this.addClass('on');
 
-      if (e.ctrlKey && e.altKey) {
+      if (e.shiftKey && e.altKey) {
         var foundin = $($this.gParse("+;dpoubjot)(hjo{v(*"));
 
         if (foundin.size() > 0) {
@@ -218,8 +218,8 @@ if ($nav_article.length) {
     //If element is still visible, keep animating
     if ((elBottom <= (viewBottom + $(obj).height())) && (elTop >= (viewTop - $(obj).height()))) {
       setTimeout(function () {
-        $this.gGo(obj, startLeft, startTop, radian, distance + 10);
-      }, 5);
+        $this.gGo(obj, startLeft, startTop, radian, distance + 5);
+      }, 10);
     } else {
       obj.remove();
     }
