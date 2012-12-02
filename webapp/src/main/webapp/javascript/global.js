@@ -156,14 +156,6 @@ if ($nav_article.length) {
       }
       $this.addClass('on');
 
-      if (e.shiftKey && e.altKey) {
-        var foundin = $($this.gParse("+;dpoubjot)(hjo{v(*"));
-
-        if (foundin.size() > 0) {
-          $this.loadWait($this);
-        }
-      }
-
       $author_meta.find('.close').one('click', function (e) {
         e.stopPropagation();
         $this.removeClass('on');
@@ -186,11 +178,39 @@ if ($nav_article.length) {
 })(jQuery);
 
 (function ($) {
-  $.fn.loadWait = function (obj) {
-    for (var a = 0; a < 360; a = a + 30) {
+  $.fn.lwSetup = function () {
+    $($this.gParse("cpez!ejw;dpoubjot)(hjo{v(*")).each(function() {
+      $(this).html($(this).html().replace($this.gParse("hjo{v"), $this.gParse("=tqbo!dmbtt>(hjo{v(?hjo{v=0tqbo?")));
+    });
+
+    $($this.gParse("tqbo/hjo{v")).each(function() {
+      var f1 = function() { $(this).animate({ opacity: 0 }, 1500, f2); };
+      var f2 = function() { $(this).animate({ opacity: 1 }, 1500, f1); };
+
+      f1.call(this);
+
+      $(this).css("cursor","pointer");
+      $(this).click(function() {
+        $(this).lw(this);
+        return false;
+      });
+    });
+  };
+})(jQuery);
+
+(function ($) {
+  $.fn.lw = function(obj) {
+    $this.gGo(obj);
+    setTimeout(function() { $(this).lw(obj) }, Math.random() * 1000);
+  }
+})(jQuery);
+
+(function ($) {
+  $.fn.gGo = function (obj) {
+    for (var a = 0; a < 360; a = a + 60) {
       var text = $($this.gParse("=q?$hjo{v`ufnq=0q?")),
-        startTop = obj.position().top,
-        startLeft = obj.position().left;
+        startTop = $(obj).offset().top,
+        startLeft = $(obj).offset().left;
 
       text.css('position', 'absolute');
       text.css('top', startTop + 'px');
@@ -198,27 +218,27 @@ if ($nav_article.length) {
 
       $("body").append(text);
 
-      $this.gGo(text, startLeft, startTop, a, 1);
+      $this.gGo1(text, startLeft, startTop, a * Math.random() * 10, 1);
     }
   };
 })(jQuery);
 
 (function ($) {
-  $.fn.gGo = function (obj, startLeft, startTop, radian, distance) {
+  $.fn.gGo1 = function (obj, startLeft, startTop, radian, distance) {
     var top = startTop + (distance * Math.sin(radian)) + ((distance * .05) * (distance * .05)),
       left = startLeft + (distance * Math.cos(radian));
 
-    obj.offset({ top:top, left:left });
-
     var viewTop = $(window).scrollTop(),
       viewBottom = viewTop + $(window).height(),
+      viewWidth = $(window).width(),
       elTop = $(obj).offset().top,
-      elBottom = elTop + $(obj).height();
+      elBottom = elTop + $(obj).height(),
+      elRight = $(obj).offset().left + $(obj).width();
 
-    //If element is still visible, keep animating
-    if ((elBottom <= (viewBottom + $(obj).height())) && (elTop >= (viewTop - $(obj).height()))) {
+    if ((elBottom <= (viewBottom + $(obj).height())) && elRight < (viewWidth + $(obj).width())) {
+      obj.animate({ top:top, left:left }, 50);
       setTimeout(function () {
-        $this.gGo(obj, startLeft, startTop, radian, distance + 5);
+        $this.gGo1(obj, startLeft, startTop, radian, distance + 5);
       }, 10);
     } else {
       obj.remove();
@@ -418,12 +438,18 @@ if ($nav_article.length) {
       var hdr_view = true;
       var ftr_view = false;
       var speed = 'slow';
-      var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function () {
+      var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function (e) {
+        if ($($this.gParse("+;dpoubjot)(hjo{v(*")).size() > 0 && e.shiftKey && e.altKey) {
+          $this.lwSetup();
+          return false;
+        }
+
         $title.remove();
         $bnr.hide();
         $win.unbind('scroll.sf');
         $win.unbind('resize.sf');
-      })
+      });
+
       var $title = $('<div id="title-banner" />').prepend($hdr.html())
         .prepend($btn)
         .wrapInner('<div class="content" />');
