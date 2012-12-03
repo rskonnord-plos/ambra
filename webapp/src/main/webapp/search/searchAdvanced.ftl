@@ -21,7 +21,7 @@
     </div>
     <div class="body">
       <@s.url id="quickSearchURL" includeParams="none" namespace="/search" action="quickSearch" />
-      <form id="quickFind" name="quickSearchForm" onsubmit="return true;" action="${quickSearchURL}"
+      <form id="quickFind" name="quickSearchForm" action="${quickSearchURL}"
             method="get" class="advSearch" title="Find An Article Search Form">
         <@s.hidden name="pageSize" />
         <p>Use citation information to quickly find a specific article.</p>
@@ -96,7 +96,7 @@
 <div class="col-2">
 <@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp" />
 <@s.url id="unformattedSearchURL" includeParams="none" namespace="/search" action="advancedSearch" />
-<form id="unformattedSearchFormId" name="unformattedSearchForm" onsubmit="return true;" action="${unformattedSearchURL}"
+<form id="unformattedSearchFormId" name="unformattedSearchForm" action="${unformattedSearchURL}"
       method="get" enctype="multipart/form-data" class="advSearch" title="Advanced Search">
 <@s.hidden name="pageSize" />
 <@s.hidden name="sort" />

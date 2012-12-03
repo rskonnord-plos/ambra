@@ -196,3 +196,44 @@ $('#clearFiltersButtonId2').on('click', function() {
 $('#clearUnformattedQueryButtonId').on('click', function() {
   $query.val('')
 });
+
+
+$('#unformattedSearchFormId').submit(function () {
+  var terms = $(this).find('input[name=queryTerm]');
+  var sDate = $(this).find('input[name=startDateAsString]');
+  var eDate = $(this).find('input[name=endDateAsString]');
+  var query = $(this).find('textarea[name=unformattedQuery]');
+
+  if(terms.val().trim().length == 0
+    && sDate.val().trim().length == 0
+    && eDate.val().trim().length == 0
+    && query.val().trim().length == 0) {
+    return false;
+  }
+
+  if(query.val().trim().length == 0) {
+    $('#queryConjunctionAndId').click();
+  }
+
+  return true;
+});
+
+$('#quickFind').submit(function () {
+  var vol = $(this).find('input[name=volume]');
+  var el = $(this).find('input[name=eLocationId]');
+  var id = $(this).find('input[name=id]');
+
+  if(vol.val().trim().length > 0) {
+    return true;
+  }
+
+  if(el.val().trim().length > 0) {
+    return true;
+  }
+
+  if(id.val().trim().length > 0) {
+    return true;
+  }
+
+  return false;
+});
