@@ -597,6 +597,28 @@ public class AmbraFreemarkerConfig {
     return retVal != null ? retVal : "";
   }
 
+
+  /**
+   * Gets display name for journal
+   *
+   * @param eissn Journal eissn
+   * @return display name
+   */
+  public String getDisplayNameByEISSN(String eissn) {
+    JournalConfig jc = journalsByIssn.get(eissn);
+    boolean usingDefault = false;
+    if (jc == null) {
+      usingDefault = true;
+      jc = journals.get(defaultJournalName);
+    }
+    String retVal = jc.getDisplayName();
+    if ((retVal == null) && !usingDefault) {
+      jc = journals.get(defaultJournalName);
+      retVal = jc.getDisplayName();
+    }
+    return retVal != null ? retVal : "";
+  }
+
   /**
    * Get the issn which is the unique identifier for this journal
    *

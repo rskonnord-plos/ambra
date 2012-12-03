@@ -491,8 +491,8 @@ ERROR, searchType must be defined.
                 <#if hit.date??>
                   published ${hit.date?string("dd MMM yyyy")} |
                 </#if>
-                <#if hit.journalTitle??>
-                ${hit.journalTitle}
+                <#if hit.issn??>
+                  ${freemarker_config.getDisplayNameByEISSN(hit.issn)}
                 </#if>
               </li>
             </#list>
