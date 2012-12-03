@@ -33,8 +33,9 @@ var bamGAVPV = location.pathname + location.search + location.hash;
 var bamGAcrossDomains = ["plosone-josowski.plos.org", "plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
 var bamGAIgnoredRefs = ["plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
 
+var _bamGA;
 if (typeof(bamGAID) != 'undefined') {
-  var _bamGA = [];
+  _bamGA = [];
 
 // required Functions for basic tracking
   _bamGA.getDomain = function (url) {
@@ -212,8 +213,10 @@ if (typeof(bamGAID) != 'undefined') {
 
 if (typeof jQuery != 'undefined') {
   jQuery(document).ready(function () {
-    _bamGA.extendTracking();
-    _bamGA.customTracking();
+    if (_bamGA) {
+      _bamGA.extendTracking();
+      _bamGA.customTracking();
+    }
   });
 }
 
