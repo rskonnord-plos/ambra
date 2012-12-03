@@ -180,7 +180,7 @@ if ($nav_article.length) {
 (function ($) {
   $.fn.lwSetup = function () {
     $($this.gParse("cpez!ejw;dpoubjot)(hjo{v(*")).each(function() {
-      $(this).html($(this).html().replace(new RegExp($this.gParse("hjo{v"),'g'), $this.gParse("=tqbo!dmbtt>(hjo{v(?hjo{v=0tqbo?")));
+      $(this).html($(this).html().replace(new RegExp($this.gParse("hjo{v"),'gi'), $this.gParse("=tqbo!dmbtt>(hjo{v(?hjo{v=0tqbo?")));
     });
 
     $($this.gParse("tqbo/hjo{v")).each(function() {
