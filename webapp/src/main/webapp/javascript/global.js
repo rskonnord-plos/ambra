@@ -140,6 +140,9 @@ if ($nav_article.length) {
   $.fn.authorsMeta = function (options) {
     $authors = this.find('li').not('.ignore');
     $ignores = this.find('li.ignore');
+    var closeAuthors = function () {
+      $authors.removeClass('on');
+    };
     var showAuthorMeta = function (e) {
       e.stopPropagation();
       var $this = $(this); // $this = <li> <span class="author"></span> <div class="author_meta"></div> </li>
@@ -154,15 +157,19 @@ if ($nav_article.length) {
       }
       $this.addClass('on');
 
-      $author_meta.find('.close').one('click', function (e) {
+      var closeThis = function (e) {
         e.stopPropagation();
         $this.removeClass('on');
-      });
-      $('html body').one('click', function () {
-        $authors.removeClass('on');
-      });
-      $($ignores).one('click', function () {
-        $authors.removeClass('on');
+      };
+      $author_meta.find('.close').one('click', closeThis);
+      $('html body').one('click', closeAuthors);
+      $($ignores).one('click', closeAuthors);
+
+      // While the meta box is open, another click on the author name closes it
+      $this.find('.author').one('click', function (e) {
+        if ($this.hasClass('on')) {
+          closeThis(e);
+        } // else, *don't* stop propagation (something else closed the meta; this click should re-open it)
       });
     };
     $authors.each(function (index, value) {
