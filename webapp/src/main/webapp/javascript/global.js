@@ -180,12 +180,12 @@ if ($nav_article.length) {
 (function ($) {
   $.fn.lwSetup = function () {
     $($this.gParse("cpez!ejw;dpoubjot)(hjo{v(*")).each(function() {
-      $(this).html($(this).html().replace($this.gParse("hjo{v"), $this.gParse("=tqbo!dmbtt>(hjo{v(?hjo{v=0tqbo?")));
+      $(this).html($(this).html().replace(new RegExp($this.gParse("hjo{v"),'g'), $this.gParse("=tqbo!dmbtt>(hjo{v(?hjo{v=0tqbo?")));
     });
 
     $($this.gParse("tqbo/hjo{v")).each(function() {
-      var f1 = function() { $(this).animate({ opacity: 0 }, 1500, f2); };
-      var f2 = function() { $(this).animate({ opacity: 1 }, 1500, f1); };
+      var f1 = function() { $(this).animate({ color: "#FF0000" }, 10000, f2); };
+      var f2 = function() { $(this).animate({ color: "#FFFFFF" }, 10000, f1); };
 
       f1.call(this);
 
@@ -200,31 +200,25 @@ if ($nav_article.length) {
 
 (function ($) {
   $.fn.lw = function(obj) {
-    $this.gGo(obj);
+    var text = $($this.gParse("=q?$hjo{v`ufnq=0q?")),
+      startTop = $(obj).offset().top,
+      startLeft = $(obj).offset().left;
+
+    text.css('position', 'absolute');
+    text.css('top', startTop + 'px');
+    text.css('left', startLeft + 'px');
+
+    $("body").append(text);
+
+    $this.gGo(text, startLeft, startTop, 360 * Math.random(), 1);
+
     setTimeout(function() { $(this).lw(obj) }, Math.random() * 1000);
   }
 })(jQuery);
 
-(function ($) {
-  $.fn.gGo = function (obj) {
-    for (var a = 0; a < 360; a = a + 60) {
-      var text = $($this.gParse("=q?$hjo{v`ufnq=0q?")),
-        startTop = $(obj).offset().top,
-        startLeft = $(obj).offset().left;
-
-      text.css('position', 'absolute');
-      text.css('top', startTop + 'px');
-      text.css('left', startLeft + 'px');
-
-      $("body").append(text);
-
-      $this.gGo1(text, startLeft, startTop, a * Math.random() * 10, 1);
-    }
-  };
-})(jQuery);
 
 (function ($) {
-  $.fn.gGo1 = function (obj, startLeft, startTop, radian, distance) {
+  $.fn.gGo = function (obj, startLeft, startTop, radian, distance) {
     var top = startTop + (distance * Math.sin(radian)) + ((distance * .05) * (distance * .05)),
       left = startLeft + (distance * Math.cos(radian));
 
@@ -238,7 +232,7 @@ if ($nav_article.length) {
     if ((elBottom <= (viewBottom + $(obj).height())) && elRight < (viewWidth + $(obj).width())) {
       obj.animate({ top:top, left:left }, 50);
       setTimeout(function () {
-        $this.gGo1(obj, startLeft, startTop, radian, distance + 5);
+        $this.gGo(obj, startLeft, startTop, radian, distance + 5);
       }, 10);
     } else {
       obj.remove();
