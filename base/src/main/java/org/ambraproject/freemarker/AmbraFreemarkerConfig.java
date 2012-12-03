@@ -604,7 +604,7 @@ public class AmbraFreemarkerConfig {
    * @param eissn Journal eissn
    * @return display name
    */
-  public String getDisplayNameByEISSN(String eissn) {
+  public String getDisplayNameByEissn(String eissn) {
     JournalConfig jc = journalsByIssn.get(eissn);
     boolean usingDefault = false;
     if (jc == null) {

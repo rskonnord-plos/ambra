@@ -13,12 +13,12 @@ public class AmbraFreeMarkerConfigTest extends BaseTest {
   @Autowired
   protected Configuration ambraConfiguration;
 
-  @Test(priority = 1)
+  @Test
   public void testConfig() throws Exception {
     AmbraFreemarkerConfig config = new AmbraFreemarkerConfig(ambraConfiguration);
 
-    String name = config.getDisplayNameByEISSN("1234");
-    String name1 = config.getDisplayNameByEISSN("5678");
+    String name = config.getDisplayNameByEissn("1234");
+    String name1 = config.getDisplayNameByEissn("5678");
 
     //assertEquals(name, "test journal");
     //assertEquals(name1, "test journal 1");

@@ -492,7 +492,7 @@ ERROR, searchType must be defined.
                   published ${hit.date?string("dd MMM yyyy")} |
                 </#if>
                 <#if hit.issn??>
-                  ${freemarker_config.getDisplayNameByEISSN(hit.issn)}
+                  ${freemarker_config.getDisplayNameByEissn(hit.issn)}
                 </#if>
               </li>
             </#list>
