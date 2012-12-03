@@ -211,6 +211,8 @@ $('#unformattedSearchFormId').submit(function () {
     return false;
   }
 
+  //If there is no text in the query field, but text in one of the 'input' fields.
+  //Simulate a click to transfer the input into the query field before the submit occurs
   if(query.val().trim().length == 0) {
     $('#queryConjunctionAndId').click();
   }
