@@ -3,7 +3,7 @@
 
 //Array elements containing value of PLOS' Google Analytics web property ID for each journal and demo site
 
-var plosGApropID = new Array();
+var plosGApropId = new Array();
 
 //demo sites
 plosGApropId["biology-demo.plosjournals.org"] = "UA-36675610-2";
