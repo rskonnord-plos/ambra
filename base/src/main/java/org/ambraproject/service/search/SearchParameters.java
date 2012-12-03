@@ -78,7 +78,7 @@ public class SearchParameters implements Serializable {
   private int           pageSize = 0;
 
   // indicator for list view vs figure view
-  private String resultView;
+  private String resultView = "";
 
   public String getQuery() {
     return query;
