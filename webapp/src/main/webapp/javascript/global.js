@@ -138,13 +138,11 @@ if ($nav_article.length) {
 
 (function ($) {
   $.fn.authorsMeta = function (options) {
-    $this = this;
-    $authors = $this.find('li').not('.ignore');
-    $ignores = $this.find('li.ignore');
+    $authors = this.find('li').not('.ignore');
+    $ignores = this.find('li.ignore');
     var showAuthorMeta = function (e) {
       e.stopPropagation();
-      $this = $(this);
-      var position = $this.position();
+      var $this = $(this); // $this = <li> <span class="author"></span> <div class="author_meta"></div> </li>
       var $author_meta = $this.find('.author_meta');
       $authors.removeClass('on');
 
