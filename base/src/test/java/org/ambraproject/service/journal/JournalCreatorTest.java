@@ -18,6 +18,7 @@ import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Journal;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -36,7 +37,7 @@ public class JournalCreatorTest extends BaseTest {
   protected JournalCreator journalCreator;
 
   @Autowired
-  protected Configuration configuration;
+  protected @Qualifier("ambraConfiguration") Configuration configuration;
 
 
   @Test
