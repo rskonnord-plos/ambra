@@ -20,7 +20,7 @@ public class AmbraFreeMarkerConfigTest extends BaseTest {
     String name = config.getDisplayNameByEissn("1234");
     String name1 = config.getDisplayNameByEissn("5678");
 
-    //assertEquals(name, "test journal");
-    //assertEquals(name1, "test journal 1");
+    assertEquals(name, "test journal");
+    assertEquals(name1, "test journal 1");
   }
 }

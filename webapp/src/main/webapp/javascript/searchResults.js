@@ -20,6 +20,13 @@
  */
 $(document).ready(
   function() {
+
+    var submitForm = function() {
+      $("#searchStripForm").each(function () {
+        this.submit();
+      });
+    };
+
     //***************************************
     //Form events linking in:
     //***************************************
@@ -28,11 +35,11 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      $("#searchStripForm").submit();
+      submitForm();
     });
 
     $("input[name|='filterJournals']").click(function(eventObj) {
-      $("#searchStripForm").submit();
+      submitForm();
     });
 
     $("#clearSubjectFilter").click(function(eventObj) {
@@ -40,11 +47,11 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      $("#searchStripForm").submit();
+      submitForm();
     });
 
     $("input[name|='filterSubjects']").click(function(eventObj) {
-      $("#searchStripForm").submit();
+      submitForm();
     });
 
     $("#clearAuthorFilter").click(function(eventObj) {
@@ -52,16 +59,17 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      $("#searchStripForm").submit();
+      submitForm();
     });
 
     $("input[name|='filterAuthors']").click(function(eventObj) {
-      $("#searchStripForm").submit();
+      submitForm();
     });
 
     $("#sortPicklist").change(function(eventObj) {
-      $("#searchStripForm").submit();
+      submitForm();
     });
+
 
     //***************************************
     //UI control events linking in:
