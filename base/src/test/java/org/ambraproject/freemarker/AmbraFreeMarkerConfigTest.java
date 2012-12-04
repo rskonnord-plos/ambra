@@ -20,6 +20,8 @@ public class AmbraFreeMarkerConfigTest extends BaseTest {
     String name = config.getDisplayNameByEissn("1234");
     String name1 = config.getDisplayNameByEissn("5678");
 
+    //TODO: Another unit test walks on this test somehow.
+    //Run this test by itself, and it passes
     //assertEquals(name, "test journal");
     //assertEquals(name1, "test journal 1");
   }
