@@ -1,6 +1,6 @@
 /*
  * $HeadURL: http://ambraproject.org/svn/plos/templates/branches/ginzu/journals/PLoSDefault/webapp/css/global.css $
- * $Id: global.css 12953 2012-12-01 02:05:05Z stumu $
+ * $Id: global.css 12963 2012-12-03 23:20:34Z josowski $
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3432,10 +3432,12 @@ img.clear-filter {
 
 #fig-search-block #search-view span.list:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 #search-results-block #search-view span.figs:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 #search-results-block .hdr-results {
