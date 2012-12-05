@@ -823,7 +823,6 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
           $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><div class="thmb-wrap"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + image_title + '" title="' + image_title + '"></div></div>').on('click', function () {
             changeSlide($(this));
-            thumbPos($(this));
           })
           $thmbs.append($thmb);
           var slide = $('<div class="slide" />');
@@ -870,12 +869,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         btn_prev = $('<span class="fig-btn prev" />').on('click',function () {
           t = active_thmb.prev()
           changeSlide(t);
-          thumbPos(t);
         }).appendTo($slides);
         btn_next = $('<span class="fig-btn next" />').on('click',function () {
           t = active_thmb.next()
           changeSlide(t);
-          thumbPos(t);
         }).appendTo($slides);
         $modal.append($slides);
         $modal.append($thmbs);
@@ -1049,6 +1046,8 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     active_thmb.addClass('active');
     active_thmb.next().length ? btn_next.show() : btn_next.hide();
     active_thmb.prev().length ? btn_prev.show() : btn_prev.hide();
+
+    thumbPos(thmb);
   };
 
 
@@ -1128,7 +1127,6 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       if(active_thmb.prev().length) {
         t = active_thmb.prev()
         changeSlide(t);
-        thumbPos(t);
       }
       return false;
     }
@@ -1137,7 +1135,6 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       if(active_thmb.next().length) {
         t = active_thmb.next()
         changeSlide(t);
-        thumbPos(t);
       }
       return false;
     }
