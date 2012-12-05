@@ -823,6 +823,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
           $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><div class="thmb-wrap"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + image_title + '" title="' + image_title + '"></div></div>').on('click', function () {
             changeSlide($(this));
+            thumbPos($(this));
           })
           $thmbs.append($thmb);
           var slide = $('<div class="slide" />');
@@ -1051,13 +1052,22 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
 
+  /**
+   * Bring a thumbnail image into view if it's scrolled out of view.
+   * @param thmb the thumbnail image to bring into view
+   */
   var thumbPos = function (thmb) {
-    var pos = $all_thmb.index(thmb) + 1;
-    var offset = pos * thmb_h;
-    if (offset > thmbs_resized_h) {
-      $thmbs.scrollTop(offset - thmbs_resized_h)
-    } else {
-      $thmbs.scrollTop(0);
+    var index = $all_thmb.index(thmb);
+    var thmb_top = index * thmb_h;
+    var thmb_bottom = thmb_top + thmb_h;
+    var currentScroll = $thmbs.scrollTop();
+
+    if (thmb_top < currentScroll) {
+      // thmb is below the bottom of the visible area, so snap it to the bottom
+      $thmbs.scrollTop(thmb_top);
+    } else if (currentScroll + thmbs_resized_h < thmb_bottom) {
+      // thmb is above the top of the visible area, so snap it to the top
+      $thmbs.scrollTop(thmb_bottom - thmbs_resized_h);
     }
   };
 
