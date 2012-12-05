@@ -1062,10 +1062,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     var currentScroll = $thmbs.scrollTop();
 
     if (thmb_top < currentScroll) {
-      // thmb is below the bottom of the visible area, so snap it to the bottom
+      // thmb is above the top of the visible area, so snap it to the top
       $thmbs.scrollTop(thmb_top);
     } else if (currentScroll + thmbs_resized_h < thmb_bottom) {
-      // thmb is above the top of the visible area, so snap it to the top
+      // thmb is below the bottom of the visible area, so snap it to the bottom
       $thmbs.scrollTop(thmb_bottom - thmbs_resized_h);
     }
   };
