@@ -234,6 +234,13 @@ public class AmbraFreemarkerConfig {
         }
       }
 
+      if (jc.getHashTag() == null) {
+        final String hashtag = configuration.getString(journal + ".hashTag");
+        if (hashtag != null) {
+          jc.setHashTag(hashtag);
+        }
+      }
+
       if (jc.getDisplayName() == null) {
         final String displayName = configuration.getString(journal + ".displayName");
         if (displayName != null) {
@@ -572,6 +579,27 @@ public class AmbraFreemarkerConfig {
     if ((retVal == null) && !usingDefault) {
       jc = journals.get(defaultJournalName);
       retVal = jc.getMetaDescription();
+    }
+    return retVal != null ? retVal : "";
+  }
+
+  /**
+   * Gets hashTag for social media for the journal
+   *
+   * @param journalName Journal name
+   * @return hashTag for social media
+   */
+  public String getHashTag(String journalName) {
+    JournalConfig jc = journals.get(journalName);
+    boolean usingDefault = false;
+    if (jc == null) {
+      usingDefault = true;
+      jc = journals.get(defaultJournalName);
+    }
+    String retVal = jc.getHashTag();
+    if ((retVal == null) && !usingDefault) {
+      jc = journals.get(defaultJournalName);
+      retVal = jc.getHashTag();
     }
     return retVal != null ? retVal : "";
   }
@@ -958,6 +986,7 @@ public class AmbraFreemarkerConfig {
     private String metaDescription;
     private String articleTitlePrefix;
     private String displayName;
+    private String hashTag;
     private String url;
     private String issn;
 
@@ -1137,6 +1166,24 @@ public class AmbraFreemarkerConfig {
      */
     public void setIssn(String issn) {
       this.issn = issn;
+    }
+
+    /**
+     * Get the hashtag to use for social media
+     *
+     * @return the hashtag to use for social media
+     */
+    public String getHashTag() {
+      return hashTag;
+    }
+
+    /**
+     * Set the hashtag to use for social media
+     *
+     * @param hashTag the hashtag to use for social media
+     */
+    public void setHashTag(String hashTag) {
+      this.hashTag = hashTag;
     }
   }
 

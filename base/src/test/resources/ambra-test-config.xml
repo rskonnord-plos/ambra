@@ -109,10 +109,12 @@
       <journal>
         <name>journal</name>
         <displayName>test journal</displayName>
+        <hashTag>#JOURNAL</hashTag>
       </journal>
       <journal>
         <name>journal1</name>
         <displayName>test journal 1</displayName>
+        <hashTag>#JOURNALONE</hashTag>
       </journal>
     </freemarker>
 
