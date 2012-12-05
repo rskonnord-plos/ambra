@@ -823,7 +823,6 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
           $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><div class="thmb-wrap"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + image_title + '" title="' + image_title + '"></div></div>').on('click', function () {
             changeSlide($(this));
-            thumbPos($(this));
           })
           $thmbs.append($thmb);
           var slide = $('<div class="slide" />');
@@ -1053,8 +1052,8 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
 
   var thumbPos = function (thmb) {
-    pos = $all_thmb.index(thmb) + 1;
-    offset = pos * thmb_h;
+    var pos = $all_thmb.index(thmb) + 1;
+    var offset = pos * thmb_h;
     if (offset > thmbs_resized_h) {
       $thmbs.scrollTop(offset - thmbs_resized_h)
     } else {
