@@ -1198,9 +1198,13 @@ if ($fig_results.length) {
 }
 
 //if search box is empty, don't submit the form
+//This is a little weird, but there are multiple forms on multiple pages
+//The home/global and advanced search pages
 $('form[name="searchForm"], form[name="searchStripForm"]').each(function(index, item) {
   $(item).submit(function() {
-    if (!$(this).find('input[name="query"]').val()) {
+    //Form fields are sometimes name differently pending on where the search came from
+    //namely simple or advanced
+    if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
       return false;
     }
   });

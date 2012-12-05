@@ -20,26 +20,21 @@
  */
 $(document).ready(
   function() {
-
-    var submitForm = function() {
-      $("#searchStripForm").each(function () {
-        this.submit();
-      });
-    };
-
     //***************************************
     //Form events linking in:
+    //Note there is also some logic in global.js that binds to the subnit event
     //***************************************
+
     $("#clearJournalFilter").click(function(eventObj) {
       $("input[name|='filterJournals']").each(function (index, element) {
         $(element).removeAttr('checked');
       });
 
-      submitForm();
+      $("#searchStripForm").submit();
     });
 
     $("input[name|='filterJournals']").click(function(eventObj) {
-      submitForm();
+      $("#searchStripForm").submit();
     });
 
     $("#clearSubjectFilter").click(function(eventObj) {
@@ -47,11 +42,11 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      submitForm();
+      $("#searchStripForm").submit();
     });
 
     $("input[name|='filterSubjects']").click(function(eventObj) {
-      submitForm();
+      $("#searchStripForm").submit();
     });
 
     $("#clearAuthorFilter").click(function(eventObj) {
@@ -59,17 +54,16 @@ $(document).ready(
         $(element).removeAttr('checked');
       });
 
-      submitForm();
+      $("#searchStripForm").submit();
     });
 
     $("input[name|='filterAuthors']").click(function(eventObj) {
-      submitForm();
+      $("#searchStripForm").submit();
     });
 
     $("#sortPicklist").change(function(eventObj) {
-      submitForm();
+      $("#searchStripForm").submit();
     });
-
 
     //***************************************
     //UI control events linking in:
