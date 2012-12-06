@@ -70,7 +70,7 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
         .setHeader("subject", constant("PLOS Search Alert -").append(simple("${body.searchName}")))
         .setHeader("imagePath",constant(imagePath))
         .to("freemarker:email.ftl")
-        .setHeader("Content-Type",constant("text/html"))
+        .setHeader("Content-Type",constant(("text/html; charset=UTF-8")))
         .setHeader("from", constant(fromEmailAddress))
         .to("direct:sendemail");
 
