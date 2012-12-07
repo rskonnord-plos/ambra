@@ -1,6 +1,6 @@
 /*
- * $HeadURL: http://ambraproject.org/svn/plos/templates/branches/ginzu/journals/PLoSDefault/webapp/css/global.css $
- * $Id: global.css 12963 2012-12-03 23:20:34Z josowski $
+ * $HeadURL: http://ambraproject.org/svn/plos/templates/head/journals/PLoSDefault/webapp/css/global.css $
+ * $Id: global.css 13022 2012-12-06 20:04:08Z msingh $
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -428,10 +428,6 @@ ul.style-a li {
   width: 960px;
   margin: 0 auto;
   overflow: hidden;
-}
-
-#static-wrap {
-  padding: 30px 30px 30px 10px;
 }
 
 /* Generic header */
@@ -4867,18 +4863,39 @@ table.tile_mini td.data2 {
 
 /* styles for static page content */
 
-#static-wrap H2 {
+
+#static-wrap, #static-content-wrap {
+  padding: 30px 30px 30px 10px;
+}
+
+#static-wrap H2, #static-content-wrap H2 {
   margin: 1.5em 0 .75em;
 }
 
-#static-wrap p.search-result {
+#static-wrap p.search-result, #static-content-wrap p.search-result {
   margin-top: 1em;
   font-size: 20px;
 }
 
-#static-wrap dl dt {
+#static-wrap dl dt, #static-content-wrap dl dt {
   margin-top: 10px;
   font-weight: bold;
+}
+
+#static-content-wrap  ul {
+  margin-top: 0px
+}
+
+#static-content-wrap  ul, ol{
+  padding-left: 45px;
+}
+
+#static-content-wrap  li {
+  line-height: 1.5em
+}
+
+#static-content-wrap p.intro {
+    font-style: italic
 }
 
 /************* edboard pages *****************/
