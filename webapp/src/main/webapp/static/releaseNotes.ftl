@@ -42,12 +42,12 @@
     <li>Global reskin of existing sites</li>
     <li>Removal of inline annotations</li>
     <li>Removal of ratings</li>
-    <li>New about the authors tab</li>
     <li>Removed browse page</li>
+    <li>New about the authors tab</li>
     <li>New article page</li>
     <li>New figure viewer</li>
-    <li>Added figure search results.</li>
-    <li>Replacement of Dojo with jQuery.</li>
+    <li>Added figure search results</li>
+    <li>Replacement of Dojo with jQuery</li>
   </ul>
 
   <h2>Ambra 2.5.0</h2>
