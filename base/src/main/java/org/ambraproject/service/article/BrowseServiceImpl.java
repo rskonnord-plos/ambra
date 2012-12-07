@@ -73,6 +73,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -370,6 +371,13 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
       parentVolume == null ? null : parentVolume.getVolumeUri(), issue.isRespectOrder());
 
     issueInfo.setArticleUriList(issue.getArticleDois());
+
+    if (issueInfo.getDescription() != null) {
+      String results[] = extractInfoFromIssueDesc(issue.getDescription());
+      issueInfo.setIssueTitle(results[0]);
+      issueInfo.setIssueImageCredit(results[1]);
+      issueInfo.setIssueDescription(results[2]);
+    }
 
     return issueInfo;
   }
@@ -906,12 +914,12 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     Date publicationDate = SolrServiceUtil.getFieldValue(document, "publication_date", Date.class, message);
     String eissn = SolrServiceUtil.getFieldValue(document, "eissn", String.class, message);
     String articleType = SolrServiceUtil.getFieldValue(document, "article_type", String.class, message);
-    List<String> abstractDisplayList = SolrServiceUtil.getFieldMultiValue(document, message, String.class, "abstract_primary_display");
+    List<String> abstractDisplayList = SolrServiceUtil.getFieldMultiValue(document, "abstract_primary_display", String.class, message);
 
-    List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, message, String.class, "author_display");
+    List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, "author_display", String.class, message);
 
-    SearchHit hit = new SearchHit(null, id, title, null, authorList, publicationDate, eissn, null, articleType);
-    hit.setAbstractPrimary(StringUtils.join(abstractDisplayList, ", "));
+    SearchHit hit = new SearchHit(null, id, title, null, authorList, publicationDate, eissn, null, articleType,
+      StringUtils.join(abstractDisplayList, ", "));
 
     return hit;
   }
@@ -939,5 +947,54 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     } else {
       return null;
     }
+  }
+
+  /**
+   * Extract issue title, issue description, issue image credit from the full issue description
+   * @param desc full issue description
+   * @return issue title, issue image credit, issue description
+   */
+  private String[] extractInfoFromIssueDesc(String desc) {
+    String results[] = {"", "", ""};
+    int start = 0, end = 0;
+
+    // get the title of the issue
+    Pattern p1 = Pattern.compile("<title>(.*?)</title>");
+    Matcher m1 = p1.matcher(desc);
+    if (m1.find()) {
+      // there should be one title
+      results[0] = m1.group(1);
+      // title seems to be surround by <bold> element
+      results[0] = results[0].replaceAll("<.*?>", "");
+
+      start = m1.start();
+      end = m1.end();
+
+      // remove the title from the total description
+      String descBefore = desc.substring(0, start);
+      String descAfter = desc.substring(end);
+      desc = descBefore + descAfter;
+    }
+
+    // get the image credit
+    Pattern p2 = Pattern.compile("<italic>Image Credit: (.*?)</italic>");
+    Matcher m2 = p2.matcher(desc);
+    if (m2.find()) {
+      // there should be one image credit
+      results[1] = m2.group(1);
+
+      start = m2.start();
+      end = m2.end();
+
+      // remove the image credit from the total description
+      String descBefore = desc.substring(0, start);
+      String descAfter = desc.substring(end);
+      desc = descBefore + descAfter;
+    }
+
+    // once title and image credit have been removed, the rest of the content is the issue description
+    results[2] = desc;
+
+    return results;
   }
 }

@@ -60,21 +60,16 @@
             Overlay Journal: Serving as an Example for the Ambra Configuration community
           </title>
         </default>
+
         <page>
-          <name>/article/article_body.ftl</name>
-          <title>CODE_ARTICLE_TITLE</title>
+          <name>/index.ftl</name>
           <css>
-            <file>dojo.css</file>
-            <file>/css/star_rating.css</file>
-            <file>/css/rating.css</file>
-            <file>/css/screen.css</file>
-            <file>/css/iepc.css</file>
+            <file>/css/global.css</file>
+            <file>/css/lte_ie7.css</file>
           </css>
           <javascript>
-            <file>/javascript/dojo/dojo/dojo.js</file>
-            <file>/javascript/dojo/dojo/ambra.js</file>
-            <file>/javascript/init_global.js</file>
-            <file>/javascript/init_article.js</file>
+            <file>/javascript/jquery-1.8.1.js</file>
+            <file>/javascript/global.js</file>
           </javascript>
         </page>
       </journal>

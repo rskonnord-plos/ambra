@@ -28,6 +28,7 @@ import org.ambraproject.service.crossref.CrossRefLookupService;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.service.pubget.PubGetLookupService;
+import org.ambraproject.views.CitedArticleView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -51,6 +52,7 @@ public class FindArticleAction extends BaseActionSupport {
   private String pubGetUrl;
   private String title;
   private String author;
+  private String originalDOI;
 
   private CrossRefLookupService crossRefLookupService;
   private PubGetLookupService pubGetLookupService;
@@ -61,16 +63,26 @@ public class FindArticleAction extends BaseActionSupport {
 
     // We first look for the DOI in the DB.  If it's not there, we query CrossRef, and if we get back a DOI,
     // store it in the DB for next time.
-    CitedArticle citedArticle = articleService.getCitedArticle(citedArticleID);
+    CitedArticleView citedArticleView = articleService.getCitedArticle(citedArticleID);
+    CitedArticle citedArticle = citedArticleView.getCitedArticle();
+
     title = citedArticle.getTitle() == null ? "" : citedArticle.getTitle();
     author = getAuthorStringForLookup(citedArticle);
+
+    //TODO: Move this logic block to the service tier
+    //SE-133
+    /** BEGIN BLOCK **/
     String doi = citedArticle.getDoi();
+    originalDOI = citedArticleView.getArticleDoi();
+
     if (doi == null || doi.isEmpty()) {
       doi = crossRefLookupService.findDoi(citedArticle.getTitle(), author);
       if (doi != null && !doi.isEmpty()) {
         articleService.setCitationDoi(citedArticle, doi);
       }
     }
+    /** END BLOCK ***/
+
     if (doi != null && !doi.isEmpty()) {
       crossRefUrl = "http://dx.doi.org/" + doi;
 
@@ -79,6 +91,7 @@ public class FindArticleAction extends BaseActionSupport {
     } else {
       crossRefUrl = configuration.getString("ambra.services.crossref.guestquery.url");
     }
+
     return SUCCESS;
   }
 
@@ -115,6 +128,10 @@ public class FindArticleAction extends BaseActionSupport {
 
   public void setCitedArticleID(long citedArticleID) {
     this.citedArticleID = citedArticleID;
+  }
+
+  public String getOriginalDOI() {
+    return originalDOI;
   }
 
   public String getCrossRefUrl() {

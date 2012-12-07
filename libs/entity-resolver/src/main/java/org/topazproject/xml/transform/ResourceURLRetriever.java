@@ -23,8 +23,8 @@ import java.util.Properties;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Look up the id in a resource cache.
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  */
 public class ResourceURLRetriever implements URLRetriever {
-  private static final Log   log = LogFactory.getLog(ResourceURLRetriever.class);
+  private static final Logger log = LoggerFactory.getLogger(ResourceURLRetriever.class);
 
   private final URLRetriever delegate;
   private final Properties   urlMap;

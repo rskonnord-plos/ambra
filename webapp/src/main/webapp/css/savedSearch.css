@@ -10,35 +10,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-div#SavedSearch {
-  position: relative;
+div#save-search-box {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
   width: 570px;
   height: 180px;
   border: solid 1px #C8DFED;
-  border-radius: 10px;
+  padding-bottom: 10px;
   font: 85% Verdana, Arial, Helvetica, sans-serif;
   background: #FFFFFF;
   box-shadow: 4px 4px 8px #808080;
+  z-index: 99999;
+  box-shadow: 0px 0px 20px #999;
+  -moz-box-shadow: 0px 0px 20px #999;
+  -webkit-box-shadow: 0px 0px 20px #999;
 }
 
-div#SavedSearch div.top-header {
+div#save-search-box div.top-header {
   position: absolute;
   width: 100%;
   height: 40px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  background-color: #333333;
+  color: #ffffff;
 }
 
-div#SavedSearch span.heading {
+div#save-search-box span.heading {
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
   position: absolute;
   left: 20px;
   top: 10px;
 }
 
-div#SavedSearch div.body-wrapper {
+div#save-search-box div.body-wrapper {
   position: absolute;
   width: 100%;
   top: 40px;
@@ -49,26 +55,55 @@ div#SavedSearch div.body-wrapper {
   font-size: 12px;
 }
 
-div#SavedSearch .big-box {
+div#save-search-box .big-box {
   width: 450px;
   border: solid 1px #606060;
 }
 
-div#SavedSearch div.check-box {
+div#save-search-box div.check-box {
   padding-top: 4px;
 }
 
-div#SavedSearch div.grey-text {
+div#save-search-box div.grey-text {
   color: #606060;
-  margin-top:8px;
+  margin-top: 8px;
 }
 
-div#SavedSearch div.button-wrapper {
+div#save-search-box div.button-wrapper {
   margin-top: 10px;
   cursor: pointer;
 }
 
-div#SavedSearch span.errortext {
+div#save-search-box span.errortext {
   color: #ff0000;
 }
 
+div#save-search-box input[type="button"] {
+  background: #333;
+  color: #fff;
+  margin-right: 2px;
+  padding: 9px 10px;
+  border: 0;
+  display: inline-block;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+div#save-search-box input[type="button"]:hover {
+  background: #3c63af !important;
+  color: #fff !important;
+}
+
+#mask {
+  display: none;
+  background: #000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  z-index: 999;
+}

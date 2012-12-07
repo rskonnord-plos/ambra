@@ -21,12 +21,10 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SimpleTimeZone;
@@ -52,6 +50,7 @@ public class AnnotationView {
   private final String truncatedBody;
   private final String bodyWithUrlLinkingNoPTags;
   private final String truncatedBodyWithUrlLinkingNoPTags;
+  private final String bodyWithHighlightedText;
   private final String competingInterestStatement;
   private final String truncatedCompetingInterestStatement;
   private final String annotationUri;
@@ -114,12 +113,21 @@ public class AnnotationView {
       this.truncatedBody = "";
       this.bodyWithUrlLinkingNoPTags = "";
       this.truncatedBodyWithUrlLinkingNoPTags = "";
+      this.bodyWithHighlightedText = "";
     } else {
       this.originalBody = annotation.getBody();
       this.body = TextUtils.hyperlinkEnclosedWithPTags(TextUtils.escapeHtml(annotation.getBody()), 25);
-      this.truncatedBody = TextUtils.hyperlinkEnclosedWithPTags(truncateText(TextUtils.escapeHtml(annotation.getBody())), 25);
+      this.truncatedBody = TextUtils.hyperlinkEnclosedWithPTags(TextUtils.truncateText(TextUtils.escapeHtml(annotation.getBody()), TRUNCATED_COMMENT_LENGTH), 25);
       this.bodyWithUrlLinkingNoPTags = TextUtils.hyperlink(TextUtils.escapeHtml(annotation.getBody()), 25);
-      this.truncatedBodyWithUrlLinkingNoPTags = TextUtils.hyperlink(truncateText(TextUtils.escapeHtml(annotation.getBody())), 25);
+      this.truncatedBodyWithUrlLinkingNoPTags = TextUtils.hyperlink(TextUtils.truncateText(TextUtils.escapeHtml(annotation.getBody()), TRUNCATED_COMMENT_LENGTH), 25);
+      if (annotation.getHighlightedText() != null) {
+        // highlighted text contains the highlighted text
+        // and a link to the paragraph location of where the highlighted text is located
+        String bodyWithHt = annotation.getHighlightedText() + "\n\n" + annotation.getBody();
+        this.bodyWithHighlightedText =TextUtils.hyperlinkEnclosedWithPTags(TextUtils.escapeHtml(bodyWithHt), 150);
+      } else {
+        this.bodyWithHighlightedText = this.body;
+      }
     }
 
     if (annotation.getCompetingInterestBody() == null) {
@@ -127,7 +135,7 @@ public class AnnotationView {
       this.truncatedCompetingInterestStatement = "";
     } else {
       this.competingInterestStatement = TextUtils.escapeHtml(annotation.getCompetingInterestBody());
-      this.truncatedCompetingInterestStatement = truncateText(TextUtils.escapeHtml(annotation.getCompetingInterestBody()));
+      this.truncatedCompetingInterestStatement = TextUtils.truncateText(TextUtils.escapeHtml(annotation.getCompetingInterestBody()), TRUNCATED_COMMENT_LENGTH);
     }
 
     this.xpath = annotation.getXpath();
@@ -153,7 +161,7 @@ public class AnnotationView {
     fmt.setTimeZone(new SimpleTimeZone(0, "UTC"));
     this.createdFormatted = fmt.format(created);
 
-    if (fullReplyTree == null) {
+    if (fullReplyTree == null || fullReplyTree.isEmpty()) {
       this.replies = EMPTY_ARRAY;
       this.lastReplyDate = this.created;
       this.totalNumReplies = 0;
@@ -211,8 +219,10 @@ public class AnnotationView {
     if (competingInterestStatement != null ? !competingInterestStatement.equals(that.competingInterestStatement) : that.competingInterestStatement != null)
       return false;
     if (creatorID != null ? !creatorID.equals(that.creatorID) : that.creatorID != null) return false;
-    if (creatorDisplayName != null ? !creatorDisplayName.equals(that.creatorDisplayName) : that.creatorDisplayName != null) return false;
-    if (creatorFormattedName != null ? !creatorFormattedName.equals(that.creatorFormattedName) : that.creatorFormattedName != null) return false;
+    if (creatorDisplayName != null ? !creatorDisplayName.equals(that.creatorDisplayName) : that.creatorDisplayName != null)
+      return false;
+    if (creatorFormattedName != null ? !creatorFormattedName.equals(that.creatorFormattedName) : that.creatorFormattedName != null)
+      return false;
     if (title != null ? !title.equals(that.title) : that.title != null) return false;
     if (type != that.type) return false;
     if (xpath != null ? !xpath.equals(that.xpath) : that.xpath != null) return false;
@@ -256,33 +266,6 @@ public class AnnotationView {
         ", articleTitle='" + articleTitle + '\'' +
         ", type=" + type +
         '}';
-  }
-
-  protected String truncateText(String text) {
-    if (StringUtils.isBlank(text)) {
-      return text;
-    }
-
-    if (text.length() > TRUNCATED_COMMENT_LENGTH) {
-      final String abrsfx = "...";
-      final int abrsfxlen = 3;
-      // attempt to truncate on a word boundary
-      int index = TRUNCATED_COMMENT_LENGTH - 1;
-
-      while (!Character.isWhitespace(text.charAt(index)) ||
-          index > (TRUNCATED_COMMENT_LENGTH - abrsfxlen - 1)) {
-        if (--index == 0)
-          break;
-      }
-
-      if (index == 0)
-        index = TRUNCATED_COMMENT_LENGTH - abrsfxlen - 1;
-
-      text = text.substring(0, index) + abrsfx;
-      assert text.length() <= TRUNCATED_COMMENT_LENGTH;
-    }
-
-    return text;
   }
 
   public String getTitle() {
@@ -419,5 +402,9 @@ public class AnnotationView {
 
   public int getTotalNumReplies() {
     return totalNumReplies;
+  }
+
+  public String getBodyWithHighlightedText() {
+    return bodyWithHighlightedText;
   }
 }

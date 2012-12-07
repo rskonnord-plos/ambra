@@ -206,4 +206,20 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   public String getFilterKeyword() {
     return getSearchParameters().getFilterKeyword();
   }
+
+  public String[] getFilterAuthors() {
+    return getSearchParameters().getFilterAuthors();
+  }
+
+  public void setFilterAuthors(String[] authors) {
+    getSearchParameters().setFilterAuthors(rectify(authors));
+  }
+
+  public String getResultView() {
+    return getSearchParameters().getResultView();
+  }
+
+  public void setResultView(String resultView) {
+    getSearchParameters().setResultView(resultView);
+  }
 }

@@ -28,6 +28,7 @@ import java.net.URI;
 import org.ambraproject.views.article.ArticleType;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 import org.ambraproject.action.BaseTest;
 
@@ -37,7 +38,7 @@ public class ArticleTypeTest extends BaseTest {
 
   //get the configuration autowired to ensure that Configuration.getInstance() has been called prior to the test (which loads up the test configuration)
   @Autowired
-  protected Configuration configuration;
+  protected @Qualifier("ambraConfiguration") Configuration configuration;
 
   @Test
   public void testDefaultArticleType() {

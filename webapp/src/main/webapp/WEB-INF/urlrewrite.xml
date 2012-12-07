@@ -26,6 +26,13 @@
 <urlrewrite>
   <rule>
     <note>
+      re-write requests at site root to home.action
+    </note>
+    <from>^/?$</from>
+    <to>/home.action</to>
+  </rule>
+  <rule>
+    <note>
       re-write incoming user profile requests.
       /user/userId -> /user/showUser.action?userId=userId
     </note>
@@ -76,6 +83,24 @@
     </note>
     <from>^(/.+)?/pingback.action$</from>
     <to>$1/pingback</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming article author URIs.
+      /article/authors/doi -> /article/fetchArticleAuthors.action?articleURI=doi
+    </note>
+    <from>^(/.+)?/article/authors/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleAuthors.action?articleURI=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound Article author URIs.
+      /article/fetchArticleAuthors.action?articleURI=doi -> /article/authors/doi
+    </note>
+    <from>^(/.+)?/article/fetchArticleAuthors.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <to>$1/article/authors/$2</to>
   </outbound-rule>
 
   <rule>
@@ -262,9 +287,18 @@
   <rule>
     <note>
       re-write incoming Feed URIs.
+      /article/feed -> /article/feed/getFeed.action
+    </note>
+    <from>^(/.+)?/article/feed$</from>
+    <to>$1/article/feed/getFeed.action</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write incoming Feed URIs.
       /article/feed?... -> /article/feed/getFeed.action?...
     </note>
-    <from>^(/.+)?/article/feed(\?.*)?</from>
+    <from>^(/.+)?/article/feed(\?.*)</from>
     <to>$1/article/feed/getFeed.action$2</to>
   </rule>
 
@@ -279,11 +313,274 @@
 
   <rule>
     <note>
-      restrict access to indexAllArticlesUnprotected.action
+      re-write incoming Feed URIs.
+      /article/feed/search?... -> /article/feed/executeFeedSearch.action?...
     </note>
-    <condition type="remote-addr" operator="notequal">127.*.*.*</condition>
-    <from>/search/indexAllArticlesUnprotected.action</from>
-    <to>/static/pageNotFound.action</to>
+    <from>^(/.+)?/article/feed/search(\?.*)?</from>
+    <to>$1/article/feed/executeFeedSearch.action$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound Feed URIs.
+      /article/feed/executeFeedSearch.action?... -> /article/feed/search?...
+    </note>
+    <from>^(/.+)?/article/feed/executeFeedSearch.action(.*)?</from>
+    <to last="true">$1/article/feed/search$2</to>
+  </outbound-rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound home.action
+      /home.action?... -> /?...
+    </note>
+    <from>^(/?)home.action(.*)</from>
+    <to last="true">/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      Catch all for old style static links and non FTL static resources served out
+      of the static folder.  Let's just pass through these requests:
+
+      /static/whatever.whatever -> /static/whatever.whatever
+    </note>
+    <from>^/static/(.*\.[\w\d]+)$</from>
+    <to>/static/$1</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write incoming requests for static pages
+      /static/whatever? -> /static/whatever.action
+    </note>
+    <from>^/static/([\w\d]+)\??.*$</from>
+    <to>/static/$1.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound static action links
+      /static/whatever.action?... -> /static/whatever
+    </note>
+    <from>^/static/([\w\d]+).action\??.*$</from>
+    <to last="true">/static/$1</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming feedback requests
+      /feedback/new -> /feedback/feedback.action
+    </note>
+    <from>^(/.+)?/feedback/new$</from>
+    <to>/feedback/feedback.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound feedback requests
+      /feedback/feedback.action -> /feedback/new
+    </note>
+    <from>^(/.+)?/feedback/feedback.action(.*)</from>
+    <to>$1/feedback/new</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming feedback submit requests
+      /feedback/submit -> /feedback/feedbackCreate.action
+    </note>
+    <from>^(/.+)?/feedback/submit$</from>
+    <to>/feedback/feedbackCreate.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound feedback submit requests
+      /feedback/feedbackCreate.action -> /feedback/submit
+    </note>
+    <from>^(/.+)?/feedback/feedbackCreate.action(.*)</from>
+    <to>$1/feedback/submit</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming simple search requests
+      /search/simpleSearch -> /search/simpleSearch.action
+    </note>
+    <from>^(/.+)?/search/simple(.*)?</from>
+    <to>$1/search/simpleSearch.action$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound simple search requests
+      /search/simpleSearch.action -> /search/simple
+    </note>
+    <from>^(/.+)?/search/simpleSearch.action(.*)</from>
+    <to>$1/search/simple$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming advanced search requests
+      /search/advanced/ -> /search/advancedSearch.action
+    </note>
+    <from>^(/.+)?/search/advanced/$</from>
+    <to>$1/search/advancedSearch.action</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write incoming advanced search requests
+      /search/advanced -> /search/advancedSearch.action
+    </note>
+    <from>^(/.+)?/search/advanced(.*)?</from>
+    <to>$1/search/advancedSearch.action$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound advanced search requests
+      /search/advancedSearch.action -> /search/advanced
+    </note>
+    <from>^(/.+)?/search/advancedSearch.action(.*)?</from>
+    <to>$1/search/advanced$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming quick searches
+      /search/quick -> search/quickSearch.action
+    </note>
+    <from>^(/.+)?/search/quick(.*)?</from>
+    <to>$1/search/quickSearch.action$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound quick search requests
+      /search/quickSearch.action -> /search/quick
+    </note>
+    <from>^(/.+)?/search/quickSearch.action(.*)?</from>
+    <to>$1/search/quick$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write old browse volume links
+      /article/browseVolume.action -> /article/browse/volume.action
+    </note>
+    <from>^(/.+)?/article/browseVolume.action(.*)$</from>
+    <to>$1/article/browse/volume.action$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write browse volume
+      /article/browse/volume -> /article/browse/volume.action
+    </note>
+    <from>^(/.+)?/article/browse/volume$</from>
+    <to>$1/article/browse/volume.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse volume
+      /article/browse/volume.action -> /article/browse/volume
+    </note>
+    <from>^(/.+)?/article/browse/volume.action</from>
+    <to>$1/article/browse/volume</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write old browse issue links
+      /article/browseIssue.action -> /article/browse/issue.action
+    </note>
+    <from>^(/.+)?/article/browseIssue.action(.*)$</from>
+    <to>$1/article/browse/issue.action$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write browse issue
+      /article/browse/issue -> /article/browse/issue.action
+    </note>
+    <from>^(/.+)?/article/browse/issue/?$</from>
+    <to>$1/article/browse/issue.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse issue
+      /article/browse/issue.action -> /article/browse/issue
+    </note>
+    <from>^(/.+)?/article/browse/issue.action$</from>
+    <to>$1/article/browse/issue</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write browse issue
+      /article/browse/issue/doi -> /article/browse/issue.action?issue=doi
+    </note>
+    <from>^(/.+)?/article/browse/issue/(.*)?</from>
+    <to>$1/article/browse/issue.action?issue=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse issue
+      /article/browse/issue.action?issue=doi -> /article/browse/issue/doi
+    </note>
+    <from>^(/.+)?/article/browse/issue.action\?issue=(.*)?</from>
+    <to>$1/article/browse/issue/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write email article submit
+      /article/email/send -> /article/emailThisArticleSubmit.action
+    </note>
+    <from>^(/.+)?/article/email/send/?$</from>
+    <to>$1/article/emailThisArticleSubmit.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound email article submit
+      /article/emailThisArticleSubmit.action -> /article/email/send
+    </note>
+    <from>^(/.+)?/article/emailThisArticleSubmit.action$</from>
+    <to>$1/article/email/send</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write email article
+      /article/email/doi -> /article/emailArticle.action?articleURI=doi
+    </note>
+    <from>^(/.+)?/article/email/(.*)?</from>
+    <to>$1/article/emailArticle.action?articleURI=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound email article
+      /article/emailArticle.action?articleURI=doi -> /article/email/doi
+    </note>
+    <from>^(/.+)?/article/emailArticle.action\?articleURI=(.*)?</from>
+    <to>$1/article/email/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write find this article
+      /article/findcited/ID -> /article/findArticle.action?citedArticleID=ID
+    </note>
+    <from>^(/.+)?/article/findcited/(\d*)$</from>
+    <to>$1/article/findArticle.action?citedArticleID=$2</to>
   </rule>
 
 </urlrewrite>

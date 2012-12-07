@@ -24,8 +24,8 @@ import java.io.IOException;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Cache entities for an {@link org.xml.sax.XMLReader}.
@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  */
 public class CustomEntityResolver implements EntityResolver {
-  private static final Log log = LogFactory.getLog(CustomEntityResolver.class);
+  private static final Logger log = LoggerFactory.getLogger(CustomEntityResolver.class);
   private URLRetriever retriever;
 
   /**

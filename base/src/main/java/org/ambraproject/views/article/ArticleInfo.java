@@ -19,43 +19,34 @@
  */
 package org.ambraproject.views.article;
 
-import org.ambraproject.views.UserProfileInfo;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.views.ArticleCategory;
-import org.ambraproject.views.JournalView;
 import org.ambraproject.views.AssetView;
+import org.ambraproject.views.UserProfileInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * The info about a single article that the UI needs.
  */
-public class ArticleInfo implements Serializable {
+public class ArticleInfo extends BaseArticleInfo implements Serializable {
+  private static final Logger log = LoggerFactory.getLogger(ArticleInfo.class);
 
   private static final long serialVersionUID = 3823215602197299918L;
 
   public Long                    id;
-  public String                  doi;
-  public Date                    date;
-  private String                 title;
   public List<RelatedArticleInfo> relatedArticles = new ArrayList<RelatedArticleInfo>();
-  public List<String>            authors = new ArrayList<String>();
   public List<String>            collaborativeAuthors = new ArrayList<String>();
-  public Set<ArticleType>        articleTypes = new HashSet<ArticleType>();
-  public Set<JournalView>        journals = new HashSet<JournalView>();
   private String                 publisher;
   private String                 rights;
   private String                 description;
   private String                 journal;
-  private String                 eIssn;
-  private Set<String>            types;
   private String                 pages;
   private Set<ArticleCategory>   categories;
   private String                 eLocationId;
@@ -64,69 +55,19 @@ public class ArticleInfo implements Serializable {
   private List<AssetView>        articleAssets;
   private List<CitedArticle>     citedArticles;
 
-  private transient String unformattedTitle;
+  private transient String unformattedTitle = null;
 
   /**
-   * Set the ID of this Article. This is the Article DOI. 
-   * 
-   * @param doi Article ID.
+   * Construct a new ArticleInfo info class
    */
-  public void setDoi(String doi) {
+  public ArticleInfo() { }
+
+  /**
+   * Construct a new ArticleInfo info class with the passed in DOI
+   * @param doi
+   */
+  public ArticleInfo(String doi) {
     this.doi = doi;
-  }
-
-  /**
-   * Get the id.
-   *
-   * @return the id.
-   */
-  public String getDoi() {
-    return doi;
-  }
-
-  /**
-   * Get the set of all Article types associated with this Article.
-   *
-   * @return the Article types.
-   */
-  public Set<ArticleType> getArticleTypes() {
-    return articleTypes;
-  }
-
-  /**
-   * Get the date that this article was published.
-   *
-   * @return the date.
-   */
-  public Date getDate() {
-    return date;
-  }
-
-  /**
-   * Set the Date that this article was published
-   * @param date Article date.
-   */
-  public void setDate(Date date) {
-    this.date = date;
-  }
-
-  /**
-   * Get the title.
-   *
-   * @return the title.
-   */
-  public String getTitle() {
-    return title;
-  }
-
-  /**
-   * Set the title of this Article.
-   *  
-   * @param articleTitle Title.
-   */
-  public void setTitle(String articleTitle) {
-    title = articleTitle;
-    unformattedTitle = null;
   }
 
   /**
@@ -157,20 +98,19 @@ public class ArticleInfo implements Serializable {
   }
 
   /**
-   * Get the authors.
-   *
-   * @return the authors.
-   */
-  public List<String> getAuthors() {
-    return authors;
-  }
-
-  /**
    * Get the collaborative authors
    * @return collaborative authors
    */
   public List<String> getCollaborativeAuthors() {
     return collaborativeAuthors;
+  }
+
+  /**
+   * Set collaborative authors
+   * @param collaborativeAuthors
+   */
+  public void setCollaborativeAuthors(List<String> collaborativeAuthors) {
+    this.collaborativeAuthors = collaborativeAuthors;
   }
 
   /**
@@ -180,22 +120,6 @@ public class ArticleInfo implements Serializable {
    */
   public List<RelatedArticleInfo> getRelatedArticles() {
     return relatedArticles;
-  }
-
-  /**
-   * get the journals that this article is cross published in
-   * @return a list of journals
-   */
-  public Set<JournalView> getJournals() {
-    return journals;
-  }
-
-  /**
-   * set the journals that this article is cross published in
-   * @param journals a set of journals
-   */
-  public void setJournals(Set<JournalView> journals) {
-    this.journals = journals;
   }
 
   public void setCi(CitationInfo ci) {
@@ -214,12 +138,6 @@ public class ArticleInfo implements Serializable {
 
   public void setArticleAssets(List<AssetView> articleAssets) {
     this.articleAssets = articleAssets;
-  }
-
-  public void setAt(Set<String> at) {
-    articleTypes.clear();
-    for (String a : at)
-      articleTypes.add(ArticleType.getArticleTypeForURI(URI.create(a), true));
   }
 
   public void setRelatedArticles(List<RelatedArticleInfo> relatedArticles) {
@@ -283,35 +201,6 @@ public class ArticleInfo implements Serializable {
     return subjects;
   }
 
-
-  /**
-   * Get a displayable version of the Article Type by doing a lookup on the every element
-   * of the Set of all Article Type URIs for this Article.
-   * Defaults to "Unclassified".  Never throw an exception.
-   * <p/>
-   * The first successful lookup is used under the assumption that there is only one legit value.
-   * This is a terrible assumption but, because of the terrible implementation of article types,
-   * there are few other reasonable options.  This method is a miserable hack that should be
-   * removed as soon as article types are implemented in a useful manner.
-   *
-   * @return The first displayable article type from the Set of Article Types for this Article
-   */
-  public String getArticleTypeForDisplay() {
-    String articleTypeForDisplay = "Unclassified";
-    try {
-      ArticleType articleType = null;
-      for (ArticleType artType : getArticleTypes()) {
-        if (ArticleType.getKnownArticleTypeForURI(artType.getUri())!= null) {
-          articleType = ArticleType.getKnownArticleTypeForURI(artType.getUri());
-          break;
-        }
-      }
-      articleTypeForDisplay = (articleType.getHeading());
-    } catch (Exception e) {  // Do not rock the boat.
-    }
-    return articleTypeForDisplay;
-  }
-
   public Long getId() {
     return id;
   }
@@ -320,28 +209,12 @@ public class ArticleInfo implements Serializable {
     this.id = id;
   }
 
-  public String geteIssn() {
-    return eIssn;
-  }
-
-  public void seteIssn(String eIssn) {
-    this.eIssn = eIssn;
-  }
-
   public String getPages() {
     return pages;
   }
 
   public void setPages(String pages) {
     this.pages = pages;
-  }
-
-  public Set<String> getTypes() {
-    return types;
-  }
-
-  public void setTypes(Set<String> types) {
-    this.types = types;
   }
 
   public Set<ArticleCategory> getCategories() {
@@ -382,5 +255,56 @@ public class ArticleInfo implements Serializable {
 
   public void setCitedArticles(List<CitedArticle> citedArticles) {
     this.citedArticles = citedArticles;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+
+    ArticleInfo that = (ArticleInfo) o;
+
+    if (articleAssets != null ? !articleAssets.equals(that.articleAssets) : that.articleAssets != null) return false;
+    if (categories != null ? !categories.equals(that.categories) : that.categories != null) return false;
+    if (citedArticles != null ? !citedArticles.equals(that.citedArticles) : that.citedArticles != null) return false;
+    if (collaborativeAuthors != null ? !collaborativeAuthors.equals(that.collaborativeAuthors) : that.collaborativeAuthors != null)
+      return false;
+    if (description != null ? !description.equals(that.description) : that.description != null) return false;
+    if (eLocationId != null ? !eLocationId.equals(that.eLocationId) : that.eLocationId != null) return false;
+    if (id != null ? !id.equals(that.id) : that.id != null) return false;
+    if (issue != null ? !issue.equals(that.issue) : that.issue != null) return false;
+    if (journal != null ? !journal.equals(that.journal) : that.journal != null) return false;
+    if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
+    if (publisher != null ? !publisher.equals(that.publisher) : that.publisher != null) return false;
+    if (relatedArticles != null ? !relatedArticles.equals(that.relatedArticles) : that.relatedArticles != null)
+      return false;
+    if (rights != null ? !rights.equals(that.rights) : that.rights != null) return false;
+    if (unformattedTitle != null ? !unformattedTitle.equals(that.unformattedTitle) : that.unformattedTitle != null)
+      return false;
+    if (volume != null ? !volume.equals(that.volume) : that.volume != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (id != null ? id.hashCode() : 0);
+    result = 31 * result + (relatedArticles != null ? relatedArticles.hashCode() : 0);
+    result = 31 * result + (collaborativeAuthors != null ? collaborativeAuthors.hashCode() : 0);
+    result = 31 * result + (publisher != null ? publisher.hashCode() : 0);
+    result = 31 * result + (rights != null ? rights.hashCode() : 0);
+    result = 31 * result + (description != null ? description.hashCode() : 0);
+    result = 31 * result + (journal != null ? journal.hashCode() : 0);
+    result = 31 * result + (pages != null ? pages.hashCode() : 0);
+    result = 31 * result + (categories != null ? categories.hashCode() : 0);
+    result = 31 * result + (eLocationId != null ? eLocationId.hashCode() : 0);
+    result = 31 * result + (volume != null ? volume.hashCode() : 0);
+    result = 31 * result + (issue != null ? issue.hashCode() : 0);
+    result = 31 * result + (articleAssets != null ? articleAssets.hashCode() : 0);
+    result = 31 * result + (citedArticles != null ? citedArticles.hashCode() : 0);
+    result = 31 * result + (unformattedTitle != null ? unformattedTitle.hashCode() : 0);
+    return result;
   }
 }

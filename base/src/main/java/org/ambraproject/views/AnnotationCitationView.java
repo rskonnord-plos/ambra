@@ -57,7 +57,8 @@ public class AnnotationCitationView {
       this.authors = new AuthorView[citation.getAuthors().size()];
       for (int i = 0; i < citation.getAuthors().size(); i++) {
         CorrectedAuthor author = citation.getAuthors().get(i);
-        this.authors[i] = new AuthorView(author.getGivenNames(), author.getSurName(), author.getSuffix());
+        this.authors[i] = new AuthorView(author.getGivenNames(), author.getSurName(), author.getSuffix(), 
+          null, false, false, null, null, null);
       }
     } else {
       this.authors = null;

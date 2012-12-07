@@ -20,6 +20,7 @@
  */
 package org.ambraproject.views;
 
+import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -34,6 +35,8 @@ public class SearchHit implements Serializable {
 
   private static final long serialVersionUID = 2450207404766168639L;
 
+  private static final int TITLE_LENGTH = 120;
+
   private final float  hitScore;
   private final String uri;
   private final String title;
@@ -44,7 +47,9 @@ public class SearchHit implements Serializable {
   private final String issn;
   private final String journalTitle;
   private final String articleTypeForDisplay;
-  private String abstractPrimary;
+  private String abstractText;
+  private String strikingImage;
+  private Boolean hasAssets = Boolean.FALSE;
 
   /**
    * Create a search hit with the values set
@@ -61,7 +66,7 @@ public class SearchHit implements Serializable {
    */
   public SearchHit(Float hitScore, String uri, String title, String highlight,
                    Collection<String> creators, Date date, String issn,
-                   String journalTitle, String articleTypeForDisplay) {
+                   String journalTitle, String articleTypeForDisplay, String abstractText) {
     if (hitScore == null) {
       this.hitScore   = 0f;
     } else {
@@ -76,6 +81,7 @@ public class SearchHit implements Serializable {
     this.issn      = issn;
     this.journalTitle = journalTitle;
     this.articleTypeForDisplay = articleTypeForDisplay;
+    this.abstractText = abstractText;
   }
 
   /**
@@ -126,6 +132,14 @@ public class SearchHit implements Serializable {
   }
 
   /**
+   * Return truncated article title
+   * @return truncated article title
+   */
+  public String getTruncatedTitle() {
+    return TextUtils.truncateTextCloseOpenTag(this.title, TITLE_LENGTH);
+  }
+
+  /**
    * Get the issn for the Journal to which this SearchHit belongs.
    * @return The issn for the Journal to which this SearchHit belongs.
    */
@@ -150,20 +164,11 @@ public class SearchHit implements Serializable {
   }
 
   /**
-   * sets the primary abstract
-   * @param newAbstract
+   * Get the abstract
+   * @return abstract text
    */
-  public void setAbstractPrimary(String newAbstract) {
-    this.abstractPrimary = newAbstract;
-  }
-
-  /**
-   * Get the primary abstract
-   * (abstract element without any attributes)
-   * @return primary abstract
-   */
-  public String getAbstractPrimary() {
-    return abstractPrimary;
+  public String getAbstract() {
+    return abstractText;
   }
 
   /**
@@ -172,6 +177,22 @@ public class SearchHit implements Serializable {
    */
   public Collection<String> getListOfCreators() {
     return this.listOfCreators;
+  }
+
+  public String getStrikingImage() {
+    return strikingImage;
+  }
+
+  public void setStrikingImage(String strikingImage) {
+    this.strikingImage = strikingImage;
+  }
+
+  public Boolean getHasAssets() {
+    return hasAssets;
+  }
+
+  public void setHasAssets(Boolean hasAssets) {
+    this.hasAssets = hasAssets;
   }
 
   @Override
@@ -186,7 +207,9 @@ public class SearchHit implements Serializable {
         ", issn='" + issn + '\'' +
         ", journalTitle='" + journalTitle + '\'' +
         ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
-        ", abstractPrimaryDisplay='" + abstractPrimary + '\'' +
+        ", abstract='" + abstractText + '\'' +
+        ", strikingImage='" + strikingImage + '\'' +
+        ", hasAssets='" + hasAssets + '\'' +
         '}';
   }
 

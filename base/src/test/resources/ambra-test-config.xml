@@ -84,6 +84,7 @@
         <almHost>http://alm.plos.org</almHost>
       </freemarker>
       <name>PLoS</name>
+      <cisStartDate>11/21/2010</cisStartDate>
     </platform>
 
     <virtualJournals>
@@ -103,6 +104,19 @@
         <description>Another test journal</description>
       </journal1>
     </virtualJournals>
+
+    <freemarker>
+      <journal>
+        <name>journal</name>
+        <displayName>test journal</displayName>
+        <hashTag>#JOURNAL</hashTag>
+      </journal>
+      <journal>
+        <name>journal1</name>
+        <displayName>test journal 1</displayName>
+        <hashTag>#JOURNALONE</hashTag>
+      </journal>
+    </freemarker>
 
     <articleTypeList>
       <articleType>
@@ -131,4 +145,10 @@
       <weekly>journal</weekly>
     </userAlerts>
   </ambra>
+
+
+
+  <struts>
+    <devMode>false</devMode>
+  </struts>
 </config>

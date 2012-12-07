@@ -24,16 +24,12 @@ package org.ambraproject.service.article;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.filestore.FSIDMapper;
 import org.ambraproject.filestore.FileStoreService;
-import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.CitedArticle;
-import org.ambraproject.service.annotation.AnnotationService;
-import org.ambraproject.service.annotation.Annotator;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.xml.XMLService;
-import org.ambraproject.views.AnnotationView;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
 import org.apache.commons.lang.StringUtils;
@@ -49,10 +45,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.activation.DataSource;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -62,7 +56,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,47 +64,34 @@ import java.util.Map;
  * Fetch article service.
  */
 public class FetchArticleServiceImpl extends HibernateServiceImpl implements FetchArticleService {
+  private static final Logger log = LoggerFactory.getLogger(FetchArticleServiceImpl.class);
   private static final String ARTICLE_LOCK = "ArticleHtmlCache-Lock-";
 
   private XMLService articleTransformService;
-
-  private static final Logger log = LoggerFactory.getLogger(FetchArticleServiceImpl.class);
-  private AnnotationService annotationService;
   private FileStoreService fileStoreService;
   private Cache articleHtmlCache;
 
   private String getTransformedArticle(final ArticleInfo article)
       throws ApplicationException, NoSuchArticleIdException {
     try {
-//      Document dom = getAnnotatedContentAsDocument(article);
-//
-//      if(log.isDebugEnabled()) {
-//        DOMImplementationLS domImplLS = (DOMImplementationLS) dom
-//          .getImplementation();
-//        LSSerializer serializer = domImplLS.createLSSerializer();
-//        log.debug(serializer.writeToString(dom));
-//      }
+      DataSource content = getArticleXML(article.getDoi());
+      Document doc = articleTransformService.createDocBuilder().parse(content.getInputStream());
 
-      // There are two cases where we need to render content in the HTML that's not in the XML (or that's difficult
-      // to get from the XML): annotations and extra links in the citations.  In these cases, we first load the DOM
-      // representation of the XML, then decorate it with the extra info before the XSLT.
-      Document doc = getAnnotatedContentAsDocument(article);
       doc = addExtraCitationInfo(doc, article.getCitedArticles());
+
       return articleTransformService.getTransformedDocument(doc);
-    } catch (ApplicationException ae) {
-      throw ae;
-    } catch (NoSuchArticleIdException nsae) {
-      throw nsae;
     } catch (Exception e) {
-      throw new ApplicationException (e);
+      throw new ApplicationException(e);
     }
   }
 
   /**
    * Get the URI transformed as HTML.
+   *
    * @param article The article to transform
    * @return String representing the annotated article as HTML
-   * @throws org.ambraproject.ApplicationException ApplicationException
+   * @throws org.ambraproject.ApplicationException
+   *          ApplicationException
    */
   @Override
   @Transactional(readOnly = true)
@@ -119,103 +99,31 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     final Object lock = (ARTICLE_LOCK + article.getDoi()).intern(); //lock @ Article level
 
     String content = articleHtmlCache.get(article.getDoi(),
-      new Cache.SynchronizedLookup<String, Exception>(lock) {
-        @Override
-        public String lookup() throws Exception {
-          return getTransformedArticle(article);
-        }
-      });
-    
+        new Cache.SynchronizedLookup<String, Exception>(lock) {
+          @Override
+          public String lookup() throws Exception {
+            return getTransformedArticle(article);
+          }
+        });
+
     return content;
   }
 
-  /**
-   *
-   * @param article- the Article content
-   * @return Article DOM document
-   * @throws java.io.IOException
-   * @throws NoSuchArticleIdException
-   * @throws javax.xml.parsers.ParserConfigurationException
-   * @throws org.xml.sax.SAXException
-   * @throws org.ambraproject.ApplicationException
-   */
-  private Document getAnnotatedContentAsDocument(final ArticleInfo article)
-      throws IOException, NoSuchArticleIdException, ParserConfigurationException, SAXException,
-             ApplicationException {
-    DataSource content;
-
-    try {
-      content = getArticleXML(article.getDoi());
-    } catch (NoSuchArticleIdException ex) {
-      throw new NoSuchArticleIdException(article.getDoi(),
-                                         "(representation=" + articleTransformService.getArticleRep() + ")",
-                                         ex);
-    }
-
-    final AnnotationView[] annotations = annotationService.listAnnotationsNoReplies(
-        article.getId(),
-        EnumSet.of(AnnotationType.MINOR_CORRECTION, AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION, AnnotationType.NOTE),
-        AnnotationService.AnnotationOrder.OLDEST_TO_NEWEST);
-    return applyAnnotationsOnContentAsDocument(content, annotations);
-  }
-
   private DataSource getArticleXML(final String articleDoi)
-    throws NoSuchArticleIdException {
+      throws NoSuchArticleIdException {
     String fsid = FSIDMapper.doiTofsid(articleDoi, "XML");
 
     if (fsid == null)
       throw new NoSuchArticleIdException(articleDoi);
 
     List assets = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(ArticleAsset.class)
-          .add(Restrictions.eq("doi", articleDoi))
-          .add(Restrictions.eq("extension", "XML")));
+        .add(Restrictions.eq("doi", articleDoi))
+        .add(Restrictions.eq("extension", "XML")));
 
-    if(assets.size() == 0)
+    if (assets.size() == 0)
       throw new NoSuchArticleIdException(articleDoi);
 
-    return new ByteArrayDataSource(fileStoreService, fsid, (ArticleAsset)assets.get(0));
-  }
-
-  private Document applyAnnotationsOnContentAsDocument(DataSource content,
-                                                       AnnotationView[] annotations)
-          throws ApplicationException
-  {
-    Document doc = null;
-
-    if (log.isDebugEnabled())
-      log.debug("Parsing article xml ...");
-
-    try {
-      doc = articleTransformService.createDocBuilder().parse(content.getInputStream());
-    } catch (Exception e){
-      throw new ApplicationException(e.getMessage(), e);
-    }
-
-    try {
-      if (annotations.length == 0)
-        return doc;
-
-      if (log.isDebugEnabled())
-        log.debug("Applying " + annotations.length + " annotations to article ...");
-
-      return Annotator.annotateAsDocument(doc, annotations);
-    } catch (Exception e){
-      if (log.isErrorEnabled()) {
-        log.error("Could not apply annotations to article: " + content.getName(), e);
-      }
-      throw new ApplicationException("Applying annotations failed for resource:" +
-                                     content.getName(), e);
-    }
-  }
-
-  /**
-   * Setter for annotationService
-   *
-   * @param annotationService annotationService
-   */
-  @Required
-  public void setAnnotationService(final AnnotationService annotationService) {
-    this.annotationService = annotationService;
+    return new ByteArrayDataSource(fileStoreService, fsid, (ArticleAsset) assets.get(0));
   }
 
   /**
@@ -228,8 +136,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Get the article xml
-   * @param article article uri
    *
+   * @param article article uri
    * @return article xml
    */
   public Document getArticleDocument(final ArticleInfo article) {
@@ -255,15 +163,19 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   * Get the author affiliations for a given article
+   * Get the authors and some meta data for a given article.  I wanted to make this method bigger, but
+   * I ran out of time.
+   *
    * @param doc article xml
    * @param doc article xml
    * @return author affiliations
    */
-  public ArrayList<AuthorExtra> getAuthorAffiliations(Document doc) {
+  public ArrayList<AuthorView> getAuthors(Document doc) {
 
-    ArrayList<AuthorExtra> list = new ArrayList<AuthorExtra>();
+    ArrayList<AuthorView> list = new ArrayList<AuthorView>();
     Map<String, String> affiliateMap = new HashMap<String, String>();
+    Map<String, String> addressMap = new HashMap<String, String>();
+    Map<String, String> otherFootnotesMap = new HashMap<String, String>();
 
     if (doc == null) {
       return list;
@@ -273,65 +185,272 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       XPathFactory factory = XPathFactory.newInstance();
       XPath xpath = factory.newXPath();
 
+      //Affiliations xpaths
       XPathExpression affiliationListExpr = xpath.compile("//aff");
+      XPathExpression affiliationInstitutionExpr = xpath.compile("//institution");
       XPathExpression affiliationAddrExpr = xpath.compile("//addr-line");
 
+      //Current affiliation addresses
+      XPathExpression currentAffiliationListAddrExpr = xpath.compile("//fn[@fn-type='current-aff']");
+      XPathExpression currentAffiliationAddrExpr = xpath.compile("//p");
+
+      //Author name xpaths
+      XPathExpression authorExpr = xpath.compile("//contrib-group/contrib[@contrib-type='author']");
+      XPathExpression surNameExpr = xpath.compile("//name/surname");
+      XPathExpression givenNameExpr = xpath.compile("//name/given-names");
+      XPathExpression suffixExpr = xpath.compile("//name/suffix");
+      XPathExpression collabExpr = xpath.compile("//collab");
+
+      //Footnotes
+      //Note this web page for notes on author footnotes:
+      //http://wiki.plos.org/pmwiki.php/Publications/FootnoteSymbolOrder
+      XPathExpression affiliationsExpr = xpath.compile("//xref[@ref-type='aff']");
+      XPathExpression currentAddressExpr = xpath.compile("//xref[@ref-type='fn']/sup[contains(text(),'¤')]/..");
+      XPathExpression equalContribExpr = xpath.compile("//@equal-contrib");
+      XPathExpression corresAuthorExpr = xpath.compile("//xref[@ref-type='corresp']");
+      XPathExpression deceasedExpr = xpath.compile("//@deceased");
+      XPathExpression otherFootnoteExpr = xpath.compile("//fn[@fn-type='other']");
+      XPathExpression otherFootnoteValueExpr = xpath.compile("//p");
+      XPathExpression otherFootnotesNodeListExpr = xpath.compile("//xref[@ref-type='fn']");
+
+      //Grab all affiliations and put them into their own map
       NodeList affiliationNodeList = (NodeList) affiliationListExpr.evaluate(doc, XPathConstants.NODESET);
 
-      // Map all affiliation id's to their affiliation strings
-      for (int i = 0; i < affiliationNodeList.getLength(); i++) {
-        Node node =  affiliationNodeList.item(i);
+      //Map all affiliation id's to their affiliation strings
+      for (int a = 0; a < affiliationNodeList.getLength(); a++) {
+        Node node = affiliationNodeList.item(a);
         // Not all <aff>'s have the 'id' attribute.
-        String id = (node.getAttributes().getNamedItem("id") == null) ? "" : node.getAttributes().getNamedItem("id").getTextContent();
+        String id = (node.getAttributes().getNamedItem("id") == null) ? "" :
+          node.getAttributes().getNamedItem("id").getTextContent();
+
+        log.debug("Found affiliation node:" + id);
+
         // Not all <aff> id's are affiliations.
         if (id.startsWith("aff")) {
           DocumentFragment df = doc.createDocumentFragment();
           df.appendChild(node);
-          String address = ((Node)affiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
-          affiliateMap.put(id,address);
+
+          StringBuilder res = new StringBuilder();
+
+          if(affiliationInstitutionExpr.evaluate(df, XPathConstants.NODE) != null) {
+            res.append(((Node)affiliationInstitutionExpr.evaluate(df, XPathConstants.NODE)).getTextContent());
+          }
+
+          if(affiliationAddrExpr.evaluate(df, XPathConstants.NODE) != null) {
+            if(res.length() > 0) {
+              res.append(" ");
+            }
+            res.append(((Node) affiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent());
+          }
+
+          affiliateMap.put(id, res.toString());
         }
       }
 
-      XPathExpression authorExpr = xpath.compile("//contrib-group/contrib[@contrib-type='author']");
-      XPathExpression surNameExpr = xpath.compile("//name/surname");
-      XPathExpression givenNameExpr = xpath.compile("//name/given-names");
-      XPathExpression affExpr = xpath.compile("//xref[@ref-type='aff']");
+      //Grab all 'other' footnotes and put them into their own map
+      NodeList footnoteNodeList = (NodeList) otherFootnoteExpr.evaluate(doc, XPathConstants.NODESET);
 
+      for (int a = 0; a < footnoteNodeList.getLength(); a++) {
+        Node node = footnoteNodeList.item(a);
+        // Not all <aff>'s have the 'id' attribute.
+        String id = (node.getAttributes().getNamedItem("id") == null) ? "" :
+          node.getAttributes().getNamedItem("id").getTextContent();
+
+        log.debug("Found footnote node:" + id);
+
+        DocumentFragment df = doc.createDocumentFragment();
+        df.appendChild(node);
+
+        String footnote = ((Node) otherFootnoteValueExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
+        otherFootnotesMap.put(id, footnote);
+      }
+
+      //Grab all the Current address information and place them into a map
+      NodeList currentAddressNodeList = (NodeList) currentAffiliationListAddrExpr.evaluate(doc, XPathConstants.NODESET);
+      for (int a = 0; a < currentAddressNodeList.getLength(); a++) {
+        Node node = currentAddressNodeList.item(a);
+        String id = (node.getAttributes().getNamedItem("id") == null) ? "" :
+          node.getAttributes().getNamedItem("id").getTextContent();
+
+        log.debug("Current address node:" + id);
+
+        DocumentFragment df = doc.createDocumentFragment();
+        df.appendChild(node);
+
+        String address = ((Node) currentAffiliationAddrExpr.evaluate(df, XPathConstants.NODE)).getTextContent();
+        addressMap.put(id, address);
+      }
+
+      //Get all the authors
       NodeList authorList = (NodeList) authorExpr.evaluate(doc, XPathConstants.NODESET);
 
-      for (int i=0; i < authorList.getLength(); i++) {
-        Node cnode = authorList.item(i);
-        DocumentFragment df = doc.createDocumentFragment();
-        df.appendChild(cnode);
-        Node sNode = (Node) surNameExpr.evaluate(df, XPathConstants.NODE);
-        Node gNode = (Node) givenNameExpr.evaluate(df, XPathConstants.NODE);
-        
-        // Either surname or givenName can be blank
-        String surname = (sNode == null) ? "" : sNode.getTextContent();
-        String givenName = (gNode == null) ? "" : gNode.getTextContent(); 
-        // If both are null then don't bother to add
-        if ((sNode != null) || (gNode != null)) {
-          NodeList affList = (NodeList) affExpr.evaluate(df, XPathConstants.NODESET);
-          ArrayList<String> affiliations = new ArrayList<String>();
+      for (int i = 0; i < authorList.getLength(); i++) {
+        Node authorNode = authorList.item(i);
+
+        //Create temp author document fragment to search out of
+        DocumentFragment authorDoc = doc.createDocumentFragment();
+        authorDoc.appendChild(authorNode);
+
+        Node surNameNode = (Node) surNameExpr.evaluate(authorDoc, XPathConstants.NODE);
+        Node givenNameNode = (Node) givenNameExpr.evaluate(authorDoc, XPathConstants.NODE);
+        Node collabNameNode = (Node) collabExpr.evaluate(authorDoc, XPathConstants.NODE);
+
+        //Sometimes, an author is not a person, but a collab
+        //Note:10.1371/journal.pone.0032315
+        if (surNameNode == null && givenNameNode == null) {
+          givenNameNode = collabNameNode;
+        }
+
+        log.debug("Author node");
+
+        // If both of these are null then don't bother to add
+        if (surNameNode != null || givenNameNode != null) {
+          Node suffixNode = (Node) suffixExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node equalContribNode = (Node) equalContribExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node deceasedNode = (Node) deceasedExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node addressNode = (Node) currentAddressExpr.evaluate(authorDoc, XPathConstants.NODE);
+          Node corresAuthorNode = (Node) corresAuthorExpr.evaluate(authorDoc, XPathConstants.NODE);
+          NodeList otherFootnotesNodeList = (NodeList) otherFootnotesNodeListExpr.evaluate(authorDoc, XPathConstants.NODESET);
+          NodeList affList = (NodeList) affiliationsExpr.evaluate(authorDoc, XPathConstants.NODESET);
+
+          // Either surname or givenName can be blank
+          String surname = (surNameNode == null) ? null : surNameNode.getTextContent();
+          String givenName = (givenNameNode == null) ? null : givenNameNode.getTextContent();
+          String suffix = (suffixNode == null) ? null : suffixNode.getTextContent();
+          boolean equalContrib = (equalContribNode != null);
+          boolean deceased = (deceasedNode != null);
+
+          String corresponding = null;
+          String currentAddress = null;
+
+          if(addressNode != null) {
+            if(addressNode.getAttributes().getNamedItem("rid") != null) {
+              String fnId = addressNode.getAttributes().getNamedItem("rid").getTextContent();
+              currentAddress = addressMap.get(fnId);
+            }
+          }
+
+          List<String> otherFootnotes = new ArrayList<String>();
+          for(int a = 0; a < otherFootnotesNodeList.getLength(); a++) {
+            Node node = otherFootnotesNodeList.item(a);
+
+            if(node.getAttributes().getNamedItem("rid") != null) {
+              String id = node.getAttributes().getNamedItem("rid").getTextContent();
+
+              String value = otherFootnotesMap.get(id);
+
+              if(value != null) {
+                //Sometimes the "other" node is used to contrib equally as well
+                //Is there a better way to do this?
+                if(value.contains("contributed equally")) {
+                  equalContrib = true;
+                }
+
+                otherFootnotes.add(value);
+              }
+            }
+          }
+
+          if(corresAuthorNode != null) {
+            Node attr = corresAuthorNode.getAttributes().getNamedItem("rid");
+
+            if(attr == null) {
+              log.warn("No rid attribute found for xref ref-type=\"corresp\" node.");
+            } else {
+              String rid = attr.getTextContent();
+
+              XPathExpression correspondAddrExpr = xpath.compile("//author-notes/corresp[@id='" + rid + "']");
+              Node correspondAddrNode = (Node) correspondAddrExpr.evaluate(doc, XPathConstants.NODE);
+
+              if(correspondAddrNode == null) {
+                log.warn("No node found for corrsponding author: author-notes/corresp[@id='\" + rid + \"']");
+              } else {
+                corresponding = correspondAddrNode.getTextContent();
+              }
+            }
+          }
+
+          List<String> affiliations = new ArrayList<String>();
 
           // Build a list of affiliations for this author
           for (int j = 0; j < affList.getLength(); j++) {
             Node anode = affList.item(j);
-            String affId = anode.getAttributes().getNamedItem("rid").getTextContent();
-            affiliations.add(affiliateMap.get(affId));
+
+            if(anode.getAttributes().getNamedItem("rid") != null) {
+              String affId = anode.getAttributes().getNamedItem("rid").getTextContent();
+              affiliations.add(affiliateMap.get(affId));
+            }
           }
 
-          AuthorExtra authorEx = new AuthorExtra();
-          authorEx.setAuthorName(surname, givenName);
-          authorEx.setAffiliations(affiliations);
-          list.add(authorEx);
+          AuthorView author = new AuthorView(givenName, surname, suffix,
+            currentAddress, equalContrib, deceased, corresponding, affiliations, otherFootnotes);
+
+          list.add(author);
         }
       }
     } catch (Exception e) {
+      //TODO: Why does this die silently?
       log.error("Error occurred while gathering the author affiliations.", e);
     }
 
     return list;
+  }
+
+  /**
+   * @param document        a document to search for nodes
+   * @param xpathExpression XPath describing the nodes to find
+   * @return a list of the text content of the nodes found, or {@code null} if none
+   */
+  private static List<String> findTextFromNodes(Document document, String xpathExpression) {
+    XPathFactory factory = XPathFactory.newInstance();
+    XPath xpath = factory.newXPath();
+
+    NodeList nodes;
+    try {
+      XPathExpression xpr = xpath.compile(xpathExpression);
+      nodes = (NodeList) xpr.evaluate(document, XPathConstants.NODESET);
+    } catch (XPathExpressionException ex) {
+      log.error("Error occurred while gathering text with: " + xpathExpression, ex);
+      return null;
+    }
+
+    int length = nodes.getLength();
+    if (length == 0) {
+      return null;
+    }
+    List<String> text = new ArrayList<String>(length);
+    for (int i = 0; i < length; i++) {
+      Node item = nodes.item(i);
+      text.add(item.getTextContent());
+    }
+    return text;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public List<String> getCorrespondingAuthors(Document doc) {
+    //TODO: Test this code across many articles
+    return findTextFromNodes(doc, "//corresp/email");
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public List<String> getAuthorContributions(Document doc) {
+    //TODO: Test this code across many articles
+    return findTextFromNodes(doc, "//author-notes/fn[@fn-type='con']");
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public List<String> getAuthorCompetingInterests(Document doc) {
+    //TODO: Test this code across many articles
+    return findTextFromNodes(doc, "//fn[@fn-type='conflict']");
   }
 
   /**
@@ -376,6 +495,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Get references for a given article
+   *
    * @param doc article xml
    * @return references
    */
@@ -521,6 +641,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
   /**
    * Returns abbreviated journal name
+   *
    * @param doc article xml
    * @return abbreviated journal name
    */
@@ -560,11 +681,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   * Decorates the citation elements of the XML DOM with extra information from the citedArticle table in the DB.
-   * An extraCitationInfo element is appended to each citation element.  It will contain between one and two
-   * attributes with the extra info: citedArticleID, the DB primary key, and doi, the DOI string, if it exists.
+   * Decorates the citation elements of the XML DOM with extra information from the citedArticle table in the DB. An
+   * extraCitationInfo element is appended to each citation element.  It will contain between one and two attributes
+   * with the extra info: citedArticleID, the DB primary key, and doi, the DOI string, if it exists.
    *
-   * @param doc DOM of the XML
+   * @param doc           DOM of the XML
    * @param citedArticles List of CitedArticle persistent objects
    * @return modified DOM
    * @throws ApplicationException

@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-base</artifactId>
-  <version>2.5.1-SNAPSHOT</version>
+  <version>2.5.1-GINZU-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Ambra Base Web Application</name>
 
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-    <version>2.5.1-SNAPSHOT</version>
+    <version>2.5.1-GINZU-SNAPSHOT</version>
   </parent>
 
   <dependencies>
@@ -29,6 +29,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>file-store</artifactId>
+      <version>${filestore.version}</version>
     </dependency>
 
     <dependency>
@@ -52,7 +53,7 @@
     <dependency>
       <groupId>net.tanesha.recaptcha4j</groupId>
       <artifactId>recaptcha4j</artifactId>
-      <version>${recaptcha.version}</version>
+      <version>0.0.7</version>
     </dependency>
 
     <dependency>
@@ -439,6 +440,14 @@
     </dependency>
 
     <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>${xerces.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.1</version>
@@ -471,6 +480,13 @@
       <groupId>org.im4java</groupId>
       <artifactId>im4java</artifactId>
       <version>1.2.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.7.1</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

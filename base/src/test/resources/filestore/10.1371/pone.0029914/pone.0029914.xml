@@ -1,0 +1,966 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ /*
+  ~  * $HeadURL$
+  ~  * $Id$
+  ~  *
+  ~  * Copyright (c) 2006-2012 by Public Library of Science
+  ~  * http://plos.org
+  ~  * http://ambraproject.org
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *     http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  -->
+
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="3.0" xml:lang="EN">
+  <front>
+    <journal-meta><journal-id journal-id-type="nlm-ta">PLoS ONE</journal-id><journal-id journal-id-type="publisher-id">plos</journal-id><journal-id journal-id-type="pmc">plosone</journal-id><!--===== Grouping journal title elements =====--><journal-title-group><journal-title>PLoS ONE</journal-title></journal-title-group><issn pub-type="epub">1932-6203</issn><publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, USA</publisher-loc>
+      </publisher></journal-meta>
+    <article-meta><article-id pub-id-type="publisher-id">PONE-D-11-14946</article-id><article-id pub-id-type="doi">10.1371/journal.pone.0029914</article-id><article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Biology</subject>
+          <subj-group>
+            <subject>Immunology</subject>
+            <subj-group>
+              <subject>Immunity</subject>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Microbiology</subject>
+          </subj-group>
+          <subj-group>
+            <subject>Model organisms</subject>
+            <subj-group>
+              <subject>Animal models</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Medicine</subject>
+          <subj-group>
+            <subject>Infectious diseases</subject>
+            <subj-group>
+              <subject>Bacterial diseases</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline">
+          <subject>Immunology</subject>
+          <subject>Infectious Diseases</subject>
+        </subj-group>
+      </article-categories><title-group><article-title>Persistence of <italic>Borrelia burgdorferi</italic> in Rhesus Macaques following Antibiotic Treatment of Disseminated Infection</article-title><alt-title alt-title-type="running-head">Post-Treatment Persistence in Primate Lyme Disease</alt-title></title-group><contrib-group>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Embers</surname>
+            <given-names>Monica E.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="corresp" rid="cor1">
+            <sup>*</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Philipp</surname>
+            <given-names>Mario T.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="corresp" rid="cor1">
+            <sup>*</sup>
+          </xref>
+        </contrib>
+      </contrib-group><aff id="aff1"><label>1</label><addr-line>Divisions of Bacteriology &amp; Parasitology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America</addr-line>       </aff><aff id="aff2"><label>2</label><addr-line>Comparative Pathology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America</addr-line>       </aff><aff id="aff3"><label>3</label><addr-line>Veterinary Medicine, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America</addr-line>       </aff><aff id="aff4"><label>4</label><addr-line>Center for Comparative Medicine, Schools of Medicine and Veterinary Medicine, University of California Davis, Davis, California, United States of America</addr-line>       </aff><aff id="aff5"><label>5</label><addr-line>Section of Rheumatology, Department of Internal Medicine, Yale University School of Medicine, New Haven, Connecticut, United States of America</addr-line>       </aff><contrib-group>
+        <contrib contrib-type="editor" xlink:type="simple">
+          <name name-style="western">
+            <surname>Herrmann</surname>
+            <given-names>Jean Louis</given-names>
+          </name>
+          <role>Editor</role>
+          <xref ref-type="aff" rid="edit1"/>
+        </contrib>
+      </contrib-group><aff id="edit1">Hopital Raymond Poincare - Universite Versailles St. Quentin, France</aff><author-notes>
+        <corresp id="cor1">* E-mail: <email xlink:type="simple">members@tulane.edu</email> (MEE); <email xlink:type="simple">Philipp@tulane.edu</email> (MTP)</corresp>
+        <fn fn-type="con">
+          <p>Conceived and designed the experiments: MEE MTP SWB. Performed the experiments: MEE EH LCB MBJ NRH DSM SN JEP MSR LAD. Analyzed the data: MEE SWB JTB KMP-F MTP. Contributed reagents/materials/analysis tools: SWB EH MBJ. Wrote the paper: MEE MTP.</p>
+        </fn>
+        <fn fn-type="current-aff" id="fn1">
+          <label>¤</label>
+          <p>Current address: Biologic Resources Laboratory, University of Illinois, Chicago, Illinois, United States of America</p>
+        </fn>
+      <fn fn-type="conflict">
+        <p>The authors have declared that no competing interests exist.</p>
+      </fn></author-notes><pub-date pub-type="collection">
+        <year>2012</year>
+      </pub-date><pub-date pub-type="epub">
+        <day>11</day>
+        <month>1</month>
+        <year>2012</year>
+      </pub-date><volume>7</volume><issue>1</issue><elocation-id>e29914</elocation-id><history>
+        <date date-type="received">
+          <day>22</day>
+          <month>7</month>
+          <year>2011</year>
+        </date>
+        <date date-type="accepted">
+          <day>6</day>
+          <month>12</month>
+          <year>2011</year>
+        </date>
+      </history><!--===== Grouping copyright info into permissions =====--><permissions><copyright-year>2012</copyright-year><copyright-holder>Embers et al</copyright-holder><license><license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p></license></permissions><abstract>
+        <p>The persistence of symptoms in Lyme disease patients following antibiotic therapy, and their causes, continue to be a matter of intense controversy. The studies presented here explore antibiotic efficacy using nonhuman primates. Rhesus macaques were infected with <italic>B. burgdorferi</italic> and a portion received aggressive antibiotic therapy 4–6 months later. Multiple methods were utilized for detection of residual organisms, including the feeding of lab-reared ticks on monkeys (xenodiagnosis), culture, immunofluorescence and PCR. Antibody responses to the <italic>B. burgdorferi</italic>-specific C6 diagnostic peptide were measured longitudinally and declined in all treated animals. <italic>B. burgdorferi</italic> antigen, DNA and RNA were detected in the tissues of treated animals. Finally, small numbers of intact spirochetes were recovered by xenodiagnosis from treated monkeys. These results demonstrate that <italic>B. burgdorferi</italic> can withstand antibiotic treatment, administered post-dissemination, in a primate host. Though <italic>B. burgdorferi</italic> is not known to possess resistance mechanisms and is susceptible to the standard antibiotics (doxycycline, ceftriaxone) <italic>in vitro</italic>, it appears to become tolerant post-dissemination in the primate host. This finding raises important questions about the pathogenicity of antibiotic-tolerant persisters and whether or not they can contribute to symptoms post-treatment.</p>
+      </abstract><funding-group><funding-statement>This work was supported by NIAID grant R01-AI042352 (MTP), R01-AI26815 (SWB and EH), a TNPRC Pilot Study Grant (MEE), and NCRR grant RR00164. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.</funding-statement></funding-group><counts>
+        <page-count count="12"/>
+      </counts></article-meta>
+  </front>
+  <body>
+    <sec id="s1">
+      <title>Introduction</title>
+      <p>Lyme borreliosis is caused by the spirochetes of the <italic>Borrelia burgdorferi</italic> sensu lato species complex. The clinical progression of Lyme borreliosis may be divided into early-localized, early-disseminated, and late stages. During the early-localized phase, the disease's most prevalent sign is an erythematous skin rash known as erythema migrans. Subsequently, patients may develop early-disseminated disease with dermatologic, rheumatologic, cardiac, and neurologic involvement. Patients with late disease present chiefly with arthritis or with neurologic manifestations <xref ref-type="bibr" rid="pone.0029914-Steere1">[1]</xref>. The Infectious Diseases Society of America (IDSA) has issued guidelines for Lyme borreliosis therapy <xref ref-type="bibr" rid="pone.0029914-WormserGary1">[2]</xref>. Signs and symptoms are usually successfully ameliorated with antimicrobial therapy. However, some patients continue to have persistent subjective complaints <xref ref-type="bibr" rid="pone.0029914-Asch1">[3]</xref>, <xref ref-type="bibr" rid="pone.0029914-Shadick1">[4]</xref> while a few patients fail to respond to antibiotic therapy, as made evident by signs of persistent infection <xref ref-type="bibr" rid="pone.0029914-WormserGary1">[2]</xref>, <xref ref-type="bibr" rid="pone.0029914-Steere2">[5]</xref>. The response to treatment in patients with late manifestations is typically slower <xref ref-type="bibr" rid="pone.0029914-WormserGary1">[2]</xref> and sometimes remains incomplete.</p>
+      <p>Post-treatment Lyme disease syndrome (PTLDS) is a condition that occurs in some patients after treatment for Lyme borreliosis. The cause of PTLDS is currently unknown but prolonged antibiotic therapy does not seem to be helpful <xref ref-type="bibr" rid="pone.0029914-Klempner1">[6]</xref>, <xref ref-type="bibr" rid="pone.0029914-Klempner2">[7]</xref>. Objective evaluation of this phenomenon in humans is complicated by the difficulty in obtaining a patient population with confirmed Lyme borreliosis treated post-dissemination, and the vague, non-specific symptoms (fatigue, headache, memory and concentration difficulties, myalgias and arthralgias) with which PTLDS patients present. In addition, reliable procedures to determine that infection has been cleared from Lyme disease patients have not been established.</p>
+      <p>The C6 ELISA detects antibodies to a region of the <italic>B. burgdorferi</italic> VlsE lipoprotein that is immunogenic in infected individuals and common to all infectious variants tested thus far. Not only is the C6 test among the most reliable in terms of accuracy, but it is also a serologic test for Lyme disease that has been used experimentally as a predictor of treatment outcome <xref ref-type="bibr" rid="pone.0029914-Philipp1">[8]</xref>. In patients with PTLDS, anti-C6 titers were found to generally persist at a low level compared to acute patient titers <xref ref-type="bibr" rid="pone.0029914-Fleming1">[9]</xref>. To date, the experimental assessment, in animals, of antibiotic treatment effectiveness, measured by the presence or absence of spirochetes, correlated with C6 serologic test reactivity has not been reported.</p>
+      <p>Signs and symptoms of putative failure of antibiotic treatment in late disease or ineffectiveness of repeated treatment in patients with PTLDS may be formally attributed to several causes, including: 1) spirochetes that persist in the tissues, likely in small numbers, inaccessible or impervious to antibiotic; 2) inflammatory responses to residual antigens from dead organisms; or 3) autoimmune responses, possibly elicited by antigenic mimicry <xref ref-type="bibr" rid="pone.0029914-Bolz1">[10]</xref>.</p>
+      <p>In an effort to gain insight into the viability of these hypotheses, we designed two experiments in which we respectively assessed the efficacy of two regimens of ceftriaxone and/or doxycycline treatment in rhesus macaques commencing at 4–7 months of infection with <italic>B. burgdorferi</italic>. Rhesus macaques were chosen because of the ability of this animal model to reproduce many of the key signs of human Lyme disease, including neuroborreliosis <xref ref-type="bibr" rid="pone.0029914-Philipp2">[11]</xref>, <xref ref-type="bibr" rid="pone.0029914-Roberts1">[12]</xref>, <xref ref-type="bibr" rid="pone.0029914-Roberts2">[13]</xref>, <xref ref-type="bibr" rid="pone.0029914-Philipp3">[14]</xref>, <xref ref-type="bibr" rid="pone.0029914-England1">[15]</xref>, <xref ref-type="bibr" rid="pone.0029914-Pachner1">[16]</xref>, <xref ref-type="bibr" rid="pone.0029914-Cadavid1">[17]</xref>, <xref ref-type="bibr" rid="pone.0029914-Cadavid2">[18]</xref>, <xref ref-type="bibr" rid="pone.0029914-Pachner2">[19]</xref>, <xref ref-type="bibr" rid="pone.0029914-Pachner3">[20]</xref>, <xref ref-type="bibr" rid="pone.0029914-Bai1">[21]</xref>, <xref ref-type="bibr" rid="pone.0029914-Cadavid3">[22]</xref> and because of the similarity between the available pharmacokinetics data for ceftriaxone and doxycycline in rhesus macaques and in humans <xref ref-type="bibr" rid="pone.0029914-DelRio1">[23]</xref>, <xref ref-type="bibr" rid="pone.0029914-Patel1">[24]</xref>, <xref ref-type="bibr" rid="pone.0029914-Matsui1">[25]</xref>, <xref ref-type="bibr" rid="pone.0029914-Maesen1">[26]</xref>. Our results confirm that spirochetes are capable of persisting in treated nonhuman primate hosts. We discuss the possible mechanisms and need for further inquiry into this phenomenon.</p>
+    </sec>
+    <sec id="s2">
+      <title>Results</title>
+      <p>We performed two separate experiments to assess post-treatment persistence by <italic>B. burgdorferi in</italic> nonhuman primates with treatment administered at different phases of disseminated infection. Both experiments involved infection, treatment post-dissemination, serology and detection of spirochetes in tissues. The two varied in the number of animals, <italic>B. burgdorferi</italic> strain used, time interval prior to treatment, antibiotic treatment regimen, and detection methods. The first (Experiment 1) was aimed at evaluating animals treated at the late disseminated phase of infection and the treatment regimen was chosen to correspond to the regimen used to treat human PTLDS patients in a clinical evaluation of treatment for this population <xref ref-type="bibr" rid="pone.0029914-Klempner1">[6]</xref>. The outline for Experiment 1 is depicted in <xref ref-type="fig" rid="pone-0029914-g001">Figure 1</xref>.</p>
+      <fig id="pone-0029914-g001" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0029914.g001</object-id>
+        <label>Figure 1</label>
+        <caption>
+          <title>Experimental design for assessment of treatment efficacy in the late, disseminated phase of infection (Experiment 1).</title>
+          <p>A) diagram of animal groups, showing inoculation (<italic>B. burgdorferi</italic> or sham) and treatment groups (treated with antibiotics or untreated); and B) the time line of the study.</p>
+        </caption>
+        <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.g001" xlink:type="simple"/>
+      </fig>
+      <sec id="s2a">
+        <title>Experiment 1: Antibiotic treatment in the late, disseminated phase of infection</title>
+        <sec id="s2a1">
+          <title>Evidence of spirochetal infection</title>
+          <p>During the first 4 weeks post-inoculation (PI), skin biopsies were taken weekly to assess infection by culture. All of the <italic>B. burgdorferi</italic>-inoculated animals yielded culture-positive skin biopsies. In addition, antibody in serum samples that were obtained just prior to the initiation of antibiotic treatment yielded both a positive <italic>B. burgdorferi</italic> whole-cell antigen ELISA, and a positive C6 ELISA in all of the inoculated animals (not shown).</p>
+        </sec>
+        <sec id="s2a2">
+          <title>Evidence that doxycycline had reached the MIC in serum of treated animals</title>
+          <p>Serum specimens were obtained from 7 rhesus macaques that were treated with doxycycline as per the regimen of Experiment 1, and 50 µL of each specimen was tested, as described in the <xref ref-type="sec" rid="s4">Materials and Methods</xref> section, for relative concentration. The mean doxycycline concentration at the peak time (2 h) was 2.071±0.431 mg/L or 6.7-fold the MIC of 0.31 mg/L. The median concentration was 2.2 mg/L (range 1.5–2.7). In another experiment, <italic>B. subtilis</italic> was used as the indicator strain. Serum specimens were obtained from 5 additional doxycycline-treated animals both at peak and trough times. The mean doxycycline concentration at the peak was 0.630±0.125 mg/L (median 0.60 mg/L, range 0.45–0.75) and at the trough (12 h) it was 0.160±0.082 mg/L (median 0.15, range 0.10–0.30). The overall median value of the peak doxycycline concentration was 1.35 mg/L and ranged from 0.63–2.07 mg/L). Thus, at the peak, the mean concentration of antibiotic exceeded the MIC in these animals by a factor of 2, but not at the trough, when it was 0.52-fold the MIC. The serum concentration of ceftriaxone was not determined. However, the published concentration of ceftriaxone in rhesus plasma after a single intravenous dose of 20 mg/Kg varies from over 200 mg/L at time zero, to about 50 mg/L at 6 h <xref ref-type="bibr" rid="pone.0029914-Matsui1">[25]</xref>. The published MIC and MBC for ceftriaxone with <italic>B. burgdorferi</italic> sensu stricto (B31) are 0.013 mg/L and 0.050 mg/L, respectively <xref ref-type="bibr" rid="pone.0029914-BaradaranDilmaghani1">[27]</xref>. Therefore, it is likely that the concentration of ceftriaxone in the rhesus circulation remained above the MIC and the MBC for a significant portion, if not all of the 24-h interval between consecutive doses of this antibiotic.</p>
+        </sec>
+        <sec id="s2a3">
+          <title>Distinct patterns in the antibody response to C6</title>
+          <p>The antibody response to C6 was measured in serially collected serum specimens. In all of the infected animals, the C6 antibody index rose steeply within the first 5–8 weeks post-inoculation (PI) (<xref ref-type="fig" rid="pone-0029914-g002">Figure 2</xref>). Thereafter, the responses fit into three patterns, depending on whether the animals were or were not treated with antibiotics. In the treated group, the response declined steadily during the treatment period and reached background levels at the endpoint in all animals (<xref ref-type="fig" rid="pone-0029914-g002">Figure 2A</xref>, <xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>). In contrast, the responses of the untreated group remained either largely unchanged (5 out of 12 animals, <xref ref-type="fig" rid="pone-0029914-g002">Figure 2C</xref>, scored positive (+) in <xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>), or returned to background levels (7 out of 12 animals, scored negative (−) in <xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>) but not in parallel with the kinetics of the treated group's decline in specific antibody (<xref ref-type="fig" rid="pone-0029914-g002">Figure 2B</xref>). The vertical lines in the figures denote the treatment intervals with ceftriaxone and doxycycline (<xref ref-type="fig" rid="pone-0029914-g002">Fig. 2A</xref>), or sham (<xref ref-type="fig" rid="pone-0029914-g002">Fig. 2B, C</xref>). A comparison of the number of animals with a negative C6 response postmortem in the treated group (11/11) with those in the untreated group (7/12) yielded a statistically significant difference (p = 0.0373).</p>
+          <fig id="pone-0029914-g002" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pone.0029914.g002</object-id>
+            <label>Figure 2</label>
+            <caption>
+              <title>Patterns of antibody response to the C6 peptide in infected animals.</title>
+              <p>The C6 index measured as a function of time PI with <italic>B. burgdorferi</italic> followed three distinct patterns in Experiment 1. Each graph is the longitudinal antibody response to C6 from one representative animal for each pattern. In treated (n = 12) animals (A) the response declined sharply, almost to background levels, within the antibiotic administration periods (solid vertical lines, weeks 27–31 for ceftriaxone, weeks 31–39 for doxycycline). In sham-treated animals (B, C) the response either declined, but independently from the sham treatment intervals, to eventually reach background level (B, n = 7), or oscillated throughout the study period without ever declining steadily (C, n = 5). The pattern in (C) corresponds to the C6-positive animals, indicated in <xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>. The dotted lines in B and C indicate the sham-treatment intervals. The index cut-off value was calculated as described in <xref ref-type="sec" rid="s4">Material and Methods</xref>.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.g002" xlink:type="simple"/>
+          </fig>
+          <table-wrap id="pone-0029914-t001" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0029914.t001</object-id><label>Table 1</label><caption>
+              <title>Detection of <italic>B. burgdorferi</italic> DNA (PCR), antigen by immunofluorescence assay (IFA), anti-C6 serum antibody (C6), <italic>B. burgdorferi</italic> RNA (RT-PCR), and inflammatory lesions (by Hematoxylin and Eosin stain (H&amp;E)) in all animals at postmortem, 6 to 12 months after the end of the antibiotic treatment (Experiment 1).</title>
+            </caption><!--===== Grouping alternate versions of objects =====--><alternatives><graphic id="pone-0029914-t001-1" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.t001" xlink:type="simple"/><table>
+              <colgroup span="1">
+                <col align="left" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <td align="left" colspan="6" rowspan="1">ANTIBIOTIC-TREATED</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Animal #</td>
+                  <td align="left" colspan="1" rowspan="1">PCR</td>
+                  <td align="left" colspan="1" rowspan="1">RT-PCR</td>
+                  <td align="left" colspan="1" rowspan="1">IFA</td>
+                  <td align="left" colspan="1" rowspan="1">Inflammation(H&amp;E)</td>
+                  <td align="left" colspan="1" rowspan="1">C6</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AG02</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AG48</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h, b)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AH77</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AI97</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, bl, s, l)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AK21</td>
+                  <td align="left" colspan="1" rowspan="1">NA</td>
+                  <td align="left" colspan="1" rowspan="1">NA</td>
+                  <td align="left" colspan="1" rowspan="1">NA</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AL06</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AL70</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AL82</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AM38</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BF20</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BF21</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BH50</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BR97 (uninf.)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BR99 (uninf.)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+              </tbody>
+            </table><table>
+              <colgroup span="1">
+                <col align="left" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <td align="left" colspan="6" rowspan="1">SHAM-TREATED</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">Animal #</td>
+                  <td align="left" colspan="1" rowspan="1">PCR</td>
+                  <td align="left" colspan="1" rowspan="1">RT-PCR</td>
+                  <td align="left" colspan="1" rowspan="1">IFA</td>
+                  <td align="left" colspan="1" rowspan="1">Inflammation(H&amp;E)</td>
+                  <td align="left" colspan="1" rowspan="1">C6</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BD71</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BG03</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BG48</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BG96</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BH18</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BH19</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BH31</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BH79</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BI80</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BT02</td>
+                  <td align="left" colspan="1" rowspan="1">+ (drg)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">V517</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (b)</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">BE40</td>
+                  <td align="left" colspan="1" rowspan="1">+ (h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+ (m, h)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">+</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">AH79(uninf.)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">V789(uninf.)</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                  <td align="left" colspan="1" rowspan="1">−</td>
+                </tr>
+              </tbody>
+            </table></alternatives><table-wrap-foot>
+              <fn id="nt101">
+                <label/>
+                <p>b, brain; bl, bladder; drg, dorsal root ganglia; h, heart; l, lung;</p>
+              </fn>
+              <fn id="nt102">
+                <label/>
+                <p>m, meninges; s, spleen.</p>
+              </fn>
+              <fn id="nt103">
+                <label/>
+                <p>(uninf.): animals not inoculated with <italic>B. burgdorferi</italic>.</p>
+              </fn>
+              <fn id="nt104">
+                <label/>
+                <p>NA: sample not available.</p>
+              </fn>
+            </table-wrap-foot></table-wrap>
+        </sec>
+        <sec id="s2a4">
+          <title>Monitoring of infection status postmortem</title>
+          <p>Infection status postmortem was evaluated by culture, PCR, RT-PCR, gross pathology, histology, and immunofluorescence. All of the animals were assessed, except one of the animals in the treated group (AK21), which died due to anesthetic shock 3 months PI. With regard to culture of spirochetes, one of the treated animals yielded a positive culture and only one of the untreated animals was culture-positive (lung tissue).</p>
+          <p>With regard to PCR, tissues were assessed for spirochetal DNA by PCR that amplified both the <italic>flaB</italic> and <italic>ospA</italic> genes of <italic>B. burgdorferi</italic>. Among the untreated group, 2 animals were positive (<xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>). Here, spirochetal DNA was found in the dorsal root ganglia for one animal, and in the heart for the other. One of the animals of the treated group was PCR positive (<xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>), and in several organs, including the meninges, bladder, spleen, and lungs. The difference between treated and untreated groups was not statistically significant (p = 1.000).</p>
+          <p>For detection of <italic>B. burgdorferi</italic> transcript, RNA was extracted from heart and brain specimens. Two of the animals that were not treated with antibiotics were positive, one in heart and the other in brain. Two of the treated animals had detectable spirochetal RNA in the heart, and one additional treated animal was positive for <italic>B. burgdorferi</italic> RNA in both heart and brain (<xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>). The difference was not statistically significant (p = 0.6464).</p>
+          <p>In the assessment of gross pathology, histology, and immunofluorescence, no gross lesions were observed in any of the animals. Fragments of heart and meninges were collected postmortem, and fixed, sectioned and stained for histology and immunofluorescence. Three animals, all of them treated, had moderate to severe inflammatory lesions in the heart (<xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>, <xref ref-type="fig" rid="pone-0029914-g003">Figure 3A</xref>). Positive immunofluorescent staining for <italic>B. burgdorferi</italic> appeared as fragments. Serial sections of tissue were cut at 6 µm width, so only bacteria lying perfectly parallel to the section would appear as 12–17 µm in length (the reported length of B31 spirochetes <xref ref-type="bibr" rid="pone.0029914-HovindHougen1">[28]</xref> (<xref ref-type="fig" rid="pone-0029914-g003">Figure 3B</xref>). We did not find samples of this type. However, there were numerous immunofluorescence-positive specimens both in the untreated and the treated groups (<xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>). The difference was not statistically significant (p = 0.6668). The four animals that were not inoculated with <italic>B. burgdorferi</italic> were negative by this test (<xref ref-type="table" rid="pone-0029914-t001">Table 1</xref>).</p>
+          <fig id="pone-0029914-g003" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pone.0029914.g003</object-id>
+            <label>Figure 3</label>
+            <caption>
+              <title>Images of tissue inflammation and <italic>B. burgdorferi</italic> antigen in tissues from animals treated in the late, disseminated phase (Experiment 1).</title>
+              <p>For antigen detection, samples of tissue were stained for fluorescent detection (IFA) with anti-<italic>B. burgdorferi</italic> monoclonal (see <xref ref-type="sec" rid="s4">Materials and Methods</xref>) antibody. (A) Hematoxylin &amp;Eosin stain showing monocytic and lymphocytic infiltrate in a heart section (20×) of a treated animal (AM38). (B) Image of positive IFA staining from the heart tissue of the same animal.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.g003" xlink:type="simple"/>
+          </fig>
+        </sec>
+      </sec>
+      <sec id="s2b">
+        <title>Experiment 2: Antibiotic treatment in the early, disseminated phase of infection</title>
+        <p>The second experiment (Experiment 2) focused on animals treated at the early disseminated phase and the duration of the treatment regimen was chosen by the IDSA guidelines <xref ref-type="bibr" rid="pone.0029914-Wormser1">[29]</xref>. The dose of doxycycline given was markedly higher than in Experiment 1. In addition to molecular methods, xenodiagnosis was used for detection of infection. The experimental outline is depicted in <xref ref-type="fig" rid="pone-0029914-g004">Figure 4</xref>.</p>
+        <fig id="pone-0029914-g004" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0029914.g004</object-id>
+          <label>Figure 4</label>
+          <caption>
+            <title>Experimental outline and sample collection for assessment of treatment efficacy in the disseminated phase of infection (Experiment 2).</title>
+          </caption>
+          <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.g004" xlink:type="simple"/>
+        </fig>
+        <sec id="s2b1">
+          <title>Confirmation of <italic>B. burgdorferi</italic> infection</title>
+          <p>In Experiment 2, skin biopsies and blood were taken at 1–4 weeks PI. Skin samples were cultured in BSK-H medium and subjected to DNA extraction for <italic>Borrelia</italic>-specific PCR. Seroconversion was tested by ELISA for antibody reactivity to the C6 peptide <xref ref-type="bibr" rid="pone.0029914-Liang1">[30]</xref>, the Ct peptide (a 51-mer synthetic peptide that reproduces the entire sequence of the C-terminal invariable domain of VlsE from <italic>B. burgdorferi</italic> strain B31) <xref ref-type="bibr" rid="pone.0029914-Liang2">[31]</xref> and outer surface protein C (OspC) <xref ref-type="bibr" rid="pone.0029914-Gilmore1">[32]</xref>. Infection was indicated by <italic>Borrelia</italic> DNA detection in skin biopsies and by serology (<xref ref-type="supplementary-material" rid="pone.0029914.s001">Table S1</xref>). Cultures were kept 12–15 weeks, but none were positive for spirochete growth.</p>
+        </sec>
+        <sec id="s2b2">
+          <title>Decrease in anti-C6 antibody titers with treatment</title>
+          <p>We measured the responses to C6 longitudinally to include before, during, and after treatment. The endpoint dilution titers were also determined for the final time point (week 47 for Experiment 2). The C6-specific antibody levels declined in all animals treated with antibiotics (<xref ref-type="supplementary-material" rid="pone.0029914.s003">Figure S1</xref>). In untreated animals, the anti-C6 responses either leveled off or slowly declined. To determine if antibody titers declined to baseline, the endpoint dilution titers for each of the five animals in Experiment 2 were determined for sera collected before, during, and after treatment. For all of the untreated animals, the titers remained high and the titers from the treated animals declined markedly, and remained at low level even at 27 weeks post-treatment (<xref ref-type="table" rid="pone-0029914-t002">Table 2</xref>).</p>
+          <table-wrap id="pone-0029914-t002" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0029914.t002</object-id><label>Table 2</label><caption>
+              <title>Reciprocal end-point dilution titers of anti-C6 antibodies in antibiotic-treated<xref ref-type="table-fn" rid="nt105">*</xref> (<bold>bold</bold>) and untreated macaques infected with <italic>B. burgdorferi</italic> (Experiment 2).</title>
+            </caption><!--===== Grouping alternate versions of objects =====--><alternatives><graphic id="pone-0029914-t002-2" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.t002" xlink:type="simple"/><table>
+              <colgroup span="1">
+                <col align="left" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+                <col align="center" span="1"/>
+              </colgroup>
+              <thead>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1"/>
+                  <td align="left" colspan="1" rowspan="1">
+                    <underline>16 weeks PI</underline>
+                  </td>
+                  <td align="left" colspan="1" rowspan="1">
+                    <underline>32 weeks PI</underline>
+                  </td>
+                  <td align="left" colspan="1" rowspan="1">
+                    <underline>47 weeks PI</underline>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">
+                    <bold>GA59</bold>
+                  </td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                  <td align="left" colspan="1" rowspan="1">640</td>
+                  <td align="left" colspan="1" rowspan="1">320</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">
+                    <bold>FK38</bold>
+                  </td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                  <td align="left" colspan="1" rowspan="1">40</td>
+                  <td align="left" colspan="1" rowspan="1">160</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">
+                    <bold>GB56</bold>
+                  </td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                  <td align="left" colspan="1" rowspan="1">160</td>
+                  <td align="left" colspan="1" rowspan="1">320</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">GC84</td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                </tr>
+                <tr>
+                  <td align="left" colspan="1" rowspan="1">FT47</td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                  <td align="left" colspan="1" rowspan="1">&gt;2560</td>
+                </tr>
+              </tbody>
+            </table></alternatives><table-wrap-foot>
+              <fn id="nt105">
+                <label/>
+                <p>*treatment was given during weeks 16–20.</p>
+              </fn>
+            </table-wrap-foot></table-wrap>
+        </sec>
+        <sec id="s2b3">
+          <title>Detection of spirochetes in treated animals by xenodiagnosis</title>
+          <p>At 7 and 11 months PI, all monkeys were fed upon by <italic>Ixodes scapularis</italic> nymphs for the uptake of persisting spirochetes by xenodiagnosis. The number of nymphs that fed to repletion varied considerably between animals. For the first round, a total of 7, 8, and 11 ticks, respectively, fed on the treated animals, whereas only 5 ticks fed on each of the untreated animals (<xref ref-type="supplementary-material" rid="pone.0029914.s002">Table S2</xref>). Tick midguts were split into 3 parts for culture, direct fluorescence and for DNA extraction. The probability of recovering spirochetes would be higher from animals upon which more ticks feed. As such, intact spirochetes were detected from the cultured midgut contents (<xref ref-type="fig" rid="pone-0029914-g005">Figure 5A</xref>) or directly from tick midgut smears (<xref ref-type="fig" rid="pone-0029914-g005">Figure 5B</xref>) of two animals at 7 months PI, both of which had been treated. These animals (GB56 and GA59) also had the most xenodiagnostic ticks feed (<xref ref-type="supplementary-material" rid="pone.0029914.s002">Table S2</xref>).</p>
+          <fig id="pone-0029914-g005" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pone.0029914.g005</object-id>
+            <label>Figure 5</label>
+            <caption>
+              <title>Spirochetes recovered by xenodiagnosis from animals treated in the disseminated phase of infection.</title>
+              <p>Images from direct fluorescent staining of <italic>B. burgdorferi</italic> spirochetes found in xenodiagnostic tick midgut culture (A) or tick midgut preparation (B) from treated animals GA59 and GB56, respectively.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.g005" xlink:type="simple"/>
+          </fig>
+        </sec>
+        <sec id="s2b4">
+          <title>Detection of spirochetal nucleic acids in tissues</title>
+          <p>For Experiment 2, several <italic>B. burgdorferi</italic> genes were used both for detection of spirochetes (by standard PCR) and for detection of metabolically active spirochetes (by RT-PCR). The detection of genes throughout the course of infection, in tissues, by standard PCR/RT-PCR is shown in <xref ref-type="fig" rid="pone-0029914-g006">Figure 6</xref>.</p>
+          <fig id="pone-0029914-g006" position="float">
+            <object-id pub-id-type="doi">10.1371/journal.pone.0029914.g006</object-id>
+            <label>Figure 6</label>
+            <caption>
+              <title>Nucleic acid detection of <italic>B. burgdorferi</italic> (Experiment 2).</title>
+              <p>Detection by PCR or RT-PCR using primers for the indicated genes from: A) skin biopsy samples; B) xenodiagnostic ticks; C) organ tissue culture pellets; and D) directly from tissues known to harbor the spirochetes. Animal numbers in <bold>bold</bold> are of those that were treated. Asterisks indicate clear positive amplimers.sk = skin; h t = heart; bl = bladder; spl = pleen. Labels include: M = marker (100 bp ladder); (+) = <italic>B.burgdorferi</italic>, strain B31 DNA/RNA; ssc = spirochete strain negative control (<italic>Bb</italic> strain JD1 DNA); ntc = no template control; tnc = tick negative control; uim = uninfected monkey DNA/RNA.</p>
+            </caption>
+            <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.g006" xlink:type="simple"/>
+          </fig>
+          <p>The <italic>ospC</italic> gene was amplified from skin biopsy tissue from each animal in at least one of the four samplings (<xref ref-type="fig" rid="pone-0029914-g006">Figure 6A</xref>) shortly after inoculation. These results confirmed infection and specific detection by the <italic>ospC</italic> PCR method. The detection of <italic>B. burgdorferi</italic> nucleic acids by PCR was also performed on xenodiagnostic tick midgut samples (<xref ref-type="fig" rid="pone-0029914-g006">Figure 6B</xref>). For treated animal FK38, spirochetal DNA was detected by amplification of <italic>ospC</italic> from midgut contents when organisms were not detected by culture or DFA (<xref ref-type="fig" rid="pone-0029914-g006">Figure 6B</xref>).</p>
+          <p>A few spirochetes grew in cultures of organ tissues collected post-mortem from each animal after &gt;9 weeks, but we were unable to subculture any spirochetes from either treated or untreated animals due to their slow growth. We therefore pelleted these cultures to confirm their identity and test their viability by DNA/RNA analysis. Transcription was detected in culture pellets and the tissues of treated animals, indicating that the bacteria were metabolically active (<xref ref-type="fig" rid="pone-0029914-g006">Figure 6C, D</xref>). <xref ref-type="fig" rid="pone-0029914-g006">Figure 6D</xref> shows <italic>ospA</italic> transcription detected directly in tissues harvested from treated and untreated animals. We also hypothesized that persistent spirochetes may lose linear plasmid 28-1 (lp28-1), which encodes the VlsE antigen bound by the anti-C6 antibody. Transcription of a lp28-1 gene (<italic>bbf26</italic>) was verified in organ tissue from both untreated animals and one treated animal (<xref ref-type="fig" rid="pone-0029914-g006">Figure 6D</xref>).</p>
+        </sec>
+      </sec>
+    </sec>
+    <sec id="s3">
+      <title>Discussion</title>
+      <p>In some cases, patients who have been treated for Lyme disease experience persistent symptoms. The assertion that further antibiotic treatment is warranted in these cases is a matter of contention and considerable debate <xref ref-type="bibr" rid="pone.0029914-Auwaerter1">[33]</xref>, <xref ref-type="bibr" rid="pone.0029914-Stricker1">[34]</xref>, <xref ref-type="bibr" rid="pone.0029914-Feder1">[35]</xref>, <xref ref-type="bibr" rid="pone.0029914-Mayer1">[36]</xref>. Our results indicate that disseminated spirochetes of two different <italic>B. burgdorferi</italic> strains can persist in the primate host following high dose, or long-lasting antibiotic therapy. In terms of disease, only objective signs of disease post-therapy may be measurable in an animal model. While we did not find gross signs of disease postmortem, in Experiment 1 we did identify heart sections with inflammatory infiltrates in three of the treated animals. In addition, several animals, both treated and untreated showed sections of heart and meninges that were positive by immunofluorescence for <italic>B. burgdorferi</italic>. At the molecular level, <italic>B. burgdorferi</italic> DNA would indicate the presence of organisms, live or dead. The detection of RNA, however, should indicate that those present are metabolically active and thus alive. In Experiment 1, spirochetal DNA and RNA were detected in the tissues of a few animals, independent of treatment. This may reflect a low spirochetal burden, lack of <italic>flaB</italic> transcription <xref ref-type="bibr" rid="pone.0029914-Barthold1">[37]</xref>, and/or seclusion in untested tissues.</p>
+      <p>In Experiment 2, we were able to recover spirochetes by xenodiagnosis in two of the three treated animals. The inability to recover spirochetes from all five macaques could be in part attributed to the number of ticks that fed, which was markedly smaller for untreated animals (Supplementary <xref ref-type="supplementary-material" rid="pone.0029914.s002">Table S2</xref>). However, a few slow-growing organisms were recovered by culture from each animal. We detected the <italic>ospA</italic> transcript in culture pellets from tissues of four animals and directly from at least one tissue from each animal. We chose <italic>ospA</italic> because this gene has been shown to be transcribed by host-adapted <italic>B. burgdorferi</italic> <xref ref-type="bibr" rid="pone.0029914-Crowley1">[38]</xref>, in disseminated infection <xref ref-type="bibr" rid="pone.0029914-Narasimhan1">[39]</xref>, and because of the induction of an anti-OspA response in patients <xref ref-type="bibr" rid="pone.0029914-Kalish1">[40]</xref> post-dissemination.</p>
+      <p>The nature of the persistent organisms and the acquisition of tolerance to antibiotics are questions that need to be addressed. The <italic>B. burgdorferi</italic> spirochete is known to invade collagenous tissue as a possible mechanism of immune evasion. It has been postulated that the joint tissues provide a protective niche during antibiotic treatment <xref ref-type="bibr" rid="pone.0029914-YrjNInen1">[41]</xref>. Our studies and others <xref ref-type="bibr" rid="pone.0029914-Barthold1">[37]</xref>, <xref ref-type="bibr" rid="pone.0029914-Hodzic1">[42]</xref>, however, have not demonstrated a specific predilection for spirochete presence in joints of treated animals. Antibiotic tolerance has been demonstrated <italic>in vitro</italic> with several bacterial species, both gram negative (<italic>E. coli</italic>) and gram positive (<italic>Staphylococcus</italic> spp.). The fact that organisms can persist in the presence of antibiotics such as penicillin and cephalosporins (ceftriaxone) that interfere with cell wall synthesis appears to stem from their ability to enter a dormant, non-dividing state <xref ref-type="bibr" rid="pone.0029914-Lewis1">[43]</xref>, <xref ref-type="bibr" rid="pone.0029914-Lewis2">[44]</xref>, thus avoiding the need for cell wall synthesis to continue growth. The other antibiotic that was used in these experiments is doxycycline. The tetracycline class of antibiotics corrupts translation at the ribosome; therefore, minimal gene expression from dormant organisms may be unaffected. A “persister” phenotype may possibly be responsible for the recalcitrance of persisting spirochetes made evident by previous studies in mice and dogs <xref ref-type="bibr" rid="pone.0029914-Barthold1">[37]</xref>, <xref ref-type="bibr" rid="pone.0029914-Hodzic1">[42]</xref>, <xref ref-type="bibr" rid="pone.0029914-Straubinger1">[45]</xref>, and by those presented in this report. Perhaps incomplete clearance of bacteria following antibiotic treatment is not a phenomenon unique to <italic>B. burgdorferi</italic>, but one that occurs with other bacterial infections as well. In this case, xenodiagnosis enables detection of otherwise inconspicuous live organisms through acquisition by the natural vector.</p>
+      <p>To date, the C6 ELISA is the only test in which a decline in antibody titer is statistically associated with outcome of antibiotic treatment <xref ref-type="bibr" rid="pone.0029914-Philipp1">[8]</xref>, <xref ref-type="bibr" rid="pone.0029914-Philipp4">[46]</xref>, <xref ref-type="bibr" rid="pone.0029914-Philipp5">[47]</xref>. In accord with this finding, we observed a distinct and rapid decline in C6 titer in all antibiotic-treated animals. Not all animals, however, were spirochete-free, so the question of what facet of infection is indicated by anti-C6 antibody titers was brought to the fore. Also, the C6 titers declined in some untreated animals over a long period of time, but not in others, though presence of spirochetes was indicated in C6-negative untreated animals by IFA or PCR/RT-PCR. This is likely due in part to genetic differences in outbred animals. Possible explanations for the lack of correlation between C6 response and presence of spirochetes include: (1) the anti-C6 titer is an indicator of treatment efficacy and the infection is cleared despite the presence of spirochetal genetic material/antigen; (2) organisms persist and the anti-C6 titer does not reflect their presence, perhaps due to loss of plasmid lp28-1 (which encodes VlsE, the parent molecule of C6); or (3) anti-C6 titer declines with a significant reduction in spirochetal burden, but a low number of organisms reside in the host; if these organisms are dormant, then transcription of <italic>vlsE</italic> also may be negligible, minimizing re-stimulation with antigen. The detection of intact organisms ruled out the first explanation and detection of transcript (<italic>bbf26</italic>) from lp28-1 disproves that explanation #2 may be operating exclusively. We therefore favor explanation #3 and seek to determine the level of transcriptional/metabolic activity, and pathogenicity of persistent organisms. If, for example, spirochetes that are recovered by xenodiagnosis from treated animals turned out to be non-pathogenic, this would validate the decline in C6 titer as a measure of successful treatment outcome.</p>
+      <p>In infected mice treated with tigecycline, transcription of the chromosomally-encoded <italic>B. burgdorferi oppA2</italic> gene was detected in 8 of 9 treated mice, indicating spirochetal viability <xref ref-type="bibr" rid="pone.0029914-Barthold1">[37]</xref>. Importantly, these studies also indicated that DNA copies of another gene, <italic>ospA</italic>, were present in treated mice, but were significantly fewer than in untreated mice. This result likely reflects a much lower spirochetal burden with treatment, supporting the notion that anti-C6 titer may decline as a function of reduced numbers. The C6 titers in these mice were not determined. Due to the relatively small quantities of bacteria over a large amount of tissue, we were unable to reliably quantify DNA or transcript levels in nonhuman primates. Similarly, the recovery of few spirochetes by tissue culture is aptly a reflection of the rhesus model and not necessarily the treatment <xref ref-type="bibr" rid="pone.0029914-Pachner4">[48]</xref>.</p>
+      <p>The most pressing question in terms of human disease is whether or not spirochetes remain pathogenic after antimicrobial therapy. Similarly, do spirochetes persist long-term, or are they eventually cleared by the host? Clearly, the phenotype of persistent organisms needs to be elucidated. These studies support the use of the C6 test for diagnosis and measurement post-treatment; however, the absolute quantification of antibody levels may be essential in determining treatment efficacy for PTLDS patients, as low levels (yet above baseline) may indicate presence of residual spirochetes or antigen. Finally, the use of variable and pulse-dosing regimens of antibiotics may improve efficacy <xref ref-type="bibr" rid="pone.0029914-Lewis1">[43]</xref> and this warrants testing in an appropriate model.</p>
+      <p>Finally, in these studies we used an artificial mode of inoculation and spirochetal dose. The experimental results must be confirmed with tick-mediated infection, which is our intent. Our studies do however offer proof of the principle that intact spirochetes can persist in an incidental host comparable to humans, following antibiotic therapy. Additionally, our experiments uncover residual antigen associated with inflammatory foci. Whether persistent spirochetes or spirochetal antigen can cause PTLDS remains unanswered.</p>
+    </sec>
+    <sec id="s4" sec-type="materials|methods">
+      <title>Materials and Methods</title>
+      <sec id="s4a">
+        <title>Ethics statement</title>
+        <p>Practices in the housing and care of animals conformed to the regulations and standards of the PHS Policy on Humane Care and Use of Laboratory Animals, and the Guide for the Care and Use of Laboratory Animals. The Tulane National Primate Research Center (Animal Welfare Assurance # A4499-01) is fully accredited by the Association for the Assessment and Accreditation of Laboratory Animal Care-International. The Institutional Animal Care and Use Committee (IACUC) of the Tulane National Primate Research Center approved all animal-related protocols, including the infection, treatment, and tick-feeding procedures used with nonhuman primates. All animal procedures were overseen by veterinarians and their staff. For blood collection, skin biopsy collection and the tick capsule procedures, monkeys were anesthetized with ketamine (10 mg/kg) by intramuscular injection. Animals were humanely euthanized by the veterinary staff at the TNPRC in accordance with endpoint policies. Euthanasia was conducted by anesthesia with ketamine hydrochloride (10 mg/kg) followed by an overdose with sodium pentobarbital. This method is consistent with the recommendation of the American Veterinary Medical Association guidelines.</p>
+      </sec>
+      <sec id="s4b">
+        <title>Experimental design</title>
+        <p>In the first experiment (Experiment 1), the treatment regimen was initiated at 27 weeks PI. It included the administration of ceftriaxone for 30 days, followed by 60 days of doxycycline. The latter antibiotic is used primarily to treat early localized and disseminated disease, whereas ceftriaxone is used to treat late disease <xref ref-type="bibr" rid="pone.0029914-WormserGary1">[2]</xref>. Animals were kept for a minimum of 6 months after treatment termination. Tissue samples were collected for 1) <italic>in vitro</italic> culture of <italic>B. burgdorferi</italic>; 2) quantitative real-time PCR and reverse transcriptase (RT)-PCR, for detection of <italic>B. burgdorferi</italic> nucleic acids; and 3) histopathology/immunofluorescence to localize inflammatory lesions and spirochetes in tissues, respectively. The C6 test was also performed on serum specimens collected serially from all of the animals.</p>
+        <p>In the second experiment (Experiment 2), the treatment regimen began 4 months after inoculation with <italic>B. burgdorferi</italic> and consisted of a 28-day regimen of oral doxycycline, as per the IDSA guidelines for disseminated infection <xref ref-type="bibr" rid="pone.0029914-WormserGary1">[2]</xref>. At 7 and 11 months PI, xenodiagnosis with <italic>I. scapularis</italic> ticks was performed. Serum was collected throughout the study period and tested for reactivity against the C6 peptide. Following euthanasia, tissues were cultured and tested by PCR and RT-PCR for detection of spirochetes and spirochetal nucleic acids.</p>
+      </sec>
+      <sec id="s4c">
+        <title>Animals, spirochetal inoculation, animal groups, and antibiotic treatment</title>
+        <sec id="s4c1">
+          <title>Experiment 1</title>
+          <p>Twenty-eight rhesus macaques (<italic>Macaca mulatta</italic>) of Chinese origin were used in this study. Their median age when assigned to the study was 2.22 years (range 1.25–4.32). Three of the animals were females and the rest males. All were singly caged, fed commercial monkey chow (Purina Mills 5037 R), and had water available <italic>ad libitum</italic>.</p>
+          <p>For inoculation, <italic>B. burgdorferi</italic> spirochetes of the JD1 strain <xref ref-type="bibr" rid="pone.0029914-Piesman1">[49]</xref> were grown in BSK-H medium (Sigma-Aldrich, St. Louis, MO) up to stationary phase (∼10<sup>8</sup> cells per mL). Twenty-four animals were given an inoculation of 3.2×10<sup>8</sup> spirochetes each via needle and syringe, with 10<sup>8</sup> organisms given intraperitoneally in the lower right quadrant, 10<sup>8</sup> subcutaneously in the same injection site, and 2×10<sup>7</sup> intradermally, also in the same site. An additional 10<sup>8</sup> spirochetes were given subcutaneously in the dorsal cervical midline. Four animals were sham-inoculated as uninfected controls. The inoculation and treatment design is summarized in <xref ref-type="fig" rid="pone-0029914-g001">Figure 1A</xref>. At 27 weeks PI, 12 of the infected animals and two of the controls were treated with ceftriaxone, followed by doxycycline. Animals received intravenous ceftriaxone, 25 mg/kg, once per day for 30 days (Ceftiofur sodium, Pfizer Animal Health, Kalamazoo, MI) followed by 60 days of oral doxycycline, 2 mg/kg, twice per day (Bio-Serv, Frenchtown, NJ). Twelve infected and 2 control animals were sham-treated. Animal euthanasia began approximately six months post-termination of treatment. Within an additional six-month period all of the animals had been euthanized. The complete time line of the study is depicted in <xref ref-type="fig" rid="pone-0029914-g001">Figure 1B</xref>.</p>
+        </sec>
+        <sec id="s4c2">
+          <title>Experiment 2</title>
+          <p>Five male rhesus macaques (Chinese origin), 3–4 years of age, were used for the second experiment (outlined in <xref ref-type="fig" rid="pone-0029914-g004">Figure 4C</xref>). Four animals were pair-housed after observation under protected contact, and one (GB56) was housed alone. Each animal was given 3 inoculations in the ventral midline of <italic>in vitro</italic>-cultured late log-phase <italic>B. burgdorferi</italic> strain B31, isolate 5A19 <xref ref-type="bibr" rid="pone.0029914-Purser1">[50]</xref>: two subcutaneous 1.0 mL injections and one intradermal 0.1 mL injection, each containing 1×10<sup>8</sup> organisms diluted in sterile Hanks Balanced Salt Solution (HBSS), for a total inoculum of 3×10<sup>8</sup>.</p>
+          <p>At four months PI, three of the five animals received antibiotic treatment. Animals were trained to accept treats in which the tablets were concealed. Each of the three treated macaques was given one 50 mg tablet of doxycycline (Bio-Serv) twice/day for 28 consecutive days. This dose corresponded to &gt;12 mg/kg/day to ensure that an effective blood level was achieved.</p>
+        </sec>
+      </sec>
+      <sec id="s4d">
+        <title>Determination of the serum concentration of doxycyline <italic>in vivo</italic></title>
+        <p>In vitro-cultured <italic>B. burgdorferi</italic> do not grow well in the presence of monkey serum, so antibiotic concentrations in serum had to be tested with alternative reporter strains of bacteria. A 0.5 McFarland suspension of bacteria (<italic>Staphylococcus aureus</italic>, ATCC #29213 or <italic>Bacillus subtilis</italic>, ATCC #6633), made in Mueller-Hinton broth (BD, Franklin Lakes, NJ), was streaked onto Mueller-Hinton agar plates (BD). The streaking was done so that a confluent “lawn” of bacteria would grow after 18–24 hours of incubation at 37°C. To determine antibiotic concentration in serum, 50 µL of serum from treated animals was applied to 6-mm diameter plain paper discs (BD) and allowed to dry for 30 minutes. Standards were made by dissolving doxycycline hyclate (Sigma-Aldrich) into normal monkey serum; these were applied to the discs in the same manner. Standard doxycycline concentrations were 2, 5 and 10-fold the <italic>B. burgdorferi</italic> minimum inhibitory concentration (MIC) when <italic>S. aureus</italic> was used, and 0.5, 1, and 2-fold the MIC when <italic>B. subtilis</italic> was used. Both indicator strains were used in order to expand the range of detection. The doxycycline MIC for the JD1 strain of <italic>B. burgdorferi</italic> was determined to be 0.310 mg/L, which was approximately the same as the mean value of 0.327 mg/L that had previously been obtained for several strains and species of <italic>B. burgdorferi</italic> sensu lato <xref ref-type="bibr" rid="pone.0029914-BaradaranDilmaghani1">[27]</xref>.</p>
+        <p>The test discs were placed onto the prepared agar plates and incubated overnight at 37°C. The zones of inhibition were measured in radial mm. A standard curve was generated using the measurements of the control/standards. The test measurements were compared to the standard curve giving an approximate doxycycline concentration from the test serum. Serum from treated animals was obtained both at the times of peak and trough concentrations for doxycycline, namely, at 2 h and 12 h post-dose administration, during the 8<sup>th</sup> week of doxycycline treatment. Peak and trough times for rhesus macaques were as per Kelly et al. <xref ref-type="bibr" rid="pone.0029914-Kelly1">[51]</xref>, who in turn based their estimations on pharmacokinetic data from humans.</p>
+      </sec>
+      <sec id="s4e">
+        <title>Culture of skin biopsy and organ specimens</title>
+        <p>In both experiments, 4 mm skin biopsy specimens were collected from all animals, under anesthesia, weekly during the first four weeks PI and were cultured in BSK-H medium as described <xref ref-type="bibr" rid="pone.0029914-Philipp2">[11]</xref>. Skin biopsy samples were thus collected from live animals before antibiotic treatment so as to confirm infection. Organ specimens were also collected at necropsy. In Experiment 1, the following organ specimens, obtained postmortem, were cultured: brain (20 samples per monkey), meninges (10), dorsal root ganglia (5), sciatic nerve (10), skin (10), heart (10), synovial membrane (2), peritoneal membrane (10), lung (5), bladder (5), and spleen (5). In Experiment 2, specimens of skin, heart, bladder, spleen, knee joint synovial membrane, and shoulder tendon were cultured. Two ∼2 mm<sup>3</sup> tissue sections from each organ were cultured.</p>
+      </sec>
+      <sec id="s4f">
+        <title>Detection of spirochetal DNA</title>
+        <p>In Experiment 1, real time PCR targeted at the <italic>ospA</italic> and <italic>flaB</italic> genes was performed following a protocol described previously <xref ref-type="bibr" rid="pone.0029914-Hodzic2">[52]</xref>. DNA extracted from up to ten specimens each of brain, meninges, dorsal root ganglia, sciatic nerve, skin, heart, synovial membrane, peritoneal membrane, lung, bladder, and spleen was amplified for all animals postmortem. Only those specimens that were positive for both the <italic>ospA</italic> and <italic>flaB</italic> genes were considered positive.</p>
+        <p>In Experiment 2, standard PCR was used for detection of <italic>B. burgdorferi</italic> from tick midguts, culture pellets and animal tissues. DNA was extracted from ∼60 mg (30 mg×2) of each tissue (heart, bladder, spleen, knee joint synovium, shoulder tendon and skin) with the DNeasy® Blood and Tissue kit (Qiagen, Valencia, CA). Primer sets that target the <italic>flaB</italic> and <italic>ospC</italic> genes were used and are published <xref ref-type="bibr" rid="pone.0029914-Embers1">[53]</xref>. The Taq DNA polymerase Core Kit (Qiagen) was utilized according to the manufacturer's protocol. For each primer, 0.4 µM concentration was used. PCR was performed with 35 cycles of denaturation (94°, 30 sec.), annealing (43–53°, 45 sec.) and extension (72°, 1 min.). Negative controls included DNA extracted from uninfected monkey tissue (from Experiment 1) and DNA extracted from a pool of 5 ticks derived from the same egg mass as those used for xenodiagnosis.</p>
+      </sec>
+      <sec id="s4g">
+        <title>Detection of spirochetal transcripts by reverse transcriptase PCR</title>
+        <p>For Experiment 1, total RNA from heart and brain specimens from all of the animals at postmortem was isolated using the Trizol method (Invitrogen, Carlsbad, CA) and contaminating DNA was removed from 2–5 µg of total RNA specimens using the DNA-free™ kit, according to the manufacturer's protocol (Applied Biosystems/Ambion, Austin, TX). cDNA was subsequently synthesized from 1 µg of DNA-free RNA using the iScript cdNA synthesis kit (Bio-Rad, Hercules, CA). No amplicon was obtained by the procedure described below when the cDNA synthesis step was omitted. One µl of cDNA from each of the monkey tissue samples served as template to PCR amplify a 275 bp fragment of the <italic>B. burgdorferi</italic> flagellin (<italic>flaB</italic>) transcript. The forward primer was <named-content content-type="gene" xlink:type="simple">5′-TTGCTGATCAAGCTCAATATAACCA-3′</named-content> and the reverse primer was <named-content content-type="gene" xlink:type="simple">5′-CACCGGTTCAAGAGGGTGTT-3′</named-content>. PCR was performed using Taq polymerase (Roche, CA). The cycling conditions were as follows: 1 cycle of denaturation at 94°C for 3 min followed by 35 cycles of 30 sec denaturation at 94°C, 30 sec annealing at 60°C and 30 sec extension at 72°C and one cycle of 5 min extension at 72°C. PCR products were electrophoresed on a 1.5% agarose gel and the gel processed for Southern blotting as described <xref ref-type="bibr" rid="pone.0029914-Sambrook1">[54]</xref>. Separated amplicons were capillary transferred to Hybond N+ nitrocellulose membrane (Amersham Biosciences, Buckinghamshire, UK) as described <xref ref-type="bibr" rid="pone.0029914-Sambrook1">[54]</xref>. A 22-mer oligonucleotide corresponding to a sequence within this amplicon (<named-content content-type="gene" xlink:type="simple">5′-CTGCTTCTCAAAATGTAAGAACAGCTGAAGAGCTTG-3′</named-content>) was synthesized at the W. M. Keck Facility at Yale University and non-radioactively labeled using the Gene Images AlkPhos Direct Labeling and Detection system (Amersham Biosciences, UK). The labeled probe was hybridized to the nitrocellulose membrane at 55°C overnight and washed as described in the manual (Amersham Biosciences, UK). Hybridization and washings were performed in hybridization bottles in a hybridization oven (Labnet International, Woodbridge, NJ). Bound probe was detected using the CDP-<italic>Star</italic> detection reagent for chemiluminescent detection of alkaline phosphatase (Amersham Biosciences, UK). Two independent RNA preparations were obtained from heart and brain tissues. Tissue specimens were considered positive only when they were positive in both preparations.</p>
+        <p>In Experiment 2, standard RT-PCR detection was used. RNA was extracted from the tissues with the RNeasy® Fibrous Tissue Mini Kit and treated with the RNase-free DNase set (Qiagen) to remove any residual DNA. The <italic>ospA</italic> and <italic>bbf26</italic> genes were amplified, using the following primers: (1) <italic>ospA</italic> forward primer <named-content content-type="gene" xlink:type="simple">5′-AATGTTAGCAGCCTTGACGA-3′</named-content>; reverse primer <named-content content-type="gene" xlink:type="simple">5′-TCGTACTTGCCGTCTTTGTT -3′</named-content>; (2) <italic>bbf26</italic> forward primer <named-content content-type="gene" xlink:type="simple">5′-TGCCTCTAATTGTGAACACC-3′</named-content>; reverse primer <named-content content-type="gene" xlink:type="simple">5′-TCAAATCTTGAACAATACACTCA-3′</named-content>. RT-PCR was performed with the Qiagen® OneStep RT-PCR kit. A quantity of 100–250 ng total RNA was used as template, with primer concentrations of 0.8 µM (forward) and 1.2 µM (reverse). The cycling was carried out per manufacturer's suggestion with the GeneAmp PCRSystem 9700 (Applied Biosystems, Carlsbad, CA). Each set produces a ∼100 bp amplicon. Samples of RNA from monkey tissue and <italic>B. burgdorferi</italic> cultures were tested for DNA contamination by PCR amplification using <italic>Taq</italic> polymerase and none was detected (<xref ref-type="supplementary-material" rid="pone.0029914.s004">Figure S2</xref>).</p>
+      </sec>
+      <sec id="s4h">
+        <title>Detection of anti-C6 antibody</title>
+        <p>Anti-C6 serum antibody levels were quantified in all animals starting prior to inoculation and then serially thereafter until post-euthanasia. The ELISA procedure used has been described <xref ref-type="bibr" rid="pone.0029914-Liang3">[55]</xref>. In Experiment 1, monkey serum was used at a dilution of 1∶800 for all time points. The cut-off ELISA value for each plate was set as the mean of the optical density at 450 nm (OD<sub>450</sub>) of duplicate determinations of pre-immune serum specimens from 7 animals plus 3× the standard deviation (SD). To correct for plate-to plate variations, a reference positive control serum pool was also included in each plate, in triplicate. This pool was made by combining equal volumes of serum that was obtained from 24 animals inoculated with <italic>B. burgdorferi</italic>. The aliquots for the pool were from serum specimens that were obtained from each animal on two consecutive collection dates just prior to the initiation of antibiotic treatment. The mean OD<sub>450</sub> of the triplicate determination for each plate was used as a divisor for all of the OD<sub>450</sub> values obtained with that plate, including the cut-off value, and values were reported as a quotient (index).</p>
+        <p>In Experiment 2, the same peptide antigen (C6), here derived from the strain B31 sequence, and ELISA procedure as in Experiment 1 was used. However, all responses could be compared on one plate, so the conversion to an index value was not required. Blood was collected at the following time points: 0, 2, 6, 10, 14, 16, 18, 22, 26, 28, 34, 40 and 47 weeks PI. Monkey serum was used at a 1∶400 dilution for standard ELISA and at 2-fold dilution (in 5% pre-immune serum) from 1∶40 through 1∶2560 for endpoint dilution titers. The mean OD<sub>450</sub> value of triplicate pre-immune serum samples from each individual animal was subtracted from the value at each time point or dilution for that animal. The reported end-point dilution titer is the dilution at which the sample reached the highest OD<sub>450</sub> value for pre-immune serum+2× the SD obtained from that animal. In addition, serum from 2 weeks PI was tested for antibody to the Ct peptide <xref ref-type="bibr" rid="pone.0029914-Liang4">[56]</xref> and OspC by ELISA, as described <xref ref-type="bibr" rid="pone.0029914-Liang4">[56]</xref>, <xref ref-type="bibr" rid="pone.0029914-Scheiblhofer1">[57]</xref>. Recombinant OspC was kindly provided by Robert Gilmore (CDC, Fort Collins, CO).</p>
+      </sec>
+      <sec id="s4i">
+        <title>Detection of antibody to <italic>B. burgdorferi</italic> whole-cell antigen extract (Experiment 1)</title>
+        <p><italic>B. burgdorferi</italic> antigen was extracted from spirochete cells by sonication in PBS, and dispensed onto 96-well ELISA plates (Corning® Costar®, Lowell, MA) at 100 µL/well (0.1 µg protein) in 50 mM carbonate buffer pH 9.6 overnight at 4°C. Plates were washed with 0.1% Tween 20 in PBS (PBS/T) and blocked for 1 h with 200 µL of 5% nonfat dried milk in PBS/T in a rotating plate set at 100–150 rpm. Serum specimens from bleeds obtained prior to inoculation, immediately prior to antibiotic treatment initiation, and at necropsy were diluted in PBS/T and tested at dilutions of 1∶800 and 1∶3200. Antibody bound to the plate was reacted with horseradish peroxidase-labeled goat anti-monkey IgG (gamma chain-specific, Kirkegaard and Perry Labs, (KPL), Gaithersburg, MD) at a dilution of 1∶5000, for 1 h, followed by TMB Microwell Peroxidase Substrate System (KPL). The color reaction was allowed to proceed for 8–9 min, and stopped by adding 100 µL per well of 1.0 M phosphoric acid. OD<sub>450</sub> was measured on a plate reader (Biotek Instruments, Winooski, VT).</p>
+      </sec>
+      <sec id="s4j">
+        <title>Gross pathology assessment (Experiment 1)</title>
+        <p>Several organs were assessed for gross pathology by a veterinary pathologist, including heart, lungs, spleen, liver, musculoskeletal system, bladder, kidneys, peripheral lymph nodes, brain and meninges.</p>
+      </sec>
+      <sec id="s4k">
+        <title>Detection of inflammatory lesions and spirochetal antigen in tissues (Experiment 1)</title>
+        <p>To detect inflammatory lesions in heart and meninges that were collected postmortem, tissue fragments were fixed in Z-fix (Anatech Ltd., Battle Creek, MI), embedded in paraffin, sectioned at 6 µm, and stained with hematoxylin and eosin. Stained sections were evaluated under a light microscope using 4–40× magnification and a Leica microscope with a SPOT Insight digital camera (Digital Instruments Inc., Michigan, USA). To detect spirochetal antigen a monoclonal antibody (MAb 240.1) was used. This IgG1 MAb reacts with a 7.5 kDa <italic>B. burgdorferi</italic> lipoprotein <xref ref-type="bibr" rid="pone.0029914-Katona1">[58]</xref> and had been employed before by us to detect <italic>B. burgdorferi</italic> antigen by immunohistochemistry <xref ref-type="bibr" rid="pone.0029914-Roberts2">[13]</xref>. Deparaffinized sections were washed with PBS containing 0.2% fish-skin gelatin and 0.1% Triton X-100 (PBS-FSG-Tx100) at room temperature for 10 minutes. Sections were then blocked with 10% normal goat serum (NGS) diluted in phosphate buffered saline containing 0.2% fish skin gelatin (PBS-FSG) in a humidified chamber, also at room temperature, for 40 minutes. The primary antibody was diluted in NGS and incubated for 1 hour at room temperature in a humidified chamber protected from light. Following incubation the slides were washed twice with PBS-FSG-Tx100 for ten minutes each. <italic>B. burgdorferi</italic> immunofluorescence was revealed using a species-specific goat anti-mouse secondary antibody coupled with Alexa 488 (Molecular Probes, Eugene, OR). The secondary antibody was also diluted in 10% NGS and incubated in a humidified chamber for 40 minutes at room temperature protected from light. Following incubation, the slides were washed twice with PBS-FSG-Tx100 for ten minutes each and followed with PBS-FSG. Upon completion of immunofluorescence staining, the sections were rinsed in doubly distilled water and mounted in an anti-quenching solution composed of 0.33 g/mL glycerol, analar grade, 0.133 g/mL MOWIOL 4–88 (Calbiochem), 33.33% double distilled water, 66.66% 0.2 M Tris Buffer, and 25 mg/mL DABCO (1.4-diazobicyclo-[2.2.2.]-octane) (Sigma-Aldrich) and coverslipped.</p>
+      </sec>
+      <sec id="s4l">
+        <title>Xenodiagnosis</title>
+        <p>In Experiment 2, xenodiagnosis was performed at 7 and 11 months PI, which translated to 2 and 6 months after cessation of treatment. At 27 weeks PI, nylon-mesh jackets that zip in the back (Lomir Biomedical, NY) were placed on each of the five animals for acclimatization. At 28 weeks PI, 10 laboratory-reared nymphal <italic>Ixodes scapularis</italic> ticks were placed on the back of each animal through a containment capsule by a procedure that has been described <xref ref-type="bibr" rid="pone.0029914-Philipp2">[11]</xref>. Briefly, the area of the back to be used for tick placement was shaved and wiped with SkinPrep (Smith &amp; Nephew Medical, UK). The tick containment capsule was fixed to the skin at its base with Super Glue and at the edges with SkinBond contact adhesive (Smith &amp; Nephew Medical). The capsule was further secured into place with Hypafix tape (Smith &amp; Nephew Medical). The ticks were placed inside the capsule on the skin and sealed over with a piece of nylon mesh and screw cap lid, so that ticks could not escape from the capsule. The average feeding time for ticks is 72 hours, so to allow time for them to feed to repletion, they were removed 4 days later. For tick removal, the capsules were opened and ticks were collected with a paintbrush. Ticks that had not detached from the skin were removed carefully with forceps. The capsules were gently removed by dissolving the adhesive with UniSolve (Smith &amp; Nephew Medical) so as not to irritate the skin.</p>
+        <p>Ticks were washed with 1% sodium hypochlorite, 0.5% benzalkonium chloride and 70% ethanol for 1 min each and crushed in 45 µL PBS with a microfuge pestle. The contents were split into three 15-µL portions for: (1) direct fluorescence assay (DFA); (2) culture; and (3) PCR. For DFA, the samples were smeared on microscope slides, dried and fixed with acetone. The samples were stained with an anti-<italic>Borrelia</italic>-FITC antibody (KPL) and examined by fluorescence microscopy to detect the presence of spirochetes <xref ref-type="bibr" rid="pone.0029914-Jacobs1">[59]</xref>. For culture, samples were added to ∼4 mL BSK-H medium and incubated for 8 weeks at 34°C, in the presence of 5% CO<sub>2</sub> and influx of N<sub>2</sub> to produce a microaerophilic environment.</p>
+      </sec>
+      <sec id="s4m">
+        <title>Statistical analysis (Experiment 1)</title>
+        <p>Differences between treated and untreated animals in detection results of spirochetal DNA, RNA, antigen, and in the C6 antibody response at postmortem were evaluated with Fisher's exact test (two-tailed). Differences were considered significant with p≤0.5.</p>
+      </sec>
+    </sec>
+    <sec id="s5">
+      <title>Supporting Information</title>
+      <supplementary-material id="pone.0029914.s001" mimetype="application/msword" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.s001" xlink:type="simple">
+        <label>Table S1</label>
+        <caption>
+          <p>
+            <bold>Evidence of Productive Infection in Experimental Animals (Experiment 2).</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0029914.s002" mimetype="application/msword" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.s002" xlink:type="simple">
+        <label>Table S2</label>
+        <caption>
+          <p>
+            <bold>Xenodiagnostic Ticks Recovered (Experiment 2).</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0029914.s003" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.s003" xlink:type="simple">
+        <label>Figure S1</label>
+        <caption>
+          <p><bold>The decline in C6 antibodies that accompanied antibiotic treatment in Experiment 2.</bold> Animal designations in <bold>bold</bold> (black lines) indicate those that were treated. Antibody levels indicated by gray lines are from the untreated animals.</p>
+          <p>(TIF)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0029914.s004" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pone.0029914.s004" xlink:type="simple">
+        <label>Figure S2</label>
+        <caption>
+          <p><bold>RNA samples tested for DNA contamination with </bold><bold><italic>Taq</italic></bold><bold> polymerase PCR.</bold> Samples included the 100 bp ladder (M), no template control (ntc), <italic>B. burgdorferi</italic> DNA (Bb DNA), <italic>B. burgdorferi</italic> RNA (Bb RNA), monkey DNA (Mk DNA) and monkey RNA (Mk RNA).</p>
+          <p>(TIF)</p>
+        </caption>
+      </supplementary-material>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <p>We thank Dr. Xavier Alvarez and Cecily Midkiff for help with immunofluorescence.</p>
+    </ack>
+    <ref-list>
+      <title>References</title>
+      <ref id="pone.0029914-Steere1">
+        <label>1</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Steere</surname><given-names>AC</given-names></name><name name-style="western"><surname>Coburn</surname><given-names>J</given-names></name><name name-style="western"><surname>Glickstein</surname><given-names>L</given-names></name></person-group>             <year>2004</year>             <article-title>The emergence of Lyme disease.</article-title>             <source>Journal of Clinical Investigation</source>             <volume>113</volume>             <fpage>1093</fpage>             <lpage>1101</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-WormserGary1">
+        <label>2</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Wormser Gary</surname><given-names>P</given-names></name><name name-style="western"><surname>Dattwyler Raymond</surname><given-names>J</given-names></name><name name-style="western"><surname>Shapiro Eugene</surname><given-names>D</given-names></name><name name-style="western"><surname>Halperin John</surname><given-names>J</given-names></name><name name-style="western"><surname>Steere</surname><given-names>A</given-names></name><etal/></person-group>             <year>2006</year>             <article-title>The Clinical Assessment, Treatment, and Prevention of Lyme Disease, Human Granulocytic Anaplasmosis, and Babesiosis: Clinical Practice Guidelines by the Infectious Diseases Society of America.</article-title>             <source>Clinical Infectious Diseases</source>             <volume>43</volume>             <fpage>1089</fpage>             <lpage>1134</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Asch1">
+        <label>3</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Asch</surname><given-names>ES</given-names></name><name name-style="western"><surname>Bujak</surname><given-names>DI</given-names></name><name name-style="western"><surname>Weiss</surname><given-names>M</given-names></name><name name-style="western"><surname>Peterson</surname><given-names>MG</given-names></name><name name-style="western"><surname>Weinstein</surname><given-names>A</given-names></name></person-group>             <year>1994</year>             <article-title>Lyme disease: an infectious and postinfectious syndrome.</article-title>             <source>Journal of Rheumatology</source>             <volume>21</volume>             <fpage>454</fpage>             <lpage>461</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Shadick1">
+        <label>4</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Shadick</surname><given-names>NA</given-names></name><name name-style="western"><surname>Phillips</surname><given-names>CB</given-names></name><name name-style="western"><surname>Logigian</surname><given-names>EL</given-names></name><name name-style="western"><surname>Steere</surname><given-names>AC</given-names></name><name name-style="western"><surname>Kaplan</surname><given-names>RF</given-names></name><etal/></person-group>             <year>1994</year>             <article-title>The long-term clinical outcomes of Lyme disease. A population-based retrospective cohort study.</article-title>             <source>Annals of Internal Medicine</source>             <volume>121</volume>             <fpage>560</fpage>             <lpage>567</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Steere2">
+        <label>5</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Steere</surname><given-names>AC</given-names></name><name name-style="western"><surname>Levin</surname><given-names>RE</given-names></name><name name-style="western"><surname>Molloy</surname><given-names>PJ</given-names></name><name name-style="western"><surname>Kalish</surname><given-names>RA</given-names></name><name name-style="western"><surname>Abraham</surname><given-names>JH</given-names><suffix>3rd</suffix></name><etal/></person-group>             <year>1994</year>             <article-title>Treatment of Lyme arthritis.</article-title>             <source>Arthritis &amp; Rheumatism</source>             <volume>37</volume>             <fpage>878</fpage>             <lpage>888</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Klempner1">
+        <label>6</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Klempner</surname><given-names>MS</given-names></name><name name-style="western"><surname>Hu</surname><given-names>LT</given-names></name><name name-style="western"><surname>Evans</surname><given-names>J</given-names></name><name name-style="western"><surname>Schmid</surname><given-names>CH</given-names></name><name name-style="western"><surname>Johnson</surname><given-names>GM</given-names></name><etal/></person-group>             <year>2001</year>             <article-title>Two controlled trials of antibiotic treatment in patients with persistent symptoms and a history of Lyme disease.</article-title>             <source>New England Journal of Medicine</source>             <volume>345</volume>             <fpage>85</fpage>             <lpage>92</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Klempner2">
+        <label>7</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Klempner</surname><given-names>MS</given-names></name></person-group>             <year>2002</year>             <article-title>Controlled trials of antibiotic treatment in patients with post-treatment chronic Lyme disease.</article-title>             <source>Vector Borne &amp; Zoonotic Diseases</source>             <volume>2</volume>             <fpage>255</fpage>             <lpage>263</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Philipp1">
+        <label>8</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name><name name-style="western"><surname>Wormser</surname><given-names>GP</given-names></name><name name-style="western"><surname>Marques</surname><given-names>AR</given-names></name><name name-style="western"><surname>Bittker</surname><given-names>S</given-names></name><name name-style="western"><surname>Martin</surname><given-names>DS</given-names></name><etal/></person-group>             <year>2005</year>             <article-title>A decline in C6 antibody titer occurs in successfully treated patients with culture-confirmed early localized or early disseminated Lyme Borreliosis.</article-title>             <source>Clin Diagn Lab Immunol</source>             <volume>12</volume>             <fpage>1069</fpage>             <lpage>1074</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Fleming1">
+        <label>9</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Fleming</surname><given-names>RV</given-names></name><name name-style="western"><surname>Marques</surname><given-names>AR</given-names></name><name name-style="western"><surname>Klempner</surname><given-names>MS</given-names></name><name name-style="western"><surname>Schmid</surname><given-names>CH</given-names></name><name name-style="western"><surname>Dally</surname><given-names>LG</given-names></name><etal/></person-group>             <year>2004</year>             <article-title>Pre-treatment and post-treatment assessment of the C(6) test in patients with persistent symptoms and a history of Lyme borreliosis.</article-title>             <source>European Journal of Clinical Microbiology &amp; Infectious Diseases</source>             <volume>23</volume>             <fpage>615</fpage>             <lpage>618</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Bolz1">
+        <label>10</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Bolz</surname><given-names>DD</given-names></name><name name-style="western"><surname>Weis</surname><given-names>JJ</given-names></name></person-group>             <year>2004</year>             <article-title>Molecular Mimicry to <italic>Borrelia burgdorferi</italic>: Pathway to Autoimmunity?</article-title>             <source>Autoimmunity</source>             <volume>37</volume>             <fpage>387</fpage>             <lpage>392</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Philipp2">
+        <label>11</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name><name name-style="western"><surname>Aydintug</surname><given-names>MK</given-names></name><name name-style="western"><surname>Bohm</surname><given-names>RP</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Cogswell</surname><given-names>FB</given-names></name><name name-style="western"><surname>Dennis</surname><given-names>VA</given-names></name><etal/></person-group>             <year>1993</year>             <article-title>Early and early disseminated phases of Lyme disease in the rhesus monkey: a model for infection in humans.</article-title>             <source>Infection &amp; Immunity</source>             <volume>61</volume>             <fpage>3047</fpage>             <lpage>3059</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Roberts1">
+        <label>12</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Roberts</surname><given-names>ED</given-names></name><name name-style="western"><surname>Bohm</surname><given-names>RP</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Cogswell</surname><given-names>FB</given-names></name><name name-style="western"><surname>Lanners</surname><given-names>HN</given-names></name><name name-style="western"><surname>Lowrie</surname><given-names>RC</given-names><suffix>Jr</suffix></name><etal/></person-group>             <year>1995</year>             <article-title>Chronic lyme disease in the rhesus monkey.</article-title>             <source>Laboratory Investigation</source>             <volume>72</volume>             <fpage>146</fpage>             <lpage>160</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Roberts2">
+        <label>13</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Roberts</surname><given-names>ED</given-names></name><name name-style="western"><surname>Bohm</surname><given-names>RP</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Lowrie</surname><given-names>RC</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Habicht</surname><given-names>G</given-names></name><name name-style="western"><surname>Katona</surname><given-names>L</given-names></name><etal/></person-group>             <year>1998</year>             <article-title>Pathogenesis of Lyme neuroborreliosis in the rhesus monkey: the early disseminated and chronic phases of disease in the peripheral nervous system.</article-title>             <source>Journal of Infectious Diseases</source>             <volume>178</volume>             <fpage>722</fpage>             <lpage>732</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Philipp3">
+        <label>14</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name><name name-style="western"><surname>Johnson</surname><given-names>BJ</given-names></name></person-group>             <year>1994</year>             <article-title>Animal models of Lyme disease: pathogenesis and immunoprophylaxis.</article-title>             <source>Trends in Microbiology</source>             <volume>2</volume>             <fpage>431</fpage>             <lpage>437</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-England1">
+        <label>15</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>England</surname><given-names>JD</given-names></name><name name-style="western"><surname>Bohm</surname><given-names>RP</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Roberts</surname><given-names>ED</given-names></name><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name></person-group>             <year>1997</year>             <article-title>Lyme neuroborreliosis in the rhesus monkey.</article-title>             <source>Seminars in Neurology</source>             <volume>17</volume>             <fpage>53</fpage>             <lpage>56</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Pachner1">
+        <label>16</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Pachner</surname><given-names>AR</given-names></name><name name-style="western"><surname>Cadavid</surname><given-names>D</given-names></name><name name-style="western"><surname>Shu</surname><given-names>G</given-names></name><name name-style="western"><surname>Dail</surname><given-names>D</given-names></name><name name-style="western"><surname>Pachner</surname><given-names>S</given-names></name><etal/></person-group>             <year>2001</year>             <article-title>Central and peripheral nervous system infection, immunity, and inflammation in the NHP model of Lyme borreliosis.</article-title>             <source>Annals of Neurology</source>             <volume>50</volume>             <fpage>330</fpage>             <lpage>338</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Cadavid1">
+        <label>17</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Cadavid</surname><given-names>D</given-names></name><name name-style="western"><surname>Bai</surname><given-names>Y</given-names></name><name name-style="western"><surname>Dail</surname><given-names>D</given-names></name><name name-style="western"><surname>Hurd</surname><given-names>M</given-names></name><name name-style="western"><surname>Narayan</surname><given-names>K</given-names></name><etal/></person-group>             <year>2003</year>             <article-title>Infection and Inflammation in Skeletal Muscle from Nonhuman Primates Infected with Different Genospecies of the Lyme Disease Spirochete <italic>Borrelia burgdorferi</italic>.</article-title>             <source>Infect Immun</source>             <volume>71</volume>             <fpage>7087</fpage>             <lpage>7098</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Cadavid2">
+        <label>18</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Cadavid</surname><given-names>D</given-names></name><name name-style="western"><surname>O'Neill</surname><given-names>T</given-names></name><name name-style="western"><surname>Schaefer</surname><given-names>H</given-names></name><name name-style="western"><surname>Pachner</surname><given-names>AR</given-names></name></person-group>             <year>2000</year>             <article-title>Localization of Borrelia burgdorferi in the nervous system and other organs in a nonhuman primate model of lyme disease.</article-title>             <source>Laboratory Investigation</source>             <volume>80</volume>             <fpage>1043</fpage>             <lpage>1054</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Pachner2">
+        <label>19</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Pachner</surname><given-names>AR</given-names></name></person-group>             <year>1995</year>             <article-title>Early disseminated Lyme disease: Lyme meningitis.</article-title>             <source>American Journal of Medicine</source>             <volume>98</volume>             <fpage>30S</fpage>             <lpage>37S; discussion 37S–43S</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Pachner3">
+        <label>20</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Pachner</surname><given-names>AR</given-names></name><name name-style="western"><surname>Delaney</surname><given-names>E</given-names></name><name name-style="western"><surname>O'Neill</surname><given-names>T</given-names></name><name name-style="western"><surname>Major</surname><given-names>E</given-names></name></person-group>             <year>1995</year>             <article-title>Inoculation of nonhuman primates with the N40 strain of <italic>Borrelia burgdorferi</italic> leads to a model of Lyme neuroborreliosis faithful to the human disease.</article-title>             <source>Neurology</source>             <volume>45</volume>             <fpage>165</fpage>             <lpage>172</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Bai1">
+        <label>21</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Bai</surname><given-names>Y</given-names></name><name name-style="western"><surname>Narayan</surname><given-names>K</given-names></name><name name-style="western"><surname>Dail</surname><given-names>D</given-names></name><name name-style="western"><surname>Sondey</surname><given-names>M</given-names></name><name name-style="western"><surname>Hodzic</surname><given-names>E</given-names></name><etal/></person-group>             <year>2004</year>             <article-title>Spinal cord involvement in the nonhuman primate model of Lyme disease.</article-title>             <source>Laboratory Investigation</source>             <volume>84</volume>             <fpage>160</fpage>             <lpage>172</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Cadavid3">
+        <label>22</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Cadavid</surname><given-names>D</given-names></name><name name-style="western"><surname>Bai</surname><given-names>Y</given-names></name><name name-style="western"><surname>Hodzic</surname><given-names>E</given-names></name><name name-style="western"><surname>Narayan</surname><given-names>K</given-names></name><name name-style="western"><surname>Barthold</surname><given-names>SW</given-names></name><etal/></person-group>             <year>2004</year>             <article-title>Cardiac involvement in non-human primates infected with the Lyme disease spirochete <italic>Borrelia burgdorferi</italic>.</article-title>             <source>Laboratory Investigation</source>             <volume>84</volume>             <fpage>1439</fpage>             <lpage>1450</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-DelRio1">
+        <label>23</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Del Rio</surname><given-names>M</given-names></name><name name-style="western"><surname>McCracken</surname><given-names>GH</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Nelson</surname><given-names>JD</given-names></name><name name-style="western"><surname>Charne</surname><given-names>D</given-names></name><name name-style="western"><surname>Shelton</surname><given-names>S</given-names></name></person-group>             <year>1982</year>             <article-title>Pharmacokinetics and cerebrospinal fluid bactericidal activity of ceftriaxone in the treatment of pediatric patients with bacterial meningitis.</article-title>             <source>Antimicrob Agents Chemother</source>             <volume>22</volume>             <fpage>622</fpage>             <lpage>627</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Patel1">
+        <label>24</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Patel</surname><given-names>IH</given-names></name><name name-style="western"><surname>Kaplan</surname><given-names>SA</given-names></name></person-group>             <year>1984</year>             <article-title>Pharmacokinetic profile of ceftriaxone in man.</article-title>             <source>American Journal of Medicine</source>             <volume>77</volume>             <fpage>17</fpage>             <lpage>25</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Matsui1">
+        <label>25</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Matsui</surname><given-names>H</given-names></name><name name-style="western"><surname>Komiya</surname><given-names>M</given-names></name><name name-style="western"><surname>Ikeda</surname><given-names>C</given-names></name><name name-style="western"><surname>Tachibana</surname><given-names>A</given-names></name></person-group>             <year>1984</year>             <article-title>Comparative pharmacokinetics of YM-13115, ceftriaxone, and ceftazidime in rats, dogs, and rhesus monkeys.</article-title>             <source>Antimicrobial Agents &amp; Chemotherapy</source>             <volume>26</volume>             <fpage>204</fpage>             <lpage>207</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Maesen1">
+        <label>26</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Maesen</surname><given-names>FP</given-names></name><name name-style="western"><surname>Davies</surname><given-names>BI</given-names></name><name name-style="western"><surname>van den Bergh</surname><given-names>JJ</given-names></name></person-group>             <year>1989</year>             <article-title>Doxycycline and minocycline in the treatment of respiratory infections: a double-blind comparative clinical, microbiological and pharmacokinetic study.</article-title>             <source>Journal of Antimicrobial Chemotherapy</source>             <volume>23</volume>             <fpage>123</fpage>             <lpage>129</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-BaradaranDilmaghani1">
+        <label>27</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Baradaran-Dilmaghani</surname><given-names>R</given-names></name><name name-style="western"><surname>Stanek</surname><given-names>G</given-names></name></person-group>             <year>1996</year>             <article-title>In vitro susceptibility of thirty Borrelia strains from various sources against eight antimicrobial chemotherapeutics.</article-title>             <source>Infection</source>             <volume>24</volume>             <fpage>60</fpage>             <lpage>63</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-HovindHougen1">
+        <label>28</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Hovind-Hougen</surname><given-names>K</given-names></name></person-group>             <year>1984</year>             <article-title>Ultrastructure of spirochetes isolated from <italic>Ixodes ricinus</italic> and <italic>Ixodes dammini</italic>.</article-title>             <source>Yale Journal of Biology &amp; Medicine</source>             <volume>57</volume>             <fpage>543</fpage>             <lpage>548</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Wormser1">
+        <label>29</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Wormser</surname><given-names>G</given-names></name><name name-style="western"><surname>Nadelman</surname><given-names>R</given-names></name><name name-style="western"><surname>Dattwyler</surname><given-names>R</given-names></name><name name-style="western"><surname>Dennis</surname><given-names>D</given-names></name><name name-style="western"><surname>Shapiro</surname><given-names>E</given-names></name><etal/></person-group>             <year>2000</year>             <article-title>Practice Guidelines for the Treatment of Lyme Disease.</article-title>             <source>Clinical Infectious Diseases</source>             <volume>31</volume>             <fpage>1</fpage>             <lpage>14</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Liang1">
+        <label>30</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Liang</surname><given-names>FT</given-names></name><name name-style="western"><surname>Steere</surname><given-names>AC</given-names></name><name name-style="western"><surname>Marques</surname><given-names>AR</given-names></name><name name-style="western"><surname>Johnson</surname><given-names>BJ</given-names></name><name name-style="western"><surname>Miller</surname><given-names>JN</given-names></name><etal/></person-group>             <year>1999</year>             <article-title>Sensitive and specific serodiagnosis of Lyme disease by enzyme-linked immunosorbent assay with a peptide based on an immunodominant conserved region of <italic>Borrelia burgdorferi</italic> vlsE.</article-title>             <source>Journal of Clinical Microbiology</source>             <volume>37</volume>             <fpage>3990</fpage>             <lpage>3996</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Liang2">
+        <label>31</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Liang</surname><given-names>FT</given-names></name><name name-style="western"><surname>Jacobs</surname><given-names>MB</given-names></name><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name></person-group>             <year>2001</year>             <article-title>C-terminal invariable domain of VlsE may not serve as target for protective immune response against <italic>Borrelia burgdorferi</italic>.[erratum appears in Infect Immun 2001 Aug;69(8):5216].</article-title>             <source>Infection &amp; Immunity</source>             <volume>69</volume>             <fpage>1337</fpage>             <lpage>1343</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Gilmore1">
+        <label>32</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Gilmore</surname><given-names>RD</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Kappel</surname><given-names>KJ</given-names></name><name name-style="western"><surname>Dolan</surname><given-names>MC</given-names></name><name name-style="western"><surname>Burkot</surname><given-names>TR</given-names></name><name name-style="western"><surname>Johnson</surname><given-names>BJ</given-names></name></person-group>             <year>1996</year>             <article-title>Outer surface protein C (OspC), but not P39, is a protective immunogen against a tick-transmitted <italic>Borrelia burgdorferi</italic> challenge: evidence for a conformational protective epitope in OspC.</article-title>             <source>Infection &amp; Immunity</source>             <volume>64</volume>             <fpage>2234</fpage>             <lpage>2239</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Auwaerter1">
+        <label>33</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Auwaerter</surname><given-names>P</given-names></name></person-group>             <year>2007</year>             <article-title>Point: Antibiotic Therapy Is Not the Answer for Patients with Persisting Symptoms Attributable to Lyme Disease.</article-title>             <source>Clinical Infectious Diseases</source>             <volume>45</volume>             <fpage>143</fpage>             <lpage>148</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Stricker1">
+        <label>34</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Stricker</surname><given-names>R</given-names></name></person-group>             <year>2007</year>             <article-title>Counterpoint: Long-Term Antibiotic Therapy Improves Persistent Symptoms Associated with Lyme Disease.</article-title>             <source>Clinical Infectious Diseases</source>             <volume>45</volume>             <fpage>149</fpage>             <lpage>157</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Feder1">
+        <label>35</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Feder</surname><given-names>HM</given-names><suffix>Jr</suffix></name><name name-style="western"><surname>Johnson</surname><given-names>BJ</given-names></name><name name-style="western"><surname>O'Connell</surname><given-names>S</given-names></name><name name-style="western"><surname>Shapiro</surname><given-names>ED</given-names></name><name name-style="western"><surname>Steere</surname><given-names>AC</given-names></name><etal/></person-group>             <year>2007</year>             <article-title>A critical appraisal of “chronic Lyme disease”.</article-title>             <source>New England Journal of Medicine</source>             <volume>357</volume>             <fpage>1422</fpage>             <lpage>1430</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Mayer1">
+        <label>36</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Mayer</surname><given-names>L</given-names></name><name name-style="western"><surname>Merz</surname><given-names>S</given-names></name></person-group>             <year>2008</year>             <article-title>An appraisal of “chronic Lyme disease”.[comment].</article-title>             <source>New England Journal of Medicine</source>             <volume>358</volume>             <fpage>428; author reply 430–421</fpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Barthold1">
+        <label>37</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Barthold</surname><given-names>SW</given-names></name><name name-style="western"><surname>Hodzic</surname><given-names>E</given-names></name><name name-style="western"><surname>Imai</surname><given-names>DM</given-names></name><name name-style="western"><surname>Feng</surname><given-names>S</given-names></name><name name-style="western"><surname>Yang</surname><given-names>X</given-names></name><etal/></person-group>             <year>2010</year>             <article-title>Ineffectiveness of tigecycline against persistent <italic>Borrelia burgdorferi.</italic></article-title>             <source>Antimicrobial Agents &amp; Chemotherapy</source>             <volume>54</volume>             <fpage>643</fpage>             <lpage>651</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Crowley1">
+        <label>38</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Crowley</surname><given-names>H</given-names></name><name name-style="western"><surname>Huber</surname><given-names>BT</given-names></name></person-group>             <year>2003</year>             <article-title>Host-Adapted <italic>Borrelia burgdorferi</italic> in Mice Expresses OspA during Inflammation.</article-title>             <source>Infect Immun</source>             <volume>71</volume>             <fpage>4003</fpage>             <lpage>4010</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Narasimhan1">
+        <label>39</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Narasimhan</surname><given-names>S</given-names></name><name name-style="western"><surname>Caimano</surname><given-names>MJ</given-names></name><name name-style="western"><surname>Liang</surname><given-names>FT</given-names></name><name name-style="western"><surname>Santiago</surname><given-names>F</given-names></name><name name-style="western"><surname>Laskowski</surname><given-names>M</given-names></name><etal/></person-group>             <year>2003</year>             <article-title><italic>Borrelia burgdorferi</italic> transcriptome in the central nervous system of non-human primates.[erratum appears in Proc Natl Acad Sci U S A. 2004 Feb 3;101(5):1426 Note: Camaino MJ [corrected to Caimano MJ]].</article-title>             <source>Proceedings of the National Academy of Sciences of the United States of America</source>             <volume>100</volume>             <fpage>15953</fpage>             <lpage>15958</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Kalish1">
+        <label>40</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Kalish</surname><given-names>RA</given-names></name><name name-style="western"><surname>Leong</surname><given-names>JM</given-names></name><name name-style="western"><surname>Steere</surname><given-names>AC</given-names></name></person-group>             <year>1993</year>             <article-title>Association of treatment-resistant chronic Lyme arthritis with HLA-DR4 and antibody reactivity to OspA and OspB of <italic>Borrelia burgdorferi.</italic></article-title>             <source>Infect Immun</source>             <volume>61</volume>             <fpage>2774</fpage>             <lpage>2779</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-YrjNInen1">
+        <label>41</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>YrjÄNÄInen</surname><given-names>H</given-names></name><name name-style="western"><surname>HytÖNen</surname><given-names>J</given-names></name><name name-style="western"><surname>Hartiala</surname><given-names>P</given-names></name><name name-style="western"><surname>Oksi</surname><given-names>J</given-names></name><name name-style="western"><surname>Viljanen</surname><given-names>MK</given-names></name></person-group>             <article-title>Persistence of borrelial DNA in the joints of <italic>Borrelia burgdorferi</italic>-infected mice after ceftriaxone treatment.</article-title>             <source>APMIS</source>             <volume>118</volume>             <fpage>665</fpage>             <lpage>673</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Hodzic1">
+        <label>42</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Hodzic</surname><given-names>E</given-names></name><name name-style="western"><surname>Feng</surname><given-names>S</given-names></name><name name-style="western"><surname>Holden</surname><given-names>K</given-names></name><name name-style="western"><surname>Freet</surname><given-names>KJ</given-names></name><name name-style="western"><surname>Barthold</surname><given-names>SW</given-names></name></person-group>             <year>2008</year>             <article-title>Persistence of <italic>Borrelia burgdorferi</italic> following Antibiotic Treatment in Mice.</article-title>             <source>Antimicrob Agents Chemother</source>             <volume>52</volume>             <fpage>1728</fpage>             <lpage>1736</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Lewis1">
+        <label>43</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Lewis</surname><given-names>K</given-names></name></person-group>             <year>2007</year>             <article-title>Persister cells, dormancy and infectious disease.</article-title>             <source>Nature Reviews Microbiology</source>             <volume>5</volume>             <fpage>48</fpage>             <lpage>56</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Lewis2">
+        <label>44</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Lewis</surname><given-names>K</given-names></name></person-group>             <year>2010</year>             <article-title>Persister Cells.</article-title>             <source>Annual Review of Microbiology</source>             <volume>64</volume>             <fpage>357</fpage>             <lpage>372</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Straubinger1">
+        <label>45</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Straubinger</surname><given-names>RK</given-names></name><name name-style="western"><surname>Summers</surname><given-names>BA</given-names></name><name name-style="western"><surname>Chang</surname><given-names>YF</given-names></name><name name-style="western"><surname>Appel</surname><given-names>MJ</given-names></name></person-group>             <year>1997</year>             <article-title>Persistence of <italic>Borrelia burgdorferi</italic> in experimentally infected dogs after antibiotic treatment.</article-title>             <source>Journal of Clinical Microbiology</source>             <volume>35</volume>             <fpage>111</fpage>             <lpage>116</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Philipp4">
+        <label>46</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name><name name-style="western"><surname>Bowers</surname><given-names>LC</given-names></name><name name-style="western"><surname>Fawcett</surname><given-names>PT</given-names></name><name name-style="western"><surname>Jacobs</surname><given-names>MB</given-names></name><name name-style="western"><surname>Liang</surname><given-names>FT</given-names></name><etal/></person-group>             <year>2001</year>             <article-title>Antibody response to IR6, a conserved immunodominant region of the VlsE lipoprotein, wanes rapidly after antibiotic treatment of <italic>Borrelia burgdorferi</italic> infection in experimental animals and in humans.</article-title>             <source>Journal of Infectious Diseases</source>             <volume>184</volume>             <fpage>870</fpage>             <lpage>878</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Philipp5">
+        <label>47</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name><name name-style="western"><surname>Marques</surname><given-names>AR</given-names></name><name name-style="western"><surname>Fawcett</surname><given-names>PT</given-names></name><name name-style="western"><surname>Dally</surname><given-names>LG</given-names></name><name name-style="western"><surname>Martin</surname><given-names>DS</given-names></name></person-group>             <year>2003</year>             <article-title>C6 test as an indicator of therapy outcome for patients with localized or disseminated lyme borreliosis.</article-title>             <source>Journal of Clinical Microbiology</source>             <volume>41</volume>             <fpage>4955</fpage>             <lpage>4960</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Pachner4">
+        <label>48</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Pachner</surname><given-names>AR</given-names></name><name name-style="western"><surname>Zhang</surname><given-names>WF</given-names></name><name name-style="western"><surname>Schaefer</surname><given-names>H</given-names></name><name name-style="western"><surname>Schaefer</surname><given-names>S</given-names></name><name name-style="western"><surname>O'Neill</surname><given-names>T</given-names></name></person-group>             <year>1998</year>             <article-title>Detection of active infection in nonhuman primates with Lyme neuroborreliosis: comparison of PCR, culture, and a bioassay.</article-title>             <source>Journal of Clinical Microbiology</source>             <volume>36</volume>             <fpage>3243</fpage>             <lpage>3247</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Piesman1">
+        <label>49</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Piesman</surname><given-names>J</given-names></name><name name-style="western"><surname>Hicks</surname><given-names>TC</given-names></name><name name-style="western"><surname>Sinsky</surname><given-names>RJ</given-names></name><name name-style="western"><surname>Obiri</surname><given-names>G</given-names></name></person-group>             <year>1987</year>             <article-title>Simultaneous transmission of <italic>Borrelia burgdorferi</italic> and <italic>Babesia microti</italic> by individual nymphal <italic>Ixodes dammini</italic> ticks.</article-title>             <source>Journal of Clinical Microbiology</source>             <volume>25</volume>             <fpage>2012</fpage>             <lpage>2013</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Purser1">
+        <label>50</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Purser</surname><given-names>JE</given-names></name><name name-style="western"><surname>Norris</surname><given-names>SJ</given-names></name></person-group>             <year>2000</year>             <article-title>Correlation between plasmid content and infectivity in <italic>Borrelia burgdorferi</italic>.</article-title>             <source>Proceedings of the National Academy of Sciences of the United States of America</source>             <volume>97</volume>             <fpage>13865</fpage>             <lpage>13870</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Kelly1">
+        <label>51</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Kelly</surname><given-names>D</given-names></name><name name-style="western"><surname>Chulay</surname><given-names>JD</given-names></name><name name-style="western"><surname>Mikesell</surname><given-names>P</given-names></name><name name-style="western"><surname>Friedlander</surname><given-names>AM</given-names></name></person-group>             <year>1992</year>             <article-title>Serum concentrations of penicillin, doxycycline, and ciprofloxacin during prolonged therapy in rhesus monkeys.</article-title>             <source>J Infect Dis</source>             <volume>166</volume>             <fpage>1184</fpage>             <lpage>1187</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Hodzic2">
+        <label>52</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Hodzic</surname><given-names>E</given-names></name><name name-style="western"><surname>Feng</surname><given-names>S</given-names></name><name name-style="western"><surname>Freet</surname><given-names>KJ</given-names></name><name name-style="western"><surname>Borjesson</surname><given-names>DL</given-names></name><name name-style="western"><surname>Barthold</surname><given-names>SW</given-names></name></person-group>             <year>2002</year>             <article-title><italic>Borrelia burgdorferi</italic> population kinetics and selected gene expression at the host-vector interface.</article-title>             <source>Infection &amp; Immunity</source>             <volume>70</volume>             <fpage>3382</fpage>             <lpage>3388</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Embers1">
+        <label>53</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Embers</surname><given-names>ME</given-names></name><name name-style="western"><surname>Alvarez</surname><given-names>X</given-names></name><name name-style="western"><surname>Ooms</surname><given-names>T</given-names></name><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name></person-group>             <year>2008</year>             <article-title>The failure of immune response evasion by linear plasmid 28-1-deficient <italic>Borrelia burgdorferi</italic> is attributable to persistent expression of an outer surface protein.</article-title>             <source>Infection &amp; Immunity</source>             <volume>76</volume>             <fpage>3984</fpage>             <lpage>3991</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Sambrook1">
+        <label>54</label>
+        <element-citation publication-type="other" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Sambrook</surname><given-names>J</given-names></name><name name-style="western"><surname>Fritch</surname><given-names>EF</given-names></name><name name-style="western"><surname>Maniatis</surname><given-names>T</given-names></name></person-group>             <year>1989</year>             <source>Molecular Cloning</source>             <publisher-loc>Cold Spring Harbor, NY</publisher-loc>             <publisher-name>Cold Spring Harbor Laboratory Press</publisher-name>             <fpage>9.31</fpage>             <lpage>9.57</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Liang3">
+        <label>55</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Liang</surname><given-names>FT</given-names></name><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name></person-group>             <year>1999</year>             <article-title>Analysis of antibody response to invariable regions of VlsE, the variable surface antigen of <italic>Borrelia burgdorferi</italic>.</article-title>             <source>Infection &amp; Immunity</source>             <volume>67</volume>             <fpage>6702</fpage>             <lpage>6706</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Liang4">
+        <label>56</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Liang</surname><given-names>FT</given-names></name><name name-style="western"><surname>Bowers</surname><given-names>LC</given-names></name><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name></person-group>             <year>2001</year>             <article-title>C-terminal invariable domain of VlsE is immunodominant but its antigenicity is scarcely conserved among strains of Lyme disease spirochetes.[erratum appears in Infect Immun 2001 Aug;69(8):5216].</article-title>             <source>Infection &amp; Immunity</source>             <volume>69</volume>             <fpage>3224</fpage>             <lpage>3231</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Scheiblhofer1">
+        <label>57</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Scheiblhofer</surname><given-names>S</given-names></name><name name-style="western"><surname>Weiss</surname><given-names>R</given-names></name><name name-style="western"><surname>Durnberger</surname><given-names>H</given-names></name><name name-style="western"><surname>Mostbock</surname><given-names>S</given-names></name><name name-style="western"><surname>Breitenbach</surname><given-names>M</given-names></name><etal/></person-group>             <year>2003</year>             <article-title>A DNA vaccine encoding the outer surface protein C from <italic>Borrelia burgdorferi</italic> is able to induce protective immune responses.</article-title>             <source>Microbes &amp; Infection</source>             <volume>5</volume>             <fpage>939</fpage>             <lpage>946</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Katona1">
+        <label>58</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Katona</surname><given-names>LI</given-names></name><name name-style="western"><surname>Beck</surname><given-names>G</given-names></name><name name-style="western"><surname>Habicht</surname><given-names>GS</given-names></name></person-group>             <year>1992</year>             <article-title>Purification and immunological characterization of a major low-molecular-weight lipoprotein from <italic>Borrelia burgdorferi</italic>.</article-title>             <source>Infection &amp; Immunity</source>             <volume>60</volume>             <fpage>4995</fpage>             <lpage>5003</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0029914-Jacobs1">
+        <label>59</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Jacobs</surname><given-names>MB</given-names></name><name name-style="western"><surname>Norris</surname><given-names>SJ</given-names></name><name name-style="western"><surname>Phillippi-Falkenstein</surname><given-names>KM</given-names></name><name name-style="western"><surname>Philipp</surname><given-names>MT</given-names></name></person-group>             <year>2006</year>             <article-title>Infectivity of the Highly Transformable BBE02- lp56- Mutant of <italic>Borrelia burgdorferi</italic>, the Lyme Disease Spirochete, via Ticks.</article-title>             <source>Infect Immun</source>             <volume>74</volume>             <fpage>3678</fpage>             <lpage>3681</lpage>          </element-citation>
+      </ref>
+    </ref-list>
+    
+  </back>
+</article>

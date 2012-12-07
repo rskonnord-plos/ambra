@@ -95,6 +95,10 @@
         </xsl:attribute>
     </xsl:template>
 
+    <xsl:template name="make-section-class">
+      <xsl:attribute name="class">section</xsl:attribute>
+    </xsl:template>
+
     <!-- 10/9/09: plos modifications (major) -->
     <xsl:template name="make-a-piece">
         <!-- variable to be used in div id's to keep them unique -->
@@ -214,6 +218,52 @@
       </xsl:choose>
     </xsl:template>
 
+  <xsl:template name="makeIdNameFromXpathLocation">
+    <xsl:variable name="idFromXpath">
+      <xsl:call-template name="createIdNameXpath">
+        <xsl:with-param name="theNode" select="."/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:attribute name="id">
+      <xsl:value-of select="substring($idFromXpath, 2)"/>
+    </xsl:attribute>
+    <xsl:attribute name="name">
+      <xsl:value-of select="substring($idFromXpath, 2)"/>
+    </xsl:attribute>
+  </xsl:template>
+
+  <xsl:template name="createIdNameXpath">
+    <xsl:param name="theNode" select="."/>
+    <xsl:choose>
+      <xsl:when test="$theNode[1]">
+        <xsl:choose>
+          <xsl:when test="not($theNode[1]/..)">
+            <xsl:text>.</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$theNode[1]/ancestor-or-self::*[not(self::aml:annotated)]">
+              <xsl:text/>.<xsl:value-of select="name()"/>
+              <xsl:text/><xsl:value-of select="count(preceding-sibling::*[name() = name(current())]) + 1"/><xsl:text/>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$theNode">
+        <xsl:choose>
+          <xsl:when test="not($theNode/..)">
+            <xsl:text>.</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$theNode/ancestor-or-self::*[not(self::aml:annotated)]">
+              <xsl:text/>.<xsl:value-of select="name()"/>
+              <xsl:text/><xsl:value-of select="count(preceding-sibling::*[name() = name(current())]) + 1"/><xsl:text/>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
     <!-- 10/13/09: viewnlm contains the remaining templates (make-id, make-src, make-href, make-email, make-anchor) -->
 
     <!-- 10/13/09: viewnlm contains display-id, table-setup sections -->
@@ -230,74 +280,128 @@
         <xsl:variable name="apos">'</xsl:variable>
         <xsl:variable name="imageURI"><xsl:value-of select="graphic/@xlink:href"/></xsl:variable>
         <xsl:variable name="slideshowURL">
-            <xsl:value-of select="concat($pubAppContext, '/article/',
-                substring($imageURI, 1, (string-length($imageURI)-5)),
-                '?imageURI=', $imageURI)"/>
+            <xsl:value-of select="concat($pubAppContext, '/article/fetchObject.action?uri=',
+                $imageURI,'&amp;representation=PNG_M')"/>
         </xsl:variable>
 
-      <xsl:variable name="pptURL">
-        <xsl:value-of select="concat('/article/',$imageURI, '/powerpoint')"/>
-      </xsl:variable>
+        <xsl:variable name="pptURL">
+          <xsl:value-of select="concat('/article/',$imageURI, '/powerpoint')"/>
+        </xsl:variable>
 
-      <xsl:variable name="bigImgURL">
-        <xsl:value-of
-            select="concat('/article/',$imageURI,'/largerimage')"/>
-      </xsl:variable>
-      <xsl:variable name="bigImgDOI">
-        <xsl:value-of select="concat($imageURI,'.PNG_L')"/>
-      </xsl:variable>
+        <xsl:variable name="bigImgURL">
+          <xsl:value-of
+              select="concat('/article/',$imageURI,'/largerimage')"/>
+        </xsl:variable>
+        <xsl:variable name="bigImgDOI">
+          <xsl:value-of select="concat($imageURI,'.PNG_L')"/>
+        </xsl:variable>
 
-      <xsl:variable name="origImgURL">
-        <xsl:value-of select="concat('/article/',$imageURI,'/originalimage')"/>
-      </xsl:variable>
-      <xsl:variable name="origImgDOI">
-        <xsl:value-of select="concat($imageURI,'.TIF')"/>
-      </xsl:variable>
+        <xsl:variable name="origImgURL">
+          <xsl:value-of select="concat('/article/',$imageURI,'/originalimage')"/>
+        </xsl:variable>
+        <xsl:variable name="origImgDOI">
+          <xsl:value-of select="concat($imageURI,'.TIF')"/>
+        </xsl:variable>
 
         <xsl:variable name="targetURI">
           <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
         </xsl:variable>
-        <xsl:variable name="jsWindow">
-          <xsl:value-of select="concat('return ambra.lightBox.show(', $apos, $targetURI, $apos, ', ', $apos, $imageURI, $apos, ');')"/>
-        </xsl:variable>
+
         <xsl:if test="graphic">
             <div class="figure">
-                <xsl:call-template name="makeXpathLocation"/>
-                <xsl:element name="a">
-                    <xsl:attribute name="name"><xsl:value-of select="$figId"/></xsl:attribute>
-                    <xsl:attribute name="id"><xsl:value-of select="$figId"/></xsl:attribute>
-                    <xsl:attribute name="title">Click for larger image </xsl:attribute>
-                    <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
-                    <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
-                    <xsl:element name="div">
-                      <xsl:attribute name="class">expand-link</xsl:attribute>
-                      <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
-                    </xsl:element>
-                    <xsl:element name="img">
-                        <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
-                        <xsl:attribute name="border">1</xsl:attribute>
-                        <xsl:attribute name="src">
-                            <xsl:value-of select="concat($pubAppContext,
-                                '/article/fetchObject.action?uri=',
-                                $imageURI,'&amp;representation=PNG_I')"/>
+              <!--id needs to be attached to "figure" div for proper anchor linking-->
+              <xsl:attribute name="id"><xsl:value-of select="$figId"/></xsl:attribute>
+                <div class="img">
+                  <xsl:call-template name="makeXpathLocation"/>
+                  <xsl:element name="a">
+                      <xsl:attribute name="name"><xsl:value-of select="$figId"/></xsl:attribute>
+                      <xsl:attribute name="title">Click for larger image </xsl:attribute>
+                      <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
+                      <xsl:attribute name="data-doi"><xsl:value-of select="$targetURI"/></xsl:attribute>
+                      <xsl:attribute name="data-uri"><xsl:value-of select="$imageURI"/></xsl:attribute>
+                      <xsl:element name="img">
+                          <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
+                          <xsl:attribute name="src">
+                              <xsl:value-of select="concat($pubAppContext,
+                                  '/article/fetchObject.action?uri=',
+                                  $imageURI,'&amp;representation=PNG_I')"/>
+                          </xsl:attribute>
+                          <xsl:attribute name="alt">thumbnail</xsl:attribute>
+                          <xsl:attribute name="class">thumbnail</xsl:attribute>
+                      </xsl:element>
+                  </xsl:element>
+                </div>
+              <!--start figure download-->
+              <div class="figure-inline-download">
+                Download:
+                <ul>
+                  <li>
+                    <div class="icon">
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$pptURL"/>
                         </xsl:attribute>
-                        <xsl:attribute name="align">left</xsl:attribute>
-                        <xsl:attribute name="alt">thumbnail</xsl:attribute>
-                        <xsl:attribute name="class">thumbnail</xsl:attribute>
+                        PPT
+                      </xsl:element>
+                    </div>
+                    <xsl:element name="a">
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="$pptURL"/>
+                      </xsl:attribute>
+                      PowerPoint slide
                     </xsl:element>
-                </xsl:element>
-                <p><strong>
+                  </li>
+                  <li>
+                    <div class="icon">
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$bigImgURL"/>
+                        </xsl:attribute>
+                        PNG
+                      </xsl:element>
+                    </div>
+                    <xsl:element name="a">
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="$bigImgURL"/>
+                      </xsl:attribute>
+                      larger image
+                      (<xsl:element name="span">
+                        <xsl:attribute name="id">
+                          <xsl:value-of select="$bigImgDOI"/>
+                        </xsl:attribute>
+                      </xsl:element>)
+                    </xsl:element>
+                  </li>
+                  <li>
+                    <div class="icon">
+                      <xsl:element name="a">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$origImgURL"/>
+                        </xsl:attribute>
+                        TIFF
+                      </xsl:element>
+                    </div>
+                    <xsl:element name="a">
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="$origImgURL"/>
+                      </xsl:attribute>
+                      original image
+                      (<xsl:element name="span">
+                        <xsl:attribute name="id">
+                          <xsl:value-of select="$origImgDOI"/>
+                        </xsl:attribute>
+                      </xsl:element>)
+                    </xsl:element>
+                  </li>
+                </ul>
+              </div>
+              <!--end figure download-->
+              <p>
+                  <strong>
                     <xsl:call-template name="makeXpathLocationParam" >
                         <xsl:with-param name="node" select="label"/>
                     </xsl:call-template>
-                    <xsl:element name="a">
-                        <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
-                        <xsl:attribute name="href"><xsl:value-of select="$slideshowURL"/></xsl:attribute>
-                        <xsl:attribute name="onclick"><xsl:value-of select="$jsWindow"/></xsl:attribute>
-                        <span>
-                            <xsl:apply-templates select="label"/>
-                        </span>
-                    </xsl:element>
+                    <strong><xsl:apply-templates select="label"/></strong>
                     <xsl:if test="caption/title">
                         <xsl:text> </xsl:text>
                         <span>
@@ -307,43 +411,12 @@
                             <xsl:apply-templates select="caption/title"/>
                         </span>
                     </xsl:if>
-                </strong></p>
+                  </strong>
+                </p>
                 <xsl:apply-templates select="caption/node()[not(self::title)]"/>
                 <xsl:if test="object-id[@pub-id-type='doi']">
                     <span xpathLocation="noSelect"><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
                 </xsl:if>
-                <div class="clearer" />
-              <!--start figure download-->
-              <div class="figure-inline-download">
-                <ul>
-                  <li><strong>Download: </strong>
-                    <xsl:element name="a">
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="$pptURL"/>
-                      </xsl:attribute>PowerPoint slide</xsl:element> |
-                    <xsl:element name="a">
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="$bigImgURL"/>
-                      </xsl:attribute>
-                      larger image (<xsl:element name="span">
-                      <xsl:attribute name="id">
-                        <xsl:value-of select="$bigImgDOI"/>
-                      </xsl:attribute>
-                    </xsl:element> PNG)</xsl:element> |
-                    <xsl:element name="a">
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="$origImgURL"/>
-                      </xsl:attribute>
-                      original image (<xsl:element name="span">
-                      <xsl:attribute name="id">
-                        <xsl:value-of select="$origImgDOI"/>
-                      </xsl:attribute>
-                    </xsl:element> TIFF)
-                    </xsl:element>
-                  </li>
-                </ul>
-              </div>
-              <!--end figure download-->
             </div>
         </xsl:if>
         <xsl:if test="not(graphic)">
@@ -715,119 +788,6 @@
       <!-- change context to front/article-meta -->
       <xsl:for-each select="front/article-meta">
         <xsl:apply-templates select="title-group" mode="front"/>
-        <p class="authors" xpathLocation="noSelect">
-          <xsl:for-each select="contrib-group/contrib[@contrib-type='author']">
-            <xsl:choose>
-
-              <!-- 4/15/10: added dc & foaf, brought up to date with current production -->
-              <xsl:when test="@xlink:href">
-                <xsl:element name="a">
-                  <xsl:call-template name="make-href"/>
-                  <xsl:call-template name="make-id"/>
-                  <xsl:apply-templates select="name" mode="front"/>
-                </xsl:element>
-                <xsl:element name="span">
-                    <xsl:attribute name="rel">dc:creator</xsl:attribute>
-                    <xsl:element name="span">
-                        <xsl:attribute name="property">foaf:name</xsl:attribute>
-                        <xsl:apply-templates select="name" mode="front-refs"/>
-                    </xsl:element>
-                </xsl:element> 
-                <xsl:apply-templates select="collab" mode="front"/>
-              </xsl:when>
-
-              <!-- email tag is new with version 2.3 of the dtd. currently disabled -->
-              <!--
-                <xsl:when test="email">
-                <xsl:element name="a">
-                <xsl:attribute name="class">author-link</xsl:attribute>
-                <xsl:attribute name="href">
-                <xsl:value-of select="concat('mailto:',email)"/>\
-                </xsl:attribute>
-                <xsl:apply-templates select="name" mode="front"/>
-                </xsl:element>
-                <xsl:apply-templates select="name" mode="front-refs"/>
-                <xsl:apply-templates select="collab" mode="front"/>
-                </xsl:when>
-              -->
-
-              <xsl:otherwise>
-                <xsl:element name="span">
-                    <xsl:attribute name="rel">dc:creator</xsl:attribute>
-                    <xsl:element name="span">
-                        <xsl:attribute name="property">foaf:name</xsl:attribute>
-                        <xsl:apply-templates select="name" mode="front"/>
-                    </xsl:element>
-                </xsl:element>
-                <xsl:apply-templates select="name" mode="front-refs"/>
-                <xsl:apply-templates select="collab" mode="front"/>
-              </xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="position() != last()">
-              <xsl:text>, </xsl:text>
-            </xsl:if>
-
-            <!-- the name element handles any contrib/xref and contrib/degrees -->
-            <xsl:apply-templates select="*[not(self::name)
-              and not(self::collab)
-              and not(self::xref)
-              and not(self::email)
-              and not(self::degrees)
-              and not(self::aff)]"
-              mode="front"/>
-          </xsl:for-each>
-
-          <!-- end of contrib -->
-        </p>
-
-        <!-- 10/27/09: plos-specific section. used to create the author affiliation line -->
-        <p class="affiliations" xpathLocation="noSelect">
-          <xsl:for-each select="contrib-group/aff | contrib-group/contrib[@contrib-type='author']/aff">
-            <xsl:apply-templates select="label"/>
-            <xsl:if test="label">
-              <xsl:text> </xsl:text>
-            </xsl:if>
-            <xsl:apply-templates select="institution" />
-            <xsl:if test="institution">
-              <xsl:text>, </xsl:text>
-            </xsl:if>
-            <!-- 7/21/10: enabled display of italics and other formatting in addr-line. xref addr-line normalize-space at the end of this section -->
-            <xsl:apply-templates select="addr-line/node()" />
-            <xsl:if test="position() != last()">
-              <xsl:text>, </xsl:text>
-            </xsl:if>
-          </xsl:for-each>
-
-          <!-- each aff that is NOT directly inside a contrib also makes a row: empty left, details at right -->
-          <xsl:for-each select="aff">
-            <xsl:variable name="rid"><xsl:value-of select="@id"/></xsl:variable>
-            <xsl:if test="../contrib-group/contrib[@contrib-type='author']/xref[@ref-type='aff' and @rid=$rid]">
-              <xsl:element name="a">
-                <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
-                <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
-              </xsl:element>
-              <xsl:apply-templates select="label"/>
-              <xsl:if test="label">
-                <xsl:text> </xsl:text>
-              </xsl:if>
-              <xsl:apply-templates select="institution" />
-              <xsl:if test="institution">
-                <xsl:text>, </xsl:text>
-              </xsl:if>
-              <!-- 7/21/10: enabled display of italics and other formatting in addr-line. xref addr-line normalize-space at the end of this section -->
-              <xsl:apply-templates select="addr-line/node()" />
-              <xsl:if test="following-sibling::aff">
-                <xsl:variable name="nextId">
-                  <xsl:value-of select="following-sibling::aff[1]/@id"/>
-                </xsl:variable>
-                <xsl:if test="../contrib-group/contrib[@contrib-type='author']/xref[@ref-type='aff' and @rid=$nextId]">
-                  <xsl:text>, </xsl:text>
-                </xsl:if>
-              </xsl:if>
-            </xsl:if>
-          </xsl:for-each>
-        </p>
-
         <!-- abstract(s) -->
         <xsl:for-each select="abstract[not(@abstract-type)
           or (@abstract-type !='toc'
@@ -901,7 +861,7 @@
         <xsl:for-each select="//abstract[@abstract-type='patient']">
           <div class="patient">
             <a id="patient" name="patient" toc="patient" title="Patient Summary"/>
-            <h3 xpathLocation="noSelect"><xsl:value-of select="title"/><xsl:call-template name="topAnchor"/></h3>
+            <h3 xpathLocation="noSelect"><xsl:value-of select="title"/></h3>
             <xsl:apply-templates select="*[not(self::title)]"/>
           </div>
         </xsl:for-each>
@@ -912,7 +872,7 @@
     <xsl:template name="author-contrib">
         <xsl:if test="../front/article-meta/author-notes/fn[@fn-type='con']">
             <div class="contributions"><a id="authcontrib" name="authcontrib" toc="authcontrib"
-                title="Author Contributions"/><h3 xpathLocation="noSelect">Author Contributions<xsl:call-template name="topAnchor"/></h3>
+                title="Author Contributions"/><h3 xpathLocation="noSelect">Author Contributions</h3>
                 <p xpathLocation="noSelect">
                     <xsl:apply-templates select="../front/article-meta/author-notes/fn[@fn-type='con']"/>
                 </p>
@@ -940,7 +900,10 @@
 		  </xsl:if>
 	    </xsl:when>
 		<xsl:otherwise>
-		  <p>
+      <a>
+        <xsl:call-template name="makeIdNameFromXpathLocation"/>
+      </a>
+      <p>
             <xsl:call-template name="makeXpathLocation"/>
 			<xsl:apply-templates/>
 		  </p>
@@ -1066,6 +1029,7 @@
       <xsl:call-template name="nl-1"/>
       <div>
         <xsl:call-template name="make-section-id"/>
+        <xsl:call-template name="make-section-class"/>
         <xsl:call-template name="makeXpathLocation" />
         <xsl:if test="descendant::title[1] != ''">
           <xsl:element name="a">
@@ -1100,6 +1064,7 @@
         <xsl:when test="@list-type='bullet'">
           <xsl:call-template name="nl-1"/>
           <ul>
+            <xsl:attribute name="class">bulletlist</xsl:attribute>
             <xsl:call-template name="nl-1"/>
             <xsl:apply-templates/>
             <xsl:call-template name="nl-1"/>
@@ -1276,6 +1241,9 @@
           </xsl:attribute>
           <xsl:attribute name="border">0</xsl:attribute>
         </xsl:if>
+        <xsl:attribute name="class">
+          <xsl:value-of>inline-graphic</xsl:value-of>
+        </xsl:attribute>
       </xsl:element>
     </xsl:template>
 
@@ -1860,7 +1828,7 @@
       <div xpathLocation="noSelect" >
         <xsl:call-template name="make-id"/>
         <xsl:if test="not(title)">
-          <a id="ack" name="ack" toc="ack" title="Acknowledgments"/><h3 xpathLocation="noSelect">Acknowledgments<xsl:call-template name="topAnchor"/></h3>
+          <a id="ack" name="ack" toc="ack" title="Acknowledgments"/><h3 xpathLocation="noSelect">Acknowledgments</h3>
           <xsl:call-template name="nl-1"/>
         </xsl:if>
         <xsl:apply-templates/>
@@ -1921,7 +1889,7 @@
 
     <!-- 11/4/09: plos-specific template -->
     <xsl:template match="notes/sec/title">
-      <h3 xpathLocation="noSelect"><xsl:value-of select="."/><xsl:call-template name="topAnchor"/></h3>
+      <h3 xpathLocation="noSelect"><xsl:value-of select="."/></h3>
     </xsl:template>
 
     <!-- 11/4/09: viewnlm contains the remaining template in this section (note) -->
@@ -2078,7 +2046,7 @@
       | back/notes/title">
       <xsl:call-template name="nl-1"/>
       <h2 xpathLocation="noSelect">
-        <xsl:apply-templates/><xsl:call-template name="topAnchor"/>
+        <xsl:apply-templates/>
       </h2>
       <xsl:call-template name="nl-1"/>
     </xsl:template>
@@ -2089,7 +2057,7 @@
       <!-- 6/2/10: added if test to fix empty h3 in articles that have empty title in the first body/sec -->
       <xsl:if test="string(.)">
         <h3 xpathLocation="noSelect">
-          <xsl:apply-templates/><xsl:call-template name="topAnchor"/>
+          <xsl:apply-templates/>
         </h3>
       </xsl:if>
     </xsl:template>
@@ -2174,7 +2142,7 @@
         </xsl:attribute>
       </a>
       <h3 xpathLocation="noSelect">
-        <xsl:apply-templates/><xsl:call-template name="topAnchor"/>
+        <xsl:apply-templates/>
       </h3>
     </xsl:template>
 
@@ -2241,7 +2209,7 @@
             <xsl:attribute name="toc"><xsl:value-of select="$abs_id"/></xsl:attribute>
             <xsl:attribute name="title">Abstract</xsl:attribute>
           </xsl:element>
-          <h2 xpathLocation="noSelect"><xsl:text>Abstract</xsl:text><xsl:call-template name="topAnchor"/></h2>
+          <h2 xpathLocation="noSelect"><xsl:text>Abstract</xsl:text></h2>
         </xsl:when>
 
         <!-- trans-abstract with no title -->
@@ -2252,7 +2220,7 @@
             <xsl:attribute name="toc"><xsl:value-of select="$abs_id"/></xsl:attribute>
             <xsl:attribute name="title">Abstract, Translated</xsl:attribute>
           </xsl:element>
-          <h2 xpathLocation="noSelect"><xsl:text>Abstract, Translated</xsl:text><xsl:call-template name="topAnchor"/></h2>
+          <h2 xpathLocation="noSelect"><xsl:text>Abstract, Translated</xsl:text></h2>
         </xsl:when>
 
         <!-- there is no logical otherwise -->
@@ -2381,7 +2349,7 @@
                 <xsl:if test="$cit/extraCitationInfo">
                   <xsl:variable name="citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:variable>
                   <xsl:variable name="findURL">
-                    <xsl:value-of select="concat($pubAppContext,'/article/findArticle.action?citedArticleID=', $citedArticleID)" />
+                    <xsl:value-of select="concat($pubAppContext,'/article/findcited/', $citedArticleID)" />
                   </xsl:variable>
                   <!-- only output 'find this article' link if there is no ext-link already in the citation -->
                   <xsl:if test="not(nlm-citation//ext-link | citation//ext-link)">
@@ -3517,11 +3485,6 @@
     <!-- 11/6/09: plos-specific template -->
     <xsl:template match="aml:annotated">
       <xsl:call-template name="createAnnotationSpan"/>
-    </xsl:template>
-
-    <!-- 11/6/09: plos-specific template -->
-    <xsl:template name="topAnchor">
-      <xsl:if test="string-length(normalize-space(.)) > 0">&#160;<a href="#top">Top</a></xsl:if>
     </xsl:template>
 
 </xsl:stylesheet>

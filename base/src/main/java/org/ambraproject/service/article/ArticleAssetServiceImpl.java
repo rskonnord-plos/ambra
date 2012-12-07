@@ -215,15 +215,19 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
   @Override
   public ArticleAssetWrapper[] listFiguresTables(final String articleDoi, final String authId) throws NoSuchArticleIdException {
     //TODO:
-    // Do we have to get the article here to get the assets?  We can't we just get a list of assets
-    // after we check to see if the article is published?  Also, can we not do a select distinct instead of
-    // getting back a large set of assets and then filtering the list via java code below?
+    // Can we not do a select distinct instead of getting back a large set of assets
+    // and then filtering the list via java code below?
 
-    Article article = articleService.getArticle(articleDoi, authId);
+    articleService.checkArticleState(articleDoi, authId);
+
+    // if we get there, we are good
+    // get assets
+    List<ArticleAsset> assets = hibernateTemplate.find("select assets from Article article where article.doi = ?", articleDoi);
+
     //keep track of dois we've added to the list so we don't duplicate assets for the same image
-    Map<String, ArticleAssetWrapper> dois = new HashMap<String, ArticleAssetWrapper>(article.getAssets().size());
-    List<ArticleAssetWrapper> results = new ArrayList<ArticleAssetWrapper>(article.getAssets().size());
-    for (ArticleAsset asset : article.getAssets()) {
+    Map<String, ArticleAssetWrapper> dois = new HashMap<String, ArticleAssetWrapper>(assets.size());
+    List<ArticleAssetWrapper> results = new ArrayList<ArticleAssetWrapper>(assets.size());
+    for (ArticleAsset asset : assets) {
       if (FIGURE_AND_TABLE_CONTEXT_ELEMENTS.contains(asset.getContextElement())) {
         ArticleAssetWrapper articleAssetWrapper;
         if (!dois.containsKey(asset.getDoi())) {

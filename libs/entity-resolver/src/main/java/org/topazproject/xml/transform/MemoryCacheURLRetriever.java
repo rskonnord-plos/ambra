@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.lang.ref.SoftReference;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Look up the URL in an in-memory cache. If the URL is not cached, then look it up
@@ -37,9 +37,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  */
 public class MemoryCacheURLRetriever implements URLRetriever {
-  private static final Log   log = LogFactory.getLog(MemoryCacheURLRetriever.class);
-  private final Map          cache = new HashMap();
-  private final URLRetriever delegate;
+  private static final Logger   log = LoggerFactory.getLogger(MemoryCacheURLRetriever.class);
+  private final Map             cache = new HashMap();
+  private final URLRetriever    delegate;
 
   /**
    * Create a <code>URLRetriever</code> that will cache content fetched by its delegate.

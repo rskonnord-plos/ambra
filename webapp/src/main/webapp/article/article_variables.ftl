@@ -1,65 +1,57 @@
-<#--
-  $HeadURL::                                                                            $
-  $Id$
-
-  Copyright (c) 2007-2010 by Public Library of Science
-  http://plos.org
-  http://ambraproject.org
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-
-<#if Request[freemarker_config.journalContextAttributeKey]?exists>
-  <#assign journalContext = Request[freemarker_config.journalContextAttributeKey].journal>
-<#else>
-  <#assign journalContext = "">
-</#if>
-
 <#if articleInfoX??>
-  <#assign shortDOI = "${articleInfoX.doi?replace('info:doi/','')}" />
-  <#assign docURL = "${freemarker_config.doiResolverURL}" + shortDOI />
-  <#assign jDocURL = freemarker_config.getJournalUrl(journalContext) + "/article/" + articleInfoX.doi?url />
-  <#assign docTitle = articleInfoX.title />
-  <#assign date = articleInfoX.date?string("yyyy-MM-dd") />
-  <#assign articlePublisher = articleInfoX.publisher!"" />
-  <#if articleInfoX.transposedCategories??>
-    <#assign dcCategories = articleInfoX.transposedCategories />
+<meta name="citation_publisher" content="${articleInfoX.publisher}" />
+<meta name="citation_doi" content="${articleInfoX.doi?replace('info:doi/','')}" />
+  <#if articleInfoX.unformattedTitle??>
+  <meta name="citation_title" content="${articleInfoX.unformattedTitle}"/>
+  <meta itemprop="name" content="${articleInfoX.unformattedTitle}"/>
   </#if>
-  <#if articleInfoX.description??>
-    <#assign description = articleInfoX.description />
+
+  <#if authors?? >
+    <#list authors as author>
+    <meta name="citation_author" content="${author.fullName}" />
+      <#if author.affiliations?? >
+        <#list author.affiliations as affiliation>
+          <#if affiliation?? >
+          <meta name="citation_author_institution" content="${affiliation?trim}" />
+          </#if>
+        </#list>
+      </#if>
+    </#list>
   </#if>
-<#else>
-  <#assign shortDOI = "" />
-  <#assign docURL = "" />
-  <#assign jDocURL = "" />
-  <#assign docTitle = "" />
-  <#assign date = "" />
-  <#assign articlePublisher = "" />
+
+  <#if articleInfoX.date??>
+  <meta name="citation_date" content="${articleInfoX.date?date?string("yyyy/M/d")}"/>
+  </#if>
+
+  <#assign pdfURL = "${freemarker_config.doiResolverURL}${articleInfoX.doi?replace('info:doi/','')}" + ".pdf" />
+  <meta name="citation_pdf_url" content="${pdfURL}" />
+
+  <#if articleInfoX??>
+    <#if publishedJournal??>
+    <meta name="citation_journal_title" content="${publishedJournal}" />
+    </#if>
+  <meta name="citation_firstpage" content="${articleInfoX.eLocationId!}"/>
+  <meta name="citation_issue" content="${articleInfoX.issue}"/>
+  <meta name="citation_volume" content="${articleInfoX.volume}"/>
+  <meta name="citation_issn" content="${articleInfoX.eIssn}"/>
+  </#if>
+
+  <#if journalAbbrev??>
+  <meta name="citation_journal_abbrev" content="${journalAbbrev}" />
+  </#if>
+
+  <#if references??>
+    <#list references as reference>
+    <meta name="citation_reference" content="${reference.referenceContent}" />
+    </#list>
+  </#if>
 </#if>
 
-<#assign publisher = "">
-<#list journalList as jour>
-  <#if jour.journalKey != journalContext && articleInfoX.eIssn == jour.eIssn>
-    <#assign publisher = "Published in <em><a href=\"" + freemarker_config.getJournalUrl(jour.journalKey) + "\">" + jour.title + "</a></em>">
-    <#break/>
-  <#else>
-    <#if jour.journalKey != journalContext>
-      <#assign jourAnchor = "<a href=\"" + freemarker_config.getJournalUrl(jour.journalKey) + "\">"/>
-      <#if (publisher?length > 0)>
-        <#assign publisher = publisher + ", " + jourAnchor + jour.title + "</a>" />
-      <#else>
-        <#assign publisher = publisher + "Featured in " + jourAnchor + jour.title + "</a>" />
-      </#if>
-    </#if>
-  </#if>
-</#list>
+<#if pgURL?contains('fetchArticle.action') && articleInfoX??>
+<#--
+Do not mess with the whitespace in the following tag!
+It is specified by http://www.hixie.ch/specs/pingback/pingback-1.0#TOC2.2
+There should be exactly one space before the closing slash. If an auto-formatter ate it, please put it back.
+-->
+<link rel="pingback" href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}/pingback" />
+</#if>

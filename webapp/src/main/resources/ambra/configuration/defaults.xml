@@ -95,6 +95,14 @@
         <exampleSetting2></exampleSetting2>
         <exampleSetting3></exampleSetting3>
       </freemarker>
+
+      <!--
+        Sample captcha keys for dev purposes.
+      -->
+      <captcha>
+        <pubkey>6LfaF9YSAAAAAJAIzY6-xTEsK7Vn7EiGXjEsK4_X</pubkey>
+        <privatekey>6LfaF9YSAAAAAKfGVj5414WWCQQ9_vNQMpXfY88Q</privatekey>
+      </captcha>
     </platform>
 
     <!-- virtual journal config -->

@@ -89,8 +89,9 @@ public class BrowseServiceTest extends BaseTest {
     Article imageArticle = new Article();
     imageArticle.setDoi("id://test-image");
     imageArticle.setTitle("Bill and Ted's Excellent Adventure");
-    imageArticle.setDescription("Two seemingly dumb teens struggle " +
-        "to prepare a historical presentation with the help of a time machine. ");
+    imageArticle.setDescription("<title><bold>Two dumb teens and a time machine</bold></title>" +
+        "<p>Two seemingly dumb teens struggle to prepare a historical presentation with the help of a time machine.</p>" +
+        "<p><italic>Image Credit: Bill and Ted</italic></p>");
 
     dummyDataStore.store(imageArticle);
 
@@ -161,6 +162,10 @@ public class BrowseServiceTest extends BaseTest {
     assertEquals(issueInfo.getPrevIssue(), prevIssue, "Returned issue with incorrect previous issue uri");
     assertEquals(issueInfo.getNextIssue(), nextIssue, "Returned issue with incorrect next issue uri");
     assertEquals(issueInfo.getParentVolume(), parentVolume, "Returned issue with incorrect parent volume uri");
+
+    assertEquals(issueInfo.getIssueTitle(), "Two dumb teens and a time machine", "Returned issue with incorrect issue title");
+    assertEquals(issueInfo.getIssueImageCredit(), "Bill and Ted", "Returned issue with incorrect issue title");
+    assertEquals(issueInfo.getIssueDescription(), "<p>Two seemingly dumb teens struggle to prepare a historical presentation with the help of a time machine.</p><p></p>", "Returned issue with incorrect issue title");
   }
 
   @DataProvider(name = "issueArticles")

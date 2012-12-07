@@ -20,120 +20,123 @@
 -->
 <#assign defaultValue = "<em>No answer</em>">
 <#if surnames?has_content>
-	<#assign surnames = surnames>
+  <#assign surnames = surnames>
 <#else>
-	<#assign surnames = defaultValue>
+  <#assign surnames = defaultValue>
 </#if>
 <#if givenNames?has_content>
-	<#assign givenNames = givenNames>
+  <#assign givenNames = givenNames>
 <#else>
-	<#assign givenNames = defaultValue>
+  <#assign givenNames = defaultValue>
 </#if>
 <#if city?has_content>
-	<#assign city = city>
+  <#assign city = city>
 <#else>
-	<#assign city = defaultValue>
+  <#assign city = defaultValue>
 </#if>
 <#if country?has_content>
-	<#assign country = country>
+  <#assign country = country>
 <#else>
-	<#assign country = "">
+  <#assign country = "">
 </#if>
 <#if postalAddress?has_content>
-	<#assign postalAddress = postalAddress>
+  <#assign postalAddress = postalAddress>
 <#else>
-	<#assign postalAddress = defaultValue>
+  <#assign postalAddress = defaultValue>
 </#if>
 <#if title?has_content>
-	<#assign title = title>
+  <#assign title = title>
 <#else>
-	<#assign title = defaultValue>
+  <#assign title = defaultValue>
 </#if>
 <#if organizationName?has_content>
-	<#assign orgName = organizationName>
+  <#assign orgName = organizationName>
 <#else>
-	<#assign orgName = defaultValue>
+  <#assign orgName = defaultValue>
 </#if>
 <#if organizationType?has_content>
-	<#assign orgType = organizationType>
+  <#assign orgType = organizationType>
 <#else>
-	<#assign orgType = defaultValue>
+  <#assign orgType = defaultValue>
 </#if>
 <#if positionType?has_content>
-	<#assign positionType = positionType>
+  <#assign positionType = positionType>
 <#else>
-	<#assign positionType = defaultValue>
+  <#assign positionType = defaultValue>
 </#if>
 
 <#if biographyText?has_content>
-	<#assign bio = biographyText>
+  <#assign bio = biographyText>
 <#else>
-	<#assign bio = defaultValue>
+  <#assign bio = defaultValue>
 </#if>
 <#if researchAreasText?has_content>
-	<#assign research = researchAreasText>
+  <#assign research = researchAreasText>
 <#else>
-	<#assign research = defaultValue>
+  <#assign research = defaultValue>
 </#if>
 <#if interestsText?has_content>
-	<#assign interests = interestsText>
+  <#assign interests = interestsText>
 <#else>
-	<#assign interests = defaultValue>
+  <#assign interests = defaultValue>
 </#if>
 <#if homePage?has_content>
-	<#assign homePageText = homePage>
+  <#assign homePageText = homePage>
 <#else>
-	<#assign homePageText = defaultValue>
+  <#assign homePageText = defaultValue>
 </#if>
 <#if weblog?has_content>
-	<#assign weblogText = weblog>
+  <#assign weblogText = weblog>
 <#else>
-	<#assign weblogText = defaultValue>
+  <#assign weblogText = defaultValue>
 </#if>
 
 
+<div id="pagebdy-wrap">
+  <div id="pagebdy" class="profile">
 
-<div id="content" class="profile">
+    <img src="${freemarker_config.context}/images/avatar.png"/>
 
-<img src="${freemarker_config.context}/images/avatar.png" />
-<h1>${displayName!}</h1>
+    <h1>${displayName!}</h1>
 
-<ol>
-    <li><span class="heading">Title</span><span class="text">${title}</span></li>
-    <li><span class="heading">Full Name</span><span class="text">${givenNames} ${surnames}</span></li>
+    <ol>
+      <li><span class="heading">Title</span><span class="text">${title}</span></li>
+      <li><span class="heading">Full Name</span><span class="text">${givenNames} ${surnames}</span></li>
 
-<li><span class="heading">Location</span><span class="text">${city}<#if country == ""><#else>, ${country}</#if></span></li>
+      <li><span class="heading">Location</span><span class="text">${city}<#if country == ""><#else>
+        , ${country}</#if></span></li>
 
-<li><span class="heading">Organization Address</span><span class="text">${postalAddress}</span></li>
+      <li><span class="heading">Organization Address</span><span class="text">${postalAddress}</span></li>
 
-<li><span class="heading">Organization Type</span><span class="text">${orgType}</span></li>
-<li><span class="heading">Organization Name</span><span class="text">${orgName}</span></li>
+      <li><span class="heading">Organization Type</span><span class="text">${orgType}</span></li>
+      <li><span class="heading">Organization Name</span><span class="text">${orgName}</span></li>
 
-<li><span class="heading">Your Role</span><span class="text">${positionType}</span></li>
+      <li><span class="heading">Your Role</span><span class="text">${positionType}</span></li>
 
-<li><span class="heading">Short Biography</span><span class="text">${bio}</span></li>
+      <li><span class="heading">Short Biography</span><span class="text">${bio}</span></li>
 
-<li><span class="heading">Research Areas</span><span class="text">${research}</span></li>
+      <li><span class="heading">Research Areas</span><span class="text">${research}</span></li>
 
-<li><span class="heading">Interests</span><span class="text">${interests}</span></li>
+      <li><span class="heading">Interests</span><span class="text">${interests}</span></li>
 
-<li><span class="heading">Website URL</span>
-<#if homePage?has_content>
-    <@s.url id="homePageLink" value="${homePageText}"/>
-    <span class="text"><a href="${homePageLink}">${homePageText}</a></span>
-<#else>
-    <span class="text">${homePageText}</span>
-</#if>
-</li>
+      <li><span class="heading">Website URL</span>
+      <#if homePage?has_content>
+        <@s.url id="homePageLink" value="${homePageText}"/>
+        <span class="text"><a href="${homePageLink}">${homePageText}</a></span>
+      <#else>
+        <span class="text">${homePageText}</span>
+      </#if>
+      </li>
 
-<li><span class="heading">Blog URL</span>
-<#if weblog?has_content>
-    <@s.url id="weblogLink" value="${weblogText}"/>
-    <span class="text"><a href="${weblogLink}">${weblogText}</a></span>
-<#else>
-    <span class="text">${weblogText}</span>
-</#if>
-</li>
-</ol>
+      <li><span class="heading">Blog URL</span>
+      <#if weblog?has_content>
+        <@s.url id="weblogLink" value="${weblogText}"/>
+        <span class="text"><a href="${weblogLink}">${weblogText}</a></span>
+      <#else>
+        <span class="text">${weblogText}</span>
+      </#if>
+      </li>
+    </ol>
 
+  </div>
 </div>

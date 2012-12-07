@@ -54,6 +54,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 /**
  * TODO: Test method: isResearchArticle(...)
@@ -771,19 +772,100 @@ public class ArticleServiceTest extends BaseTest {
 
   @Test
   public void testGetBasicArticleView() throws NoSuchArticleIdException {
+    // TODO add check for article type
+
     Article article = new Article("id:doi-for-get-basic-article-view");
     article.setTitle("test title for get article view");
+
+    List<ArticleAuthor> authors = new LinkedList<ArticleAuthor>();
+    ArticleAuthor author1 = new ArticleAuthor();
+    author1.setFullName("FullName");
+    author1.setGivenNames("GivenNames");
+    author1.setSuffix("Suffix");
+    author1.setSurnames("Surnames");
+    authors.add(author1);
+    article.setAuthors(authors);
+
+    List<String> collaborativeAuthors = new LinkedList<String>();
+    collaborativeAuthors.add("collab author 1");
+    article.setCollaborativeAuthors(collaborativeAuthors);
+
     dummyDataStore.store(article);
+
+    List<String> authors2 = new ArrayList<String>(authors.size());
+    for (ArticleAuthor ac : authors) {
+      authors2.add(ac.getFullName());
+    }
 
     ArticleInfo result = articleService.getBasicArticleView(article.getID());
     assertNotNull(result, "returned null result when fetching by id");
     assertEquals(result.getDoi(), article.getDoi(), "result had incorrect doi when fetching by id");
     assertEquals(result.getTitle(), article.getTitle(), "result had incorrect title when fetching by id");
+    assertEquals(result.getAuthors(),authors2, "result had incorrect authors when fetching by id");
+    assertEquals(result.getCollaborativeAuthors(), article.getCollaborativeAuthors(),
+        "result had incorrect collaborative authors when fetching by id");
 
     result = articleService.getBasicArticleView(article.getDoi());
     assertNotNull(result, "returned null result when fetching by doi");
     assertEquals(result.getDoi(), article.getDoi(), "result had incorrect doi when fetching by doi");
     assertEquals(result.getTitle(), article.getTitle(), "result had incorrect title when fetching by doi");
+    assertEquals(result.getAuthors(),authors2, "result had incorrect authors when fetching by doi");
+    assertEquals(result.getCollaborativeAuthors(), article.getCollaborativeAuthors(),
+        "result had incorrect collaborative authors when fetching by doi");
+  }
+
+  @Test
+  public void testCheckArticleState() {
+    try {
+      articleService.checkArticleState(null, DEFAULT_USER_AUTHID);
+      fail("this article does not exist");
+    } catch (NoSuchArticleIdException e) {
+      // success
+    }
+
+    try {
+      articleService.checkArticleState("", DEFAULT_USER_AUTHID);
+      fail("this article does not exist");
+    } catch (NoSuchArticleIdException e) {
+      // success
+    }
+
+    try {
+      articleService.checkArticleState("garbage", DEFAULT_USER_AUTHID);
+      fail("this article does not exist");
+    } catch (NoSuchArticleIdException e) {
+      // success
+    }
+
+    Article activeArticle = new Article("id:doi-for-checkArticleState-active");
+    activeArticle.setTitle("test title for get article view");
+    activeArticle.setState(Article.STATE_ACTIVE);
+    dummyDataStore.store(activeArticle);
+
+    try {
+      articleService.checkArticleState(activeArticle.getDoi(), DEFAULT_USER_AUTHID);
+    } catch (NoSuchArticleIdException e) {
+      fail("this article does exist");
+    }
+
+    Article unpublishedArticle = new Article("id:doi-for-checkArticleState-unpublished");
+    unpublishedArticle.setTitle("test title for get article view");
+    unpublishedArticle.setState(Article.STATE_UNPUBLISHED);
+    dummyDataStore.store(unpublishedArticle);
+
+    try {
+      articleService.checkArticleState(unpublishedArticle.getDoi(), DEFAULT_USER_AUTHID);
+      fail("this article should not be visible to the default user");
+    } catch (NoSuchArticleIdException e) {
+      // success
+    }
+
+    try {
+      articleService.checkArticleState(unpublishedArticle.getDoi(), DEFAULT_ADMIN_AUTHID);
+      // success
+    } catch (NoSuchArticleIdException e) {
+      fail("this article should be visible to the admin user");
+    }
   }
 
   private Set<Category> addCategory(Set<Category> categories, String mainCategory,

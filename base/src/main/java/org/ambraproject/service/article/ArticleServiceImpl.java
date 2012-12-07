@@ -22,6 +22,7 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.UserProfileInfo;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
@@ -338,6 +339,39 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Transactional(readOnly = true)
+  public void checkArticleState(final String articleDoi, final String authId) throws NoSuchArticleIdException {
+    //If the article is unpublished, it should not be returned if the user is not an admin
+
+    List<Integer> results = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
+        .add(Restrictions.eq("doi", articleDoi))
+        .setProjection(Projections.projectionList()
+            .add(Projections.property("state")))
+        ,0,1);
+
+    if (results.size() == 0) {
+      throw new NoSuchArticleIdException(articleDoi);
+    }
+
+    Integer articleState = results.get(0);
+
+    if (articleState == Article.STATE_UNPUBLISHED) {
+      try {
+        permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, authId);
+      } catch(SecurityException se) {
+        throw new NoSuchArticleIdException(articleDoi);
+      }
+    }
+
+    //If the article is disabled, don't display it ever
+    if (articleState == Article.STATE_DISABLED) {
+      throw new NoSuchArticleIdException(articleDoi);
+    }
+  }
+
+  /**
    * Get articles based on a list of Article id's.
    *
    * If an article is requested that the user does not have access to, it will not be returned
@@ -453,6 +487,16 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Transactional(readOnly = true)
+  @Override
+  public ArticleInfo getArticleInfo(Long articleID, String authId) throws NoSuchArticleIdException {
+    Article article = hibernateTemplate.get(Article.class, articleID);
+    return createArticleInfo(article, authId);
+  }
+
+  /**
    * Get the articleInfo object for an article
    * @param articleDois the ID of the article
    * @param authId the authorization ID of the current user
@@ -552,6 +596,28 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           RelatedArticleInfo relatedArticleInfo = new RelatedArticleInfo();
           relatedArticleInfo.setUri(URI.create(otherArticle.getDoi()));
           relatedArticleInfo.setTitle(otherArticle.getTitle());
+          relatedArticleInfo.setDoi(otherArticle.getDoi());
+          relatedArticleInfo.setDate(otherArticle.getDate());
+          relatedArticleInfo.seteIssn(otherArticle.geteIssn());
+
+          journals = otherArticle.getJournals();
+          journalViews = new HashSet<JournalView>(journals.size());
+          for(org.ambraproject.models.Journal journal : journals) {
+            journalViews.add(new JournalView(journal));
+          }
+          relatedArticleInfo.setJournals(journalViews);
+
+          List<String> relatedArticleAuthors = new ArrayList<String>(otherArticle.getAuthors().size());
+          for (ArticleAuthor ac : otherArticle.getAuthors()) {
+            relatedArticleAuthors.add(ac.getFullName());
+          }
+          relatedArticleInfo.setAuthors(relatedArticleAuthors);
+
+          //set article type
+          if (otherArticle.getTypes() != null) {
+            relatedArticleInfo.setAt(otherArticle.getTypes());
+          }
+
           if (!articleInfo.getRelatedArticles().contains(relatedArticleInfo)) {
             articleInfo.getRelatedArticles().add(relatedArticleInfo);
           }
@@ -576,55 +642,105 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       throw new NoSuchArticleIdException("Null id");
     }
     log.debug("loading up title and doi for article: {}", articleID);
-    Object[] results = new Object[0];
-    try {
-      results = (Object[]) hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
-          .add(Restrictions.eq("ID", articleID))
-          .setProjection(Projections.projectionList()
-              .add(Projections.property("doi"))
-              .add(Projections.property("title"))),0,1).get(0);
-    } catch (IndexOutOfBoundsException e) {
-      throw new NoSuchArticleIdException(articleID.toString());
-    }
-    ArticleInfo articleInfo = new ArticleInfo();
-    articleInfo.setDoi((String) results[0]);
-    articleInfo.setTitle((String) results[1]);
-    articleInfo.setId(articleID);
-
+    ArticleInfo articleInfo = getBasicArticleViewArticleInfo(articleID);
     return articleInfo;
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ArticleInfo getBasicArticleView(String articleDoi) throws NoSuchArticleIdException {
     if (articleDoi == null) {
       throw new NoSuchArticleIdException("Null doi");
     }
     log.debug("loading up title and doi for article: {}", articleDoi);
+
+    ArticleInfo articleInfo = getBasicArticleViewArticleInfo(articleDoi);
+
+    return articleInfo;
+  }
+
+  /**
+   * Returns ArticleInfo object with articleID, doi, title, authors, collaborativeAuthors and article type populated
+   * @param articleIdentifier articleID or articleDoi
+   * @return ArticleInfo object with articleID, doi, title, authors, collaborativeAuthors and article type populated
+   * @throws NoSuchArticleIdException
+   */
+  private ArticleInfo getBasicArticleViewArticleInfo (Object articleIdentifier) throws NoSuchArticleIdException {
+
     Object[] results = new Object[0];
+    List<ArticleAuthor> authors;
+    List<String> collabAuthors;
+    List<String> articleTypes;
+
     try {
-      results = (Object[]) hibernateTemplate.findByCriteria(DetachedCriteria.forClass(Article.class)
-          .add(Restrictions.eq("doi", articleDoi))
+
+      DetachedCriteria dc =  DetachedCriteria.forClass(Article.class)
           .setProjection(Projections.projectionList()
               .add(Projections.id())
-              .add(Projections.property("title"))),0,1).get(0);
+              .add(Projections.property("doi"))
+              .add(Projections.property("title"))
+          );
+
+      if (articleIdentifier instanceof Long) {
+        dc.add(Restrictions.eq("ID", articleIdentifier));
+      } else if (articleIdentifier instanceof String) {
+        dc.add(Restrictions.eq("doi", articleIdentifier));
+      }
+
+      results = (Object[]) hibernateTemplate.findByCriteria(dc,0,1).get(0);
+
+      authors = hibernateTemplate.find("from ArticleAuthor where articleID = ?", results[0]);
+
+      collabAuthors = hibernateTemplate.find("select elements(article.collaborativeAuthors) from Article as article where id = ?", results[0]);
+
+      articleTypes = hibernateTemplate.find("select elements(article.types) from Article as article where id = ?", results[0]);
+
+
     } catch (IndexOutOfBoundsException e) {
-      throw new NoSuchArticleIdException(articleDoi.toString());
+      throw new NoSuchArticleIdException(articleIdentifier.toString());
     }
+
     ArticleInfo articleInfo = new ArticleInfo();
-    articleInfo.setDoi(articleDoi);
     articleInfo.setId((Long) results[0]);
-    articleInfo.setTitle((String) results[1]);
+    articleInfo.setDoi((String) results[1]);
+    articleInfo.setTitle((String) results[2]);
+
+    List<String> authors2 = new ArrayList<String>(authors.size());
+    for (ArticleAuthor ac : authors) {
+      authors2.add(ac.getFullName());
+    }
+    articleInfo.setAuthors(authors2);
+
+    articleInfo.setCollaborativeAuthors(collabAuthors);
+
+    articleInfo.setAt(new HashSet<String>(articleTypes));
 
     return articleInfo;
   }
 
   /**
    * {@inheritDoc}
+   *
    */
   @Override
+  @SuppressWarnings("unchecked")
   @Transactional(readOnly = true)
-  public CitedArticle getCitedArticle(long citedArticleID) {
-    return hibernateTemplate.get(CitedArticle.class, citedArticleID);
+  public CitedArticleView getCitedArticle(long citedArticleID) {
+    //TODO, unit test needed SE-133
+    List<String> results = (List<String>)hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Article.class)
+        .setProjection(Projections.property("doi"))
+        .createCriteria("citedArticles", "ca")
+        .add(Restrictions.eq("ca.ID", citedArticleID)));
+
+    if(results.size() == 0) {
+      return null;
+    }
+
+    CitedArticle citedArticle = hibernateTemplate.get(CitedArticle.class, citedArticleID);
+    String doi = results.get(0);
+
+    return new CitedArticleView(doi, citedArticle);
   }
 
   /**

@@ -68,11 +68,12 @@ public interface UserService {
   /**
    * Save the given alerts for the user specified by the given id.
    *
-   * @param userAuthId the auth id of the user to set the alerts on
+   * @param userAuthId    the auth id of the user to set the alerts on
    * @param monthlyAlerts a list of the monthly alerts
-   * @param weeklyAlerts a list of the weekly alerts
+   * @param weeklyAlerts  a list of the weekly alerts
+   * @return the user object
    */
-  public void setAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts);
+  public UserProfile setAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts);
 
   /**
    * save the given search alerts for the user specified by the given id
@@ -81,7 +82,7 @@ public interface UserService {
    * @param weeklyAlerts  a list of the weekly alerts
    * @param deleteAlerts  a list of the delete alerts
    */
-  public void setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts);
+  public UserProfile setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts);
 
   /**
    * Remove the saved search

@@ -22,6 +22,7 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.CitedArticle;
@@ -147,6 +148,14 @@ public interface ArticleService {
   public ArticleInfo getArticleInfo(final String articleDoi, final String authId) throws NoSuchArticleIdException;
 
   /**
+   * Get the articleInfo object for an article
+   * @param articleID the back-end primary key of the article
+   * @param authId the authorization ID of the current user
+   * @return articleInfo
+   */
+  public ArticleInfo getArticleInfo(final Long articleID, final String authId) throws NoSuchArticleIdException;
+
+  /**
    * Get the articleInfo objects for the list of articles
    * @param articleDois the IDs of the articles
    * @param authId the authorization ID of the current user
@@ -172,15 +181,13 @@ public interface ArticleService {
   public ArticleInfo getBasicArticleView(String articleDoi) throws NoSuchArticleIdException;
 
   // TODO: consider moving these two methods into a new CitedArticleService.  Seems like overkill for now.
-
   /**
    * Loads a CitedArticle from the DB.
    *
    * @param citedArticleID primary key
    * @return the CitedArticle instance
-   * @throws NoSuchArticleIdException
    */
-  public CitedArticle getCitedArticle(long citedArticleID);
+  public CitedArticleView getCitedArticle(long citedArticleID);
 
   /**
    * Saves a CitedArticle's doi property.
@@ -197,4 +204,14 @@ public interface ArticleService {
    * @param categories List of category strings
    */
   public void setArticleCategories(Article article, List<String> categories);
+
+  /**
+   * Throw a NoSuchArticleIdException exception if the article doesn't exist or the user does not have permission
+   * to see the article
+   *
+   * @param articleDoi article doi
+   * @param authId the authorization ID of the current user
+   * @throws NoSuchArticleIdException
+   */
+  public void checkArticleState(final String articleDoi, final String authId) throws NoSuchArticleIdException;
 }

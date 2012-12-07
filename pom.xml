@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra</artifactId>
-  <version>2.5.1-SNAPSHOT</version>
+  <version>2.5.1-GINZU-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Ambra application</name>
 
@@ -34,8 +34,7 @@
     <aggregate>true</aggregate>
     <spring.version>3.1.1.RELEASE</spring.version>
     <struts.version>2.3.1.2</struts.version>
-    <freemarker.version>2.3.15</freemarker.version>
-    <log4j.version>1.2.16</log4j.version>
+    <freemarker.version>2.3.19</freemarker.version>
     <slf4j.version>1.6.1</slf4j.version>
     <ehcache.version>1.5.0</ehcache.version>
     <xbean-spring.version>3.5</xbean-spring.version>
@@ -46,8 +45,8 @@
     <filestore.version>1.0.1</filestore.version>
     <httpclient.version>4.2.1</httpclient.version>
     <httpmime.version>4.2.1</httpmime.version>
-    <recaptcha.version>0.0.7</recaptcha.version>
   </properties>
+
 
   <repositories>
     <repository>
@@ -150,6 +149,11 @@
         <enabled>true</enabled>
       </releases>
     </pluginRepository>
+    <pluginRepository>
+      <name>oss.sonatype.org</name>
+      <id>oss.sonatype.org</id>
+      <url>http://oss.sonatype.org/content/groups/public</url>
+    </pluginRepository>
   </pluginRepositories>
 
   <scm>
@@ -209,36 +213,6 @@
         <groupId>org.jdom</groupId>
         <artifactId>jdom</artifactId>
         <version>1.1</version>
-      </dependency>
-
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.1.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>avalon-framework</groupId>
-            <artifactId>avalon-framework</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>logkit</groupId>
-            <artifactId>logkit</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
-      <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>${log4j.version}</version>
       </dependency>
 
       <dependency>

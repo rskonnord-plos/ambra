@@ -1,226 +1,450 @@
 /*
- * $HeadURL::                                                                            $
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
- *
+ * $HeadURL: http://ambraproject.org/svn/plos/templates/branches/ginzu/journals/PLoSDefault/webapp/css/home.css $
+ * $Id: home.css 12936 2012-11-30 21:54:56Z josowski $
+ * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
-----------------------------------------------------------
-Homepages Style Sheet for Ambra
-Created on: August 22, 2006
-Created by: Margaret Shear
-Modified by: Sebastian Toomey
-----------------------------------------------------------
-All journal specific styles, colors are on individual
-journal style sheets
-----------------------------------------------------------
-*/
-body		{ background-color: transparent;}
-#wrap 		{ margin: 0 auto 0 auto; width: 940px; padding: 0 0 10px 0; line-height: 1.5em; position: relative;}
-#content 	{ margin-left: 0; }
 
-/* Homepage : Elements
-----------------------------------------------------------
-*/
-#home			{ position: relative; background:  url(../images/home_bg.gif) no-repeat 0 9px!important; margin: 0; margin-top: -30px; border:0;}/* removed border to fix 1px vertical alignment discrepency in IE7*/
-#home img,
-#home object		{ display: inline; position: relative;}
-#home a:hover 	{ text-decoration: underline; } /* apply a border in hover state */
-#home a:hover h1{ color: inherit; } /* this ensures that the headings in the ad blocks will highlight appropriately */
-#home h2		{ margin: 10px 0; font-size: 1.8em; color: #333; border: none; padding-left: 24px; background-repeat: no-repeat; background-position: left center;}
-div.recent h2	{ padding-left:6px; margin-bottom:0}
-h3		{ font-size: 1.6em; line-height:1.2em; margin:0 0 10px 0; padding:0 0 3px 0; color:#444; border-bottom:1px solid #ccc; }
-div.other h3 { border-bottom:0; font-family:Verdana, sans-serif; font-size:.9em; margin:10px 0 8px 0; padding:0; }
-div.other h3 em { font-weight:bold; }
+/********** home.css **********/
 
-/* suppresses underlined links in lists, preserves underlind hover state */
-#home ul li a,
-#home ul li a:link,
-#home ul li a:visited,
-#home dl dd a,
-#home dl dd a:link,
-#home dl dd a:visited { text-decoration:none; }
-#home ul li a:hover,
-#home dl dd a:hover  { text-decoration:underline; }
-	
-/* Homepage : Layout : Structure
-----------------------------------------------------------
-This layout has been adapted from the Yahoo Developer's Interface Library
-Software License Agreement (BSD License)
-----------------------------------------------------------
-Copyright (c) 2006, Yahoo! Inc.
-All rights reserved.
-----------------------------------------------------------
-*/
-/* all modules and grids nested in a grid get floated */
-.col .subcol, .col .col 	{ float:right; display:inline;   /* for ie */ }
-/* float left and kill margin on first for added flex */
-#first, .col .first 		{ float:left; }
-/* container column 1 */
-#first 						{ width:518px; padding-top:12px; }
+#pagebdy-wrap {
+  background: #efefef;
+}
 
-/* column 1 --This column is empty-- */
+#pagebdy {
+  padding-top: 30px;
+}
 
-/* column 2 */
-#first .last 				{ width:490px; position:relative; margin-right:5px; }
+#headlines {
+  padding: 10px 15px 15px;
+  background: #fff;
+  margin-bottom: 30px;
+}
 
-/* blocks in column 1, subcolumn 2 - i.e. the primary content area */
-#first .last .block { margin:20px 0; padding:0; border:1px solid #ccc; background:transparent; }
-#first .last .block h2 { margin:0; padding:8px 10px 6px 10px; border-bottom:1px dashed #ccc; background:#fcd3b8; }
+#headlines h1 {
+  margin-bottom: 12px;
+}
 
-/* contains columns 3 and column 4 */
-#second 					{ width: 402px; padding-top:27px;}
-/* column 3 */ 
-#second .first 				{ width:253px; }
-/* column 4 */
-#second .last				{ width: 140px;}
-#second p { font-size:.9em; }
+#headlines .tab-content {
+  padding-right: 20px;
+}
 
-/* lower contains lower background image */
-#lower  { width:100%; margin:0; height:50px; padding-top:40px; clear:both; font-size:.9em; background:url(../images/home_lower_bg.gif) no-repeat bottom center;}
+.js .tab-pane + .tab-pane,
+.js .tab-pane h3 {
+  display: none;
+}
 
-/* self clear floated parent containers This is critical for proper display in IE7 */
-#lower:after,
-.col:after 					{content:".";display:block;height:0;clear:both;visibility:hidden;}	
-#lower,
-.col 						{zoom:1;} /* IE */
-#lower h3					{ background-color: #ddd; letter-spacing: normal; font-size: 1em; margin-right: 10px; padding: 1px 5px; font-family: Verdana, Arial, Helvetica, sans-serif; }
+#headlines ul.articles {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-/* all homepage content blocks are wrapped in class block for padding to avoid ie box model */
-div.block 				{ margin:0; padding:0; clear: both; position: relative;}
-div.block p { margin:0; font-size:.9em; }
-div.block .section { margin:10px; padding:0 0 10px 0; border-bottom:1px solid #ccc;}
-div.block .lastSection { border:0; margin-bottom:0; }
+#headlines ul.articles li {
+  font-size: 20px;
+  line-height: 1.3;
+  margin-bottom: 25px;
+}
 
-/* fixes float clearing bug */
-.block:after					{ content: ".";  display: block;  height: 0; clear: both; visibility: hidden; }
-div.clearer {clear:both; line-height:0; height:0; visibility:hidden; }
+#headlines ul.articles a {
+  color: #333;
+}
 
-div.article h3 { font-size:110%; font-weight:bold; line-height:1.5em; border:0; margin:0; padding:0; }
-div.article h3 a { text-decoration:none; }
-div.article h3 a:hover { text-decoration:underline; }
-div.article p { margin:6px 0 0 0!important; padding:0!important; }
-div.article img { float:left; margin:10px 10px 0 0; border: 1px solid #ccc; position:static!important; /* static position required to fix wierd image displacement bug in IE6 when tabs are written into page */ }
-div.article p.imgCredit { font-style:italic; color:#666; }
+#headlines ul.articles a:hover {
+  color: #3c63af;
+  text-decoration: none;
+}
 
-/* wraps banner ads */
-div.banner				{ padding: 0; border: none; margin:0 0 4px 2px; }
-div.banner img,
-div.banner object 			{ float: none; margin:0 0 4px 2px!important; background: transparent;}
-div.banner object			{ padding-top: 0; }
+#headlines .more {
+  font-size: 0.923em !important;
+  line-height: 1.417 !important;
+  border-top: 1px solid #d1d1d1;
+  padding-top: 20px;
+  margin-top: 40px;
+}
 
-/* partner icons */
-div.partner 				{ position:relative; text-align: center; margin:0; padding:0; }
-div.partner h6			{ font-weight: normal; text-align: center; font-size: .85em; margin: 0 0 0 10px; color: #999;text-transform: uppercase; background: url(../images/home_partner_h6.gif) no-repeat top left; padding-top: 8px;}
-div.partner img 			{ margin:0 20px; vertical-align:top;}
+#headlines .tab-pane p {
+  margin-bottom: 18px;
+}
 
-/* blocks in right-hand column */
-div#second div.first div.block { margin-bottom:15px; }
-div#second div.first div.block  p { margin:0 0 5px 0; }
-div#second div.first div.block  ul { margin:0; padding:0; }
-div#second div.first div.block  ul li { background:transparent url(../images/home_articles_li_bg.gif) no-repeat scroll 0pt 10px; font-size:0.9em; list-style-type:none; margin-left:10px; padding:3px 0pt 3px 10px; }
+#headlines ul.articles li.more {
+  margin-bottom: 18px;
+}
 
-/* Stay Connected block - list styles */
-div#connect ul { margin-bottom:10px; padding:0; text-indent:0; }
-div#second div.first div#connect ul li { list-style-type:none; background:none; margin-left:0; margin-bottom:.8em; padding:3px 0; font-size:.9em; line-height:1.5em; }
-div#connect ul li img { margin:0 .5em -.2em 0; }
-div#connect ul li a,
-div#connect ul li a:link,
-div#connect ul li a:visited { text-decoration:underline; }
+#headlines ul.articles li.more a {
+  color: #3c63af;
+  text-decoration: underline;
+}
 
-/* issue block */
-div#second div.first div#issue { margin:0; padding:0; border:1px solid #ccc; background:#fff; }
-div#issue h3 { margin:0; padding:4px 8px; font-family:Verdana, sans-serif; font-size:110%; font-weight:bold; }
-div#issue h3 a { text-decoration:none; }
-div#issue h3 a:hover { text-decoration:underline; }
-div#issue img { margin:0; padding:0; line-height:0 }
-div#second div.first div#mission p { margin:5px 0 0 0; }
+#headlines p a {
+  text-decoration: underline;
+}
 
-/* subject contains and category styles the category list */
-div.subject		{ padding: 0; padding-top: 5px; border: none;}
-dl.category 		{ margin: 0;  padding: 0 0 20px 0; }
-dl.category dt	{ margin:5px 0; padding: 0; font-weight: bold; /* vertical-align: bottom; clear: left; This fixes the IE5 Win gap! */ }
-dl.category dt a {padding-bottom: 0; margin-bottom: 2px;}
-dl.category dt a:hover {text-decoration: underline;}
-dl.category dd { line-height:1.5em; font-size:.9em; padding:0 0 5px 0;}
-dl.category dt a {padding-bottom: 0; margin-bottom: 2px;}
-dl.category dt a:hover {text-decoration: underline;}
-dl.category a.expand,
-dl.category a:visited.expand 	{ padding-left: 15px;  background: url(../images/home_expand.gif) no-repeat 0 5px;}
-dl.category img	{display: inline; padding: 0; margin-left: 0;}
+.promoted-block {
+  margin-bottom: 30px;
+}
 
-div#adWrap { position:relative; margin:30px 0 20px 0 }
-#home #second div.block.ad	{ margin:0 0 6px 0; padding:0; border:1px solid #ccc; background:#efefef; clear:left; }
-div.block.ad img { border:1px solid #ccc; display:block; float:left; }
-div.ad a:hover img { border:1px solid #0033cc; }
-div.block.ad a { overflow:hidden; width:239px; }
-div.block.ad a,
-div.block.ad a:link,
-div.block.ad a:visited { color:#555; text-decoration:none; display:block; padding:6px; }
-#home div.block.ad a:hover { text-decoration:none; border:2px solid; padding:4px; }
-#home div.ad a:hover { background-color:#bfd4ff; border-color:#0033cc; color:#0033cc; }
-div.block.ad a span.body { font-size:.9em; display:block; }
-#home div.block.ad a strong { font:normal 1.4em  Georgia,"Times New Roman",Times,serif; letter-spacing:-0.05em; line-height:1.25em; text-decoration:none; display:block; margin-bottom:0.2em; }
-#home div.block.ad a span.body { line-height:1.5em; }
-#home div.block.ad a strong,
-#home div.block.ad a span.body { margin-top:0; margin-left:70px; }
-#home div.block.ad a span.body:after { content:"."; display:block; height:0; clear:both; visibility:hidden; }
+.promoted {
+  background: #fff;
+  padding: 15px 35px 25px 15px;
+  margin-bottom: 20px;
+}
 
-#home div.other div	{ padding:0; padding:0; }
-div.recent p		{ margin: 0 0 10px 0; }
+.promoted .type {
+  font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif !important;
+  font-size-adjust: 0.48;
+  margin-bottom: 10px;
+}
 
-#home div.other		{ padding-bottom: 0; /*margin-left: 0;*/ padding-left: 0;}
-#home div.other ul,
-#home div.other p { margin:5px 0 10px 0; padding: 0; text-indent: 0;}
-#home div.other li	{ background: url(../images/home_new_bullet.gif) no-repeat 0 4px; padding: 0 0 5px 14px;margin:0; text-indent: 0; list-style-type: none;}
-#home div.other h3 { font-weight:bold; }
-#home div.other p a em { white-space:nowrap; } /* for journal names */
+.promoted .img {
+  float: left;
+  margin: 0 15px 1em 0;
+  padding-top: 2px;
+}
 
-/* Explore by Subject block */
-div.explore p { margin:14px 14px 7px 14px }
-div.explore ul	{ position:static; width:244px; float:left; margin:5px 0 10px 0; padding: 0; text-indent: 0; } /* Note: explicit static positioning required for IE6 */
-div.explore li	{ margin:0; padding:0 14px 5px; text-indent:0; list-style-type: none; font-size:0.9em; }
-div.explore li img { position:static!important; vertical-align:-1px } /* Note: explicit static positioning with '!important' construct required for IE6 */
+.promoted .txt {
+  display: table-cell;
+  vertical-align: top;
+  font-size: 0.923em;
+  color: #666;
+}
 
-/* browse widget */
-#first .last div#browseWidget { background: url(../images/home_browse_bg.gif) no-repeat left center; height:30px; border:0; }
-div#browseWidget p { margin:0 0 0 35px; padding:.5em 0 0 0; vertical-align:middle; font-weight:bold;}
+.promoted h3 {
+  font-size: 16px;
+  line-height: 1.125;
+  color: #333;
+  margin-bottom: 10px;
+}
 
-/* apply to all article lists on homepage */
-ul.articles,
-ul.articles li		{ margin: 0; padding: 0; list-style-type: none; }
-ul.articles			{ margin: 5px 4px 10px 0;  padding: 10px 10px 0 6px;}
-#home ul.articles li		{ font-size: .9em; margin-left:10px; padding: 3px 0 3px 10px; list-style:none; background: url(../images/home_articles_li_bg.gif) no-repeat 0 10px;}
+.promoted h3 a {
+  color: #333;
+}
 
-/* NOTE: horizontal tab styles that I'd previously moved to screen.css are now below. */
+.promoted h3 a:hover {
+  color: #3c63af;
+  text-decoration: none;
+}
 
-/* tabs and tabbed box */
-div.horizontalTabs	{ position:relative; border:0; margin:0 0 20px; padding:0; background:transparent; width:490px; }
-div.horizontalTabs:after  { content:"."; display: block; height:0; clear:both; visibility:hidden; }
-ul#tabsContainer  { float:left;  margin:0!important; padding:0 0 0 10px!important; /* "!important" required for IE7 */ line-height:normal; background:transparent url("../images/tab_bg.gif") repeat-x bottom; width:480px; }
-ul#tabsContainer ul { margin:0; padding:10px 10px 0; }
-ul#tabsContainer li		{ cursor:pointer; float:left; background:url("../images/tab_left.gif") no-repeat 0% 0%; margin:0 2px; padding:0 0 0 8px; list-style:none; font-size:.9em; font-weight:bold; color:#666; }
-ul#tabsContainer li span { display:block; float:left; background:url("../images/tab_right.gif") no-repeat 100% 0%;  padding:8px 16px 8px 8px!important; /* "!important" required for IE7 */ }
-ul#tabsContainer li.active { background-position:0% -40px; }
-ul#tabsContainer li.active span { background-position:100% -40px; padding-bottom: 9px!important; }
-.horizontalTabs .contentwrap { float:left; width:488px; margin:0!important; padding:0!important; background:#ffffff;  border:1px solid #bababa; border-top:0; }
-.horizontalTabs ul {  border:0; /* suppresses "border-bottom:2px solid #acf1ff" from screen.css, ln. #511 */ }
-.horizontalTabs .contentwrap ul { list-style:none; margin:10px 10px 0 10px!important; padding:0!important; }
-.horizontalTabs .contentwrap li	{ display:list-item; background-image:none!important; list-style:none; margin:0!important; padding:0!important; padding-bottom:1em!important; line-height:1.5em; }
-.horizontalTabs .contentwrap li	a { font-weight:bold; }
-.horizontalTabs .contentwrap li.more	{ border-top:1px solid #ccc!important; padding-top:.4em!important; }
-.horizontalTabs .contentwrap li.more a	{ font-weight:normal!important; text-decoration:underline!important; }
+.promoted .more {
+  font-size: 0.923em !important;
+  line-height: 1.417 !important;
+  border-top: 1px solid #d1d1d1;
+  padding-top: 20px;
+  margin-top: 40px;
+}
+
+.promoted-block hr {
+  margin-top: 20px;
+  margin-bottom: 25px;
+  color: #dadada;
+}
+
+#issue {
+  background: #363636;
+  border-radius: 4px;
+  color: #ccc;
+  padding-top: 16px;
+  margin-bottom: 20px;
+}
+
+#issue .kicker {
+  text-align: center;
+  margin: 0 17px 3px;
+  font-size: 1.077em;
+}
+
+#issue h3 {
+  color: #fff;
+  text-align: center;
+  font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif;
+  font-size-adjust: 0.48;
+  margin: 0 17px 17px;
+}
+
+#issue h3 a {
+  color: #fff;
+}
+
+#issue .img img {
+  margin: 0 auto;
+}
+
+#issue .txt {
+  padding: 17px;
+  font-size: 0.923em;
+  line-height: 1.417;
+}
+
+#issue p {
+  margin: 0;
+}
+
+#issue .txt a {
+  color: #fff;
+  text-decoration: none;
+}
+
+#issue .txt a:hover{
+  text-decoration: underline;
+}
+
+#issue .txt strong {
+  color: #fff;
+}
+
+#connect {
+  margin-bottom: 20px;
+}
+
+#connect .lnk-social li {
+  float: left;
+  margin-left: 6px;
+}
+
+#connect .lnk-social li:first-child {
+  margin: 0;
+}
+
+.publish {
+  background: #363636;
+  border-radius: 4px;
+  color: #fff;
+  margin-bottom: 30px;
+  font: 20px/1.1 'FS Albert Web Regular', Verdana, sans-serif;
+  font-size-adjust: 0.48;
+  padding: 18px 15px 25px;
+}
+
+.publish h2 {
+  box-shadow: 0 7px 7px -4px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-weight: normal;
+  margin: 0;
+  padding-bottom: 15px;
+}
+
+.publish a {
+  color: #8aa1cf;
+}
+
+.publish .body {
+  padding-top: 20px;
+}
+
+.publish .item {
+  width: 110px;
+  float: left;
+  min-height: 2.5em;
+  padding: 0 10px 0 15px;
+}
+
+.publish .item + .item {
+  padding: 0 0 0 25px;
+  position: relative;
+}
+
+.publish .item + .item:after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2.1em;
+  border-left: 1px solid #666;
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+
+#blog {
+  margin-bottom: 20px;
+}
+
+#blog h3 {
+  font: 20px/1.1 'FS Albert Web Regular', Verdana, sans-serif;
+  font-size-adjust: 0.48;
+  text-align: center;
+  margin-bottom: 25;
+}
+
+#blog h4 {
+  font-size: 0.923em;
+  margin: 25px 0 7px;
+}
+
+#blog h4 a {
+  color: #333;
+}
+
+#blog h4 a:hover {
+  color: #3c63af;
+  text-decoration: none;
+}
+
+#adWrap {
+  background: #fff;
+  margin-bottom: 30px;
+}
+
+#adWrap iframe {
+  float: left;
+}
+
+#homepageTwitterStream {
+  border-top: 1px solid #b3b3b3;
+  margin-bottom: 30px;
+}
+
+.twtr-hd {
+  padding: 25px 10px !important;
+}
+
+#homepageTwitterStream .twtr-widget h4 {
+  font: 30px/1 'FS Albert Web Regular', Verdana, sans-serif !important;
+  font-size-adjust: 0.48;
+  background: url(../images/icon.twtr.28.png) no-repeat 0 50% !important;
+  padding-left: 37px !important;
+}
+
+.twtr-tweets {
+  overflow: hidden;
+}
+
+.twtr-tweet {
+  width: 239px;
+  float: left;
+  border: 0 !important;
+}
+
+#homepageTwitterStream .twtr-tweet p {
+  line-height: 1.333 !important;
+}
+
+.twtr-avatar {
+  float: none !important;
+  height: 48px !important;
+  width: 48px !important;
+  border: 15px solid #fff;
+  margin-bottom: 18px;
+}
+
+.twtr-img img {
+  height: 48px !important;
+  width: 48px !important;
+}
+
+.twtr-tweet-text {
+  margin: 0 20px 0 0 !important;
+}
+
+.twtr-widget em {
+  font-size: 10px !important;
+  margin-top: 10px !important;
+}
+
+.twtr-ft {
+  position: absolute !important;
+  top: 25px;
+  right: 10px;
+}
+
+.twtr-ft a img {
+  display: none;
+}
+
+.twtr-ft span a {
+  background: #f8af2d;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 35px;
+  text-align: center;
+  width: 220px;
+  border-radius: 4px;
+}
+
+.twtr-ft span a:hover {
+  background: #3c63af;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+.twtr-ft div {
+  padding: 0 !important;
+}
+
+/*plos one*/
+
+#search-home {
+  width: 960px;
+  margin: 0 auto;
+  padding: 35px 0 40px;
+  color: #afafaf;
+}
+
+#search-home p.intro {
+  text-align: center;
+  font: 20px/24px 'FS Albert Web Regular', Verdana, sans-serif;
+  font-size-adjust: 0.48;
+}
+
+#search-home p.intro strong {
+  font-weight: normal;
+  color: #fff;
+}
+
+#search-home #db {
+  margin-left: 115px;
+  position: relative;
+  width: 700px;
+}
+
+#search-home #db .wrap {
+  width: 525px;
+  padding-left: 15px;
+  margin: 0;
+}
+
+#search-home #db input#search {
+  width: 490px;
+}
+
+#search-home #advSearch {
+  min-width: 123px;
+  position: absolute;
+  top: 2px;
+  right: 0;
+}
+
+.explore {
+  padding: 0 5px 0 10px;
+  margin-bottom: 30px;
+}
+
+.explore h2 {
+  font: 30px 'FS Albert Web Regular', Verdana, sans-serif;
+  font-size-adjust: 0.48;
+  margin-bottom: 25px;
+}
+
+.explore ul {
+  width: 290px;
+}
+
+.explore li {
+  font-size: 15px;
+  padding-left: 15px;
+  background: url(../images/bul.blu.png) no-repeat 0 8px;
+  margin-bottom: 6px;
+}
+
+.explore li a img {
+  visibility: hidden;
+}
+
+.explore li:hover a img {
+  visibility: visible;
+}

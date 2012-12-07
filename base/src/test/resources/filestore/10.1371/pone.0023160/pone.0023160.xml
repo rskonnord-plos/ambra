@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="3.0" xml:lang="EN">
+  <front>
+    <journal-meta><journal-id journal-id-type="nlm-ta">PLoS ONE</journal-id><journal-id journal-id-type="publisher-id">plos</journal-id><journal-id journal-id-type="pmc">plosone</journal-id><!--===== Grouping journal title elements =====--><journal-title-group><journal-title>PLoS ONE</journal-title></journal-title-group><issn pub-type="epub">1932-6203</issn><publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, USA</publisher-loc>
+      </publisher></journal-meta>
+    <article-meta><article-id pub-id-type="publisher-id">PONE-D-11-09799</article-id><article-id pub-id-type="doi">10.1371/journal.pone.0023160</article-id><article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Biology</subject>
+          <subj-group>
+            <subject>Biochemistry</subject>
+            <subj-group>
+              <subject>Nucleic acids</subject>
+              <subj-group>
+                <subject>DNA</subject>
+                <subj-group>
+                  <subject>DNA recombination</subject>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Proteins</subject>
+              <subj-group>
+                <subject>Protein synthesis</subject>
+                <subject>Recombinant proteins</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Genetics</subject>
+            <subj-group>
+              <subject>Cloning</subject>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Microbiology</subject>
+            <subj-group>
+              <subject>Virology</subject>
+              <subj-group>
+                <subject>Viral transmission and infection</subject>
+                <subj-group>
+                  <subject>Viral vectors</subject>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Molecular cell biology</subject>
+            <subj-group>
+              <subject>Cellular types</subject>
+              <subj-group>
+                <subject>Endothelial cells</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Nucleic acids</subject>
+              <subj-group>
+                <subject>DNA</subject>
+                <subj-group>
+                  <subject>DNA recombination</subject>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Medicine</subject>
+          <subj-group>
+            <subject>Cardiovascular</subject>
+            <subj-group>
+              <subject>Vascular biology</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline">
+          <subject>Genetics and Genomics</subject>
+          <subject>Virology</subject>
+          <subject>Molecular Biology</subject>
+          <subject>Cell Biology</subject>
+          <subject>Biochemistry</subject>
+        </subj-group>
+      </article-categories><title-group><article-title>Checkpoints in Adenoviral Production: Cross-Contamination and E1A</article-title><alt-title alt-title-type="running-head">Checkpoints in Adenoviral Production</alt-title></title-group><contrib-group>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Bachschmid</surname>
+            <given-names>Markus M.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="corresp" rid="cor1">
+            <sup>*</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn1">
+            <sup>¶</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Pimental</surname>
+            <given-names>David R.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff2">
+            <sup>2</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn1">
+            <sup>¶</sup>
+          </xref>
+        </contrib>
+      </contrib-group><aff id="aff1"><label>1</label><addr-line>Vascular Biology Section, Boston University Medical Center, Boston, Massachusetts, United States of America</addr-line>       </aff><aff id="aff2"><label>2</label><addr-line>Myocardial Biology Unit, Boston University Medical Center, Boston, Massachusetts, United States of America</addr-line>       </aff><contrib-group>
+        <contrib contrib-type="editor" xlink:type="simple">
+          <name name-style="western">
+            <surname>Uversky</surname>
+            <given-names>Vladimir N.</given-names>
+          </name>
+          <role>Editor</role>
+          <xref ref-type="aff" rid="edit1"/>
+        </contrib>
+      </contrib-group><aff id="edit1">University of South Florida College of Medicine, United States of America</aff><author-notes>
+        <corresp id="cor1">* E-mail: <email xlink:type="simple">bach@bu.edu</email></corresp>
+        <fn fn-type="con">
+          <p>Conceived and designed the experiments: DH AE JB RAC MB DP. Performed the experiments: DH AE JB. Analyzed the data: DH AE JB MB DP. Contributed reagents/materials/analysis tools: DP. Wrote the paper: DH AE JB RAC MB DP.</p>
+        </fn>
+        <fn fn-type="other" id="fn1">
+          <p>¶ These authors also contributed equally to this work.</p>
+        </fn>
+      <fn fn-type="conflict">
+        <p>The authors have declared that no competing interests exist.</p>
+      </fn></author-notes><pub-date pub-type="collection">
+        <year>2011</year>
+      </pub-date><pub-date pub-type="epub">
+        <day>3</day>
+        <month>8</month>
+        <year>2011</year>
+      </pub-date><volume>6</volume><issue>8</issue><elocation-id>e23160</elocation-id><history>
+        <date date-type="received">
+          <day>31</day>
+          <month>5</month>
+          <year>2011</year>
+        </date>
+        <date date-type="accepted">
+          <day>7</day>
+          <month>7</month>
+          <year>2011</year>
+        </date>
+      </history><!--===== Grouping copyright info into permissions =====--><permissions><copyright-year>2011</copyright-year><copyright-holder>Haeussler et al</copyright-holder><license><license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p></license></permissions><abstract>
+        <p>Adenoviruses are widely used for overexpressing proteins in primary mammalian cells. Incorporation of the early viral gene, E1A, or viral cross-contamination can occur during amplification, and identification of these products is crucial as the transcription of unwanted genetic material can impact cell function and compromise data interpretation. Here we report methods for evaluation of contaminating adenovirus and E1 viral DNA.</p>
+      </abstract><funding-group><funding-statement>This work was supported by the National Institutes of Health (HL031607-28 to R.A.C., PO1 HL 068758 and R37 HL104017 to D.J.H., J.R.B., and M.M.B., and HL007501-26 to A.E., and K08HL071563 to D.P.) and its contents are solely the responsibility of the authors and do not necessarily represent the official views of the awarding offices. This work was also supported by a Sir Henry Wellcome postdoctoral fellowship from The Wellcome Trust (Sponsor Reference 085483/Z/08/Z; to J.R.B.). The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.</funding-statement></funding-group><counts>
+        <page-count count="3"/>
+      </counts></article-meta>
+  </front>
+  <body>
+    <sec id="s1">
+      <title>Introduction</title>
+      <p>The generation and use of adenoviruses (Ad) in physiological research has become a routine procedure due to their ability to increase protein expression in primary mammalian cells that cannot be efficiently transfected with plasmid DNA. Creating and amplifying an Ad is a time and labor intensive process; therefore it is necessary to determine as early as possible that the gene of interest (GOI) is free of mutations and is not contaminated with another coding sequence. This is particularly pertinent when creating more than one Ad at a time using site directed mutagenesis (i.e. wild type and mutant), as it is not possible to verify the authenticity of the final adenovirally expressed protein using standard immunoblot techniques. Although it is common practice to screen the Ad cosmid DNA for errors, in our experience the stage at which Ad are most susceptible to unwanted contamination, and therefore the most important to screen, is during the initial formation of a viral plaque. During this period of time a single contaminating viral particle, i.e. from aerosolization of another Ad used in the same sterile hood, or an Ad that is amplified in the same incubator as the single clones, is enough to cause contamination, which may replace expression of the intended GOI with that of the contaminating virus. We therefore propose routine evaluation of the initial viral plaques should be done using a simple PCR-based method and suggest routine decontamination of incubators used to amplify Ad.</p>
+      <p>Refined vector systems, such as AdEasy, make Ad production a relatively straight forward procedure. This system is based on the human Ad serotype 5 genome and belongs to the so called 2<sup>nd</sup> generation Ad constructs that omit the early viral genes, E1 and E3, but maintain the viral packaging signal and inverted terminal repeat (ITR) required for viral transcription. The benefits of using 2<sup>nd</sup> generation Ad are that they can accommodate a GOI up to 7.5 kb. Using a bacterial plasmid containing left and right arm flanking homology domains, the GOI is inserted into the site of the disrupted E1A by homologous recombination. E1A is a viral transcription factor required for induction of early genes necessary for viral replication, including E1B and E2 <xref ref-type="bibr" rid="pone.0023160-Nevins1">[1]</xref>, <xref ref-type="bibr" rid="pone.0023160-Wu1">[2]</xref>, progression of the cell cycle, and inhibition of apoptosis <xref ref-type="bibr" rid="pone.0023160-Wu1">[2]</xref>. E3, though not technically required for viral replication, plays an important role in suppression of host immunity <xref ref-type="bibr" rid="pone.0023160-Schaack1">[3]</xref>, <xref ref-type="bibr" rid="pone.0023160-Ginsberg1">[4]</xref>. In the absence of E1A and E3, the recombinant Ad can infect but not replicate in most cells. Since 2<sup>nd</sup> generation Ad lack E1 and E3, rendering them non-replicative, they must be amplified in packaging cell lines that express E1 gene products. In HEK293 cells, which are transformed with bases 1–4355 (containing full-length E1) of sheared human Ad5 genome, the Ad with GOI insert can be packaged and amplified via E1A and E3 supplied <italic>in trans</italic>. However, because many vector systems maintain significant portions of the human Ad5 genome, single or double homologous recombination events between the transformed HEK293 cells and the viral cosmid can occur, resulting in the production of replication competent Ad contamination (<xref ref-type="fig" rid="pone-0023160-g001">Figure 1</xref>). Though rare in early passages of adenovirus, the probability of replication competent Ad contamination increases with large-scale amplification <xref ref-type="bibr" rid="pone.0023160-Lochmuller1">[5]</xref>, a phenomenon that has led to the decline of HEK293 cells in adenoviral production for clinical usage but has not translated to the basic science laboratory. Even optimized protocols fail to warn about the possibility of recombination with the early viral genes and how to monitor the authenticity of Ad during the amplification process via a simple PCR method.</p>
+      <fig id="pone-0023160-g001" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0023160.g001</object-id>
+        <label>Figure 1</label>
+        <caption>
+          <title>Homologous recombination of HEK293 Ad5 genomic DNA with the Ad construct.</title>
+          <p>HEK293 cells contain bases 1–4345 of Human Ad serotype 5 genome, including the packaging signal (ψ) and E1 region. Overlapping Ad5 sequences in 2<sup>nd</sup> generation Ad constructs can undergo single or double homologous recombination to yield replication competent Ad.</p>
+        </caption>
+        <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0023160.g001" xlink:type="simple"/>
+      </fig>
+    </sec>
+    <sec id="s2" sec-type="materials|methods">
+      <title>Materials and Methods</title>
+      <p>Ad constructs were prepared and cesium chloride purification was performed according to the previously reported methods <xref ref-type="bibr" rid="pone.0023160-Luo1">[6]</xref>, <xref ref-type="bibr" rid="pone.0023160-Adachi1">[7]</xref>.</p>
+      <sec id="s2a">
+        <title>Isolation of Ad DNA and PCR for E1A</title>
+        <p>DNA was isolated from cesium chloride-purified Ad using proteinase K extraction with the RedExtract-N-Amp Tissue PCR kit (Sigma). Isolated Ad DNA was tested for the presence of E1A contamination using the following primer sets as reported by Lavine et al. and Kuwano et al. <xref ref-type="bibr" rid="pone.0023160-Lavine1">[8]</xref>, <xref ref-type="bibr" rid="pone.0023160-Kuwano1">[9]</xref>:</p>
+        <p>E1A nested outer primers: <named-content content-type="gene" xlink:type="simple">5′-CTGCCACGGAGGTGTTATTACC-3′</named-content> and <named-content content-type="gene" xlink:type="simple">5′-CTCAGGTTCAGACACAGGACCT-3′</named-content></p>
+        <p>E1A nested inner primers: <named-content content-type="gene" xlink:type="simple">5′-GAACCACCTACCCTTCACGAACTG-3′</named-content> and <named-content content-type="gene" xlink:type="simple">5′-GTGGCAGGTAAGATCGATCACCTC-3′</named-content>.</p>
+        <p>E1A primer set: <named-content content-type="gene" xlink:type="simple">5′-TATGCCAAACCTTGTACCGGAGGT-3′</named-content> and <named-content content-type="gene" xlink:type="simple">5′-CCGGGGTGCTCCACATAATCT-3′</named-content></p>
+        <p>Nested PCR reactions were performed sequentially. All reactions were performed using REDExtract-N-Amp PCR Reaction Mix containing JumpStart Taq polymerase (Sigma Aldrich) using an Endurance TC-512 Thermocycler (Techne Inc.). Primers were added at a final concentration of 5 µM to 1× PCR Reaction Mix containing 4 µl DNA for a final volume of 20 µl. Nested PCR was performed with initial denaturation at 94 degrees for 3 mins followed by 30 cycles with denaturation for 1 min at 94 degrees, annealing for 45 secs at 63 degrees and extension for 1 min at 72 degrees. Final extension was held for 10 mins at 72 degrees. Confirmation of PCR products was performed using the E1A primer set and was performed with initial denaturation at 94 degrees for 3 mins followed by 30 cycles with denaturation for 1 min at 94 degrees, annealing for 30 secs at 60 degrees and extension for 45 secs at 72 degrees. PCR products were analyzed on a 1% agarose gel containing 200 ng/ml ethidium bromide (Bio-Rad) in 1× TAE buffer. Bands were visualized using the Bio-Rad Gel-Doc system.</p>
+      </sec>
+      <sec id="s2b">
+        <title>Isolation of Ad DNA and PCR for GOI</title>
+        <p>DNA was isolated from early amplifications by taking a small portion of the cell suspension before freeze/thawing, obtaining a cell pellet by centrifugation (5 min, 1000 rcf) and performing proteinase K extraction with the RedExtract-N-Amp Tissue PCR kit (Sigma).</p>
+        <p>Primer I (within affinity tag): <named-content content-type="gene" xlink:type="simple">5′-CAAATGGGTCGGGATCTGTA-3′</named-content></p>
+        <p>Primer I (within pshuttle-CMV): <named-content content-type="gene" xlink:type="simple">5′- ACCGTCAGATCCGCTAGAGA- 3′</named-content></p>
+        <p>Primer II (downstream GOI): <named-content content-type="gene" xlink:type="simple">5′-GATCCGGTGGATCGGATAAA-3′</named-content></p>
+        <p>Primer III (Sequencing Primer): <named-content content-type="gene" xlink:type="simple">5′-GATCCAGAACCATTTTGTG-3′</named-content></p>
+        <p>Primers were added at a final concentration of 0.5 µM to 1× PCR Reaction Mix containing 3–7 µl DNA (depending on viral titer). PCR reaction was performed with an initial denaturation at 94 degrees for 3 mins and annealing at 60 degrees for 3 min, followed by 30 cycles with denaturation for 1 min at 94 degrees, annealing for 30 secs at 60 degrees and extension for 30 secs at 72 degrees. Final extension was held for 10 mins at 72 degrees. 5 µl of PCR product was analyzed for size as described above. The remaining PCR reaction was processed with a PCR cleanup kit (Qiagen) and submitted for sequencing using the Tufts sequencing core facility.</p>
+      </sec>
+    </sec>
+    <sec id="s3">
+      <title>Results and Discussion</title>
+      <p>To specifically amplify only GOI and not the HEK cell endogenous gene, we designed a set of PCR primers (<xref ref-type="fig" rid="pone-0023160-g002">Figure 2A</xref>), where Primer I binds either at the junction between the upstream vector and GOI sequence or, if available, within the affinity tag sequence of the GOI. Primer II binds at the sequence downstream of GOI and ensures amplification of only the Ad sequence. The PCR products were checked for specific amplification and size via agarose gel separation, and DNA sequencing services were used to determine the authenticity of the PCR product (<xref ref-type="fig" rid="pone-0023160-g002">Figure 2B</xref>). Depending on the size of GOI, one or more sequencing primers (Primer III) should be designed to cover the entire sequence. When using multiple primers, contiguous primers should be designed to generate overlapping sequences. By using this method we identified a contaminant during an attempt to create an Ad. In this particular case we found 3 different populations of Ad from the initial viral plaque. In <xref ref-type="fig" rid="pone-0023160-g002">Figure 2C</xref>, the chromatograms show 1) the desired mutation C118, 2) a mixed virus population of C118 contaminated with S118, and 3) a completely contaminated clone with S118. With this PCR-based method it is not only possible to detect cross-contamination but also accidental mutation that can happen while the virus is amplified from a single copy to up to 10<sup>12</sup> viral particles per ml. This screening technique ensures that only viral clones with the correct DNA sequence are propagated and provides assurance that results obtained with Ad can be accurately interpreted.</p>
+      <fig id="pone-0023160-g002" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0023160.g002</object-id>
+        <label>Figure 2</label>
+        <caption>
+          <title>Contamination of Ad constructs during replication.</title>
+          <p>(A) Primer locations for PCR of Ad and subsequent sequencing. Primer I and primer III ensure PCR of viral DNA by overlapping either with an affinity tag or part of the construct sequence. (B) Procedure used for sequencing Ad. (C) Sequencing results from early stage Ad amplification demonstrating contamination of the GOI.</p>
+        </caption>
+        <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0023160.g002" xlink:type="simple"/>
+      </fig>
+      <p>Following amplification in HEK293 cells, high titer virus can be purified using the cesium chloride density centrifugation method, which yields high purity viral stock. We propose routine screening of this stock for the presence of contaminating replication competent Ad. Traditional sequencing protocols for the viral genome rely on reverse transcription of mRNA produced in Ad transfected cells; however, using proteinase K extraction, we purified viral DNA and directly tested for E1A using PCR. We tested four viruses amplified in HEK293 cells and found E1A contamination present in one Ad stock (<xref ref-type="fig" rid="pone-0023160-g003">Figure 3A</xref>). Using the contaminated Ad and an Ad containing the same GOI but no E1A contamination, we infected human aortic endothelial cells (HAEC) and measured cellular migration using a tube formation assay in Matrigel-coated plates. Ad contaminated with E1A showed a marked increase in tube formation over the same virus without E1A (<xref ref-type="fig" rid="pone-0023160-g003">Figure 3B</xref>) in response to VEGF, demonstrating the possible confounding impact of E1A contamination in cell culture studies. Testing for E1A contamination after purification of Ad should be standard practice in order to ensure the integrity of results in Ad-transduced cells.</p>
+      <fig id="pone-0023160-g003" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0023160.g003</object-id>
+        <label>Figure 3</label>
+        <caption>
+          <title>Detection and effects of E1A in HAEC.</title>
+          <p>(A) DNA was extracted from cesium chloride purified Ad or HEK293 cells and PCR was performed with primers for E1A. Ad 3 shows E1A contamination. (B) VEGF-induced tube formation in HAEC infected with either Ad containing the GOI or Ad coding for the GOI and the contaminant E1A.</p>
+        </caption>
+        <graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0023160.g003" xlink:type="simple"/>
+      </fig>
+    </sec>
+  </body>
+  <back>
+    <ref-list>
+      <title>References</title>
+      <ref id="pone.0023160-Nevins1">
+        <label>1</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Nevins</surname><given-names>JR</given-names></name></person-group>             <year>1986</year>             <article-title>Control of cellular and viral transcription during adenovirus infection.</article-title>             <source>CRC Crit Rev Biochem</source>             <volume>19</volume>             <fpage>307</fpage>             <lpage>322</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Wu1">
+        <label>2</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Wu</surname><given-names>L</given-names></name><name name-style="western"><surname>Rosser</surname><given-names>DS</given-names></name><name name-style="western"><surname>Schmidt</surname><given-names>MC</given-names></name><name name-style="western"><surname>Berk</surname><given-names>A</given-names></name></person-group>             <year>1987</year>             <article-title>A TATA box implicated in E1A transcriptional activation of a simple adenovirus 2 promoter.</article-title>             <source>Nature</source>             <volume>326</volume>             <fpage>512</fpage>             <lpage>515</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Schaack1">
+        <label>3</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Schaack</surname><given-names>J</given-names></name><name name-style="western"><surname>Bennett</surname><given-names>ML</given-names></name><name name-style="western"><surname>Colbert</surname><given-names>JD</given-names></name><name name-style="western"><surname>Torres</surname><given-names>AV</given-names></name><name name-style="western"><surname>Clayton</surname><given-names>GH</given-names></name><etal/></person-group>             <year>2004</year>             <article-title>E1A and E1B proteins inhibit inflammation induced by adenovirus.</article-title>             <source>Proc Natl Acad Sci U S A</source>             <volume>101</volume>             <fpage>3124</fpage>             <lpage>3129</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Ginsberg1">
+        <label>4</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Ginsberg</surname><given-names>HS</given-names></name><name name-style="western"><surname>Lundholm-Beauchamp</surname><given-names>U</given-names></name><name name-style="western"><surname>Horswood</surname><given-names>RL</given-names></name><name name-style="western"><surname>Pernis</surname><given-names>B</given-names></name><name name-style="western"><surname>Wold</surname><given-names>WS</given-names></name><etal/></person-group>             <year>1989</year>             <article-title>Role of early region 3 (E3) in pathogenesis of adenovirus disease.</article-title>             <source>Proc Natl Acad Sci U S A</source>             <volume>86</volume>             <fpage>3823</fpage>             <lpage>3827</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Lochmuller1">
+        <label>5</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Lochmuller</surname><given-names>H</given-names></name><name name-style="western"><surname>Jani</surname><given-names>A</given-names></name><name name-style="western"><surname>Huard</surname><given-names>J</given-names></name><name name-style="western"><surname>Prescott</surname><given-names>S</given-names></name><name name-style="western"><surname>Simoneau</surname><given-names>M</given-names></name><etal/></person-group>             <year>1994</year>             <article-title>Emergence of early region 1-containing replication-competent adenovirus in stocks of replication-defective adenovirus recombinants (delta E1 + delta E3) during multiple passages in 293 cells.</article-title>             <source>Hum Gene Ther</source>             <volume>5</volume>             <fpage>1485</fpage>             <lpage>1491</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Luo1">
+        <label>6</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Luo</surname><given-names>J</given-names></name><name name-style="western"><surname>Deng</surname><given-names>ZL</given-names></name><name name-style="western"><surname>Luo</surname><given-names>X</given-names></name><name name-style="western"><surname>Tang</surname><given-names>N</given-names></name><name name-style="western"><surname>Song</surname><given-names>WX</given-names></name><etal/></person-group>             <year>2007</year>             <article-title>A protocol for rapid generation of recombinant adenoviruses using the AdEasy system.</article-title>             <source>Nat Protoc</source>             <volume>2</volume>             <fpage>1236</fpage>             <lpage>1247</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Adachi1">
+        <label>7</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Adachi</surname><given-names>T</given-names></name><name name-style="western"><surname>Pimentel</surname><given-names>DR</given-names></name><name name-style="western"><surname>Heibeck</surname><given-names>T</given-names></name><name name-style="western"><surname>Hou</surname><given-names>X</given-names></name><name name-style="western"><surname>Lee</surname><given-names>YJ</given-names></name><etal/></person-group>             <year>2004</year>             <article-title>S-glutathiolation of Ras mediates redox-sensitive signaling by angiotensin II in vascular smooth muscle cells.</article-title>             <source>J Biol Chem</source>             <volume>279</volume>             <fpage>29857</fpage>             <lpage>29862</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Lavine1">
+        <label>8</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Lavine</surname><given-names>JA</given-names></name><name name-style="western"><surname>Raess</surname><given-names>PW</given-names></name><name name-style="western"><surname>Davis</surname><given-names>DB</given-names></name><name name-style="western"><surname>Rabaglia</surname><given-names>ME</given-names></name><name name-style="western"><surname>Presley</surname><given-names>BK</given-names></name><etal/></person-group>             <year>2010</year>             <article-title>Contamination with E1A-positive wild-type adenovirus accounts for species-specific stimulation of islet cell proliferation by CCK: a cautionary note.</article-title>             <source>Mol Endocrinol</source>             <volume>24</volume>             <fpage>464</fpage>             <lpage>467</lpage>          </element-citation>
+      </ref>
+      <ref id="pone.0023160-Kuwano1">
+        <label>9</label>
+        <element-citation publication-type="journal" xlink:type="simple">             <person-group person-group-type="author"><name name-style="western"><surname>Kuwano</surname><given-names>K</given-names></name><name name-style="western"><surname>Nomoto</surname><given-names>Y</given-names></name><name name-style="western"><surname>Kunitake</surname><given-names>R</given-names></name><name name-style="western"><surname>Hagimoto</surname><given-names>N</given-names></name><name name-style="western"><surname>Matsuba</surname><given-names>T</given-names></name><etal/></person-group>             <year>1997</year>             <article-title>Detection of adenovirus E1A DNA in pulmonary fibrosis using nested polymerase chain reaction.</article-title>             <source>Eur Respir J</source>             <volume>10</volume>             <fpage>1445</fpage>             <lpage>1449</lpage>          </element-citation>
+      </ref>
+    </ref-list>
+    
+  </back>
+</article>

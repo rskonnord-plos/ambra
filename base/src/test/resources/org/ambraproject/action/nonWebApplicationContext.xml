@@ -52,6 +52,12 @@
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
+  <!-- used by AmbraFreeMarkerConfigTest -->
+  <bean id="ambraConfiguration2" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
+        factory-method="getConfiguration">
+    <constructor-arg index="0" value="ambra-test-config.xml"/>
+  </bean>
+
   <!--Solr server factory-->
   <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
 
@@ -209,7 +215,6 @@
   <bean id="fetchArticleService" class="org.ambraproject.service.article.FetchArticleServiceImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="articleHtmlCache" ref="articleHtmlCache"/>
-    <property name="annotationService" ref="annotationService"/>
     <property name="fileStoreService" ref="fileStoreService"/>
     <property name="articleTransformService" ref="xmlService"/>
   </bean>

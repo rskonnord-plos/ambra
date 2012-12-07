@@ -32,25 +32,27 @@ import org.ambraproject.util.TextUtils;
 import org.ambraproject.util.UriUtil;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.RatingSummaryView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.ambraproject.service.annotation.AnnotationService.AnnotationOrder;
@@ -72,13 +74,18 @@ import static org.ambraproject.service.annotation.AnnotationService.AnnotationOr
  * Struts picks this up and translates it call the FetchArticleRelated method ex: &lt;action name="fetchRelatedArticle"
  * class="org.ambraproject.article.action.FetchArticleTabsAction" method="FetchArticleRelated"&gt;
  */
-public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
+public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implements ArticleHeaderAction {
   private static final Logger log = LoggerFactory.getLogger(FetchArticleTabsAction.class);
   private final ArrayList<String> messages = new ArrayList<String>();
+
+  private static final int RELATED_AUTHOR_SEARCH_QUERY_SIZE = 4;
 
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
+  private List<String> correspondingAuthor;
+  private List<String> authorContributions;
+  private List<String> competingInterest;
   private int pageCount = 0;
 
   private int totalNumAnnotations = 0;
@@ -102,9 +109,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   private List<List<String>> articleIssues;
   private List<LinkbackView> trackbackList;
   private int trackbackCount;
-  private ArrayList<AuthorExtra> authorExtras;
-  private ArrayList<CitationReference> references;
+  private List<AuthorView> authors;
+  private List<CitationReference> references;
   private String journalAbbrev;
+  private String relatedAuthorSearchQuery;
 
   private FetchArticleService fetchArticleService;
   private AnnotationService annotationService;
@@ -127,12 +135,15 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     try {
 
       setCommonData();
-      //get the corrections without replies loaded up, and ordered oldest to newest. We don't need to show a count of replies on the main article page
-      AnnotationView[] annotationViews = annotationService.listAnnotationsNoReplies(
+      //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
+      AnnotationView[] annotationViews = annotationService.listAnnotations(
           articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
-          AnnotationOrder.OLDEST_TO_NEWEST
+          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
+              AnnotationType.COMMENT, AnnotationType.NOTE),
+          AnnotationOrder.NEWEST_TO_OLDEST
       );
+
+      List<AnnotationView> commentList = new LinkedList<AnnotationView>();
       for (AnnotationView annotationView : annotationViews) {
         switch (annotationView.getType()) {
           case FORMAL_CORRECTION:
@@ -144,9 +155,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
           case RETRACTION:
             retractions.add(annotationView);
             break;
+          case COMMENT:
+          case NOTE:
+            commentList.add(annotationView);
+            break;
         }
       }
-      numCorrections = annotationViews.length;
+      commentary = commentList.toArray(new AnnotationView[commentList.size()]);
+      numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
 
 
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
@@ -192,7 +208,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
 
       //have to count the corrections so we know whether to show a 'Show All corrections' link
       numCorrections = annotationService.countAnnotations(articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
+        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
       //have to indicate if there's a retraction so we know whether to show a 'Show Retraction' link
       isRetracted = annotationService.countAnnotations(articleInfoX.getId(), EnumSet.of(AnnotationType.RETRACTION)) > 0;
 
@@ -242,6 +258,27 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
   }
 
   /**
+   * Fetches common data for the authors tab
+   *
+   * @return "success" on succes, "error" on error
+   */
+  public String fetchArticleAuthors() {
+    try {
+      setCommonData();
+
+    } catch (NoSuchArticleIdException e) {
+      messages.add("No article found for id: " + articleURI);
+      log.info("Could not find article: " + articleURI, e);
+      return ERROR;
+    } catch (Exception e) {
+      messages.add(e.getMessage());
+      log.error("Error retrieving article: " + articleURI, e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
    * Fetches common data and the trackback list.
    *
    * @return "success" on succes, "error" on error
@@ -274,6 +311,28 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       setCommonData();
 
       trackbackList = trackbackService.getTrackbacksForArticle(articleURI);
+
+      // get the first two and the last two authors
+      List<String> authors = articleInfoX.getAuthors();
+      int authorSize = authors.size();
+      relatedAuthorSearchQuery = "";
+      if (authorSize <= RELATED_AUTHOR_SEARCH_QUERY_SIZE) {
+        for (String author : authors) {
+          relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + author + "\" OR ";
+        }
+        // remove the last ", OR "
+        if (relatedAuthorSearchQuery.length() > 0) {
+          relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
+        }
+
+      } else {
+        // get first 2
+        relatedAuthorSearchQuery = "\"" + authors.get(0) + "\" OR ";
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(1) + "\" OR ";
+        // get last 2
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 2) + "\" OR ";
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 1) + "\"";
+      }
 
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
@@ -334,14 +393,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
         EnumSet.of(AnnotationType.NOTE, AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
             AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
 
-    articleType = ArticleType.getDefaultArticleType();
-    for (String artType : this.articleInfoX.getTypes()) {
-      URI articleTypeUri = URI.create(artType);
-      if (ArticleType.getKnownArticleTypeForURI(articleTypeUri) != null) {
-        articleType = ArticleType.getKnownArticleTypeForURI(articleTypeUri);
-        break;
-      }
-    }
+    articleType = articleInfoX.getKnownArticleType();
 
     String pages = this.articleInfoX.getPages();
 
@@ -356,10 +408,17 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
       }
     }
 
+    //TODO: Refactor this to not be spaghetti, all these properties should be made
+    //to be part of articleInfo.  Rename articleInfo to articleView and populate articleView
+    //In the service tier in whatever way is appropriate
     Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
-    authorExtras = this.fetchArticleService.getAuthorAffiliations(doc);
+    authors = this.fetchArticleService.getAuthors(doc);
+    correspondingAuthor = this.fetchArticleService.getCorrespondingAuthors(doc);
+    authorContributions = this.fetchArticleService.getAuthorContributions(doc);
+    competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
+
     articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
 
     /**
@@ -372,6 +431,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
         publishedJournal = ambraFreemarkerConfig.getDisplayName(j.getJournalKey());
       }
     }
+  }
+
+  @Override
+  public boolean getHasAboutAuthorContent() {
+    return AuthorView.anyHasAffiliation(authors)
+        || CollectionUtils.isNotEmpty(correspondingAuthor)
+        || CollectionUtils.isNotEmpty(authorContributions)
+        || CollectionUtils.isNotEmpty(competingInterest);
   }
 
   /**
@@ -565,19 +632,34 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    * @return Comma delimited string of authors
    */
   public String getAuthorNames() {
-    StringBuilder sb = new StringBuilder();
+    return AuthorView.buildNameList(authors);
+  }
 
-    //Fixed for JIRA Id: NHOPE-88
+  /**
+   * Get the corresponding author
+   *
+   * @return
+   */
+  public List<String> getCorrespondingAuthor() {
+    return this.correspondingAuthor;
+  }
 
-    for (AuthorExtra author : authorExtras) {
-      if (sb.length() > 0) {
-        sb.append(", ");
-      }
+  /**
+   * Get the author contributions
+   *
+   * @return
+   */
+  public List<String> getAuthorContributions() {
+    return this.authorContributions;
+  }
 
-      sb.append(author.getAuthorName());
-    }
-
-    return sb.toString();
+  /**
+   * Get the authors competing interest
+   *
+   * @return
+   */
+  public List<String> getCompetingInterest() {
+    return competingInterest;
   }
 
   /**
@@ -666,16 +748,51 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
    *
    * @return author affiliations
    */
-  public ArrayList<AuthorExtra> getAuthorExtras() {
-    return this.authorExtras;
+  public List<AuthorView> getAuthors() {
+    return this.authors;
   }
+
+  /**
+   * Get a list of contributing authors
+   *
+   * @return
+   */
+  public String getContributingAuthors() {
+    return AuthorView.buildContributingAuthorsList(authors);
+  }
+
+  /**
+   * Generate a list of authors grouped by affiliation
+   *
+   * @return a list of authors grouped by affiliation
+   */
+  public Set<Map.Entry<String, List<AuthorView>>> getAuthorsByAffiliation() {
+    Map<String, List<AuthorView>> authorsByAffil = new HashMap<String, List<AuthorView>>();
+
+    for(AuthorView ae : this.authors) {
+      for(String affilation : ae.getAffiliations()) {
+        List<AuthorView> authors;
+
+        if(authorsByAffil.containsKey(affilation)) {
+          authors = authorsByAffil.get(affilation);
+        } else {
+          authors = new ArrayList<AuthorView>();
+          authorsByAffil.put(affilation, authors);
+        }
+        authors.add(ae);
+      }
+    }
+
+    return authorsByAffil.entrySet();
+  }
+
 
   /**
    * Returns a list of citation references
    *
    * @return citation references
    */
-  public ArrayList<CitationReference> getReferences() {
+  public List<CitationReference> getReferences() {
     return this.references;
   }
 
@@ -700,4 +817,12 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport {
     return TextUtils.transformXMLtoHtmlText(articleInfoX.getDescription());
   }
 
+  /**
+   * Returns related article author search query
+   *
+   * @return author name query
+   */
+  public String getRelatedAuthorSearchQuery() {
+    return relatedAuthorSearchQuery;
+  }
 }

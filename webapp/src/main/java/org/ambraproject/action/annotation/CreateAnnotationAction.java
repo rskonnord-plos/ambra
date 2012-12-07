@@ -20,32 +20,23 @@
 package org.ambraproject.action.annotation;
 
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import org.ambraproject.Constants;
-import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.annotation.Context;
 import org.ambraproject.service.cache.Cache;
-import org.ambraproject.util.ProfanityCheckingService;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-
-import java.util.List;
 
 /**
  * Action to create an annotation. It also does profanity validation on the user content.
  */
 @SuppressWarnings("serial")
-public class CreateAnnotationAction extends BaseSessionAwareActionSupport {
+public class CreateAnnotationAction extends DiscussionAction {
+
   private String target;
-  private String commentTitle;
-  private String ciStatement;
-  private String comment;
   private String mimeType = "text/plain";
   private String annotationId;
   private boolean isPublic = false;
-  private boolean isCompetingInterest = false;
   private String noteType;
   private String startPath;
   private int startOffset;
@@ -53,93 +44,34 @@ public class CreateAnnotationAction extends BaseSessionAwareActionSupport {
   private int endOffset;
   private String supercedes;
 
-  private ProfanityCheckingService profanityCheckingService;
   protected AnnotationService annotationService;
   private Cache articleHtmlCache;
   private static final Logger log = LoggerFactory.getLogger(CreateAnnotationAction.class);
 
-  /**
-   * {@inheritDoc}
-   * Also does some profanity check for commentTitle and comment before creating the annotation.
-   */
   @Override
-  public String execute() throws Exception {
-    if (isInvalid())
-      return INPUT;
+  protected void create() {
+    boolean flagAsCorrection = "correction".equals(noteType);
+    annotationId = annotationService.createComment(
+        getCurrentUser(),
+        target,
+        commentTitle,
+        comment,
+        ciStatement,
+        new Context(startPath, startOffset, endPath, endOffset, target),
+        flagAsCorrection).toString();
 
-    try {
-      final List<String> profaneWordsInTitle = profanityCheckingService.validate(commentTitle);
-      final List<String> profaneWordsInBody = profanityCheckingService.validate(comment);
-      final List<String> profaneWordsInCIStatement = profanityCheckingService.validate(ciStatement);
-
-      if (profaneWordsInBody.isEmpty() && profaneWordsInTitle.isEmpty() &&
-          profaneWordsInCIStatement.isEmpty()) {
-        boolean flagAsCorrection = "correction".equals(noteType);
-        annotationId = annotationService.createComment(
-            getCurrentUser(),
-            target,
-            commentTitle,
-            comment,
-            ciStatement,
-            new Context(startPath, startOffset, endPath, endOffset, target),
-            flagAsCorrection).toString();
-
-        articleHtmlCache.remove(target);
-
-      } else {
-        addProfaneMessages(profaneWordsInBody, "comment", "comment");
-        addProfaneMessages(profaneWordsInTitle, "commentTitle", "title");
-        addProfaneMessages(profaneWordsInCIStatement, "ciStatement", "statement");
-        return INPUT;
-      }
-    } catch (final Exception e) {
-      log.error("Could not create annotation", e);
-      addActionError("Annotation creation failed with error message: " + e.getMessage());
-      return ERROR;
-    }
-    addActionMessage("Annotation created with id:" + annotationId);
-    return SUCCESS;
+    articleHtmlCache.remove(target);
   }
 
-  private boolean isInvalid() {
-    boolean invalid = false;
-    if (StringUtils.isEmpty(commentTitle)) {
-      addFieldError("commentTitle", "A title is required.");
-      invalid = true;
-    } else {
-      if (commentTitle.length() > Constants.Length.COMMENT_TITLE_MAX) {
-        addFieldError("commentTitle", "Your title is " + commentTitle.length() +
-            " characters long, it can not be longer than " + Constants.Length.COMMENT_TITLE_MAX + ".");
-        invalid = true;
-      }
-    }
+  @Override
+  protected void error(Exception e) {
+    log.error("Could not create annotation", e);
+    addActionError("Annotation creation failed with error message: " + e.getMessage());
+  }
 
-    if (StringUtils.isEmpty(comment)) {
-      addFieldError("comment", "You must say something in your comment");
-      invalid = true;
-    } else {
-      if (comment.length() > Constants.Length.COMMENT_BODY_MAX) {
-        addFieldError("comment", "Your comment is " + comment.length() +
-            " characters long, it can not be longer than " + Constants.Length.COMMENT_BODY_MAX + ".");
-        invalid = true;
-      }
-    }
-
-    if (this.isCompetingInterest) {
-      if (StringUtils.isEmpty(ciStatement)) {
-        addFieldError("statement", "You must say something in your competing interest statement");
-        invalid = true;
-      } else {
-        if (ciStatement.length() > Constants.Length.CI_STATEMENT_MAX) {
-          addFieldError("statement", "Your competing interest statement is " +
-              ciStatement.length() + " characters long, it can not be longer than " +
-              Constants.Length.CI_STATEMENT_MAX + ".");
-          invalid = true;
-        }
-      }
-    }
-
-    return invalid;
+  @Override
+  protected void success() {
+    addActionMessage("Annotation created with id:" + annotationId);
   }
 
   /**
@@ -149,33 +81,6 @@ public class CreateAnnotationAction extends BaseSessionAwareActionSupport {
    */
   public void setTarget(final String target) {
     this.target = target;
-  }
-
-  /**
-   * Set the commentTitle of the annotation
-   *
-   * @param commentTitle commentTitle
-   */
-  public void setCommentTitle(final String commentTitle) {
-    this.commentTitle = commentTitle;
-  }
-
-  /**
-   * Set the comment of the annotation
-   *
-   * @param comment comment
-   */
-  public void setComment(final String comment) {
-    this.comment = comment;
-  }
-
-  /**
-   * Set the competing interest statement of the annotation
-   *
-   * @param ciStatement Statement
-   */
-  public void setCiStatement(final String ciStatement) {
-    this.ciStatement = ciStatement;
   }
 
   /**
@@ -230,23 +135,6 @@ public class CreateAnnotationAction extends BaseSessionAwareActionSupport {
    */
   public String getMimeType() {
     return mimeType;
-  }
-
-  /**
-   * Set the profanityCheckingService
-   *
-   * @param profanityCheckingService profanityCheckingService
-   */
-  @Required
-  public void setProfanityCheckingService(final ProfanityCheckingService profanityCheckingService) {
-    this.profanityCheckingService = profanityCheckingService;
-  }
-
-  /**
-   * @param isCompetingInterest does this annotation have competing interests?
-   */
-  public void setIsCompetingInterest(final boolean isCompetingInterest) {
-    this.isCompetingInterest = isCompetingInterest;
   }
 
   /**

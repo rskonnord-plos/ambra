@@ -20,13 +20,13 @@
 
 package org.ambraproject.service.article;
 
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.models.Article;
 import org.ambraproject.service.hibernate.HibernateService;
-import org.ambraproject.views.AuthorExtra;
+import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
+import org.ambraproject.views.article.ArticleInfo;
 import org.w3c.dom.Document;
-import java.util.ArrayList;
+
+import java.util.List;
 
 /**
  * Fetch article service.
@@ -34,36 +34,65 @@ import java.util.ArrayList;
 public interface FetchArticleService extends HibernateService {
   /**
    * Get the URI transformed as HTML.
+   *
    * @param article The Article to transform into HTML
    * @return String representing the annotated article as HTML
-   * @throws org.ambraproject.ApplicationException ApplicationException
+   * @throws org.ambraproject.ApplicationException
+   *          ApplicationException
    */
   public String getArticleAsHTML(final ArticleInfo article) throws Exception;
 
   /**
    * Get the article xml
+   *
    * @param article the article
    * @return article xml
    */
   public Document getArticleDocument(final ArticleInfo article);
 
-
   /**
    * Get the author affiliations for a given article
+   *
    * @param doc article xml
    * @return author affiliations
    */
-  public ArrayList<AuthorExtra> getAuthorAffiliations(Document doc);
+  public List<AuthorView> getAuthors(Document doc);
+
+  /**
+   * Get the corresponding Author's email
+   *
+   * @param doc
+   * @return an email address
+   */
+  public List<String> getCorrespondingAuthors(Document doc);
+
+  /**
+   * Get the author contributions
+   *
+   * @param doc
+   * @return the author contributions
+   */
+  public List<String> getAuthorContributions(Document doc);
+
+  /**
+   * Get the authors competing interest
+   *
+   * @param doc
+   * @return the authors competing interest
+   */
+  public List<String> getAuthorCompetingInterests(Document doc);
 
   /**
    * Get references for a given article
+   *
    * @param doc article xml
    * @return references
    */
-  public ArrayList<CitationReference> getReferences(Document doc);
+  public List<CitationReference> getReferences(Document doc);
 
   /**
    * Returns abbreviated journal name
+   *
    * @param doc article xml
    * @return abbreviated journal name
    */

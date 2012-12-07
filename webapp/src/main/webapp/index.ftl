@@ -19,187 +19,212 @@
   limitations under the License.
 -->
 <!-- begin : main content -->
-<div id="content">
-  <!-- begin : home page wrapper -->
-  <div id="wrap">
-    <!-- begin : home -->
-    <div id="home">
-      <!-- begin : layout wrapper -->
-      <div class="col">
-        <!-- begin : wrapper for cols 1 & 2 -->
-        <div id="first" class="col">
-        <!-- removed : col 1 -->
-        <!-- begin : col 2 -->
-          <div class="col last">
-          <!-- begin : block journal list -->
-            <!-- <div class="block">
-              <h2>Ambra Journal List</h2>
-              <ul class="articles">
-                <li><@s.a href="#" title="Read Open Access Article">
-                  Journal One
-                </@s.a></li>
-                <li><@s.a href="#" title="Read Open Access Article">
-                  Journal Two
-                </@s.a></li>
-                <li><@s.a href="#" title="Read Open Access Article">
-                 Journal Three
-                </@s.a></li>
-                <li><@s.a href="#" title="Read Open Access Article">
-                  Journal Four
-                </@s.a></li>
-				      </ul>
-            </div> -->
-            
-            <div class="explore block">
-              <h2>Journal List</h2>
-              <p>(#) indicates the number of articles published in each Journal.</p>
-              <ul>
-                    <li>
-                      <a href="#">Overlay Journal (86)</a>
-                    </li>
-                    <li>
-                      <a href="#">Journal of Lorem Ipsum (203)</a>
-                    </li>
-                    <li>
-                      <a href="#">Journal of Erat Volputate (93)</a>
-                    </li>
-                    <li>
-                      <a href="#">Journal of Commodo Consequat (113)</a>
-                    </li>
-                    <li>
-                      <a href="#">Journal fo Quis Nostrud Exerci Tation Ullamcorper (69)</a>
-                    </li> 
-              </ul>
-              <ul>
-                    <li>
-                      <a href="#">Journal of Obortis Nisl ut Aliquip (94)</a>
-                    </li>
-                    <li>
-                      <a href="#">Journal of Tincidunt ut Laoreet (147)</a>
-                    </li>
-                    <li>
-                      <a href="#">Journal of Suscipit Lobortis Nisl ut Aliquip (102)</a>
-                    </li>
-                    <li>
-                      <a href="#"><strong>More Journals</strong></a>
-                    </li>
-              </ul>
-              <div class="clearer">�</div>
-            </div>
-            <!-- end : block journal list -->
-            <!-- begin : browse widget -->
-            <div id="browseWidget" class="block">
-              <p>Browse Ambra Articles: <a href="${browseSubjectURL}">By Subject</a> or <a href="${browseDateURL}">By Publication Date</a></p>
-            </div>
-            <!-- end : browse block -->
-            
-            <#if categoryInfos?size gt 0>
-	    
-            <#assign colSize = (categoryInfos?size / 2) + 0.5>
-	    
-            <!-- begin : explore by subject block -->
-            <div class="explore block">
-              <h2>Articles by Subject</h2>
-              <p>(#) indicates the number of articles published in each subject category.</p>
-              <ul>
-                <#list categoryInfos?keys as category>
-		  <#if (category_index + 1) lte colSize>
-		  <#assign categoryId = category?replace("\\s|\'","","r")>
-                    <@s.url id="browseURL" action="browse" namespace="/article" catName="${category}" includeParams="none"/>
-                    <li>
-                      <a id="widget${categoryId}" href="${browseURL}">${category} (${categoryInfos[category]?size})</a>&nbsp;
-                      <a href="${freemarker_config.context}/article/feed?category=${category?replace(' ','+')}"><img src="${freemarker_config.context}/images/feed-icon-inline.gif" /></a>
-                    </li>
-		  </#if>
-                </#list>
-              </ul>
-              <ul>
-                <#list categoryInfos?keys as category>
-		  <#if (category_index + 1) gt colSize>
-                    <#assign categoryId = category?replace("\\s|\'","","r")>
-                    <@s.url id="browseURL" action="browse" namespace="/article" catName="${category}" includeParams="none"/>
-                    <li>
-                      <a id="widget${categoryId}" href="${browseURL}">${category} (${categoryInfos[category]?size})</a>&nbsp;
-                      <a href="${freemarker_config.context}/article/feed?category=${category?replace(' ','+')}"><img src="${freemarker_config.context}/images/feed-icon-inline.gif" /></a>
-                    </li>
-		  </#if>
-                </#list>
-              </ul>
-              <div class="clearer">&nbsp;</div>
-            </div><!-- end : explore by subject block -->
-            </#if>
-            
-            <!-- begin : content block -->
-            <div class="other block">
-              <h2>Other Content</h2>
-              <div class="section">
-                <h3>Browse content from our partners</h3>
-                <p><a href="#">Ipsum Lorem</a>; <a href="#">Ipsum Lorem</a>; <a href="#">Ipsum Lorem</a>; <a href="#">Ipsum Lorem</a></p>
-              </div>
-              <div class="section lastSection">
-                <h3>Browse even more content</h3>
-                <p><a href="#">Ipsum Lorem</a>; <a href="#">Ipsum Lorem</a>; <a href="#">Ipsum Lorem</a>;</p>
-              </div>
-            </div>
-            <!-- end : content block -->
-          </div>
-          <!-- end : col last -->
+
+<div id="pagebdy-wrap">
+<div id="pagebdy">
+
+<div class="layout-625_300 cf">
+  <div class="col-1">
+
+    <div id="headlines">
+      <h1>Research Headlines</h1>
+      <div class="tab-block">
+        <div class="nav tab-nav">
+          <ul>
+            <li><a href="#tab-01">in the news</a></li>
+            <li><a href="#tab-02" data-loadurl="ajax/recentArticles.action">recent</a></li>
+            <li><a href="#tab-03" data-loadurl="ajax/mostViewed.action">most viewed</a></li>
+          </ul>
         </div>
-        <!-- end : wrapper for cols 1 & 2 -->
-        <!-- begin : wrapper for cols 3 & 4 -->
-        <div id="second" class="col">
-          <!-- begin : col 3 -->
-          <div class="subcol first">
-            <!-- begin : block -->
-            <div class="block">
-              <@s.url action="commentGuidelines" anchor="note" namespace="/static" includeParams="none" id="note"/>
-              <@s.url action="ratingGuidelines" namespace="/static" includeParams="none" id="rating"/>
- 	              <h3>Join the Community</h3>
-                <p><a href="${freemarker_config.registrationURL}" title="Register">Register now</a> and share your views. Only registrants can add <a href="${note}" title="Guidelines for Notes, Comments, and Corrections">Notes, Comments</a>, and <a href="${rating}" title="Guidelines for Rating">Ratings</a> to articles in the Hub.</p>
+        <div class="tab-content">
+          <div class="tab-pane" id="tab-01">
+            <h3>In the News</h3>
+            <ul class="articles">
+              <li><a href="TEST" title="Read Open-Access Article">Reward Value Determines Memory Consolidation in Parasitic Wasps</a></li>
+              <li><a href="TEST" title="Read Open-Access Article">Inappropriateness of medication prescriptions to elderly patients in the primary care setting: A systematic review</a></li>
+              <li><a href="TEST" title="Read Open-Access Article">Female fitness optimum at intermediate mating rates under traumatic mating</a></li>
+              <li><a href="TEST" title="Read Open-Access Article">Imagining One's Own and Someone Else's Body Actions: Dissociation in Anorexia Nervosa</a></li>
+              <li><a href="TEST" title="Read Open-Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.</a></li>
+              <li><a href="TEST" title="Read Open-Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</a></li>
+              <li><a href="TEST" title="Read Open-Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.</a></li>
+            </ul>
+
+            <div class="more">
+              <p>Recent survey of deforestation in Brazil shows faster rate of wildlife extinction than previously predicted. <a href="TEST">The New York Times Blog</a>, <a href="TEST">NBC News</a> and <a href="TEST">Nature</a> covered this <a href="TEST">study</a>.</p>
+              <!--Do not delete this link-->
+              <p>Looking for a paper that has been covered by the media? Try our <a href="/search/advanced/">search functionality</a>.</p>
             </div>
-            <!-- end : block -->
-            <!-- begin : block -->
-            <div class="block">
-              <@s.url action="checklist" namespace="/static" includeParams="none" id="checklist"/>
-              <h3>Submit Your Work</h3>
-              <p>Tincidunt ut laoreet dolore magna aliquam erat volputate. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
-            </div>
-            <!-- end : block -->
-            <!-- begin : stay-connected block -->
-            <div id="connect" class="block">
-              <h3>Stay Connected</h3>
-              <ul>
-                  <li><img src="images/icon_rss_small.gif" alt="rss icon" /><@s.url action="rssInfo" namespace="/static" includeParams="none" id="rssinfo"/><a href="${Request[freemarker_config.journalContextAttributeKey].baseUrl}${rssPath}"><strong>RSS</strong></a> (<a href="${rssinfo}">What is RSS?</a>)<br />Subscribe to content feed</li>
-                  <li><img src="images/icon_join.gif" alt="Join Us" /><a href="${freemarker_config.registrationURL}" title="Join Us: Show Your Support"><strong>Join Us</strong></a><br />Support our organization!</li>
-              </ul>
-            </div>
-            <!-- end : stay-connected block -->
           </div>
-          <!-- end : subcol first -->
-          <!-- end : col 3 -->
-          <!-- begin : col 4 -->
-          <div class="subcol last">
-            <!-- begin : block banner -->
-            <div class="block banner"><!--skyscraper-->
-              <a href="#"><img src="images/adBanner_placeholder_120x600.png" alt=""/></a>
-            </div>
-            <!-- end : block banner -->
+
+          <div class="tab-pane" id="tab-02">
+            <h3>Most Viewed</h3>
+            <ul class="articles">
+              <li><a href="TEST" title="Read Open Access Article">Lorem ipsum dolor sit amet, consectetuer.</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat.</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat.</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Lorem ipsum dolor sit amet, consectetuer.</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.</a></li>
+              <li class="more">These articles are updated daily, based on usage data from the previous 30 days.</li>
+            </ul>
           </div>
-          <!-- end : subcol last -->
+
+          <div class="tab-pane" id="tab-03">
+            <h3>Recent</h3>
+            <ul class="articles">
+              <li class="even"><a href="TEST" title="Read Open Access Article">HIV and STI Prevalence and Determinants among Male Migrant Workers in India</a></li>
+              <li><a href="TEST" title="Read Open Access Article"><i>Clostridium difficile</i> Spore-Macrophage Interactions: Spore Survival</a></li>
+              <li class="even"><a href="TEST" title="Read Open Access Article">A Splice Site Mutation in Laminin-Î±2 Results in a Severe Muscular Dystrophy and Growth Abnormalities in Zebrafish</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Sepsis-Induced Cardiac Mitochondrial Dysfunction Involves Altered Mitochondrial-Localization of Tyrosine Kinase Src and Tyrosine Phosphatase SHP2</a></li>
+              <li class="even"><a href="TEST" title="Read Open Access Article">Inhibition of EGFR-AKT Axis Results in the Suppression of Ovarian Tumors <i>In Vitro</i> and in Preclinical Mouse Model</a></li>
+              <li><a href="TEST" title="Read Open Access Article">Serum Carcinoembryonic Antigen Is Associated with Abdominal Visceral Fat Accumulation in Female Korean Nonsmokers</a></li>
+              <li class="even"><a href="TEST" title="Read Open Access Article">Transcriptional Regulation of hTREX84 in Human Cancer Cells</a></li>
+              <li class="more"><a href="TEST" title="Browse Articles">Browse all recently published articles</a></li>
+            </ul>
+          </div>
+
         </div>
-        <!-- end : wrapper for cols 3 & 4 -->
-        <div id="lower">&nbsp;</div> <!-- displays lower background image -->
       </div>
-      <!-- end : col -->
-      <!-- begin : partners block -->
-      <div class="partner">
-        <a href="http://www.fedora-commons.org" title="Fedora-Commons.org"><img src="${freemarker_config.context}/images/home_fedoracommons.png" alt="Fedora-Commons.org"/></a>
-        <a href="http://www.mulgara.org/" title="Mulgara.org"><img src="${freemarker_config.context}/images/home_mulgara.gif" alt="Mulgara.org"/></a>
+    </div><!-- headlines -->
+
+    <!-- begin : explore by subject block -->
+    <div class="explore nav cf">
+      <h2>Browse by Subject Area</h2>
+      <ul class="flt-l">
+        <li>
+          <a href="TEST">Biology and life sciences</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Computer science</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Earth sciences</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Engineering and technology</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Environmental sciences and ecology</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Mathematics</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+
+      </ul>
+      <ul class="flt-r">
+        <li>
+          <a href="TEST">Medicine and health sciences</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Physical sciences</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Computational Biology</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Research and analysis methods</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Science policy</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+        <li>
+          <a href="TEST">Social Sciences</a>&nbsp;
+          <a href="TEST">
+            <img src="images/icon.rss.16.png" alt="RSS">
+          </a>
+        </li>
+      </ul>
+    </div><!-- end : explore by subject block -->
+
+  </div><!-- col-1 -->
+  <div class="col-2">
+
+    <div id="issue" class="block">
+      <h3><a href="TEST">Featured Image</a></h3>
+      <div class="img">
+        <a href="TEST" target="_blank"><img src="images/placeholder.gif" width="280" height="280" alt=""></a>
       </div>
-      <!-- end : partners block -->
+      <div class="txt">
+        <p>Visit EveryONE &#8211; the PLOS ONE community blog &#8211; for the latest updates. <a href="TEST">Subscribe</a>.</p>
+      </div>
     </div>
-    <!-- end : home -->
-  </div>
-  <!-- end : home page wrapper -->
+
+    <!-- begin : stay-connected block -->
+    <div id="connect" class="nav">
+      <ul class="lnk-social cf">
+        <li class="lnk-email ir"><a href="http://www.plosone.org/user/secure/editPrefsAlerts.action?tabId=alerts" title="E-mail Alerts">E-mail Alerts</a></li>
+        <li class="lnk-rss ir"><a href="http://www.plosone.org/article/feed" title="RSS">RSS</a></li>
+        <li class="lnk-twtr ir"><a href="http://twitter.com/plosone" title="PLOS ONE on Twitter" target=_blank>PLOS ONE on Twitter</a></li>
+        <li class="lnk-fb ir"><a href="http://www.facebook.com/plos.org" title="PLOS on Facebook" target=_blank>PLOS on Facebook</a></li>
+        <li class="lnk-in ir"><a href="http://www.linkedin.com/groups?mostPopular=&gid=3484244" title="PLOS on LinkedIn" target=_blank>PLOS on LinkedIn</a></li>
+        <li class="lnk-join ir"><a href="http://blogs.plos.org/" title="PLOS Blogs">PLOS Blogs</a></li>
+      </ul>
+    </div><!-- end : stay-connected block -->
+
+    <div class="publish">
+      <h2>Publish with PLOS ONE</h2>
+      <div class="body cf">
+        <div class="item">
+          <a href="http://www.plosone.org/static/submissionInstructions">Submission Instructions</a>
+        </div>
+        <div class="item">
+          <a href="http://www.editorialmanager.com/pone/default.asp">Submit your manuscript</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ad">
+      <div class="title">Advertisement</div>
+      <img src="images/placeholder.gif" width="300" height="250" alt="">
+    </div>
+
+  </div><!-- col-2 -->
+</div><!-- layout-625_300 -->
+
+<!-- begin : marketing advocacy blocks -->
+<div id="adWrap" class="cf">
+  <iframe id="if1" name="if1" src="iframes/mab1.html" frameborder="0" scrolling="no" width="320" height="150"></iframe>
+  <iframe id="if2" name="if2" src="iframes/mab1.html" frameborder="0" scrolling="no" width="320" height="150"></iframe>
+  <iframe id="if3" name="if3" src="iframes/mab1.html" frameborder="0" scrolling="no" width="320" height="150"></iframe>
 </div>
-<!-- end : main content -->
+<!-- end : marketing advocacy blocks -->
+
+</div><!-- pagebdy -->
+
+</div><!-- pagebdy-wrap -->
+<!--page-wrap closing tag is in global_footer.ftl-->
+<#include "includes/javascript.ftl">

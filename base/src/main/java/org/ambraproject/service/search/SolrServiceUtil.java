@@ -62,21 +62,21 @@ public class SolrServiceUtil {
    * @param type data type
    * @return field value
    */
-  public static <T> List<T> getFieldMultiValue(SolrDocument document, String message, Class<T> type, String fieldName) {
-    List<T> authorList = new ArrayList<T>();
-    Object authors = document.getFieldValue(fieldName);
-    if (authors != null) {
-      if (authors instanceof Collection) {
-        authorList.addAll((Collection<T>) authors);
+  public static <T> List<T> getFieldMultiValue(SolrDocument document, String fieldName, Class<T> type, String message) {
+    List<T> valueList = new ArrayList<T>();
+    Object values = document.getFieldValue(fieldName);
+    if (values != null) {
+      if (values instanceof Collection) {
+        valueList.addAll((Collection<T>) values);
       } else {
         T value = getFieldValue(document, fieldName, type, message);
         if (value != null) {
-          authorList.add(value);
+          valueList.add(value);
         }
       }
     } else {
       log.warn("No \'" + fieldName + "\' field for " + message);
     }
-    return authorList;
+    return valueList;
   }
 }

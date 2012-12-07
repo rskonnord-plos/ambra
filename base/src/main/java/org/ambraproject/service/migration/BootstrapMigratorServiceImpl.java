@@ -119,7 +119,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     if (dbVersion < 249) {
       migrate248();
     }
-
   }
 
   /**
@@ -157,7 +156,7 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
    * The pattern to match method name is to match earlier db version.
    * For example, if earlier db version is 237,
    * next migration method name should be migrate237()
-   */
+  */
   private void migrate246() {
     log.info("Migration from 246 starting");
 
@@ -181,7 +180,7 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
         return null;
       }
     });
-    log.info("Migration from 243 complete");
+    log.info("Migration from 246 complete");
   }
 
   private void migrate245() {

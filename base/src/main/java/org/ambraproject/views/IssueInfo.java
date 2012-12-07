@@ -40,6 +40,9 @@ public class IssueInfo implements Serializable {
   private String       parentVolume;
   private boolean      respectOrder;
   private List<String> articleUriList;
+  private String       issueTitle;
+  private String       issueImageCredit;
+  private String       issueDescription;
 
   // XXX TODO, List<URI> w/Article DOI vs. List<ArticleInfo>???
   public IssueInfo(String issueURI, String displayName, String prevIssue, String nextIssue, String imageArticle,
@@ -100,7 +103,7 @@ public class IssueInfo implements Serializable {
   }
 
   /**
-   * Get the description.
+   * Get the entire / full description.
    *
    * @return the description.
    */
@@ -138,5 +141,41 @@ public class IssueInfo implements Serializable {
 
   public boolean isRespectOrder() {
     return respectOrder;
+  }
+
+  /**
+   * get the issue description.  (does not contain image credit and title information)
+   * @return
+   */
+  public String getIssueDescription() {
+    return issueDescription;
+  }
+
+  public void setIssueDescription(String issueDescription) {
+    this.issueDescription = issueDescription;
+  }
+
+  /**
+   * get issue image image credit
+   * @return
+   */
+  public String getIssueImageCredit() {
+    return issueImageCredit;
+  }
+
+  public void setIssueImageCredit(String issueImageCredit) {
+    this.issueImageCredit = issueImageCredit;
+  }
+
+  /**
+   * get issue title
+   * @return
+   */
+  public String getIssueTitle() {
+    return issueTitle;
+  }
+
+  public void setIssueTitle(String issueTitle) {
+    this.issueTitle = issueTitle;
   }
 }
