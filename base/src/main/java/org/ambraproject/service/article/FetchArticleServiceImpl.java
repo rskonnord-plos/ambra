@@ -200,6 +200,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       XPathExpression givenNameExpr = xpath.compile("//name/given-names");
       XPathExpression suffixExpr = xpath.compile("//name/suffix");
       XPathExpression collabExpr = xpath.compile("//collab");
+      XPathExpression behalfOfExpr = xpath.compile("//on-behalf-of");
 
       //Footnotes
       //Note this web page for notes on author footnotes:
@@ -294,14 +295,25 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
         Node surNameNode = (Node) surNameExpr.evaluate(authorDoc, XPathConstants.NODE);
         Node givenNameNode = (Node) givenNameExpr.evaluate(authorDoc, XPathConstants.NODE);
         Node collabNameNode = (Node) collabExpr.evaluate(authorDoc, XPathConstants.NODE);
+        Node behalfOfNode = (Node) behalfOfExpr.evaluate(authorDoc, XPathConstants.NODE);
 
         //Sometimes, an author is not a person, but a collab
         //Note:10.1371/journal.pone.0032315
         if (surNameNode == null && givenNameNode == null) {
+          if(collabNameNode != null) {
+            //If current node is a collab author.  Make sure previous author
+            //Is not marked as "on behalf of"  If so, we can ignore this collab
+            //It is assumed this collab contains the same text as the value of the
+            //Previous authors "on behalf of" node
+            if(list.size() > 0) {
+              if(list.get(list.size() - 1).getOnBehalfOf() != null) {
+                break;
+              }
+            }
+          }
+
           givenNameNode = collabNameNode;
         }
-
-        log.debug("Author node");
 
         // If both of these are null then don't bother to add
         if (surNameNode != null || givenNameNode != null) {
@@ -317,6 +329,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
           String surname = (surNameNode == null) ? null : surNameNode.getTextContent();
           String givenName = (givenNameNode == null) ? null : givenNameNode.getTextContent();
           String suffix = (suffixNode == null) ? null : suffixNode.getTextContent();
+          String onBehalfOf = (behalfOfNode == null) ? null : behalfOfNode.getTextContent();
+
           boolean equalContrib = (equalContribNode != null);
           boolean deceased = (deceasedNode != null);
 
@@ -383,7 +397,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
           }
 
           AuthorView author = new AuthorView(givenName, surname, suffix,
-            currentAddress, equalContrib, deceased, corresponding, affiliations, otherFootnotes);
+            currentAddress, onBehalfOf, equalContrib, deceased,
+            corresponding, affiliations, otherFootnotes);
 
           list.add(author);
         }

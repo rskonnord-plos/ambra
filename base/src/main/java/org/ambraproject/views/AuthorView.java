@@ -31,6 +31,7 @@ public class AuthorView {
   private final String surnames;
   private final String suffix;
   private final String currentAddress;
+  private final String onBehalfOf;
   private final boolean equalContrib;
   private final boolean deceased;
   private final String corresponding;
@@ -38,14 +39,15 @@ public class AuthorView {
   private final List<String> customFootnotes;
 
   public AuthorView(String givenNames, String surnames, String suffix,
-                    String currentAddress, boolean equalContrib, boolean deceased,
-                    String corresponding, List<String>affiliations,
+                    String currentAddress, String onBehalfOf, boolean equalContrib,
+                    boolean deceased, String corresponding, List<String>affiliations,
                     List<String> customFootnotes) {
 
     this.givenNames = givenNames;
     this.surnames = surnames;
     this.suffix = suffix;
     this.currentAddress = currentAddress;
+    this.onBehalfOf = onBehalfOf;
     this.equalContrib = equalContrib;
     this.deceased = deceased;
     this.corresponding = corresponding;
@@ -75,6 +77,10 @@ public class AuthorView {
 
   public String getCurrentAddress() {
     return this.currentAddress;
+  }
+
+  public String getOnBehalfOf() {
+    return onBehalfOf;
   }
 
   public boolean getDeceased() {
@@ -177,6 +183,7 @@ public class AuthorView {
     if (affiliations != null ? !affiliations.equals(that.affiliations) : that.affiliations != null) return false;
     if (corresponding != null ? !corresponding.equals(that.corresponding) : that.corresponding != null) return false;
     if (currentAddress != null ? !currentAddress.equals(that.currentAddress) : that.currentAddress != null) return false;
+    if (onBehalfOf != null ? !onBehalfOf.equals(that.onBehalfOf) : that.onBehalfOf != null) return false;
     if (customFootnotes != null ? !customFootnotes.equals(that.customFootnotes) : that.customFootnotes != null) return false;
     if (equalContrib != that.equalContrib) return false;
     if (givenNames != null ? !givenNames.equals(that.givenNames) : that.givenNames != null) return false;
@@ -194,6 +201,7 @@ public class AuthorView {
     result = 31 * result + (equalContrib ? 1 : 0);
     result = 31 * result + (affiliations != null ? affiliations.hashCode() : 0);
     result = 31 * result + (currentAddress != null ? currentAddress.hashCode() : 0);
+    result = 31 * result + (onBehalfOf != null ? onBehalfOf.hashCode() : 0);
     result = 31 * result + (deceased ? 1 : 0);
     result = 31 * result + (corresponding != null ? corresponding.hashCode() : 0);
     result = 31 * result + (customFootnotes != null ? customFootnotes.hashCode() : 0);

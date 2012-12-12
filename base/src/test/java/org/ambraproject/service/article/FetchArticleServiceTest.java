@@ -45,7 +45,7 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test an author with a suffix on their name
     ArticleInfo a1 = new ArticleInfo("info:doi/10.1371/journal.pone.0002879");
     List<AuthorView> authors1 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("John M.", "Logsdon", "Jr", null, false, false, "* E-mail: john-logsdon@uiowa.edu",
+      add(new AuthorView("John M.", "Logsdon", "Jr", null, null, false, false, "* E-mail: john-logsdon@uiowa.edu",
         new ArrayList<String>() {{ add("Department of Biology test"); }},
         new ArrayList<String>()));
     }};
@@ -53,7 +53,7 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test corresponding author
     ArticleInfo a2 = new ArticleInfo("info:doi/10.1371/journal.pbio.1001335");
     List<AuthorView> authors2 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Mariano", "Carrión-Vázquez", null, null, false, false, "* E-mail: mcarrion@cajal.csic.es",
+      add(new AuthorView("Mariano", "Carrión-Vázquez", null, null, null, false, false, "* E-mail: mcarrion@cajal.csic.es",
         new ArrayList<String>() {{ add("Instituto Cajal"); add("Instituto Madrileño"); }},
         new ArrayList<String>()));
     }};
@@ -61,7 +61,7 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test deceased author
     ArticleInfo a3 = new ArticleInfo("info:doi/10.1371/journal.pntd.0001165");
     List<AuthorView> authors3 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Nicholas J. S.", "Lwambo", null, null, false, true, null,
+      add(new AuthorView("Nicholas J. S.", "Lwambo", null, null, null, false, true, null,
         new ArrayList<String>() {{
           add("National Institute for Medical Research, Mwanza Medical Research Centre, Mwanza, Tanzania");
         }},
@@ -71,13 +71,13 @@ public class FetchArticleServiceTest extends BaseTest {
     //additional sets of equally contributing authors.
     ArticleInfo a4 = new ArticleInfo("info:doi/10.1371/journal.pone.0023160");
     List<AuthorView> authors4 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Markus M.", "Bachschmid", null, null, true, false, "* E-mail: bach@bu.edu",
+      add(new AuthorView("Markus M.", "Bachschmid", null, null, null, true, false, "* E-mail: bach@bu.edu",
         new ArrayList<String>() {{
           add("Vascular Biology Section, Boston University Medical Center, Boston, Massachusetts, United States of America");
         }},
         new ArrayList<String>() {{ add("¶ These authors also contributed equally to this work."); }} ));
 
-      add(new AuthorView("David R.", "Pimental", null, null, true, false, null,
+      add(new AuthorView("David R.", "Pimental", null, null, null, true, false, null,
         new ArrayList<String>() {{
           add("Myocardial Biology Unit, Boston University Medical Center, Boston, Massachusetts, United States of America");
         }},
@@ -89,14 +89,14 @@ public class FetchArticleServiceTest extends BaseTest {
     List<AuthorView> authors5 = new ArrayList<AuthorView>() {{
       add(new AuthorView("Oliver", "Liesenfeld", null,
         "Current address: Roche Molecular Diagnostics, Pleasanton, California, United States of America",
-        false, false, null,
+        null, false, false, null,
         new ArrayList<String>() {{
           add("Institute of Microbiology and Hygiene, Charité Universitätsmedizin Berlin, Berlin, Germany");
         }},
         new ArrayList<String>()));
 
       add(new AuthorView("Iana", "Parvanova", null,
-        "Current address: Bavarian Research Alliance GmbH (BayFOR), Munich, Germany", false, false, null,
+        "Current address: Bavarian Research Alliance GmbH (BayFOR), Munich, Germany", null, false, false, null,
         new ArrayList<String>() {{
           add("Institute for Genetics, University of Cologne, Cologne, Germany");
         }},
@@ -107,7 +107,7 @@ public class FetchArticleServiceTest extends BaseTest {
     ArticleInfo a6 = new ArticleInfo("info:doi/10.1371/journal.pone.0032315");
     List<AuthorView> authors6 = new ArrayList<AuthorView>() {{
       add(new AuthorView("the Danish SAB Study Group Consortium", null,
-        null, null, false, false, null,
+        null, null, null, false, false, null,
         new ArrayList<String>(),
         new ArrayList<String>() {{
           add("¶ Membership of the Danish SAB Study Group Consortium is provided in the Acknowledgments.");
@@ -118,7 +118,7 @@ public class FetchArticleServiceTest extends BaseTest {
     ArticleInfo a7 = new ArticleInfo("info:doi/10.1371/journal.pmed.0020073");
     List<AuthorView> authors7 = new ArrayList<AuthorView>() {{
       add(new AuthorView("William", "Pao",
-        null, null, true, false, "*To whom correspondence should be addressed. E-mail: paow@mskcc.org",
+        null, null, null, true, false, "*To whom correspondence should be addressed. E-mail: paow@mskcc.org",
         new ArrayList<String>() {{
           add("Program in Cancer Biology and Genetics, Memorial Sloan-Kettering Cancer Center, New York, New York, United States of America");
           add("Thoracic Oncology Service, Department of Medicine, Memorial Sloan-Kettering Cancer Center, New York, New York, United States of America");
@@ -130,22 +130,35 @@ public class FetchArticleServiceTest extends BaseTest {
     ArticleInfo a8 = new ArticleInfo("info:doi/10.1371/journal.pone.0029914");
     List<AuthorView> authors8 = new ArrayList<AuthorView>() {{
       add(new AuthorView("Monica E.", "Embers",
-        null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
+        null, null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
         new ArrayList<String>() {{
           add("Divisions of Bacteriology & Parasitology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America");
         }},
         new ArrayList<String>()));
 
       add(new AuthorView("Mario T.", "Philipp",
-        null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
+        null, null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
         new ArrayList<String>() {{
           add("Divisions of Bacteriology & Parasitology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America");
         }},
         new ArrayList<String>()));
     }};
 
+    //Test for articles with 'on behalf of' node defined
+    ArticleInfo a9 = new ArticleInfo("info:doi/10.1371/journal.pone.0047391");
+    List<AuthorView> authors9 = new ArrayList<AuthorView>() {{
+      add(new AuthorView("David", "Dalmau",
+        null, null, "on behalf of Busia OR Study Group", false, false, "* E-mail: ddalmau@mutuaterrassa.cat",
+        new ArrayList<String>() {{
+          add("Hospital Universitari MútuaTerrassa, Medicine Department, Terrassa, Spain");
+          add("Fundació Docència i Recerca MutuaTerrassa, Terrassa, Spain");
+        }},
+        new ArrayList<String>()));
+    }};
+
     return new Object[][] { { a1, authors1 }, { a2, authors2 }, { a3, authors3 },
-      { a4, authors4 } , { a5, authors5 }, { a6, authors6 }, { a7, authors7 }, { a8, authors8 } };
+      { a4, authors4 } , { a5, authors5 }, { a6, authors6 }, { a7, authors7 }, { a8, authors8 },
+      { a9, authors9 } };
   }
 
   @DataProvider(name = "articleInfos")
@@ -292,6 +305,7 @@ public class FetchArticleServiceTest extends BaseTest {
     logger.info("getSurnames :" + av.getSurnames());
     logger.info("getCorresponding :" + av.getCorresponding());
     logger.info("getCurrentAddress :" + av.getCurrentAddress());
+    logger.info("getOnBehalfOf :" + av.getOnBehalfOf());
     logger.info("getDeceased :" + av.getDeceased());
     logger.info("getEqualContrib :" + av.getEqualContrib());
 
