@@ -89,7 +89,15 @@ public class AIArticleClassifier implements ArticleClassifier {
     //The first and last elements of the vector response are just MAITERMS
     for (int i = 1; i < vectorElements.getLength() - 1; i++) {
       String term = parseVectorElement(vectorElements.item(i).getTextContent());
-      if (term != null) {
+
+      // When the new taxonomy launched, we had a problem where lots of PLOS ONE
+      // papers were being tagged with subcategories of
+      // "/Earth sciences/Geography/Locations" (see Jira TAX-30).  So we're just
+      // blacklisting this category for now.
+      //
+      // TODO: tweak the AI taxonomy server rulebase to make this unnecessary, and
+      // remove the hack.
+      if (term != null && !term.startsWith("/Earth sciences/Geography/Locations/")) {
         results.add(term);
       }
     }
