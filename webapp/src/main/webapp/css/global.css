@@ -1151,12 +1151,6 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   text-decoration: none;
 }
 
-#hdr-article .authors .author,
-#hdr-article .authors .action,
-#hdr-article .authors .ellipsis {
-  white-space: nowrap;
-}
-
 #hdr-article .authors a {
   cursor: pointer;
 }

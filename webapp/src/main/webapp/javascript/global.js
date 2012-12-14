@@ -149,6 +149,12 @@ if ($nav_article.length) {
       var $author_meta = $this.find('.author_meta');
       $authors.removeClass('on');
 
+      //A fix for FEND-776, sometimes author names are very long and take up two lines
+      //Push the box down a bit in this case
+      if($this.height() > 25) {
+        $author_meta.css("top", "43px")
+      }
+
       if ($this.position().left > ($(window).outerWidth() / 2)) {
         $author_meta.css({
           'left':'auto',
