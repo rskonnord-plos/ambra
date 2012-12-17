@@ -354,12 +354,6 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
               String value = otherFootnotesMap.get(id);
 
               if(value != null) {
-                //Sometimes the "other" node is used to contrib equally as well
-                //Is there a better way to do this?
-                if(value.contains("contributed equally")) {
-                  equalContrib = true;
-                }
-
                 otherFootnotes.add(value);
               }
             }

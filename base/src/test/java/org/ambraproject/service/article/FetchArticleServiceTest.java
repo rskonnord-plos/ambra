@@ -71,13 +71,13 @@ public class FetchArticleServiceTest extends BaseTest {
     //additional sets of equally contributing authors.
     ArticleInfo a4 = new ArticleInfo("info:doi/10.1371/journal.pone.0023160");
     List<AuthorView> authors4 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Markus M.", "Bachschmid", null, null, null, true, false, "* E-mail: bach@bu.edu",
+      add(new AuthorView("Markus M.", "Bachschmid", null, null, null, false, false, "* E-mail: bach@bu.edu",
         new ArrayList<String>() {{
           add("Vascular Biology Section, Boston University Medical Center, Boston, Massachusetts, United States of America");
         }},
         new ArrayList<String>() {{ add("¶ These authors also contributed equally to this work."); }} ));
 
-      add(new AuthorView("David R.", "Pimental", null, null, null, true, false, null,
+      add(new AuthorView("David R.", "Pimental", null, null, null, false, false, null,
         new ArrayList<String>() {{
           add("Myocardial Biology Unit, Boston University Medical Center, Boston, Massachusetts, United States of America");
         }},
