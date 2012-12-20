@@ -158,10 +158,10 @@ public class ArticleTest extends BaseHibernateTest {
     article.setDoi("doi5");
     Set<Category> categories = new HashSet<Category>(2);
     Category category1 = new Category();
-    category1.setMainCategory("category1");
+    category1.setPath("/category1");
     categories.add(category1);
     Category category2 = new Category();
-    category2.setMainCategory("category2");
+    category2.setPath("/category2");
     categories.add(category2);
 
     article.setCategories(categories);

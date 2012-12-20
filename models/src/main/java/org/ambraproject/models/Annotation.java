@@ -30,7 +30,6 @@ public class Annotation extends AmbraEntity {
 
   private String title;
   private String body;
-  private String xpath;
   private String highlightedText;
 
   private String competingInterestBody;
@@ -44,9 +43,7 @@ public class Annotation extends AmbraEntity {
 
   public Annotation(UserProfile creator, AnnotationType type, Long articleID) {
     this();
-    if (type == AnnotationType.RATING && !(this instanceof Rating)) {
-      throw new IllegalArgumentException("Ratings must be created using the Rating constructor");
-    }
+
     this.creator = creator;
     this.type = type;
     this.articleID = articleID;
@@ -89,9 +86,6 @@ public class Annotation extends AmbraEntity {
   }
 
   public void setType(AnnotationType type) {
-    if (type == AnnotationType.RATING && !(this instanceof Rating)) {
-      throw new IllegalArgumentException("Only ratings can be of type Rating");
-    }
     this.type = type;
   }
 
@@ -109,14 +103,6 @@ public class Annotation extends AmbraEntity {
 
   public void setBody(String body) {
     this.body = body;
-  }
-
-  public String getXpath() {
-    return xpath;
-  }
-
-  public void setXpath(String xpath) {
-    this.xpath = xpath;
   }
 
   public String getCompetingInterestBody() {
@@ -154,7 +140,6 @@ public class Annotation extends AmbraEntity {
     if (body != null ? !body.equals(that.body) : that.body != null) return false;
     if (title != null ? !title.equals(that.title) : that.title != null) return false;
     if (type != that.type) return false;
-    if (xpath != null ? !xpath.equals(that.xpath) : that.xpath != null) return false;
 
     return true;
   }
@@ -165,7 +150,6 @@ public class Annotation extends AmbraEntity {
     result = 31 * result + (type != null ? type.hashCode() : 0);
     result = 31 * result + (title != null ? title.hashCode() : 0);
     result = 31 * result + (body != null ? body.hashCode() : 0);
-    result = 31 * result + (xpath != null ? xpath.hashCode() : 0);
     return result;
   }
 

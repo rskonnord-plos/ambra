@@ -1,6 +1,6 @@
 /*
- * $HeadURL: http://ambraproject.org/svn/plos/templates/head/journals/PLoSDefault/webapp/css/global.css $
- * $Id: global.css 13022 2012-12-06 20:04:08Z msingh $
+ * $HeadURL$
+ * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -667,8 +667,8 @@ input#search:-moz-placeholder:focus, input#searchOnResult:-moz-placeholder:focus
   z-index: 10;
   font-size: 14px;
   padding: 20px 0 30px;
-  width: 600px;
-  margin-left: -300px;
+  width: 240px;
+  margin-left: -13px;
   border-radius: 4px;
   box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.15), 3px 3px 3px rgba(0, 0, 0, 0.15);
 }
@@ -692,7 +692,7 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 #nav-main .submenu .menu {
   display: table-cell;
   vertical-align: top;
-  width: 300px;
+  width: 240px;
   font-family: arial;
 }
 
@@ -906,10 +906,12 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 
 .lnk-alert a {
   background-position: -306px 0;
+  width: 128px;
 }
 
 .lnk-alert a:hover {
   background-position: -306px -50px;
+  width: 128px;
 }
 
 /*article page*/
@@ -1165,6 +1167,16 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   top: 2px;
 }
 
+.authors .equal-group-contrib {
+  height: 13px;
+  width: 15px;
+  display: inline-block;
+  text-indent: -9999px;
+  background: url(../images/icon.grp-auth.png) no-repeat;
+  position: relative;
+  top: 2px;
+}
+
 .authors .corresponding {
   height: 13px;
   width: 15px;
@@ -1223,9 +1235,34 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   color: #FFF;
 }
 
+.author_inner span.email {
+  height: 13px;
+  width: 15px;
+  display: inline-block;
+  margin-right: 3px;
+  text-indent: -9999px;
+  background: url(../images/icon.email_author.png) no-repeat;
+  position: relative;
+  top: 2px;
+}
+
+.author_inner span.pilcro {
+  height: 13px;
+  width: 15px;
+  display: inline-block;
+  text-indent: -9999px;
+  background: url(../images/icon.grp-auth.png) no-repeat;
+  position: relative;
+  top: 2px;
+}
+
 .author_inner p {
   padding-bottom: 12px;
   border-bottom: 2px solid #666;
+}
+
+.author_inner p sup {
+  margin-right: 5px;
 }
 
 .author_inner p:last-of-type {
@@ -2668,6 +2705,10 @@ ul.bulletlist li {
   text-transform: uppercase;
   margin-bottom: -2px;
   display: block;
+}
+
+.journal_current .issue_container {
+  overflow:auto;
 }
 
 .journal_issues {

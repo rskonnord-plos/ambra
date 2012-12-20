@@ -22,7 +22,7 @@ $(document).ready(
   function() {
     //***************************************
     //Form events linking in:
-    //Note there is also some logic in global.js that binds to the subnit event
+    //Note there is also some logic in global.js that binds to the submit event
     //***************************************
 
     $("#clearJournalFilter").click(function(eventObj) {
@@ -46,6 +46,22 @@ $(document).ready(
     });
 
     $("input[name|='filterSubjects']").click(function(eventObj) {
+      $("#searchStripForm").submit();
+    });
+
+    $("#clearDateFilter").click(function(eventObj) {
+      $("input[name|='filterStartDate']").each(function (index, element) {
+        $(element).val('');
+      });
+
+      $("input[name|='filterEndDate']").each(function (index, element) {
+        $(element).val('');
+      });
+
+      $("#searchStripForm").submit();
+    });
+
+    $("input[name|='filterDateButton']").click(function(eventObj) {
       $("#searchStripForm").submit();
     });
 
@@ -404,7 +420,7 @@ $(document).ready(
             "Metrics unavailable for recently published articles. Please check back later.");
         } else {
           makeALMSearchWidgetError(ids[a],
-            "<img src=\"../images/icon_error.gif\"/>&nbsp;Metrics unavailable. Please check back later.");
+            "<img src=\"../images/icon_error.png\"/>&nbsp;Metrics unavailable. Please check back later.");
         }
       }
     }
@@ -474,7 +490,13 @@ $(document).ready(
     });
 
     $('a.save-search').click(function() {
-      if ($('#searchOnResult')) {
+
+      //if the request is from author/editor facet for save search, setting the search name with anchor id.
+      //else the regular search term is used.
+      if($(this).attr('id')) {
+        $('#text_name_savedsearch').val($(this).attr('id'));
+      }
+      else if ($('#searchOnResult')) {
         $('#text_name_savedsearch').val($('#searchOnResult').val());
       }
       $('#span_error_savedsearch').html('');
@@ -508,9 +530,18 @@ $(document).ready(
       $('#weekly').val($('#cb_weekly_savedsearch').is(':checked'));
       $('#monthly').val($('#cb_monthly_savedsearch').is(':checked'));
 
+      var uqry="";
+      var query = $('#searchOnResult').attr('value');
+
+      // if saving the author/editor facet search, then set the query to empty and
+      //unformattedQry to facet value. (author:name or editor:name)
+      if($('#saveSearchFacetVal').val()) {
+        $('#searchOnResult').attr('value',"");
+        uqry = "?unformattedQuery="+$('#saveSearchFacetVal').val();
+      }
       $.ajax({
         type: 'POST',
-        url: '/search/saveSearch.action',
+        url: '/search/saveSearch.action'+uqry,
         data: $('#searchStripForm').serialize(),
         dataFilter: function (data, type) {
           return data.replace(/(\/\*|\*\/)/g, '');
@@ -539,6 +570,10 @@ $(document).ready(
         }
       });
 
+      // Setting back the original value of the query.
+      //This is required if the user wants to save the original search.
+      $('#searchOnResult').attr('value',query);
+      $('#saveSearchFacetVal').attr('value',"");
     });
 
     $('#btn_cancel_savedsearch').click(function() {
@@ -556,3 +591,7 @@ $(document).ready(
     });
 
   });
+
+function setFacetSearchValue(id){
+  $('#saveSearchFacetVal').attr('value',id);
+}

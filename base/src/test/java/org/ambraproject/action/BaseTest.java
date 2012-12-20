@@ -388,7 +388,6 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
         expected.getCompetingInterestBody() == null ? "" : expected.getCompetingInterestBody(),
         "Annotation view had incorrect ci statement");
     assertEquals(result.getAnnotationUri(), expected.getAnnotationUri(), "Annotation view had incorrect annotation uri");
-    assertEquals(result.getXpath(), expected.getXpath(), "Annotation view had incorrect xpath");
     assertEquals(result.getCreatorID(), expected.getCreator().getID(), "Annotation view had incorrect creator id");
     assertEquals(result.getCreatorDisplayName(), expected.getCreator().getDisplayName(), "Annotation view had incorrect creator name");
 

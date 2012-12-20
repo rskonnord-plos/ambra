@@ -146,28 +146,30 @@ public class AIArticleClassifier implements ArticleClassifier {
   }
 
   /**
-   * Appends a given section of the article, with the given title, to the
+   * Appends a given section of the article, with one of the given titles, to the
    * StringBuilder passed in.  (Examples include "Results", "Materials and Methods",
    * "Discussion", etc.)
    *
    * @param sb StringBuilder to be modified
    * @param dom DOM tree of an article
-   * @param sectionTitle title of the section to append
+   * @param sectionTitles list of titles to look for.  The first one found will be
+   *     appended.
    * @return true if the StringBuilder was modified
    * @throws XPathException
    */
-  boolean appendSectionIfExists(StringBuilder sb, Document dom, String sectionTitle)
+  boolean appendSectionIfExists(StringBuilder sb, Document dom, String... sectionTitles)
       throws XPathException {
     XPathUtil xPathUtil = new XPathUtil();
-    Node node = xPathUtil.selectSingleNode(dom,
-        String.format("/article/body/sec[title='%s']", sectionTitle));
-    if (node == null) {
-      return false;
-    } else {
-      sb.append(node.getTextContent());
-      sb.append("\n");
-      return true;
+    for (String title : sectionTitles) {
+      Node node = xPathUtil.selectSingleNode(dom,
+          String.format("/article/body/sec[title='%s']", title));
+      if (node != null) {
+        sb.append(node.getTextContent());
+        sb.append("\n");
+        return true;
+      }
     }
+    return false;
   }
 
   /**
@@ -189,8 +191,8 @@ public class AIArticleClassifier implements ArticleClassifier {
     appendElementIfExists(sb, dom, "article-title");
     boolean hasBody = false;
     hasBody |= appendElementIfExists(sb, dom, "abstract");
-    hasBody |= appendSectionIfExists(sb, dom, "Materials and Methods");
-    hasBody |= appendSectionIfExists(sb, dom, "Results");
+    hasBody |= appendSectionIfExists(sb, dom, "Materials and Methods", "Methods");
+    hasBody |= appendSectionIfExists(sb, dom, "Results", "Results and Discussion");
     if (!hasBody) {
       appendElementIfExists(sb, dom, "body");
     }
@@ -240,12 +242,17 @@ public class AIArticleClassifier implements ArticleClassifier {
       Document dom = DocumentBuilderFactoryCreator.createFactory().newDocumentBuilder().parse(
           new ByteArrayInputStream(xml.getBytes("utf-8")));
       AIArticleClassifier classifier = new AIArticleClassifier();
+      System.out.println("Content to send to taxonomy server:");
+      System.out.println("\n\n" + classifier.getCategorizationContent(dom) + "\n\n");
+
       classifier.setServiceUrl("http://tax.plos.org:9080/servlet/dh");
       classifier.setHttpClient(new HttpClient(new MultiThreadedHttpConnectionManager()));
       List<String> terms = classifier.classifyArticle(dom);
+      System.out.println("\n\nTerms returned by taxonomy server:");
       for (String term : terms) {
         System.out.println(term);
       }
+      System.out.println("\n\n");
     } else {
       System.out.println(args[0] + " is not a valid DOI");
       System.exit(1);

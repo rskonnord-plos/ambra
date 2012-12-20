@@ -48,8 +48,7 @@ import java.util.Set;
 public class ListReplyAction extends BaseActionSupport implements ArticleHeaderAction {
   private static final Logger log = LoggerFactory.getLogger(ListReplyAction.class);
 
-  private static final Set<AnnotationType> COMMENT_TYPES = Collections.unmodifiableSet(EnumSet.of(
-      AnnotationType.COMMENT, AnnotationType.NOTE));
+  private static final Set<AnnotationType> COMMENT_TYPES = Collections.unmodifiableSet(EnumSet.of(AnnotationType.COMMENT));
 
   protected AnnotationService annotationService;
   private ArticleService articleService;

@@ -38,10 +38,20 @@ public interface SearchService {
   SearchResultSinglePage simpleSearch(SearchParameters searchParameters) throws ApplicationException;
 
   SearchResultSinglePage advancedSearch(SearchParameters searchParameters) throws ApplicationException;
-  
+
   SearchResultSinglePage findAnArticleSearch(SearchParameters searchParameters) throws ApplicationException;
 
   SearchResultSinglePage getFilterData(SearchParameters searchParameters) throws ApplicationException;
+
+  /**
+   * Returns a list of all subject categories associated with all papers ever published
+   * for the given journal.
+   *
+   * @param journal name of the journal in question
+   * @return List of category strings, slash-delimited to indicate hierarchy.  Example:
+   *     "/Biology and life sciences/Plant science/Plant anatomy/Flowers"
+   */
+  List<String> getAllSubjects(String journal) throws ApplicationException;
 
   List<SearchHit> savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException;
 
@@ -56,4 +66,14 @@ public interface SearchService {
    * @return
    */
   List getPageSizes();
+
+  /**
+   * Retrieve an article abstract from the search engine.
+   *
+   * @param articleDoi
+   * @return the article abstract, with HTML if possible, or an empty (non-null) string if the article has none
+   * @throws ApplicationException if article abstracts (including empty values) are missing or invalid
+   */
+  String fetchAbstractText(String articleDoi) throws ApplicationException;
+
 }

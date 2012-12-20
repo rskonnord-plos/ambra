@@ -19,6 +19,9 @@ if (!window.console) {
 var $win = $(window);
 var $pagebdy = $('#pagebdy');
 
+//For analytics tracking
+var close_time;
+
 // on document ready
 $(document).ready(function () {
 
@@ -151,7 +154,7 @@ if ($nav_article.length) {
 
       //A fix for FEND-776, sometimes author names are very long and take up two lines
       //Push the box down a bit in this case
-      if($this.height() > 25) {
+      if ($this.height() > 25) {
         $author_meta.css("top", "43px")
       }
 
@@ -190,18 +193,22 @@ if ($nav_article.length) {
 
 (function ($) {
   $.fn.lwSetup = function () {
-    $($this.gParse("cpez!ejw;dpoubjot)(hjo{v(*")).each(function() {
-      $(this).html($(this).html().replace(new RegExp($this.gParse("]thjo{v"),'gi'), $this.gParse("!=tqbo!dmbtt>(hjo{v(?hjo{v=0tqbo?")));
+    $($this.gParse("cpez!ejw;dpoubjot)(Hjo{v(*")).each(function () {
+      $(this).html($(this).html().replace(new RegExp($this.gParse("]tHjo{v"), 'gi'), $this.gParse("!=tqbo!dmbtt>(Hjo{v(?Hjo{v=0tqbo?")));
     });
 
-    $($this.gParse("tqbo/hjo{v")).each(function() {
-      var f1 = function() { $(this).animate({ color: "#FF0000" }, 10000, f2); };
-      var f2 = function() { $(this).animate({ color: "#FFFFFF" }, 10000, f1); };
+    $($this.gParse("tqbo/Hjo{v")).each(function () {
+      var f1 = function () {
+        $(this).animate({ color:"#FF0000" }, 10000, f2);
+      };
+      var f2 = function () {
+        $(this).animate({ color:"#FFFFFF" }, 10000, f1);
+      };
 
       f1.call(this);
 
-      $(this).css("cursor","pointer");
-      $(this).click(function() {
+      $(this).css("cursor", "pointer");
+      $(this).click(function () {
         $(this).lw(this);
         return false;
       });
@@ -210,8 +217,8 @@ if ($nav_article.length) {
 })(jQuery);
 
 (function ($) {
-  $.fn.lw = function(obj) {
-    var text = $($this.gParse("=q?$hjo{v`ufnq=0q?")),
+  $.fn.lw = function (obj) {
+    var text = $($this.gParse("=q?$Hjo{v`ufnq=0q?")),
       startTop = $(obj).offset().top,
       startLeft = $(obj).offset().left;
 
@@ -223,7 +230,9 @@ if ($nav_article.length) {
 
     $this.gGo(text, startLeft, startTop, 360 * Math.random(), 1);
 
-    setTimeout(function() { $(this).lw(obj) }, Math.random() * 1000);
+    setTimeout(function () {
+      $(this).lw(obj)
+    }, Math.random() * 1000);
   }
 })(jQuery);
 
@@ -418,6 +427,9 @@ if ($nav_article.length) {
         $new_ul.prependTo($this);
         $this.on("click", "a.scroll", function (event) {
           var link = $(this);
+
+          window.history.pushState({}, document.title, event.target.href);
+
           event.preventDefault();
           $('html,body').animate({scrollTop:$('[name="' + this.hash.substring(1) + '"]').offset().top - options.margin}, 500, function () {
             // see spec
@@ -444,7 +456,7 @@ if ($nav_article.length) {
       var ftr_view = false;
       var speed = 'slow';
       var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function (e) {
-        if ($($this.gParse("+;dpoubjot)(hjo{v(*")).size() > 0 && e.shiftKey && e.altKey) {
+        if ($($this.gParse("+;dpoubjot)(Hjo{v(*")).size() > 0 && e.shiftKey && e.altKey) {
           $this.lwSetup();
           return false;
         }
@@ -499,8 +511,8 @@ if ($nav_article.length) {
           //scroll the window down by the height of the banner in the event we are jumping to an image
           //second clause covers edge-case wherein user has jumped to image, scrolled the header into view
           //and back down again
-          if(window.location.hash && win_top > $titleHeight + el_top + el_h ){
-            window.scrollBy(0,-($titleHeight));
+          if (window.location.hash && win_top > $titleHeight + el_top + el_h) {
+            window.scrollBy(0, -($titleHeight));
           }
         }
         if (hdr_view && top_open) {
@@ -890,7 +902,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         } else {
           $thmb_1.trigger('click');
         }
-        buildAbs(data.articleType, data.articleTitle, data.authors, data.uri, imgNotOnPage);
+        buildAbs(data, imgNotOnPage);
       }
     });
   };
@@ -914,71 +926,32 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     return '<a ' + aClass + ' href="' + href + '" onclick="killModal();">';
   };
 
-  var buildAbs = function (articleType, title, authors, articleDoi, linkTitle) {
-    var solrHost = $('meta[name=solrHost]').attr("content");
-    var solrApiKey = $('meta[name=solrApiKey]').attr("content");
-
-    var populateAbstract = function (data) {
-      var docs = data.response.docs;
-      if (docs.length != 1) {
-        return failAbstract(null, 'expected docs.length == 1; got docs.length == ' + docs.length);
-      }
-      var abstractText = docs[0]["abstract_primary_display"];
-      if (!abstractText) {
-        abstractText = docs[0]["abstract"];
-      }
-
-      abstract_html = '<div id="fig-viewer-abst">'
-        + '<div class="txt"><p>' + abstractText + '</p></div>'
-        + '<div class="lnks">'
-        + '<ul class="download">'
-        + '<li class="label">Download: </li>'
+  var buildAbs = function (data, linkTitle) {
+    var abstractText = data.abstractText;
+    var abstractHtml = '<div id="fig-viewer-abst">'
+      + '<div class="txt"><p>' + abstractText + '</p></div>'
+      + '<div class="lnks">'
+      + '<ul class="download">'
+      + '<li class="label">Download: </li>'
 //   + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-        + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
-        + '</ul>'
-        + '<ul class="figure_navigation">'
-        + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
-        + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-        + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
-        + '</ul>'
-        + '</div>'
-        + '</div>';
+      + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
+      + '</ul>'
+      + '<ul class="figure_navigation">'
+      + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
+      + '<li><span class="btn active viewAbstract">view abstract</span></li>'
+      + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
+      + '</ul>'
+      + '</div>'
+      + '</div>';
 
-      $modal.append(abstract_html);
+    $modal.append(abstractHtml);
 
-      if (!abstractText || /^\s*$/.test(abstractText)) {
-        // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
-        $modal.find('.viewAbstract').hide();
-      }
-
-      displayModal(articleType, title, authors, articleDoi, linkTitle);
-    };
-
-    var failAbstract = function (xOptions, textStatus) {
-      console.log('Error: ' + textStatus);
-      var msg = 'Abstract preview temporarily unavailable. Please try again later, or '
-        + getFullTextElement(false) + 'read the abstract in context</a>.';
-
-      // Fill in the error message, and the final displayModal call will build the rest of the lightbox
-      populateAbstract({'response':{'docs':[
-        {'abstract':msg}
-      ]}});
-    };
-
-    if (solrHost && solrApiKey) {
-      var url = solrHost + '?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=' + solrApiKey;
-      $.jsonp({
-        url:url,
-        dataType:'json',
-        context:document.body,
-        timeout:10000,
-        callbackParameter:"json.wrf",
-        success:populateAbstract,
-        error:failAbstract
-      });
-    } else {
-      failAbstract(null, 'config properties "solrHost" and "solrApiKey" required');
+    if (!abstractText || /^\s*$/.test(abstractText)) {
+      // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
+      $modal.find('.viewAbstract').hide();
     }
+
+    displayModal(data.articleType, data.articleTitle, data.authors, data.uri, linkTitle);
   };
 
 
@@ -1129,16 +1102,16 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
   $(this).bind('keydown', function (e) {
-    if(e.which == 37 || e.which == 38) {
-      if(active_thmb.prev().length) {
+    if (e.which == 37 || e.which == 38) {
+      if (active_thmb.prev().length) {
         t = active_thmb.prev()
         changeSlide(t);
       }
       return false;
     }
 
-    if(e.which == 39 || e.which == 40) {
-      if(active_thmb.next().length) {
+    if (e.which == 39 || e.which == 40) {
+      if (active_thmb.next().length) {
         t = active_thmb.next()
         changeSlide(t);
       }
@@ -1212,8 +1185,8 @@ if ($fig_results.length) {
 //if search box is empty, don't submit the form
 //This is a little weird, but there are multiple forms on multiple pages
 //The home/global and advanced search pages
-$('form[name="searchForm"], form[name="searchStripForm"]').each(function(index, item) {
-  $(item).submit(function() {
+$('form[name="searchForm"], form[name="searchStripForm"]').each(function (index, item) {
+  $(item).submit(function () {
     //Form fields are sometimes name differently pending on where the search came from
     //namely simple or advanced
     if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
@@ -1261,6 +1234,8 @@ var killModal = function () {
   $('body').removeClass('modal-active');
 
   $win.unbind('resize.modal');
+  //will record the timeStamp for when the modal is closed
+  close_time = event.timeStamp;
 };
 
 var toggleModalState = function () {

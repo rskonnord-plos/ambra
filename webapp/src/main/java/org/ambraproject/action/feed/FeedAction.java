@@ -122,8 +122,6 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
       case MinorCorrection:
       case Retraction:
       case Comment:
-      case Note:
-      case Rating:
       case Reply:
         //The getAnnotations method performs filters for all of the above types.
         //(Or not if Annotation is selected) AnnotationFeedSearchParameters will not populate the annotationTypes property

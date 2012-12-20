@@ -25,7 +25,6 @@ import org.ambraproject.service.article.ArticleAssetWrapper;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.service.article.NoSuchArticleIdException;
-import org.ambraproject.service.rating.RatingsService;
 import org.ambraproject.service.trackback.TrackbackService;
 import org.ambraproject.service.user.UserService;
 import org.ambraproject.util.TextUtils;
@@ -36,7 +35,6 @@ import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.LinkbackView;
-import org.ambraproject.views.RatingSummaryView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.apache.commons.collections.CollectionUtils;
@@ -116,13 +114,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   private FetchArticleService fetchArticleService;
   private AnnotationService annotationService;
-  private RatingsService ratingsService;
   private ArticleService articleService;
   private TrackbackService trackbackService;
   private AmbraFreemarkerConfig ambraFreemarkerConfig;
   private UserService userService;
   private Set<JournalView> journalList;
-  private RatingSummaryView averageRatings;
   private ArticleAssetWrapper[] articleAssetWrapper;
   private ArticleAssetService articleAssetService;
 
@@ -139,13 +135,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       AnnotationView[] annotationViews = annotationService.listAnnotations(
           articleInfoX.getId(),
           EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
-              AnnotationType.COMMENT, AnnotationType.NOTE),
+              AnnotationType.COMMENT),
           AnnotationOrder.NEWEST_TO_OLDEST
       );
 
       List<AnnotationView> commentList = new LinkedList<AnnotationView>();
       for (AnnotationView annotationView : annotationViews) {
-        switch (annotationView.getType()) {
+        AnnotationType annotationType = annotationView.getType();
+        switch (annotationType) {
           case FORMAL_CORRECTION:
             formalCorrections.add(annotationView);
             break;
@@ -156,9 +153,12 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
             retractions.add(annotationView);
             break;
           case COMMENT:
-          case NOTE:
             commentList.add(annotationView);
             break;
+          case REPLY:
+            break;
+          default:
+            throw new RuntimeException("Unhandled enum value: " + annotationType);
         }
       }
       commentary = commentList.toArray(new AnnotationView[commentList.size()]);
@@ -203,7 +203,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
       commentary = annotationService.listAnnotations(
           articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT, AnnotationType.NOTE),
+          EnumSet.of(AnnotationType.COMMENT),
           AnnotationOrder.MOST_RECENT_REPLY);
 
       //have to count the corrections so we know whether to show a 'Show All corrections' link
@@ -243,7 +243,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
       //have to count comments so we know whether to show a 'View All Comments' link
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT, AnnotationType.NOTE));
+          EnumSet.of(AnnotationType.COMMENT));
 
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
@@ -383,14 +383,12 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     }
 
     articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
-    averageRatings = ratingsService.getAverageRatings(articleInfoX.getId());
     journalList = articleInfoX.getJournals();
     isResearchArticle = articleService.isResearchArticle(articleInfoX);
-    hasRated = ratingsService.hasRated(articleInfoX.getId(), getCurrentUser());
     articleIssues = articleService.getArticleIssues(articleURI);
     //count all the comments and corrections
     totalNumAnnotations = annotationService.countAnnotations(articleInfoX.getId(),
-        EnumSet.of(AnnotationType.NOTE, AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
+        EnumSet.of(AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
             AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
 
     articleType = articleInfoX.getKnownArticleType();
@@ -467,16 +465,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   @Required
   public void setTrackBackService(TrackbackService trackBackservice) {
     this.trackbackService = trackBackservice;
-  }
-
-  /**
-   * Set the ratings service.
-   *
-   * @param ratingsService the ratings service
-   */
-  @Required
-  public void setRatingsService(final RatingsService ratingsService) {
-    this.ratingsService = ratingsService;
   }
 
   /**
@@ -591,15 +579,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public boolean getIsResearchArticle() {
     return isResearchArticle;
-  }
-
-  /*
-  * Gets averageRatings info
-  *
-  * @return returns averageRatings info
-  * */
-  public RatingSummaryView getAverageRatings() {
-    return averageRatings;
   }
 
   /**

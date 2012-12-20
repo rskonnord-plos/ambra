@@ -24,6 +24,7 @@ package org.ambraproject.service.search;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,11 +65,14 @@ public class SearchParameters implements Serializable {
   private String        id                    = ""; // One DOI.  These are indexed as "ID" in Solr
 
   // Used to create query filters on any search
-  private String[]      filterSubjects      = {}; // Only search in these subjects
-  private String[]      filterAuthors      = {}; // Only search in these subjects
+  private String[]      filterSubjects        = {}; // Only search in these subjects
+  private String[]      filterAuthors         = {}; // Only search in these subjects
   private String        filterKeyword         = ""; // Only search in this document part
   private String        filterArticleType     = ""; // Only search for this article type
   private String[]      filterJournals        = {}; // Only search these Journals. If no elements, then default to the current journal
+
+  private Date          filterStartDate       = null; //Only search for articles published in this date range
+  private Date          filterEndDate         = null;
 
   // Controls results order
   private String        sort                  = "";
@@ -83,6 +87,7 @@ public class SearchParameters implements Serializable {
   public String getQuery() {
     return query;
   }
+
   public void setQuery(String query) {
     if (query == null || query.trim().length() < 1)
       this.query = "";
@@ -262,6 +267,22 @@ public class SearchParameters implements Serializable {
     this.resultView = resultView;
   }
 
+  public Date getFilterStartDate() {
+    return filterStartDate;
+  }
+
+  public void setFilterStartDate(Date filterStartDate) {
+    this.filterStartDate = filterStartDate;
+  }
+
+  public Date getFilterEndDate() {
+    return filterEndDate;
+  }
+
+  public void setFilterEndDate(Date filterEndDate) {
+    this.filterEndDate = filterEndDate;
+  }
+
   /**
    * Creates a deep copy of this SearchParameters object.
    *
@@ -283,6 +304,8 @@ public class SearchParameters implements Serializable {
     sp.setStartPage(this.getStartPage());
     sp.setPageSize(this.getPageSize());
     sp.setResultView(this.getResultView());
+    sp.setFilterStartDate(this.getFilterStartDate());
+    sp.setFilterEndDate(this.getFilterEndDate());
     return sp;
   }
 
@@ -299,6 +322,8 @@ public class SearchParameters implements Serializable {
         ", filterKeyword='" + filterKeyword + "'" +
         ", filterArticleType='" + filterArticleType + "'" +
         ", filterJournals=" + (filterJournals == null ? null : Arrays.asList(filterJournals)) +
+        ", filterStartDate=" + filterStartDate +
+        ", filterEndDate=" + filterEndDate +
         ", sort='" + sort + "'" +
         ", startPage=" + startPage +
         ", pageSize=" + pageSize +

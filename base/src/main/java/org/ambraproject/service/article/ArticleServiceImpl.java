@@ -762,15 +762,11 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     List<Category> categories = new ArrayList<Category>(categoryStrings.size());
     int numAdded = 0;
     for (String s : categoryStrings) {
-      String[] fields = s.split("\\/");
-      if (fields.length < 2 || !fields[0].isEmpty()) {
+      if (s.charAt(0) != '/') {
         throw new IllegalArgumentException("Bad category: " + s);
       }
       Category category = new Category();
-      category.setMainCategory(fields[1]);
-      if (fields.length > 2) {
-        category.setSubCategory(fields[fields.length - 1]);
-      }
+      category.setPath(s);
       categories.add(category);
       if (++numAdded == 8) {
         break;
@@ -812,13 +808,11 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
             if (category.getSubCategory() != null) {
               existingCategory = (Category) hibernateTemplate.findByCriteria(
                   DetachedCriteria.forClass(Category.class)
-                      .add(Restrictions.eq("mainCategory", category.getMainCategory()))
-                      .add(Restrictions.eq("subCategory", category.getSubCategory())), 0, 1).get(0);
+                      .add(Restrictions.eq("path", category.getPath())), 0, 1).get(0);
             } else {
               existingCategory = (Category) hibernateTemplate.findByCriteria(
                   DetachedCriteria.forClass(Category.class)
-                      .add(Restrictions.eq("mainCategory", category.getMainCategory()))
-                      .add(Restrictions.isNull("subCategory")), 0, 1).get(0);
+                      .add(Restrictions.eq("path", category.getPath())), 0, 1).get(0);
             }
             correctCategories.add(existingCategory);
           } catch (IndexOutOfBoundsException e) {

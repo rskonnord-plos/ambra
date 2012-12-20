@@ -75,7 +75,6 @@
 
   <bean id="annotationService" class="org.ambraproject.service.annotation.AnnotationServiceImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
-    <property name="articleHtmlCache" ref="articleHtmlCache"/>
   </bean>
 
   <bean id="articleAssetService" class="org.ambraproject.service.article.ArticleAssetServiceImpl">
@@ -103,12 +102,6 @@
   <bean id="pingbackService" class="org.ambraproject.service.trackback.PingbackServiceImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="configuration" ref="ambraConfiguration"/>
-  </bean>
-
-  <bean id="ratingsService" class="org.ambraproject.service.rating.RatingsServiceImpl">
-    <property name="applicationId" ref="applicationId"/>
-    <property name="permissionsService" ref="permissionsService"/>
-    <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
 
   <bean id="journalService" class="org.ambraproject.service.journal.JournalServiceImpl">

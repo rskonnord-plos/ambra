@@ -49,26 +49,9 @@ public class FetchArticleCategoriesAction extends BaseSessionAwareActionSupport 
     Set<Category> articleCategories = article.getCategories();
     categories = new HashSet<String>(articleCategories.size());
     for (Category category : articleCategories) {
-      categories.add(buildCategoryString(category));
+      categories.add(category.getPath());
     }
     return SUCCESS;
-  }
-
-  /**
-   * Returns a single-string representation of a possibly-nested category
-   * hierarchy, delimited by "/".  E. g. "Virology/Ebola".  If there is
-   * no sub-category information, only the top-level category will be
-   * returned.
-   */
-  private String buildCategoryString(Category category) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(category.getMainCategory());
-    String subCategory = category.getSubCategory();
-    if (subCategory != null && !subCategory.isEmpty()) {
-      sb.append('/');
-      sb.append(subCategory);
-    }
-    return sb.toString();
   }
 
   @Required

@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.5.2</h2>
+  <p>Released December 20th, 2012</p>
+  <h3>Features Implemented in Ambra 2.5.2</h3>
+  <ul>
+    <li>Taxonomy Improvements</li>
+    <li>Various code cleanups</li>
+    <li>Many bug fixes</li>
+  </ul>
+
   <h2>Ambra 2.5.1</h2>
   <p>Released December 6, 2012</p>
   <h3>Features Implemented in Ambra 2.5.1</h3>
@@ -96,6 +105,36 @@
     <li>Fixed bug that resulted in missing links in reference section.</li>
   </ul>
 
+  <h2>Ambra 2.4.4</h2>
+  <p>Released September 25, 2012</p>
+  <h3>Features Implemented in Ambra 2.4.4</h3>
+  <ul>
+    <li>New ALM search & browse sort by Most Bookmarked and Most shared in social media</li>
+    <li>Fixed search errors and issue management errors.</li>
+    <li>Improved transaction management code.</li>
+    <li>Added Captcha challenge to "Email this article" functionality.</li>
+  </ul>
+
+  <h2>Ambra 2.4.3</h2>
+  <p>Released September 18, 2012</p>
+  <h3>Features Implemented in Ambra 2.4.3</h3>
+  <ul>
+    <li>Added the ability to Subscribe (RSS) to a search result.</li>
+    <li>Trial Registration field was added to advanced search.</li>
+    <li>Publication date was added to the Metrics box.</li>
+    <li>"Find this article online" feature retrieves results faster.</li>
+    <li>Several fixes to social media display such as twitter and facebook.</li>
+    <li>Added new ALM Source, Wikipedia, to the Article Metrics tab.</li>
+  </ul>
+
+  <h2>Ambra 2.4.2</h2>
+  <p>Released September 4, 2012</p>
+  <h3>Features Implemented in Ambra 2.4.2</h3>
+  <ul>
+    <li>Added functionality to clear css and javascript cache from browsers to prevent stale display of information.</li>
+    <li>Improved the code structure to facilitate deployment of registration application separately from the main web app.</li>
+    <li>Made logo changes to facilitate the new logo design.</li>
+  </ul>
 
   <h2>Ambra 2.41</h2>
   <p>Released August 28, 2012</p>

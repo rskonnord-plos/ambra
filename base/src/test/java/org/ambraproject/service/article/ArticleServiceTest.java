@@ -90,20 +90,17 @@ public class ArticleServiceTest extends BaseTest {
 
     Set<Category> categoriesForArticle1 = new HashSet<Category>();
     Category category1ForArticle1 = new Category();
-    category1ForArticle1.setMainCategory("Fake Main Category for category1ForArticle1");
-    category1ForArticle1.setSubCategory("Fake Sub Category for category1ForArticle1");
+    category1ForArticle1.setPath("/Fake Main Category/for/category1ForArticle1");
     category1ForArticle1.setCreated(new Date());
     category1ForArticle1.setLastModified(new Date());
     categoriesForArticle1.add(category1ForArticle1);
     Category category2ForArticle1 = new Category();
-    category2ForArticle1.setMainCategory("Fake Main Category for category2ForArticle1");
-    category2ForArticle1.setSubCategory("Fake Sub Category for category2ForArticle1");
+    category2ForArticle1.setPath("/Fake Main Category/for/category2ForArticle1");
     category2ForArticle1.setCreated(new Date());
     category2ForArticle1.setLastModified(new Date());
     categoriesForArticle1.add(category2ForArticle1);
     Category category3ForArticle1 = new Category();
-    category3ForArticle1.setMainCategory("Fake Main Category for category3ForArticle1");
-    category3ForArticle1.setSubCategory("Fake Sub Category for category3ForArticle1");
+    category3ForArticle1.setPath("Fake Main Category/for/category3ForArticle1");
     categoriesForArticle1.add(category3ForArticle1);
     article1.setCategories(categoriesForArticle1);
 
@@ -291,20 +288,17 @@ public class ArticleServiceTest extends BaseTest {
 
     Set<Category> categoriesForArticle2 = new HashSet<Category>();
     Category category1ForArticle2 = new Category();
-    category1ForArticle2.setMainCategory("Fake Main Category for category1ForArticle2");
-    category1ForArticle2.setSubCategory("Fake Sub Category for category1ForArticle2");
+    category1ForArticle2.setPath("Fake Main Category/for/category1ForArticle2");
     category1ForArticle2.setCreated(new Date());
     category1ForArticle2.setLastModified(new Date());
     categoriesForArticle2.add(category1ForArticle2);
     Category category2ForArticle2 = new Category();
-    category2ForArticle2.setMainCategory("Fake Main Category for category2ForArticle2");
-    category2ForArticle2.setSubCategory("Fake Sub Category for category2ForArticle2");
+    category2ForArticle2.setPath("Fake Main Category/for/category2ForArticle2");
     category2ForArticle2.setCreated(new Date());
     category2ForArticle2.setLastModified(new Date());
     categoriesForArticle2.add(category2ForArticle2);
     Category category3ForArticle2 = new Category();
-    category3ForArticle2.setMainCategory("Fake Main Category for category3ForArticle2");
-    category3ForArticle2.setSubCategory("Fake Sub Category for category3ForArticle2");
+    category3ForArticle2.setPath("Fake Main Category/for/category3ForArticle2");
     categoriesForArticle2.add(category3ForArticle2);
     article2.setCategories(categoriesForArticle2);
 
@@ -669,12 +663,10 @@ public class ArticleServiceTest extends BaseTest {
 
     Set<Category> categories = new HashSet<Category>(2);
     Category cat1 = new Category();
-    cat1.setMainCategory("maincat1");
-    cat1.setSubCategory("subcat1");
+    cat1.setPath("/maincat1");
 
     Category cat2 = new Category();
-    cat2.setMainCategory("maincat2");
-    cat2.setSubCategory("subcat2");
+    cat2.setPath("/maincat2");
 
     categories.add(cat1);
     categories.add(cat2);
@@ -868,13 +860,9 @@ public class ArticleServiceTest extends BaseTest {
     }
   }
 
-  private Set<Category> addCategory(Set<Category> categories, String mainCategory,
-      String subCategory) {
+  private Set<Category> addCategory(Set<Category> categories, String path) {
     Category category = new Category();
-    category.setMainCategory(mainCategory);
-    if (subCategory != null) {
-      category.setSubCategory(subCategory);
-    }
+    category.setPath(path);
     categories.add(category);
     return categories;
   }
@@ -896,21 +884,27 @@ public class ArticleServiceTest extends BaseTest {
     articleService.setArticleCategories(article, terms);
 
     Set<Category> expectedCategories = new HashSet<Category>(8);
-    addCategory(expectedCategories, "Biology and life sciences", "T cells");
-    addCategory(expectedCategories, "Biology and life sciences", null);
-    addCategory(expectedCategories, "Biology and life sciences", "Spleen");
-    addCategory(expectedCategories, "Biology and life sciences", "Antigens");
-    addCategory(expectedCategories, "Research and analysis methods", "Liver and spleen scan");
-    addCategory(expectedCategories, "Medicine and health sciences", "Hepatitis");
-    addCategory(expectedCategories, "Biology and life sciences", "Liver");
-    addCategory(expectedCategories, "Biology and life sciences", "Lymph nodes");
+    addCategory(expectedCategories,
+        "/Biology and life sciences/Cell biology/Cellular types/Animal cells/Blood cells/White blood cells/T cells");
+    addCategory(expectedCategories, "/Biology and life sciences");
+    addCategory(expectedCategories,
+        "/Biology and life sciences/Anatomy and physiology/Immune physiology/Spleen");
+    addCategory(expectedCategories,
+        "/Biology and life sciences/Anatomy and physiology/Immune physiology/Antigens");
+    addCategory(expectedCategories,
+        "/Research and analysis methods/Imaging techniques/Radiologic imaging/Gastrointestinal imaging/Liver and spleen scan");
+    addCategory(expectedCategories,
+        "/Medicine and health sciences/Pathology and laboratory medicine/Infectious diseases/Viral diseases/Hepatitis");
+    addCategory(expectedCategories, "/Biology and life sciences/Anatomy and physiology/Liver");
+    addCategory(expectedCategories,
+        "/Biology and life sciences/Anatomy and physiology/Lymphatic system/Lymph nodes");
     assertEquals(article.getCategories(), expectedCategories);
 
     // setArticleCategories should only store the first 8 categories returned by
     // the taxonomy server.
     Category shouldntExist = new Category();
-    shouldntExist.setMainCategory("Biology and life sciences");
-    shouldntExist.setSubCategory("Antigen-presenting cells");
+    shouldntExist.setPath(
+        "/Biology and life sciences/Cell biology/Cellular types/Animal cells/Antigen-presenting cells");
     assertFalse(article.getCategories().contains(shouldntExist));
   }
 

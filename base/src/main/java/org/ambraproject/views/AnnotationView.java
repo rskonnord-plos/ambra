@@ -54,7 +54,6 @@ public class AnnotationView {
   private final String competingInterestStatement;
   private final String truncatedCompetingInterestStatement;
   private final String annotationUri;
-  private final String xpath;
   private final Long ID;
   private final Long creatorID;
   private final String creatorDisplayName;
@@ -138,7 +137,6 @@ public class AnnotationView {
       this.truncatedCompetingInterestStatement = TextUtils.truncateText(TextUtils.escapeHtml(annotation.getCompetingInterestBody()), TRUNCATED_COMMENT_LENGTH);
     }
 
-    this.xpath = annotation.getXpath();
     this.creatorID = annotation.getCreator().getID();
     this.creatorDisplayName = annotation.getCreator().getDisplayName();
     this.creatorFormattedName = createFormattedName(annotation.getCreator());
@@ -225,7 +223,6 @@ public class AnnotationView {
       return false;
     if (title != null ? !title.equals(that.title) : that.title != null) return false;
     if (type != that.type) return false;
-    if (xpath != null ? !xpath.equals(that.xpath) : that.xpath != null) return false;
 
     return true;
   }
@@ -236,7 +233,6 @@ public class AnnotationView {
     result = 31 * result + (body != null ? body.hashCode() : 0);
     result = 31 * result + (competingInterestStatement != null ? competingInterestStatement.hashCode() : 0);
     result = 31 * result + (annotationUri != null ? annotationUri.hashCode() : 0);
-    result = 31 * result + (xpath != null ? xpath.hashCode() : 0);
     result = 31 * result + (ID != null ? ID.hashCode() : 0);
     result = 31 * result + (creatorID != null ? creatorID.hashCode() : 0);
     result = 31 * result + (creatorDisplayName != null ? creatorDisplayName.hashCode() : 0);
@@ -257,7 +253,6 @@ public class AnnotationView {
         ", body='" + body + '\'' +
         ", competingInterestStatement='" + competingInterestStatement + '\'' +
         ", annotationUri='" + annotationUri + '\'' +
-        ", xpath='" + xpath + '\'' +
         ", creatorID=" + creatorID +
         ", creatorDisplayName='" + creatorDisplayName + '\'' +
         ", articleID=" + articleID +
@@ -323,10 +318,6 @@ public class AnnotationView {
 
   public String getAnnotationUri() {
     return annotationUri;
-  }
-
-  public String getXpath() {
-    return xpath;
   }
 
   public Long getID() {

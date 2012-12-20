@@ -47,6 +47,7 @@
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="articleService" ref="articleService"/>
+    <property name="searchService" ref="searchService"/>
   </bean>
 
   <bean id="homePageAction" class="org.ambraproject.action.HomePageAction">
@@ -62,7 +63,6 @@
   </bean>
 
   <bean id="fetchArticleTabAction" class="org.ambraproject.action.article.FetchArticleTabsAction">
-    <property name="ratingsService" ref="ratingsService"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="userService" ref="userService"/>
     <property name="trackBackService" ref="trackbackService"/>
@@ -130,13 +130,6 @@
     <property name="secondaryObjectService" ref="secondaryObjectService"/>
     <property name="captchaService" ref="captchaService"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
-  </bean>
-
-  <bean id="getArticleRatingsAction" class="org.ambraproject.action.rating.GetArticleRatingsAction">
-    <property name="ratingsService" ref="ratingsService"/>
-    <property name="permissionsService" ref="permissionsService"/>
-    <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="articleService" ref="articleService"/>
   </bean>
 
   <bean id="fetchPowerPointAction" class="org.ambraproject.action.article.FetchPowerPointAction">
