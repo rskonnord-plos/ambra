@@ -61,7 +61,7 @@
       <xsl:call-template name="newline1"/>
       <xsl:call-template name="make-front"/>
       <xsl:call-template name="newline1"/>
-      <div class="articleinfo" xpathLocation="noSelect">
+      <div class="articleinfo">
         <xsl:call-template name="make-article-meta"/>
       </div>
       <xsl:call-template name="make-editors-summary"/>
@@ -87,7 +87,6 @@
         <xsl:for-each select="abstract[not(@abstract-type) or (@abstract-type !='toc' and @abstract-type != 'teaser'
              and @abstract-type != 'editor' and @abstract-type != 'patient')]">
           <div class="abstract">
-            <xsl:call-template name="makeXpathLocation"/>
             <xsl:call-template name="abstract-title"/>
             <xsl:apply-templates select="*[not(self::title)]"/>
           </div>
@@ -242,12 +241,6 @@
               These authors contributed equally to this work.
           </p>
         </xsl:if>
-        <!-- current-aff footnote -->
-        <xsl:for-each select="author-notes/fn[@fn-type='current-aff']">
-          <p>
-            <xsl:apply-templates select="." mode="metadata"/>
-          </p>
-        </xsl:for-each>
         <!-- deceased author footnote -->
         <xsl:for-each select="author-notes/fn[@fn-type='deceased']">
           <p>
@@ -276,7 +269,6 @@
     <xsl:template name="make-editors-summary">
       <xsl:for-each select="front/article-meta/abstract[@abstract-type='editor']">
         <div class="editorsAbstract">
-          <xsl:call-template name="makeXpathLocation"/>
           <xsl:call-template name="abstract-title"/>
           <xsl:apply-templates select="*[not(self::title)]"/>
         </div>
@@ -408,7 +400,7 @@
 
     <!-- 1/4/12: plos modifications -->
     <xsl:template match="title-group/subtitle" mode="metadata">
-      <h2 xpathLocation="noSelect">
+      <h2>
         <xsl:apply-templates/>
       </h2>
     </xsl:template>
@@ -730,7 +722,6 @@
       <div>
         <xsl:call-template name="make-section-id"/>
         <xsl:call-template name="make-section-class"/>
-        <xsl:call-template name="makeXpathLocation" />
         <xsl:if test="descendant::title[1] != ''">
           <xsl:element name="a">
             <xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
@@ -757,11 +748,11 @@
 
     <!-- 1/4/12: plos modifications -->
     <xsl:template match="ref-list" name="ref-list">
-      <div xpathLocation="noSelect">
+      <div>
         <xsl:choose>
           <xsl:when test="not(title)">
             <a id="refs" name="refs" toc="refs" title="References"/>
-            <h3 xpathLocation="noSelect">References</h3>
+            <h3>References</h3>
             <xsl:call-template name="newline1"/>
           </xsl:when>
           <xsl:otherwise>
@@ -769,10 +760,10 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:apply-templates select="p"/>
-        <ol class="references" xpathLocation="noSelect">
+        <ol class="references">
           <xsl:for-each select="ref">
             <xsl:sort data-type="number" select="label"/>
-            <li xpathLocation="noSelect">
+            <li>
               <a>
                 <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
                 <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
@@ -820,7 +811,7 @@
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="abstract/title">
       <xsl:call-template name="newline1"/>
-      <h2 xpathLocation="noSelect">
+      <h2>
         <xsl:apply-templates/>
       </h2>
       <xsl:call-template name="newline1"/>
@@ -830,7 +821,7 @@
     <xsl:template match="body/sec/title">
       <!-- only output an h3 if the body/sec/title has content -->
       <xsl:if test="string(.)">
-        <h3 xpathLocation="noSelect">
+        <h3>
           <xsl:apply-templates/>
         </h3>
       </xsl:if>
@@ -846,7 +837,7 @@
       <xsl:call-template name="newline1"/>
       <!-- only output an h3 if the abstract title has content -->
       <xsl:if test="string-length() &gt; 0">
-        <h3 xpathLocation="noSelect">
+        <h3>
           <xsl:apply-templates/>
         </h3>
       </xsl:if>
@@ -876,7 +867,7 @@
             <xsl:attribute name="toc"><xsl:value-of select="$abs_id"/></xsl:attribute>
             <xsl:attribute name="title">Abstract</xsl:attribute>
           </xsl:element>
-          <h2 xpathLocation="noSelect"><xsl:text>Abstract</xsl:text></h2>
+          <h2><xsl:text>Abstract</xsl:text></h2>
         </xsl:when>
       </xsl:choose>
     </xsl:template>
@@ -885,7 +876,6 @@
     <xsl:template match="body/sec/sec/title">
       <xsl:call-template name="newline1"/>
       <h4>
-        <xsl:call-template name="makeXpathLocation" />
         <xsl:apply-templates/>
       </h4>
       <xsl:call-template name="newline1"/>
@@ -899,7 +889,6 @@
     <!-- 1/4/12: plos-specific template (creates article third-level heading) -->
     <xsl:template match="body/sec/sec/sec/title">
       <h5>
-        <xsl:call-template name="makeXpathLocation" />
         <xsl:apply-templates/>
         <xsl:call-template name="punctuation" />
       </h5>
@@ -914,7 +903,6 @@
     <xsl:template match="ack/sec/title">
       <xsl:call-template name="newline1"/>
       <h4>
-        <xsl:call-template name="makeXpathLocation" />
         <xsl:apply-templates/>
       </h4>
       <xsl:call-template name="newline1"/>
@@ -926,7 +914,7 @@
         <xsl:attribute name="id"><xsl:value-of select="replace(lower-case(.),' ','')"/></xsl:attribute>
         <xsl:attribute name="name"><xsl:value-of select="replace(lower-case(.),' ','')"/></xsl:attribute>
       </a>
-      <h3 xpathLocation="noSelect">
+      <h3>
         <xsl:apply-templates/>
       </h3>
     </xsl:template>
@@ -948,14 +936,14 @@
           </xsl:choose>
         </xsl:attribute>
       </a>
-      <h3 xpathLocation="noSelect">
+      <h3>
         <xsl:apply-templates/>
       </h3>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="notes/sec/title">
-      <h3 xpathLocation="noSelect"><xsl:value-of select="."/></h3>
+      <h3><xsl:value-of select="."/></h3>
     </xsl:template>
 
     <!-- 1/4/12: plos modifications (creates any other titles not already specified) -->
@@ -965,14 +953,13 @@
         <xsl:when test="count(ancestor::sec) > 1">
           <xsl:call-template name="newline1"/>
           <h4>
-            <xsl:call-template name="makeXpathLocation"/>
             <xsl:apply-templates/>
           </h4>
           <xsl:call-template name="newline1"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:call-template name="newline1"/>
-          <h3 xpathLocation="noSelect">
+          <h3>
             <xsl:apply-templates/>
           </h3>
           <xsl:call-template name="newline1"/>
@@ -1043,7 +1030,6 @@
           <!--id needs to be attached to "figure" div for proper anchor linking-->
           <xsl:attribute name="id"><xsl:value-of select="translate($figId, '.', '-')"/> </xsl:attribute>
           <div class="img">
-            <xsl:call-template name="makeXpathLocation"/>
             <xsl:element name="a">
               <!-- 6/13/12: added translate so names and ids have dash (for figure enhancement) -->
               <xsl:attribute name="name"><xsl:value-of select="translate($figId, '.', '-')"/></xsl:attribute>
@@ -1052,7 +1038,6 @@
                 <xsl:attribute name="data-doi"><xsl:value-of select="$targetURI"/></xsl:attribute>
                 <xsl:attribute name="data-uri"><xsl:value-of select="$imageURI"/></xsl:attribute>
                 <xsl:element name="img">
-                  <xsl:attribute name="xpathLocation">noSelect</xsl:attribute>
                   <xsl:attribute name="src">
                   <xsl:value-of select="concat($pubAppContext,'/article/fetchObject.action?uri=',$imageURI,'&amp;representation=PNG_I')"/>
                   </xsl:attribute>
@@ -1127,23 +1112,17 @@
           </div>
           <!--end figure download-->
           <p><strong>
-              <xsl:call-template name="makeXpathLocationParam" >
-                <xsl:with-param name="node" select="label"/>
-              </xsl:call-template>
               <strong><xsl:apply-templates select="label"/></strong>
               <xsl:if test="caption/title">
                 <xsl:text> </xsl:text>
                 <span>
-                  <xsl:call-template name="makeXpathLocationParam" >
-                    <xsl:with-param name="node" select="caption/title"/>
-                  </xsl:call-template>
                   <xsl:apply-templates select="caption/title"/>
                 </span>
               </xsl:if>
             </strong></p>
             <xsl:apply-templates select="caption/node()[not(self::title)]"/>
             <xsl:if test="object-id[@pub-id-type='doi']">
-              <span xpathLocation="noSelect"><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
+              <span><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
             </xsl:if>
           <div class="clearer"/>
         </div>
@@ -1247,7 +1226,6 @@
     <xsl:template match="list-item">
 	    <xsl:call-template name="newline1"/>
 		  <li>
-        <xsl:call-template name="makeXpathLocation"/>
         <xsl:if test="../@prefix-word">
           <xsl:value-of select="../@prefix-word"/>
           <xsl:text> </xsl:text>
@@ -1275,7 +1253,6 @@
         <xsl:call-template name="makeIdNameFromXpathLocation"/>
       </a>
 	    <p>
-        <xsl:call-template name="makeXpathLocation"/>
 	      <xsl:apply-templates/>
 	    </p>
 	    <xsl:call-template name="newline1"/>
@@ -1849,7 +1826,7 @@
         <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
       </xsl:element>
       <p>
-        <strong xPathLocation="noSelect">
+        <strong>
           <xsl:element name="a">
             <xsl:variable name="objURI"><xsl:value-of select="@xlink:href"/></xsl:variable>
             <xsl:attribute name="href">
@@ -1897,7 +1874,6 @@
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="disp-formula//label">
       <span class="note">
-        <xsl:call-template name="makeXpathLocation" />
         <xsl:apply-templates/>
       </span>
     </xsl:template>
@@ -2154,7 +2130,7 @@
         <xsl:for-each select="//abstract[@abstract-type='patient']">
           <div class="patient">
             <a id="patient" name="patient" toc="patient" title="Patient Summary"/>
-            <h3 xpathLocation="noSelect"><xsl:value-of select="title"/></h3>
+            <h3><xsl:value-of select="title"/></h3>
             <xsl:apply-templates select="*[not(self::title)]"/>
           </div>
         </xsl:for-each>
@@ -2165,8 +2141,8 @@
     <xsl:template name="author-contrib">
       <xsl:if test="../front/article-meta/author-notes/fn[@fn-type='con']">
         <div class="contributions"><a id="authcontrib" name="authcontrib" toc="authcontrib"
-                title="Author Contributions"/><h3 xpathLocation="noSelect">Author Contributions</h3>
-          <p xpathLocation="noSelect">
+                title="Author Contributions"/><h3>Author Contributions</h3>
+          <p>
             <xsl:apply-templates select="../front/article-meta/author-notes/fn[@fn-type='con']"/>
           </p>
         </div>
@@ -2184,10 +2160,10 @@
         <hr class="section-rule"/>
       </xsl:if>
       <xsl:call-template name="newline1"/>
-      <div xpathLocation="noSelect" >
+      <div >
         <xsl:call-template name="assign-id"/>
         <xsl:if test="not(title)">
-          <a id="ack" name="ack" toc="ack" title="Acknowledgments"/><h3 xpathLocation="noSelect">Acknowledgments</h3>
+          <a id="ack" name="ack" toc="ack" title="Acknowledgments"/><h3>Acknowledgments</h3>
           <xsl:call-template name="newline1"/>
         </xsl:if>
         <xsl:apply-templates/>
@@ -2321,64 +2297,6 @@
     <!-- ============================================================= -->
     <!--  UTILITY TEMPLATES                                           -->
     <!-- ============================================================= -->
-
-    <!-- 1/4/12: plos-specific template (creates xpaths in source html) -->
-    <xsl:template name="makeXpathLocation">
-      <xsl:variable name="xpathLocation">
-        <xsl:call-template name="createXpath">
-          <xsl:with-param name="theNode" select="."/>
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:attribute name="xpathLocation">
-        <xsl:value-of select="$xpathLocation"/>
-      </xsl:attribute>
-    </xsl:template>
-
-    <!-- 1/4/12: plos-specific template (creates xpaths in source html) -->
-    <xsl:template name="makeXpathLocationParam">
-      <xsl:param name="node" select="."/>
-      <xsl:variable name="xpathLocation">
-        <xsl:call-template name="createXpath">
-          <xsl:with-param name="theNode" select="$node"/>
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:attribute name="xpathLocation">
-        <xsl:value-of select="$xpathLocation"/>
-      </xsl:attribute>
-    </xsl:template>
-
-    <!-- 1/4/12: plos-specific template (creates xpaths in source html) -->
-    <xsl:template name="createXpath">
-      <xsl:param name="theNode" select="."/>
-      <xsl:choose>
-        <xsl:when test="$theNode[1]">
-          <xsl:choose>
-            <xsl:when test="not($theNode[1]/..)">
-              <xsl:text>/</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:for-each select="$theNode[1]/ancestor-or-self::*[not(self::aml:annotated)]">
-                <xsl:text/>/<xsl:value-of select="name()"/>
-                <xsl:text/>[<xsl:value-of select="count(preceding-sibling::*[name() = name(current())]) + 1"/>]<xsl:text/>
-              </xsl:for-each>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <xsl:when test="$theNode">
-          <xsl:choose>
-            <xsl:when test="not($theNode/..)">
-              <xsl:text>/</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:for-each select="$theNode/ancestor-or-self::*[not(self::aml:annotated)]">
-                <xsl:text/>/<xsl:value-of select="name()"/>
-                <xsl:text/>[<xsl:value-of select="count(preceding-sibling::*[name() = name(current())]) + 1"/>]<xsl:text/>
-              </xsl:for-each>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-      </xsl:choose>
-    </xsl:template>
 
   <xsl:template name="makeIdNameFromXpathLocation">
     <xsl:variable name="idFromXpath">

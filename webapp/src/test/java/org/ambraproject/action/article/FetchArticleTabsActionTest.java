@@ -79,7 +79,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
 
     Annotation comment = new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID());
     comment.setTitle("comment title");
-    comment.setXpath("xpath");
     dummyDataStore.store(comment);
 
     //replies don't get counted as a comment
@@ -135,7 +134,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
 
     Annotation comment = new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID());
     comment.setTitle("comment title");
-    comment.setXpath("xpath");
     comment.setCreated(lastYear.getTime());
     dummyDataStore.store(comment);
 
@@ -145,24 +143,18 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     reply.setParentID(comment.getID());
     dummyDataStore.store(reply);
 
-    //note is created after comment
-    Annotation note = new Annotation(user, AnnotationType.NOTE, getArticleToFetch().getID());
-    note.setTitle("note title");
-    dummyDataStore.store(note);
-
     action.setArticleURI(getArticleToFetch().getDoi());
     String result = action.fetchArticleComments();
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
-    assertEquals(action.getTotalNumAnnotations(), 5, "Action returned incorrect annotation count");
+    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect annotation count");
     //order his hard to check, we do it in annotation service test.
     assertEqualsNoOrder(action.getCommentary(), new AnnotationView[]{
-        new AnnotationView(note, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
         new AnnotationView(comment, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)
     }, "Action returned incorrect comments");
 
     //check that the reply got loaded up
-    assertEquals(action.getCommentary()[1].getReplies().length, 1, "Reply to comment didn't get loaded up");
-    assertEquals(action.getCommentary()[1].getReplies()[0],
+    assertEquals(action.getCommentary()[0].getReplies().length, 1, "Reply to comment didn't get loaded up");
+    assertEquals(action.getCommentary()[0].getReplies()[0],
         new AnnotationView(reply, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
         "Action returned incorrect reply");
     assertEquals(action.getNumCorrections(), 2, "Action didn't count corrections");
@@ -192,14 +184,13 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     dummyDataStore.store(retraction);
 
     dummyDataStore.store(new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.NOTE, getArticleToFetch().getID()));
     dummyDataStore.store(new Annotation(user, AnnotationType.REPLY, getArticleToFetch().getID()));
 
     action.setArticleURI(getArticleToFetch().getDoi());
     String result = action.fetchArticleCorrections();
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
     //check the comments
-    assertEquals(action.getTotalNumAnnotations(), 5, "Action returned incorrect number of annotations");
+    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect number of annotations");
 
     //order his hard to check, we do it in annotation service test.
     assertEqualsNoOrder(action.getCommentary(), new AnnotationView[]{
@@ -208,7 +199,7 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
         new AnnotationView(retraction, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)
     }, "Action returned incorrect comments");
 
-    assertEquals(action.getNumComments(), 2, "Action didn't count comments");
+    assertEquals(action.getNumComments(), 1, "Action didn't count comments");
     assertTrue(action.getIsDisplayingCorrections(), "Action didn't indicate that it was displaying corrections");
   }
 

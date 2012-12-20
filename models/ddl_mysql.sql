@@ -10,7 +10,6 @@
         parentID bigint,
         title longtext,
         body longtext,
-        xpath longtext,
         highlightedText longtext,
         competingInterestBody longtext,
         annotationCitationID bigint unique,
@@ -161,10 +160,8 @@
         categoryID bigint not null auto_increment,
         lastModified datetime not null,
         created datetime not null,
-        mainCategory varchar(100),
-        subCategory varchar(100),
-        primary key (categoryID),
-        unique (mainCategory, subCategory)
+        path varchar(255) unique,
+        primary key (categoryID)
     );
 
     create table citedArticle (
@@ -260,32 +257,6 @@
         title varchar(255),
         primary key (pingbackID),
         unique (articleID, url)
-    );
-
-    create table rating (
-        annotationID bigint not null,
-        insight integer not null,
-        reliability integer not null,
-        style integer not null,
-        singleRating integer not null,
-        primary key (annotationID)
-    );
-
-    create table ratingSummary (
-        ratingSummaryID bigint not null auto_increment,
-        lastModified datetime not null,
-        created datetime not null,
-        articleID bigint not null unique,
-        insightNumRatings integer not null,
-        insightTotal integer not null,
-        reliabilityNumRatings integer not null,
-        reliabilityTotal integer not null,
-        styleNumRatings integer not null,
-        styleTotal integer not null,
-        singleRatingNumRatings integer not null,
-        singleRatingTotal integer not null,
-        usersThatRated integer not null,
-        primary key (ratingSummaryID)
     );
 
     create table savedSearch (
@@ -559,12 +530,6 @@
         add constraint FKAB64AF37E96C1C60 
         foreign key (currentIssueID) 
         references issue (issueID);
-
-    alter table rating 
-        add index FKC815B19DB123DFCD (annotationID), 
-        add constraint FKC815B19DB123DFCD 
-        foreign key (annotationID) 
-        references annotation (annotationID);
 
     alter table savedSearch 
         add index FK3407F0F78B0DAE3 (userProfileID), 

@@ -36,7 +36,6 @@ import org.ambraproject.service.feed.FeedService.FEED_TYPES;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.models.AnnotationType;
-import org.ambraproject.service.rating.RatingsService;
 import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.util.TextUtils;
 import org.ambraproject.views.AnnotationView;
@@ -82,12 +81,9 @@ import java.util.TreeMap;
  * @author jsuttor
  * @author russ
  * @author Joe Osowski
- * @see org.ambraproject.feed.service.FeedSearchParameters
- * @see org.ambraproject.feed.action.FeedAction
  */
 public class AmbraFeedResult extends Feed implements Result {
   private FeedService feedService;
-  private RatingsService ratingsService;
   private XMLService secondaryObjectService;
 
   private boolean includeformatting = false;
@@ -97,7 +93,6 @@ public class AmbraFeedResult extends Feed implements Result {
   private static final Logger log = LoggerFactory.getLogger(AmbraFeedResult.class);
   private static final String ATOM_NS = "http://www.w3.org/2005/Atom";
   private final String fetchObjectAttachmentAction = "article/fetchObjectAttachment.action";
-  private final String RATING_TITLE = "Rating";
 
   // TODO: Should be in a resource bundle
   private static final String URL_DEF = "http://ambraproject.org/";
@@ -239,11 +234,9 @@ public class AmbraFeedResult extends Feed implements Result {
       case Annotation:
         trackbacks = (List<LinkbackView>) ai.getStack().findValue("trackbacks");
       case FormalCorrection:
-      case Note:
       case MinorCorrection:
       case Retraction:
       case Comment:
-      case Rating:
       case Reply:
         List<AnnotationView> annotations = (List<AnnotationView>) ai.getStack().findValue("annotations");
         entries = buildAnnotationFeed(xmlBase, annotations, trackbacks, searchParams.getMaxResults(),
@@ -592,15 +585,7 @@ public class AmbraFeedResult extends Feed implements Result {
 
       annotationType = view.getType().toString();
 
-      if (view.getType() == AnnotationType.RATING) {
-        if (view.getTitle() == null) {
-          entry.setTitle(RATING_TITLE);
-        } else {
-          entry.setTitle(view.getOriginalTitle());
-        }
-      } else {
-        entry.setTitle(view.getOriginalTitle());
-      }
+      entry.setTitle(view.getOriginalTitle());
     } else if (object instanceof LinkbackView) {
       LinkbackView trackback = (LinkbackView) object;
 
@@ -711,42 +696,12 @@ public class AmbraFeedResult extends Feed implements Result {
     if (view instanceof AnnotationView) {
       AnnotationView annot = (AnnotationView) view;
 
-      if (annot.getType() == AnnotationType.RATING) {
-        org.ambraproject.models.Rating rating = ratingsService.getRating(annot.getID());
-
-        StringBuilder ratingBody = new StringBuilder();
-        ratingBody.append("<div><ul>");
-        if (rating.getSingleRating() > 0) {
-          ratingBody.append("<li>Rating: ")
-              .append(Integer.toString(rating.getSingleRating()))
-              .append("</li>");
-        } else {
-          ratingBody.append("<li>Insight: ")
-              .append(Integer.toString(rating.getInsight()))
-              .append("</li>")
-              .append("<li>Reliability: ")
-              .append(Integer.toString(rating.getReliability()))
-              .append("</li>")
-              .append("<li>Style: ")
-              .append(Integer.toString(rating.getStyle()))
-              .append("</li>");
-        }
-        ratingBody.append("</ul></div>")
-            .append(rating.getBody());
-        if (includeCompetingInterest && rating.getCompetingInterestBody() != null
-            && rating.getCompetingInterestBody().trim().length() > 0) {
-          ratingBody.append("<p/><strong>Competing Interest Statement</strong>: " + rating.getCompetingInterestBody());
-        }
-        body = ratingBody.toString();
-
-      } else {
-        body = TextUtils.makeHtmlLineBreaks(annot.getBody());
-        if (includeCompetingInterest && annot.getBody() != null
-            && annot.getCompetingInterestStatement() != null
-            && annot.getCompetingInterestStatement().trim().length() > 0) {
-          body += "<p/><strong>Competing Interest Statement</strong>: "
-              + TextUtils.makeHtmlLineBreaks(annot.getCompetingInterestStatement());
-        }
+      body = TextUtils.makeHtmlLineBreaks(annot.getBody());
+      if (includeCompetingInterest && annot.getBody() != null
+          && annot.getCompetingInterestStatement() != null
+          && annot.getCompetingInterestStatement().trim().length() > 0) {
+        body += "<p/><strong>Competing Interest Statement</strong>: "
+            + TextUtils.makeHtmlLineBreaks(annot.getCompetingInterestStatement());
       }
     } else if (view instanceof LinkbackView) {
       LinkbackView trackback = (LinkbackView) view;
@@ -1090,40 +1045,28 @@ public class AmbraFeedResult extends Feed implements Result {
 
       AnnotationView annot = (AnnotationView) view;
 
-      if (annot.getType() == AnnotationType.RATING) {
-        href.append("rate/getArticleRatings.action?articleURI=")
-            .append(annot.getArticleDoi());
+      String id;
+
+      if (annot.getType() == AnnotationType.REPLY) {
+        id = annot.getParentID().toString();
       } else {
-        String id;
-
-        if (annot.getType() == AnnotationType.REPLY) {
-          id = annot.getParentID().toString();
-        } else {
-          id = annot.getID().toString();
-        }
-
-        href.append("annotation/listThread.action?inReplyTo=")
-            .append(id)
-            .append("&root=")
-            .append(id);
+        id = annot.getID().toString();
       }
+
+      href.append("annotation/listThread.action?inReplyTo=")
+          .append(id)
+          .append("&root=")
+          .append(id);
 
       // add anchor
       if (annot.getType() == AnnotationType.REPLY) {
-        href.append('#').append(annot.getID().toString());
-      } else if (annot.getType() == AnnotationType.RATING) {
         href.append('#').append(annot.getID().toString());
       }
 
       Link link = new Link();
       link.setRel("alternate");
       link.setHref(href.toString());
-
-      if (annot.getType() == AnnotationType.RATING) {
-        link.setTitle(RATING_TITLE);
-      } else {
-        link.setTitle(annot.getTitle());
-      }
+      link.setTitle(annot.getTitle());
 
       return link;
     } else if (view instanceof LinkbackView) {
@@ -1429,11 +1372,6 @@ public class AmbraFeedResult extends Feed implements Result {
   @Required
   public void setFeedService(FeedService feedService) {
     this.feedService = feedService;
-  }
-
-  @Required
-  public void setRatingsService(RatingsService ratingsService) {
-    this.ratingsService = ratingsService;
   }
 }
 

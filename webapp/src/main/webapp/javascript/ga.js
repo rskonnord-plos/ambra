@@ -16,13 +16,13 @@ plosGApropId["one-demo.plosjournals.org"] = "UA-36675610-1";
 
 //production sites
 
-plosGApropId["plosbiology.org"] = "UA-36675108-2";
-plosGApropId["ploscompbiol.org"] = "UA-36675108-3";
-plosGApropId["plosgenetics.org"] = "UA-36675108-4";
-plosGApropId["plosmedicine.org"] = "UA-36675108-5";
-plosGApropId["plosntds.org"] = "UA-36675108-6";
-plosGApropId["plospathogens.org"] = "UA-36675108-7";
-plosGApropId["plosone.org"] = "UA-36675108-1";
+plosGApropId["www.plosbiology.org"] = "UA-36675108-2";
+plosGApropId["www.ploscompbiol.org"] = "UA-36675108-3";
+plosGApropId["www.plosgenetics.org"] = "UA-36675108-4";
+plosGApropId["www.plosmedicine.org"] = "UA-36675108-5";
+plosGApropId["www.plosntds.org"] = "UA-36675108-6";
+plosGApropId["www.plospathogens.org"] = "UA-36675108-7";
+plosGApropId["www.plosone.org"] = "UA-36675108-1";
 
 //No matter which journal or demo site is served, the identifier for the correct site will be used
 var bamGAID = plosGApropId[window.location.hostname];

@@ -24,6 +24,7 @@ import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleAssetService;
 import org.ambraproject.service.article.ArticleAssetWrapper;
 import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.search.SearchService;
 import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.views.article.ArticleInfo;
 import org.slf4j.Logger;
@@ -44,10 +45,12 @@ public class SlideshowAction extends BaseActionSupport {
   private ArticleAssetService articleAssetService;
   private XMLService secondaryObjectService;
   private ArticleService articleService;
+  private SearchService searchService;
 
   private String articleTitle;
   private String articleType;
   private List<String> authors;
+  private String abstractText;
 
   /**
    * Action to return list of Secondary object for an article that are enclosed in Tables (table-warp)
@@ -103,6 +106,8 @@ public class SlideshowAction extends BaseActionSupport {
         return INPUT;
       }
 
+      abstractText = searchService.fetchAbstractText(uri);
+
     } catch (Exception ex) {
       log.info("Couldn't retrieve secondary object for URI: " + uri, ex);
       return INPUT;
@@ -143,6 +148,10 @@ public class SlideshowAction extends BaseActionSupport {
     return authors;
   }
 
+  public String getAbstractText() {
+    return abstractText;
+  }
+
   /**
    * Set the secondary objects
    * @param articleAssetService articleAssetService
@@ -164,4 +173,10 @@ public class SlideshowAction extends BaseActionSupport {
   public void setArticleService(ArticleService articleService) {
     this.articleService = articleService;
   }
+
+  @Required
+  public void setSearchService(SearchService searchService) {
+    this.searchService = searchService;
+  }
+
 }

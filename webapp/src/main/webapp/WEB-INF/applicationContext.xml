@@ -192,13 +192,6 @@
 
   <bean id="annotationService" class="org.ambraproject.service.annotation.AnnotationServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
-    <property name="articleHtmlCache" ref="articleHtmlCache"/>
-  </bean>
-
-  <bean id="ratingsService" class="org.ambraproject.service.rating.RatingsServiceImpl">
-    <property name="sessionFactory" ref="hibernateSessionFactory"/>
-    <property name="applicationId" ref="applicationId"/>
-    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="userService" class="org.ambraproject.service.user.UserServiceImpl">

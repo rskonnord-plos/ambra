@@ -483,7 +483,10 @@ $.fn.alm = function () {
       timeout:20000,
       callbackParameter:"callback",
       success:callBack,
-      error:errorCallback
+      error: function(xOptions, msg) {
+        errorCallback("Our system is having a bad day. We are working on it. Please check back later.")
+      }
+
     });
 
     console.log(url);
@@ -696,7 +699,7 @@ $.fn.alm = function () {
 
     var almError = function (message) {
       $("#" + loadingID).fadeOut('slow');
-      $("#" + bookMarksID).html(message);
+      $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
       $("#" + bookMarksID).show("blind", 500);
     };
 
@@ -953,14 +956,14 @@ $.fn.alm = function () {
     $("#" + successID).html(html);
     $("#" + successID).show("blind", 500);
 
-    $("#" + errorID).text(message);
+    $("#" + errorID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + errorID).show("blind", 500);
   };
 
   this.setCitesText = function (doi, citesID, loadingID) {
     var almError = function (message) {
       $("#" + loadingID).fadeOut('slow');
-      $("#" + citesID).html(message);
+      $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
       $("#" + citesID).show("blind", 500);
     };
 
@@ -1060,7 +1063,7 @@ $.fn.alm = function () {
       if (this.isArticle(doi)) {
         var almError = function (message) {
           $("#" + loadingID).fadeOut('slow');
-          $("#" + usageID).html(message);
+          $("#" + usageID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
           $("#" + usageID).show("blind", 500);
         };
 

@@ -22,7 +22,6 @@ package org.ambraproject.util;
 
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
-import org.ambraproject.models.Rating;
 import org.ambraproject.models.UserProfile;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -49,8 +48,7 @@ public class URIGeneratorTest {
       { new Annotation(null, AnnotationType.REPLY, null), URIGenerator.getPrefix() + "reply/" },
       { new Annotation(null, AnnotationType.MINOR_CORRECTION, null), URIGenerator.getPrefix() + "annotation/" },
       { new Annotation(null, AnnotationType.FORMAL_CORRECTION, null), URIGenerator.getPrefix() + "annotation/" },
-      { new UserProfile(), URIGenerator.getPrefix() + "profile/" },
-      { new Rating(), URIGenerator.getPrefix() + "annotation/" },
+      { new UserProfile(), URIGenerator.getPrefix() + "profile/" }
     };
   }
 

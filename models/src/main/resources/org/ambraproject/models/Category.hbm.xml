@@ -26,11 +26,7 @@
     </id>
     <timestamp name="lastModified" column="lastModified"/>
     <property name="created" column="created" type="timestamp" not-null="true" update="false" />
-
-    <properties name="mainSubCategories" unique="true">
-      <property name="mainCategory" column="mainCategory" type="string" length="100"/>
-      <property name="subCategory" column="subCategory" type="string" length="100"/>
-    </properties>
+    <property name="path" column="path" type="string" length="255" unique="true" />
 
   </class>
 

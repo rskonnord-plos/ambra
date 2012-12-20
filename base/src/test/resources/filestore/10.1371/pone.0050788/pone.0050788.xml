@@ -1,0 +1,1373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="3.0" xml:lang="en">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">PLoS ONE</journal-id>
+      <journal-id journal-id-type="publisher-id">plos</journal-id>
+      <journal-id journal-id-type="pmc">plosone</journal-id>
+      <journal-title-group>
+        <journal-title>PLoS ONE</journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">1932-6203</issn>
+      <publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, USA</publisher-loc>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="publisher-id">PONE-D-12-18705</article-id>
+      <article-id pub-id-type="doi">10.1371/journal.pone.0050788</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Biology</subject>
+          <subj-group>
+            <subject>Population biology</subject>
+            <subj-group>
+              <subject>Epidemiology</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Medicine</subject>
+          <subj-group>
+            <subject>Non-clinical medicine</subject>
+            <subj-group>
+              <subject>Health care policy</subject>
+              <subj-group>
+                <subject>Treatment guidelines</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Obstetrics and gynecology</subject>
+            <subj-group>
+              <subject>Pregnancy</subject>
+              <subj-group>
+                <subject>Pregnancy complications</subject>
+                <subject>Preterm labor</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Labor and delivery</subject>
+              <subject>Management of high-risk pregnancies</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline">
+          <subject>Public Health and Epidemiology</subject>
+          <subject>Obstetrics</subject>
+          <subject>Non-Clinical Medicine</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>Individual and Organisational Determinants Associated with Maintenance Tocolysis in the Management of Preterm Labour: A Multilevel Analysis</article-title>
+        <alt-title alt-title-type="running-head">Determinants Associated with Maintenance Tocolysis</alt-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Goffinet</surname>
+            <given-names>François</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="aff" rid="aff2">
+            <sup>2</sup>
+          </xref>
+          <xref ref-type="aff" rid="aff5">
+            <sup>5</sup>
+          </xref>
+          <on-behalf-of>for the EVAPRIMA group</on-behalf-of>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <collab xlink:type="simple">EVAPRIMA group</collab>
+          <xref ref-type="fn" rid="fn1">¶</xref>
+        </contrib>
+      </contrib-group>
+      <aff id="aff1">
+        <label>1</label>
+        <addr-line>INSERM UMR S953, Epidemiological Research Unit on Perinatal Health and Women’s and Children’s Health, Pierre et Marie Curie University, Paris, France</addr-line>
+      </aff>
+      <aff id="aff2">
+        <label>2</label>
+        <addr-line>Department of Obstetrics and Gynaecology, Port-Royal Maternity, Cochin Saint-Vincent-de-Paul Hospital, Assistance Publique des Hopitaux de Paris, Université Paris Descartes, Sorbonne Paris Cité, Paris, France</addr-line>
+      </aff>
+      <aff id="aff3">
+        <label>3</label>
+        <addr-line>Department of Obstetrics and Gynaecology, University Hospital of Rouen, Rouen, France</addr-line>
+      </aff>
+      <aff id="aff4">
+        <label>4</label>
+        <addr-line>Department of Obstetrics and Gynaecology, University Hospital of Tours, François Rabelais University, Tours, France</addr-line>
+      </aff>
+      <aff id="aff5">
+        <label>5</label>
+        <addr-line>Premup Foundation, Paris, France</addr-line>
+      </aff>
+      <contrib-group>
+        <contrib contrib-type="editor" xlink:type="simple">
+          <name name-style="western">
+            <surname>Gratacos</surname>
+            <given-names>Eduard</given-names>
+          </name>
+          <role>Editor</role>
+          <xref ref-type="aff" rid="edit1"/>
+        </contrib>
+      </contrib-group>
+      <aff id="edit1">
+        <addr-line>Hospital Clinic, University of Barcelona, Spain</addr-line>
+      </aff>
+      <author-notes>
+        <corresp id="cor1">* E-mail: <email xlink:type="simple">carolinediguisto@gmail.com</email></corresp>
+        <fn id="fn1" fn-type="other">
+          <p><sup>¶</sup>Membership of the EVAPRIMA group is provided in the Acknowledgments.</p>
+        </fn>
+        <fn fn-type="conflict">
+          <p>I have read the journal's policy and have the following interests: The EVAPRIMA survey was supported by the Ferring Company. This does not alter our adherence to all the PLoS ONE policies on sharing data and materials.</p>
+        </fn>
+        <fn fn-type="con">
+          <p>Conceived and designed the experiments: CD CLR FG. Performed the experiments: CD FM CLR BK. Analyzed the data: CD FM BK. Contributed reagents/materials/analysis tools: CD CLR FG. Wrote the paper: CD CLR FG. Revised the manuscript: EV FP.</p>
+        </fn>
+      </author-notes>
+      <pub-date pub-type="collection">
+        <year>2012</year>
+      </pub-date>
+      <pub-date pub-type="epub">
+        <day>13</day>
+        <month>12</month>
+        <year>2012</year>
+      </pub-date>
+      <volume>7</volume>
+      <issue>12</issue>
+      <elocation-id>e50788</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>27</day>
+          <month>6</month>
+          <year>2012</year>
+        </date>
+        <date date-type="accepted">
+          <day>24</day>
+          <month>10</month>
+          <year>2012</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-year>2012</copyright-year>
+        <copyright-holder>Diguisto et al</copyright-holder>
+        <license xlink:type="simple">
+          <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p>
+        </license>
+      </permissions>
+      <abstract>
+        <sec>
+          <title>Background</title>
+          <p>Clinical guidelines do not recommend maintenance tocolysis for the management of preterm labour. The French national survey EVAPRIMA revealed it was administered to more than 50% of women hospitalised for preterm labour. Our aim was to identify the individual and organisational determinants associated with maintenance tocolysis.</p>
+        </sec>
+        <sec>
+          <title>Methods</title>
+          <p>The study was a secondary analysis of the prospective population-based EVAPRIMA study database. Population study included every women hospitalised for preterm labour and at risk of receiving maintenance tocolysis, over a one month period, in 99 randomly selected French maternity units. <bold>Main outcome</bold> was the prescription of maintenance tocolysis. The association between maintenance tocolysis and individual (maternal or obstetrical) and organisational determinants were evaluated with multilevel analysis.</p>
+        </sec>
+        <sec>
+          <title>Results</title>
+          <p>Of the 531 women included, 68.9% (95% CI 0.65–0.73) received maintenance tocolysis. The only individual factor associated with maintenance tocolysis was gestational age at admission; the rate of maintenance tocolysis was higher among women hospitalised before 32 weeks of gestation. The significantly different rates between maternity units demonstrated the existence of a maternity unit effect. Maintenance tocolysis was also associated with organisational determinants and was more frequent in level 1 (ORa = 6.54[2.21–19.40]) and level 2 maternity units (ORa = 3.68[1.28–10.59]), in units with less than 1500 deliveries/year (ORa = 5.27[4.43–19.44]), and in specific areas of France.</p>
+        </sec>
+        <sec>
+          <title>Conclusion</title>
+          <p>A maternity unit effect, explained partly by the organisational characteristics of the units, plays a major role in the practice of maintenance tocolysis. Widespread dissemination of these results might improve adherence to clinical guidelines.</p>
+        </sec>
+      </abstract>
+      <funding-group>
+        <funding-statement>The EVAPRIMA survey was supported by the Ferring Company. The funders had no role in the study design, data collection, data interpretation or the writing of the report.</funding-statement>
+      </funding-group>
+      <counts>
+        <page-count count="8"/>
+      </counts>
+    </article-meta>
+  </front>
+  <body>
+    <sec id="s1">
+      <title>Introduction</title>
+      <p>Preterm delivery is a leading cause of perinatal mortality and morbidity in industrialised countries <xref ref-type="bibr" rid="pone.0050788-Goldenberg1">[1]</xref>. Worldwide prevalence of preterm delivery ranges from 6 to 15%; the rate in France is 7.2%, and two thirds of these preterm deliveries are spontaneous and preceded by preterm labour <xref ref-type="bibr" rid="pone.0050788-Slattery1">[2]</xref>, <xref ref-type="bibr" rid="pone.0050788-Blondel1">[3]</xref>.</p>
+      <p>By postponing delivery, acute tocolysis allows the transfer of the patient to a unit with a suitable neonatal ward and the administration of corticosteroids, thereby decreasing neonatal morbidity and mortality <xref ref-type="bibr" rid="pone.0050788-Iams1">[4]</xref>, <xref ref-type="bibr" rid="pone.0050788-Gyetvai1">[5]</xref>. Acute tocolysis usually lasts 48 hours. Maintenance tocolysis is broadly defined as the continuation of tocolytic treatment after 48 hours and after acute tocolysis has been clinically effective.</p>
+      <p>Because of the absence of evidence of any benefit from maintenance tocolysis and the possibility of maternal or fetal side effects, in 2002, neither the National College of French Gynaecologists and Obstetricians (CNGOF) nor the Royal College of Obstetricians and Gynaecologists (RCOG) recommends the practice of maintenance tocolysis in their clinical practice guidelines <xref ref-type="bibr" rid="pone.0050788-RCOG1">[6]</xref>, <xref ref-type="bibr" rid="pone.0050788-DErcole1">[7]</xref>. Nonetheless, the EVAPRIMA (Enquête Française sur la Prise en charge des Menaces d’Accouchement Prématuré) study, examining the management of preterm labour in a representative sample of French maternity units three years after the publication of the CNGOF guidelines, showed surprisingly that 54.3% of women hospitalised for preterm labour received maintenance tocolysis <xref ref-type="bibr" rid="pone.0050788-Parant1">[8]</xref>. EVAPRIMA was a national observational practice survey. It offered the opportunity to study organisational determinants for each participating maternity unit and individual determinants for every women included in the study.</p>
+      <p>Contrary to practice survey with questionnaires sent to physicians which induce many biases, this observational survey and its database provided a unique opportunity to assess the frequency of this unrecommended practice and the associated determinants.</p>
+      <p>We performed a secondary analysis of the EVAPRIMA database to identify individual and organisational determinants associated with maintenance tocolysis to attempt to understand why this practice remains so common in France despite the guidelines. Our aim was also to publicize these results among physicians to improve guideline adhesion.</p>
+      <fig id="pone-0050788-g001" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0050788.g001</object-id>
+        <label>Figure 1</label>
+        <caption>
+          <title>Population study.</title>
+        </caption>
+        <graphic mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0050788.g001" position="float" xlink:type="simple"/>
+      </fig>
+    </sec>
+    <sec id="s2" sec-type="methods">
+      <title>Methods</title>
+      <sec id="s2a">
+        <title>Data Source</title>
+        <p>The EVAPRIMA study was a national prospective observational survey, conducted during the month of May, 2005. This population-based study examined clinical practices regarding management of women admitted for preterm labour in a representative sample of French maternity units. The National Data Protection Authority and the Institutional Review Board of Cochin Hospital (in a decision dated 15 April 2005) both approved this study.</p>
+        <p>To obtain a representative sample of maternity units, we randomly selected 20% of the 614 French maternity units, after stratification for level of perinatal care, maternity unit status (private or public) and geographical area. Investigators in the participating units included every woman hospitalised that month for preterm labour between 22 and 36 weeks of gestation, whether the pregnancy was singleton or multiple and whether membranes were intact or ruptured. Exclusion criteria were direct admission to the delivery room for delivery, stillbirth, and participation in a clinical trial in the previous month. Data were prospectively collected by a local investigator. The national co-ordinator visited 11 randomly selected units to check the completeness and validity of data collection. Details on the methods have been published previously <xref ref-type="bibr" rid="pone.0050788-Parant1">[8]</xref>.</p>
+      </sec>
+      <sec id="s2b">
+        <title>Study Population</title>
+        <p>The EVAPRIMA study population included 734 women from 107 maternity units. We selected from them the women eligible for maintenance tocolysis, that is, those who might have received it. The exclusion criteria were: women who had not received any tocolysis during hospitalisation (n = 89), women who delivered within three days of admission, for whom acute tocolysis was considered a failure (n = 53), and women whose subsequent tocolytic treatment was unavailable because they were transferred to another maternity unit (n = 37). Thus, our study population included 531 women from 99 maternity units [<xref ref-type="fig" rid="pone-0050788-g001">Figure 1</xref>].</p>
+      </sec>
+      <sec id="s2c">
+        <title>Outcome Factors and Other Data Collected</title>
+        <p>The main outcome measure was a binary variable of maintenance tocolysis (yes/no). Information about any such treatment included date it began, type of tocolytic drug, route of administration, and gestational age at which treatment stopped.</p>
+        <p>Two categories of explanatory factors were considered: individual characteristics of women and organisational characteristics related to the health care facility. At the individual level, the characteristics studied included the mother’s age, any history of late miscarriage or preterm delivery, parity, multiple pregnancies, cervical cerclage and clinical criteria at admission, including gestational age, Bishop score, frequency of uterine contractions, sonographic cervical length, and membrane status. Two composite variables were created: “high risk pregnancy” for women with a history of preterm delivery, late miscarriage, multiple pregnancy, or cervical cerclage, and “high risk at admission” for women with a Bishop score higher than 4, a sonographic cervical length shorter than 25 mm, more than six uterine contractions per 30 minutes or ruptured membranes.</p>
+        <p>The organisational characteristics studied were level of perinatal care, legal status (public or private), size of maternity unit and geographical area. Level of perinatal care was defined by official French regulations on the safety of childbirth <xref ref-type="bibr" rid="pone.0050788-Larroque1">[9]</xref>, <xref ref-type="bibr" rid="pone.0050788-Lewis1">[10]</xref>: level 1 units have no neonatal ward and are not required to have a paediatrician onsite; level 2 units have neonatology facilities to manage infants born at 32 weeks of gestation or later and require the presence of a paediatrician during the day and either their presence or on-call availability at night and weekends; and level 3 units have an onsite neonatal intensive care unit and a neonatologist onsite 24 hours a day, seven days a week. Maternity unit size was defined by the number of deliveries per year: less than 1500, 1500–2500, more than 2500. For geographic area, France was divided in five areas: Ile de France, Northwest, Northeast, Southeast and Southwest.</p>
+      </sec>
+      <sec id="s2d">
+        <title>Statistical analysis</title>
+        <p>Tocolytic agents and duration of maintenance tocolysis were described. We used univariate and multivariate analysis to examine the associations between individual and organisational characteristics and maintenance tocolysis. For both univariate and multivariate analysis we used multilevel models, i.e., two-level hierarchical logistic regression models which took into account the hierarchical structure of data, with women (level 1 =  individual level) nested within maternity units (level 2 =  organisational level).</p>
+        <p>Multivariate analyses were conducted with 3 sets of models. First we estimated an empty (or null) model, a random intercept model with no predictor variables (model 1) to obtain the baseline hospital-level variance (var<sup>(1)</sup>) and to determine the existence of any “maternity unit effect” for the practice of maintenance tocolysis. Next, in a second model (model 2), we included women’s individual characteristics as predictor variables. This model allowed us to investigate the association between frequency of maintenance tocolysis and individual-level variables and to estimate the residual maternity-unit variation after adjustment for the individual–level variables (var<sup>(2)</sup>). In a third series of models we added organisational characteristics as predictor variables after adjustment for individual-level variables: level of perinatal care (model 3a), size of the maternity unit (model 3b), and geographic area (model 3 c) (var<sup>(3)</sup>). Organisational characteristics that were not independent according to a chi-square test were not simultaneously entered in any model, to avoid correlation. Therefore, only level of perinatal care and geographical region were simultaneously included as predictor variables in a model (model 3d). We used the proportional change in the variance (PCV) with PCV =  [var<sup>(2)</sup>-var<sup>(3)</sup>/var<sup>(2)</sup>], to assess the extent to which differences between units in their practices of maintenance tocolysis might be explained by organisational characteristics in each model. As stated by the formula, the reference variance used to calculate the PCV was the variance of model 2, which was adjusted for women’s individual characteristics.</p>
+        <p>Variables for which more than 15% of the data was missing were not included in our multivariate analysis, i.e. only one variable (sonographic cervical length at admission). We added a missing data class to the variables for which the percentage of missing data was between 5 and 15%. The statistical analysis used Stata 9.1 software (StataCorp, College Station, TX, USA).</p>
+      </sec>
+    </sec>
+    <sec id="s3">
+      <title>Results</title>
+      <p>Of the 531 women included, 68.9% (95% CI 0.65–0.73) received maintenance tocolysis. Its median duration was 37 days (interquartile range (ICQ): 24–46). The most frequently used agent was Nicardipine (43%), followed by Beta-agonists (33%) and Nifedipine (23.5%). Oxytocin receptor antagonists were never used for maintenance tocolysis in our study.</p>
+      <p><xref ref-type="table" rid="pone-0050788-t001">Table 1</xref> summarises the characteristics of the study population, among whom 23% had a “high risk pregnancy” and 74% were considered at “high risk at admission”. Finally, 30.7% (n = 160/531) of the women hospitalised for preterm labour delivered preterm.</p>
+      <table-wrap id="pone-0050788-t001" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0050788.t001</object-id>
+        <label>Table 1</label>
+        <caption>
+          <title>Characteristics of the study population.</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0050788-t001-1" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0050788.t001" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">N = 531n (%)</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Maternal age (years)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&lt;25</td>
+                <td align="left" rowspan="1" colspan="1">179 (33.7)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">25–35</td>
+                <td align="left" rowspan="1" colspan="1">299 (56.3)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;35</td>
+                <td align="left" rowspan="1" colspan="1">53 (10)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Nulliparas</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1">310 (58.4)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>History of late miscarriage</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1">24 (4.5)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>History of preterm delivery</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1">48 (9)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Multiple pregnancy</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1">60 (11.3)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Cervical cerclage</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1">15 (2.8)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>High risk pregnancy</underline>
+                  <xref ref-type="table-fn" rid="nt101">*</xref>
+                </td>
+                <td align="left" rowspan="1" colspan="1">121 (22.8)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;34</td>
+                <td align="left" rowspan="1" colspan="1">43 (8.1)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">32–34</td>
+                <td align="left" rowspan="1" colspan="1">149 (28.1)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">≤32</td>
+                <td align="left" rowspan="1" colspan="1">339 (63.8)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Bishop score at admission</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">≤4</td>
+                <td align="left" rowspan="1" colspan="1">320 (60.2)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">5–6</td>
+                <td align="left" rowspan="1" colspan="1">106 (20)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;6</td>
+                <td align="left" rowspan="1" colspan="1">44 (8.3)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Missing data</td>
+                <td align="left" rowspan="1" colspan="1">61 (11.5)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Number of uterine contractions at admission</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">≤6 per 30 minutes</td>
+                <td align="left" rowspan="1" colspan="1">292 (55.6)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;6 per 30 minutes</td>
+                <td align="left" rowspan="1" colspan="1">219 (41.2)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Sonographic cervical length at admission (mm)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">≤25</td>
+                <td align="left" rowspan="1" colspan="1">167 (31.4)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;25 &amp; ≤30</td>
+                <td align="left" rowspan="1" colspan="1">54 (10.2)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;30</td>
+                <td align="left" rowspan="1" colspan="1">60 (11.3)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Missing data</td>
+                <td align="left" rowspan="1" colspan="1">250 (47.1)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Ruptured membranes at admission</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1">26 (4.9)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>High risk at admission</underline>
+                  <xref ref-type="table-fn" rid="nt102">**</xref>
+                </td>
+                <td align="left" rowspan="1" colspan="1">392 (73.8)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Level of perinatal care</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">−1</td>
+                <td align="left" rowspan="1" colspan="1">170 (32.0)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">−2</td>
+                <td align="left" rowspan="1" colspan="1">215 (40.5)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">−3</td>
+                <td align="left" rowspan="1" colspan="1">146 (27.5)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Legal status</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Public</td>
+                <td align="left" rowspan="1" colspan="1">360 (67.8)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Private</td>
+                <td align="left" rowspan="1" colspan="1">171 (32.2)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Size of maternity ward (deliveries/year)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&lt;1500</td>
+                <td align="left" rowspan="1" colspan="1">299 (56.3)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">1500–2500</td>
+                <td align="left" rowspan="1" colspan="1">123 (23.1)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;2500</td>
+                <td align="left" rowspan="1" colspan="1">109 (20.6)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Geographic area</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Ile de France</td>
+                <td align="left" rowspan="1" colspan="1">154 (29.0)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Northwest</td>
+                <td align="left" rowspan="1" colspan="1">72 (13.5)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Northeast</td>
+                <td align="left" rowspan="1" colspan="1">136 (25.7)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Southeast</td>
+                <td align="left" rowspan="1" colspan="1">108 (20.3)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Southwest</td>
+                <td align="left" rowspan="1" colspan="1">61 (11.5)</td>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+        <table-wrap-foot>
+          <fn id="nt101">
+            <label>*</label>
+            <p>High risk pregnancy : History of late miscarriage, preterm delivery, multiple pregnancies or cervical cerclage.</p>
+          </fn>
+          <fn id="nt102">
+            <label>**</label>
+            <p>High risk at admission: Bishop score &gt;4, &gt;6 uterine contractions per 30 minutes, ruptured membranes at admission.</p>
+          </fn>
+        </table-wrap-foot>
+      </table-wrap>
+      <p>As shown in <xref ref-type="table" rid="pone-0050788-t002">Table 2</xref>, in the univariate analyses, the rate of maintenance tocolysis was higher among women with intact membranes than among those with ruptured membranes (69.9% vs 50.0%; p = 0.03). The rate of maintenance tocolysis was also significantly higher for women admitted before 32 weeks of gestation compared with those admitted between 32 and 34 weeks or after 34 weeks (70.5% vs 69.8% vs 53.5%; p = 0.07). Other individual factors, including the composite variables of “high risk pregnancy” and “high risk at admission”, were not significantly associated with maintenance tocolysis.</p>
+      <table-wrap id="pone-0050788-t002" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0050788.t002</object-id>
+        <label>Table 2</label>
+        <caption>
+          <title>Association between individual determinants and maintenance tocolysis (univariate analysis).</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0050788-t002-2" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0050788.t002" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">Maintenance tocolysisYes (%)</td>
+                <td align="left" rowspan="1" colspan="1">Crude OR95% CI</td>
+                <td align="left" rowspan="1" colspan="1">p</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Maternal age (years)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&lt;25 (n = 179)</td>
+                <td align="left" rowspan="1" colspan="1">118 (65.9)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.11</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">25–35 (n = 299)</td>
+                <td align="left" rowspan="1" colspan="1">205 (68.6)</td>
+                <td align="left" rowspan="1" colspan="1">0.95 (0.57–1.58)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;35 (n = 53)</td>
+                <td align="left" rowspan="1" colspan="1">43 (81.1)</td>
+                <td align="left" rowspan="1" colspan="1">1.70 (0.67–4.27)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Parity</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">nulliparas (n = 310)</td>
+                <td align="left" rowspan="1" colspan="1">211 (68.1)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.61</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">multiparas (n = 221)</td>
+                <td align="left" rowspan="1" colspan="1">155 (70.1)</td>
+                <td align="left" rowspan="1" colspan="1">1.06 (0.66–1.72)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>History of late miscarriage</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">No (n = 507)</td>
+                <td align="left" rowspan="1" colspan="1">349 (68.8)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.84</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Yes (n = 24)</td>
+                <td align="left" rowspan="1" colspan="1">17 (70.8)</td>
+                <td align="left" rowspan="1" colspan="1">1.41 (0.47–4.30)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>History of preterm birth</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">No (n = 483)</td>
+                <td align="left" rowspan="1" colspan="1">332 (68.7)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.77</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Yes (n = 48)</td>
+                <td align="left" rowspan="1" colspan="1">34 (70.8)</td>
+                <td align="left" rowspan="1" colspan="1">1.73 (0.72–4.14)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Type of pregnancy</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">singleton (n = 471)</td>
+                <td align="left" rowspan="1" colspan="1">326 (69.2)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.69</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">multiple pregnancies (n = 60)</td>
+                <td align="left" rowspan="1" colspan="1">40 (66.7)</td>
+                <td align="left" rowspan="1" colspan="1">1.39 (0.32–6.02)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Cervical cerclage</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">no (n = 516)</td>
+                <td align="left" rowspan="1" colspan="1">356 (69.0)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.85</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">yes (n = 15)</td>
+                <td align="left" rowspan="1" colspan="1">10 (66.7)</td>
+                <td align="left" rowspan="1" colspan="1">0.78 (0.38–1.60)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"><underline>High risk pregnancy</underline>*</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">no (n = 410)</td>
+                <td align="left" rowspan="1" colspan="1">282 (68.8)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.89</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">yes (n = 121)</td>
+                <td align="left" rowspan="1" colspan="1">84 (69.4)</td>
+                <td align="left" rowspan="1" colspan="1">1.18 (0.67–2.08)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Gestational age at admission (weeks of gestation)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;34 (n = 43)</td>
+                <td align="left" rowspan="1" colspan="1">23 (53.5)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.07</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">32–34 (n = 149)</td>
+                <td align="left" rowspan="1" colspan="1">104 (69.8)</td>
+                <td align="left" rowspan="1" colspan="1">1.95 (0.79–4.84)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">≤32 (n = 339)</td>
+                <td align="left" rowspan="1" colspan="1">239 (70.5)</td>
+                <td align="left" rowspan="1" colspan="1">3.02 (1.27–7.14)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Bishop score at admission</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">≤4 (n = 320)</td>
+                <td align="left" rowspan="1" colspan="1">220 (68.8)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.83</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">5–6 (n = 106)</td>
+                <td align="left" rowspan="1" colspan="1">72 (67.9)</td>
+                <td align="left" rowspan="1" colspan="1">1.02 (0.56–1.89)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;6 (n = 44)</td>
+                <td align="left" rowspan="1" colspan="1">33 (75.0)</td>
+                <td align="left" rowspan="1" colspan="1">1.12 (0.46–2.75)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Missing data</td>
+                <td align="left" rowspan="1" colspan="1">41 (67.2)</td>
+                <td align="left" rowspan="1" colspan="1">0.71 (0.32–1.56)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Uterine contractions per 30 minutes at admission</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">≤6 (n = 295)</td>
+                <td align="left" rowspan="1" colspan="1">212 (67.9)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.56</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;6 (n = 219)</td>
+                <td align="left" rowspan="1" colspan="1">154 (70.3)</td>
+                <td align="left" rowspan="1" colspan="1">0.94 (0.57–1.56)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Membrane status at admission</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Intact (n = 505)</td>
+                <td align="left" rowspan="1" colspan="1">353 (69.9)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.03</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Ruptured (n = 26)</td>
+                <td align="left" rowspan="1" colspan="1">13 (50)</td>
+                <td align="left" rowspan="1" colspan="1">0.23 (0.08–0.63)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"><underline>High risk at admission</underline>**</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">no (n = 188)</td>
+                <td align="left" rowspan="1" colspan="1">93 (66.9)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.54</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">yes (n = 343)</td>
+                <td align="left" rowspan="1" colspan="1">273 (69.6)</td>
+                <td align="left" rowspan="1" colspan="1">0.91 (0.55–1.51)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+      </table-wrap>
+      <p>As <xref ref-type="table" rid="pone-0050788-t003">Table 3</xref> shows, maternity-unit characteristics significantly influenced the rate of maintenance tocolysis in the univariate analysis. The maintenance tocolysis rate was higher among women who had been hospitalised in level 1 and 2 maternity units than in level 3 units (76.5% vs 69.8% vs 58.9%; p&lt;0.01). It was also higher in units with less than 1500 deliveries per year than in those with either 1500 to 2500 or more than 2500 (74.6% vs 59.4% vs 64.2%; p&lt;0.01). Maintenance tocolysis was also more frequent in two regions – the Ile de France and the Southwest. Maternity unit’s legal status was not significantly associated with the practice of maintenance tocolysis.</p>
+      <table-wrap id="pone-0050788-t003" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0050788.t003</object-id>
+        <label>Table 3</label>
+        <caption>
+          <title>Association between organisational determinants and maintenance tocolysis (univariate analysis).</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0050788-t003-3" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0050788.t003" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">Maintenance tocolysisYes (%)</td>
+                <td align="left" rowspan="1" colspan="1">Crude OR (95% CI)</td>
+                <td align="left" rowspan="1" colspan="1">p</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Level of perinatal care</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">1 (n = 170)</td>
+                <td align="left" rowspan="1" colspan="1">130 (76.5)</td>
+                <td align="left" rowspan="1" colspan="1">4.84 (1.60–13.63)</td>
+                <td align="left" rowspan="1" colspan="1">&lt;10<sup>−2</sup></td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">2 (n = 215)</td>
+                <td align="left" rowspan="1" colspan="1">150 (69.8)</td>
+                <td align="left" rowspan="1" colspan="1">3.05 (1.15–10.56)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">3 (n = 146)</td>
+                <td align="left" rowspan="1" colspan="1">86 (58.9)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Legal status</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Public (n = 360)</td>
+                <td align="left" rowspan="1" colspan="1">239 (66.4)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">0.07</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Private (n = 171)</td>
+                <td align="left" rowspan="1" colspan="1">127 (74.3)</td>
+                <td align="left" rowspan="1" colspan="1">1.73 (0.76–3.93)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Size of maternity ward (deliveries/year)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&lt;1500 (n = 299)</td>
+                <td align="left" rowspan="1" colspan="1">223 (74.6)</td>
+                <td align="left" rowspan="1" colspan="1">3.91 (1.12–13.71)</td>
+                <td align="left" rowspan="1" colspan="1">&lt;10<sup>−2</sup></td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">1500–2500 (n = 123)</td>
+                <td align="left" rowspan="1" colspan="1">73 (59.4)</td>
+                <td align="left" rowspan="1" colspan="1">1.56 (0.38–6.37)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;2500 (n = 109)</td>
+                <td align="left" rowspan="1" colspan="1">70 (64.2)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Geographic area</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Ile de France (n = 154)</td>
+                <td align="left" rowspan="1" colspan="1">128 (83.1)</td>
+                <td align="left" rowspan="1" colspan="1">6.56 (2.09–20.48)</td>
+                <td align="left" rowspan="1" colspan="1">&lt;10<sup>−3</sup></td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Northwest (n = 72)</td>
+                <td align="left" rowspan="1" colspan="1">42 (58.3)</td>
+                <td align="left" rowspan="1" colspan="1">1.29 (0.40–4.17)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Northeast (n = 136)</td>
+                <td align="left" rowspan="1" colspan="1">89 (65.4)</td>
+                <td align="left" rowspan="1" colspan="1">2.75 (0.98–7.72)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Southeast (n = 108)</td>
+                <td align="left" rowspan="1" colspan="1">57 (52.8)</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Southwest (n = 61)</td>
+                <td align="left" rowspan="1" colspan="1">50 (81.9)</td>
+                <td align="left" rowspan="1" colspan="1">4.45 (1.22–16.20)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+      </table-wrap>
+      <p>In the multivariate analyses, the study of the empty (or null) model showed a significant “maternity unit effect” for the practice of maintenance tocolysis, with the rate varying significantly from one maternity unit to another (p&lt;0.001). <xref ref-type="table" rid="pone-0050788-t004">Table 4</xref> reports the results of the multilevel analysis, which includes the adjusted odds ratios between maintenance tocolysis and individual and organisational determinants. It also includes the calculation of the proportional change in the variance (PCV) for each model, to assess the extent to which differences in maintenance tocolysis practices might be explained by organisational characteristics. Model 2, which only had women’s individual characteristics as predictor variables, had a reference variance of 2.42. The third series of models, adjusted both for individual characteristics and for organisational characteristics, i.e., level of perinatal care, size of the maternity unit and geographical area, allowed us to calculate the PCV. When we adjusted for women’s individual characteristics, the unit’s level of care, and geographic region (model 3d), variance decreased to 1.54, and the PCV was 0.38, i.e., 38% of the residual variance could be explained by level of perinatal care and geographic area. In this model, the risk of receiving maintenance tocolysis in level 1 and level 2 maternity units was 6.54 (95% CI 2.21–19.40) and 3.68 (95% CI 1.28–10.59) times higher, respectively, than in level 3 units. The risk of receiving maintenance tocolysis was as much as 6.83 (95% CI 2.20–21.16) times higher in specific regions.</p>
+      <table-wrap id="pone-0050788-t004" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0050788.t004</object-id>
+        <label>Table 4</label>
+        <caption>
+          <title>Association between individual and organisational determinants and maintenance tocolysis (multivariate analysis).</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0050788-t004-4" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0050788.t004" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">Model 2OR (95% CI)</td>
+                <td align="left" rowspan="1" colspan="1">Model 3aOR (95% CI)</td>
+                <td align="left" rowspan="1" colspan="1">Model 3bOR (95% CI)</td>
+                <td align="left" rowspan="1" colspan="1">Model 3cOR (95% CI)</td>
+                <td align="left" rowspan="1" colspan="1">Model 3d</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Maternal age (years)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&lt;25</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">25–35</td>
+                <td align="left" rowspan="1" colspan="1">0.86 (0.50–1.46)</td>
+                <td align="left" rowspan="1" colspan="1">0.82 (0.48–1.40)</td>
+                <td align="left" rowspan="1" colspan="1">0.88 (0.52–1.49)</td>
+                <td align="left" rowspan="1" colspan="1">0.88 (0.52–1.49)</td>
+                <td align="left" rowspan="1" colspan="1">0.84 (0.49–1.43)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;35</td>
+                <td align="left" rowspan="1" colspan="1">1.56 (0.60–4.05)</td>
+                <td align="left" rowspan="1" colspan="1">1.55 (0.60–3.99)</td>
+                <td align="left" rowspan="1" colspan="1">1.55 (0.60–4.01)</td>
+                <td align="left" rowspan="1" colspan="1">1.64 (0.63–4.26)</td>
+                <td align="left" rowspan="1" colspan="1">1.62 (0.63–4.18)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Parity</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Nulliparas</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Multiparas</td>
+                <td align="left" rowspan="1" colspan="1">1.13 (0.68–1.88)</td>
+                <td align="left" rowspan="1" colspan="1">1.08 (0.65–1.81)</td>
+                <td align="left" rowspan="1" colspan="1">1.11 (0.67–1.85)</td>
+                <td align="left" rowspan="1" colspan="1">1.12 (0.67–1.86)</td>
+                <td align="left" rowspan="1" colspan="1">1.07 (0.64–1.78)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>High risk pregnancy*</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">no</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">yes</td>
+                <td align="left" rowspan="1" colspan="1">1.09 (0.61–1.96)</td>
+                <td align="left" rowspan="1" colspan="1">1.16 (0.65–2.08)</td>
+                <td align="left" rowspan="1" colspan="1">1.17 (0.66–2.10)</td>
+                <td align="left" rowspan="1" colspan="1">1.12 (0.62–2.01)</td>
+                <td align="left" rowspan="1" colspan="1">1.20 (0.67–2.15)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Weeks of gestation at admission</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;34</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">32–34</td>
+                <td align="left" rowspan="1" colspan="1">1.98 (0.79–4.95)</td>
+                <td align="left" rowspan="1" colspan="1">2.20 (0.88–5.49)</td>
+                <td align="left" rowspan="1" colspan="1">2.06 (0.83–5.14)</td>
+                <td align="left" rowspan="1" colspan="1">2.08 (0.84–5.17)</td>
+                <td align="left" rowspan="1" colspan="1">2.33 (0.94–5.76)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&lt;32</td>
+                <td align="left" rowspan="1" colspan="1">3.21 (1.33–7.75)</td>
+                <td align="left" rowspan="1" colspan="1">3.90 (1.61–9.47)</td>
+                <td align="left" rowspan="1" colspan="1">3.61 (1.50–8.69)</td>
+                <td align="left" rowspan="1" colspan="1">3.35 (1.40–8.01)</td>
+                <td align="left" rowspan="1" colspan="1">4.07 (1.70–9.77)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>High risk at admission**</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">No</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Yes</td>
+                <td align="left" rowspan="1" colspan="1">1.32 (0.73–2.37)</td>
+                <td align="left" rowspan="1" colspan="1">1.50 (0.83–2.69)</td>
+                <td align="left" rowspan="1" colspan="1">1.42 (0.79–2.58)</td>
+                <td align="left" rowspan="1" colspan="1">1.26 (0.71–2.25)</td>
+                <td align="left" rowspan="1" colspan="1">1.43 (0.81–2.55)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Level of perinatal care</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Level 1</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">7.56 (2.36–24.26)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">6.54 (2.21–19.40)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Level 2</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">4.64 (1.48–14.56)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">3.68 (1.28–10.59)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Level 3</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Size of maternity ward (deliveries/yrs)</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&lt;1500</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">5.27 (1.43–19.44)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">1500–2500</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">1.73 (0.41–7.35)</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">&gt;2500</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <underline>Geographic area</underline>
+                </td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Ile de France</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">6.93 (2.12–22.63)</td>
+                <td align="left" rowspan="1" colspan="1">6.83 (2.20–21.16)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Northwest</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">1.38 (0.41–4.63)</td>
+                <td align="left" rowspan="1" colspan="1">1.42 (0.45–4.47)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Northeast</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">3.25 (1.11–9.56)</td>
+                <td align="left" rowspan="1" colspan="1">2.49 (0.89–6.94)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Southeast</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+                <td align="left" rowspan="1" colspan="1">1.00</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Southwest</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">5.48 (1.42–21.12)</td>
+                <td align="left" rowspan="1" colspan="1">4.79 (1.33–17.21)</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Variance</td>
+                <td align="left" rowspan="1" colspan="1">2.42</td>
+                <td align="left" rowspan="1" colspan="1">2.08</td>
+                <td align="left" rowspan="1" colspan="1">2.16</td>
+                <td align="left" rowspan="1" colspan="1">1.87</td>
+                <td align="left" rowspan="1" colspan="1">1.54</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">PCV***</td>
+                <td align="left" rowspan="1" colspan="1">reference</td>
+                <td align="left" rowspan="1" colspan="1">0.16</td>
+                <td align="left" rowspan="1" colspan="1">0.12</td>
+                <td align="left" rowspan="1" colspan="1">0.22</td>
+                <td align="left" rowspan="1" colspan="1">0.38</td>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+      </table-wrap>
+    </sec>
+    <sec id="s4">
+      <title>Discussion</title>
+      <p>We found that frequency of maintenance tocolysis appears to vary more according to the women’s place of care than according to individual medical risk levels, with a significant maternity unit effect. Part of this effect might be explained by organisational determinants such as level of perinatal care, size of maternity unit, or geographical area. Indeed, the risk of maintenance tocolysis in level 1 and 2 maternity units was at least triple than in level 3 units, up to 5 times higher in small maternity units, and up to 6 times higher in some areas of France.</p>
+      <p>The EVAPRIMA survey showed that doctors failed to comply with several specific clinical practice guidelines and, in particular, that they prescribed maintenance tocolysis for more than 50% of the women hospitalised for preterm labour. As 6.5% of pregnant women in France are hospitalised for preterm labour each year, 52 000 women might be exposed to a treatment with no proven efficacy and potential side effects. Identifying the factors associated with the prescription of maintenance tocolysis seems important for reducing the exposure of so many women to these unnecessary drugs and to improve adhesion to guidelines.</p>
+      <p>To our knowledge, this is the first study to assess the factors related to maintenance tocolysis in the management of preterm labour. Because the EVAPRIMA study was a prospective observational survey designed specifically to assess practices related to this management, its database provided a unique opportunity to answer questions about the determinants of maintenance tocolysis. Moreover the EVAPRIMA study differs from questionnaires sent to physicians, which can induce many biases (due to high rate of nonresponse) when studying practices. Its prospective design allows being confident with quality of data. The sample of randomly selected maternity units is representative of French maternity units and did not differ from those included in the 2003 French National Perinatal Survey (i.e., all maternity units in France at that time) for level of perinatal care, hospital status, or size. To avoid selection bias, every woman hospitalised in participating centres over the one-month period was included. The missing data rate was low. Finally, to study only women for whom maintenance tocolysis was possible, we excluded 203 women from the initial EVAPRIMA population. Inclusion of these 203 women would have strengthened the associations observed still further (data not shown).</p>
+      <p>We used logistic multilevel models, i.e., models adapted to the hierarchical data. Standard logistic models assume that all observations are independent, that is, that women with similar individual characteristics have the same probability of receiving maintenance tocolysis regardless of the maternity unit at which they are treated. We considered women and maternity units as two distinct sources of variability. On one level, women varied among one another according to their socio-demographic and obstetric characteristics. Maternity units, with their organisational characteristics, were treated as a second level. For data with this kind of hierarchical structure, multilevel models provide more accurate measures of confidence intervals than standard logistic models.</p>
+      <p>Various studies have used different definitions and different agents, most often calcium channel blockers and beta-agonists. Treatment can be performed on an outpatient basis or in hospital <xref ref-type="bibr" rid="pone.0050788-Lyell1">[11]</xref>–<xref ref-type="bibr" rid="pone.0050788-SanchezRamos1">[21]</xref>. CNGOF defines maintenance tocolysis as the prescription of tocolysis beyond 48 hours of effective tocolysis, regardless of type of drug or mode of administration. Because EVAPRIMA was an observational survey, the case report forms did not provide a strict definition of maintenance tocolysis but rather left it to the physician’s interpretation. Our definition of maintenance tocolysis could be discussed. Results did not change, however, when we conducted sensitivity analyses with different definitions (data not shown).</p>
+      <p>The rate of maintenance tocolysis was surprisingly high in the EVAPRIMA study but without any reliable data from other countries, we were unable to conclude if this was specific to France. The reason for the continued widespread use of maintenance tocolysis remains a puzzle. It might be because it was used extensively in the 1980s, and that use has continued since then because it is considered harmless and habits are difficult to change. Another hypothesis is that doctors think that this treatment might provide comfort and reassurance to women returning home after hospitalisation for preterm labour. In this case, maintenance tocolysis, by a placebo effect or by reducing symptoms due to uterine contractions, might reduce women’s anxiety. However, How et al. report that maintenance tocolysis does not reduce the number of readmissions and unscheduled maternity unit visits <xref ref-type="bibr" rid="pone.0050788-How1">[22]</xref>.</p>
+      <p>The higher “treatment” rate among women admitted before 32 weeks of gestation might be explained by greater concern about early preterm labour. However, the fact that maintenance tocolysis was not more frequent among women with high risk pregnancies or high risks at admission suggests that it is prescribed more according to doctors’ habits than according to individual risks.</p>
+      <p>Maintenance tocolysis rates were higher among women treated in level 1 and 2 maternity units than among those treated in level 3 units. They were also higher in small maternity units. Several hypotheses might explain these results. First, physicians working in level 3 maternity units, which are usually large teaching hospitals, might be more sensitive to evidence based medicine and their practices thus more consistent with guidelines. Secondly, the concern about preterm delivery might vary with the level of perinatal care. Thus, doctors in level 3 maternity units are much more familiar with preterm labour and therefore less apprehensive about it after an effective acute tocolysis.</p>
+      <p>Finally the rates of maintenance tocolysis differ between regions of France. Professors in teaching hospitals and other leaders in local and regional obstetrics communities might be responsible for differences in practice between the regions, through teaching and communications at conferences.</p>
+      <p>Differences observed between maternity units for maintenance tocolysis raise the question of the dissemination and application of clinical guidelines. Few published studies have evaluated the implementation of guidelines in obstetrics. However, several studies have already shown in other medical and surgical disciplines that the application of guidelines is related to both organisational and individual factors <xref ref-type="bibr" rid="pone.0050788-SaillourGlenisson1">[23]</xref>–<xref ref-type="bibr" rid="pone.0050788-Grol1">[25]</xref>. In these studies, teaching hospitals and hierarchical structure of the ward are associated with higher guideline application, consistent with our findings. Moreover, within a given ward, guideline application depends on doctors’ awareness of their existence, their access to them, their knowledge of them, and their opinions about them <xref ref-type="bibr" rid="pone.0050788-SaillourGlenisson1">[23]</xref>. For our study, we did not have any specific information on physicians’ characteristics.</p>
+      <p>Other factors, not mentioned in our study because they were not available in our database, could also explain some of the maternity unit effect. Status of doctor, i.e junior or consultant, medical specialty or the country of training could influence the rate of maintenance tocolysis. Also on an organisational level, the difficulty of access to the maternity unit or its distance from a level 3 maternity unit could influence the rate of maintenance tocolysis.</p>
+      <p>By understanding and identifying the reasons associated with the difficulty in applying guidelines, we hope to encourage discussion among health professionals and raise awareness of the need to keep up to date on the literature and guidelines. To improve guideline adhesion for maintenance tocolysis, the guidelines on management of preterm labour appears to require renewed dissemination and publicity in level 1 and 2 maternity units, in small maternity units, and in some French geographic areas. These guidelines should emphasize the lack of efficacy and the possible side effects of this treatment.</p>
+      <sec id="s4a">
+        <title>Conclusion</title>
+        <p>Maintenance tocolysis is widely prescribed in France, regardless of the maternal characteristics at admission for preterm labour. The frequency of this practice appears to vary mostly according to habits in different maternity units, for we found a significant maternity unit effect. Some of this variability between maternity units can be explained by organisational characteristics such as level of perinatal care and geographic area. Broader dissemination of these results might improve adhesion to clinical guidelines.</p>
+      </sec>
+      <sec id="s4b">
+        <title>Details of Ethics Approval</title>
+        <p>EVAPRIMA survey received ethics approval from the following institutional ethics committee: Comité Consultatif sur le traitment en matière de Recherche dans le domaine de la santé (CCTIRS) (approval on the 14th april 2005 file n°05.128) and Comission Nationale de l’Informatique et des libertés (CNIL approval on th 7th september 2005 n° 905388).</p>
+      </sec>
+    </sec>
+    <sec id="s5">
+      <title>Supporting Information</title>
+      <supplementary-material id="pone.0050788.s001" mimetype="application/msword" xlink:href="info:doi/10.1371/journal.pone.0050788.s001" position="float" xlink:type="simple">
+        <label>Appendix S1</label>
+        <caption>
+          <p>
+            <bold>Collaborators and participating centres of the EVAPRIMA study.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <p>The Scientific committee of EVAPRIMA survey includes Pr D. Cabrol (CHU Cochin), Pr B. Carbonne (CHU Saint Antoine), Pr C. d’Ercole (CHU Marseille), Pr F. Goffinet (CHU Cochin, Inserm U149), Dr O. Parant (CHU Toulouse), Pr F.Perrotin (CHU Tours), Pr D. Subtil (CHU Lille), Dr V. Tsatsaris (CHU Cochin), Dr C. Vayssière (CHU Strasbourg), Pr E. Verpyck (CHU Rouen), Dr N. Winer (CHU Nantes). A list of collaborators and participating centres is available in the original publication of EVAPRIMA <xref ref-type="bibr" rid="pone.0050788-Parant1">[8]</xref>.</p>
+    </ack>
+    <ref-list>
+      <title>References</title>
+      <ref id="pone.0050788-Goldenberg1">
+        <label>1</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Goldenberg</surname><given-names>RL</given-names></name>, <name name-style="western"><surname>Culhane</surname><given-names>JF</given-names></name>, <name name-style="western"><surname>Iams</surname><given-names>JD</given-names></name>, <name name-style="western"><surname>Romero</surname><given-names>R</given-names></name> (<year>2008</year>) <article-title>Epidemiology and causes of preterm birth</article-title>. <source>Lancet</source> <volume>371</volume>: <fpage>75</fpage>–<lpage>84</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Slattery1">
+        <label>2</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Slattery</surname><given-names>MM</given-names></name>, <name name-style="western"><surname>Morrison</surname><given-names>JJ</given-names></name> (<year>2002</year>) <article-title>Preterm delivery</article-title>. <source>Lancet</source> <volume>360</volume>: <fpage>1489</fpage>–<lpage>1497</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Blondel1">
+        <label>3</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Blondel</surname><given-names>B</given-names></name>, <name name-style="western"><surname>Supernant</surname><given-names>K</given-names></name>, <name name-style="western"><surname>Du Mazaubrun</surname><given-names>C</given-names></name>, <name name-style="western"><surname>Breart</surname><given-names>G</given-names></name> (<year>2006</year>) <article-title>[Trends in perinatal health in metropolitan France between 1995 and 2003: results from the National Perinatal Surveys]</article-title>. <source>J Gynecol Obstet Biol Reprod (Paris)</source> <volume>35</volume>: <fpage>373</fpage>–<lpage>387</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Iams1">
+        <label>4</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Iams</surname><given-names>JD</given-names></name>, <name name-style="western"><surname>Romero</surname><given-names>R</given-names></name>, <name name-style="western"><surname>Culhane</surname><given-names>JF</given-names></name>, <name name-style="western"><surname>Goldenberg</surname><given-names>RL</given-names></name> (<year>2008</year>) <article-title>Primary, secondary, and tertiary interventions to reduce the morbidity and mortality of preterm birth</article-title>. <source>Lancet</source> <volume>371</volume>: <fpage>164</fpage>–<lpage>175</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Gyetvai1">
+        <label>5</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Gyetvai</surname><given-names>K</given-names></name>, <name name-style="western"><surname>Hannah</surname><given-names>ME</given-names></name>, <name name-style="western"><surname>Hodnett</surname><given-names>ED</given-names></name>, <name name-style="western"><surname>Ohlsson</surname><given-names>A</given-names></name> (<year>1999</year>) <article-title>Tocolytics for preterm labor: a systematic review</article-title>. <source>Obstet Gynecol</source> <volume>94</volume>: <fpage>869</fpage>–<lpage>877</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-RCOG1">
+        <label>6</label>
+        <mixed-citation publication-type="other" xlink:type="simple">RCOG (2002) Tocolytic drugs for women in preterm labour. Clinical Guidelines No.1(B).</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-DErcole1">
+        <label>7</label>
+        <mixed-citation publication-type="other" xlink:type="simple">D’Ercole C, Bretelle F, Shojai R, Desbriere R, Boubli L (2002) [Tocolysis: indications and contraindications. When to start and when to stop]. J Gynecol Obstet Biol Reprod (Paris) 31: 5 S84–95.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Parant1">
+        <label>8</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Parant</surname><given-names>O</given-names></name>, <name name-style="western"><surname>Maillard</surname><given-names>F</given-names></name>, <name name-style="western"><surname>Tsatsaris</surname><given-names>V</given-names></name>, <name name-style="western"><surname>Delattre</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Subtil</surname><given-names>D</given-names></name>, <etal>et al</etal>. (<year>2008</year>) <article-title>Management of threatened preterm delivery in France: a national practice survey (the EVAPRIMA study)</article-title>. <source>Bjog</source> <volume>115</volume>: <fpage>1538</fpage>–<lpage>1546</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Larroque1">
+        <label>9</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Larroque</surname><given-names>B</given-names></name>, <name name-style="western"><surname>Breart</surname><given-names>G</given-names></name>, <name name-style="western"><surname>Kaminski</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Dehan</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Andre</surname><given-names>M</given-names></name>, <etal>et al</etal>. (<year>2004</year>) <article-title>Survival of very preterm infants: Epipage, a population based cohort study</article-title>. <source>Arch Dis Child Fetal Neonatal Ed</source> <volume>89</volume>: <fpage>F139</fpage>–<lpage>144</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Lewis1">
+        <label>10</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Lewis</surname><given-names>R</given-names></name>, <name name-style="western"><surname>Mercer</surname><given-names>BM</given-names></name>, <name name-style="western"><surname>Salama</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Walsh</surname><given-names>MA</given-names></name>, <name name-style="western"><surname>Sibai</surname><given-names>BM</given-names></name> (<year>1996</year>) <article-title>Oral terbutaline after parenteral tocolysis: a randomized, double-blind, placebo-controlled trial</article-title>. <source>Am J Obstet Gynecol</source> <volume>175</volume>: <fpage>834</fpage>–<lpage>837</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Lyell1">
+        <label>11</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Lyell</surname><given-names>DJ</given-names></name>, <name name-style="western"><surname>Pullen</surname><given-names>KM</given-names></name>, <name name-style="western"><surname>Mannan</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Chitkara</surname><given-names>U</given-names></name>, <name name-style="western"><surname>Druzin</surname><given-names>ML</given-names></name>, <etal>et al</etal>. (<year>2008</year>) <article-title>Maintenance nifedipine tocolysis compared with placebo: a randomized controlled trial</article-title>. <source>Obstet Gynecol</source> <volume>112</volume>: <fpage>1221</fpage>–<lpage>1226</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Papatsonis1">
+        <label>12</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Papatsonis D, Flenady V, Liley H (2009) Maintenance therapy with oxytocin antagonists for inhibiting preterm birth after threatened preterm labour. Cochrane Database Syst Rev: CD005938.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Nanda1">
+        <label>13</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Nanda K, Cook LA, Gallo MF, Grimes DA (2002) Terbutaline pump maintenance therapy after threatened preterm labor for preventing preterm birth. Cochrane Database Syst Rev: CD003933.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Gaunekar1">
+        <label>14</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Gaunekar NN, Crowther CA (2004) Maintenance therapy with calcium channel blockers for preventing preterm birth after threatened preterm labour. Cochrane Database Syst Rev: CD004071.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Parilla1">
+        <label>15</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Parilla</surname><given-names>BV</given-names></name>, <name name-style="western"><surname>Dooley</surname><given-names>SL</given-names></name>, <name name-style="western"><surname>Minogue</surname><given-names>JP</given-names></name>, <name name-style="western"><surname>Socol</surname><given-names>ML</given-names></name> (<year>1993</year>) <article-title>The efficacy of oral terbutaline after intravenous tocolysis</article-title>. <source>Am J Obstet Gynecol</source> <volume>169</volume>: <fpage>965</fpage>–<lpage>969</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Ricci1">
+        <label>16</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Ricci</surname><given-names>JM</given-names></name>, <name name-style="western"><surname>Hariharan</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Helfgott</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Reed</surname><given-names>K</given-names></name>, <name name-style="western"><surname>O’Sullivan</surname><given-names>MJ</given-names></name> (<year>1991</year>) <article-title>Oral tocolysis with magnesium chloride: a randomized controlled prospective clinical trial</article-title>. <source>Am J Obstet Gynecol</source> <volume>165</volume>: <fpage>603</fpage>–<lpage>610</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Valenzuela1">
+        <label>17</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Valenzuela</surname><given-names>GJ</given-names></name>, <name name-style="western"><surname>Sanchez-Ramos</surname><given-names>L</given-names></name>, <name name-style="western"><surname>Romero</surname><given-names>R</given-names></name>, <name name-style="western"><surname>Silver</surname><given-names>HM</given-names></name>, <name name-style="western"><surname>Koltun</surname><given-names>WD</given-names></name>, <etal>et al</etal>. (<year>2000</year>) <article-title>Maintenance treatment of preterm labor with the oxytocin antagonist atosiban. The Atosiban PTL-098 Study Group</article-title>. <source>Am J Obstet Gynecol</source> <volume>182</volume>: <fpage>1184</fpage>–<lpage>1190</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Carr1">
+        <label>18</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Carr</surname><given-names>DB</given-names></name>, <name name-style="western"><surname>Clark</surname><given-names>AL</given-names></name>, <name name-style="western"><surname>Kernek</surname><given-names>K</given-names></name>, <name name-style="western"><surname>Spinnato</surname><given-names>JA</given-names></name> (<year>1999</year>) <article-title>Maintenance oral nifedipine for preterm labor: a randomized clinical trial</article-title>. <source>Am J Obstet Gynecol</source> <volume>181</volume>: <fpage>822</fpage>–<lpage>827</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Dodd1">
+        <label>19</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Dodd JM, Crowther CA, Dare MR, Middleton P (2006) Oral betamimetics for maintenance therapy after threatened preterm labour. Cochrane Database Syst Rev: CD003927.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Roos1">
+        <label>20</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Roos</surname><given-names>C</given-names></name>, <name name-style="western"><surname>Scheepers</surname><given-names>LH</given-names></name>, <name name-style="western"><surname>Bloemenkamp</surname><given-names>KW</given-names></name>, <name name-style="western"><surname>Bolte</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Cornette</surname><given-names>J</given-names></name>, <etal>et al</etal>. (<year>2009</year>) <article-title>Assessment of perinatal outcome after sustained tocolysis in early labour (APOSTEL-II trial)</article-title>. <source>BMC Pregnancy Childbirth</source> <volume>9</volume>: <fpage>42</fpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-SanchezRamos1">
+        <label>21</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Sanchez-Ramos</surname><given-names>L</given-names></name>, <name name-style="western"><surname>Kaunitz</surname><given-names>AM</given-names></name>, <name name-style="western"><surname>Gaudier</surname><given-names>FL</given-names></name>, <name name-style="western"><surname>Delke</surname><given-names>I</given-names></name> (<year>1999</year>) <article-title>Efficacy of maintenance therapy after acute tocolysis: a meta-analysis</article-title>. <source>Am J Obstet Gynecol</source> <volume>181</volume>: <fpage>484</fpage>–<lpage>490</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-How1">
+        <label>22</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>How</surname><given-names>HY</given-names></name>, <name name-style="western"><surname>Hughes</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Vogel</surname><given-names>RL</given-names></name>, <name name-style="western"><surname>Gall</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Spinnato</surname><given-names>JA</given-names></name> (<year>1995</year>) <article-title>Oral terbutaline in the outpatient management of preterm labor</article-title>. <source>Am J Obstet Gynecol</source> <volume>173</volume>: <fpage>1518</fpage>–<lpage>1522</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-SaillourGlenisson1">
+        <label>23</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Saillour-Glenisson</surname><given-names>F</given-names></name>, <name name-style="western"><surname>Domecq</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Pouchadon</surname><given-names>ML</given-names></name>, <name name-style="western"><surname>Jacques</surname><given-names>B</given-names></name>, <name name-style="western"><surname>Sibe</surname><given-names>M</given-names></name> (<year>2008</year>) <article-title>[Combined quantitative and qualitative methods to identify local facilitators of and barriers to physician’s adherence to clinical practice guidelines]</article-title>. <source>Rev Epidemiol Sante Publique</source> <volume>56</volume> <supplement>Suppl 3</supplement><fpage>S207</fpage>–<lpage>219</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Veatch1">
+        <label>24</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Veatch RM (2000) Reasons physicians do not follow clinical practice guidelines. Jama 283: 1685; author reply 1686.</mixed-citation>
+      </ref>
+      <ref id="pone.0050788-Grol1">
+        <label>25</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Grol R, Grimshaw J (2003) From best evidence to best practice: effective implementation of change in patients’ care. Lancet 362: 1225–1230.</mixed-citation>
+      </ref>
+    </ref-list>
+  </back>
+</article>

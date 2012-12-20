@@ -19,12 +19,10 @@
  */
 package org.ambraproject.service.annotation;
 
-import org.ambraproject.service.annotation.Context;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.FlagReasonCode;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.views.AnnotationView;
-
 import javax.annotation.Nullable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -58,21 +56,18 @@ public interface AnnotationService {
 
 
   /**
-   * Create a comment on an article.  If the xpath passed is null or empty, then it is created as an {@link
-   * org.ambraproject.models.AnnotationType#COMMENT}. If it's not empty, it is assumed we are creating an inline comment
-   * ({@link org.ambraproject.models.AnnotationType#NOTE})
+   * Create a comment on an article.
    *
    * @param user             the user creating the annotation
    * @param articleDoi       the doi of the article being annotated
    * @param title            title
    * @param body             body
    * @param ciStatement      competing interesting statement
-   * @param context          if this is an inline note, the location of the highlighted portion in the article
    * @param flagAsCorrection if true, flag the created comment as a potential correction
    * @return the id of the stored annotation
    */
   public Long createComment(UserProfile user, final String articleDoi, final String title, final String body,
-                            @Nullable final String ciStatement, @Nullable final Context context, boolean flagAsCorrection);
+                            @Nullable final String ciStatement, boolean flagAsCorrection);
 
   /**
    * Create a reply to an annotation

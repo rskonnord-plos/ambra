@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -61,8 +60,8 @@ public class SolrSearchService implements SearchService {
   private SolrServerFactory serverFactory;
   private int queryTimeout;
 
-  private static final int MAX_FACET_SIZE         = 100;
-  private static final int MIN_FACET_COUNT        = 1;
+  private static final int MAX_FACET_SIZE = 100;
+  private static final int MIN_FACET_COUNT = 1;
   private static final int MAX_HIGHLIGHT_SNIPPETS = 3;
 
   // sort option possible values (sort direction is optional)
@@ -82,7 +81,7 @@ public class SolrSearchService implements SearchService {
 
   /**
    * Perform an "all the words" search (across most article fields)
-   *
+   * <p/>
    * It uses <a href="http://wiki.apache.org/solr/DisMaxRequestHandler">DisMax Query Parser</a>.
    *
    * @param sParams The search parameters to use.
@@ -101,7 +100,7 @@ public class SolrSearchService implements SearchService {
 
     SolrQuery query = createQuery(sParams.getQuery(),
         sParams.getStartPage(), sParams.getPageSize(), true);
-    SolrQuery journalFacetQuery = createJournalFacetQuery(sParams.getQuery(),true);
+    SolrQuery journalFacetQuery = createJournalFacetQuery(sParams.getQuery(), true);
 
     //Set filters for both queries, but (obviously) the journals query doesn't get the journal
     //filter
@@ -113,15 +112,15 @@ public class SolrSearchService implements SearchService {
 
     //If the keywords parameter is specified, we need to change what field we're querying against
     //aka, body, conclusions, materials and methods ... etc ...
-    if(sParams.getFilterKeyword().length() > 0) {
+    if (sParams.getFilterKeyword().length() > 0) {
       String fieldkey = sParams.getFilterKeyword();
 
-      if(!validKeywords.containsKey(fieldkey)) {
+      if (!validKeywords.containsKey(fieldkey)) {
         throw new ApplicationException("Invalid filterKeyword value of " +
             fieldkey + " specified");
       }
-      
-      String fieldName = (String)validKeywords.get(fieldkey);
+
+      String fieldName = (String) validKeywords.get(fieldkey);
 
       //Set the field for dismax to use
       query.set("qf", fieldName);
@@ -134,7 +133,7 @@ public class SolrSearchService implements SearchService {
     results.setJournalFacet(facetCountsToHashMap(journals));
 
     //Only execute the keyword search facet if the keyword wasn't specified
-    if(sParams.getFilterKeyword().length() == 0) {
+    if (sParams.getFilterKeyword().length() == 0) {
       SolrQuery keywordFacetQuery = createKeywordFacetQuery(sParams.getQuery());
       setFilters(keywordFacetQuery, sParams, true);
       FacetField keywords = facetSearch(keywordFacetQuery, "doc_partial_type");
@@ -145,17 +144,15 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * Execute a Solr search composed from the contents of the
-   * <code>SearchParameters.unformattedQuery</code> property.
-   * The query is filtered by the journal and category fields also contained in the
-   * <code>searchParameters</code> parameter.  No filter is created for date ranges, since that
-   * is assumed to be contained in <code>SearchParameters.unformattedQuery</code>.
+   * Execute a Solr search composed from the contents of the <code>SearchParameters.unformattedQuery</code> property.
+   * The query is filtered by the journal and category fields also contained in the <code>searchParameters</code>
+   * parameter.  No filter is created for date ranges, since that is assumed to be contained in
+   * <code>SearchParameters.unformattedQuery</code>.
    *
-   * @param searchParameters Contains all the parameters necessary to execute a search against
-   *   the Solr query engine
-   * @return A subset (determined by <code>SearchParameters.startPage</code> and
-   *   <code>SearchParameters.pageSize</code> of the results of the Solr query generated from the
-   *   contents of the <code>searchParameters</code> parameter
+   * @param searchParameters Contains all the parameters necessary to execute a search against the Solr query engine
+   * @return A subset (determined by <code>SearchParameters.startPage</code> and <code>SearchParameters.pageSize</code>
+   *         of the results of the Solr query generated from the contents of the <code>searchParameters</code>
+   *         parameter
    * @throws ApplicationException Thrown during failed interactions with the Solr Server
    */
   public SearchResultSinglePage advancedSearch(SearchParameters searchParameters) throws ApplicationException {
@@ -167,12 +164,12 @@ public class SolrSearchService implements SearchService {
 
     SolrQuery query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
     query.setQuery(searchParameters.getUnformattedQuery().trim());
-    
+
     SolrQuery journalFacetQuery = createJournalFacetQuery(query.getQuery(), false);
 
     setFilters(query, sp, true);
     setFilters(journalFacetQuery, sp, false);
-    
+
     setSort(query, sp);
 
     FacetField journals = facetSearch(journalFacetQuery, "cross_published_journal_key");
@@ -185,10 +182,9 @@ public class SolrSearchService implements SearchService {
 
   /**
    * Populate facets of the search object.
-   *
-   * If no search results and hence facets are found remove defined filters and try
-   * the search again.  Journals and ArticleType facets will always be the complete list.
-   *  
+   * <p/>
+   * If no search results and hence facets are found remove defined filters and try the search again.  Journals and
+   * ArticleType facets will always be the complete list.
    *
    * @param searchParameters The search parameters
    * @return a populared SearchResultSinglePage object
@@ -198,17 +194,17 @@ public class SolrSearchService implements SearchService {
     //TODO: This function queries SOLR for the journal and article type list
     //We should migrate this away from config and into a database when it is
     //available
-    
+
     //Does not impact unformattedQuery field.
     SearchParameters sp = cleanStrings(searchParameters);
 
     String q = searchParameters.getUnformattedQuery().trim();
 
     //In this use case, if the query string is empty, we want to get facets for everything
-    if(q.length() == 0) {
+    if (q.length() == 0) {
       q = "*:*";
     }
-    
+
     if (log.isDebugEnabled()) {
       log.debug("Solr Search performed to get facet data on the unformattedSearch String: "
           + q);
@@ -247,11 +243,10 @@ public class SolrSearchService implements SearchService {
       }
     }
 
-    if(results == null || results.getTotalNoOfResults() == 0) {
+    if (results == null || results.getTotalNoOfResults() == 0) {
       //If no results, remove optional filters and try again
-      for(String filter : query.getFilterQueries()) {
-        if(filter.indexOf(createFilterFullDocuments()) < 0)
-        {
+      for (String filter : query.getFilterQueries()) {
+        if (filter.indexOf(createFilterFullDocuments()) < 0) {
           query.removeFilterQuery(filter);
         }
       }
@@ -260,8 +255,7 @@ public class SolrSearchService implements SearchService {
 
       //If results are STILL empty.  We must return something for subjects.
       //So let's use the global list
-      if(results.getTotalNoOfResults() == 0)
-      {
+      if (results.getTotalNoOfResults() == 0) {
         results.setSubjectFacet(preFilterResults.getSubjectFacet());
       }
 
@@ -278,20 +272,45 @@ public class SolrSearchService implements SearchService {
     return results;
   }
 
+  @Override
+  public List<String> getAllSubjects(String journal) throws ApplicationException {
+    SolrQuery query = createQuery("*:*", 0, 0, false);
+
+    // Remove facets we don't use in this case.
+    query.removeFacetField("author_facet");
+    query.removeFacetField("editor_facet");
+    query.removeFacetField("affiliate_facet");
+    query.removeFacetField("subject_facet");
+
+    // Add the one we do want.
+    query.addFacetField("subject_hierarchy");
+    query.addFilterQuery("cross_published_journal_key:" + journal);
+
+    // The intention is to set this to unlimited, or at least a high limit.
+    // By default it's 100.
+    query.setFacetLimit(1024 * 1024);
+
+    QueryResponse queryResponse = getSOLRResponse(query);
+    FacetField facet = queryResponse.getFacetField("subject_hierarchy");
+    List<String> results = new ArrayList<String>(facet.getValues().size());
+    for (FacetField.Count count : facet.getValues()) {
+      results.add(count.getName());
+    }
+    return results;
+  }
+
   /**
    * Add a <i>sort</i> (on a single field) clause to the <code>query</code> parameter.  If the
-   * <code>SearchParameters.sort</code> variable contains a single value (no white space),
-   * then that value is assumed to be a field name.  If the <code>SearchParameters.sort</code>
-   * variable contains two values (separated by whitespace), then the first is assumed to be a
-   * field name and the second is assumed to be a <i>sort direction</i>,
-   * one of <strong>desc</strong> or <strong>asc</strong>.
+   * <code>SearchParameters.sort</code> variable contains a single value (no white space), then that value is assumed to
+   * be a field name.  If the <code>SearchParameters.sort</code> variable contains two values (separated by whitespace),
+   * then the first is assumed to be a field name and the second is assumed to be a <i>sort direction</i>, one of
+   * <strong>desc</strong> or <strong>asc</strong>.
    * <p/>
-   * If there is only one value in the <code>SearchParameters.sort</code> variable or if the second
-   * value is not (non-case-sensitive) <strong>asc</strong>, then the <i>sort direction</i> defaults
-   * to <strong>desc</strong>.
-   * 
+   * If there is only one value in the <code>SearchParameters.sort</code> variable or if the second value is not
+   * (non-case-sensitive) <strong>asc</strong>, then the <i>sort direction</i> defaults to <strong>desc</strong>.
+   *
    * @param query The SolrQuery which will have a <i>sort</i> clause attached
-   * @param sp The SearchParameters DTO which contains the <code>sort</code> field used by this method
+   * @param sp    The SearchParameters DTO which contains the <code>sort</code> field used by this method
    */
   private void setSort(SolrQuery query, SearchParameters sp) throws ApplicationException {
     if (log.isDebugEnabled()) {
@@ -300,14 +319,14 @@ public class SolrSearchService implements SearchService {
 
     if (sp.getSort().length() > 0) {
       String sortKey = sp.getSort();
-      String sortValue = (String)validSorts.get(sortKey);
-      
-      if(sortValue == null) {
+      String sortValue = (String) validSorts.get(sortKey);
+
+      if (sortValue == null) {
         throw new ApplicationException("Invalid sort of '" + sp.getSort() + "' specified.");
       }
 
       String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);
-      for (String sortOption: sortOptions) {
+      for (String sortOption : sortOptions) {
         sortOption = sortOption.trim();
         int index = sortOption.lastIndexOf(" ");
 
@@ -319,7 +338,7 @@ public class SolrSearchService implements SearchService {
           sortDirection = sortOption.substring(index + 1).trim();
         }
 
-        if ( sortDirection == null || ! sortDirection.toLowerCase().equals("asc")) {
+        if (sortDirection == null || !sortDirection.toLowerCase().equals("asc")) {
           query.addSortField(fieldName, SolrQuery.ORDER.desc);
         } else {
           query.addSortField(fieldName, SolrQuery.ORDER.asc);
@@ -327,7 +346,7 @@ public class SolrSearchService implements SearchService {
       }
     }
 
-    if(query.getSortField() == null || query.getSortField().length() == 0) {
+    if (query.getSortField() == null || query.getSortField().length() == 0) {
       //Always default to score if it's not defined
       query.addSortField("score", SolrQuery.ORDER.desc);
       //If two articles are ranked the same, give the one with a more recent publish date a bump
@@ -338,19 +357,18 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * Execute a Solr search composed from the contents of the <i>Find An Article</i> search block
-   * including the properties: <code>volume</code>, <code>eNumber</code>, and/or <code>id</code> (DOI).
+   * Execute a Solr search composed from the contents of the <i>Find An Article</i> search block including the
+   * properties: <code>volume</code>, <code>eNumber</code>, and/or <code>id</code> (DOI).
    * <p/>
-   * The query is filtered by the <code>SearchParameters.filterJournals</code> property
-   * also contained in the <code>searchParameters</code> parameter.
+   * The query is filtered by the <code>SearchParameters.filterJournals</code> property also contained in the
+   * <code>searchParameters</code> parameter.
    * <p/>
    * No filter is created for date ranges or subject categories.
    *
-   * @param searchParameters Contains all the parameters necessary to execute a search against
-   *   the Solr query engine
-   * @return A subset (determined by <code>SearchParameters.startPage</code> and
-   *   <code>SearchParameters.pageSize</code> of the results of the Solr query generated from the
-   *   contents of the <code>searchParameters</code> parameter
+   * @param searchParameters Contains all the parameters necessary to execute a search against the Solr query engine
+   * @return A subset (determined by <code>SearchParameters.startPage</code> and <code>SearchParameters.pageSize</code>
+   *         of the results of the Solr query generated from the contents of the <code>searchParameters</code>
+   *         parameter
    * @throws ApplicationException Thrown during failed interactions with the Solr Server
    */
   public SearchResultSinglePage findAnArticleSearch(SearchParameters searchParameters) throws ApplicationException {
@@ -421,21 +439,21 @@ public class SolrSearchService implements SearchService {
 
     List sizes = config.getList("ambra.services.search.pageSizes.size");
 
-    if(sizes == null) {
+    if (sizes == null) {
       throw new ApplicationException("ambra.services.search.pageSizes not defined " +
           "in configuration.");
     }
-    
+
     pageSizes = sizes;
 
-    if(config.containsKey("ambra.services.search.sortOptions.option")) {
+    if (config.containsKey("ambra.services.search.sortOptions.option")) {
       validSorts = new HashMap();
       displaySorts = new ArrayList();
-      
-      HierarchicalConfiguration hc = (HierarchicalConfiguration)config;
+
+      HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
       List<HierarchicalConfiguration> sorts =
           hc.configurationsAt("ambra.services.search.sortOptions.option");
-      
+
       for (HierarchicalConfiguration s : sorts) {
         String key = s.getString("[@displayName]");
         String value = s.getString("");
@@ -451,21 +469,21 @@ public class SolrSearchService implements SearchService {
 
     List hFields = config.getList("ambra.services.search.highlightFields.field");
 
-    if(hFields == null) {
+    if (hFields == null) {
       throw new ApplicationException("ambra.services.search.highlightFields.field not defined " +
           "in configuration.");
     }
 
-    for(Object field : hFields) {
-      if(hightlightFieldBuilder.length() > 0) {
+    for (Object field : hFields) {
+      if (hightlightFieldBuilder.length() > 0) {
         hightlightFieldBuilder.append(",");
       }
       hightlightFieldBuilder.append(field.toString());
     }
 
-    if(config.containsKey("ambra.services.search.keywordFields.field")) {
+    if (config.containsKey("ambra.services.search.keywordFields.field")) {
       validKeywords = new HashMap();
-      HierarchicalConfiguration hc = (HierarchicalConfiguration)config;
+      HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
       List<HierarchicalConfiguration> sorts =
           hc.configurationsAt("ambra.services.search.keywordFields.field");
 
@@ -475,7 +493,7 @@ public class SolrSearchService implements SearchService {
         validKeywords.put(key, value);
 
         //These fields can be highlighted too!
-        if(hightlightFieldBuilder.length() > 0) {
+        if (hightlightFieldBuilder.length() > 0) {
           hightlightFieldBuilder.append(",");
         }
         hightlightFieldBuilder.append(value);
@@ -492,13 +510,12 @@ public class SolrSearchService implements SearchService {
     this.serverFactory = serverFactory;
   }
 
-  private void setFilters(SolrQuery query, SearchParameters sp, boolean includeJournal)
-  {
+  private void setFilters(SolrQuery query, SearchParameters sp, boolean includeJournal) {
     //Related to JO: http://joborder.plos.org/view.php?id=17480
     //(for now) we don't want to search on Issue Images
     query.addFilterQuery(createFilterNoIssueImageDocuments());
 
-    if(includeJournal) {
+    if (includeJournal) {
       // Form field description: "Journals".  Query Filter.
       if (sp.getFilterJournals() != null && sp.getFilterJournals().length > 0) {
         query.addFilterQuery(createFilterLimitForJournals(sp.getFilterJournals()));
@@ -519,6 +536,22 @@ public class SolrSearchService implements SearchService {
     if (sp.getFilterAuthors() != null && sp.getFilterAuthors().length > 0) {
       query.addFilterQuery(createFilterLimitForAuthor(sp.getFilterAuthors()));
     }
+
+    if (sp.getFilterStartDate() != null && sp.getFilterEndDate() != null) {
+      query.addFilterQuery(createFilterLimitForPublishDate(sp.getFilterStartDate(), sp.getFilterEndDate()));
+    }
+  }
+
+  private String createFilterLimitForPublishDate(Date startDate, Date endDate) {
+    StringBuilder fq = new StringBuilder();
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String sDate = sdf.format(startDate) + "T00:00:00Z";
+    String eDate = sdf.format(endDate) + "T00:00:00Z";
+
+    fq.append("publication_date:[" + sDate + " TO " + eDate + "]");
+
+    return fq.toString();
   }
 
   private String createFilterLimitForJournals(String[] journals) {
@@ -558,6 +591,7 @@ public class SolrSearchService implements SearchService {
 
   /**
    * Filter that limits results to only the complete documents, excluding partial documents.
+   *
    * @return A filter that excludes partial documents
    */
   private String createFilterFullDocuments() {
@@ -601,19 +635,18 @@ public class SolrSearchService implements SearchService {
 
     FacetField facet = queryResponse.getFacetField(name);
 
-    if(facet == null) {
+    if (facet == null) {
       throw new ApplicationException("No facet found with name of:" + name);
     }
 
     return facet;
   }
 
-  private List<Map> facetCountsToHashMap(FacetField field)
-  {
+  private List<Map> facetCountsToHashMap(FacetField field) {
     List<FacetField.Count> counts = field.getValues();
     ArrayList<Map> result = new ArrayList<Map>();
 
-    if(counts != null) {
+    if (counts != null) {
       for (FacetField.Count count : counts) {
         HashMap<String, Object> hm = new HashMap<String, Object>();
         hm.put("name", count.getName());
@@ -632,7 +665,7 @@ public class SolrSearchService implements SearchService {
     query.setIncludeScore(true); // The relevance (of each results element) to the search terms.
     query.setHighlight(true);
 
-    if(useDismax) {
+    if (useDismax) {
       query.set("defType", "dismax");
     }
 
@@ -646,7 +679,7 @@ public class SolrSearchService implements SearchService {
     query.setRows(pageSize); // The number of results elements to return.
     // request only fields that we need to display
     query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type",
-      "author_display", "abstract", "abstract_primary_display", "striking_image", "figure_table_caption");
+        "author_display", "abstract", "abstract_primary_display", "striking_image", "figure_table_caption");
     query.addFacetField("subject_facet");
     query.addFacetField("author_facet");
     query.addFacetField("editor_facet");
@@ -670,7 +703,7 @@ public class SolrSearchService implements SearchService {
     query.setFacetLimit(MAX_FACET_SIZE);
     query.setFacetMinCount(MIN_FACET_COUNT);
 
-    if(useDismax) {
+    if (useDismax) {
       query.set("defType", "dismax");
     }
 
@@ -687,8 +720,8 @@ public class SolrSearchService implements SearchService {
     query.setIncludeScore(false);
     query.setHighlight(false);
     query.setRows(0);
-    query.set("defType","dismax");
-    query.set("qf","doc_partial_body");
+    query.set("defType", "dismax");
+    query.set("qf", "doc_partial_body");
     query.addFacetField("doc_partial_type");
     query.setFacetLimit(MAX_FACET_SIZE);
     query.setFacetMinCount(MIN_FACET_COUNT);
@@ -698,7 +731,7 @@ public class SolrSearchService implements SearchService {
 
     return query;
   }
-  
+
   private SearchResultSinglePage readQueryResults(QueryResponse queryResponse, SolrQuery query) {
     SolrDocumentList documentList = queryResponse.getResults();
 
@@ -735,7 +768,7 @@ public class SolrSearchService implements SearchService {
           if (queryResponse.getSpellCheckResponse().getSuggestionMap().get(token).getAlternatives().size() < 1) {
             sb.append("NO ALTERNATIVES");
           } else {
-            for ( String alternative : queryResponse.getSpellCheckResponse().getSuggestionMap().get(token).getAlternatives()) {
+            for (String alternative : queryResponse.getSpellCheckResponse().getSuggestionMap().get(token).getAlternatives()) {
               sb.append(alternative).append(", ");
             }
             sb.replace(sb.length() - 2, sb.length(), ""); // Remove last comma and space.
@@ -776,17 +809,17 @@ public class SolrSearchService implements SearchService {
       String abstractResult = "";
 
       //Use the primary abstract if it exists
-      if(abstractPrimary.size() > 0) {
+      if (abstractPrimary.size() > 0) {
         abstractResult = StringUtils.join(abstractPrimary, ", ");
       } else {
-        if(abstractText.size() > 0) {
+        if (abstractText.size() > 0) {
           abstractResult = StringUtils.join(abstractText, ", ");
         }
       }
 
       SearchHit hit = new SearchHit(
           score, id, title, highlights, authorList, publicationDate, eissn, journal, articleType,
-        abstractResult);
+          abstractResult);
 
       hit.setStrikingImage(strikingImage);
       if (figureTableCaptions.size() > 0) {
@@ -803,27 +836,27 @@ public class SolrSearchService implements SearchService {
     SearchResultSinglePage results = new SearchResultSinglePage((int) documentList.getNumFound(), -1,
         searchResults, query.getQuery());
 
-    if(queryResponse.getFacetField("subject_facet") != null) {
+    if (queryResponse.getFacetField("subject_facet") != null) {
       results.setSubjectFacet(facetCountsToHashMap(queryResponse.getFacetField("subject_facet")));
     }
 
-    if(queryResponse.getFacetField("author_facet") != null) {
+    if (queryResponse.getFacetField("author_facet") != null) {
       results.setAuthorFacet(facetCountsToHashMap(queryResponse.getFacetField("author_facet")));
     }
 
-    if(queryResponse.getFacetField("editor_facet") != null) {
+    if (queryResponse.getFacetField("editor_facet") != null) {
       results.setEditorFacet(facetCountsToHashMap(queryResponse.getFacetField("editor_facet")));
     }
 
-    if(queryResponse.getFacetField("article_type_facet") != null) {
+    if (queryResponse.getFacetField("article_type_facet") != null) {
       results.setArticleTypeFacet(facetCountsToHashMap(queryResponse.getFacetField("article_type_facet")));
     }
 
-    if(queryResponse.getFacetField("affiliate_facet") != null) {
+    if (queryResponse.getFacetField("affiliate_facet") != null) {
       results.setInstitutionFacet(facetCountsToHashMap(queryResponse.getFacetField("affiliate_facet")));
     }
 
-    if(queryResponse.getFacetField("cross_published_journal_key") != null) {
+    if (queryResponse.getFacetField("cross_published_journal_key") != null) {
       results.setJournalFacet(facetCountsToHashMap(queryResponse.getFacetField("cross_published_journal_key")));
     }
 
@@ -873,75 +906,70 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * Returns articles list that are published between the last search time and the current search time for saved search alerts.
+   * Returns articles list that are published between the last search time and the current search time for saved search
+   * alerts.
+   *
    * @param sParams
    * @param lastSearchTime
    * @param currentSearchTime
    * @return
    * @throws ApplicationException
    */
-   public List savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException {
-     SolrQuery query = null;
-     SearchParameters sp = null;
+  public List savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException {
+    SolrQuery query = null;
+    SearchParameters sp = null;
 
-     if(sParams.getUnformattedQuery() == null || sParams.getUnformattedQuery().equals("")){
-       if (log.isDebugEnabled()) {
-         log.debug("Simple Saved Search performed on the unformattedSearch String: "
-             + sParams.getQuery().trim());
-       }
+    if (sParams.getUnformattedQuery() == null || sParams.getUnformattedQuery().equals("")) {
+      if (log.isDebugEnabled()) {
+        log.debug("Simple Saved Search performed on the unformattedSearch String: "
+            + sParams.getQuery().trim());
+      }
 
-       query = createQuery(sParams.getQuery(), sParams.getStartPage(), sParams.getPageSize(), false);
-       query.setQuery(sParams.getQuery());
-       //If the keywords parameter is specified, we need to change what field we're querying against
-       //aka, body, conclusions, materials and methods ... etc ...
-       if(sParams.getFilterKeyword().length() > 0) {
-         String fieldkey = sParams.getFilterKeyword();
+      query = createQuery(sParams.getQuery(), sParams.getStartPage(), sParams.getPageSize(), false);
+      query.setQuery(sParams.getQuery());
+      //If the keywords parameter is specified, we need to change what field we're querying against
+      //aka, body, conclusions, materials and methods ... etc ...
+      if (sParams.getFilterKeyword().length() > 0) {
+        String fieldkey = sParams.getFilterKeyword();
 
-         if(!validKeywords.containsKey(fieldkey)) {
-           throw new ApplicationException("Invalid filterKeyword value of " +
-               fieldkey + " specified");
-         }
+        if (!validKeywords.containsKey(fieldkey)) {
+          throw new ApplicationException("Invalid filterKeyword value of " +
+              fieldkey + " specified");
+        }
 
-         String fieldName = (String)validKeywords.get(fieldkey);
+        String fieldName = (String) validKeywords.get(fieldkey);
 
-         //Set the field for dismax to use
-         query.set("qf", fieldName);
-         setFilters(query, sParams, true);
-       }
+        //Set the field for dismax to use
+        query.set("qf", fieldName);
+        setFilters(query, sParams, true);
+      }
 
-     }else{
+    } else {
 
-       if (log.isDebugEnabled()) {
-         log.debug("Advanced Saved Search performed on the unformattedSearch String: "
-             + sParams.getUnformattedQuery().trim());
-       }
-       sp = cleanStrings(sParams);
-       query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
-       query.setQuery(sParams.getUnformattedQuery());
-       setFilters(query, sp, true);
-     }
+      if (log.isDebugEnabled()) {
+        log.debug("Advanced Saved Search performed on the unformattedSearch String: "
+            + sParams.getUnformattedQuery().trim());
+      }
+      sp = cleanStrings(sParams);
+      query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
+      query.setQuery(sParams.getUnformattedQuery());
+      setFilters(query, sp, true);
+    }
 
-     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-     String lastSavedSearchTime = sdf.format(lastSearchTime);
-     String currentTime = sdf.format(currentSearchTime);
-
-     lastSavedSearchTime = lastSavedSearchTime + "T00:00:00Z";
-     currentTime = currentTime + "T00:00:00Z";
-
-     query.addFilterQuery("publication_date:[" + lastSavedSearchTime + " TO " + currentTime + "]");
+    query.addFilterQuery(createFilterLimitForPublishDate(lastSearchTime, currentSearchTime));
 
 
-     SearchResultSinglePage results = search(query);
+    SearchResultSinglePage results = search(query);
 
-     return results.getHits();
-   }
+    return results.getHits();
+  }
 
 
   /**
    * Remove dangerous and unwanted values from the Strings in selected fields in the SearchParameters parameter.
    * <p/>
-   * Note that <code>SearchParameters.unformattedQuery</code> is excluded from this list, for the
-   * reason implied by its name.
+   * Note that <code>SearchParameters.unformattedQuery</code> is excluded from this list, for the reason implied by its
+   * name.
    *
    * @param searchParameters A SearchParameters object the needs to have some of its fields "cleaned"
    * @return The SearchParameters parameter with some of its fields "cleaned"
@@ -953,17 +981,15 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * Change all input to lower case and, in front of each character that Solr recognizes as
-   * an operator, place a backslash (i.e., \) so that these characters are "escaped" such
-   * that they may be used as normal characters in searches.
+   * Change all input to lower case and, in front of each character that Solr recognizes as an operator, place a
+   * backslash (i.e., \) so that these characters are "escaped" such that they may be used as normal characters in
+   * searches.
    * <p/>
-   * Since Solr uses upper case to define the operators <code>AND</code>,  <code>OR</code>,
-   * <code>NOT</code>, and  <code>TO</code>, setting these values to lower case means that they
-   * are not seen as operators by Solr.
-   * 
+   * Since Solr uses upper case to define the operators <code>AND</code>,  <code>OR</code>, <code>NOT</code>, and
+   * <code>TO</code>, setting these values to lower case means that they are not seen as operators by Solr.
+   *
    * @param toBeCleaned String that will have each Solr operator-character "escaped" with a backslash
-   * @return The original <code>toBeCleaned</code> object with each Solr operator-character
-   *   "escaped" with a backslash
+   * @return The original <code>toBeCleaned</code> object with each Solr operator-character "escaped" with a backslash
    */
   private String cleanString(String toBeCleaned) {
     return toBeCleaned.replaceAll("[:!&\"\'\\^\\+\\-\\|\\(\\)\\[\\]\\{\\}\\\\]", "\\\\$0").toLowerCase();
@@ -971,19 +997,43 @@ public class SolrSearchService implements SearchService {
 
   /**
    * The map of sorts that are valid for this provider
+   *
    * @return
    */
-  public List getSorts()
-  {
+  public List getSorts() {
     return this.displaySorts;
   }
 
   /**
    * The valid page sizes for this provider
+   *
    * @return
    */
-  public List getPageSizes()
-  {
+  public List getPageSizes() {
     return pageSizes;
   }
+
+  private static final String DOI_SCHEME = "info:doi/";
+
+  @Override
+  public String fetchAbstractText(String articleDoi) throws ApplicationException {
+    if (articleDoi.startsWith(DOI_SCHEME)) {
+      articleDoi = articleDoi.substring(DOI_SCHEME.length());
+    }
+    SolrQuery query = new SolrQuery("id:" + articleDoi);
+    query.setFields("abstract", "abstract_primary_display");
+    List<SearchHit> hits = search(query).getHits();
+
+    if (hits.size() != 1) {
+      String message = (hits.isEmpty()) ? "Article not found" : "Non-unique ID";
+      throw new ApplicationException(message + ": " + articleDoi);
+    }
+    String abstractText = hits.get(0).getAbstract();
+    if (abstractText == null) {
+      // Even an article with no abstract should have produced an empty (non-null) string
+      throw new ApplicationException("Abstract not found for article: " + articleDoi);
+    }
+    return abstractText;
+  }
+
 }

@@ -18,9 +18,7 @@ package org.ambraproject.models;
  */
 public enum AnnotationType {
   COMMENT("Comment"), //comment on an article
-  RATING("Rating"),
   REPLY("Reply"),
-  NOTE("Note"), //Inline note
   MINOR_CORRECTION("MinorCorrection"),
   FORMAL_CORRECTION("FormalCorrection"),
   RETRACTION("Retraction");
@@ -43,10 +41,6 @@ public enum AnnotationType {
   public static AnnotationType fromString(String string) {
     if (COMMENT.string.equals(string)) {
       return COMMENT;
-    } else if (NOTE.string.endsWith(string)) {
-      return NOTE;
-    } else if (RATING.string.equals(string)) {
-      return RATING;
     } else if (REPLY.string.equals(string)) {
       return REPLY;
     } else if (MINOR_CORRECTION.string.equals(string)) {

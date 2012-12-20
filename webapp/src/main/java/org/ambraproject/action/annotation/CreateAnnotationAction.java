@@ -21,7 +21,6 @@ package org.ambraproject.action.annotation;
 
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.service.annotation.AnnotationService;
-import org.ambraproject.service.annotation.Context;
 import org.ambraproject.service.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +37,6 @@ public class CreateAnnotationAction extends DiscussionAction {
   private String annotationId;
   private boolean isPublic = false;
   private String noteType;
-  private String startPath;
-  private int startOffset;
-  private String endPath;
-  private int endOffset;
   private String supercedes;
 
   protected AnnotationService annotationService;
@@ -57,7 +52,6 @@ public class CreateAnnotationAction extends DiscussionAction {
         commentTitle,
         comment,
         ciStatement,
-        new Context(startPath, startOffset, endPath, endOffset, target),
         flagAsCorrection).toString();
 
     articleHtmlCache.remove(target);
@@ -156,64 +150,6 @@ public class CreateAnnotationAction extends DiscussionAction {
    */
   public String getNoteType() {
     return noteType;
-  }
-
-  /**
-   * @return the end point offset
-   */
-  public int getEndOffset() {
-    return endOffset;
-  }
-
-  /**
-   * @param endOffset set the end point offset
-   */
-  public void setEndOffset(final int endOffset) {
-    this.endOffset = endOffset;
-  }
-
-  /**
-   * @return return the end point path
-   */
-  //@RequiredStringValidator(message="You must specify a value")
-  public String getEndPath() {
-    return endPath;
-  }
-
-  /**
-   * @param endPath set the end point path
-   */
-  public void setEndPath(final String endPath) {
-    this.endPath = endPath;
-  }
-
-  /**
-   * @return the start point offset
-   */
-  public int getStartOffset() {
-    return startOffset;
-  }
-
-  /**
-   * @param startOffset set the start point offset
-   */
-  public void setStartOffset(final int startOffset) {
-    this.startOffset = startOffset;
-  }
-
-  /**
-   * @return the start point path
-   */
-  //@RequiredStringValidator(message="You must specify a value")
-  public String getStartPath() {
-    return startPath;
-  }
-
-  /**
-   * @param startPath set start point path
-   */
-  public void setStartPath(final String startPath) {
-    this.startPath = startPath;
   }
 
   /**

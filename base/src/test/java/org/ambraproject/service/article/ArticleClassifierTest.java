@@ -90,6 +90,15 @@ public class ArticleClassifierTest extends BaseTest {
         .newDocumentBuilder().parse(new File(DATA_DIR + "pntd.0001008.xml"));
     content = articleClassifier.getCategorizationContent(article);
     assertTrue(content.length() > threshold);
+
+    // Research article with non-standard section titles.
+    article = DocumentBuilderFactoryCreator.createFactory()
+        .newDocumentBuilder().parse(new File(DATA_DIR + "pone.0040598.xml"));
+    content = articleClassifier.getCategorizationContent(article);
+
+    // Call it good if we have material that's at least twice as long as the abstract.
+    assertTrue(content.length()
+        > article.getElementsByTagName("abstract").item(0).getTextContent().length() * 2);
   }
 
   @Test

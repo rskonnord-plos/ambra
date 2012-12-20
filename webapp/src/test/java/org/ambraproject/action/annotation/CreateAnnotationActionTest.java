@@ -61,10 +61,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     String ciStatement = "I work for the Skoll Foundation";
     action.setCommentTitle(title);
     action.setComment(body);
-    action.setStartPath(null);
-    action.setStartOffset(0);
-    action.setEndPath(null);
-    action.setEndOffset(0);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(true);
     action.setCiStatement(ciStatement);
@@ -85,7 +81,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
     assertEquals(storedAnnotation.getBody(), body, "stored annotation had incorrect body");
     assertEquals(storedAnnotation.getCompetingInterestBody(), ciStatement, "stored annotation had incorrect ci statement");
-    assertNull(storedAnnotation.getXpath(), "stored annotation had an xpath associated with it");
     assertNotNull(storedAnnotation.getAnnotationUri(), "didn't generate an annotation uri");
   }
 
@@ -105,10 +100,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     String expectedXpointer = "id:doi-for-create-inlineNote-action#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
     action.setCommentTitle(title);
     action.setComment(body);
-    action.setStartPath("/article[1]/body[1]/sec[1]/p[3]");
-    action.setStartOffset(107);
-    action.setEndPath("/article[1]/body[1]/sec[1]/p[3]");
-    action.setEndOffset(640);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
@@ -125,11 +116,10 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     Long id = Long.valueOf(action.getAnnotationId());
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
     assertNotNull(storedAnnotation, "Didn't store annotation to the db");
-    assertEquals(storedAnnotation.getType(), AnnotationType.NOTE, "Created annotation with incorrect type");
+    assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Created annotation with incorrect type");
     assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
     assertEquals(storedAnnotation.getBody(), body, "stored annotation had incorrect body");
     assertNull(storedAnnotation.getCompetingInterestBody(), "stored annotation had incorrect ci statement");
-    assertEquals(storedAnnotation.getXpath(), expectedXpointer, "stored annotation had incorrect xpath associated with it");
     assertNotNull(storedAnnotation.getAnnotationUri(), "didn't generate an annotation uri");
 
   }
@@ -150,10 +140,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     String expectedXpointer = "id:doi-for-create-and-flag-action#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
     action.setCommentTitle(title);
     action.setComment(body);
-    action.setStartPath("/article[1]/body[1]/sec[1]/p[3]");
-    action.setStartOffset(107);
-    action.setEndPath("/article[1]/body[1]/sec[1]/p[3]");
-    action.setEndOffset(640);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
@@ -170,13 +156,11 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     Long id = Long.valueOf(action.getAnnotationId());
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
     assertNotNull(storedAnnotation, "Didn't store annotation to the db");
-    assertEquals(storedAnnotation.getType(), AnnotationType.NOTE, "Created annotation with incorrect type");
+    assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Created annotation with incorrect type");
     assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
     assertEquals(storedAnnotation.getBody(), body, "stored annotation had incorrect body");
     assertNull(storedAnnotation.getCompetingInterestBody(), "stored annotation had incorrect ci statement");
     assertNotNull(storedAnnotation.getAnnotationUri(), "didn't generate an annotation uri");
-
-    assertEquals(storedAnnotation.getXpath(), expectedXpointer, "stored annotation had incorrect xpath associated with it");
 
     List<Flag> flags = dummyDataStore.getAll(Flag.class);
     assertTrue(flags.size() > 0, "didn't create any flags");
@@ -203,10 +187,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
 
     action.setCommentTitle("test title");
     action.setComment("");
-    action.setStartPath(null);
-    action.setStartOffset(0);
-    action.setEndPath(null);
-    action.setEndOffset(0);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
@@ -232,10 +212,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
 
     action.setCommentTitle("test title");
     action.setComment("foo");
-    action.setStartPath(null);
-    action.setStartOffset(0);
-    action.setEndPath(null);
-    action.setEndOffset(0);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(true);
     action.setCiStatement(null);
@@ -261,10 +237,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
 
     action.setCommentTitle("ass");
     action.setComment("A clean body");
-    action.setStartPath(null);
-    action.setStartOffset(0);
-    action.setEndPath(null);
-    action.setEndOffset(0);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
@@ -288,10 +260,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
 
     action.setCommentTitle("A very clean title");
     action.setComment("ass");
-    action.setStartPath(null);
-    action.setStartOffset(0);
-    action.setEndPath(null);
-    action.setEndOffset(0);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
@@ -315,10 +283,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
 
     action.setCommentTitle("A clean title");
     action.setComment("A clean body");
-    action.setStartPath(null);
-    action.setStartOffset(0);
-    action.setEndPath(null);
-    action.setEndOffset(0);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(true);
     action.setCiStatement("ass");
@@ -347,10 +311,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
         "goal to reduce the level of the suffering of animals raised for meat in industrial conditions. " +
         "And this puts it over 500");
     action.setComment("test body");
-    action.setStartPath(null);
-    action.setStartOffset(0);
-    action.setEndPath(null);
-    action.setEndOffset(0);
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);

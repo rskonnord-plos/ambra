@@ -12,6 +12,7 @@
 
 package org.ambraproject.service.search;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -67,6 +68,7 @@ public class SearchServiceTest extends BaseTest {
     document1.put("cross_published_journal_key", new String[]{JOURNAL_KEY_1});
     document1.put("subject", new String[]{CATEGORY_1, CATEGORY_2});
     document1.put("article_type_facet", new String[]{"Not an issue image"});
+    document1.put("abstract_primary_display", new String[]{"<p>The spleen is an organ found in virtually all vertebrate animals.</p>"});
 
     // 2 occurrences in "everything": "Yak"
     Map<String, String[]> document2 = new HashMap<String, String[]>();
@@ -83,6 +85,7 @@ public class SearchServiceTest extends BaseTest {
     document2.put("cross_published_journal_key", new String[]{JOURNAL_KEY_2});
     document2.put("subject", new String[]{CATEGORY_2});
     document2.put("article_type_facet", new String[]{"Not an issue image"});
+    document2.put("abstract", new String[]{"The yak is a long-haired bovine found throughout the Himalayan region"});
 
     // 2 occurrences in "everything": "Gecko"
     Map<String, String[]> document3 = new HashMap<String, String[]>();
@@ -99,6 +102,7 @@ public class SearchServiceTest extends BaseTest {
     document3.put("cross_published_journal_key", new String[]{JOURNAL_KEY_2});
     document3.put("subject", new String[]{CATEGORY_1});
     document3.put("article_type_facet", new String[]{"Not an issue image"});
+    document3.put("abstract", new String[]{"Geckos are lizards belonging to the infraorder Gekkota"});
 
     solrServerFactory.addDocument(document1);
     solrServerFactory.addDocument(document2);
@@ -228,4 +232,11 @@ public class SearchServiceTest extends BaseTest {
         "For the query '*:*', get Filter Data expected 2 Subject Facets but, instead, received "
             + resultSinglePage.getSubjectFacet().size());
   }
+
+  @Test(dataProvider = "volumeAndELocationIdAndIdAndJournal")
+  public void testFetchAbstractText(String volume, String eLocationId, String id, String journal) throws Exception {
+    String abstractText = searchService.fetchAbstractText(id);
+    Assert.isTrue(StringUtils.isNotBlank(abstractText));
+  }
+
 }

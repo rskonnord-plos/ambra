@@ -260,6 +260,8 @@ public class SearchParametersTest {
         " filterKeyword='keyword'," +
         " filterArticleType='articleType'," + 
         " filterJournals=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
+        " filterStartDate=null," +
+        " filterEndDate=null," +
         " sort='sortString'," +
         " startPage=473," +
         " pageSize=216," +

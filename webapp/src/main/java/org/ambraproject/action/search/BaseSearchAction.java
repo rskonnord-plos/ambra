@@ -22,6 +22,10 @@ package org.ambraproject.action.search;
 
 import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.service.search.SearchParameters;
+import org.ambraproject.util.DateParser;
+import org.ambraproject.util.InvalidDateException;
+
+import java.util.Date;
 
 public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   // All of the parameters used to execute any search.
@@ -221,5 +225,41 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
 
   public void setResultView(String resultView) {
     getSearchParameters().setResultView(resultView);
+  }
+
+  public void setFilterEndDate(String filterEndDate) {
+    Date eDate = null;
+
+    if(filterEndDate != null && filterEndDate.length() > 0) {
+      try {
+        eDate = DateParser.parse(filterEndDate);
+      } catch(InvalidDateException ex) {
+        //If the user enters a wacky date, die silently?
+      }
+    }
+
+    getSearchParameters().setFilterEndDate(eDate);
+  }
+
+  public Date getFilterEndDate() {
+    return getSearchParameters().getFilterEndDate();
+  }
+
+  public void setFilterStartDate(String filterStartDate) {
+    Date sDate = null;
+
+    if(filterStartDate != null && filterStartDate.length() > 0) {
+      try {
+        sDate = DateParser.parse(filterStartDate);
+      } catch(InvalidDateException ex) {
+        //If the user enters a wacky date, die silently?
+      }
+    }
+
+    getSearchParameters().setFilterStartDate(sDate);
+  }
+
+  public Date getFilterStartDate() {
+    return getSearchParameters().getFilterStartDate();
   }
 }

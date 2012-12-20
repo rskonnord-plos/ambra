@@ -391,7 +391,10 @@ public class TextUtils {
   public static String getAsXMLString(final Node node) throws TransformerException {
     final Transformer tf = TransformerFactory.newInstance().newTransformer();
     final StringWriter stringWriter = new StringWriter();
+
+    tf.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
     tf.transform(new DOMSource(node), new StreamResult(stringWriter));
+
     return stringWriter.toString();
   }
 

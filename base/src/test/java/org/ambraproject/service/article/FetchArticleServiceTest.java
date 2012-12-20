@@ -9,7 +9,6 @@ import org.ambraproject.models.CitedArticle;
 import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.article.ArticleInfo;
-import org.apache.commons.digester.ObjectParamRule;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 
@@ -45,120 +43,251 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test an author with a suffix on their name
     ArticleInfo a1 = new ArticleInfo("info:doi/10.1371/journal.pone.0002879");
     List<AuthorView> authors1 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("John M.", "Logsdon", "Jr", null, null, false, false, "* E-mail: john-logsdon@uiowa.edu",
-        new ArrayList<String>() {{ add("Department of Biology test"); }},
-        new ArrayList<String>()));
+      add(AuthorView.builder()
+        .setGivenNames("John M.")
+        .setSurnames("Logsdon")
+        .setSuffix("Jr")
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding("<span class=\"email\">* E-mail:</span> john-logsdon@uiowa.edu")
+        .setAffiliations(new ArrayList<String>() {{
+          add("Department of Biology test");
+        }})
+        .setCustomFootnotes(null)
+        .build());
     }};
 
     //Test corresponding author
     ArticleInfo a2 = new ArticleInfo("info:doi/10.1371/journal.pbio.1001335");
     List<AuthorView> authors2 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Mariano", "Carrión-Vázquez", null, null, null, false, false, "* E-mail: mcarrion@cajal.csic.es",
-        new ArrayList<String>() {{ add("Instituto Cajal"); add("Instituto Madrileño"); }},
-        new ArrayList<String>()));
+      add(AuthorView.builder()
+        .setGivenNames("Mariano")
+        .setSurnames("Carrión-Vázquez")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding("<span class=\"email\">* E-mail:</span> mcarrion@cajal.csic.es")
+        .setAffiliations(new ArrayList<String>() {{
+          add("Instituto Cajal"); add("Instituto Madrileño");
+        }})
+        .setCustomFootnotes(null)
+        .build());
     }};
 
     //Test deceased author
     ArticleInfo a3 = new ArticleInfo("info:doi/10.1371/journal.pntd.0001165");
     List<AuthorView> authors3 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Nicholas J. S.", "Lwambo", null, null, null, false, true, null,
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("Nicholas J. S.")
+        .setSurnames("Lwambo")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(true)
+        .setCorresponding(null)
+        .setAffiliations(new ArrayList<String>() {{
           add("National Institute for Medical Research, Mwanza Medical Research Centre, Mwanza, Tanzania");
-        }},
-        new ArrayList<String>() ));
+        }})
+        .setCustomFootnotes(null)
+        .build());
     }};
 
     //additional sets of equally contributing authors.
     ArticleInfo a4 = new ArticleInfo("info:doi/10.1371/journal.pone.0023160");
     List<AuthorView> authors4 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Markus M.", "Bachschmid", null, null, null, false, false, "* E-mail: bach@bu.edu",
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("Markus M.")
+        .setSurnames("Bachschmid")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setGroupContrib(true)
+        .setDeceased(false)
+        .setCorresponding("<span class=\"email\">* E-mail:</span> bach@bu.edu")
+        .setAffiliations(new ArrayList<String>() {{
           add("Vascular Biology Section, Boston University Medical Center, Boston, Massachusetts, United States of America");
-        }},
-        new ArrayList<String>() {{ add("¶ These authors also contributed equally to this work."); }} ));
+        }})
+        .setCustomFootnotes(new ArrayList<String>() {{ add("<p><span class=\"pilcro\">¶</span> These authors also contributed equally to this work.</p>"); }})
+        .build());
 
-      add(new AuthorView("David R.", "Pimental", null, null, null, false, false, null,
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("David R.")
+        .setSurnames("Pimental")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setGroupContrib(true)
+        .setDeceased(false)
+        .setCorresponding(null)
+        .setAffiliations(new ArrayList<String>() {{
           add("Myocardial Biology Unit, Boston University Medical Center, Boston, Massachusetts, United States of America");
-        }},
-        new ArrayList<String>() {{ add("¶ These authors also contributed equally to this work."); }} ));
+        }})
+        .setCustomFootnotes(new ArrayList<String>() {{
+          add("<p><span class=\"pilcro\">¶</span> These authors also contributed equally to this work.</p>");
+        }})
+        .build());
     }};
 
     //Test alternate address
     ArticleInfo a5 = new ArticleInfo("info:doi/10.1371/journal.pone.0020568");
     List<AuthorView> authors5 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Oliver", "Liesenfeld", null,
-        "Current address: Roche Molecular Diagnostics, Pleasanton, California, United States of America",
-        null, false, false, null,
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("Oliver")
+        .setSurnames("Liesenfeld")
+        .setSuffix(null)
+        .setCurrentAddress("Current address: Roche Molecular Diagnostics, Pleasanton, California, United States of America")
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding(null)
+        .setAffiliations(new ArrayList<String>() {{
           add("Institute of Microbiology and Hygiene, Charité Universitätsmedizin Berlin, Berlin, Germany");
-        }},
-        new ArrayList<String>()));
+        }})
+        .setCustomFootnotes(null)
+        .build());
 
-      add(new AuthorView("Iana", "Parvanova", null,
-        "Current address: Bavarian Research Alliance GmbH (BayFOR), Munich, Germany", null, false, false, null,
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("Iana")
+        .setSurnames("Parvanova")
+        .setSuffix(null)
+        .setCurrentAddress("Current address: Bavarian Research Alliance GmbH (BayFOR), Munich, Germany")
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding(null)
+        .setAffiliations(new ArrayList<String>() {{
           add("Institute for Genetics, University of Cologne, Cologne, Germany");
-        }},
-        new ArrayList<String>()));
+        }})
+        .setCustomFootnotes(null)
+        .build());
     }};
 
     //Test 'other' author attribute
     ArticleInfo a6 = new ArticleInfo("info:doi/10.1371/journal.pone.0032315");
     List<AuthorView> authors6 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("the Danish SAB Study Group Consortium", null,
-        null, null, null, false, false, null,
-        new ArrayList<String>(),
-        new ArrayList<String>() {{
-          add("¶ Membership of the Danish SAB Study Group Consortium is provided in the Acknowledgments.");
-        }} ));
+      add(AuthorView.builder()
+        .setGivenNames("the Danish SAB Study Group Consortium")
+        .setSurnames(null)
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding(null)
+        .setAffiliations(null)
+        .setCustomFootnotes(new ArrayList<String>() {{
+          add("<p><span class=\"pilcro\">¶</span> Membership of the Danish SAB Study Group Consortium is provided in the Acknowledgments.</p>");
+        }})
+        .build());
     }};
 
     //Additional test for corresponding author
     ArticleInfo a7 = new ArticleInfo("info:doi/10.1371/journal.pmed.0020073");
     List<AuthorView> authors7 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("William", "Pao",
-        null, null, null, true, false, "*To whom correspondence should be addressed. E-mail: paow@mskcc.org",
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("William")
+        .setSurnames("Pao")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(true)
+        .setDeceased(false)
+        .setCorresponding("<span class=\"email\">*</span>To whom correspondence should be addressed. E-mail: paow@mskcc.org")
+        .setAffiliations(new ArrayList<String>() {{
           add("Program in Cancer Biology and Genetics, Memorial Sloan-Kettering Cancer Center, New York, New York, United States of America");
           add("Thoracic Oncology Service, Department of Medicine, Memorial Sloan-Kettering Cancer Center, New York, New York, United States of America");
-        }},
-        new ArrayList<String>()));
+        }})
+        .setCustomFootnotes(null)
+        .build());
     }};
 
     //Test for articles with multiple corresponding authors
     ArticleInfo a8 = new ArticleInfo("info:doi/10.1371/journal.pone.0029914");
     List<AuthorView> authors8 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("Monica E.", "Embers",
-        null, null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("Monica E.")
+        .setSurnames("Embers")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding("<span class=\"email\">* E-mail:</span> members@tulane.edu (MEE); Philipp@tulane.edu (MTP)")
+        .setAffiliations(new ArrayList<String>() {{
           add("Divisions of Bacteriology & Parasitology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America");
-        }},
-        new ArrayList<String>()));
+        }})
+        .setCustomFootnotes(null)
+        .build());
 
-      add(new AuthorView("Mario T.", "Philipp",
-        null, null, null, false, false, "* E-mail: members@tulane.edu (MEE); Philipp@tulane.edu (MTP)",
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("Mario T.")
+        .setSurnames("Philipp")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf(null)
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding("<span class=\"email\">* E-mail:</span> members@tulane.edu (MEE); Philipp@tulane.edu (MTP)")
+        .setAffiliations(new ArrayList<String>() {{
           add("Divisions of Bacteriology & Parasitology, Tulane National Primate Research Center, Tulane University Health Sciences Center, Covington, Louisiana, United States of America");
-        }},
-        new ArrayList<String>()));
+        }})
+        .setCustomFootnotes(null)
+        .build());
     }};
 
     //Test for articles with 'on behalf of' node defined
     ArticleInfo a9 = new ArticleInfo("info:doi/10.1371/journal.pone.0047391");
     List<AuthorView> authors9 = new ArrayList<AuthorView>() {{
-      add(new AuthorView("David", "Dalmau",
-        null, null, "on behalf of Busia OR Study Group", false, false, "* E-mail: ddalmau@mutuaterrassa.cat",
-        new ArrayList<String>() {{
+      add(AuthorView.builder()
+        .setGivenNames("David")
+        .setSurnames("Dalmau")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf("on behalf of Busia OR Study Group")
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding("<span class=\"email\">* E-mail:</span> ddalmau@mutuaterrassa.cat")
+        .setAffiliations(new ArrayList<String>() {{
           add("Hospital Universitari MútuaTerrassa, Medicine Department, Terrassa, Spain");
           add("Fundació Docència i Recerca MutuaTerrassa, Terrassa, Spain");
-        }},
-        new ArrayList<String>()));
+        }})
+        .setCustomFootnotes(null)
+        .build());
+    }};
+
+    //Test for articles with 'on behalf of' node defined + plus extra data
+    ArticleInfo a10 = new ArticleInfo("info:doi/10.1371/journal.pone.0050788");
+    List<AuthorView> authors10 = new ArrayList<AuthorView>() {{
+      add(AuthorView.builder()
+        .setGivenNames("François")
+        .setSurnames("Goffinet")
+        .setSuffix(null)
+        .setCurrentAddress(null)
+        .setOnBehalfOf("for the EVAPRIMA group")
+        .setEqualContrib(false)
+        .setDeceased(false)
+        .setCorresponding(null)
+        .setAffiliations(new ArrayList<String>() {{
+          add("INSERM UMR S953, Epidemiological Research Unit on Perinatal Health and Women’s and Children’s Health, Pierre et Marie Curie University, Paris, France");
+          add("Department of Obstetrics and Gynaecology, Port-Royal Maternity, Cochin Saint-Vincent-de-Paul Hospital, Assistance Publique des Hopitaux de Paris, Université Paris Descartes, Sorbonne Paris Cité, Paris, France");
+          add("Premup Foundation, Paris, France");
+        }})
+        .setCustomFootnotes(new ArrayList<String>() {{
+          add("<p><span class=\"pilcro\">¶</span>Membership of the EVAPRIMA group is provided in the Acknowledgments.</p>");
+        }})
+        .build());
     }};
 
     return new Object[][] { { a1, authors1 }, { a2, authors2 }, { a3, authors3 },
       { a4, authors4 } , { a5, authors5 }, { a6, authors6 }, { a7, authors7 }, { a8, authors8 },
-      { a9, authors9 } };
+      { a9, authors9 }, { a10, authors10 } };
   }
 
   @DataProvider(name = "articleInfos")
@@ -284,7 +413,7 @@ public class FetchArticleServiceTest extends BaseTest {
     assertTrue(authors.size() > 0, "No authors found");
     assertTrue(testAuthors.size() > 0, "No test authors found");
 
-//    //For debugging:
+    //For debugging:
     for(AuthorView ac : testAuthors) {
       printAuthor(ac);
     }
