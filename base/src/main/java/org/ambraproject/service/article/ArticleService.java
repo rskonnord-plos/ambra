@@ -23,11 +23,15 @@ package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.views.CitedArticleView;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.CitedArticle;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -95,6 +99,17 @@ public interface ArticleService {
    * @throws java.text.ParseException if any of the dates could not be parsed
    */
   public List<String> getArticleDOIs(final ArticleServiceSearchParameters params) throws ParseException;
+
+  /**
+   * Return a list of search hits representing articles within the specified parameters
+   *
+   *
+   * @param startDate java.util.Calendar indicating beginning date
+   * @param endDate java.util.Calendar indicating end date
+   * @return a list of SearchHits
+   */
+  @Transactional(readOnly = true)
+  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate,final Date endDate);
 
   /**
    * Get all of the articles satisfying the given criteria.

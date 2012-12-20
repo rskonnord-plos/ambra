@@ -23,6 +23,7 @@ package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.views.CitedArticleView;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.UserProfileInfo;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
@@ -44,16 +45,21 @@ import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AssetView;
 import org.ambraproject.views.JournalView;
+
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -64,8 +70,11 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -202,6 +211,44 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     return articleIds;
+  }
+
+  /**
+   * Return a list of search hits representing articles within the specified parameters
+   *
+   * @param startDate java.util.Calendar indicating beginning date
+   * @param endDate java.util.Calendar indicating end date
+   * @return a list of SearchHits
+   */
+  @Transactional (readOnly = true)
+  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate,final Date endDate) {
+
+    return (List<SearchHit>) this.hibernateTemplate.execute(new HibernateCallback() {
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+
+        Criteria query = session.createCriteria(Article.class);
+
+        ProjectionList proList = Projections.projectionList();
+        proList.add(Projections.property("doi"));
+        proList.add(Projections.property("title"));
+
+        query.setProjection(proList);
+        query.add(Restrictions.between("date", startDate, endDate));
+
+        /*need to do some processing to create SearchHits*/
+        List qResults = query.list();
+        List<SearchHit> results = new ArrayList<SearchHit>();
+        for(Object resultObject : qResults){
+          Map row = (Map)resultObject;
+
+          //uri = ${doi}.substring(9)
+          results.add(new SearchHit(null, ((String)row.get("doi")).substring(9),(String)row.get("title"),null,null,null,null,null,null,null));
+        }
+
+        return results;
+      }
+    });
+
   }
 
   /**

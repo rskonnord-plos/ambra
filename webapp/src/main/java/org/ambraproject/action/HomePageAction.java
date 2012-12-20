@@ -20,6 +20,8 @@
 
 package org.ambraproject.action;
 
+import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.article.ArticleServiceSearchParameters;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.views.BrowseResult;
@@ -31,6 +33,7 @@ import org.springframework.beans.factory.annotation.Required;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,14 +53,13 @@ import java.util.TreeMap;
 public class HomePageAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(HomePageAction.class);
 
+  private ArticleService articleService;
   private BrowseService browseService;
   private SortedMap<String, Long> categoryInfos;
 
   private ArrayList<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
-
-
 
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
@@ -144,61 +146,46 @@ public class HomePageAction extends BaseActionSupport {
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
 
-      //  This is the most recent midnight.  No need to futz about with exact dates.
-      Calendar startDate = Calendar.getInstance();
-      startDate.set(Calendar.HOUR_OF_DAY, 0);
-      startDate.set(Calendar.MINUTE, 0);
-      startDate.set(Calendar.SECOND, 0);
-      startDate.set(Calendar.MILLISECOND, 0);
+      //end date is most recent midnight
+      //milliseconds in a day: 86400000
+      Date endDate = new Date();
+      endDate.setTime(endDate.getTime() - endDate.getTime() % 86400000L);
+      Date startDate = new Date();
+      startDate.setTime(endDate.getTime() - Long.valueOf(numDaysInPast) * 86400000L);
 
       //  First query.  Just get the articles from "numDaysInPast" ago.
-      Calendar endDate = (Calendar) startDate.clone();
-      startDate.add(Calendar.DATE, -(numDaysInPast) + 1);
+      recentArticles = (ArrayList<SearchHit>) articleService.getArticleURIsTitlesByDate(startDate, endDate);
 
-      BrowseParameters params = new BrowseParameters();
-      params.setStartDate(startDate);
-      params.setEndDate(endDate);
-      params.setArticleTypes(typeUriArticlesToShow);
-      params.setPageNum(0);
-      params.setPageSize(numArticlesToShow * 100);
-      params.setJournalKey(this.getCurrentJournal());
-
-      BrowseResult results = browseService.getArticlesByDate(params);
-
-      //Create a clone here so we're not modifying the object that is actually in the cache
-      recentArticles = (ArrayList<SearchHit>)results.getArticles().clone();
-
-      //  If not enough, then query for articles before "numDaysInPast" to make up the difference.
+      // If not enough, then query for articles before ${numDaysInPast} to make up the difference.
       if (recentArticles.size() < numArticlesToShow) {
-        endDate = (Calendar) startDate.clone();
-        endDate.add(Calendar.SECOND, -1); // So no overlap with the first query.
-        startDate.add(Calendar.DATE, -(numDaysInPast) - 1); // One extra day to play it safe.
+        int dayCount = 0;
 
-        params = new BrowseParameters();
-        params.setStartDate(startDate);
-        params.setEndDate(endDate);
-        params.setArticleTypes(typeUriArticlesToShow);
-        params.setPageNum(0);
-        params.setPageSize(numArticlesToShow - recentArticles.size());
-        params.setJournalKey(this.getCurrentJournal());
+        while (recentArticles.size() < numArticlesToShow && dayCount < 30) {
 
-        recentArticles.addAll(browseService.getArticlesByDate(params).getArticles());
-      }
+          endDate = (Date) startDate.clone();
+          endDate.setTime(endDate.getTime() - 1000L); //avoid overlap here
+          //3 days = 86400000L * 3
+          startDate.setTime(startDate.getTime() - 3 * 86400000L);
+          recentArticles.addAll(articleService.getArticleURIsTitlesByDate(startDate, endDate));
+          dayCount += 3;
 
-      // Now choose a random selection of numArticlesToShow articles from the article pool.
-      // Even if we do not have enough articles, this will still randomize their order.
-      if (recentArticles.size() > 0) {
-        Random randomNumberGenerator = new Random((new Date()).getTime());  // Seed: time = "now".
-        ArrayList<SearchHit> recentArticlesTemp = new ArrayList<SearchHit>();
-        while (recentArticlesTemp.size() < numArticlesToShow && recentArticles.size() > 0) {
-          // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
-          int randomNumber = randomNumberGenerator.nextInt(recentArticles.size());
-          recentArticlesTemp.add(recentArticles.get(randomNumber));
-          recentArticles.remove(randomNumber);
         }
-        recentArticles = recentArticlesTemp;
+
       }
-  }
+
+      //pare down the actual number of recent articles to match ${numberArticlesToShow}
+      int howManyIsTooMany = recentArticles.size() - numArticlesToShow;
+      Random randy = new Random((new Date()).getTime());  // Seed: time = "now".
+
+      while (howManyIsTooMany >= 0) {
+        // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
+        recentArticles.remove(randy.nextInt(recentArticles.size()));
+        howManyIsTooMany--;
+      }
+
+      //shuffle the recent articles
+      Collections.shuffle(recentArticles);
+    }
 
   /**
    * This execute method always returns SUCCESS
@@ -236,7 +223,7 @@ public class HomePageAction extends BaseActionSupport {
    * @return Returns category and number of articles for each category.
    * Categories are sorted by name.
    */
-  public SortedMap<String, Long> getCategoryInfos() {
+  public SortedMap<String,Long> getCategoryInfos() {
     return categoryInfos;
   }
 
@@ -279,6 +266,14 @@ public class HomePageAction extends BaseActionSupport {
     }
 
     return returnArray;
+  }
+
+  /**
+   * @param articleService the ArticleService to set
+   */
+  @Required
+  public void setArticleService(ArticleService articleService) {
+    this.articleService = articleService;
   }
 
   /**

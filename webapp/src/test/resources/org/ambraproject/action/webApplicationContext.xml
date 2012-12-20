@@ -53,6 +53,7 @@
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="browseService" ref="browseService"/>
+    <property name="articleService" ref="articleService"/>
   </bean>
 
   <bean id="fetchArticleAction" class="org.ambraproject.action.article.FetchArticleAction">
