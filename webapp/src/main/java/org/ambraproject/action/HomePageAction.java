@@ -21,30 +21,27 @@
 package org.ambraproject.action;
 
 import org.ambraproject.service.article.ArticleService;
-import org.ambraproject.service.article.ArticleServiceSearchParameters;
-import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
-import org.ambraproject.views.BrowseResult;
+import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.views.SearchHit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Required;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 
 /**
  * @author stevec
@@ -54,64 +51,13 @@ public class HomePageAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(HomePageAction.class);
 
   private ArticleService articleService;
+  private JournalService journalService;
   private BrowseService browseService;
   private SortedMap<String, Long> categoryInfos;
 
   private ArrayList<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
-
-  /**
-   * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
-   * on the home page.  If there is no list of acceptable Article Type URIs,
-   * then an empty List is returned.
-   * This method should never return null.
-   * <p/>
-   * As an example, this XML is used to create a List of two Strings for the PLoS One Journal:
-   * <pre>
-   *   &lt;PLoSONE&gt;
-   *     &lt;recentArticles&gt;
-   *       &lt;numDaysInPast&gt;7&lt;/numDaysInPast&gt;
-   *       &lt;numArticlesToShow&gt;5&lt;/numArticlesToShow&gt;
-   *       &lt;typeUriArticlesToShow&gt;
-   *         &lt;articleTypeUri&gt;http://rdf.plos.org/RDF/articleType/Research%20Article&lt;/articleTypeUri&gt;
-   *         &lt;articleTypeUri&gt;http://rdf.plos.org/RDF/articleType/History/Profile&lt;/articleTypeUri&gt;
-   *       &lt;/typeUriArticlesToShow&gt;
-   *     &lt;/recentArticles&gt;
-   *   &lt;/PLoSONE&gt;
-   * </pre>
-   * The logic in this method was adapted from the ArticleType.configureArticleTypes(Configuration)
-   * method.
-   *
-   * @param basePath The location (including Journal Name) of the properties which will be used to
-   *   populate the returned Set.  An example is <i>ambra.virtualJournals.PLoSONE.recentArticles</i>
-   * @return The URIs for the Article Types which will be displayed on the "Recent Articles" tab on
-   *   the home page
-   */
-  private List<URI> getArticleTypesToShow(String basePath) {
-    String baseString = basePath + ".typeUriArticlesToShow";
-    List<URI> typeUriArticlesToShow;
-
-    /*
-     * Iterate through the defined article types.  This is ugly since the index needs to be given
-     * in xpath format to access the element, so we calculate a base string like:
-     *   ambra.virtualJournals.PLoSONE.recentArticles.typeUriArticlesToShow.articleTypeUri(x)
-     * and check if that element is non-null.
-     */
-    typeUriArticlesToShow = new LinkedList<URI>();
-    int count = 0;
-    String articleTypeUri;
-    while (true) {
-      articleTypeUri = configuration.getString(baseString + ".articleTypeUri(" + count + ")");
-      if (articleTypeUri != null && articleTypeUri.trim().length() > 0) {
-        typeUriArticlesToShow.add(URI.create(articleTypeUri));
-      } else {
-        break;
-      }
-      count++;
-    }
-    return typeUriArticlesToShow;
-  }
 
     /**
      * Populate the <b>recentArticles</b> (global) variable with random recent articles of
@@ -139,9 +85,11 @@ public class HomePageAction extends BaseActionSupport {
      */
     private void initRecentArticles() {
       String journalKey = getCurrentJournal();
+      String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
       String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
 
-      List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
+      //we're not gonna be showing these...
+      String articleTypeToExclude = new String("http://rdf.plos.org/RDF/articleType/Issue%20Image");
 
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
@@ -154,7 +102,7 @@ public class HomePageAction extends BaseActionSupport {
       startDate.setTime(endDate.getTime() - Long.valueOf(numDaysInPast) * 86400000L);
 
       //  First query.  Just get the articles from "numDaysInPast" ago.
-      recentArticles = (ArrayList<SearchHit>) articleService.getArticleURIsTitlesByDate(startDate, endDate);
+      recentArticles = (ArrayList<SearchHit>) articleService.getArticleURIsTitlesByDate(startDate, endDate, journal_eIssn);
 
       // If not enough, then query for articles before ${numDaysInPast} to make up the difference.
       if (recentArticles.size() < numArticlesToShow) {
@@ -166,7 +114,7 @@ public class HomePageAction extends BaseActionSupport {
           endDate.setTime(endDate.getTime() - 1000L); //avoid overlap here
           //3 days = 86400000L * 3
           startDate.setTime(startDate.getTime() - 3 * 86400000L);
-          recentArticles.addAll(articleService.getArticleURIsTitlesByDate(startDate, endDate));
+          recentArticles.addAll(articleService.getArticleURIsTitlesByDate(startDate, endDate, journal_eIssn));
           dayCount += 3;
 
         }
@@ -177,7 +125,7 @@ public class HomePageAction extends BaseActionSupport {
       int howManyIsTooMany = recentArticles.size() - numArticlesToShow;
       Random randy = new Random((new Date()).getTime());  // Seed: time = "now".
 
-      while (howManyIsTooMany >= 0) {
+      while (howManyIsTooMany > 0) {
         // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
         recentArticles.remove(randy.nextInt(recentArticles.size()));
         howManyIsTooMany--;
@@ -237,43 +185,18 @@ public class HomePageAction extends BaseActionSupport {
   }
 
   /**
-   * Returns an array of numValues ints which are randomly selected between 0 (inclusive) and
-   * maxValue(exclusive). If maxValue is less than numValues, will return maxValue items. Guarantees
-   * uniqueness of values.
-   *
-   * @param numValues Length of the array
-   * @param maxValue Maximum value of each element of the array
-   * @return array of random ints
-   */
-  public int[] randomNumbers(int numValues, int maxValue) {
-    if (numValues > maxValue) {
-      numValues = maxValue;
-    }
-
-    Random rng = new Random(System.currentTimeMillis());
-    Set<Integer> intValues = new HashSet<Integer>();
-    while (intValues.size() < numValues) {
-      Integer oneNum = rng.nextInt(maxValue);
-      if (!intValues.contains(oneNum)) {
-        intValues.add(oneNum);
-      }
-    }
-
-    Iterator<Integer> iter = intValues.iterator();
-    int[] returnArray = new int[intValues.size()];
-    for (int i = 0; iter.hasNext(); i++) {
-      returnArray[i] = iter.next();
-    }
-
-    return returnArray;
-  }
-
-  /**
    * @param articleService the ArticleService to set
    */
   @Required
   public void setArticleService(ArticleService articleService) {
     this.articleService = articleService;
+  }
+
+  /*
+  * @param journalService the JournalService to use
+  */
+  public void setJournalService(JournalService journalService) {
+    this.journalService = journalService;
   }
 
   /**

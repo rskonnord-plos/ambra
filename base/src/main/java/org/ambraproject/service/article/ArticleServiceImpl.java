@@ -47,9 +47,7 @@ import org.ambraproject.views.AssetView;
 import org.ambraproject.views.JournalView;
 
 import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -70,7 +68,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -216,38 +213,36 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   /**
    * Return a list of search hits representing articles within the specified parameters
    *
+   *
    * @param startDate java.util.Calendar indicating beginning date
    * @param endDate java.util.Calendar indicating end date
-   * @return a list of SearchHits
+   * @param journal_eIssn
+   * @return a list of SearchHits wherein URI ~= DOI
    */
   @Transactional (readOnly = true)
-  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate,final Date endDate) {
+  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate, final Date endDate, String journal_eIssn) {
+    List<Object[]> articleResults = hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(Article.class)
+            .add(Restrictions.eq("eIssn", journal_eIssn))
+            .add(Restrictions.ge("date", startDate))
+            .add(Restrictions.le("date", endDate))
+            .setProjection(Projections.projectionList()
+                .add(Projections.property("doi"))
+                .add(Projections.property("title"))));
 
-    return (List<SearchHit>) this.hibernateTemplate.execute(new HibernateCallback() {
-      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+    List<SearchHit> searchResults = new ArrayList<SearchHit>();
 
-        Criteria query = session.createCriteria(Article.class);
+    for (int i = 0; i < articleResults.size(); i++) {
+      Object[] res = articleResults.get(i);
+      String doi = (String) res[0];
+      String title = (String) res[1];
 
-        ProjectionList proList = Projections.projectionList();
-        proList.add(Projections.property("doi"));
-        proList.add(Projections.property("title"));
+      searchResults.add(new SearchHit(null, doi, title, null, null, null, null, null, null, null));
 
-        query.setProjection(proList);
-        query.add(Restrictions.between("date", startDate, endDate));
+    }
 
-        /*need to do some processing to create SearchHits*/
-        List qResults = query.list();
-        List<SearchHit> results = new ArrayList<SearchHit>();
-        for(Object resultObject : qResults){
-          Map row = (Map)resultObject;
+    return searchResults;
 
-          //uri = ${doi}.substring(9)
-          results.add(new SearchHit(null, ((String)row.get("doi")).substring(9),(String)row.get("title"),null,null,null,null,null,null,null));
-        }
-
-        return results;
-      }
-    });
 
   }
 

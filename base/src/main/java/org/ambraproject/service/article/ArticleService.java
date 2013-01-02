@@ -104,12 +104,14 @@ public interface ArticleService {
    * Return a list of search hits representing articles within the specified parameters
    *
    *
+   *
    * @param startDate java.util.Calendar indicating beginning date
    * @param endDate java.util.Calendar indicating end date
+   * @param journal_eIssn
    * @return a list of SearchHits
    */
   @Transactional(readOnly = true)
-  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate,final Date endDate);
+  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate, final Date endDate, String journal_eIssn);
 
   /**
    * Get all of the articles satisfying the given criteria.

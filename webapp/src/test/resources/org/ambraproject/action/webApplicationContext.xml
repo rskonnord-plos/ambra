@@ -54,6 +54,7 @@
     <property name="permissionsService" ref="permissionsService"/>
     <property name="browseService" ref="browseService"/>
     <property name="articleService" ref="articleService"/>
+    <property name="journalService" ref="journalService"/>
   </bean>
 
   <bean id="fetchArticleAction" class="org.ambraproject.action.article.FetchArticleAction">
