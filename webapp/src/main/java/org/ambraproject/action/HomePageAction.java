@@ -42,6 +42,11 @@ import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/**TODO axe this**/
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
+
 
 /**
  * @author stevec
@@ -131,7 +136,6 @@ public class HomePageAction extends BaseActionSupport {
         howManyIsTooMany--;
       }
 
-      //shuffle the recent articles
       Collections.shuffle(recentArticles);
     }
 
@@ -215,4 +219,28 @@ public class HomePageAction extends BaseActionSupport {
     return numArticlesToShow;
   }
 
+
+  /**will axe this**/
+  public int[] randomNumbers(int numValues, int maxValue) {
+    if (numValues > maxValue) {
+      numValues = maxValue;
+    }
+
+    Random rng = new Random(System.currentTimeMillis());
+    Set<Integer> intValues = new HashSet<Integer>();
+    while (intValues.size() < numValues) {
+      Integer oneNum = rng.nextInt(maxValue);
+      if (!intValues.contains(oneNum)) {
+        intValues.add(oneNum);
+      }
+    }
+
+    Iterator<Integer> iter = intValues.iterator();
+    int[] returnArray = new int[intValues.size()];
+    for (int i = 0; iter.hasNext(); i++) {
+      returnArray[i] = iter.next();
+    }
+
+    return returnArray;
+  }
 }
