@@ -51,7 +51,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -71,7 +70,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -212,6 +210,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
 
   /**
    * Return a list of search hits representing articles within the specified parameters
+   *
+   *
    *
    *
    * @param startDate java.util.Calendar indicating beginning date

@@ -30,22 +30,16 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Required;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-/**TODO axe this**/
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
+
 
 
 /**
@@ -93,9 +87,6 @@ public class HomePageAction extends BaseActionSupport {
       String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
       String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
 
-      //we're not gonna be showing these...
-      String articleTypeToExclude = new String("http://rdf.plos.org/RDF/articleType/Issue%20Image");
-
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
 
@@ -109,6 +100,14 @@ public class HomePageAction extends BaseActionSupport {
       //  First query.  Just get the articles from "numDaysInPast" ago.
       recentArticles = (ArrayList<SearchHit>) articleService.getArticleURIsTitlesByDate(startDate, endDate, journal_eIssn);
 
+
+      //did not use for(SearchHit hit : recentArticles){} notation because of ConcurrentModification error
+      for(int x = 0; x < recentArticles.size(); x++){
+        if(recentArticles.get(x).getUri().indexOf("10.1371/image") > -1 ){
+            recentArticles.remove(x);
+        }
+      }
+
       // If not enough, then query for articles before ${numDaysInPast} to make up the difference.
       if (recentArticles.size() < numArticlesToShow) {
         int dayCount = 0;
@@ -120,6 +119,13 @@ public class HomePageAction extends BaseActionSupport {
           //3 days = 86400000L * 3
           startDate.setTime(startDate.getTime() - 3 * 86400000L);
           recentArticles.addAll(articleService.getArticleURIsTitlesByDate(startDate, endDate, journal_eIssn));
+          //discard image articles
+          for (SearchHit hit : recentArticles) {
+            //image type doi: info:doi/10.1371/image.[journal].[other-stuff]
+            if (hit.getUri().indexOf("10.1371/image") > -1) {
+              recentArticles.remove(hit);
+            }
+          }
           dayCount += 3;
 
         }
@@ -128,15 +134,12 @@ public class HomePageAction extends BaseActionSupport {
 
       //pare down the actual number of recent articles to match ${numberArticlesToShow}
       int howManyIsTooMany = recentArticles.size() - numArticlesToShow;
-      Random randy = new Random((new Date()).getTime());  // Seed: time = "now".
-
+      Collections.shuffle(recentArticles);
       while (howManyIsTooMany > 0) {
         // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
-        recentArticles.remove(randy.nextInt(recentArticles.size()));
+        recentArticles.remove(0);
         howManyIsTooMany--;
       }
-
-      Collections.shuffle(recentArticles);
     }
 
   /**
@@ -219,28 +222,4 @@ public class HomePageAction extends BaseActionSupport {
     return numArticlesToShow;
   }
 
-
-  /**will axe this**/
-  public int[] randomNumbers(int numValues, int maxValue) {
-    if (numValues > maxValue) {
-      numValues = maxValue;
-    }
-
-    Random rng = new Random(System.currentTimeMillis());
-    Set<Integer> intValues = new HashSet<Integer>();
-    while (intValues.size() < numValues) {
-      Integer oneNum = rng.nextInt(maxValue);
-      if (!intValues.contains(oneNum)) {
-        intValues.add(oneNum);
-      }
-    }
-
-    Iterator<Integer> iter = intValues.iterator();
-    int[] returnArray = new int[intValues.size()];
-    for (int i = 0; iter.hasNext(); i++) {
-      returnArray[i] = iter.next();
-    }
-
-    return returnArray;
-  }
 }

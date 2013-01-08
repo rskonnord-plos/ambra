@@ -86,7 +86,7 @@ public class HomepageActionTest extends AmbraWebTest {
       //randomize date - we know a priori recent articles should be within last 7 days; 86400000 milliseconds in a day
       Date d = new Date();
       d.setTime(d.getTime() - d.getTime() % 86400000L);    /* set to midnight */
-      d.setTime(d.getTime() - (long)r.nextInt(604800000)); /*some random time within the last 7 days*/
+      d.setTime(d.getTime() - (long) r.nextInt(604800000)); /*some random time within the last 7 days*/
       a.setDate(d);
       a.seteIssn("8675-309");
       dummyDataStore.store(a);
@@ -105,10 +105,34 @@ public class HomepageActionTest extends AmbraWebTest {
       });
     }
 
-    //article beyond the date that should show up
-    Article a = new Article("not-recent-article-doi-THAT-SHOULD-SHOW-doi");
-    a.setTitle("not-recent-article-doi-THAT-SHOULD-SHOW-title");
+    //article within date w/ image-type doi that should be discarded on init - in HomePageAction.java:initRecentArticles()
+    //"10.1371/image" is the string being searched on for discarding results
+    String doi = new String("recent-article-that-SHOULD-NOT-SHOW-10.1371/image");
+    String title = new String("recent-article-that-SHOULD-NOT-SHOW title");
+    Article a = new Article(doi);
+    a.setTitle(title);
     Date d = new Date();
+    d.setTime(d.getTime() - d.getTime() % 86400000L);    /* set to midnight */
+    d.setTime(d.getTime() - (long)r.nextInt(604800000)); /*some random time within the last 7 days*/
+    a.setDate(d);
+    a.seteIssn("8675-309");
+    dummyDataStore.store(a);
+
+    solr.addDocument(new String[][]{
+        {"id", doi},
+        {"title_display", title},
+        {"publication_date", dateFormatter.format(a.getDate())},
+        {"subject_level_1", "Biology"},
+        {"article_type_facet", "article"},
+        {"doc_type", "full"},
+        {"cross_published_journal_key", journal.getJournalKey()}
+    });
+
+
+    //article beyond the date that should show up
+    a = new Article("not-recent-article-doi-THAT-SHOULD-SHOW-doi");
+    a.setTitle("not-recent-article-doi-THAT-SHOULD-SHOW-title");
+    d = new Date();
     d.setTime(d.getTime() - 691200000L);    /* set to time outside range */
     a.setDate(d);
     a.seteIssn("8675-309");
@@ -126,7 +150,7 @@ public class HomepageActionTest extends AmbraWebTest {
     });
 
     //article beyond days to show that should NOT show up
-    a = new Article("not-recent-article-doi-that-should-NOT-show-doi");
+    a = new Article("not-recent-article-doi-that-SHOULD-NOT-show-doi");
     a.setTitle("not-recent-article-doi-that-should-NOT-show-title");
     d = new Date();
     d.setTime(d.getTime() - 950400000L);    /* set to time outside range + search interval used to go back in time*/
@@ -135,7 +159,7 @@ public class HomepageActionTest extends AmbraWebTest {
     dummyDataStore.store(a);
 
     SortedMap<String, Long> subjectCounts = new TreeMap<String, Long>();
-    subjectCounts.put("Biology", 4l);
+    subjectCounts.put("Biology", 5l);
     subjectCounts.put("Chemistry", 1l);
 
     return new Object[][]{

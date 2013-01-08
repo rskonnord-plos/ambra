@@ -105,6 +105,8 @@ public interface ArticleService {
    *
    *
    *
+   *
+   *
    * @param startDate java.util.Calendar indicating beginning date
    * @param endDate java.util.Calendar indicating end date
    * @param journal_eIssn
