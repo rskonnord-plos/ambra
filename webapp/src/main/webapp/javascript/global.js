@@ -832,6 +832,9 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         return data.replace(/(\/\*|\*\/)/g, '');
       },
       dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
       success:function (data) {
         page_url = data.URL;
         $.each(data.secondaryObjects, function () {
