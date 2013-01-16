@@ -829,7 +829,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       url:'/article/lightbox.action?uri=' + doi,
       // url: 'article/' + doi,
       dataFilter:function (data, type) {
-        return data.replace(/(\/\*|\*\/)/g, '');
+        return data.replace(/(^\/\*|\*\/$)/g, '');
       },
       dataType:'json',
       error: function (jqXHR, textStatus, errorThrown) {
