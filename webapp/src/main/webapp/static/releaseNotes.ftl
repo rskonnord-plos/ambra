@@ -35,6 +35,16 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.5.3</h2>
+  <p>Released January 22nd, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.3</h3>
+  <ul>
+    <li>Reworked edboard search</li>
+    <li>Upgrade to SOLR4</li>
+    <li>Figshare integration</li>
+    <li>Many bug fixes</li>
+  </ul>
+
   <h2>Ambra 2.5.2</h2>
   <p>Released December 20th, 2012</p>
   <h3>Features Implemented in Ambra 2.5.2</h3>

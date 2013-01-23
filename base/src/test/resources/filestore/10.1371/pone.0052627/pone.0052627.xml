@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="3.0" xml:lang="en">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">PLoS ONE</journal-id>
+      <journal-id journal-id-type="publisher-id">plos</journal-id>
+      <journal-id journal-id-type="pmc">plosone</journal-id>
+      <journal-title-group>
+        <journal-title>PLoS ONE</journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">1932-6203</issn>
+      <publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, USA</publisher-loc>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="publisher-id">PONE-D-12-17589</article-id>
+      <article-id pub-id-type="doi">10.1371/journal.pone.0052627</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Biology</subject>
+          <subj-group>
+            <subject>Biochemistry</subject>
+            <subj-group>
+              <subject>Cytochemistry</subject>
+              <subj-group>
+                <subject>Cell membrane</subject>
+                <subj-group>
+                  <subject>Membrane characteristics</subject>
+                  <subject>Membrane structures</subject>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Molecular cell biology</subject>
+            <subj-group>
+              <subject>Cell adhesion</subject>
+              <subj-group>
+                <subject>Integrins</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Cellular structures</subject>
+              <subj-group>
+                <subject>Cytoplasm</subject>
+                <subject>Cytoskeleton</subject>
+                <subject>Subcellular organelles</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Extracellular matrix</subject>
+              <subj-group>
+                <subject>Integrins</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Membranes and sorting</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline">
+          <subject>Cell Biology</subject>
+          <subject>Biochemistry</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>Exo70 Subunit of the Exocyst Complex Is Involved in Adhesion-Dependent Trafficking of Caveolin-1</article-title>
+        <alt-title alt-title-type="running-head">Characterization of Trafficking of Caveolin-1</alt-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Hertzog</surname>
+            <given-names>Maud</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="corresp" rid="cor1">
+            <sup>*</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn1">
+            <sup>¤a</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn2">
+            <sup>¤b</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Monteiro</surname>
+            <given-names>Pedro</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn1">
+            <sup>¤a</sup>
+          </xref>
+        </contrib>
+      </contrib-group>
+      <aff id="aff1">
+        <label>1</label>
+        <addr-line>Membrane and Cytoskeleton Dynamics, Institut Curie, Research Center, CNRS- UMR144, Paris, France</addr-line>
+      </aff>
+      <contrib-group>
+        <contrib contrib-type="editor" xlink:type="simple">
+          <name name-style="western">
+            <surname>Rappoport</surname>
+            <given-names>Joshua Z.</given-names>
+          </name>
+          <role>Editor</role>
+          <xref ref-type="aff" rid="edit1"/>
+        </contrib>
+      </contrib-group>
+      <aff id="edit1">
+        <addr-line>University of Birmingham, United Kingdom</addr-line>
+      </aff>
+      <author-notes>
+        <corresp id="cor1">* E-mail: <email xlink:type="simple">maud.hertzog@ibcg.biotoul.fr</email> (MH); <email xlink:type="simple">philippe.chavrier@curie.fr</email> (PC)</corresp>
+        <fn fn-type="conflict">
+          <p>The authors have declared that no competing interests exist.</p>
+        </fn>
+        <fn fn-type="con">
+          <p>Conceived and designed the experiments: MH PC. Performed the experiments: MH GLD. Analyzed the data: MH PC. Contributed reagents/materials/analysis tools: GLD PM. Wrote the paper: MH PC.</p>
+        </fn>
+        <fn id="fn1" fn-type="current-aff">
+          <label>¤a</label>
+          <p>Current address: Laboratoire de Microbiologie et Génétique Moléculaire, LMGM-CNRS UMR 5100, Université Paul Sabatier, Toulouse, France</p>
+        </fn>
+        <fn id="fn2" fn-type="current-aff">
+          <label>¤b</label>
+          <p>Current address: CNRS, UMR 6061, Institut Génétique et Développement de Rennes, Université Rennes 1, UEB, IFR 140, Rennes, France</p>
+        </fn>
+      </author-notes>
+      <pub-date pub-type="collection">
+        <year>2012</year>
+      </pub-date>
+      <pub-date pub-type="epub">
+        <day>27</day>
+        <month>12</month>
+        <year>2012</year>
+      </pub-date>
+      <volume>7</volume>
+      <issue>12</issue>
+      <elocation-id>e52627</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>15</day>
+          <month>6</month>
+          <year>2012</year>
+        </date>
+        <date date-type="accepted">
+          <day>19</day>
+          <month>11</month>
+          <year>2012</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-year>2012</copyright-year>
+        <copyright-holder>Hertzog et al</copyright-holder>
+        <license xlink:type="simple">
+          <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p>
+        </license>
+      </permissions>
+      <abstract>
+        <p>Caveolae are specialized domains of the plasma membrane, which play key roles in signaling, endocytosis and mechanosensing. Using total internal reflection fluorescent microscopy (TIRF-M), we observe that the exocyst subunit Exo70 forms punctuate structures at the plasma membrane and partially localizes with caveolin-1, the main component of caveolae. Upon cell detachment, we found that Exo70 accumulates with caveolin-1-positive vesicular structures. Upon cell re-adhesion, caveolin-1 traffics back to the plasma membrane in a multistep process involving microtubules and actin cytoskeleton. In addition, silencing of Exo70 redirects caveolin-1 to focal adhesions identified by markers such as α5 integrin or vinculin. Based on these findings, we conclude that Exo70 is involved in caveolin-1 recycling to the plasma membrane during re-adhesion of the cells to the substratum.</p>
+      </abstract>
+      <funding-group>
+        <funding-statement>Support was provided to PC by Association pour la Recherche sur le Cancer.(grant # SL220100601356) and Agence Nationale pour la Recherche (grant # ANR-08-BLAN-0111). Core funding for this work was provided by Institut Curie and Centre National de la Recherche Scientifique (National Center for Scientific Research, France). The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.</funding-statement>
+      </funding-group>
+      <counts>
+        <page-count count="9"/>
+      </counts>
+    </article-meta>
+  </front>
+  <body>
+    <sec id="s1">
+      <title>Introduction</title>
+      <p>Caveolae are bulb-shaped pits present in several mammalian cell types including adipocytes and muscle cells <xref ref-type="bibr" rid="pone.0052627-Parton1">[1]</xref>, <xref ref-type="bibr" rid="pone.0052627-Parton2">[2]</xref>. These structures play key roles in compartmentalization and organization of signaling pathways for cell growth and differentiation. In addition, caveolae were recently implicated in membrane-mediated mechanical responses <xref ref-type="bibr" rid="pone.0052627-Sinha1">[3]</xref>, <xref ref-type="bibr" rid="pone.0052627-Goetz1">[4]</xref>. Caveolin-1 (Cav1) is the main component of caveolae. Cav1 adopts a hairpin-like shape within the membrane bilayer with both the N and C-terminus facing the cytoplasm <xref ref-type="bibr" rid="pone.0052627-Parton1">[1]</xref>. Recent studies showed that the Cav1 partner protein, Polymerase I and Transcript Release Factor (PTRF)/cavin-1 selectively associates with mature caveolae at the plasma membrane and is involved in caveolae formation and function <xref ref-type="bibr" rid="pone.0052627-Parton1">[1]</xref>, <xref ref-type="bibr" rid="pone.0052627-McMahon1">[5]</xref>. Total internal reflection fluorescence microscopy (TIRF-M) allowed characterizing the dynamics of individual caveolae and revealed that caveolae can be stored in stationary multi-caveolar structures at the plasma membrane, or undergo kiss and run processes without disassembling the caveolar coat <xref ref-type="bibr" rid="pone.0052627-Pelkmans1">[6]</xref>. Moreover, caveolae can undergo long-range cytoplasmic transport during diverse regulated processes such as mitosis and during loss of integrin-based adhesion to the extracellular matrix (ECM) <xref ref-type="bibr" rid="pone.0052627-Parton1">[1]</xref>, <xref ref-type="bibr" rid="pone.0052627-Boucrot1">[7]</xref>, <xref ref-type="bibr" rid="pone.0052627-delPozo1">[8]</xref>. All together, these data suggest some interplay between caveolar trafficking and cell adhesion <xref ref-type="bibr" rid="pone.0052627-Echarri1">[9]</xref>.</p>
+      <p>Initially identified in <italic>Saccharomyces cerevisiae</italic>, the exocyst complex comprises eight subunits named Sec3, Sec5, Sec6, Sec8, Sec10, Sec15, Exo70 and Exo84 <xref ref-type="bibr" rid="pone.0052627-He1">[10]</xref>, <xref ref-type="bibr" rid="pone.0052627-Munson1">[11]</xref>. This complex controls the docking and insertion of secretory and endocytic recycling vesicles to growing regions of the plasma membrane and impinges on diverse cellular processes requiring polarization of membrane trafficking such as cell motility and neuronal development <xref ref-type="bibr" rid="pone.0052627-Hertzog1">[12]</xref>, <xref ref-type="bibr" rid="pone.0052627-Muriel1">[13]</xref>. In yeast, Exo70 interacts with phospholipids at the plasma membrane and is crucial for tethering of secretory vesicles for exocytosis <xref ref-type="bibr" rid="pone.0052627-He2">[14]</xref>. Phospholipid binding and plasma membrane localization are conserved in mammalian cells suggesting a similar role of Exo70 in targeting of the exocyst complex to the plasma membrane and regulation of vesicle docking <xref ref-type="bibr" rid="pone.0052627-He2">[14]</xref>–<xref ref-type="bibr" rid="pone.0052627-Liu1">[16]</xref>. Previous studies showed that detachment of cells from integrin-mediated adhesion triggers the caveolin-dependent internalization of lipid rafts <xref ref-type="bibr" rid="pone.0052627-Echarri1">[9]</xref>. Conversely, re-adhesion of cells to the ECM induces the re-insertion of lipid rafts to the plasma membrane in a process that involves the Ras-related GTP binding proteins RalA and ARF6 and their downstream effectors, exocyst complex <xref ref-type="bibr" rid="pone.0052627-Spiczka1">[17]</xref>, <xref ref-type="bibr" rid="pone.0052627-Balasubramanian1">[18]</xref>, <xref ref-type="bibr" rid="pone.0052627-Balasubramanian2">[19]</xref>. However, the specific contribution of Exo70 to Cav1 trafficking remains largely unknown.</p>
+      <p>Here, using TIRF-M we could show that Exo70 accumulates in punctuate plasma membrane domains where it co-localized with Cav1. Upon cell detachment, Exo70 localized to Cav1-positive intracellular compartments. When cells were allowed to re-adhere, silencing of Exo70 led to the accumulation of Cav1-positive structures at the cell periphery close to focal adhesions (FAs), suggesting that loss of Exo70 function results in Cav1 mistargeting during cell spreading.</p>
+    </sec>
+    <sec id="s2">
+      <title>Results</title>
+      <sec id="s2a">
+        <title>Exo70 co-localizes with Cav1 at the plasma membrane</title>
+        <p>TIRF-M revealed a punctuate distribution of Exo70-mCherry on the adherent surface of Hela cells and co-localization with a subset of Cav1-GFP-positive structures (representing 20 to 30% of total Cav1-positive structures) and probably corresponding to caveolae (<xref ref-type="fig" rid="pone-0052627-g001">Fig. 1A</xref> and <xref ref-type="supplementary-material" rid="pone.0052627.s001">S1A</xref>). Live-cell confocal spinning disk microscopy confirmed this punctuate pattern and plasma membrane localization of Exo70-GFP whereas Cav1-mRFP associated predominantly with intracellular vesicular structures (<xref ref-type="fig" rid="pone-0052627-g001">Fig. 1B</xref>). It has been previously reported that Exo70 binds directly to phospholipids and that binding to PtdIns(4,5)P2 mediates interaction of Exo70 with the plasma membrane <xref ref-type="bibr" rid="pone.0052627-He2">[14]</xref>, <xref ref-type="bibr" rid="pone.0052627-Liu1">[16]</xref>. When we used the PtdIns(4,5)P2-binding protein tubby <xref ref-type="bibr" rid="pone.0052627-Santagata1">[20]</xref>, tubby-GFP was present in plasma membrane punctuate structures observed by TIRF-M, which partially localized with Exo70-mCherry (<xref ref-type="supplementary-material" rid="pone.0052627.s001">Fig. S1B</xref>) indicating that Exo70 localization sites at the plasma membrane are enriched in PtdIns(4,5)P2.</p>
+        <fig id="pone-0052627-g001" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0052627.g001</object-id>
+          <label>Figure 1</label>
+          <caption>
+            <title>Partial co-localization and co-trafficking of Exo70 and Cav1 at the plasma membrane.</title>
+            <p>(<bold>A</bold>) Hela cells expressing Cav1-GFP and Exo70-mCherry were visualized by TIRFM (upper panel); Scale bar, 5 µm. Higher magnification of the boxed region is shown (bottom panel). Scale bar, 1 µm. (<bold>B</bold>) Hela cells expressing Cav1-mRFP and Exo70-GFP were visualized using time-lapse confocal spinning disk microscopy. Scale bar, 5 µm.</p>
+          </caption>
+          <graphic mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0052627.g001" position="float" xlink:type="simple"/>
+        </fig>
+        <p>Caveolae internalization can be triggered by several stimuli, including loss of integrin- mediated cell adhesion <xref ref-type="bibr" rid="pone.0052627-delPozo2">[21]</xref>. Upon cell detachment, Cav1-positive PM domains initiate an inward traffic to the perinuclear area. Hela cells expressing Cav1-mRFP and Exo70-GFP were detached from the substratum by trypsinization, maintained for 1 hr in suspension, replated onto fibronectin (FN)-coated substrate and visualized by spinning disk microscopy. Cav1-mRFP was observed in dynamic vesicles that shuttled between the perinuclear region and the cell periphery (<xref ref-type="fig" rid="pone-0052627-g002">Fig. 2A</xref> and movie S1). Analysis of the distribution and dynamics of Exo70-GFP during cell replating revealed that Exo70 was strongly associated with Cav1-positive vesicles throughout the cell (compare <xref ref-type="fig" rid="pone-0052627-g001">Fig. 1B</xref> and <xref ref-type="fig" rid="pone-0052627-g002">2A</xref>). Thus, these results reveal a dynamic association of Exo70 with Cav1 transport intermediates following cell detachment and re-adhesion. In addition to Cav1, cavin-family proteins are required for caveolae formation and PTRF/cavin-1 associates with mature caveolae <xref ref-type="bibr" rid="pone.0052627-Hill1">[22]</xref>. Interestingly, cavin-1 partially redistributed with Cav1 in intracellular vesicles in cells replated on FN-coated substrates after detachment, suggesting that mature caveolae are internalized and trafficked upon cell detachment (<xref ref-type="fig" rid="pone-0052627-g002">Fig. 2B</xref>). In addition, we acquired time-lapse sequences of HeLa cells expressing either Cav1-GFP and Exo70-mCherry or Cav1-mRFP and Exo70-GFP by TIRF-M (data not shown). These movies were acquired starting 1, 2, or 3 hours after cell detachment and replating. In all cases, we observed that 100% of Exo70-positive structures were Cav1-positive, while only a subset (20–30%) of Cav1-positive structures co-localized with Exo70 (data not shown).</p>
+        <fig id="pone-0052627-g002" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0052627.g002</object-id>
+          <label>Figure 2</label>
+          <caption>
+            <title>Exo70 redistributes in Cav1-positive compartments upon cell detachment.</title>
+            <p>(<bold>A</bold>) Hela cells expressing Cav1-mRFP and Exo70-GFP were kept in suspension for 1 h and replated on fibronectin for 3 h, and then visualized by confocal dual-colour spinning-disk microscopy (see corresponding movie S1). Arrow points to a dynamic Cav1- and Exo70-positive vesicle. Bottom panel shows selected frames from the time-lapse series corresponding to the boxed region in the upper panel. Time is given in second. (<bold>B</bold>) Hela cells expressing Cav1-GFP and cavin-1-mRFP were treated as in panel A. Inset shows higher magnification of region indicated by an arrow. Scale bars, 5 µm.</p>
+          </caption>
+          <graphic mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0052627.g002" position="float" xlink:type="simple"/>
+        </fig>
+      </sec>
+      <sec id="s2b">
+        <title>Actin and microtubule cytoskeletons are involved in distinct steps of Cav1 trafficking</title>
+        <p>To identify mechanisms underlying cell detachment-induced Cav1 redistribution, we investigated the involvement of cytoskeleton components using nocodazole and cytochalasin-B (cytoB), which destabilize microtubule and actin networks, respectively. Treatment with nocodazole induced a blockade of Cav1 transport, which accumulated in a network of static tubulo-vesicular extensions extending towards the cell periphery (<xref ref-type="fig" rid="pone-0052627-g003">Fig. 3A</xref>, movie S2), indicating that recycling of Cav1 to the surface is a MT-dependent process. Inhibition of actin assembly by treatment with cytoB induced the redistribution of Cav1 to small, scattered vesicles in the central region of the cells and in some peripheral accumulations at the cell edges (<xref ref-type="fig" rid="pone-0052627-g003">Fig. 3B</xref>, movie S3). Remarkably, a network of radially extending tubular membranes connected the perinuclear vesicles and the peripheral Cav1 pools. Collectively, and in agreement with previous reports <xref ref-type="bibr" rid="pone.0052627-Wickstrom1">[23]</xref>, <xref ref-type="bibr" rid="pone.0052627-Wickstrom2">[24]</xref>, these observations suggest that both MTs and actin cytoskeleton are involved in distinct steps of Cav1 trafficking: (i) a MT-dependent long range transport from perinuclear endosomal compartments that we identified as late endosomes (LEs) by co-localization with GFP-rab7 and GFP-VAMP7 (see <xref ref-type="supplementary-material" rid="pone.0052627.s002">Figure S2</xref>) (ii) and an actin-dependent step involved in Cav1 trafficking at the cell periphery.</p>
+        <fig id="pone-0052627-g003" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0052627.g003</object-id>
+          <label>Figure 3</label>
+          <caption>
+            <title>Actin and microtubule cytoskeletons act at distinct steps of Cav1 trafficking.</title>
+            <p>(<bold>A, B</bold>) Hela cells expressing Cav1-mRFP maintained in suspension for 1 h, were replated on fibronectin for 3 h in the presence of 10 µM nocodazole (panel A) or 10 µg/ml cytochalasin-B (panel B) for 30 min. Cells were then analyzed by time-lapse confocal spinning disk microscopy. The right panels represent selected frames from the time-lapse series (time is given in second). Arrows point to Cav1-positive intracellular vesicles. See corresponding movie S2 (panel A) and movie 3 (panel B). Scale bars, 5 µm.</p>
+          </caption>
+          <graphic mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0052627.g003" position="float" xlink:type="simple"/>
+        </fig>
+      </sec>
+      <sec id="s2c">
+        <title>Silencing of Exo70 leads to an accumulation of Cav1 in focal adhesions</title>
+        <p>Cav1 is internalized together with integrins upon cell detachment and β1 integrin regulates Cav1 trafficking and recycling to the plasma membrane for caveolae reassembly upon cell adhesion <xref ref-type="bibr" rid="pone.0052627-Wickstrom3">[25]</xref>, <xref ref-type="bibr" rid="pone.0052627-Wickstrom4">[26]</xref>. Consistent with these findings, we observed a partial co-localization of α5-integrin-GFP with Cav1-mRFP in cytoplasmic vesicles upon cell detachment and re-adhesion (<xref ref-type="fig" rid="pone-0052627-g004">Fig. 4A</xref>). In addition, α5-integrin-GFP associated with reforming focal adhesions at the cell edge, which were negative for Cav1 (<xref ref-type="fig" rid="pone-0052627-g004">Fig. 4A and A′</xref>). Noticeably, in 20% of the cells, Cav1-mRFP and α5-integrin-GFP associated with membrane tubules extending radially from the perinuclear compartments, and frequently targeting newly reformed focal adhesions (movies S3 and S4). All together, these findings indicate that Cav1 and integrins traffic together in tubulo-vesicular transport carriers to the cell periphery.</p>
+        <fig id="pone-0052627-g004" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0052627.g004</object-id>
+          <label>Figure 4</label>
+          <caption>
+            <title>Exo70 is required for Cav1 transport to the plasma membrane.</title>
+            <p>(<bold>A, B</bold>) Hela cells expressing Cav1-mRFP and α5-integrin-GFP either mock-treated (A) or treated with a specific siRNA to silencing Exo70 (B) were maintained in suspension for 1 h and replated on fibronectin for 3 h, and visualized using time-lapse spinning disk microscopy. Scale bars, 5 µm. (<bold>A′, B′</bold>) Intensity profile of Cav1 (red) and α5-integrin (green) along the white lines shown in panel A and B. (<bold>C</bold>) Co-localization analysis of Cav1-mRFP and α5-integrin-GFP in cells as in panels A and B in a 20-pixel width region along the cell periphery of mock- or Exo70 siRNA-depleted cells using two specific siRNAs (siRNA 7c and 7d). <xref ref-type="sec" rid="s2">Results</xref> are the average of mean percentage of co-localization ± s.e.m. of three experiments. ** <italic>P</italic>&lt;0.05. Experiment has been repeated three times; with number of cell analysed: n = 19 for mock cells, n = 17 for siRNA 7c, and n = 17 for siRNA 7d.</p>
+          </caption>
+          <graphic mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0052627.g004" position="float" xlink:type="simple"/>
+        </fig>
+        <p>We investigated whether Exo70 may play a role in Cav1 trafficking and recycling upon cell adhesion <xref ref-type="bibr" rid="pone.0052627-Thapa1">[27]</xref>. Silencing of Exo70 using two independent siRNAs (<xref ref-type="supplementary-material" rid="pone.0052627.s003">Fig. S3</xref>) inhibited cell spreading on fibronectin-coated substratum during the early phase of replating (3 to 6 hrs after replating) (<xref ref-type="supplementary-material" rid="pone.0052627.s004">Fig. S4</xref>), Silencing of Exo70 caused the accumulation of Cav1-mRFP to peripheral α5-integrin-positive structures with a morphology typical of focal adhesions (<xref ref-type="fig" rid="pone-0052627-g004">Fig. 4</xref>, compare panels A and B and linescan profiles in panel A′ and B′). Co-localization of Cav1 and α5-integrin was quantified and compared between mock- and siExo70-treated cells in a peripheral region of the cells enriched in focal adhesions (see Material and Methods section) (<xref ref-type="fig" rid="pone-0052627-g004">Fig. 4C</xref>). In mock-treated cells, we observed a 26.6% co-localization of Cav1-mRFP and α5-integrin-GFP in the peripheral region. This percentage increased to 42–45% in cells depleted for Exo70 with two-independent siRNAs (<xref ref-type="fig" rid="pone-0052627-g004">Fig. 4C</xref>). These results suggest that, in the absence of Exo70, Cav1 (or Cav1-positive vesicles) is retained in focal adhesions. Next, we addressed the effect of Exo70 knockdown on the distribution of endogenous Cav1 protein. Hela cells were detached and maintained in suspension for 60 min before replating on fibronectin for 3h, and labeled for endogenous Cav1 and the focal adhesion protein vinculin. Using the quantification method described above, we found a 6.3% co-localization of Cav1 and vinculin at focal adhesions. This value increased to 10–12% in cells depleted for Exo70 (<xref ref-type="fig" rid="pone-0052627-g005">Fig. 5</xref>). Thus, these results suggest that depletion of Exo70 results in an accumulation of Cav1 at focal adhesions.</p>
+        <fig id="pone-0052627-g005" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0052627.g005</object-id>
+          <label>Figure 5</label>
+          <caption>
+            <title>Silencing of Exo70 leads to Cav1 accumulation in focal adhesions.</title>
+            <p>Mock-treated (<bold>A</bold>) or Exo70-depleted cells (<bold>B</bold>) were detached for 1 h and replated on fibronectin-coated substrate for 3 h, and then fixed and stained for endogenous vinculin and Cav1. Scale bars, 5 µm. Co-localization between Cav1 and vinculin was quantified in a 20-pixel width region from the cell periphery and compared in Exo70-depleted with two independent siRNAs <italic>vs</italic>. mock-treated cells (<bold>C</bold>). <xref ref-type="sec" rid="s2">Results</xref> in panel C are the average of mean percentage of co-localization ± s.e.m. of three experiments. ** <italic>P</italic>&lt;0.05. Experiment has been repeated three times with number of cells analysed: n = 25 mock cells, n = 9 for cells treated with Exo70 siRNA 7c, and n = 23 for siRNA 7d.</p>
+          </caption>
+          <graphic mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0052627.g005" position="float" xlink:type="simple"/>
+        </fig>
+      </sec>
+    </sec>
+    <sec id="s3">
+      <title>Discussion</title>
+      <p>This study reveals that Exo70 accumulates in dotty structures, which are visible by TIRF-M at the plasma membrane. Exo70-positive plasma membrane domains are enriched in PtdIns(4,5)P2, a lipid known to mediate binding of Exo70 at the plasma membrane both in yeast and mammal cells <xref ref-type="bibr" rid="pone.0052627-He2">[14]</xref>, <xref ref-type="bibr" rid="pone.0052627-Liu1">[16]</xref>. In addition, in mammalian cells Exo70 has been shown to recruit other exocyst components to the plasma membrane and to control the tethering of secretory vesicles <xref ref-type="bibr" rid="pone.0052627-Zuo1">[15]</xref>. Thus, Exo70-positive puncta that we observed at the adherent plasma membrane of HeLa cells may represent some exocytic vesicles docking sites. Interestingly, these puncta also appear to be enriched for the main caveolar component, Cav1.</p>
+      <p>Whether caveolae can mediate endocytosis of specific cargo(es) is still a matter of debate <xref ref-type="bibr" rid="pone.0052627-Parton1">[1]</xref>. In contrast, several studies have documented the internalization of caveolae in internal compartments during diverse cellular processes including mitosis and cell detachment <xref ref-type="bibr" rid="pone.0052627-Boucrot1">[7]</xref>, <xref ref-type="bibr" rid="pone.0052627-DelPozo1">[28]</xref>. Cell adhesion signaling through ß1 integrins seems to play a key role for the recycling of caveolar components and the formation of caveolae at the plasma membrane <xref ref-type="bibr" rid="pone.0052627-Pelkmans1">[6]</xref>, <xref ref-type="bibr" rid="pone.0052627-Santagata1">[20]</xref>, <xref ref-type="bibr" rid="pone.0052627-Wickstrom1">[23]</xref>, <xref ref-type="bibr" rid="pone.0052627-Wickstrom2">[24]</xref>. Keratinocytes from mice knockout for ß1 integrin or integrin-linked kinase (ILK) show a very low level of caveolae due to impaired traffic of Cav1-containing transport vesicles along microtubules <xref ref-type="bibr" rid="pone.0052627-Wickstrom1">[23]</xref>, <xref ref-type="bibr" rid="pone.0052627-Wickstrom2">[24]</xref>. ILK was shown to promote the recruitment of actin regulators allowing stable insertion of caveolae into the plasma membrane <xref ref-type="bibr" rid="pone.0052627-Wickstrom2">[24]</xref>. Our study confirms that intracellular transport of Cav1 is a multistep process controlled by cell adhesion. First, cell detachment leads to a massive redistribution of Cav1 and α5ß1 integrins in a perinuclear compartment. This compartment is rab7- and Vamp7-positive suggesting that upon cell detachment, Cav1 is internalized and trafficked to late endosome/lysosomal compartments. This is reminiscent of the effect of cholesterol depletion or serum deprivation, which trigger caveolae accumulation into late endosomes/lysosomes <xref ref-type="bibr" rid="pone.0052627-Mundy1">[29]</xref>. Members of the cavin protein family, which comprise four proteins including cavin-1/PTRF are also crucial for caveolae formation <xref ref-type="bibr" rid="pone.0052627-McMahon1">[5]</xref>, <xref ref-type="bibr" rid="pone.0052627-Hill1">[22]</xref>. Here, we observed that Cav1 partially redistributed with cavin-1 after cell detachment, suggesting that mature caveolae are internalized and traffic upon cell detachment (<xref ref-type="fig" rid="pone-0052627-g002">figure 2B</xref>). A recent study supports the conclusion that under normal conditions, upon docking and fusion of Cav1-positive transport carriers with the plasma membrane at nascent focal adhesions, Cav1 would be segregated away from focal adhesion to redistribute laterally along the plasma membrane bilayer for caveolae assembly <xref ref-type="bibr" rid="pone.0052627-Muriel2">[30]</xref>. Our data indicate that in adherent cells, at steady-state, Exo70 domains co-localize with a subset of Cav1-positive structures at the plasma membrane, very likely corresponding to caveolae, while these proteins show no association in the cytoplasm. Upon cell detachment and readhesion, Cav1 redistributes to late endosomes and strongly co-localizes with Exo70. Upon silencing of Exo70, Cav1 (or Cav1-positive transport carriers) are retained at focal adhesions and mistargeted, suggesting that Exo70 is involved in Cav1 recycling to the plasma membrane during readhesion of the cells to the substratum.</p>
+      <p>To conclude, functions for caveolae have been identified in biomechanical remodeling or mechanosensing <xref ref-type="bibr" rid="pone.0052627-Sinha1">[3]</xref>, <xref ref-type="bibr" rid="pone.0052627-Goetz1">[4]</xref>, <xref ref-type="bibr" rid="pone.0052627-DelPozo1">[28]</xref>. Indeed, Cav1 and caveolae are abundant in cells experiencing high mechanical stress such as muscle, skin and endothelial cells. The fact that Cav1 and caveolae levels at the cell surface are regulated by cell adhesion provide a rational for the regulation of caveolae assembly by mechanical clues.</p>
+    </sec>
+    <sec id="s4" sec-type="materials|methods">
+      <title>Materials and Methods</title>
+      <sec id="s4a">
+        <title>Cell Culture, transfection and siRNA treatment</title>
+        <p>Hela cells were cultured in DMEM medium (GIBCO) containing 15% FCS and 2 mM glutamine at 37°C and 5% CO<sub>2</sub>. For treatment with cytoskeleton-disassembling drugs, cells were treated for 30 min with nocodazole (working concentration 10 µM) or cytochalasin-B (10 µg/ml). Drugs were purchased from Sigma.</p>
+        <p>Cells were transfected with following plasmids: Exo70-GFP or -mCherry, Exo84-GFP or -mCherry cloned in pcDNA3.1 plasmid; Cav1-GFP or mRFP constructs were a kind gift of Dr A. Helenius (ETH, Zürich) <xref ref-type="bibr" rid="pone.0052627-Pelkmans2">[31]</xref>; Cavin-1-mRFP was a kind gift of Dr C. Lamaze (Institut Curie, Paris) <xref ref-type="bibr" rid="pone.0052627-Sinha1">[3]</xref> and tubby-GFP was a kind gift L. Shapiro (Columbia University, New York) <xref ref-type="bibr" rid="pone.0052627-Santagata1">[20]</xref>. Transfections with plasmid DNA (1 µg) were carried out with Fugene (Roche) according to the manufacturer' instructions. Cells were analyzed 24 h after transfection.</p>
+        <p>Cells were transfected with two independent siRNAs (Dharmacon) specific for EXOC7 (Exo70) at a concentration 100 nM using Oligofectamine (Invitrogen). Sequences of the forward strand were as follows: EXOC7-duplexC: <named-content content-type="gene" xlink:type="simple">5′-GAGAUGACAUGCUGGACGUUU-3′</named-content>, EXOC7-duplexD: <named-content content-type="gene" xlink:type="simple">5′-GGAAGGCCAUUGUGCGACAUU-3′</named-content>. Mock or siRNA-treated cells were analyzed 3 days after transfection.</p>
+      </sec>
+      <sec id="s4b">
+        <title>Western blot and antibodies</title>
+        <p>siRNA-treated cells were lysed in lysis buffer (50 mMTris-HCl [pH 7.4], 150 mM NaCl, 1% Triton X-100, 1 mM EDTA, and protease inhibitors Mini complete, Roche) and centrifuged at 16,000 g for 10 min at 4°C. Supernatants were separated by SDS-PAGE and analyzed by immunoblotting. Rabbit polyclonal antibodies against actin (A5060) and Cav1 (610060) were purchased from Sigma and BD Bioscience, respectively. Monoclonal antibody against EXOC7 was a generous gift of Dr S. Hsu (Rutgers University, NJ). Monoclonal against human vinculin was a kind gift of Dr Marina Glukhova (Institut Curie-Paris). HRP-conjugated anti-mouse IgG, Cy3-conjugated anti-mouse and Cy5-conjugated F(ab)2 anti-mouse antibodies were purchased from Jackson ImmunoResearch Laboratories. Alexa-Fluor-labeled anti-mouse IgG antibodies were purchased from Molecular Probes (Invitrogen).</p>
+      </sec>
+      <sec id="s4c">
+        <title>Caveolin1 trafficking assay and quantification</title>
+        <p>Hela cells transfected with the indicated constructs were detached, held in suspension in culture medium supplemented with 20 mM Hepes at 37°C for 1 h and replated on fibronectin (10 µg/ml) coated glass dish. After the indicated time of replating, the cells were fixed for immunfluorescence analysis or observed in live using spinning disk or TIRF-M.</p>
+        <p>For quantification of co-localization between α5-integrin-GFP and Cav1-mRFP at the cell periphery, the area of cell surface was drawn with the Threshold command of MetaMorph 7. A 20-pixel width region from the cell periphery was created using both the Erode and Create Region commands of MetaMorph 7. The percentage of co-localization of the two proteins was measured using the Measure Colocalization command of MetaMorph 7 in the 20-pixel region. Statistical analyses were performed using Student's <italic>t</italic> test in GraphPad Prism 5 software.</p>
+      </sec>
+      <sec id="s4d">
+        <title>Live cell imaging by TIRF and spinning disk confocal microscopy</title>
+        <p>For live cell imaging by TIRF-M, HeLa cells seeded onto glass-bottom dish were transfected with the indicated constructs and imaged the next day with a 100× 1.49 NA TIRF objective on a Nikon TE2000 (Nikon France SAS, Champigny sur Marne, France) inverted microscope equipped with a QuantEM EMCCD camera (Roper Scientific SAS, Evry, France/Photometrics, AZ, USA), a dual output laser launch which included 491 and 561 nm 50 mW DPSS lasers (Roper Scientific), and driven by Metamorph 7 software (MDS Analytical Technologies). A DV2 beam-splitter system (Roper Scientific/Photometrics) mounted on the light path enabled the simultaneous acquisition of the two emission channels. A motorized device driven by Metamorph allowed accurate positioning of the illumination light for evanescent wave excitation.</p>
+        <p>For spinning disk microscopy, HeLa cells plated onto a glass-bottom dish coated with fibronectin (Sigma, 10 µg/ml) and transfected with the indicated constructs. Images were acquired with 100 ms exposure time at 2 or 5 s interval as indicated using a spinning disk microscope based on a CSU22 Yokogawa head mounted on the lateral port of an inverted microscope Leica IRE2 equipped with a 100× 1.4NA Plan-Apo objective and a dual output laser launch which included 491 and 561 nm ERROL laser bench 491 nm, 561 nm (Roper Scientific). Images were acquired with a Camera EMCCD Cascade 512×512 (Photometrics). The system was steered by Metamorph 7 software.</p>
+      </sec>
+      <sec id="s4e">
+        <title>Immunofluorescence analysis</title>
+        <p>For immunofluorescence analysis, Hela cells were plated on fibronectin coated coverslips, fixed and extracted with 0.3% Triton X-100 in 4% PFA for 20 min and further fixed for 20 min by 4% PFA. Then, cells were incubated with Cav1 antibodies in PBS and washed with PBS. Bound antibodies were detected with Cy3-conjugated mouse antibodies. Cells were then mounted in ProLong Gold antifade reagent (Invitrogen) containing DAPI. Images were taken using Eclipse 90i Upright Microscope with a CCD Camera CoolSNAP HQ2 and a Piezo Flexure Objective Scanner. The system was steered by Metamorph 7 software.</p>
+      </sec>
+    </sec>
+    <sec id="s5">
+      <title>Supporting Information</title>
+      <supplementary-material id="pone.0052627.s001" mimetype="application/postscript" xlink:href="info:doi/10.1371/journal.pone.0052627.s001" position="float" xlink:type="simple">
+        <label>Figure S1</label>
+        <caption>
+          <p><bold>TIRF-M revealed specific structures positive for Cav1-GFP and Exo70-mCherry.</bold> (<bold>A</bold>) Hela cells expressing Cav1-GFP and Exo70-mCherry were visualized by TIRF-M (top panel). The bottom panel shows a wide-field image of the same field. <bold>B</bold>) Hela cells expressing tubby-GFP and Exo70-mCherry were visualized by TIRF-M. Scale bars, 5 µm. Inset shows higher magnification of region indicated by an arrow.</p>
+          <p>(EPS)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0052627.s002" mimetype="application/postscript" xlink:href="info:doi/10.1371/journal.pone.0052627.s002" position="float" xlink:type="simple">
+        <label>Figure S2</label>
+        <caption>
+          <p><bold>Caveolin1 co-localizes with late endosomes markers, GFP-rab7 or GFP-VAMP7.</bold> (<bold>A</bold>) Hela cells expressing Cav1-mRFP and GFP-rab7 were detached and maintained in suspension for 1 h in culture medium at 37°C, and then replated on fibronectin for 3 h and visualized using time-lapse confocal spinning disk microscopy (upper panel). The lower panels represent selected frames from the time-lapse series (time is given in second). Arrows point to a Cav1-, rab7-positive intracellular vesicle. (<bold>B</bold>) Hela cells expressing Cav1-mRFP and GFP-VAMP7 were treated and analyzed as in panel A. Scale bars, 5 µm.</p>
+          <p>(EPS)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0052627.s003" mimetype="application/postscript" xlink:href="info:doi/10.1371/journal.pone.0052627.s003" position="float" xlink:type="simple">
+        <label>Figure S3</label>
+        <caption>
+          <p><bold>Exo70 silencing.</bold> Samples of Hela cells treated with two independent Exo70 siRNAs (7c and 7d) were analyzed by western blotting with the indicated antibodies. Levels of Exo70 were reduced by 1.9 and 2.2-fold upon treatment with Exo70 siRNA 7c and 7d, respectively. Actin immunoblotting staining was used as a loading control. Levels of Exo70 strongly decreased without affecting Cav1 levels.</p>
+          <p>(EPS)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0052627.s004" mimetype="application/postscript" xlink:href="info:doi/10.1371/journal.pone.0052627.s004" position="float" xlink:type="simple">
+        <label>Figure S4</label>
+        <caption>
+          <p><bold>Silencing of Exo70 inhibited cell spreading on fibronectin-coated substratum.</bold> Mock-treated cells or cells silenced for Exo70 were maintained in suspension for 60 min and replated on fibronectin for 3 or 6 h and fixed. The projected cell surface area was measured using Metamorph software. Graph represents the mean projected cell surface area ± S.E.M. in µm<sup>2</sup> measured before putting cell in suspension (t = 0); after 3 h (t = 3 h) and 6 h of replating (t = 6 h) on fibronectin coated substrates. ** <italic>P</italic>&lt;0.05.</p>
+          <p>(EPS)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0052627.s005" mimetype="video/quicktime" xlink:href="info:doi/10.1371/journal.pone.0052627.s005" position="float" xlink:type="simple">
+        <label>Movie S1</label>
+        <caption>
+          <p><bold>Microtubule disassembly interferes with Cav1-positive vesicle trafficking.</bold> Hela cells expressing Cav1-mRFP were kept in suspension for 1 h, and then replated on fibronectin-coated substrate for 3 h and further incubated in the presence of nocodazole for 30 min. Cells were visualized using time-lapse spinning disk microscopy. Images were taken every 2 s. Under Nocodazole treatment, Cav1- positive vesicles are static and concentrated in the cell center.</p>
+          <p>(MOV)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0052627.s006" mimetype="video/quicktime" xlink:href="info:doi/10.1371/journal.pone.0052627.s006" position="float" xlink:type="simple">
+        <label>Movie S2</label>
+        <caption>
+          <p><bold>Cytochalasin-B treatment interferes with Cav1 trafficking.</bold> Hela cells expressing Cav1-mRFP are put in suspension for 1 h replated on fibronectin-coated substrates for 3 h, incubated with 10 µg/ml cytochalasin-B for 30 min, and visualized using time-lapse Spinning Disk Microscopy. Images are taken each 2 s. Under these conditions, an accumulation of Cav1-mRFP positive vesicles appeared at the cell periphery.</p>
+          <p>(MOV)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0052627.s007" mimetype="video/quicktime" xlink:href="info:doi/10.1371/journal.pone.0052627.s007" position="float" xlink:type="simple">
+        <label>Movie S3</label>
+        <caption>
+          <p><bold>Cav1-positive tubules target peripheral focal adhesions.</bold> Hela cells expressing Cav1-mRFP and α5-integrin-GFP are put in suspension for 1 h replated on fibronectin-coated substrates for 3 h, and visualized using time-lapse confocal spinning disk microscopy. Images are taken each 5 s.</p>
+          <p>(MOV)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0052627.s008" mimetype="video/quicktime" xlink:href="info:doi/10.1371/journal.pone.0052627.s008" position="float" xlink:type="simple">
+        <label>Movie S4</label>
+        <caption>
+          <p><bold>Cav1-positive tubules target peripheral focal adhesions.</bold> Hela cells expressing Cav1-mRFP and α5-integrin-GFP are put in suspension for 1 h replated on fibronectin-coated substrates for 3 h, and visualized using time-lapse confocal spinning disk microscopy. Images are taken each 5 s.</p>
+          <p>(MOV)</p>
+        </caption>
+      </supplementary-material>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <p>The authors wish to thank Drs C. Lamaze, M. Arpin, S. Hsu, M. Glukhova and L.Shapiro for providing reagents. We are indebted to Dr G. Scita for critical reading of the manuscript. We thank the staff of the Cell and Tissue Imaging Facility (PICT-IBiSA) for help with image acquisition. Members of PC's laboratory are thanked for helpful discussions.</p>
+    </ack>
+    <ref-list>
+      <title>References</title>
+      <ref id="pone.0052627-Parton1">
+        <label>1</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Parton</surname><given-names>RG</given-names></name>, <name name-style="western"><surname>Simons</surname><given-names>K</given-names></name> (<year>2007</year>) <article-title>The multiple faces of caveolae</article-title>. <source>Nat Rev Mol Cell Biol</source> <volume>8</volume>: <fpage>185</fpage>–<lpage>194</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Parton2">
+        <label>2</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Parton</surname><given-names>RG</given-names></name>, <name name-style="western"><surname>Hanzal-Bayer</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Hancock</surname><given-names>JF</given-names></name> (<year>2006</year>) <article-title>Biogenesis of caveolae: a structural model for caveolin-induced domain formation</article-title>. <source>J Cell Sci</source> <volume>119</volume>: <fpage>787</fpage>–<lpage>796</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Sinha1">
+        <label>3</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Sinha</surname><given-names>B</given-names></name>, <name name-style="western"><surname>Koster</surname><given-names>D</given-names></name>, <name name-style="western"><surname>Ruez</surname><given-names>R</given-names></name>, <name name-style="western"><surname>Gonnord</surname><given-names>P</given-names></name>, <name name-style="western"><surname>Bastiani</surname><given-names>M</given-names></name>, <etal>et al</etal>. (<year>2011</year>) <article-title>Cells respond to mechanical stress by rapid disassembly of caveolae</article-title>. <source>Cell</source> <volume>144</volume>: <fpage>402</fpage>–<lpage>413</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Goetz1">
+        <label>4</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Goetz</surname><given-names>JG</given-names></name>, <name name-style="western"><surname>Minguet</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Navarro-Lerida</surname><given-names>I</given-names></name>, <name name-style="western"><surname>Lazcano</surname><given-names>JJ</given-names></name>, <name name-style="western"><surname>Samaniego</surname><given-names>R</given-names></name>, <etal>et al</etal>. (<year>2011</year>) <article-title>Biomechanical remodeling of the microenvironment by stromal caveolin-1 favors tumor invasion and metastasis</article-title>. <source>Cell</source> <volume>146</volume>: <fpage>148</fpage>–<lpage>163</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-McMahon1">
+        <label>5</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>McMahon</surname><given-names>KA</given-names></name>, <name name-style="western"><surname>Zajicek</surname><given-names>H</given-names></name>, <name name-style="western"><surname>Li</surname><given-names>WP</given-names></name>, <name name-style="western"><surname>Peyton</surname><given-names>MJ</given-names></name>, <name name-style="western"><surname>Minna</surname><given-names>JD</given-names></name>, <etal>et al</etal>. (<year>2009</year>) <article-title>SRBC/cavin-3 is a caveolin adapter protein that regulates caveolae function</article-title>. <source>EMBO J</source> <volume>28</volume>: <fpage>1001</fpage>–<lpage>1015</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Pelkmans1">
+        <label>6</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Pelkmans</surname><given-names>L</given-names></name>, <name name-style="western"><surname>Zerial</surname><given-names>M</given-names></name> (<year>2005</year>) <article-title>Kinase-regulated quantal assemblies and kiss-and-run recycling of caveolae</article-title>. <source>Nature</source> <volume>436</volume>: <fpage>128</fpage>–<lpage>133</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Boucrot1">
+        <label>7</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Boucrot</surname><given-names>E</given-names></name>, <name name-style="western"><surname>Howes</surname><given-names>MT</given-names></name>, <name name-style="western"><surname>Kirchhausen</surname><given-names>T</given-names></name>, <name name-style="western"><surname>Parton</surname><given-names>RG</given-names></name> (<year>2011</year>) <article-title>Redistribution of caveolae during mitosis</article-title>. <source>J Cell Sci</source> <volume>124</volume>: <fpage>1965</fpage>–<lpage>1972</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-delPozo1">
+        <label>8</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>del Pozo</surname><given-names>MA</given-names></name>, <name name-style="western"><surname>Alderson</surname><given-names>NB</given-names></name>, <name name-style="western"><surname>Kiosses</surname><given-names>WB</given-names></name>, <name name-style="western"><surname>Chiang</surname><given-names>HH</given-names></name>, <name name-style="western"><surname>Anderson</surname><given-names>RG</given-names></name>, <etal>et al</etal>. (<year>2004</year>) <article-title>Integrins regulate Rac targeting by internalization of membrane domains</article-title>. <source>Science</source> <volume>303</volume>: <fpage>839</fpage>–<lpage>842</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Echarri1">
+        <label>9</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Echarri</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Muriel</surname><given-names>O</given-names></name>, <name name-style="western"><surname>Del Pozo</surname><given-names>MA</given-names></name> (<year>2007</year>) <article-title>Intracellular trafficking of raft/caveolae domains: insights from integrin signaling</article-title>. <source>Semin Cell Dev Biol</source> <volume>18</volume>: <fpage>627</fpage>–<lpage>637</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-He1">
+        <label>10</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>He</surname><given-names>B</given-names></name>, <name name-style="western"><surname>Guo</surname><given-names>W</given-names></name> (<year>2009</year>) <article-title>The exocyst complex in polarized exocytosis</article-title>. <source>Curr Opin Cell Biol</source> <volume>21</volume>: <fpage>537</fpage>–<lpage>542</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Munson1">
+        <label>11</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Munson</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Novick</surname><given-names>P</given-names></name> (<year>2006</year>) <article-title>The exocyst defrocked, a framework of rods revealed</article-title>. <source>Nat Struct Mol Biol</source> <volume>13</volume>: <fpage>577</fpage>–<lpage>581</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Hertzog1">
+        <label>12</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Hertzog</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Chavrier</surname><given-names>P</given-names></name> (<year>2011</year>) <article-title>Cell polarity during motile processes: keeping on track with the exocyst complex</article-title>. <source>Biochem J</source> <volume>433</volume>: <fpage>403</fpage>–<lpage>409</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Muriel1">
+        <label>13</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Muriel</surname><given-names>O</given-names></name>, <name name-style="western"><surname>Echarri</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Hellriegel</surname><given-names>C</given-names></name>, <name name-style="western"><surname>Pavon</surname><given-names>DM</given-names></name>, <name name-style="western"><surname>Beccari</surname><given-names>L</given-names></name>, <etal>et al</etal>. (<year>2011</year>) <article-title>Phosphorylated filamin A regulates actin-linked caveolae dynamics</article-title>. <source>J Cell Sci</source> <volume>124</volume>: <fpage>2763</fpage>–<lpage>2776</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-He2">
+        <label>14</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>He</surname><given-names>B</given-names></name>, <name name-style="western"><surname>Xi</surname><given-names>F</given-names></name>, <name name-style="western"><surname>Zhang</surname><given-names>X</given-names></name>, <name name-style="western"><surname>Zhang</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Guo</surname><given-names>W</given-names></name> (<year>2007</year>) <article-title>Exo70 interacts with phospholipids and mediates the targeting of the exocyst to the plasma membrane</article-title>. <source>EMBO J</source> <volume>26</volume>: <fpage>4053</fpage>–<lpage>4065</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Zuo1">
+        <label>15</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Zuo</surname><given-names>X</given-names></name>, <name name-style="western"><surname>Zhang</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Zhang</surname><given-names>Y</given-names></name>, <name name-style="western"><surname>Hsu</surname><given-names>SC</given-names></name>, <name name-style="western"><surname>Zhou</surname><given-names>D</given-names></name>, <etal>et al</etal>. (<year>2006</year>) <article-title>Exo70 interacts with the Arp2/3 complex and regulates cell migration</article-title>. <source>Nat Cell Biol</source> <volume>8</volume>: <fpage>1383</fpage>–<lpage>1388</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Liu1">
+        <label>16</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Liu</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Zuo</surname><given-names>X</given-names></name>, <name name-style="western"><surname>Yue</surname><given-names>P</given-names></name>, <name name-style="western"><surname>Guo</surname><given-names>W</given-names></name> (<year>2007</year>) <article-title>Phosphatidylinositol 4,5-bisphosphate mediates the targeting of the exocyst to the plasma membrane for exocytosis in mammalian cells</article-title>. <source>Mol Biol Cell</source> <volume>18</volume>: <fpage>4483</fpage>–<lpage>4492</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Spiczka1">
+        <label>17</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Spiczka</surname><given-names>KS</given-names></name>, <name name-style="western"><surname>Yeaman</surname><given-names>C</given-names></name> (<year>2008</year>) <article-title>Ral-regulated interaction between Sec5 and paxillin targets Exocyst to focal complexes during cell migration</article-title>. <source>J Cell Sci</source> <volume>121</volume>: <fpage>2880</fpage>–<lpage>2891</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Balasubramanian1">
+        <label>18</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Balasubramanian</surname><given-names>N</given-names></name>, <name name-style="western"><surname>Meier</surname><given-names>JA</given-names></name>, <name name-style="western"><surname>Scott</surname><given-names>DW</given-names></name>, <name name-style="western"><surname>Norambuena</surname><given-names>A</given-names></name>, <name name-style="western"><surname>White</surname><given-names>MA</given-names></name>, <etal>et al</etal>. (<year>2010</year>) <article-title>RalA-exocyst complex regulates integrin-dependent membrane raft exocytosis and growth signaling</article-title>. <source>Curr Biol</source> <volume>20</volume>: <fpage>75</fpage>–<lpage>79</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Balasubramanian2">
+        <label>19</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Balasubramanian</surname><given-names>N</given-names></name>, <name name-style="western"><surname>Scott</surname><given-names>DW</given-names></name>, <name name-style="western"><surname>Castle</surname><given-names>JD</given-names></name>, <name name-style="western"><surname>Casanova</surname><given-names>JE</given-names></name>, <name name-style="western"><surname>Schwartz</surname><given-names>MA</given-names></name> (<year>2007</year>) <article-title>Arf6 and microtubules in adhesion-dependent trafficking of lipid rafts</article-title>. <source>Nat Cell Biol</source> <volume>9</volume>: <fpage>1381</fpage>–<lpage>1391</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Santagata1">
+        <label>20</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Santagata</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Boggon</surname><given-names>TJ</given-names></name>, <name name-style="western"><surname>Baird</surname><given-names>CL</given-names></name>, <name name-style="western"><surname>Gomez</surname><given-names>CA</given-names></name>, <name name-style="western"><surname>Zhao</surname><given-names>J</given-names></name>, <etal>et al</etal>. (<year>2001</year>) <article-title>G-protein signaling through tubby proteins</article-title>. <source>Science</source> <volume>292</volume>: <fpage>2041</fpage>–<lpage>2050</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-delPozo2">
+        <label>21</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>del Pozo</surname><given-names>MA</given-names></name>, <name name-style="western"><surname>Balasubramanian</surname><given-names>N</given-names></name>, <name name-style="western"><surname>Alderson</surname><given-names>NB</given-names></name>, <name name-style="western"><surname>Kiosses</surname><given-names>WB</given-names></name>, <name name-style="western"><surname>Grande-Garcia</surname><given-names>A</given-names></name>, <etal>et al</etal>. (<year>2005</year>) <article-title>Phospho-caveolin-1 mediates integrin-regulated membrane domain internalization</article-title>. <source>Nat Cell Biol</source> <volume>7</volume>: <fpage>901</fpage>–<lpage>908</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Hill1">
+        <label>22</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Hill</surname><given-names>MM</given-names></name>, <name name-style="western"><surname>Bastiani</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Luetterforst</surname><given-names>R</given-names></name>, <name name-style="western"><surname>Kirkham</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Kirkham</surname><given-names>A</given-names></name>, <etal>et al</etal>. (<year>2008</year>) <article-title>PTRF-Cavin, a conserved cytoplasmic protein required for caveola formation and function</article-title>. <source>Cell</source> <volume>132</volume>: <fpage>113</fpage>–<lpage>124</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Wickstrom1">
+        <label>23</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wickstrom</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Fassler</surname><given-names>R</given-names></name> (<year>2011</year>) <article-title>Regulation of membrane traffic by integrin signaling</article-title>. <source>Trends Cell Biol</source> <volume>21</volume>: <fpage>266</fpage>–<lpage>273</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Wickstrom2">
+        <label>24</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wickstrom</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Lange</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Hess</surname><given-names>MW</given-names></name>, <name name-style="western"><surname>Polleux</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Spatz</surname><given-names>JP</given-names></name>, <etal>et al</etal>. (<year>2010</year>) <article-title>Integrin-linked kinase controls microtubule dynamics required for plasma membrane targeting of caveolae</article-title>. <source>Dev Cell</source> <volume>19</volume>: <fpage>574</fpage>–<lpage>588</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Wickstrom3">
+        <label>25</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wickstrom</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Fassler</surname><given-names>R</given-names></name> (<year>2011</year>) <article-title>Regulation of membrane traffic by integrin signaling</article-title>. <source>Trends Cell Biol</source> <volume>21</volume>: <fpage>266</fpage>–<lpage>273</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Wickstrom4">
+        <label>26</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wickstrom</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Lange</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Hess</surname><given-names>MW</given-names></name>, <name name-style="western"><surname>Polleux</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Spatz</surname><given-names>JP</given-names></name>, <etal>et al</etal>. (<year>2010</year>) <article-title>Integrin-linked kinase controls microtubule dynamics required for plasma membrane targeting of caveolae</article-title>. <source>Dev Cell</source> <volume>19</volume>: <fpage>574</fpage>–<lpage>588</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Thapa1">
+        <label>27</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Thapa</surname><given-names>N</given-names></name>, <name name-style="western"><surname>Sun</surname><given-names>Y</given-names></name>, <name name-style="western"><surname>Schramp</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Choi</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Ling</surname><given-names>K</given-names></name>, <etal>et al</etal>. (<year>2012</year>) <article-title>Phosphoinositide signaling regulates the exocyst complex and polarized integrin trafficking in directionally migrating cells</article-title>. <source>Dev Cell</source> <volume>22</volume>: <fpage>116</fpage>–<lpage>130</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-DelPozo1">
+        <label>28</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Del Pozo</surname><given-names>MA</given-names></name>, <name name-style="western"><surname>Schwartz</surname><given-names>MA</given-names></name> (<year>2007</year>) <article-title>Rac, membrane heterogeneity, caveolin and regulation of growth by integrins</article-title>. <source>Trends Cell Biol</source> <volume>17</volume>: <fpage>246</fpage>–<lpage>250</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Mundy1">
+        <label>29</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Mundy</surname><given-names>DI</given-names></name>, <name name-style="western"><surname>Li</surname><given-names>WP</given-names></name>, <name name-style="western"><surname>Luby-Phelps</surname><given-names>K</given-names></name>, <name name-style="western"><surname>Anderson</surname><given-names>RG</given-names></name> (<year>2012</year>) <article-title>Caveolin targeting to late endosome/lysosomal membranes is induced by perturbations of lysosomal pH and cholesterol content</article-title>. <source>Mol Biol Cell</source> <volume>23</volume>: <fpage>864</fpage>–<lpage>880</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Muriel2">
+        <label>30</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Muriel</surname><given-names>O</given-names></name>, <name name-style="western"><surname>Echarri</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Hellriegel</surname><given-names>C</given-names></name>, <name name-style="western"><surname>Pavon</surname><given-names>DM</given-names></name>, <name name-style="western"><surname>Beccari</surname><given-names>L</given-names></name>, <etal>et al</etal>. (<year>2011</year>) <article-title>Phosphorylated filamin A regulates actin-linked caveolae dynamics</article-title>. <source>J Cell Sci</source> <volume>124</volume>: <fpage>2763</fpage>–<lpage>2776</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0052627-Pelkmans2">
+        <label>31</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Pelkmans</surname><given-names>L</given-names></name>, <name name-style="western"><surname>Burli</surname><given-names>T</given-names></name>, <name name-style="western"><surname>Zerial</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Helenius</surname><given-names>A</given-names></name> (<year>2004</year>) <article-title>Caveolin-stabilized membrane domains as multifunctional transport and sorting devices in endocytic membrane traffic</article-title>. <source>Cell</source> <volume>118</volume>: <fpage>767</fpage>–<lpage>780</lpage>.</mixed-citation>
+      </ref>
+    </ref-list>
+  </back>
+</article>

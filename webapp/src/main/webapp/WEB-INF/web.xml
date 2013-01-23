@@ -264,6 +264,11 @@ If so, wrap request with virtual journal override values in FilterChain.</descri
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
 
+  <!-- Count the number of active sessions and make it available.   -->
+  <listener>
+    <listener-class>org.ambraproject.web.SessionCounter</listener-class>
+  </listener>
+
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

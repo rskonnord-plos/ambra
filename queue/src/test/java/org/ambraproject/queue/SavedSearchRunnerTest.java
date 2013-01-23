@@ -18,6 +18,8 @@ import org.ambraproject.action.BaseTest;
 import org.ambraproject.search.SavedSearchRunner;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.views.SavedSearchView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.BeforeMethod;
@@ -37,6 +39,8 @@ import static org.testng.Assert.assertNotNull;
  */
 @ContextConfiguration
 public class SavedSearchRunnerTest extends BaseTest {
+
+  private static final Logger log = LoggerFactory.getLogger(SavedSearchRunnerTest.class);
 
   @Autowired
   protected SavedSearchRunner savedSearchRunner;
@@ -66,9 +70,9 @@ public class SavedSearchRunnerTest extends BaseTest {
     document1.put("title", new String[]{"The First Title, with Spleen testing"});
     document1.put("title_display", new String[]{"The First Title, with Spleen testing"});
     document1.put("author", new String[]{"alpha delta epsilon"});
-    document1.put("body", new String[]{"Body of the first document: Yak and Spleen"});
+    document1.put("body", new String[]{"Body of the first document: Yak and Spleen test"});
     document1.put("everything", new String[]{
-        "body first document yak spleen first title with spleen"});
+        "body first document yak spleen first title with spleen test"});
     document1.put("elocation_id", new String[]{"111"});
     document1.put("volume", new String[]{"1"});
     document1.put("doc_type", new String[]{"full"});
@@ -101,12 +105,12 @@ public class SavedSearchRunnerTest extends BaseTest {
     // 2 occurrences in "everything": "Gecko"
     Map<String, String[]> document3 = new HashMap<String, String[]>();
     document3.put("id", new String[]{DOI_3});
-    document3.put("title", new String[]{"The Third Title, with Gecko savedsearch "});
+    document3.put("title", new String[]{"The Third Title, with Gecko  "});
     document3.put("title_display", new String[]{"The Second Title, with Yak Gecko"});
     document3.put("author", new String[]{"gamma delta"});
     document3.put("body", new String[]{"Contents of the second document: Gecko and Islets of Langerhans"});
     document3.put("everything", new String[]{
-        "contents of the second document gecko islets langerhans third title with gecko savedsearch"});
+        "contents of the second document gecko islets langerhans third title with gecko testjournal"});
     document3.put("elocation_id", new String[]{"333"});
     document3.put("volume", new String[]{"3"});
     document3.put("doc_type", new String[]{"full"});
@@ -128,6 +132,7 @@ public class SavedSearchRunnerTest extends BaseTest {
 
     SavedSearchView searchView = null;
     searchView = savedSearchRunner.runSavedSearch(view);
+    log.debug("Search name: {} and Search query: {}", view.getSearchName(),view.getSearchParameters());
     assertNotNull(searchView.getSearchHitList(), "No results for the query");
     assertEquals(searchView.getSearchHitList().size(), expectedHits , "Wrong number of search results returned");
 
@@ -157,20 +162,20 @@ public class SavedSearchRunnerTest extends BaseTest {
     SavedSearchView savedSearchView2 = new SavedSearchView(
         new Long(2),
         "testingString2",
-        "{\"query\":\"\",\"unformattedQuery\":\"everything:savedsearch\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
+        "{\"query\":\"\",\"unformattedQuery\":\"everything:testjournal\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
         lastMonthlySearchTime.getTime(),
         "search2@plos.org") ;
 
     SavedSearchView savedSearchView3 = new SavedSearchView(
         new Long(3),
         "testString3",
-        "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
+        "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\",\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
         lastWeeklySearchTime.getTime(),
         "search3@plos.org") ;
 
 
     return new Object[][]{
-      {savedSearchView1, 1 },{savedSearchView2, 1},{savedSearchView3, 1}
+      {savedSearchView1, 1 },{savedSearchView2, 1},{savedSearchView3, 2}
     };
   }
 

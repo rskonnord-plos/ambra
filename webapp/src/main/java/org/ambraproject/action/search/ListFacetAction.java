@@ -20,6 +20,7 @@
  */
 package org.ambraproject.action.search;
 
+import org.ambraproject.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class ListFacetAction extends SearchAction {
    * For the current set of parameters, just retrieve the facet data
    * @return ERROR or SUCCESS
    */
-  public String listFacet() {
+  public String listFacet() throws ApplicationException {
     //We only allow a very small set of options and all these options should be set by the system.  '
     //hence, we have unforgiving input validation
     if(searchType == null) {

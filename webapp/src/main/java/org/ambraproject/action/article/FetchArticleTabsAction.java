@@ -46,7 +46,6 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,6 +77,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   private static final int RELATED_AUTHOR_SEARCH_QUERY_SIZE = 4;
 
+  /**
+   * Returned by fetchArticle() when the given DOI is not in the repository.
+   */
+  public static final String ARTICLE_NOT_FOUND = "articleNotFound";
+
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
@@ -103,6 +107,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private String publishedJournal = "";
 
   private ArticleInfo articleInfoX;
+  private Document doc;
   private ArticleType articleType;
   private List<List<String>> articleIssues;
   private List<LinkbackView> trackbackList;
@@ -127,7 +132,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return "success" on succes, "error" on error
    */
-  public String fetchArticle() {
+  public String fetchArticle() throws Exception {
     try {
 
       setCommonData();
@@ -169,11 +174,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
       log.info("Could not find article: " + articleURI, e);
-      return ERROR;
-    } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
-      return ERROR;
+      return ARTICLE_NOT_FOUND;
     }
 
     //If the user is logged in, record this as an article view
@@ -409,7 +410,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     //TODO: Refactor this to not be spaghetti, all these properties should be made
     //to be part of articleInfo.  Rename articleInfo to articleView and populate articleView
     //In the service tier in whatever way is appropriate
-    Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
+    doc = this.fetchArticleService.getArticleDocument(articleInfoX);
     authors = this.fetchArticleService.getAuthors(doc);
     correspondingAuthor = this.fetchArticleService.getCorrespondingAuthors(doc);
     authorContributions = this.fetchArticleService.getAuthorContributions(doc);
@@ -743,28 +744,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   /**
    * Generate a list of authors grouped by affiliation
    *
-   * @return a list of authors grouped by affiliation
+   * @return a list of authors grouped by affiliation and sorted according to the order of the institutions in the xml
+   *
    */
-  public Set<Map.Entry<String, List<AuthorView>>> getAuthorsByAffiliation() {
-    Map<String, List<AuthorView>> authorsByAffil = new HashMap<String, List<AuthorView>>();
+  public Set<Map.Entry<String, List<AuthorView>>> getAuthorsByAffiliation() throws RuntimeException{
 
-    for(AuthorView ae : this.authors) {
-      for(String affilation : ae.getAffiliations()) {
-        List<AuthorView> authors;
+    return fetchArticleService.getAuthorsByAffiliation(doc, authors).entrySet();
 
-        if(authorsByAffil.containsKey(affilation)) {
-          authors = authorsByAffil.get(affilation);
-        } else {
-          authors = new ArrayList<AuthorView>();
-          authorsByAffil.put(affilation, authors);
-        }
-        authors.add(ae);
-      }
-    }
-
-    return authorsByAffil.entrySet();
   }
-
 
   /**
    * Returns a list of citation references

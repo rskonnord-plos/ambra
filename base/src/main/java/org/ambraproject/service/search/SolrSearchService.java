@@ -276,6 +276,9 @@ public class SolrSearchService implements SearchService {
   public List<String> getAllSubjects(String journal) throws ApplicationException {
     SolrQuery query = createQuery("*:*", 0, 0, false);
 
+    // We don't care about results, just facet counts.
+    query.setRows(0);
+
     // Remove facets we don't use in this case.
     query.removeFacetField("author_facet");
     query.removeFacetField("editor_facet");
@@ -285,10 +288,7 @@ public class SolrSearchService implements SearchService {
     // Add the one we do want.
     query.addFacetField("subject_hierarchy");
     query.addFilterQuery("cross_published_journal_key:" + journal);
-
-    // The intention is to set this to unlimited, or at least a high limit.
-    // By default it's 100.
-    query.setFacetLimit(1024 * 1024);
+    query.setFacetLimit(-1);  // unlimited
 
     QueryResponse queryResponse = getSOLRResponse(query);
     FacetField facet = queryResponse.getFacetField("subject_hierarchy");
@@ -941,15 +941,13 @@ public class SolrSearchService implements SearchService {
 
         //Set the field for dismax to use
         query.set("qf", fieldName);
-        setFilters(query, sParams, true);
       }
+      setFilters(query, sParams, true);
 
     } else {
 
-      if (log.isDebugEnabled()) {
-        log.debug("Advanced Saved Search performed on the unformattedSearch String: "
-            + sParams.getUnformattedQuery().trim());
-      }
+      log.debug("Advanced Saved Search performed on the unformattedSearch String: {}",
+          sParams.getUnformattedQuery().trim());
       sp = cleanStrings(sParams);
       query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
       query.setQuery(sParams.getUnformattedQuery());
@@ -957,8 +955,6 @@ public class SolrSearchService implements SearchService {
     }
 
     query.addFilterQuery(createFilterLimitForPublishDate(lastSearchTime, currentSearchTime));
-
-
     SearchResultSinglePage results = search(query);
 
     return results.getHits();

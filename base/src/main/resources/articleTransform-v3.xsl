@@ -228,35 +228,6 @@
             </xsl:for-each>
           </p>
         </xsl:if>
-        <!-- corresponding author footnote -->
-        <xsl:if test="author-notes/corresp">
-          <p>
-            <xsl:apply-templates select="author-notes/corresp" mode="metadata"/>
-          </p>
-        </xsl:if>
-        <!-- equal contribution footnote -->
-        <xsl:if test="contrib-group/contrib[@contrib-type='author'][@equal-contrib='yes']">
-          <p>
-            <a name="equal-contrib"></a><xsl:text>#</xsl:text>
-              These authors contributed equally to this work.
-          </p>
-        </xsl:if>
-        <!-- deceased author footnote -->
-        <xsl:for-each select="author-notes/fn[@fn-type='deceased']">
-          <p>
-            <xsl:apply-templates select="." mode="metadata"/>
-          </p>
-        </xsl:for-each>
-        <!-- additional test for automatic deceased footnote. -->
-        <xsl:if test="contrib-group/contrib/@deceased='yes' and not(author-notes/fn[@fn-type='deceased'])">
-          <p><a name="deceased"></a><sup>&#x2020;</sup> Deceased.</p>
-        </xsl:if>
-        <!-- author-notes fn-type="other" -->
-        <xsl:for-each select="author-notes/fn[@fn-type='other']">
-          <p>
-            <xsl:apply-templates select="." mode="metadata"/>
-          </p>
-        </xsl:for-each>
         <!-- end of article-meta; return to previous context -->
       </xsl:for-each>
       <!-- display fn-group fn-type="other" at bottom of citation -->
@@ -1809,8 +1780,19 @@
     <xsl:template match="speech/p" mode="speech" />
     <xsl:template match="speech/speaker" />
 
+    <!-- 1/7/13: plos modifications for figshare widget, FEND-2  -->
+    <xsl:template match="supplementary-material[1]">
+      <xsl:element name="div">
+        <xsl:attribute name="class">figshare_widget</xsl:attribute>
+        <xsl:attribute name="doi">
+          <xsl:value-of select="//article/front/article-meta/article-id[@pub-id-type='doi']"/>
+        </xsl:attribute>
+      </xsl:element>
+      <xsl:call-template name="supplementary-material" />
+    </xsl:template>
+
     <!-- 1/4/12: plos modifications -->
-    <xsl:template match="supplementary-material">
+    <xsl:template match="supplementary-material" name="supplementary-material">
       <xsl:variable name="the-label">
         <xsl:choose>
           <xsl:when test="label">

@@ -3,7 +3,7 @@ $(function () {
   var indexes = {
     preferences:0,
     alerts:1,
-    searchalerts:2
+    savedSearchAlerts:2
   };
 
   var activeIndex = indexes[getParameterByName("tabId")] || 0;

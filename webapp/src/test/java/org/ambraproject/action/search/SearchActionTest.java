@@ -61,7 +61,7 @@ public class SearchActionTest extends AmbraWebTest {
     action.setRequest(Collections.singletonMap(reqAttrKey, mockAttr));
   }
 
-  private void assertInvalidSimpleSearchQuery(String query) {
+  private void assertInvalidSimpleSearchQuery(String query) throws Exception {
     action.setQuery(query);
     String result = action.executeSimpleSearch();
     assertEquals(result, Action.INPUT, "Didn't halt with INPUT with query: " + query);
