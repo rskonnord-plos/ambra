@@ -54,12 +54,13 @@ import static org.testng.Assert.assertTrue;
  * @author Joe Osowski
  */
 public class XMLServiceTest extends BaseTest {
-  private static final String OBJINFO_NAMESPACES = "xmlns:mml=\"http://www.w3.org/1998/Math/MathML\" " +
-      "xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" " +
-      "xmlns:fo=\"http://www.w3.org/1999/XSL/Format\" " +
-      "xmlns:fn=\"http://www.w3.org/2005/xpath-functions\" " +
-      "xmlns:xlink=\"http://www.w3.org/1999/xlink\" " +
-      "xmlns:util=\"http://dtd.nlm.nih.gov/xsl/util\"";
+  private static final String OBJINFO_NAMESPACES =
+      "xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" "
+      + "xmlns:fo=\"http://www.w3.org/1999/XSL/Format\" "
+      + "xmlns:fn=\"http://www.w3.org/2005/xpath-functions\" "
+      + "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+      + "xmlns:util=\"http://dtd.nlm.nih.gov/xsl/util\" "
+      + "xmlns:mml=\"http://www.w3.org/1998/Math/MathML\"";
 
   @Autowired
   @Qualifier("secondaryObjectService")
@@ -97,13 +98,8 @@ public class XMLServiceTest extends BaseTest {
   public String[][] createObjInfoSamples() {
     return new String[][]{
         {"<p>Hello World</p>", "<p>Hello World</p>"},
-        {"<sc>hello world</sc>", "<small " + OBJINFO_NAMESPACES + ">HELLO WORLD</small>"},
-        {"<bold>Hello World</bold>", "<b " + OBJINFO_NAMESPACES + ">Hello World</b>"},
-        {"<abbrev xmlns:xlink=\"http://www.w3.org/1999/xlink\" " +
-            "xlink:href=\"test\" id=\"123\">Hello World</abbrev>",
-            "<a " + OBJINFO_NAMESPACES + " href=\"test\" id=\"123\">Hello World</a>"},
-        {"<abbrev id=\"123\">Hello World</abbrev>",
-            "<span " + OBJINFO_NAMESPACES + " class=\"capture-id\" id=\"123\">Hello World</span>"}
+        {"<sc>hello world</sc>", "<span " + OBJINFO_NAMESPACES + " class=\"small-caps\">hello world</span>"},
+        {"<bold>Hello World</bold>", "<strong " + OBJINFO_NAMESPACES + ">Hello World</strong>"},
     };
   }
 

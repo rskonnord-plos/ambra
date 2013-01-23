@@ -83,7 +83,7 @@ public class SearchAction extends BaseSearchAction {
   /**
    * @return return simple search result
    */
-  public String executeSimpleSearch() {
+  public String executeSimpleSearch() throws ApplicationException {
     searchType = "simple";
 
     setDefaultsCommon();
@@ -96,34 +96,27 @@ public class SearchAction extends BaseSearchAction {
       
       return INPUT;
     } else {
-      try {
-        SearchParameters params = getSearchParameters();
-        resultsSinglePage = searchService.simpleSearch(params);
+      SearchParameters params = getSearchParameters();
+      resultsSinglePage = searchService.simpleSearch(params);
 
-        //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
-        totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
-        searchResults = resultsSinglePage.getHits();
-        queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
-        resultView = params.getResultView();
+      //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
+      totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
+      searchResults = resultsSinglePage.getHits();
+      queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
+      resultView = params.getResultView();
 
-        //If page size is zero, assume totalPages is zero
-        int totPages = (getPageSize() == 0)?0:((totalNoOfResults + getPageSize() - 1) / getPageSize());
-        setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
+      //If page size is zero, assume totalPages is zero
+      int totPages = (getPageSize() == 0)?0:((totalNoOfResults + getPageSize() - 1) / getPageSize());
+      setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
 
-        // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
-        if (doSearch() && getRequestURL() != null && getRequestQueryString() != null) {
-          addRecentSearch(queryString, getRequestURL() + "?" + getRequestQueryString());
-        }
-
-        if(getCurrentUser() != null) {
-          userService.recordUserSearch(getCurrentUser().getID(), params.getQuery(), params.toString());
-        }
-      } catch (ApplicationException e) {
-        addActionError("Search failed");
-        log.error("Search failed for the query string: " + queryString, e);
-        return ERROR;
+      // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
+      if (doSearch() && getRequestURL() != null && getRequestQueryString() != null) {
+        addRecentSearch(queryString, getRequestURL() + "?" + getRequestQueryString());
       }
 
+      if(getCurrentUser() != null) {
+        userService.recordUserSearch(getCurrentUser().getID(), params.getQuery(), params.toString());
+      }
       return SUCCESS;
     }
   }

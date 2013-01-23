@@ -1,18 +1,10 @@
 /*
  * $HeadURL$
  * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
- *
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -42,6 +34,54 @@
  *        or not. Defaults to false.
  * }
  */
+
+/*
+ * jQuery UI Autocomplete HTML Extension
+ *
+ * Copyright 2010, Scott González (http://scottgonzalez.com)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * http://github.com/scottgonzalez/jquery-ui-extensions
+ */
+
+// HTML extension to autocomplete borrowed from
+// https://github.com/scottgonzalez/jquery-ui-extensions/blob/master/autocomplete/jquery.ui.autocomplete.html.js
+
+(function( $ ) {
+
+  var proto = $.ui.autocomplete.prototype,
+      initSource = proto._initSource;
+
+  function filter( array, term ) {
+    var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
+    return $.grep( array, function(value) {
+      return matcher.test( $( "<div>" ).html( value.label || value.value || value ).text() );
+    });
+  }
+
+  $.extend( proto, {
+    _initSource: function() {
+      if ($.isArray(this.options.source) ) {
+        this.source = function( request, response ) {
+          response( filter( this.options.source, request.term ) );
+        };
+      } else {
+        initSource.call( this );
+      }
+    },
+
+    _renderItem: function( ul, item) {
+      return $( "<li></li>" )
+          .data( "item.autocomplete", item )
+          .append( $( "<a style=\"line-height: "
+          + (item.value ? 0.9 : 2)
+          + "; font-size: 12px;\"></a>" )
+          [item.type == "html" ? "html" : "text"]( item.label ) )
+          .appendTo( ul );
+    }
+  });
+
+})( jQuery );
 
 $.fn.edBoard = function () {
   var solrHost = $('meta[name=solrHost]').attr("content");
@@ -80,113 +120,7 @@ $.fn.edBoard = function () {
       args.icon_html = $("#section_editor_icon").html();
     }
 
-    //load callback function
-    //defining it here allows us to reference the
-    //query terms for highlighting
-    var loadCallback = function (args) {
-      var editorsDiv = $("#all_editors");
-
-      $.each(args.data.response.docs, function (index, editor) {
-
-        var firstLetter = editor.ae_name
-          .replace(/[^\w\s]|_/g, "")
-          .split(" ")
-          .pop()[0]
-          .toUpperCase();
-
-        var container = $("#" + firstLetter + "_editors");
-
-        //create a div for the editor
-        var entry = $("<div></div>").addClass("editor");
-        container.append(entry);
-
-        var nameDiv = $("<div></div>").addClass("name").html(editor.ae_name);
-        entry.append(nameDiv);
-
-        //show an icon if the person is a section editor
-        if (args.formatSectionEds && editor.doc_type == "section_editor") {
-          nameDiv.prepend($("<div></div>").addClass("icon_holder").html(args.icon_html));
-          nameDiv.append($("<span></span>").addClass("section_ed").html(" Section Editor"));
-        }
-
-        entry.append($("<div></div>")
-          .addClass("organization")
-          .html(editor.ae_institute.join(", ")));
-
-        entry.append($("<div></div>")
-          .addClass("location")
-          .html(editor.ae_country.join(", ")));
-
-        if (editor.ae_subject) {
-          //highlight the subjects
-          if (args.highlight) {
-            $.each(editor.ae_subject, function (index, subject) {
-              $.each(args.queryTerms, function (index, term) {
-                subject = subject.replace(term, "<span class=\"highlight\">$1</span>");
-              });
-              editor.ae_subject[index] = subject;
-            });
-          }
-
-          //limit the number of subjects we show for expertise, with a show more link
-          //we don't want to split by number of characters, since then we might end up
-          //splitting in the middle of a highlight span tag
-          if (args.subjectsOnLine <= 0 ||
-            editor.ae_subject.length <= args.subjectsOnLine) {
-            entry.append($("<div></div>").addClass("expertise")
-              .html("<b>Expertise:</b> " + editor.ae_subject.join(", ")));
-          } else {
-            //node with the first n subjects
-            var editorNode = $("<div></div>").addClass("expertise").html(
-              "<b>Expertise:</b> " +
-                editor.ae_subject.slice(0, args.subjectsOnLine).join(", ") + ","
-            );
-            entry.append(editorNode);
-
-            var elipses = $("<span></span>").html("... ");
-            editorNode.append(elipses);
-
-            //rest of subjects, showable
-
-            var more = $("<span></span>").css("display","none").html(
-              " " + editor.ae_subject.slice(args.subjectsOnLine).join(", "));
-            editorNode.append(more);
-
-            var showMore = $("<a></a>").html("Show all")
-              .attr("href", "javascript:void(0)")
-              .addClass("show_all")
-              .click(function (eventObj) {
-                $(this).css("display", "none");
-                elipses.css("display", "none");
-                more.css("display", "inline");
-              });
-
-            editorNode.append(showMore);
-          }
-        }
-
-        entry.append($("<hr>").addClass("editor_separator"));
-      });
-
-      //unhide the editor sections that were
-      //hidden on previous searches
-      $(".hidden").removeClass("hidden");
-
-      //hide the sections with no editors
-      $(".editor_section").each(function (index, div) {
-        var parent = $(".editor_section:eq(" + index + ")");
-        var childrens = $(".editor_section:eq(" + index + ") > div.editor");
-
-        if (childrens.length == 0) {
-          parent.addClass("hidden");
-          $("a[href=\"#" + div.id + "\"]").addClass("hidden");
-        }
-      });
-
-      //show the loaded data
-      $("#loading").fadeOut();
-      $(editorsDiv).show( "blind", 500 );
-    }; //end loadCallback
+    var edBoard = new $.fn.edBoard();
 
     //make the request to solr
     $.jsonp({
@@ -204,7 +138,7 @@ $.fn.edBoard = function () {
       },
       success: function (data) {
         args["data"] = data;
-        loadCallback(args);
+        edBoard.setEditors(args);
       },
       error: function (xOptions, textStatus) {
         console.log(textStatus);
@@ -212,6 +146,244 @@ $.fn.edBoard = function () {
 
     });
   };
+
+
+  //Setting the Editor results and making a call to load first page
+  this.setEditors = function(json, textStatus, xOptions) {
+    window.EditorialResponse = json;
+
+    $("#spinner").fadeOut(1000);
+    $("#all_editors").css("display", "none");
+
+    this.loadCallback(0);
+
+    $("#all_editors").show("blind", 1000);
+  };
+
+  //load callback function
+  //defining it here allows us to reference the
+  //query terms for highlighting
+  this.loadCallback = function (currentPage) {
+
+    var json = window.EditorialResponse;
+    var editorsDiv = $("#all_editors");
+    editorsDiv.empty();
+    editorsDiv.append("</br>")
+
+    var pageSize = 50;
+    var numOfEditors = json.data.response.docs.length;
+
+    // example: if currentPage is 2 and numOfEditors is 420
+    // totalPages is 9 == ceil of 420/50
+    // startIndex is 100, endIndex is 149.
+    var totalPages = Math.ceil(numOfEditors/pageSize);
+    var startIndex = currentPage * pageSize;
+
+    // if last page has less than 50 Editors, use remaining Editors.
+    var endIndex = Math.min(numOfEditors, startIndex + pageSize);
+
+    if(numOfEditors>0){
+      editorsDiv.append("Displaying  "+ parseInt(startIndex+1) +"-" + endIndex +
+        " of " + parseInt(numOfEditors) + " Editors.");
+    }
+    editorsDiv.append("</br>") ;
+
+    var singlePage = $("<div></div>");
+    for (var i = startIndex; i < endIndex; i++) {
+
+      var editor = json.data.response.docs[i];
+      //create a div for the editor
+      var entry = $("<div></div>").addClass("editor");
+
+      var nameDiv = $("<div></div>").addClass("name").html("<b>" + editor.ae_name + "</b>");
+      entry.append(nameDiv);
+
+      //show an icon if the person is a section editor
+      if (json.formatSectionEds && editor.doc_type == "section_editor") {
+        nameDiv.prepend($("<div></div>").addClass("icon_holder").html(json.icon_html));
+        nameDiv.append($("<span></span>").addClass("section_ed").html(" Section Editor"));
+      }
+
+      entry.append($("<div></div>")
+        .addClass("organization")
+        .html(editor.ae_institute.join(", ")));
+
+      entry.append($("<div></div>")
+        .addClass("location")
+        .html(editor.ae_country.join(", ")));
+
+      if (editor.ae_subject) {
+        //highlight the subjects
+        if (json.highlight) {
+          $.each(editor.ae_subject, function (index, subject) {
+            $.each(json, function (index, term) {
+              subject = subject.replace(term, "<span class=\"highlight\">$1</span>");
+            });
+            editor.ae_subject[index] = subject;
+          });
+        }
+
+        entry.append($("<div></div>").addClass("expertise")
+          .html("Expertise: " + editor.ae_subject.join(", ")));
+
+      }
+
+      entry.append("</br>");
+      singlePage.append(entry);
+    }
+    editorsDiv.append("</br>");
+    // Adding pagination component to div
+    var paginationTop = this.paging(totalPages, currentPage);
+    var paginationBottom = this.paging(totalPages, currentPage);
+    editorsDiv.append(paginationTop,singlePage,paginationBottom);
+
+    //unhide the editor sections that were
+    //hidden on previous searches
+    $(".hidden").removeClass("hidden");
+
+    //hide the sections with no editors
+    $(".editor_section").each(function (index, div) {
+      var parent = $(".editor_section:eq(" + index + ")");
+      var childrens = $(".editor_section:eq(" + index + ") > div.editor");
+
+      if (childrens.length == 0) {
+        parent.addClass("hidden");
+        $("a[href=\"#" + div.id + "\"]").addClass("hidden");
+      }
+    });
+
+    //show the loaded data
+    $("#loading").fadeOut();
+    $(editorsDiv).show( "blind", 500 );
+  }; //end loadCallback
+
+
+  this.paging = function(totalPages, currentPage) {
+    var pagination = $("<div></div>");
+
+    // no pagination if only one page
+    if (totalPages > 1) {
+      // otherwise adding pagination
+
+      //the logic is same as in templates/journals/PLoSDefault/webapp/search/searchResults.ftl
+
+      /*
+       It supports the following use cases and will output the following:
+       current page is zero based.
+       page number = current page + 1.
+
+       if current page is the start or end
+       if current page is 0:
+       < 1 2 3  ... 10 >
+       if current page is 9:
+       < 1 ...8 9 10 >
+
+       if current page is 4:
+       (Current page is greater then 2 pages away from start or end)
+       < 1 ... 4 5 6 ... 10 >
+
+       if current page is less then 2 pages away from start or end:
+       current page is 7:
+       < 1 ...7 8 9 10 >
+       current page is 2:
+       < 1 2 3 4 ... 10 >
+       */
+
+      pagination.attr("class", "pagination");
+
+      var ellipsis = '<span>...</span>';
+      var prev = '<span class="prev">&lt;</span>';
+      var next = '<span class="next">&gt;</span>';
+
+      if (totalPages < 4) {
+        // if less than 4 pages, do not put "..."
+        // put < with or without link depending on whether this is first page.
+        if (currentPage > 0) {
+          pagination.append(this.pagingAnchor((currentPage - 1), "&lt;", "prev"));
+        }
+        else {
+          pagination.append(prev);
+        }
+
+        // put page number for all pages
+        // do not put link for current page.
+        for (var pageNumber=0; pageNumber<totalPages; ++pageNumber) {
+          if (pageNumber == currentPage) {
+            pagination.append("<strong>" + (currentPage + 1) + "</strong>");
+          }
+          else {
+            pagination.append(this.pagingAnchor(pageNumber, pageNumber + 1));
+          }
+        }
+
+        // put > at the end with or without link depending on whether it is the last page.
+        if (currentPage < (totalPages - 1)) {
+          pagination.append(this.pagingAnchor(currentPage + 1, "&gt;", "next"));
+        }
+        else {
+          pagination.append(next);
+        }
+      } else {
+        // if >=4 pages then need to put "..."
+        // put < and first page number always.
+        // The link is present if this is not the first page.
+        if (currentPage > 0) {
+          pagination.append(this.pagingAnchor((currentPage - 1), "&lt;", "prev"));
+          pagination.append(this.pagingAnchor(0, 1));
+        }
+        else {
+          pagination.append(prev + '<strong>1</strong>');
+        }
+        // put the first "..." if this is more than 2 pages away from start.
+        if (currentPage > 2) {
+          pagination.append(ellipsis);
+        }
+        // put the three page numbers -- one before, current and one after
+        for (var pageNumber=Math.min(currentPage, 0); pageNumber<=Math.max(3, currentPage+2); ++pageNumber) {
+          if ((pageNumber > 1 && pageNumber < totalPages && pageNumber > (currentPage - 1)
+            || ((pageNumber == (totalPages - 2)) && (pageNumber > (currentPage - 2))))) {
+            if ((currentPage + 1) == pageNumber) {
+              pagination.append("<strong>" + pageNumber + "</strong>");
+            }
+            else {
+              pagination.append(this.pagingAnchor(pageNumber - 1, pageNumber));
+            }
+          }
+        }
+        // if this is more than 2 pages away from last page, put last "..."
+        if (currentPage < (totalPages - 3)) {
+          pagination.append(ellipsis);
+        }
+        // put the last page number and >.
+        // The link depends of whether this is the last page.
+        if (currentPage < (totalPages - 1)) {
+          pagination.append(this.pagingAnchor(totalPages - 1, totalPages));
+          pagination.append(this.pagingAnchor(currentPage + 1, "&gt;", "next"));
+        }
+        else {
+          pagination.append('<strong>' + totalPages + '</strong>' + next);
+        }
+      }
+    }
+
+    return pagination;
+  };
+
+  this.pagingAnchor = function(pageNumber, pagingText, className) {
+    var edBoard = new $.fn.edBoard();
+    var anchor = $('<a></a>').attr({
+      href: "#",
+      title: "(" + (pageNumber + 1)  + ")"
+    }).html(pagingText).bind("click",function(e){
+        edBoard.loadCallback(pageNumber);
+      })
+
+    if (className) {
+      anchor.attr("class", className);
+    }
+    return anchor;
+  };
+
 
   /**
    * Initialize an autosuggest search box that queries solr for the
@@ -234,7 +406,7 @@ $.fn.edBoard = function () {
     var resetButton = $("#" + args.resetButton);
 
     //show a shaded suggestion in the box
-    var default_value = "Biology, Chemistry, ...";
+    var default_value = "People, Areas of Expertise, ...";
     textbox.css("opacity", 0.5);
     textbox.val(default_value);
 
@@ -289,57 +461,189 @@ $.fn.edBoard = function () {
       },
 
       source: function(entry, response) {
-        var query = [];
+        var actual_query = [];
         var terms = entry.term.split(",");
 
         if(terms.length > 0) {
-          var prefix = terms.pop().trim().toLowerCase();
+          var prefix = $.trim(terms.pop());
 
-          $.each(terms, function(index, subject) {
-            if(subject.trim().length > 0) {
-              query.push("ae_subject:\"" + subject.trim() + "\"");
+          // once the subject facet and name facet queries complete,
+          // invoke the response handler with the list of options.
+          var success_handler = function(json_subjects, json_names) {
+            var options = [];
+
+            // areas and names total is at most 20
+            var areas_count = json_subjects ? json_subjects.facet_counts.facet_fields.ae_subject_facet.length / 2 : 0;
+            var names_count =  json_names ? json_names.response.docs.length : 0;
+            if (areas_count >= 10 && names_count >= 10) {
+              areas_count = 10;
+              names_count = 10;
+            }
+            else if (areas_count < 10 && names_count >= 10) {
+              names_count = Math.min(names_count, 20 - areas_count);
+            }
+            else if (areas_count >= 10 && names_count < 10) {
+              areas_count = Math.min(areas_count, 20 - names_count);
+            }
+
+            //push the subjects
+            if (json_subjects && json_subjects.facet_counts.facet_fields.ae_subject_facet) {
+              var subjects = json_subjects.facet_counts.facet_fields.ae_subject_facet;
+
+              var subject_title = false;
+              $.each(subjects, function (index, subject) {
+                //solr returns a list that looks like
+                // ["biology",2411, "biophysics",344]
+
+                //Only push terms that haven't been selected.
+                if($.inArray(subject, terms) == -1) {
+                  if ((index / 2) < areas_count && index % 2 == 0 && subjects[index + 1] > 0) {
+                    if (!subject_title) {
+                      subject_title = true;
+                      options.push({ label: "<b>Areas of Expertise</b>", type: "html", value: ""});
+                    }
+                    var label = subject + " (" + subjects[index+1] + ")";;
+                    if (prefix.length > 0) {
+                      label = "<b>" + label.substr(0, prefix.length) + "</b>" + label.substr(prefix.length);
+                    }
+                    options.push({ label:label, value:subject, type: "html" });
+                  }
+                }
+              });
+            }
+
+            //push academic editors name
+            if (json_names && json_names.response.docs) {
+              var names = json_names.response.docs;
+
+              var prefix_parts = prefix.split(" ");
+              var name_title = false;
+              if (names.length > 0) {
+                $.each(names, function (index, name0) {
+                  if (index < names_count) {
+                    var people = name0.ae_name;
+                    var parts = people.split(" ");
+                    var last_first = parts.pop() + ", " + parts.join(" ");
+
+                    //Only push terms that haven't been selected.
+                    if($.inArray('"' + people + '"', terms) == -1) {
+                      if (!name_title) {
+                        name_title = true;
+                        options.push({ label: "<b>People</b>", type: "html", value: ""});
+                      }
+                      var label = last_first;
+                      if (prefix.length > 0) {
+                        for (var j=0; j<prefix_parts.length; ++j) {
+                          if (prefix_parts[j]) {
+                            var re = RegExp("\\b(" + prefix_parts[j] + ")", "ig");
+                            label = label.replace(re, "<b>$1</b>");
+                          }
+                        }
+                      }
+                      options.push({ label:label, value:'"' + people + '"', type: "html"});
+                    }
+                  }
+                });
+              }
+            }
+
+            options.push({ label: '<span style="font-style: italic; color: #808080;">keep typing to see more results...</span>', type: "html", value: ""});
+
+            response(options);
+          };
+
+          // all except the last item is queried exactly via name or subject
+          $.each(terms, function(index, term) {
+            var item = $.trim(term);
+            if(item.length > 0) {
+              if (item[0] == '"' && item[item.length-1] == '"') {
+                actual_query.push("ae_name:" + item);
+              }
+              else {
+                actual_query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
+              }
             }
           });
+
+          // actual_query now has list of exact match query for all items except the last.
+
+          // for subject facet query, if no query exists (only one item)
+          // then use a wild-card *:* query (q).
+          var query = actual_query.slice(0);
 
           if(query.length == 0) {
             query.push("*:*")
           }
 
+          // subject facet query for 3 items A, B, C looks like
+          // q=(A AND B)&facet.prefix=C...
+
+          var data = [
+            {name: "wt", value: "json"},
+            {name: "q", value: query.join(" AND ")},
+            {name: "fq", value: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE"},
+            {name: "facet", value: true},
+            {name: "facet.field", value: "ae_subject_facet"},
+            {name: "facet.sort", value: "index"},
+            {name: "facet.mincount", value: 1},
+            {name: "facet.limit", value: 20},
+            {name: "facet.prefix", value: prefix.toLowerCase()}
+          ];
+
           $.jsonp({
             url: solrHost,
             context: document.body,
             timeout: 10000,
-            data: {
-              wt:"json",
-              q:query.join(" AND "),
-              fq:"doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE",
-              "facet":true,
-              "facet.field":"ae_subject_facet",
-              "facet.sort":"index",
-              "facet.prefix":prefix
-            },
+            data: data,
             callbackParameter: "json.wrf",
-            success: function(json, textStatus, xOptions) {
-              var options = [];
-              var subjects = json.facet_counts.facet_fields.ae_subject_facet;
+            success: function(json_subjects, textStatus, xOptions) {
+              if (prefix.length < 3) {
+                success_handler(json_subjects);
+                return;
+              }
 
-              $.each(subjects, function (index, subject) {
-                //solr returns a list that looks like
-                // ["biology",2411, "biophysics",344]
+              // for items A, B, C the name query looks like
+              // q=(A AND B AND (C OR C*))
 
-                //Onlu push terms that haven't been selected. :-)
-                if($.inArray(subject, terms) == -1) {
-                  if (index % 2 == 0 && subjects[index + 1] > 0) {
-                    var countString = " (" + subjects[index + 1] + ")";
-                    options.push({ label:subject + countString, value:subject });
-                  }
+              var query = actual_query.slice(0);
+              var prefix_parts = prefix.split(" ");
+              var last_part = prefix_parts.pop();
+              for (var i=0; i<prefix_parts.length; ++i) {
+                if (prefix_parts[i]) {
+                  query.push("ae_name_facet:" + prefix_parts[i].toLowerCase());
+                }
+              }
+              query.push("(ae_name_facet:" + last_part.toLowerCase()
+                  + "* OR ae_name_facet:" + last_part.toLowerCase() + ")");
+
+              var data = [
+                {name: "wt", value: "json"},
+                {name: "q", value: query.join(" AND ")},
+                {name: "fl", value: "ae_name"},
+                {name: "rows", value: 20},
+                {name: "fq", value: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE"},
+                {name: "sort", value: "ae_last_name asc"},
+                {name: "facet", value: false}
+              ];
+
+              $.jsonp({
+                url: solrHost,
+                context: document.body,
+                timeout: 10000,
+                data: data,
+                callbackParameter: "json.wrf",
+                success: function(json_names, textStatus, xOptions) {
+                  success_handler(json_subjects, json_names);
+                },
+                error: function(xOptions, error) {
+                  console.log(error);
+                  success_handler(json_subjects);
                 }
               });
-
-              response(options);
             },
             error: function(xOptions, error) {
               console.log(error);
+              success_handler();
             }
           });
         }
@@ -363,9 +667,20 @@ $(function () {
       searchFunction: function(userString) {
         var query = [];
 
-        $.each(userString.split(","), function(index, subject) {
-          if(subject.trim().length > 0) {
-            query.push("ae_subject:\"" + subject.trim() + "\"");
+        // each item is either name or subject.
+        // if it is "quoted" it is only a name, otherwise
+        // it is either name or subject.
+
+        $.each(userString.split(","), function(index, term) {
+          var item = $.trim(term);
+          if(item.length > 0) {
+            if (item[0] == '"' && item[item.length-1] == '"') {
+              var name = item.substring(1, item.length-1);
+              query.push("ae_name:\"" + name + "\"");
+            }
+            else {
+              query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
+            }
           }
         });
 
@@ -377,8 +692,23 @@ $(function () {
     }
   );
 
+  $("#searchBox").keyup(function(eventObj) {
+    setTimeout(function() {
+      console.log($("#searchBox").val() + ", " + $("#clearFilter").css("display"));
+      if ($("#searchBox").val() && $("#clearFilter").css("display") != "block") {
+        $("#clearFilter").css("display", "block");
+      }
+      else if (!$("#searchBox").val() && $("#clearFilter").css("display") == "block") {
+        $("#clearFilter").css("display", "none");
+      }
+    }, 0);
+    return true;
+  });
+
   $("#clearFilter").click(function(eventObj) {
     $("#searchBox").val("");
+    $("#clearFilter").css("display", "none");
     edBoard.getEditors();
+    $("#searchBox").focus();
   });
 });

@@ -338,8 +338,6 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
 
         assertTrue(foundCategory, "Didn't return category: " + category.getMainCategory());
       }
-
-      assertEqualsNoOrder(collapsedCategories.toArray(), actual.getTransposedCategories().toArray());
     }
 
     //check authors

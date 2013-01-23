@@ -403,49 +403,6 @@ $.fn.alm = function () {
     return result;
   }
 
-  //Deprecated, should be removed once browse / search scripts refactored not to use
-  //TODO: Confirm we can delete this
-  this.massageCounterData = function (data, pubDateMS) {
-    //Do some final calculations on the results
-    var pubDate = new Date(pubDateMS);
-    var pubYear = pubDate.getFullYear();
-    //Add one as getMonth is zero based
-    var pubMonth = pubDate.getMonth() + 1;
-
-    data.totalPDF = 0;
-    data.totalXML = 0;
-    data.totalHTML = 0;
-    data.total = 0;
-
-    //Don't display any data from any date before the publication date
-    for (var a = 0; a < data.length; a++) {
-      if (data[a].year < pubYear || (data[a].year == pubYear && data[a].month < pubMonth)) {
-        data.splice(a, 1);
-        a--;
-      }
-    }
-
-    for (var a = 0; a < data.length; a++) {
-      var totalViews = new Number(data[a].html_views) + new Number(data[a].xml_views) + new Number(data[a].pdf_views);
-      //Total views for the current period
-      data[a].total = totalViews;
-
-      //Total views so far
-      data[a].cumulativeTotal = new Number(data.total) + totalViews;
-      data[a].cumulativePDF = data.totalPDF + new Number(data[a].pdf_views);
-      data[a].cumulativeXML = data.totalXML + new Number(data[a].xml_views);
-      data[a].cumulativeHTML = data.totalHTML + new Number(data[a].html_views);
-
-      //The grand totals
-      data.totalPDF += new Number(data[a].pdf_views);
-      data.totalXML += new Number(data[a].xml_views);
-      data.totalHTML += new Number(data[a].html_views);
-      data.total += totalViews;
-    }
-
-    return data;
-  }
-
   this.parseIntSafe = function (value) {
     if (isNaN(value)) {
       return 0;
@@ -1255,6 +1212,19 @@ $.fn.alm = function () {
       }
     }
   };
+
+  this.makeSignPostLI = function(text, value, description, link) {
+    var li = $('<li>' +
+      '<div class="top">' + value.format(0, '.', ',') + '</div><div class="bottom"><div class="center">' +
+      '<div class="text">' + text + '<div class="content"><div class="description">' + description + '&nbsp;&nbsp;' +
+      '<a href="' + link + '">Read more</a>.</div></div></div></div></div></li>');
+
+    (function () {
+      this.hoverEnhanced({});
+    }).apply(li);
+
+    return li;
+  }
 }
 
 $(document).ready(
@@ -1278,75 +1248,85 @@ $(document).ready(
           //If the article is less then two days old and there might not be any data for the article
           // do not display anything
         } else {
-          // TODO: should come up with a better way to caluclate the height of the li element
-          $('#almSignPost').append($('<li></li>').text("metrics unavailable").css('vertical-align', 'middle').css('height', '65px'));
+          $('#almSignPost').append($('<li></li>').text("metrics unavailable").css('vertical-align', 'middle'));
           $('#almSignPost').fadeIn(fadeInDuration);
         }
       };
 
       var almSuccess = function (response) {
-        if (response[0].groups.length > 0) {
-          var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
+        if(response && response.length > 0 ) {
+          if (response[0].groups.length > 0) {
+            var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
 
-          var li = $('<li><span class="num">' + viewdata.total.format(0, '.', ',') + '</span> VIEWS<br/><br/></li>');
-          $("#almSignPost").append(li);
-        }
+            li = almService.makeSignPostLI("VIEWS", viewdata.total,
+              "Sum of PLOS and PubMed Central page views and downloads",
+              "/static/almInfo#usageInfo");
 
-        var scopus = 0;
-        var bookmarks = 0;
-        var shares = 0;
+            $("#almSignPost").append(li);
+          }
 
-        for (var curGroup = 0; curGroup < response[0].groupcounts.length; curGroup++) {
-          for (var curSource = 0; curSource < response[0].groupcounts[curGroup].sources.length; curSource++) {
-            var name = response[0].groupcounts[curGroup].sources[curSource].source;
-            var count = response[0].groupcounts[curGroup].sources[curSource].count;
+          var scopus = 0;
+          var bookmarks = 0;
+          var shares = 0;
 
-            if (name == "Scopus") {
-              scopus = count;
+          for (var curGroup = 0; curGroup < response[0].groupcounts.length; curGroup++) {
+            for (var curSource = 0; curSource < response[0].groupcounts[curGroup].sources.length; curSource++) {
+              var name = response[0].groupcounts[curGroup].sources[curSource].source;
+              var count = response[0].groupcounts[curGroup].sources[curSource].count;
+
+              if (name == "Scopus") {
+                scopus = count;
+              }
+
+              if (name == "Mendeley" || name == "CiteULike" || name == "Connotea") {
+                bookmarks += count;
+              }
+
+              if (name == "Facebook" || name == "Twitter") {
+                shares += count;
+              }
+            }
+          }
+
+          var text, li;
+          if (scopus > 0) {
+            text = "CITATIONS";
+            if (scopus == 1) {
+              text = "CITATION";
             }
 
-            if (name == "Mendeley" || name == "CiteULike" || name == "Connotea") {
-              bookmarks += count;
+            li = almService.makeSignPostLI(text, scopus, "Paper's citation count computed by Scopus",
+              "/static/almInfo#citationInfo");
+
+            $("#almSignPost").append(li);
+          }
+
+          if (bookmarks > 0) {
+            text = "ACADEMIC BOOKMARKS";
+            if (bookmarks == 1) {
+              text = "ACADEMIC BOOKMARK";
             }
 
-            if (name == "Facebook" || name == "Twitter") {
-              shares += count;
+            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley, CiteULike, and Connotea " +
+              "bookmarks", "/static/almInfo#socialBookmarks");
+
+            $("#almSignPost").append(li);
+          }
+
+          if (shares > 0) {
+            text = "SOCIAL SHARES";
+            if (shares == 1) {
+              text = "SOCIAL SHARE";
             }
-          }
-        }
 
-        var text, li;
-        if (scopus > 0) {
-          text = "CITATIONS";
-          if (scopus == 1) {
-            text = "CITATION";
+            li = almService.makeSignPostLI(text, shares, "Sum of Facebook and Twitter activity",
+              "/static/almInfo#socialBookmarks");
+
+            $("#almSignPost").append(li);
           }
 
-          li = $('<li><span class="num">' + scopus.format(0, '.', ',') + '</span> ' + text + '<br/><br/></li>');
-          $("#almSignPost").append(li);
+          $('#almSignPost').fadeIn(fadeInDuration);
         }
-
-        if (bookmarks > 0) {
-          text = "ACADEMIC BOOKMARKS";
-          if (bookmarks == 1) {
-            text = "ACADEMIC BOOKMARK";
-          }
-
-          li = $('<li><span class="num">' + bookmarks.format(0, '.', ',') + '</span> ' + text + '</li>');
-          $("#almSignPost").append(li);
-        }
-
-        if (shares > 0) {
-          text = "SOCIAL SHARES";
-          if (shares == 1) {
-            text = "SOCIAL SHARE";
-          }
-
-          li = $('<li><span class="num">' + shares.format(0, '.', ',') + '</span> ' + text + '</li>');
-          $("#almSignPost").append(li);
-        }
-
-        $('#almSignPost').fadeIn(fadeInDuration);
       };
 
       almService.getSummaryForArticles([ doi ], almSuccess, almError);

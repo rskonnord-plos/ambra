@@ -130,6 +130,10 @@ $(document).ready(function () {
     });
   }
 
+  var collapsible = $('.collapsibleContainer');
+  if (collapsible) {
+    collapsible.collapsiblePanel();
+  }
 });
 
 var $nav_article = $('#nav-article');
@@ -1356,3 +1360,42 @@ $('.assetSize').each(function (index, assetInput) {
     span.html(val);
   }
 });
+
+// Collapsible div used on the 500 page (error.ftl) to hold the exception stacktrace.
+// Based on code from http://www.darreningram.net/pages/examples/jQuery/CollapsiblePanelPlugin.aspx
+// (No copyright statements there, but including for attribution.)
+
+(function($) {
+  $.fn.extend({
+    collapsiblePanel: function() {
+      return $(this).each(ConfigureCollapsiblePanel);
+    }
+  });
+})(jQuery);
+
+function ConfigureCollapsiblePanel() {
+  $(this).addClass("ui-widget");
+
+  // Check if there are any child elements, if not then wrap the inner text within a new div.
+  if ($(this).children().length == 0) {
+    $(this).wrapInner("<div></div>");
+  }
+
+  // Wrap the contents of the container within a new div.
+  $(this).children().wrapAll("<div class='collapsibleContainerContent ui-widget-content'></div>");
+
+  // Create a new div as the first item within the container.  Put the title of the panel in here.
+  $("<div class='collapsibleContainerTitle ui-widget-header'><div>" + $(this).attr("title") + "</div></div>").prependTo($(this));
+
+  // Assign a call to CollapsibleContainerTitleOnClick for the click event of the new title div.
+  $(".collapsibleContainerTitle", this).click(CollapsibleContainerTitleOnClick);
+
+  // Keep the widget closed initially.
+  $(".collapsibleContainerContent", $(this).parent()).toggle();
+}
+
+function CollapsibleContainerTitleOnClick() {
+
+  // The item clicked is the title div... get this parent (the overall container) and toggle the content within it.
+  $(".collapsibleContainerContent", $(this).parent()).slideToggle();
+}

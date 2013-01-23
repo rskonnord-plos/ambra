@@ -69,8 +69,6 @@
   <util:map id="xslArticleTransformStyleSheetMap">
     <entry key="default"
            value="${ambra.services.articletransform.default}"/>
-    <entry key="2.0"
-           value="${ambra.services.articletransform.dtd_2_3}"/>
     <entry key="3.0"
            value="${ambra.services.articletransform.dtd_3_0}"/>
   </util:map>
@@ -87,8 +85,6 @@
   <util:map id="xslFullDoiStyleSheetMap">
     <entry key="default"
            value="${ambra.services.fulldoitransform.default}"/>
-    <entry key="2.0"
-           value="${ambra.services.fulldoitransform.dtd_2_3}"/>
     <entry key="3.0"
            value="${ambra.services.fulldoitransform.dtd_3_0}"/>
   </util:map>
@@ -105,8 +101,6 @@
   <util:map id="xslObjInfoStyleSheetMap">
     <entry key="default"
            value="${ambra.services.objinfotransform.default}"/>
-    <entry key="2.0"
-           value="${ambra.services.objinfotransform.dtd_2_3}"/>
     <entry key="3.0"
            value="${ambra.services.objinfotransform.dtd_3_0}"/>
   </util:map>
@@ -298,6 +292,10 @@
     <constructor-arg index="0" ref="rolesEhCache"/>
   </bean>
 
+  <bean id="taxonomyCache" class="org.ambraproject.service.cache.EhcacheProvider">
+    <constructor-arg index="0" ref="taxonomyEhCache"/>
+  </bean>
+
   <!-- freemarker configs -->
   <bean id="ambraFreemarkerConfig" class="org.ambraproject.freemarker.AmbraFreemarkerConfig">
     <constructor-arg index="0" ref="ambraConfiguration"/>
@@ -324,6 +322,10 @@
 
   <bean id="rolesEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
     <property name="cacheName" value="RolesCache"/>
+  </bean>
+
+  <bean id="taxonomyEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="TaxonomyCache"/>
   </bean>
 
   <!-- JMX exporting -->
@@ -421,4 +423,9 @@
       </map>
     </property>
   </bean>
+
+  <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">
+    <property name="cache" ref="taxonomyCache" />
+  </bean>
+
 </beans>

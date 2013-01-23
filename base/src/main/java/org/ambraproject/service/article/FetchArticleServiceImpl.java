@@ -1,18 +1,10 @@
 /*
  * $HeadURL$
  * $Id$
- *
- * Copyright (c) 2006-2011 by Public Library of Science
- *     http://plos.org
- *     http://ambraproject.org
- *
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -41,28 +33,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.activation.DataSource;
 import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Fetch article service.
@@ -76,7 +60,16 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   private FileStoreService fileStoreService;
   private Cache articleHtmlCache;
 
-
+  /**
+   * For the articleInfo, get the article HTML
+   *
+   * @param article the articleInfo object
+   *
+   * @return the article HTML
+   *
+   * @throws ApplicationException
+   * @throws NoSuchArticleIdException
+   */
   private String getTransformedArticle(final ArticleInfo article)
       throws ApplicationException, NoSuchArticleIdException {
     try {
@@ -115,6 +108,16 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     return content;
   }
 
+  /**
+   * For the articleDOI, get the article XML datasource
+   *
+   * @param articleDoi the articleInfo object
+   *
+   * @return the article XML
+   *
+   * @throws ApplicationException
+   * @throws NoSuchArticleIdException
+   */
   private DataSource getArticleXML(final String articleDoi)
       throws NoSuchArticleIdException {
     String fsid = FSIDMapper.doiTofsid(articleDoi, "XML");
@@ -169,6 +172,35 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
+   *  Patterns for <corresp></corresp>  and <email></email> tags
+   */
+  private static final Pattern[] PATTERNS = {
+    Pattern.compile("<corresp(.*?)>"),
+    Pattern.compile("</corresp>"),
+    Pattern.compile("<email(?:" +
+      "(?:\\s+xmlns:xlink\\s*=\\s*\"http://www.w3.org/1999/xlink\"\\s*)|" +
+      "(?:\\s+xlink:type\\s*=\\s*\"simple\"\\s*)" +
+      ")*>(.*?)</email>"),
+    Pattern.compile("^E-mail:"),
+    Pattern.compile("^\\* E-mail:"),
+    Pattern.compile("\\*To whom"),
+    Pattern.compile("\\* To whom")
+  };
+
+  /**
+   *  Pattern replaceements for <corresp></corresp>  and <email></email> tags
+   */
+  private static final String[] REPLACEMENTS = {
+    "",
+    "",
+    "<a href=\"mailto:$1\">$1</a>",
+    "<span class=\"email\">* E-mail:</span>",
+    "<span class=\"email\">* E-mail:</span>",
+    "<span class=\"email\">*</span>To whom",
+    "<span class=\"email\">*</span>To whom"
+  };
+
+  /**
    * Get the authors and some meta data for a given article.  I wanted to make this method bigger, but
    * I ran out of time.
    *
@@ -197,7 +229,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
         //Create temp author document fragment to search out of
         DocumentFragment authorDoc = doc.createDocumentFragment();
-        authorDoc.appendChild(authorNode);
+
+        //I thought this strange, appendChild actually moves the node in the case of document fragment
+        //hence below I clone to keep the original DOM intact.
+        //re: http://docs.oracle.com/javase/1.4.2/docs/api/org/w3c/dom/Node.html#appendChild%28org.w3c.dom.Node%29
+        authorDoc.appendChild(authorNode.cloneNode(true));
 
         Node surNameNode = xPathUtil.selectSingleNode(authorDoc, "//name/surname");
         Node givenNameNode = xPathUtil.selectSingleNode(authorDoc, "//name/given-names");
@@ -233,7 +269,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
                       List<String> footnotes = new ArrayList<String>();
                       footnotes.addAll(av.getCustomFootnotes());
 
-                      value = transFormFootnote(value);
+                      value = fixPilcrow(value, false);
 
                       footnotes.add(value);
 
@@ -258,8 +294,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
           Node suffixNode = xPathUtil.selectSingleNode(authorDoc, "//name/suffix");
           Node equalContribNode = xPathUtil.selectSingleNode(authorDoc, "//@equal-contrib");
           Node deceasedNode = xPathUtil.selectSingleNode(authorDoc, "//@deceased");
-          Node addressNode = xPathUtil.selectSingleNode(authorDoc, "//xref[@ref-type='fn']/sup[contains(text(),'¤')]/..");
           Node corresAuthorNode = xPathUtil.selectSingleNode(authorDoc, "//xref[@ref-type='corresp']");
+          NodeList addressList = xPathUtil.selectNodes(authorDoc, "//xref[@ref-type='fn']/sup[contains(text(),'¤')]/..");
           NodeList affList = xPathUtil.selectNodes(authorDoc, "//xref[@ref-type='aff']");
 
           // Either surname or givenName can be blank
@@ -270,15 +306,24 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
           boolean equalContrib = (equalContribNode != null);
           boolean deceased = (deceasedNode != null);
-          boolean groupContrib = false;
+          boolean relatedFootnote = false;
 
           String corresponding = null;
-          String currentAddress = null;
 
-          if(addressNode != null) {
+          List<String> currentAddresses = new ArrayList<String>();
+          for(int a = 0; a < addressList.getLength(); a++) {
+            Node addressNode = addressList.item(a);
+
             if(addressNode.getAttributes().getNamedItem("rid") != null) {
               String fnId = addressNode.getAttributes().getNamedItem("rid").getTextContent();
-              currentAddress = addressMap.get(fnId);
+
+              if(currentAddresses.size() > 0) {
+                //If the current address is already defined, remove "current" text from subsequent
+                //addresses
+                currentAddresses.add(fixCurrentAddress(addressMap.get(fnId)));
+              } else {
+                currentAddresses.add(addressMap.get(fnId));
+              }
             }
           }
 
@@ -291,17 +336,17 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
             if(node.getAttributes().getNamedItem("rid") != null) {
               String id = node.getAttributes().getNamedItem("rid").getTextContent();
-
               String value = otherFootnotesMap.get(id);
 
               if(value != null) {
-                //Sometimes the "other" node is used to contrib equally as well
-                //Is there a better way to do this?
-                if(value.contains("contributed equally")) {
-                  groupContrib = true;
+                //If the current footnote is also referenced by another contrib
+                //We want to notify the end user of the relation
+                if(hasRelatedFootnote(doc, id)) {
+                  value = fixPilcrow(value, true);
+                  relatedFootnote = true;
+                } else {
+                  value = fixPilcrow(value, false);
                 }
-
-                value = transFormFootnote(value);
 
                 otherFootnotes.add(value);
               }
@@ -321,7 +366,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
               if(correspondAddrNode == null) {
                 log.warn("No node found for corrsponding author: author-notes/corresp[@id='\" + rid + \"']");
               } else {
-                corresponding = correspondAddrNode.getTextContent();
+                corresponding = TextUtils.getAsXMLString(correspondAddrNode);
                 corresponding = transFormCorresponding(corresponding);
               }
             }
@@ -343,12 +388,12 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
             .setGivenNames(givenName)
             .setSurnames(surname)
             .setSuffix(suffix)
-            .setCurrentAddress(currentAddress)
             .setOnBehalfOf(onBehalfOf)
             .setEqualContrib(equalContrib)
-            .setGroupContrib(groupContrib)
             .setDeceased(deceased)
+            .setRelatedFootnote(relatedFootnote)
             .setCorresponding(corresponding)
+            .setCurrentAddresses(currentAddresses)
             .setAffiliations(affiliations)
             .setCustomFootnotes(otherFootnotes)
             .build();
@@ -365,34 +410,151 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   * Kludge for FEND-794, A better ways of doing this?
+   *
+   * @param doc the article xml document in question
+   *
+   * @param authors list of article authors
+   *
+   * @return an xml-sorted map of article affiliates and their respective authors
    */
-  private String transFormFootnote(String source) {
-    String dest = source.replace("<sup>¶</sup>", "<span class=\"pilcro\">¶</span>");
-    dest = dest.replaceAll("^<p>¶", "<p><span class=\"pilcro\">¶</span>");
+  public Map<String, List<AuthorView>> getAuthorsByAffiliation(Document doc, List<AuthorView> authors) throws RuntimeException {
 
-    return dest;
+    Map<String, List<AuthorView>> authorsByAffiliation = new LinkedHashMap<String, List<AuthorView>>();
+
+    try {
+      /*
+      <String, String> in the following case is, in xpath parlance, <//aff@id>,<//aff/addr-line/text() but
+      AuthorView cues on the //aff/addr-line/text() part, so we need to add a level of indirection
+      */
+      Map<String, String> originalAffiliateMap = getAffiliateMap(doc);
+      for (Map.Entry<String, String> entry : originalAffiliateMap.entrySet()) {
+        authorsByAffiliation.put(entry.getValue(), new ArrayList<AuthorView>());
+      }
+
+      for (AuthorView currentAuthorView : authors) {
+        for (String affiliate : currentAuthorView.getAffiliations()) {
+
+          List<AuthorView> authorList = authorsByAffiliation.get(affiliate);
+          if (authorList != null) {
+            authorsByAffiliation.get(affiliate).add(currentAuthorView);
+          } else {
+            log.error(new StringBuilder("Could not associate ").append(currentAuthorView.getFullName()).append(" with institution ").append(affiliate).toString());
+          }
+
+        }
+      }
+    } catch (XPathExpressionException e) {
+      throw new RuntimeException();
+    }
+
+      //make sure to return only non-empty lists
+      Map<String, List<AuthorView>> tempAuthorAffiliations = new LinkedHashMap<String, List<AuthorView>>();
+      for(Map.Entry<String, List<AuthorView>> affiliationMapping: authorsByAffiliation.entrySet()){
+
+        if (affiliationMapping.getValue().size() > 0) {
+          tempAuthorAffiliations.put(affiliationMapping.getKey(), affiliationMapping.getValue());
+        }
+
+      }
+      authorsByAffiliation = tempAuthorAffiliations;
+
+
+
+    return authorsByAffiliation;
+
   }
 
   /**
-   * Kludge for FEND-794, A better ways of doing this?
+   * Remove "current" text from an address field
+   *
+   * @param source text fragment
+   *
+   * @return text fragment
    */
-  private String transFormCorresponding(String source) {
-    String dest = source.replaceAll("^E-mail:", "<span class=\"email\">* E-mail:</span>");
-    dest = dest.replaceAll("^\\* E-mail:", "<span class=\"email\">* E-mail:</span>");
-    dest = dest.replace("*To whom", "<span class=\"email\">*</span>To whom");
-    dest = dest.replace("* To whom", "<span class=\"email\">*</span>To whom");
+  private String fixCurrentAddress(String source) {
+    String destination;
 
-    return dest;
+    destination = source.replaceAll("Current\\s[Aa]ddress:\\s*", "");
+
+    return destination;
+  }
+
+  /**
+   * Reformat html embedded into the XML into something more easily styled on the front end
+   *
+   * @param source html fragment
+   * @param prependHTML if true, append a html snippet for a 'pilcro'
+   *
+   * @return html fragment
+   */
+  private String fixPilcrow(String source, boolean prependHTML) {
+    String destination;
+
+    if(prependHTML) {
+      destination = source.replace("<sup>¶</sup>", "<span class=\"rel-footnote\">¶</span>");
+      destination = destination.replaceAll("^<p>¶?\\s*", "<p><span class=\"rel-footnote\">¶</span>");
+    } else {
+      destination = source.replace("<sup>¶</sup>", "");
+      destination = destination.replaceAll("^<p>¶?\\s*", "<p>");
+    }
+
+    return destination;
+  }
+
+  /**
+   * Check to see if the current footnote is referenced by multiple contribs
+   * If the current footnote is also referenced by another contrib
+   * We want to notify the end user of the relation
+   *
+   * @param doc the document
+   * @param rid the rid to search for, the RID is an attribute of a footnote that
+   *            attaches a footnote to one or many authors
+   *
+   * @return true if the rid is referenced by contribs more then once
+   *
+   * * @throws XPathExpressionException
+   */
+  private boolean hasRelatedFootnote(Node doc, String rid) throws XPathExpressionException {
+    String xpath = "//contrib/xref[@ref-type='fn' and @rid='" + rid + "']";
+
+    log.debug("xpath: {}", xpath);
+    NodeList nl = xPathUtil.selectNodes(doc, xpath);
+    log.debug("nodecount: {}", nl.getLength());
+
+    if(nl.getLength() > 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  /**
+   * Kludge for FEND-794, A better ways of doing this?
+   *
+   * Reformat html embedded into the XML into something more easily styled on the front end
+   *
+   * @param source html fragment
+   *
+   * @return html fragment
+   */
+  private static String transFormCorresponding(String source) {
+    for (int index = 0; index < PATTERNS.length; index++) {
+      source = PATTERNS[index].matcher(source).replaceAll(REPLACEMENTS[index]);
+    }
+
+    return source;
   }
 
   /**
    * Grab all affiliations and put them into their own map
-   * @param doc
-   * @return
+   *
+   * @param doc the article XML document
+   *
+   * @return a Map of affiliate IDs and values
    */
   private Map<String, String> getAffiliateMap(Document doc) throws XPathExpressionException {
-    Map<String, String> affiliateMap = new HashMap<String, String>();
+    Map<String, String> affiliateMap = new LinkedHashMap<String, String>();
 
     NodeList affiliationNodeList = xPathUtil.selectNodes(doc, "//aff");
 
@@ -408,7 +570,9 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       // Not all <aff> id's are affiliations.
       if (id.startsWith("aff")) {
         DocumentFragment df = doc.createDocumentFragment();
-        df.appendChild(node);
+        //because of a org.w3c.Document.dom.Document peculiarity, simple appellation will strip it from the source and
+        //cause bugs, so we need cloning technology
+        df.appendChild(node.cloneNode(true));
 
         StringBuilder res = new StringBuilder();
 
@@ -430,6 +594,13 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     return affiliateMap;
   }
 
+  /**
+   * Grab all addresses and put them into their own map
+   *
+   * @param doc the article XML document
+   *
+   * @return a Map of address IDs and values
+   */
   private Map<String, String> getAddressMap(Document doc) throws XPathExpressionException {
     Map<String, String> addressMap = new HashMap<String, String>();
 
@@ -452,6 +623,13 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     return addressMap;
   }
 
+  /**
+   * Grab all footnotes and put them into their own map
+   *
+   * @param doc the article XML document
+   *
+   * @return a Map of footnote IDs and values
+   */
   private Map<String, String> getOtherFootnotesMap(Document doc) throws XPathExpressionException, TransformerException {
     Map<String, String> otherFootnotesMap = new HashMap<String, String>();
 
@@ -491,16 +669,10 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
       return null;
     }
 
-    int length = nodes.getLength();
-    if (length == 0) {
-      return null;
-    }
+    List<String> text = new ArrayList<String>(nodes.getLength());
 
-    List<String> text = new ArrayList<String>(length);
-
-    for (int i = 0; i < length; i++) {
-      Node item = nodes.item(i);
-      text.add(item.getTextContent());
+    for (int i = 0; i < nodes.getLength(); i++) {
+      text.add(nodes.item(i).getTextContent());
     }
 
     return text;
@@ -511,8 +683,67 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
    */
   @Override
   public List<String> getCorrespondingAuthors(Document doc) {
-    //TODO: Test this code across many articles
-    return findTextFromNodes(doc, "//corresp/email");
+    //Sample XML node:
+    //<corresp id="cor1">* E-mail:
+    // <email xlink:type="simple">maud.hertzog@ibcg.biotoul.fr</email> (MH);
+    // <email xlink:type="simple">philippe.chavrier@curie.fr</email> (PC)</corresp>
+    //<corresp xmlns:mml="http://www.w3.org/1998/Math/MathML"
+    // xmlns:xlink="http://www.w3.org/1999/xlink"
+    // xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="cor1">* E-mail:
+    // <email xlink:type="simple">maud.hertzog@ibcg.biotoul.fr</email> (MH);
+    // <email xlink:type="simple">philippe.chavrier@curie.fr</email> (PC)</corresp>
+
+    try {
+      Node authNode = xPathUtil.selectSingleNode(doc, "//corresp");
+      String authors = TextUtils.getAsXMLString(authNode);
+      return parseOutAuthorEmails(authors);
+
+    } catch (XPathExpressionException ex) {
+      log.error("Error occurred while gathering text with: //corresp", ex);
+    } catch (TransformerException ex) {
+      log.error("Error occurred while gathering text with: //corresp", ex);
+    }
+
+    return new ArrayList<String>();
+  }
+
+  /**
+   * For a given corresp XML node, parse out the article author's emails
+   *
+   * This method is static and public because we want to be able to access it via the unit test
+   *
+   * @param authors
+   * @return
+   */
+
+  public static List<String> parseOutAuthorEmails(String authors) {
+    List<String> result = new ArrayList<String>();
+
+    //This fixes email links:
+    String r = transFormCorresponding(authors);
+
+    //Remove prepending text
+    r = r.replaceAll("<span.*?/span>", "");
+    r = r.replaceFirst(".*?[Ee]-mail:", "");
+
+    //Remove extra carriage return
+    r = r.replaceAll("\\n", "");
+
+    //Split on "<a" as the denotes a new email address
+    String[] emails = r.split("(?=<a)");
+
+    for(int a = 0; a < emails.length; a++) {
+      if(emails[a].trim().length() > 0) {
+        String email = emails[a];
+        //Remove ; and "," from address
+        email = email.replaceAll("[,;]","");
+        email = email.replaceAll("[Ee]mail:","");
+        email = email.replaceAll("[Ee]-mail:","");
+        result.add(email.trim());
+      }
+    }
+
+    return result;
   }
 
   /**

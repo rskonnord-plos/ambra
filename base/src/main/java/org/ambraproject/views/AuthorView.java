@@ -26,36 +26,38 @@ public class AuthorView {
   private final String givenNames;
   private final String surnames;
   private final String suffix;
-  private final String currentAddress;
   private final String onBehalfOf;
   private final boolean equalContrib;
-  private final boolean groupContrib;
   private final boolean deceased;
+  private final boolean relatedFootnote;
   private final String corresponding;
+  private final List<String> currentAddresses;
   private final List<String> affiliations;
   private final List<String> customFootnotes;
 
   private AuthorView(String givenNames,
                      String surnames,
                      String suffix,
-                     String currentAddress,
                      String onBehalfOf,
                      boolean equalContrib,
-                     boolean groupContrib,
                      boolean deceased,
+                     boolean relatedFootnote,
                      String corresponding,
+                     List<String> currentAddresses,
                      List<String> affiliations,
                      List<String> customFootnotes) {
     super();
     this.givenNames = givenNames;
     this.surnames = surnames;
     this.suffix = suffix;
-    this.currentAddress = currentAddress;
     this.onBehalfOf = onBehalfOf;
     this.equalContrib = equalContrib;
-    this.groupContrib = groupContrib;
     this.deceased = deceased;
+    this.relatedFootnote = relatedFootnote;
     this.corresponding = corresponding;
+    this.currentAddresses = (currentAddresses == null)
+      ? Collections.<String>emptyList()
+      : Collections.unmodifiableList(currentAddresses);
     this.affiliations = (affiliations == null)
       ? Collections.<String>emptyList()
       : Collections.unmodifiableList(affiliations);
@@ -76,10 +78,6 @@ public class AuthorView {
     return suffix;
   }
 
-  public String getCurrentAddress() {
-    return currentAddress;
-  }
-
   public String getOnBehalfOf() {
     return onBehalfOf;
   }
@@ -88,16 +86,20 @@ public class AuthorView {
     return equalContrib;
   }
 
-  public boolean getGroupContrib() {
-    return groupContrib;
-  }
-
   public boolean getDeceased() {
     return deceased;
   }
 
+  public boolean getRelatedFootnote() {
+    return relatedFootnote;
+  }
+
   public String getCorresponding() {
     return corresponding;
+  }
+
+  public List<String> getCurrentAddresses() {
+    return currentAddresses;
   }
 
   public List<String> getAffiliations() {
@@ -198,12 +200,11 @@ public class AuthorView {
     builder.setGivenNames(av.getGivenNames());
     builder.setSurnames(av.getSurnames());
     builder.setSuffix(av.getSuffix());
-    builder.setCurrentAddress(av.getCurrentAddress());
     builder.setOnBehalfOf(av.getOnBehalfOf());
     builder.setEqualContrib(av.getEqualContrib());
-    builder.setGroupContrib(av.getGroupContrib());
     builder.setDeceased(av.getDeceased());
     builder.setCorresponding(av.getCorresponding());
+    builder.setCurrentAddresses(av.getCurrentAddresses());
     builder.setAffiliations(av.getAffiliations());
     builder.setCustomFootnotes(av.getCustomFootnotes());
 
@@ -218,12 +219,12 @@ public class AuthorView {
     private String givenNames;
     private String surnames;
     private String suffix;
-    private String currentAddress;
     private String onBehalfOf;
     private boolean equalContrib;
-    private boolean groupContrib;
     private boolean deceased;
+    private boolean relatedFootnote;
     private String corresponding;
+    private List<String> currentAddresses;
     private List<String> affiliations;
     private List<String> customFootnotes;
 
@@ -242,11 +243,6 @@ public class AuthorView {
       return this;
     }
 
-    public Builder setCurrentAddress(String currentAddress) {
-      this.currentAddress = currentAddress;
-      return this;
-    }
-
     public Builder setOnBehalfOf(String onBehalfOf) {
       this.onBehalfOf = onBehalfOf;
       return this;
@@ -257,18 +253,23 @@ public class AuthorView {
       return this;
     }
 
-    public Builder setGroupContrib(boolean groupContrib) {
-      this.groupContrib = groupContrib;
-      return this;
-    }
-
     public Builder setDeceased(boolean deceased) {
       this.deceased = deceased;
       return this;
     }
 
+    public Builder setRelatedFootnote(boolean relatedFootnote) {
+      this.relatedFootnote = relatedFootnote;
+      return this;
+    }
+
     public Builder setCorresponding(String corresponding) {
       this.corresponding = corresponding;
+      return this;
+    }
+
+    public Builder setCurrentAddresses(List<String> currentAddresses) {
+      this.currentAddresses = currentAddresses;
       return this;
     }
 
@@ -287,12 +288,12 @@ public class AuthorView {
         givenNames,
         surnames,
         suffix,
-        currentAddress,
         onBehalfOf,
         equalContrib,
-        groupContrib,
         deceased,
+        relatedFootnote,
         corresponding,
+        currentAddresses,
         affiliations,
         customFootnotes);
     }
@@ -308,12 +309,12 @@ public class AuthorView {
     return (this.givenNames == null ? that.givenNames == null : this.givenNames.equals(that.givenNames))
       && (this.surnames == null ? that.surnames == null : this.surnames.equals(that.surnames))
       && (this.suffix == null ? that.suffix == null : this.suffix.equals(that.suffix))
-      && (this.currentAddress == null ? that.currentAddress == null : this.currentAddress.equals(that.currentAddress))
       && (this.onBehalfOf == null ? that.onBehalfOf == null : this.onBehalfOf.equals(that.onBehalfOf))
       && (this.equalContrib == that.equalContrib)
-      && (this.groupContrib == that.groupContrib)
       && (this.deceased == that.deceased)
+      && (this.relatedFootnote == that.relatedFootnote)
       && (this.corresponding == null ? that.corresponding == null : this.corresponding.equals(that.corresponding))
+      && (this.currentAddresses == null ? that.currentAddresses == null : this.currentAddresses.equals(that.currentAddresses))
       && (this.affiliations == null ? that.affiliations == null : this.affiliations.equals(that.affiliations))
       && (this.customFootnotes == null ? that.customFootnotes == null : this.customFootnotes.equals(that.customFootnotes));
   }
@@ -325,12 +326,12 @@ public class AuthorView {
     hash = prime * hash + (givenNames == null ? 0 : givenNames.hashCode());
     hash = prime * hash + (surnames == null ? 0 : surnames.hashCode());
     hash = prime * hash + (suffix == null ? 0 : suffix.hashCode());
-    hash = prime * hash + (currentAddress == null ? 0 : currentAddress.hashCode());
     hash = prime * hash + (onBehalfOf == null ? 0 : onBehalfOf.hashCode());
     hash = prime * hash + Boolean.valueOf(equalContrib).hashCode();
-    hash = prime * hash + Boolean.valueOf(groupContrib).hashCode();
     hash = prime * hash + Boolean.valueOf(deceased).hashCode();
+    hash = prime * hash + Boolean.valueOf(relatedFootnote).hashCode();
     hash = prime * hash + (corresponding == null ? 0 : corresponding.hashCode());
+    hash = prime * hash + (currentAddresses == null ? 0 : currentAddresses.hashCode());
     hash = prime * hash + (affiliations == null ? 0 : affiliations.hashCode());
     hash = prime * hash + (customFootnotes == null ? 0 : customFootnotes.hashCode());
     return hash;
