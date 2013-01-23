@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra</artifactId>
-  <version>2.5.3-SNAPSHOT</version>
+  <version>2.5.3</version>
   <packaging>pom</packaging>
   <name>Ambra application</name>
 
@@ -42,7 +42,7 @@
     <easymock.version>2.5.2</easymock.version>
     <hibernate-version>3.6.3.Final</hibernate-version>
     <mysql-connector-java.version>5.1.9</mysql-connector-java.version>
-    <filestore.version>1.0.1</filestore.version>
+    <filestore.version>1.0.4</filestore.version>
     <httpclient.version>4.2.1</httpclient.version>
     <httpmime.version>4.2.1</httpmime.version>
   </properties>
@@ -157,9 +157,9 @@
   </pluginRepositories>
 
   <scm>
-    <developerConnection>scm:svn:http://ambraproject.org/svn/ambra/ambra/head</developerConnection>
-    <connection>scm:svn:http://http://ambraproject.org/svn/ambra/ambra/head</connection>
-    <url>scm:svn:http://ambraproject.org/svn/ambra/ambra/head</url>
+    <developerConnection>scm:svn:http://ambraproject.org/svn/ambra/ambra/tags/ambra-2.5.3</developerConnection>
+    <connection>scm:svn:http://http://ambraproject.org/svn/ambra/ambra/tags/ambra-2.5.3</connection>
+    <url>scm:svn:http://ambraproject.org/svn/ambra/ambra/tags/ambra-2.5.3</url>
   </scm>
 
   <distributionManagement>

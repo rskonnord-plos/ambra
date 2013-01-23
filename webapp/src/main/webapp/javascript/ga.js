@@ -30,8 +30,8 @@ var bamGAID = plosGApropId[window.location.hostname];
 // Deprecated GoogleAnalytics Prop ID.  Used for all of PLOS.org 'UA-338393-1'
 var bamGAVPV = location.pathname + location.search + location.hash;
 // cross domain list
-var bamGAcrossDomains = ["plosone-josowski.plos.org", "plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
-var bamGAIgnoredRefs = ["plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
+var bamGAcrossDomains = ["plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
+var bamGAIgnoredRefs = ["www.plosone.org", "www.plosbiology.org", "www.plosmedicine.org", "www.plosgenetics.org", "www.ploscompbiol.org", "www.plospathogens.org", "www.plosntds.org", "www.ploscollections.org", "www.plosreports.org", "www.ploshubs.org", "www.plos.org"];
 
 var _bamGA;
 if (typeof(bamGAID) != 'undefined') {

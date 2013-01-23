@@ -70,6 +70,7 @@
       <interceptor name="ensureUserAccount" class="org.ambraproject.struts2.EnsureUserAccountInterceptor"/>
       <interceptor name="ensureAdmin" class="org.ambraproject.struts2.EnsureRoleInterceptor"/>
       <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
+      <interceptor name="internalIp" class="org.ambraproject.struts2.InternalIpInterceptor"/>
 
       <interceptor-stack name="strutsBaseStack">
         <interceptor-ref name="exception">
@@ -101,6 +102,7 @@
 
       <interceptor-stack name="ambraBaseStack">
         <interceptor-ref name="strutsBaseStack"/>
+        <interceptor-ref name="internalIp"/>
       </interceptor-stack>
 
       <interceptor-stack name="ambraUserStack">
@@ -214,7 +216,27 @@
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
+  </package>
 
+  <package name="debug" extends="default" namespace="/debug">
+    <default-action-ref name="debug"/>
+
+    <action name="debug" class="org.ambraproject.action.debug.DebugInfoAction">
+      <result name="success" type="naked">
+        <param name="templateFile">/debugInfo.ftl</param>
+      </result>
+
+      <!-- Since this is an internal-only action, return a 404 instead of 500 on ERROR
+           to prevent the super-top-secret URL from leaking out.                  -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="threadDump" class="org.ambraproject.action.debug.ThreadDumpAction" />
+
+    <action name="processDump" class="org.ambraproject.action.debug.ProcessDumpAction" />
   </package>
 
   <package name="feedback" extends="default" namespace="/feedback">
@@ -386,7 +408,7 @@
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article.ftl</param>
       </result>
-      <result name="error" type="default_freemarker">
+      <result name="articleNotFound" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
