@@ -1195,6 +1195,9 @@ $('form[name="searchForm"], form[name="searchStripForm"]').each(function (index,
     if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
       return false;
     }
+    else {
+      $('#db input[name="startPage"]').val('0');
+    }
   });
 });
 
