@@ -232,6 +232,11 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
 
     if(filterEndDate != null && filterEndDate.length() > 0) {
       try {
+        //If no time is specified, append end of day
+        if(!filterEndDate.contains("T")) {
+          filterEndDate = filterEndDate + "T23:59:59Z";
+        }
+
         eDate = DateParser.parse(filterEndDate);
       } catch(InvalidDateException ex) {
         //If the user enters a wacky date, die silently?
@@ -249,6 +254,11 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
     Date sDate = null;
 
     if(filterStartDate != null && filterStartDate.length() > 0) {
+      //If no time is specified, append beginning of day
+      if(!filterStartDate.contains("T")) {
+        filterStartDate = filterStartDate + "T00:00:00Z";
+      }
+
       try {
         sDate = DateParser.parse(filterStartDate);
       } catch(InvalidDateException ex) {
