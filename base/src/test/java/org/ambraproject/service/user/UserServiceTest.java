@@ -176,7 +176,7 @@ public class UserServiceTest extends BaseTest {
     List<SavedSearchView> savedSearch = userService.getSavedSearches(id);
 
     assertEquals(savedSearch.size(), 1);
-    assertEquals(savedSearch.get(0).getSearchName(), "test");
+    assertEquals(savedSearch.get(0).getSearchName(), "testSave");
     assertEquals(savedSearch.get(0).getMonthly(), false);
     assertEquals(savedSearch.get(0).getWeekly(), true);
 
