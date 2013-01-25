@@ -1158,7 +1158,7 @@ $.fn.alm = function () {
                   return '<table id="mini" cellpadding="0" cellspacing="0">'
                     + '<tr><th></td><td colspan="2">Views in '
                     + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                    + '</td><td colspan="2">Views since ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+                    + '</td><td colspan="2">Views through ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
                     + '</td></tr><tr><th>Source</th><th class="header1">PLOS</th><th class="header2">PMC</th>'
                     + '<th class="header1">PLOS</th><th class="header2">PMC</th></tr>'
                     + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
