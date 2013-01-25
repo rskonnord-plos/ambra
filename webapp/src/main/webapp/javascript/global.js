@@ -109,6 +109,9 @@ $(document).ready(function () {
     e.preventDefault();
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
+
+    window.history.pushState({}, document.title, $(this).attr('href'));
+
     $('html,body').animate({scrollTop:b.offset().top - 100}, 500, 'linear', function () {
       // see spec
       // window.location.hash = '#' + href;
@@ -1198,6 +1201,9 @@ $('form[name="searchForm"], form[name="searchStripForm"]').each(function (index,
     //namely simple or advanced
     if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
       return false;
+    }
+    else {
+      $('#db input[name="startPage"]').val('0');
     }
   });
 });

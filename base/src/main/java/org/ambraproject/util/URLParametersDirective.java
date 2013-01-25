@@ -21,8 +21,10 @@
 package org.ambraproject.util;
 
 import freemarker.ext.beans.ArrayModel;
+import freemarker.ext.beans.DateModel;
 import freemarker.ext.beans.NumberModel;
 import freemarker.ext.beans.StringModel;
+import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
@@ -36,6 +38,7 @@ import freemarker.template.TemplateModelIterator;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.Map;
 import java.io.IOException;
 
@@ -164,23 +167,32 @@ public class URLParametersDirective implements TemplateDirectiveModel {
       if(values instanceof SimpleSequence) {
         String val = null;
         if(index < ((SimpleSequence)values).size()) {
-          return String.valueOf(((SimpleSequence)values).get(index));
+          return getValue(((SimpleSequence) values).get(index));
         } else {
-          return String.valueOf(((SimpleSequence)values).get(((SimpleSequence)values).size()));
+          return getValue(((SimpleSequence) values).get(((SimpleSequence) values).size()));
         }
       }
 
-      if((values instanceof NumberModel) || (values instanceof StringModel)
-          || (values instanceof SimpleScalar)) {
-        return String.valueOf(values);
-      }
-
-      throw new TemplateModelException("A bad value was given, values must be of type string, number" +
-          " or collection in a format of: [\"value\",1,5]");
-      
+      return getValue(values);
     } else {
       return "";
     }
+  }
+
+  private String getValue(Object value) throws TemplateModelException
+  {
+    if((value instanceof NumberModel) || (value instanceof StringModel)
+      || (value instanceof SimpleScalar || (value instanceof SimpleNumber))) {
+      return String.valueOf(value);
+    }
+
+    if(value instanceof DateModel) {
+      Date d = ((DateModel)value).getAsDate();
+      return DateParser.getIsoDateNoMillis(d);
+    }
+
+    throw new TemplateModelException("A bad value was given, values must be of type string, number, date" +
+      " or collection in a format of: [\"value\",1,5]");
   }
 
   public String makeURLParameters(StringModel params, String names, Object values, String method)
@@ -215,7 +227,7 @@ public class URLParametersDirective implements TemplateDirectiveModel {
 
               if(method.equals("add")) {
                 while(arrayIt.hasNext()) {
-                  sb.append(String.valueOf(arrayIt.next()));
+                  sb.append(getValue(arrayIt.next()));
                   sb.append(",");
                 }
                 String val = getValue(keyIndex, values);
@@ -226,14 +238,14 @@ public class URLParametersDirective implements TemplateDirectiveModel {
             }
           } else {
             while(arrayIt.hasNext()) {
-              sb.append(String.valueOf(arrayIt.next()));
+              sb.append(getValue(arrayIt.next()));
 
               if(arrayIt.hasNext()) {
                 sb.append(",");
               }
             }
           }
-        } else if((o instanceof NumberModel) || (o instanceof StringModel)) {
+        } else if((o instanceof NumberModel) || (o instanceof StringModel) || (o instanceof DateModel)) {
           sb.append(String.valueOf(key));
           sb.append("=");
 
@@ -242,9 +254,9 @@ public class URLParametersDirective implements TemplateDirectiveModel {
 
             if(keyIndex > -1) {
               String val = getValue(keyIndex, values);
-              sb.append(URLEncoder.encode(val,UTF8));
+              sb.append(URLEncoder.encode(val, UTF8));
             } else {
-              sb.append(URLEncoder.encode(String.valueOf(o),UTF8));
+              sb.append(URLEncoder.encode(getValue(o), UTF8));
             }
           } catch (UnsupportedEncodingException ex) {
             throw new TemplateModelException("UnsupportedEncodingException, " + UTF8 + " not supported: ", ex);
@@ -252,7 +264,8 @@ public class URLParametersDirective implements TemplateDirectiveModel {
         }
 
         //If the object matches any of the preceding cases, add a "&"
-        if((o instanceof ArrayModel) || (o instanceof NumberModel) || (o instanceof StringModel)) {
+        if((o instanceof ArrayModel) || (o instanceof NumberModel) || (o instanceof StringModel)
+          || o instanceof DateModel) {
           if(keysIterator.hasNext()) {
             sb.append("&");
           }
