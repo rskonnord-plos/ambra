@@ -56,9 +56,6 @@ public class HomePageAction extends BaseActionSupport {
   private ArrayList<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
-  protected String searchType;
-
-
 
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
@@ -207,7 +204,6 @@ public class HomePageAction extends BaseActionSupport {
   @Override
   public String execute() {
     String journal = getCurrentJournal();
-    searchType = "fromHomePage";
 
     // HACK: the PLOS ONE homepage displays all top-level categories.  With the
     // old taxonomy, we got these results from solr.  However, the new taxonomy
@@ -299,11 +295,4 @@ public class HomePageAction extends BaseActionSupport {
     return numArticlesToShow;
   }
 
-  public String getSearchType() {
-    return searchType;
-  }
-
-  public void setSearchType(String searchType) {
-    this.searchType = searchType;
-  }
 }
