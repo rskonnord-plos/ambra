@@ -63,25 +63,34 @@ public class CategoryServiceTest {
   public void testGetTopLevelCategories() throws Exception {
     CategoryService service = new CategoryServiceImpl();
     List<String> categories = Arrays.asList(
-        "top2/foo/bar/blaz",
-        "top3/lsjkd/thjwe/xvblj",
-        "top2/big",
-        "top4",
-        "top1/bam",
-        "top2",
-        "top3/blammo",
-        "top17/bomb"
+        "/top2/foo/bar/blaz",
+        "/top3/lsjkd/thjwe/xvblj",
+        "/top2/big",
+        "/top4",
+        "/top1/bam",
+        "/top2",
+        "/top3/blammo",
+        "/top17/bomb"
     );
-    assertEquals(Arrays.asList("top2", "top3", "top4", "top1", "top17"),
-        service.getTopLevelCategories(categories));
+    assertEquals(service.getTopLevelCategories(categories),
+        Arrays.asList("top2", "top3", "top4", "top1", "top17"));
 
     List<String> empty = new ArrayList<String>();
-    assertEquals(empty, service.getTopLevelCategories(empty));
+    assertEquals(service.getTopLevelCategories(empty), empty);
 
-    List<String> trivial = Arrays.asList("foo");
-    assertEquals(trivial, service.getTopLevelCategories(trivial));
+    List<String> trivial = Arrays.asList("/foo");
+    assertEquals(service.getTopLevelCategories(trivial), Arrays.asList("foo"));
 
-    trivial = Arrays.asList("foo/bar");
-    assertEquals(Arrays.asList("foo"), service.getTopLevelCategories(trivial));
+    trivial = Arrays.asList("/foo/bar");
+    assertEquals(service.getTopLevelCategories(trivial), Arrays.asList("foo"));
+  }
+
+  @Test(expectedExceptions = {IllegalArgumentException.class})
+  public void testGetTopLevelCategories_error() {
+    CategoryService service = new CategoryServiceImpl();
+
+    // No leading slash.
+    List<String> categories = Arrays.asList("top2/foo/bar/blaz", "top3/lsjkd/thjwe/xvblj");
+    service.getTopLevelCategories(categories);
   }
 }

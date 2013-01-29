@@ -116,8 +116,10 @@ public class CategoryServiceImpl implements CategoryService {
     // list approach here.
     List<String> results = new ArrayList<String>(categories.size());
     for (String category : categories) {
-      int x = category.indexOf('/');
-      category = x < 0 ? category : category.substring(0, x);
+      if ('/' != category.charAt(0)) {
+        throw new IllegalArgumentException("Categories must begin with '/': " + category);
+      }
+      category = category.split("\\/")[1];
       boolean alreadyExists = false;
       for (String existing : results) {
         if (category.equals(existing)) {
