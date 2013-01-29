@@ -695,9 +695,10 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
     try {
       Node authNode = xPathUtil.selectSingleNode(doc, "//corresp");
-      String authors = TextUtils.getAsXMLString(authNode);
-      return parseOutAuthorEmails(authors);
-
+      if (authNode != null) {
+        String authors = TextUtils.getAsXMLString(authNode);
+        return parseOutAuthorEmails(authors);
+      }
     } catch (XPathExpressionException ex) {
       log.error("Error occurred while gathering text with: //corresp", ex);
     } catch (TransformerException ex) {
