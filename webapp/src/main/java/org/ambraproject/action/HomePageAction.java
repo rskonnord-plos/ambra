@@ -57,8 +57,6 @@ public class HomePageAction extends BaseActionSupport {
   private int numDaysInPast;
   private int numArticlesToShow;
 
-
-
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
    * on the home page.  If there is no list of acceptable Article Type URIs,
