@@ -692,11 +692,18 @@ $.fn.alm = function () {
           }
 
           if (response.article.source[a].events) {
-            for (var i = 0; i < response.article.source[a].events.length; i++) {
-              countToShowOnTile = countToShowOnTile + response.article.source[a].events[i].total_count;
-              facebookData.likes += response.article.source[a].events[i].like_count;
-              facebookData.shares += response.article.source[a].events[i].share_count;
-              facebookData.posts += response.article.source[a].events[i].comment_count;
+            if (response.article.source[a].events instanceof Array) {
+              for (var i = 0; i < response.article.source[a].events.length; i++) {
+                countToShowOnTile = countToShowOnTile + response.article.source[a].events[i].total_count;
+                facebookData.likes += response.article.source[a].events[i].like_count;
+                facebookData.shares += response.article.source[a].events[i].share_count;
+                facebookData.posts += response.article.source[a].events[i].comment_count;
+              }
+            } else {
+              countToShowOnTile = countToShowOnTile + response.article.source[a].events.total_count;
+              facebookData.likes = response.article.source[a].events.like_count;
+              facebookData.shares = response.article.source[a].events.share_count;
+              facebookData.posts = response.article.source[a].events.comment_count;
             }
           }
 
