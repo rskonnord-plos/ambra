@@ -218,11 +218,14 @@
                   <#if journals??>
                     <#list journals as journal>
                       <li>
-                        <input id="filterJournals_${journal.name}" name="filterJournals" value="${journal.name}"
+                        <span class="checkboxWrapper" >
+                          <input id="filterJournals_${journal.name}" name="filterJournals" value="${journal.name}"
                                type="checkbox" <#if (filterJournals?seq_contains(journal.name)) > checked</#if>
                                title="Select ${freemarker_config.getDisplayName(journal.name)}"
                                alt="Select Journal ${freemarker_config.getDisplayName(journal.name)} Check Box"/>&nbsp;
-                        <label for="filterJournals_${journal.name}">${freemarker_config.getDisplayName(journal.name)}</label>
+                          <div onclick="enableCheckboxes('filterJournals_${journal.name}','journalsOpt_slct' )" class="checkboxOverlay"></div>
+                        </span>
+                          <label for="filterJournals_${journal.name}">${freemarker_config.getDisplayName(journal.name)}</label>
                       </li>
                     </#list>
                   <#else>
@@ -263,11 +266,14 @@
                       <#if (subject_index + 1) lte colSize>
                         <#assign subjectId = subject.name?replace(" ","_","r")>
                         <li>
+                        <span class="checkboxWrapper" >
                           <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
                                  type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
                                  title="Select Subject Category ${subject.name}"
                                  alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
-                          <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
+                          <div onclick="enableCheckboxes('filterSubjects_${subjectId}','subjectOption_some')" class="checkboxOverlay"></div>
+                        </span>
+                        <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
                       </#if>
                     </#list>
                   </ul>
@@ -276,10 +282,13 @@
                       <#if (subject_index + 1) gt colSize>
                         <#assign subjectId = subject.name?replace(" ","_","r")>
                         <li>
-                          <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
+                          <span class="checkboxWrapper" >
+                            <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
                                  type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
                                  title="Select Subject Category ${subject.name}"
                                  alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
+                            <div onclick="enableCheckboxes('filterSubjects_${subjectId}','subjectOption_some')" class="checkboxOverlay"></div>
+                          </span>
                           <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
                       </#if>
                     </#list>
