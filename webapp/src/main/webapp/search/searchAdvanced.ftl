@@ -225,7 +225,7 @@
                                alt="Select Journal ${freemarker_config.getDisplayName(journal.name)} Check Box"/>&nbsp;
                           <div onclick="enableCheckboxes('filterJournals_${journal.name}','journalsOpt_slct' )" class="checkboxOverlay"></div>
                         </span>
-                          <label for="filterJournals_${journal.name}">${freemarker_config.getDisplayName(journal.name)}</label>
+                        <label for="filterJournals_${journal.name}">${freemarker_config.getDisplayName(journal.name)}</label>
                       </li>
                     </#list>
                   <#else>
