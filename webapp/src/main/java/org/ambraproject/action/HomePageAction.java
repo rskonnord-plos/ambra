@@ -219,7 +219,8 @@ public class HomePageAction extends BaseActionSupport {
 
   /**
    * @return Returns category and number of articles for each category.
-   * Categories are sorted by name.
+   *
+   * Categories are listed for all journals and sorted by name
    */
   public SortedMap<String, Long> getCategoryInfos() {
     return categoryInfos;
