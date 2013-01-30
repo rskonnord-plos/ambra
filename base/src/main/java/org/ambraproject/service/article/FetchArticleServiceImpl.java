@@ -380,7 +380,13 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
             if(anode.getAttributes().getNamedItem("rid") != null) {
               String affId = anode.getAttributes().getNamedItem("rid").getTextContent();
-              affiliations.add(affiliateMap.get(affId));
+              String affValue = affiliateMap.get(affId);
+
+              //A fix for PBUG-149, sometimes we get wacky XML.  This should handle it so at least the
+              //List returned by this method is well structured
+              if(affValue != null) {
+                affiliations.add(affValue);
+              }
             }
           }
 
