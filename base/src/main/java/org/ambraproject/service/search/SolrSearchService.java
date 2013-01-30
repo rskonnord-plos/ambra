@@ -390,7 +390,7 @@ public class SolrSearchService implements SearchService {
 
     // If ID exists, then search on that first, ignoring all the other fields.
     if (sp.getId().length() > 0) {
-      query.setQuery("id:" + sp.getId());
+      query.setQuery("id:\"" + sp.getId() + "\"");
       return search(query);
       //if (resultsFromId.getTotalNoOfResults() > 0) {
       //  return resultsFromId;
