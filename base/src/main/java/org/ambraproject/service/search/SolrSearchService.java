@@ -356,9 +356,14 @@ public class SolrSearchService implements SearchService {
 
     SortedMap<String, Long> results = new TreeMap<String, Long>();
 
-    synchronized (results) {
-      for (FacetField.Count count : facet.getValues()) {
-        results.put(count.getName(), count.getCount());
+    //If there are is no facet.  Should never happen outside a unit test
+    if(facet.getValues() == null) {
+      log.warn("No subject_level_1 facet");
+    } else {
+      synchronized (results) {
+        for (FacetField.Count count : facet.getValues()) {
+          results.put(count.getName(), count.getCount());
+        }
       }
     }
 
@@ -905,24 +910,30 @@ public class SolrSearchService implements SearchService {
 
     if (queryResponse.getFacetField("subject_facet") != null) {
       List<Map> subjects = facetCountsToHashMap(queryResponse.getFacetField("subject_facet"));
-      List<Map> subjectResult = new ArrayList<Map>();
 
-      try {
-        SortedMap<String, Long> topSubjects = getTopSubjects();
+      if(subjects != null) {
+        List<Map> subjectResult = new ArrayList<Map>();
+        SortedMap<String, Long> topSubjects = null;
+
+        try {
+          topSubjects = getTopSubjects();
+        } catch (ApplicationException ex) {
+          throw new RuntimeException(ex.getMessage(), ex);
+        }
 
         //Remove top level 1 subjects from list, FEND-805
-       for(Map<String, Object> m : subjects) {
-         if(!topSubjects.containsKey(m.get("name"))) {
-           HashMap<String, Object> hm = new HashMap<String, Object>();
-           hm.put("name", m.get("name"));
-           hm.put("count", m.get("count"));
-           subjectResult.add(hm);
-         }
+        for(Map<String, Object> m : subjects) {
+          if(!topSubjects.containsKey(m.get("name"))) {
+            HashMap<String, Object> hm = new HashMap<String, Object>();
+            hm.put("name", m.get("name"));
+            hm.put("count", m.get("count"));
+            subjectResult.add(hm);
+          }
         }
 
         results.setSubjectFacet(subjectResult);
-      } catch (ApplicationException ex) {
-        throw new RuntimeException(ex);
+      } else {
+        results.setSubjectFacet(null);
       }
     }
 
