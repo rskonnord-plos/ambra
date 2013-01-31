@@ -23,7 +23,7 @@ plosGApropId["www.plosmedicine.org"] = "UA-36675108-5";
 plosGApropId["www.plosntds.org"] = "UA-36675108-6";
 plosGApropId["www.plospathogens.org"] = "UA-36675108-7";
 plosGApropId["www.plosone.org"] = "UA-36675108-1";
-plosGApropId["www.plosone.org"] = "UA-36675108-8";
+plosGApropId["www.ploscollections.org"] = "UA-36675108-8";
 
 //No matter which journal or demo site is served, the identifier for the correct site will be used
 var bamGAID = plosGApropId[window.location.hostname];
