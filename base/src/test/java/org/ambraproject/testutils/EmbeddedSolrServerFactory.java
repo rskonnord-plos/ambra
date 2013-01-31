@@ -75,7 +75,7 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
    * @throws Exception - URISyntaxException when loading resources or else Exception when setting up the server
    */
   public EmbeddedSolrServerFactory() throws Exception {
-    this("solr/conf/test-solr-schema.xml", "solr/conf/test-solr-config.xml");
+    this("solr/collection1/conf/test-solr-schema.xml", "solr/collection1/conf/test-solr-config.xml");
   }
 
   public void tearDown() throws Exception {

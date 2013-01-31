@@ -44,8 +44,10 @@ public class EmbeddedSolrServerFactoryTest {
 
   @Test(priority = -1)
   public void testConstructor() throws Exception {
-    String schemaFile = this.getClass().getClassLoader().getResource("solr/conf/test-solr-schema.xml").getFile();
-    String configFile = this.getClass().getClassLoader().getResource("solr/conf/test-solr-config.xml").getFile();
+    String schemaFile = this.getClass().getClassLoader().getResource(
+        "solr/collection1/conf/test-solr-schema.xml").getFile();
+    String configFile = this.getClass().getClassLoader().getResource(
+        "solr/collection1/conf/test-solr-config.xml").getFile();
 
     solrServerFactory = new EmbeddedSolrServerFactory(schemaFile, configFile);
     solrServerFactory = new EmbeddedSolrServerFactory();

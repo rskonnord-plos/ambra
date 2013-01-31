@@ -293,8 +293,43 @@
     <dependency>
       <artifactId>solr-core</artifactId>
       <groupId>org.apache.solr</groupId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-test-framework</artifactId>
+      <version>${solr.version}</version>
+      <scope>test</scope>
+
+      <!--
+      Unfortunately, the version of jetty used internally by this solr
+      testing library conflicts with a version that we depend on (camel-jetty).
+      The symptom is a mysterious IncompatibleClassChangeError when running
+      a test that depends on both of these dependencies.  We fix this by
+      excluding the following.  Luckily, solr-test-framework, in the way we
+      use it, either doesn't need these or can get by with the conflicting
+      version.
+      -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-server</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-security</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-servlet</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-util</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -338,12 +373,6 @@
       <artifactId>camel-jetty</artifactId>
       <version>2.6.0</version>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.solr</groupId>
-      <artifactId>solr-test-framework</artifactId>
-      <version>3.6.0</version>
     </dependency>
 
     <dependency>
@@ -403,7 +432,7 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
     </dependency>
 
     <dependency>
