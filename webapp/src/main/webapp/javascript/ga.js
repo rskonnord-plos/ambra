@@ -23,6 +23,7 @@ plosGApropId["www.plosmedicine.org"] = "UA-36675108-5";
 plosGApropId["www.plosntds.org"] = "UA-36675108-6";
 plosGApropId["www.plospathogens.org"] = "UA-36675108-7";
 plosGApropId["www.plosone.org"] = "UA-36675108-1";
+plosGApropId["www.plosone.org"] = "UA-36675108-8";
 
 //No matter which journal or demo site is served, the identifier for the correct site will be used
 var bamGAID = plosGApropId[window.location.hostname];
@@ -30,7 +31,7 @@ var bamGAID = plosGApropId[window.location.hostname];
 // Deprecated GoogleAnalytics Prop ID.  Used for all of PLOS.org 'UA-338393-1'
 var bamGAVPV = location.pathname + location.search + location.hash;
 // cross domain list
-var bamGAcrossDomains = ["plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
+var bamGAcrossDomains = ["www.plosone.org", "www.plosbiology.org", "www.plosmedicine.org", "www.plosgenetics.org", "www.ploscompbiol.org", "www.plospathogens.org", "www.plosntds.org", "www.ploscollections.org", "www.plosreports.org", "www.ploshubs.org", "www.plos.org"];
 var bamGAIgnoredRefs = ["www.plosone.org", "www.plosbiology.org", "www.plosmedicine.org", "www.plosgenetics.org", "www.ploscompbiol.org", "www.plospathogens.org", "www.plosntds.org", "www.ploscollections.org", "www.plosreports.org", "www.ploshubs.org", "www.plos.org"];
 
 var _bamGA;
