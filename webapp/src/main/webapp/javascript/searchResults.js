@@ -376,6 +376,7 @@ $(document).ready(
                   }
                   tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0, '.', ',') + "</b>";
                 }
+
               }
 
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
