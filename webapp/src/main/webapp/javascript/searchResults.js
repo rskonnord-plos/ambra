@@ -189,6 +189,7 @@ $(document).ready(
         var bookmarks = null;
         var cites = null;
         var viewsData = null;
+        var socialData = null;
 
         for(b = 0; b < article.groupcounts.length; b++) {
           if(article.groupcounts[b].name.toLowerCase() === "citations" &&
@@ -199,6 +200,12 @@ $(document).ready(
           if(article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
             article.groupcounts[b].count > 0) {
             bookmarks = article.groupcounts[b].sources;
+          }
+
+          /* will "testing" need to be name-changed in the future? */
+          if(article.groupcounts[b].name.toLowerCase() === "testing" &&
+              article.groupcounts[b].count > 0){
+            socialData = article.groupcounts[b].sources;
           }
         }
 
@@ -221,13 +228,13 @@ $(document).ready(
         //show widgets only when you have data
         if(cites != null ||  bookmarks != null || viewsData !=null) {
           confirmed_ids[confirmed_ids.length] = doi;
-          makeALMSearchWidget(doi, cites, bookmarks, viewsData);
+          makeALMSearchWidget(doi, cites, bookmarks, viewsData, socialData);
         }
       }
       confirmALMDataDisplayed();
     }
 
-    function makeALMSearchWidget(doi, cites, bookmarks, data) {
+    function makeALMSearchWidget(doi, cites, bookmarks, data, socialData) {
       var nodeList = getSearchWidgetByDOI(doi);
       var metricsURL = getMetricsURL(doi);
 
@@ -235,7 +242,7 @@ $(document).ready(
         var searchWidget = $("<span></span>");
         searchWidget.addClass("almSearchWidget");
 
-        buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data);
+        buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data, socialData);
 
         $(nodeList).html("");
         $(nodeList).append(searchWidget);
@@ -244,7 +251,7 @@ $(document).ready(
     }
 
     //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a>
-    function buildWidgetText(node, metricsURL, cites, bookmarks, data) {
+    function buildWidgetText(node, metricsURL, cites, bookmarks, data, socialData) {
       var newNode = null;
 
       if(data != null) {
@@ -317,10 +324,31 @@ $(document).ready(
           .addClass("no-data"));
       }
 
-      if(bookmarks != null) {
+      var mendeley = null;
+      if(socialData){
+        for(var s = 0; s < socialData.length; s++){
+          if (socialData[s].source == "Mendeley"){
+            mendeley = socialData[s];
+          }
+        }
+      }
+
+      if(bookmarks) {
+
+        var markCount = 0;
+         if(mendeley){
+          markCount += mendeley.count;
+        }
+
+        for(var book = 0; book < bookmarks.length; book++){
+          if(bookmarks[book].source != "Connotea"){
+            markCount+= bookmarks[book].count;
+          }
+        }
+
         newNode = $("<a></a>")
-          .attr("href", metricsURL + "#other")
-          .html("Bookmarks: Yes")
+            .attr("href", metricsURL + "#other")
+            .html("Bookmarks: " + markCount)
           .addClass("data");
         //new dijit.Tooltip({ connectId: newNode, label: tipText });
 
@@ -336,11 +364,18 @@ $(document).ready(
           bodyHandler: function() {
             var tipText = "";
 
+            if (mendeley) {
+              tipText += mendeley.source + ": <b>" + mendeley.count.format(0, '.', ',') + "</b>";
+            }
+
             for(a = 0; a < bookmarks.length; a++) {
-              if(tipText != "") {
-                tipText += ", "
+              if (bookmarks[a].source != "Connotea") {
+
+                if (tipText != "") {
+                  tipText += ", "
+                }
+                tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0, '.', ',') + "</b>";
               }
-              tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0,'.',',') + "</b>";
             }
 
             return "<span class=\"searchResultsTip\">" + tipText + "</span>";
@@ -348,6 +383,32 @@ $(document).ready(
         });
 
         node.append(newNode);
+      } else if (!bookmarks && mendeley) {
+
+        newNode = $("<a></a>")
+            .attr("href", metricsURL + "#other")
+            .html("Bookmarks: " + mendeley.count)
+            .addClass("data");
+
+        appendBullIfNeeded(node);
+
+        newNode.tooltip({
+          delay: 250,
+          fade: 250,
+          top: -40,
+          left: 20,
+          track: true,
+          showURL: false,
+          bodyHandler: function () {
+
+            var tipText = mendeley.source + ": <b>" + mendeley.count.format(0, '.', ',') + "</b>";
+            return "<span class=\"searchResultsTip\">" + tipText + "</span>";
+
+          }
+        });
+
+        node.append(newNode);
+
       } else {
         appendBullIfNeeded(node);
         node.append($("<span></span>")
