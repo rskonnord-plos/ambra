@@ -110,7 +110,7 @@ public class HomepageActionTest extends AmbraWebTest {
 
     SortedMap<String, Long> subjectCounts = new TreeMap<String, Long>();
     subjectCounts.put("Biology", 4l);
-    subjectCounts.put("Chemistry", 1l);
+    subjectCounts.put("Chemistry", 2l);
 
     return new Object[][]{
         {journal, recentArticles, subjectCounts}

@@ -1,18 +1,10 @@
 /*
- * $HeadURL:: http://ambraproject.org/svn/ambra/ambra/branches/ginzu/webapp/src/main/web#$
- * $Id: alm.js 12107 2012-10-30 22:35:43Z josowski $
- *
- * Copyright (c) 2006-2010 by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
- *
+ * $HeadURL$
+ * $Id$
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -112,12 +104,6 @@ subject_all.change(function() {
 
 $('#subjectOption_some').change(function() {
   enableFormEls($(this));
-});
-
-$('#subjectOption_some').each(function() {
-  if(this.checked) {
-    enableFormEls($(this));
-  }
 });
 
 article_all.change(function() {
@@ -239,3 +225,15 @@ $('#quickFind').submit(function () {
 
   return false;
 });
+
+// To make the checkboxes on the advanced Search page clickable at all the times.
+function enableCheckboxes(checkboxId,containerId){
+
+  //Enable corresponding radio button and enable all the checkboxes under that.
+  $('#'+containerId).prop('checked',true);
+  $('#'+containerId).closest('ol').find('.options input').prop('disabled', false);
+
+  var checkboxes = $("#"+checkboxId);
+  //Toggle checkboxes
+  checkboxes.prop("checked", !checkboxes.prop("checked"));
+}

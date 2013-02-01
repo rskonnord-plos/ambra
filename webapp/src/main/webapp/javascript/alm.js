@@ -1133,7 +1133,7 @@ $.fn.alm = function () {
                   color:"#6d84bf"
                 },
                 {
-                  name:"PLoS",
+                  name:"PLOS",
                   data:[],
                   color:"#3c63af"
                 }
@@ -1158,9 +1158,9 @@ $.fn.alm = function () {
                   return '<table id="mini" cellpadding="0" cellspacing="0">'
                     + '<tr><th></td><td colspan="2">Views in '
                     + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                    + '</td><td colspan="2">Views since ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                    + '</td></tr><tr><th>Source</th><th class="header1">PLoS</th><th class="header2">PMC</th>'
-                    + '<th class="header1">PLoS</th><th class="header2">PMC</th></tr>'
+                    + '</td><td colspan="2">Views through ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+                    + '</td></tr><tr><th>Source</th><th class="header1">PLOS</th><th class="header2">PMC</th>'
+                    + '<th class="header1">PLOS</th><th class="header2">PMC</th></tr>'
                     + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
                     + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
                     h[key].source.pmcViews.totalHTML.format(0, '.', ',') : "n.a.") + '</td>'

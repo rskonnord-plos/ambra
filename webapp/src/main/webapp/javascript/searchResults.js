@@ -182,8 +182,9 @@ $(document).ready(
 
       almService.getSummaryForArticles(ids, setALMSearchWidgets, setALMSearchWidgetsError);
 
+
       function setALMSearchWidgets(articles) {
-        for(a = 0; a < articles.length; a++) {
+        for (a = 0; a < articles.length; a++) {
           var article = articles[a];
           var doi = article.article.article.doi;
           var bookmarks = null;
@@ -191,20 +192,20 @@ $(document).ready(
           var viewsData = null;
           var socialData = null;
 
-          for(b = 0; b < article.groupcounts.length; b++) {
-            if(article.groupcounts[b].name.toLowerCase() === "citations" &&
+          for (b = 0; b < article.groupcounts.length; b++) {
+            if (article.groupcounts[b].name.toLowerCase() === "citations" &&
                 article.groupcounts[b].count > 0) {
               cites = article.groupcounts[b].sources;
             }
 
-            if(article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
+            if (article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
                 article.groupcounts[b].count > 0) {
               bookmarks = article.groupcounts[b].sources;
             }
 
             /* will "testing" need to be name-changed in the future? */
-            if(article.groupcounts[b].name.toLowerCase() === "testing" &&
-                article.groupcounts[b].count > 0){
+            if (article.groupcounts[b].name.toLowerCase() === "testing" &&
+                article.groupcounts[b].count > 0) {
               socialData = article.groupcounts[b].sources;
             }
           }
@@ -376,7 +377,6 @@ $(document).ready(
                   }
                   tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0, '.', ',') + "</b>";
                 }
-
               }
 
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
