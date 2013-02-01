@@ -364,19 +364,23 @@ $(document).ready(
           bodyHandler: function() {
             var tipText = "";
 
+           for(a = 0; a < bookmarks.length; a++) {
+             if (bookmarks[a].source != "Connotea") {
+
+               if (tipText != "") {
+                 tipText += ", "
+               }
+               tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0, '.', ',') + "</b>";
+             }
+           }
+
+            if (tipText != "") {
+              tipText += ", "
+            }
             if (mendeley) {
               tipText += mendeley.source + ": <b>" + mendeley.count.format(0, '.', ',') + "</b>";
             }
 
-            for(a = 0; a < bookmarks.length; a++) {
-              if (bookmarks[a].source != "Connotea") {
-
-                if (tipText != "") {
-                  tipText += ", "
-                }
-                tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0, '.', ',') + "</b>";
-              }
-            }
 
             return "<span class=\"searchResultsTip\">" + tipText + "</span>";
           }
