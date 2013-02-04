@@ -2284,6 +2284,11 @@ ul.bulletlist li {
 
 #responses .response .response_content {
   padding: 20px 15px;
+  word-wrap: break-word;
+}
+
+#responses .response .response_title  {
+  word-wrap: break-word;
 }
 
 #responses .response .toolbar {
