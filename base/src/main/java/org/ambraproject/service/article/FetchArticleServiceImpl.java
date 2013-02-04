@@ -316,13 +316,19 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
             if(addressNode.getAttributes().getNamedItem("rid") != null) {
               String fnId = addressNode.getAttributes().getNamedItem("rid").getTextContent();
+              String curAddress = addressMap.get(fnId);
 
-              if(currentAddresses.size() > 0) {
-                //If the current address is already defined, remove "current" text from subsequent
-                //addresses
-                currentAddresses.add(fixCurrentAddress(addressMap.get(fnId)));
+              //A fix for PBUG-153, sometimes addresses are null because of weird XML
+              if(curAddress == null) {
+                log.warn("No found current-aff footnote found for fnID: {}", fnId);
               } else {
-                currentAddresses.add(addressMap.get(fnId));
+                if(currentAddresses.size() > 0) {
+                  //If the current address is already defined, remove "current" text from subsequent
+                  //addresses
+                  currentAddresses.add(fixCurrentAddress(curAddress));
+                } else {
+                  currentAddresses.add(curAddress);
+                }
               }
             }
           }
