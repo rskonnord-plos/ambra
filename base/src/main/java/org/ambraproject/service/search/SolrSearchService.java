@@ -1113,7 +1113,7 @@ public class SolrSearchService implements SearchService {
     if (articleDoi.startsWith(DOI_SCHEME)) {
       articleDoi = articleDoi.substring(DOI_SCHEME.length());
     }
-    SolrQuery query = new SolrQuery("id:" + articleDoi);
+    SolrQuery query = new SolrQuery("id:\"" + articleDoi + "\"");
     query.setFields("abstract", "abstract_primary_display");
     List<SearchHit> hits = search(query).getHits();
 

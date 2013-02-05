@@ -37,13 +37,14 @@
   -->
   <dataDir>${solr.data.dir:./solr/data}</dataDir>
 
+  <luceneMatchVersion>LUCENE_CURRENT</luceneMatchVersion>
 
   <!-- 
     WARNING: this <indexDefaults> section only provides defaults for index writers
     in general. See also the <mainIndex> section after that when changing parameters
     for Solr's main Lucene index. 
   -->
-  <indexDefaults>
+  <indexConfig>
     <!-- Values here affect all index writers and act as a default unless overridden. -->
     <useCompoundFile>false</useCompoundFile>
 
@@ -106,10 +107,7 @@
       Controls how often Lucene loads terms into memory 
     -->
     <!--<termIndexInterval>256</termIndexInterval>-->
-  </indexDefaults>
 
-  <mainIndex>
-    <!-- options specific to the main on-disk lucene index -->
     <useCompoundFile>false</useCompoundFile>
     <ramBufferSizeMB>64</ramBufferSizeMB>
     <mergeFactor>10</mergeFactor>
@@ -171,7 +169,7 @@
     -->
     <infoStream file="INFOSTREAM.txt">false</infoStream>
 
-  </mainIndex>
+  </indexConfig>
 
   <!--	
     Enables JMX if and only if an existing MBeanServer is found, use this
@@ -446,6 +444,11 @@
       <str name="facet">true</str>
       <str name="facet.method">enum</str>
 
+      <!-- default query operator -->
+      <str name="q.op">AND</str>
+      <!-- field for the QueryParser to use when an explicit fieldname is absent-->
+      <str name="df">everything</str>
+
       <!-- DisMAx configuration -->
 
       <!-- List of fields and optional boost factors -->
@@ -474,15 +477,6 @@
       <str>spellcheck</str>
     </arr>
   </requestHandler>
-
-  <!-- XSLT response writer transforms the XML output by any xslt file found
-       in Solr's conf/xslt directory.  Changes to xslt files are checked for
-       every xsltCacheLifetimeSeconds.  For development, this should be a lot lower
-       http://wiki.apache.org/solr/XsltResponseWriter
-   -->
-  <queryResponseWriter name="xslt" class="org.apache.solr.request.XSLTResponseWriter">
-    <int name="xsltCacheLifetimeSeconds">600</int>
-  </queryResponseWriter>
 
   <!--
     Search components are registered to SolrCore and used by Search Handlers

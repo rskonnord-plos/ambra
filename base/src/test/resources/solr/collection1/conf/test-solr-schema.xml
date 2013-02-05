@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<schema name="plos" version="1.3">
+  <!-- attribute "name" is the name of this schema and is only used for display purposes.
+       Applications should change this to reflect the nature of the search collection.
+       version="x.y" is Solr's version number for the schema syntax and semantics.  It should
+       not normally be changed by applications.
+       1.3: removed optional field compress feature
+       1.4: default auto-phrase (QueryParser feature) to off
+       1.5: omitNorms defaults to true for primitive field types (int, float, boolean, string...)
+     -->
+<schema name="plos" version="1.5">
   <types>
-    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+   <!-- omitNorms defaults to "true" for primitive field types --> 
+   <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
     <!--
       Default numeric field types. For faster range queries, consider the tint/tfloat/tlong/tdouble types.
     -->
-    <fieldType name="int" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
-    <fieldType name="date" class="solr.TrieDateField" omitNorms="true" precisionStep="0" positionIncrementGap="0"/>
+    <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
+    <fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+
 
     <!-- A Trie based date field for faster date range queries and date faceting. -->
-    <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true" precisionStep="6" positionIncrementGap="0"/>
+    <fieldType name="tdate" class="solr.TrieDateField" precisionStep="6" positionIncrementGap="0"/>
 
     <!-- A text field that uses WordDelimiterFilter to enable splitting and matching of
         words on case-change, alpha numeric boundaries, and non-alphanumeric chars,
         so that a query of "wifi" or "wi fi" could match a document containing "Wi-Fi".
         Synonyms and stopwords are customized by external files, and stemming is enabled.
         -->
-    <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.ASCIIFoldingFilterFactory"/>
         <filter class="solr.LengthFilterFactory" min="3" max="100"/>
-        <filter class="solr.StopFilterFactory"
-                ignoreCase="true"
-                enablePositionIncrements="true"
-                />
         <filter class="solr.WordDelimiterFilterFactory" stemEnglishPossessive="1"
                 generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0"
                 catenateAll="0" splitOnNumerics="0" splitOnCaseChange="0"/>
         <!-- Disabeling position filter.  Note JO: 16743
           filter class="solr.PositionFilterFactory" /-->
         <filter class="solr.TrimFilterFactory"/>
-        <filter class="solr.EnglishPorterFilterFactory" />
+	
+	<!-- EnglishPorterFilterFactory class is deprecated, replacing it with PorterStemFilterFactory --> 
+	<filter class="solr.PorterStemFilterFactory" protected="protwords.txt"/>
       </analyzer>
+
       <analyzer type="query">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
@@ -42,25 +50,23 @@
         <filter class="solr.LengthFilterFactory" min="3" max="100"/>
         <!-- Disabling synonym filter, we may want to turn this back on eventually -->
         <!---filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/-->
-        <filter class="solr.StopFilterFactory"
-                ignoreCase="true"
-                enablePositionIncrements="true"
-                />
         <filter class="solr.WordDelimiterFilterFactory" stemEnglishPossessive="1"
                 generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0"
                 catenateAll="0" splitOnNumerics="0" splitOnCaseChange="0"/>
         <!-- Disabeling position filter.  Note JO: 16743
         filter class="solr.PositionFilterFactory" /-->
         <filter class="solr.TrimFilterFactory"/>
-        <filter class="solr.EnglishPorterFilterFactory" />
+         
+        <!-- EnglishPorterFilterFactory class is deprecated, replacing it with PorterStemFilterFactory --> 
+	<filter class="solr.PorterStemFilterFactory" protected="protwords.txt"/>
       </analyzer>
     </fieldType>
 
     <!-- 
   A text field that has little processing on it to use for term and spelling suggestions
     -->
-    <fieldType name="text_noprocess" class="solr.TextField" positionIncrementGap="100">
-      <analyzer type="index">
+   <fieldType name="text_noprocess" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.LengthFilterFactory" min="3" max="100"/>
@@ -80,7 +86,7 @@
       </analyzer>
     </fieldType>
 
-    <!--
+   <!--
       Lowercasing terms for case insensitive searching
     -->
     <fieldType name="keyword_lowercase" class="solr.TextField" positionIncrementGap="100">
@@ -97,40 +103,33 @@
     </fieldType>
 
     <!-- A text field specialized for exact proper name search. -->
-    <fieldType name="text_name" class="solr.TextField" positionIncrementGap="100">
+    <fieldType name="text_name" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.ASCIIFoldingFilterFactory"/>
         <filter class="solr.WordDelimiterFilterFactory" preserveOriginal="1" splitOnCaseChange="0"/>
-        <filter class="solr.StopFilterFactory"
-                ignoreCase="true"
-                enablePositionIncrements="true"
-                />
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.ASCIIFoldingFilterFactory"/>
         <filter class="solr.WordDelimiterFilterFactory" preserveOriginal="1" splitOnCaseChange="0"/>
-        <filter class="solr.StopFilterFactory"
-                ignoreCase="true"
-                enablePositionIncrements="true"
-                />        
       </analyzer>
     </fieldType>
 
     <!-- A general unstemmed text field that indexes tokens normally and also
          reversed (via ReversedWildcardFilterFactory), to enable more efficient 
 	 leading wildcard queries. -->
-    <fieldType name="text_rev" class="solr.TextField" positionIncrementGap="100">
+    <!--  "autoGeneratePhraseQueries" that defaults to "false" in 3.x.
+          In earlier versions, autoGeneratePhraseQueries was defaulted to 'True"
+          So, it is required to set this value explicitly in order for WhitespaceTokenizerFactory to work properly. -->
+    <fieldType name="text_rev" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.ASCIIFoldingFilterFactory"/>
         <filter class="solr.LengthFilterFactory" min="3" max="25"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true"
-                enablePositionIncrements="true"/>
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1"
                 generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0"
                 splitOnCaseChange="0"/>
@@ -144,10 +143,6 @@
         <filter class="solr.LengthFilterFactory" min="3" max="25"/>
         <!-- Disabling synonym filter, we'll want to turn this back on -->
         <!--filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/-->
-        <filter class="solr.StopFilterFactory"
-                ignoreCase="true"
-                enablePositionIncrements="true"
-                />
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1"
                 generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0"
                 splitOnCaseChange="0"/>
@@ -210,7 +205,17 @@
         <filter class="solr.NGramFilterFactory" minGramSize="3" maxGramSize="20"/>
       </analyzer>
     </fieldtype>
-  </types>
+    
+    <fieldtype name="text_subject_search" class="solr.TextField">
+      <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.EdgeNGramFilterFactory" maxGramSize="20" />
+      </analyzer>
+    </fieldtype>
+ </types>
+
+
 
   <fields>
     <field name="id" type="string" indexed="true" stored="true" required="true"/>
@@ -226,7 +231,7 @@
     <!--  Also store the subject to preserve the hierarchy if needed later -->
     <field name="subject_hierarchy" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="subject_level_1" type="string" indexed="true" stored="true" multiValued="true"/>
-    
+
     <field name="pagecount" type="int" indexed="true" stored="true"/>
     <field name="volume" type="int" indexed="true" stored="true"/>
     <field name="issue" type="int" indexed="true" stored="true"/>
@@ -265,6 +270,8 @@
     <field name="article_type_facet" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="reference" type="text" indexed="true" stored="true" multiValued="true"/>
     <field name="copyright" type="text" indexed="true" stored="true" />
+    <field name="figure_table_caption" type="text" indexed="true" stored="true" multiValued="true" />
+    <field name="striking_image" type="string" indexed="false" stored="true" multiValued="false" />
 
     <!-- Should we add ngram and rev fields for all of these types as well? -->
     <!-- Document parts -->
@@ -291,24 +298,35 @@
     <!-- For tracking ALM data -->
     <field name="counter_total_all" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
     <field name="counter_total_month" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
+    <field name="alm_scopusCiteCount" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
+    <field name="alm_citeulikeCount" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
+    <field name="alm_connoteaCount" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
+    <field name="alm_mendeleyCount" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
+    <field name="alm_twitterCount" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
+    <field name="alm_facebookCount" type="int" indexed="true" stored="true" default="0" multiValued="false"/>
 
     <!-- Fields for partial documents -->
     <field name="doc_partial_parent_id" type="string" indexed="true" stored="true" multiValued="false"/>
-    <field name="doc_type" type="string" indexed="true" stored="false" multiValued="false"/>
+    <field name="doc_type" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="doc_partial_type" type="string" indexed="true" stored="false" multiValued="false"/>
     <field name="doc_partial_body" type="text" indexed="true" stored="true" multiValued="true" termVectors="true"/>
+    
+    <!-- Fields for academic editor document -->
+    <field name="ae_name" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="ae_name_facet" type="text_name" indexed="true" stored="true" multiValued="false" />
+    <field name="ae_last_name" type="keyword_lowercase" indexed="true" stored="false" multiValued="false" />
+    <field name="ae_institute" type="string" indexed="false" stored="true" multiValued="true" />
+    <field name="ae_country" type="string" indexed="false" stored="true" multiValued="true" />
+    <field name="ae_subject" type="text_subject_search" indexed="true" stored="true" multiValued="true" />
+    <field name="ae_subject_facet" type="keyword_lowercase" indexed="true" stored="true" multiValued="true" />
+
+    <field name="trial_registration" type="text" indexed="true" stored="true" multiValued="true" />
   </fields>
 
-  <!-- Field to use to determine and enforce document uniqueness. 
+ <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
-  <uniqueKey>id</uniqueKey>
-
-  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
-  <defaultSearchField>everything</defaultSearchField>
-
-  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
-  <solrQueryParser defaultOperator="AND"/>
+ <uniqueKey>id</uniqueKey>
 
   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,
@@ -323,7 +341,7 @@
 
   <copyField source="subject" dest="subject_hierarchy"/>
   <copyField source="subject" dest="subject_facet"/>
-  
+
   <copyField source="author" dest="author_facet"/>
   <copyField source="editor" dest="editor_facet"/>
   <copyField source="article_type" dest="article_type_facet"/>
@@ -336,5 +354,9 @@
   <copyField source="everything" dest="everything_rev"/>
   <copyField source="everything" dest="everything_ngram"/>
   <copyField source="everything" dest="everything_noprocess"/>
-</schema>
+  
+  <copyField source="ae_subject" dest="ae_subject_facet" />
+  <copyField source="ae_name" dest="ae_name_facet" />
 
+
+</schema>

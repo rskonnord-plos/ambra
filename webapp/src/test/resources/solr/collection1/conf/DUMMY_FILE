@@ -1,0 +1,1 @@
+Solr 3.6 test framework requires a directory named "solr/conf" to be on the classpath. This file ensures maven will put this directory in /target.

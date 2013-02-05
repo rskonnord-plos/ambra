@@ -134,6 +134,12 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
@@ -235,7 +241,7 @@
     <dependency>
       <artifactId>solr-core</artifactId>
       <groupId>org.apache.solr</groupId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
       <type>jar</type>
       <scope>test</scope>
     </dependency>
@@ -249,8 +255,36 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-test-framework</artifactId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
       <scope>test</scope>
+
+      <!--
+      Unfortunately, the version of jetty used internally by this solr
+      testing library conflicts with a version that we depend on (camel-jetty).
+      The symptom is a mysterious IncompatibleClassChangeError when running
+      a test that depends on both of these dependencies.  We fix this by
+      excluding the following.  Luckily, solr-test-framework, in the way we
+      use it, either doesn't need these or can get by with the conflicting
+      version.
+      -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-server</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-security</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-servlet</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-util</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -315,7 +349,7 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
     </dependency>
 
     <dependency>
@@ -414,21 +448,21 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
-      <version>2.6.0</version>
+      <version>2.10.3</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring</artifactId>
-      <version>2.6.0</version>
+      <version>2.10.3</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jetty</artifactId>
-      <version>2.6.0</version>
+      <version>2.10.3</version>
       <scope>test</scope>
     </dependency>
 
