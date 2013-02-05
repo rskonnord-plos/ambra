@@ -15,21 +15,21 @@
 package org.ambraproject.testutils;
 
 import org.ambraproject.service.search.SolrServerFactory;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.util.AbstractSolrTestCase;
+import org.apache.solr.core.CoreContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Class added for unit tests to use an in-memory embedded solr server.
@@ -43,44 +43,58 @@ import java.util.Random;
  */
 public class EmbeddedSolrServerFactory extends SolrServerFactory {
 
+  private static Logger log = LoggerFactory.getLogger(EmbeddedSolrServerFactory.class);
+
   private SolrServer server;
-  private final Factory factory;
+
+  private String solrHome;
+
+  private String destSolrXmlFile;
 
   /**
-   * Initialize the server stored by the factory by specifying the locations of the schema and config files
+   * Constructor.
    *
-   * @param schemaFile - either the classpath location or the absolute file location of the solr schema xml to use
-   * @param configFile - either the classpath location or the absolute file location  of the solr config xml to use
-   * @throws Exception - from factory.setup()
+   * TODO: this constructor does a lot of IO, and can throw IOException, not ideal
+   * in a constructor.  Refactor to eliminate this.
    */
-  public EmbeddedSolrServerFactory(String schemaFile, String configFile) throws Exception {
-    super();
-    try {
-      this.factory = new Factory(schemaFile, configFile);
-      server = factory.createServer();
-    } catch (Exception e) {
-      throw new Exception("Error setting up server; " +
-          "be sure that your working directory is set correctly to find the schema and config files; nested exception is " + e.getMessage(), e);
+  public EmbeddedSolrServerFactory() throws IOException {
+
+    // Build a directory structure for the embedded solr server's solr home,
+    // and copy configuration files there from the classpath.
+    solrHome = System.getProperty("java.io.tmpdir") + File.separator + "EmbeddedSolrTest_"
+        + System.currentTimeMillis();
+    File conf = new File(solrHome + File.separator + "collection1" + File.separator + "conf");
+    if (!conf.mkdirs()) {
+      throw new RuntimeException("Could not create dir " + conf.getCanonicalPath());
     }
+    destSolrXmlFile = solrHome + File.separator + "solr.xml";
+    copyResource("solr/collection1/conf/test-solr.xml", destSolrXmlFile);
+    copyResource("solr/collection1/conf/test-solr-config.xml",
+        conf.getCanonicalPath() + File.separator + "solrconfig.xml");
+    copyResource("solr/collection1/conf/test-solr-schema.xml",
+        conf.getCanonicalPath() + File.separator + "schema.xml");
+
+    System.setProperty("solr.solr.home", solrHome);
+    CoreContainer coreContainer = new CoreContainer(solrHome, new File(destSolrXmlFile));
+    server = new EmbeddedSolrServer(coreContainer, "collection1");
+    log.info("EmbeddedSolrServer started with solr home " + solrHome);
   }
 
   /**
-   * Initialize the server stored in the factory by using the defaults of <ul>
-   * <li>solr/test-solr-schema.xml</li>
-   * <li>solr/test-solr-config.xml</li>
-   * </ul>
-   * <p/>
-   * in the classpath for the schema and config files, respectively.
+   * Copies a file from the classpath to the given destination.
    *
-   * @throws Exception - URISyntaxException when loading resources or else Exception when setting up the server
+   * @param resource resource location relative to the classpath
+   * @param destination destination file path
+   * @throws IOException
    */
-  public EmbeddedSolrServerFactory() throws Exception {
-    this("solr/collection1/conf/test-solr-schema.xml", "solr/collection1/conf/test-solr-config.xml");
+  private void copyResource(String resource, String destination) throws IOException {
+    IOUtils.copy(getClass().getClassLoader().getResourceAsStream(resource),
+        new FileOutputStream(new File(destination)));
   }
 
   public void tearDown() throws Exception {
-    factory.tearDown();
     server = null;
+    FileUtils.deleteQuietly(new File(solrHome));
   }
 
   /**
@@ -129,104 +143,4 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
   public SolrServer getServer() {
     return server;
   }
-
-  /**
-   * factory class that does the work of creating the embedded server.  Extends AbstractSolrTestCase so we can reuse
-   * their code
-   */
-  private static class Factory extends AbstractSolrTestCase {
-    private String schemaFile;
-    private String configFile;
-
-    public Factory(String schemaFile, String configFile) throws Exception {
-      super();
-      //Copy the schema and config files to temp files, to that if any project is using this class from a jar they can
-      //since we can't call class.getResource() on a file from a jar
-      int r = Math.abs(new Random().nextInt());
-      this.schemaFile = System.getProperty("java.io.tmpdir") + File.separator + "ambra-test-solr-schema-" + r + ".xml";
-      this.configFile = System.getProperty("java.io.tmpdir") + File.separator + "ambra-test-solr-config-" + r + ".xml";
-
-      writeFile(schemaFile, this.schemaFile);
-      writeFile(configFile, this.configFile);
-
-      super.setUp();
-      System.setProperty("solr.solr.home", System.getProperty("java.io.tmpdir"));
-    }
-
-    private void writeFile(String source, String destination) throws IOException {
-      File destinationFile = new File(destination);
-      destinationFile.deleteOnExit();
-      InputStream inputStream = null;
-      OutputStream outputStream = null;
-
-      try {
-        inputStream = getInputStream(source);
-        outputStream = new FileOutputStream(destinationFile);
-        final byte[] buf = new byte[1024];
-        int len;
-        while ((len = inputStream.read(buf)) > 0) {
-          outputStream.write(buf, 0, len);
-        }
-      } finally {
-        if (inputStream != null) {
-          try {
-            inputStream.close();
-          } catch (IOException e) {
-            //suppress
-          }
-        }
-        if (outputStream != null) {
-          try {
-            outputStream.close();
-          } catch (IOException e) {
-            //suppress
-          }
-        }
-      }
-    }
-
-    private InputStream getInputStream(String source) throws FileNotFoundException {
-      InputStream inputStream;
-      inputStream = EmbeddedSolrServerFactory.class.getResourceAsStream(source);
-      if (inputStream == null) {
-        //try with the class loader
-        inputStream = EmbeddedSolrServerFactory.class.getClassLoader().getResourceAsStream(source);
-      }
-      if (inputStream == null) {
-        //perhaps it describes a file
-        inputStream = new FileInputStream(source);
-      }
-      return inputStream;
-    }
-
-    @Override
-    public String getSchemaFile() {
-      return schemaFile;
-    }
-
-    @Override
-    public String getSolrConfigFile() {
-      return configFile;
-    }
-
-    public SolrServer createServer() {
-      //h is a TestHarness from AbstractSolrTestCase that gets set up on calling setup()
-      return new EmbeddedSolrServer(h.getCoreContainer(), h.getCore().getName());
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-
-      try {
-
-        super.preTearDown();
-        super.tearDown();
-
-      } catch (Exception e){
-        log.warn("Embedded Solr server tear down Failed.");
-      }
-
-    }
-  }
-
 }

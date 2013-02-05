@@ -35,7 +35,6 @@
     other than the default ./data under the Solr home.
     If replication is in use, this should match the replication configuration. 
   -->
-  <dataDir>${solr.data.dir:./solr/data}</dataDir>
 
   <luceneMatchVersion>LUCENE_CURRENT</luceneMatchVersion>
 
