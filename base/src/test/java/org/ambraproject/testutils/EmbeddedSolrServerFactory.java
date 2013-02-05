@@ -73,6 +73,10 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
         conf.getCanonicalPath() + File.separator + "solrconfig.xml");
     copyResource("solr/collection1/conf/test-solr-schema.xml",
         conf.getCanonicalPath() + File.separator + "schema.xml");
+    copyResource("solr/collection1/conf/stopwords.txt",
+        conf.getCanonicalPath() + File.separator + "stopwords.txt");
+    copyResource("solr/collection1/conf/author_stopwords.txt",
+        conf.getCanonicalPath() + File.separator + "author_stopwords.txt");
 
     System.setProperty("solr.solr.home", solrHome);
     CoreContainer coreContainer = new CoreContainer(solrHome, new File(destSolrXmlFile));
