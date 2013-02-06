@@ -25,7 +25,7 @@ import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.UserProfile;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 import java.io.Serializable;
 

@@ -63,7 +63,7 @@ public class DummyAmbraMailer extends AmbraMailerImpl {
     private final String htmlTemplateFilename;
 
     /**
-     * @see org.topazproject.ambra.email.impl.FreemarkerTemplateMailer#mail
+     * @see org.ambraproject.ambra.email.impl.FreemarkerTemplateMailer#mail
      */
     public DummyEmail(String toEmailAddresses, String fromEmailAddress, String subject, Map<String, Object> context, String textTemplateFilename, String htmlTemplateFilename) {
       this.toEmailAddresses = toEmailAddresses;

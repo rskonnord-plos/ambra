@@ -22,14 +22,11 @@
 package org.ambraproject.service.xml;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.ambraproject.ApplicationException;
-import org.ambraproject.util.FileUtils;
-import org.springframework.transaction.annotation.Transactional;
-import org.topazproject.xml.transform.cache.CachedSource;
+import org.ambraproject.xml.transform.cache.CachedSource;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 

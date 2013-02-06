@@ -21,7 +21,7 @@
 package org.ambraproject.testutils;
 
 import org.apache.commons.configuration.Configuration;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 import java.io.*;
 import java.util.Random;
