@@ -2243,6 +2243,7 @@ ul.bulletlist li {
   padding: 35px 50px;
   background: #efefef;
   float: right;
+  word-wrap: break-word;
 }
 
 #thread ul#threads li div.title span {
