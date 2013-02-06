@@ -46,7 +46,7 @@ import java.util.Set;
  *
  * @author Alex Kudlick Date: 5/4/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
 

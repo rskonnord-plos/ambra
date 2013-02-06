@@ -32,7 +32,7 @@ import java.util.Random;
  *
  * @author Alex Kudlick Date: 5/11/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 public class AmbraTestConfigurationFactory {
 

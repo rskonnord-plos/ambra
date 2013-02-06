@@ -69,7 +69,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Alex Kudlick Date: 4/29/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 @ContextConfiguration(locations = "nonWebApplicationContext.xml")
 @Test(singleThreaded = true)
@@ -98,7 +98,7 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
    * rounding can occur when storing to an hsql db
    *
    * @param actual   - the date from mysql to compare
-   * @param expected - the date from topaz to compare
+   * @param expected - the date from Ambra to compare
    */
   protected static void assertMatchingDates(Date actual, Date expected) {
     if (actual == null || expected == null) {

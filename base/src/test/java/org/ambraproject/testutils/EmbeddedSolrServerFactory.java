@@ -34,7 +34,7 @@ import java.util.Random;
 /**
  * Class added for unit tests to use an in-memory embedded solr server.
  * <p/>
- * Extends the topazproject SolrServerFactory so it can be passed to existing beans. Documents are added to the server
+ * Extends the Ambra SolrServerFactory so it can be passed to existing beans. Documents are added to the server
  * by passing a map to the addDocument method.
  *
  * @author Alex Kudlick Date: 5/13/11
