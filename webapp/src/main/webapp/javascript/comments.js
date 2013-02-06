@@ -169,6 +169,7 @@ $.fn.comments = function () {
    */
   function sendAjaxRequest(url, data, success) {
     $.ajax(url, {
+      type: "post",
       dataType:"json",
       data:data,
       dataFilter:function (data, type) {

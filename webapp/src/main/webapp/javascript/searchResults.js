@@ -182,7 +182,6 @@ $(document).ready(
 
       almService.getSummaryForArticles(ids, setALMSearchWidgets, setALMSearchWidgetsError);
 
-
       function setALMSearchWidgets(articles) {
         for (a = 0; a < articles.length; a++) {
           var article = articles[a];
