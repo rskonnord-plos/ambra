@@ -68,6 +68,19 @@ public class FileUtils {
   }
 
   /**
+   * Gets all the text content from the given url. It is expected that the url will have all
+   * content as a text type.
+   *
+   * @param url url
+   * @return the whole content from the url
+   * @throws IOException IOException
+   */
+  public static String getTextFromUrl(final URL url) throws IOException {
+    // Read all the text returned by the server
+    return IOUtils.toString(url.openStream(), "UTF-8");
+  }
+
+  /**
    * Return the first file extension that maps to the given mimeType.
    *
    * @param mimeType the mimeType
