@@ -18,10 +18,14 @@
 package org.ambraproject.service.raptor;
 
 import org.ambraproject.views.AcademicEditorView;
-
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A class that holds methods for talking to the raptor (PLOS)
+ * reporting service
+ *
+ */
 public interface RaptorService {
   /**
    * Get a list of academic editors from the raptor server

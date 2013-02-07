@@ -21,13 +21,10 @@
 
 package org.ambraproject.service.search;
 
+import org.ambraproject.util.XPathUtil;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
@@ -36,12 +33,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -65,6 +62,7 @@ import java.util.Map;
 public class SolrHttpServiceImpl implements SolrHttpService {
 
   private static final Logger log = LoggerFactory.getLogger(SolrHttpServiceImpl.class);
+  private XPathUtil xPathUtil = new XPathUtil();
   private String solrUrl;
   private Configuration config;
   private HttpClient httpClient;
@@ -224,7 +222,7 @@ public class SolrHttpServiceImpl implements SolrHttpService {
    * @inheritDoc
    */
   @Override
-  public void makeSolrPostRequest(Map<String, String> params, String data) throws SolrException {
+  public void makeSolrPostRequest(Map<String, String> params, String data, boolean isCSV) throws SolrException {
     String postUrl = config.getString(URL_CONFIG_PARAM);
 
     String queryString = "?";
@@ -236,17 +234,28 @@ public class SolrHttpServiceImpl implements SolrHttpService {
       queryString += (cleanInput(param) + "=" + cleanInput(value));
     }
 
-    String urlString = postUrl + queryString;
+    String filename;
+    String contentType;
 
-    log.debug("Making Solr http post request to " + urlString);
+    if(isCSV) {
+      postUrl = postUrl + "/update/csv" + queryString;
+      filename = "data.csv";
+      contentType = "text/plain";
+    } else {
+      postUrl = postUrl + "/update" + queryString;
+      filename = "data.xml";
+      contentType = "text/xml";
+    }
 
-    PostMethod filePost = new PostMethod(urlString);
+    log.debug("Making Solr http post request to " + postUrl);
+
+    PostMethod filePost = new PostMethod(postUrl);
 
     try {
       filePost.setRequestEntity(
         new MultipartRequestEntity(new Part[] {
-          new FilePart("data.csv", new ByteArrayPartSource("data.csv",
-            data.getBytes("UTF-8")), "text/plain", "UTF-8")
+          new FilePart(filename, new ByteArrayPartSource(filename,
+            data.getBytes("UTF-8")), contentType, "UTF-8")
         }, filePost.getParams())
       );
     } catch (UnsupportedEncodingException ex) {
@@ -258,10 +267,31 @@ public class SolrHttpServiceImpl implements SolrHttpService {
 
       if(response == 200) {
         log.info("Request Complete: {}", response);
+
+        //Confirm SOLR result status is 0
+
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        InputSource source = new InputSource(filePost.getResponseBodyAsStream());
+
+        Document doc = db.parse(source);
+
+        String result = xPathUtil.evaluate(doc, "//int[@name=\'status\']");
+
+        if(!"0".equals(result)) {
+          log.error("SOLR Returned non zero result: {}", result);
+          throw new SolrException("SOLR Returned non zero result: " + result);
+        }
       } else {
         log.error("Request Failed: {}", response);
+        throw new SolrException("Request Failed: " + response);
       }
     } catch (IOException ex) {
+      throw new SolrException(ex);
+    } catch (ParserConfigurationException ex) {
+      throw new SolrException(ex);
+    } catch (SAXException ex) {
+      throw new SolrException(ex);
+    } catch (XPathExpressionException ex) {
       throw new SolrException(ex);
     }
   }

@@ -50,6 +50,7 @@ public interface SolrHttpService {
    *
    * @param params  the params to pass to solr. these are URL encoded and passed as part of the get request
    * @param data the data to pass via a HTTP put
+   * @param isCSV is the data CSV?
    */
-  public void makeSolrPostRequest(Map<String, String> params, String data) throws SolrException;
+  public void makeSolrPostRequest(Map<String, String> params, String data, boolean isCSV) throws SolrException;
 }
