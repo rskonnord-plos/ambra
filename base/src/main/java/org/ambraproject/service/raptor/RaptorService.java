@@ -23,5 +23,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface RaptorService {
+  /**
+   * Get a list of academic editors from the raptor server
+   *
+   * @return a list of academic editors from the raptor server
+   * @throws IOException
+   */
   public List<AcademicEditorView> getAcademicEditor() throws IOException;
 }

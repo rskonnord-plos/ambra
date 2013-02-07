@@ -40,21 +40,45 @@ public class RaptorServiceImpl implements RaptorService {
   private String serviceUrl;
   private HttpClient httpClient;
 
+  /**
+   * @inheritDoc
+   */
   public List<AcademicEditorView> getAcademicEditor() throws IOException {
     String getRequest = serviceUrl + "/?q=services&report=editor_page&db=em,ap&Download=raw";
+
+    log.info("Making request to raptor: {}", getRequest);
 
     GetMethod get = new GetMethod(getRequest);
     int response = httpClient.executeMethod(get);
 
     if(response == 200) {
+      log.info("Request Complete: {}", response);
       return parseResults(get.getResponseBodyAsStream());
     } else {
-      log.error("Request: {} Returned status {}", getRequest, response);
-      return null;
+      log.error("Request Failed: {}", response);
+      throw new IOException("Request to raptor failed, response code: " + response);
     }
   }
 
-  //A parser class for the csv engine
+  @SuppressWarnings("unchecked")
+  private List<AcademicEditorView> parseResults(InputStream is) throws IOException {
+    log.info("Parsing Response");
+
+    CSVReader<AcademicEditorView> csvParser = new CSVReaderBuilder(new InputStreamReader(is))
+      .strategy(new CSVStrategy('\t', '\"', '#', true, true))
+      .entryParser(new AcademicEditorParser())
+      .build();
+
+    List<org.ambraproject.views.AcademicEditorView> results = csvParser.readAll();
+
+    log.info("Parsing Complete, Records found: {}", results.size());
+
+    return results;
+  }
+
+  /**
+   * A parser class for the csv engine
+   */
   private class AcademicEditorParser implements CSVEntryParser<AcademicEditorView> {
     public AcademicEditorView parseEntry(String[] line) {
 
@@ -69,30 +93,23 @@ public class RaptorServiceImpl implements RaptorService {
           subjectHash.put(subject, "");
         }
 
-      return AcademicEditorView.builder()
-        .setId(line[0])
-        .setName(line[1])
-        .setLastName(line[2])
-        .setInstitute(line[3])
-        .setCountry(line[4])
-        .setSubjects(new ArrayList<String>(subjectHash.keySet()))
-        .setType(line[6])
-        .setJournalKey(line[7])
-        .build();
+        String name = line[1];
+
+        //Replace double spaces
+        name = name.replaceAll("\\s+", " ");
+
+        return AcademicEditorView.builder()
+          .setId(line[0])
+          .setName(name)
+          .setLastName(line[2])
+          .setInstitute(line[3])
+          .setCountry(line[4])
+          .setSubjects(new ArrayList<String>(subjectHash.keySet()))
+          .setType(line[6])
+          .setJournalKey(line[7])
+          .build();
       }
     }
-  }
-
-  private List<AcademicEditorView> parseResults(InputStream is) throws IOException {
-    List<org.ambraproject.views.AcademicEditorView> results = new ArrayList<org.ambraproject.views.AcademicEditorView>();
-
-    CSVStrategy strategy = new CSVStrategy('\t', '\"', '#', true, true);
-    CSVReader<AcademicEditorView> csvParser = new CSVReaderBuilder(new InputStreamReader(is))
-      .strategy(strategy)
-      .entryParser(new AcademicEditorParser())
-      .build();
-
-    return csvParser.readAll();
   }
 
   @Required

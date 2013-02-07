@@ -22,14 +22,26 @@
 package org.ambraproject.service.search;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.MultipartPostMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -55,6 +67,7 @@ public class SolrHttpServiceImpl implements SolrHttpService {
   private static final Logger log = LoggerFactory.getLogger(SolrHttpServiceImpl.class);
   private String solrUrl;
   private Configuration config;
+  private HttpClient httpClient;
 
   private static final String XML = "xml";
   private static final String URL_CONFIG_PARAM = "ambra.services.search.server.url";
@@ -66,6 +79,9 @@ public class SolrHttpServiceImpl implements SolrHttpService {
    */
   private static final int CONNECTION_TIMEOUT = 100;
 
+  /**
+   * @inheritDoc
+   */
   @Override
   public Document makeSolrRequest(Map<String, String> params) throws SolrException {
     if (solrUrl == null || solrUrl.isEmpty()) {
@@ -153,10 +169,9 @@ public class SolrHttpServiceImpl implements SolrHttpService {
     this.solrUrl = this.solrUrl.replaceAll("\\?", "");
   }
 
-  public void setConfig(Configuration config) {
-    this.config = config;
-  }
-
+  /**
+   * @inheritDoc
+   */
   public Document makeSolrRequestForRss(String queryString) throws SolrException {
 
     if (solrUrl == null || solrUrl.isEmpty()) {
@@ -205,4 +220,59 @@ public class SolrHttpServiceImpl implements SolrHttpService {
     return doc;
   }
 
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public void makeSolrPostRequest(Map<String, String> params, String data) throws SolrException {
+    String postUrl = config.getString(URL_CONFIG_PARAM);
+
+    String queryString = "?";
+    for (String param : params.keySet()) {
+      String value = params.get(param);
+      if (queryString.length() > 1) {
+        queryString += "&";
+      }
+      queryString += (cleanInput(param) + "=" + cleanInput(value));
+    }
+
+    String urlString = postUrl + queryString;
+
+    log.debug("Making Solr http post request to " + urlString);
+
+    PostMethod filePost = new PostMethod(urlString);
+
+    try {
+      filePost.setRequestEntity(
+        new MultipartRequestEntity(new Part[] {
+          new FilePart("data.csv", new ByteArrayPartSource("data.csv",
+            data.getBytes("UTF-8")), "text/plain", "UTF-8")
+        }, filePost.getParams())
+      );
+    } catch (UnsupportedEncodingException ex) {
+      throw new SolrException(ex);
+    }
+
+    try {
+      int response = httpClient.executeMethod(filePost);
+
+      if(response == 200) {
+        log.info("Request Complete: {}", response);
+      } else {
+        log.error("Request Failed: {}", response);
+      }
+    } catch (IOException ex) {
+      throw new SolrException(ex);
+    }
+  }
+
+  @Required
+  public void setConfig(Configuration config) {
+    this.config = config;
+  }
+
+  @Required
+  public void setHttpClient(HttpClient httpClient) {
+    this.httpClient = httpClient;
+  }
 }

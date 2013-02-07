@@ -55,7 +55,7 @@ public class RaptorServiceTest extends BaseTest {
 
     results.add(AcademicEditorView.builder()
       .setId("PONE-9843")
-      .setName("Mark  Isalan")
+      .setName("Mark Isalan")
       .setLastName("Isalan")
       .setInstitute("Center for Genomic Regulation")
       .setCountry("SPAIN")
