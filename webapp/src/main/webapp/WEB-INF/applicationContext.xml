@@ -416,6 +416,7 @@
 
   <bean id="solrHttpService" class="org.ambraproject.service.search.SolrHttpServiceImpl">
     <property name="config" ref="ambraConfiguration"/>
+    <property name="httpClient" ref="httpClient"/>
   </bean>
 
   <bean id="mostViewedArticleService" class="org.ambraproject.service.search.SolrMostViewedArticleService">
