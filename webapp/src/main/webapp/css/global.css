@@ -2334,7 +2334,14 @@ ul.bulletlist li {
 
 .reply form fieldset {
   min-width: 49%;
-  float: left;
+ }
+
+/* spacing for correction checkbox and comment title fields in next two rules*/
+.reply form fieldset div{
+  margin: 5 !important;
+}
+.reply form fieldset #replyCheckbox{
+  margin: 0;
 }
 
 .reply.review form fieldset {
@@ -2407,7 +2414,6 @@ ul.bulletlist li {
 .reply form fieldset label {
   font-size: 0.813em;
   position: relative;
-
 }
 
 .reply .help {
