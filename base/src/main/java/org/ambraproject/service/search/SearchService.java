@@ -57,7 +57,7 @@ public interface SearchService {
   /**
    * Returns a list of the top level subject categories associated with all journals
    *
-   * @return
+   * @return A map of subject areas and a count of their frequency
    * @throws ApplicationException
    */
   SortedMap<String, Long> getTopSubjects() throws ApplicationException;

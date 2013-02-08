@@ -356,14 +356,12 @@ public class SolrSearchService implements SearchService {
 
     SortedMap<String, Long> results = new TreeMap<String, Long>();
 
-    //If there are is no facet.  Should never happen outside a unit test
+    //If there is no facet.  Should never happen outside a unit test
     if(facet.getValues() == null) {
       log.warn("No subject_level_1 facet");
     } else {
-      synchronized (results) {
-        for (FacetField.Count count : facet.getValues()) {
-          results.put(count.getName(), count.getCount());
-        }
+      for (FacetField.Count count : facet.getValues()) {
+        results.put(count.getName(), count.getCount());
       }
     }
 
