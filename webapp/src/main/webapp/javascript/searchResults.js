@@ -226,7 +226,7 @@ $(document).ready(
           }
 
           //show widgets only when you have data
-          if(cites != null ||  bookmarks != null || viewsData !=null) {
+          if(cites != null ||  bookmarks != null || viewsData != null || socialData != null) {
             confirmed_ids[confirmed_ids.length] = doi;
             makeALMSearchWidget(doi, cites, bookmarks, viewsData, socialData);
           }
@@ -287,9 +287,15 @@ $(document).ready(
           //   followed by the rest of the sources in alphabetical order.
           cites = cites.sort(sortCitesByName);
 
+          //get count of citations
+          var citeCount = 0;
+          for(a = 0; a < cites.length; a++) {
+            citeCount += cites[a].count;
+          }
+
           newNode = $("<a></a>")
               .attr("href", metricsURL + "#citations")
-              .html("Citations: Yes")
+              .html("Citations: " + citeCount)
               .addClass("data");
 
           newNode.tooltip({
@@ -350,7 +356,6 @@ $(document).ready(
               .attr("href", metricsURL + "#other")
               .html("Bookmarks: " + markCount)
               .addClass("data");
-          //new dijit.Tooltip({ connectId: newNode, label: tipText });
 
           appendBullIfNeeded(node);
 
