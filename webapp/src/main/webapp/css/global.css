@@ -1,7 +1,7 @@
 /*
  * $HeadURL$
  * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -2243,6 +2243,7 @@ ul.bulletlist li {
   padding: 35px 50px;
   background: #efefef;
   float: right;
+  word-wrap: break-word;
 }
 
 #thread ul#threads li div.title span {
@@ -2284,6 +2285,11 @@ ul.bulletlist li {
 
 #responses .response .response_content {
   padding: 20px 15px;
+  word-wrap: break-word;
+}
+
+#responses .response .response_title  {
+  word-wrap: break-word;
 }
 
 #responses .response .toolbar {
@@ -5057,4 +5063,17 @@ div.findArticle h4 {
 
 .collapsibleContainerContent {
   padding: 10px;
+}
+
+/***************************** Adv search checkboxes *****************/
+.checkboxWrapper {
+  position: relative;
+}
+.checkboxOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
 }
