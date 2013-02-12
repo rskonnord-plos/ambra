@@ -23,7 +23,7 @@ package org.ambraproject.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
