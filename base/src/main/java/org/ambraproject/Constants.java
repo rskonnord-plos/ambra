@@ -36,7 +36,6 @@ public interface Constants {
   String SINGLE_SIGNON_EMAIL_KEY = "org.ambraproject.sso.email";
   /** Authentication method used for anonymous user, otherwise it is normally CAS */
   String ANONYMOUS_USER_AUTHENTICATION = "ANONYMOUS_USER_AUTHENTICATION";
-  String ROOT_PACKAGE = "org.topazproject.ambra";
   String ADMIN_ROLE = "admin";
 
   /**
