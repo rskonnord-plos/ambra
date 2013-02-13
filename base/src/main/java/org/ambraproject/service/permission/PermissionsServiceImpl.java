@@ -133,4 +133,12 @@ public class PermissionsServiceImpl extends HibernateServiceImpl implements Perm
   public void setRolesCache(Cache rolesCache) {
     this.rolesCache = rolesCache;
   }
+
+  /**
+   * @inheritDoc
+   */
+  public void clearCache()
+  {
+    this.rolesCache.removeAll();
+  }
 }
