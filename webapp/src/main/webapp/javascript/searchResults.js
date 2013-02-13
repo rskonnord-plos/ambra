@@ -285,6 +285,9 @@ $(document).ready(
         //only using scopus so get a reference if possible and use information contained therein
         var scopus = null;
         if (cites != null) {
+          //citations should always be sorted with Scopus first
+          cites = cites.sort(sortCitesByName);
+
           //see if a reference to scopus exists
           for(a = 0; a < cites.length; a++) {
             if (cites[a].source.toLowerCase() == 'scopus' && cites[a].count > 0) {
