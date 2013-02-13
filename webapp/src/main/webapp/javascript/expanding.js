@@ -1,3 +1,13 @@
+/**********************************************
+ *
+ * Expanding Textareas
+ * Brian Grinstead
+ * 2013-02-07 09:55
+ * 1.0?
+ * https://github.com/bgrins/ExpandingTextareas
+ *
+ **********************************************/
+
 /*
 MIT License
 
@@ -20,16 +30,6 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
-/**********************************************
- *
- * Expanding Textareas
- * Brian Grinstead
- * 2013-02-07 09:55
- * 1.0?
- * https://github.com/bgrins/ExpandingTextareas
- *
- **********************************************/
 
 (function (factory) {
   // Add jQuery via AMD registration or browser globals

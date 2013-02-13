@@ -114,6 +114,15 @@ $.fn.comments = function () {
     container.html(box);
     box.show();
     animatedShow(container);
+
+    //activate expanding text plugin for reply elements that exist
+//    if($('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]')){
+//    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').expandingTextarea();
+//    }
+//    if(true){
+//    var x = $('#reply-' + replyId + ' form[class="cf"] textarea[name="competing_interests"').expandingTextarea();
+//    alert('hi');
+//    }
   };
 
   /**
@@ -128,6 +137,8 @@ $.fn.comments = function () {
           outer.submitReport(replyId);
         });
       });
+    //activate expanding text area
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="additional_info"]').expandingTextarea();
   };
 
   /**
@@ -147,6 +158,9 @@ $.fn.comments = function () {
         box.find('[name="comment_title"]').attr("value", 'RE: ' + parentTitle);
         outer.wireCompetingInterestRadioButtons(box);
       });
+    //activate expanding text area
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').expandingTextarea();
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="competing_interests"]').expandingTextarea();
   };
 
   /**
