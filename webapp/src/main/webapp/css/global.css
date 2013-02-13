@@ -2366,11 +2366,12 @@ ul.bulletlist li {
 .reply form fieldset #flag_text{
   margin-top: 5px;
   margin-bottom: 20px;
-}
+  }
 
-/* max width of text area for expanding text areas */
+/* max width of text area for expanding text areas and min-height */
 .expandingText{
   min-height: 80px;
+  max-width: 695px;
 }
 
 .reply.review form fieldset {
