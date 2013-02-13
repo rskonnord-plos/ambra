@@ -310,8 +310,15 @@ $(document).ready(
             showURL: false,
 
             bodyHandler: function() {
-              //"scopus" is a javascript object, and scopus.source is the string literal "Scopus"
-              var tipText = scopus.source + ": <b>" + scopus.count.format(0,'.',',') + "</b>";
+              var tipText = "";
+
+              for(a = 0; a < cites.length; a++) {
+                if(tipText != "") {
+                  tipText += ", "
+                }
+                tipText += cites[a].source + ": <b>" + cites[a].count.format(0,'.',',') + "</b>";
+              }
+
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
             }
           });
