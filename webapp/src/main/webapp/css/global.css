@@ -2374,6 +2374,28 @@ ul.bulletlist li {
   max-width: 695px;
 }
 
+/*comments input */
+#comment_title,
+#comment,
+#competing_interests,
+{
+  border: 0px;
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+#comment_title,
+.comment_field_title{
+  height: 15px;
+}
+
+.comment_field{
+  border: 0px !important;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+}
+/* end comments input styling */
+
 .reply.review form fieldset {
   float: none;
   width: 100%;
