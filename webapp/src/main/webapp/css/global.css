@@ -2357,7 +2357,6 @@ ul.bulletlist li {
 
 /* spacing between competing interest radio buttons */
 .reply form fieldset div.cf{
-  height: 15px;
   margin-bottom: 10px;
 }
 
@@ -2369,30 +2368,21 @@ ul.bulletlist li {
   }
 
 /* max width of text area for expanding text areas and min-height */
-.expandingText{
-  min-height: 80px;
-  max-width: 695px;
+/* TODO: Explicitly set heights 106 and 88 for competing interest and comment */
+textarea, .textareaClone {
+  min-height: 88px;
+  /*padding: 1em !important;*/
+  /*margin: 1em !important;*/
+  /*width: 50% !important;*/
 }
 
 /*comments input */
-#comment_title,
-#comment,
-#competing_interests,
+div#respond textarea, div#respond input[type="text"]
 {
-  border: 0px;
-  padding-right: 0px;
-  padding-left: 0px;
-}
-
-#comment_title,
-.comment_field_title{
-  height: 15px;
-}
-
-.comment_field{
-  border: 0px !important;
-  padding-right: 0px !important;
-  padding-left: 0px !important;
+  border: 0;
+  padding-right: 0;
+  padding-left: 0;
+  overflow:hidden;
 }
 /* end comments input styling */
 

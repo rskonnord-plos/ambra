@@ -115,14 +115,7 @@ $.fn.comments = function () {
     box.show();
     animatedShow(container);
 
-    //activate expanding text plugin for reply elements that exist
-//    if($('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]')){
-//    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').expandingTextarea();
-//    }
-//    if(true){
-//    var x = $('#reply-' + replyId + ' form[class="cf"] textarea[name="competing_interests"').expandingTextarea();
-//    alert('hi');
-//    }
+
   };
 
   /**
@@ -138,7 +131,7 @@ $.fn.comments = function () {
         });
       });
     //activate expanding text area
-    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="additional_info"]').expandingTextarea();
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="additional_info"]').TextAreaExpander(106,99999);
   };
 
   /**
@@ -159,8 +152,8 @@ $.fn.comments = function () {
         outer.wireCompetingInterestRadioButtons(box);
       });
     //activate expanding text area
-    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').expandingTextarea();
-    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="competing_interests"]').expandingTextarea();
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').TextAreaExpander(106,99999);
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="competing_interests"]').TextAreaExpander(88,99999);
   };
 
   /**

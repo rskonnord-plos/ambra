@@ -1,149 +1,101 @@
-/**********************************************
+/**
+ * TextAreaExpander plugin for jQuery
+ * v1.0
+ * Expands or contracts a textarea height depending on the
+ * quantity of content entered by the user in the box.
  *
- * Expanding Textareas
- * Brian Grinstead
- * 2013-02-07 09:55
- * 1.0?
- * https://github.com/bgrins/ExpandingTextareas
+ * By Craig Buckler, Optimalworks.net
  *
- **********************************************/
+ * As featured on SitePoint.com:
+ * http://www.sitepoint.com/blogs/2009/07/29/build-auto-expanding-textarea-1/
+ *
+ * Please use as you wish at your own risk.
+ */
 
-/*
-MIT License
+/**
+ * Usage:
+ *
+ * From JavaScript, use:
+ *     $(<node>).TextAreaExpander(<minHeight>, <maxHeight>);
+ *     where:
+ *       <node> is the DOM node selector, e.g. "textarea"
+ *       <minHeight> is the minimum textarea height in pixels (optional)
+ *       <maxHeight> is the maximum textarea height in pixels (optional)
+ *
+ * Alternatively, in you HTML:
+ *     Assign a class of "expand" to any <textarea> tag.
+ *     e.g. <textarea name="textarea1" rows="3" cols="40" class="expand"></textarea>
+ *
+ *     Or assign a class of "expandMIN-MAX" to set the <textarea> minimum and maximum height.
+ *     e.g. <textarea name="textarea1" rows="3" cols="40" class="expand50-200"></textarea>
+ *     The textarea will use an appropriate height between 50 and 200 pixels.
+ */
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+(function($) {
 
-    The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+  // jQuery plugin definition
+  $.fn.TextAreaExpander = function(minHeight, maxHeight) {
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+    var hCheck = !($.browser.msie || $.browser.opera);
 
-(function (factory) {
-  // Add jQuery via AMD registration or browser globals
-  if (typeof define === 'function' && define.amd) {
-    define([ 'jquery' ], factory);
-  }
-  else {
-    factory(jQuery);
-  }
-}(function ($) {
-  $.expandingTextarea = $.extend({
-    autoInitialize:true,
-    initialSelector:"textarea.expanding",
-    opts:{
-      resize:function () {
+    // resize a textarea
+    function ResizeTextarea(e) {
+
+      // event or initialize element?
+      e = e.target || e;
+
+      if(e.disabled)
+        return;
+
+      // find content length and box width
+      var vlen = e.value.length, ewidth = e.offsetWidth;
+      if (vlen != e.valLength || ewidth != e.boxWidth) {
+
+        if (hCheck && (vlen < e.valLength || ewidth != e.boxWidth)) e.style.height = "0px";
+
+        var h = Math.max(e.expandMin, Math.min(e.scrollHeight, e.expandMax));
+
+        e.style.overflow = (e.scrollHeight > h ? "auto" : "hidden");
+        e.style.height = h + "px";
+
+        e.valLength = vlen;
+        e.boxWidth = ewidth;
       }
-    }
-  }, $.expandingTextarea || {});
 
-  var cloneCSSProperties = [
-    'lineHeight', 'textDecoration', 'letterSpacing',
-    'fontSize', 'fontFamily', 'fontStyle',
-    'fontWeight', 'textTransform', 'textAlign',
-    'direction', 'wordSpacing', 'fontSizeAdjust',
-    'wordWrap', 'word-break',
-    'borderLeftWidth', 'borderRightWidth',
-    'borderTopWidth', 'borderBottomWidth',
-    'paddingLeft', 'paddingRight',
-    'paddingTop', 'paddingBottom',
-    'marginLeft', 'marginRight',
-    'marginTop', 'marginBottom',
-    'boxSizing', 'webkitBoxSizing', 'mozBoxSizing', 'msBoxSizing'
-  ];
+      return true;
+    };
 
-  var textareaCSS = {
-    position:"absolute",
-    height:"100%",
-    resize:"none"
-  };
+    // initialize
+    this.each(function() {
 
-  var preCSS = {
-    visibility:"hidden",
-    border:"0 solid",
-    whiteSpace:"pre-wrap"
-  };
+      // is a textarea?
+      if (this.nodeName.toLowerCase() != "textarea") return;
 
-  var containerCSS = {
-    position:"relative"
-  };
+      // set height restrictions
 
-  function resize() {
-    $(this).closest('.expandingText').find("div").text(this.value.replace(/\r\n/g, "\n") + ' ');
-    $(this).trigger("resize.expanding");
-  }
+      var p = this.className.match(/expand(\d+)\-*(\d+)*/i);
 
-  $.fn.expandingTextarea = function (o) {
+      this.expandMin = minHeight || (p ? parseInt('0'+p[1], 10) : 0);
+      this.expandMax = maxHeight || (p ? parseInt('0'+p[2], 10) : 99999);
 
-    var opts = $.extend({ }, $.expandingTextarea.opts, o);
+      // initial resize
+      ResizeTextarea(this);
 
-    if (o === "resize") {
-      return this.trigger("input.expanding");
-    }
-
-    if (o === "destroy") {
-      this.filter(".expanding-init").each(function () {
-        var textarea = $(this).removeClass('expanding-init');
-        var container = textarea.closest('.expandingText');
-
-        container.before(textarea).remove();
-        textarea
-            .attr('style', textarea.data('expanding-styles') || '')
-            .removeData('expanding-styles');
-      });
-
-      return this;
-    }
-
-    this.filter("textarea").not(".expanding-init").addClass("expanding-init").each(function () {
-      var textarea = $(this);
-
-      textarea.wrap("<div class='expandingText'></div>");
-      textarea.after("<pre class='textareaClone'><div></div></pre>");
-
-      var container = textarea.parent().css(containerCSS);
-      var pre = container.find("pre").css(preCSS);
-
-      // Store the original styles in case of destroying.
-      textarea.data('expanding-styles', textarea.attr('style'));
-      textarea.css(textareaCSS);
-
-      $.each(cloneCSSProperties, function (i, p) {
-        var val = textarea.css(p);
-
-        // Only set if different to prevent overriding percentage css values.
-        if (pre.css(p) !== val) {
-          pre.css(p, val);
-        }
-      });
-
-      textarea.bind("input.expanding propertychange.expanding keyup.expanding", resize);
-      resize.apply(this);
-
-      if (opts.resize) {
-        textarea.bind("resize.expanding", opts.resize);
+      // zero vertical padding and add events
+      if (!this.Initialized) {
+        this.Initialized = true;
+        $(this).css("padding-top", 0).css("padding-bottom", 0);
+        $(this).bind("keyup", ResizeTextarea).bind("focus", ResizeTextarea);
       }
     });
 
     return this;
   };
 
-  $(function () {
-    if ($.expandingTextarea.autoInitialize) {
-      $($.expandingTextarea.initialSelector).expandingTextarea();
-    }
-  });
+})(jQuery);
 
-}));
+
+// initialize all expanding textareas
+jQuery(document).ready(function() {
+  jQuery("textarea[class*=expand]").TextAreaExpander();
+});
