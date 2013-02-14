@@ -2367,22 +2367,14 @@ ul.bulletlist li {
   margin-bottom: 20px;
   }
 
-/* max width of text area for expanding text areas and min-height */
-/* TODO: Explicitly set heights 106 and 88 for competing interest and comment */
-textarea, .textareaClone {
-  min-height: 88px;
-  /*padding: 1em !important;*/
-  /*margin: 1em !important;*/
-  /*width: 50% !important;*/
-}
-
 /*comments input */
-div#respond textarea, div#respond input[type="text"]
+div#respond textarea, div#respond input[type="text"],
+div.reply input[type="text"], .comment_field
 {
-  border: 0;
-  padding-right: 0;
-  padding-left: 0;
-  overflow:hidden;
+  border: 0 !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  overflow:hidden !important;
 }
 /* end comments input styling */
 
