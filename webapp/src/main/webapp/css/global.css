@@ -2357,22 +2357,26 @@ ul.bulletlist li {
 
 /* spacing between competing interest radio buttons */
 .reply form fieldset div.cf{
-  height: 15px;
   margin-bottom: 10px;
 }
 
 /* competing interest text area margins */
 .reply form fieldset div.competing_text,
 .reply form fieldset #flag_text{
-  margin-top: 5px;
+  margin-top: 12px;
   margin-bottom: 20px;
   }
 
-/* max width of text area for expanding text areas and min-height */
-.expandingText{
-  min-height: 80px;
-  max-width: 695px;
+/*comments input */
+div#respond textarea, div#respond input[type="text"],
+div.reply input[type="text"], .comment_field
+{
+  border: 0 !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  overflow:hidden !important;
 }
+/* end comments input styling */
 
 .reply.review form fieldset {
   float: none;
@@ -2410,10 +2414,17 @@ ul.bulletlist li {
   margin-bottom: 15px;
 }
 
-.reply form input[type=radio], .reply form input[type=checkbox] {
+.reply form input[type=checkbox] {
   float: left;
   width: auto;
-  margin: 0px 5px 8px 0 !important;
+  margin: 0 5px 8px 0 !important;
+  border: none;
+}
+
+.reply form input[type=radio]  {
+  float: left;
+  width: auto;
+  margin: 0 5px 0 0 !important;
   border: none;
 }
 
