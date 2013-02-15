@@ -5071,3 +5071,14 @@ div.findArticle h4 {
   bottom: 0;
   background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
 }
+
+ol.references li {
+  list-style-type: none;
+}
+
+ol.references li span.label {
+  margin-left: -26px;
+  float: left;
+  width: 20px;
+  text-align: right;
+}

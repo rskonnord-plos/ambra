@@ -50,4 +50,9 @@ public interface PermissionsService {
   public Set<Permission> getPermissions(final String authId);
 
   public void checkLogin(String authId) throws SecurityException;
+
+  /**
+   * Clear the cache of all roles
+   */
+  public void clearCache();
 }
