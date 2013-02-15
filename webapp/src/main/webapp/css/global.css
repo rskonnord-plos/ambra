@@ -2363,7 +2363,7 @@ ul.bulletlist li {
 /* competing interest text area margins */
 .reply form fieldset div.competing_text,
 .reply form fieldset #flag_text{
-  margin-top: 5px;
+  margin-top: 12px;
   margin-bottom: 20px;
   }
 
@@ -2414,10 +2414,17 @@ div.reply input[type="text"], .comment_field
   margin-bottom: 15px;
 }
 
-.reply form input[type=radio], .reply form input[type=checkbox] {
+.reply form input[type=checkbox] {
   float: left;
   width: auto;
-  margin: 0px 5px 8px 0 !important;
+  margin: 0 5px 8px 0 !important;
+  border: none;
+}
+
+.reply form input[type=radio]  {
+  float: left;
+  width: auto;
+  margin: 0 5px 0 0 !important;
   border: none;
 }
 
