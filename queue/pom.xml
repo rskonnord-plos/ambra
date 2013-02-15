@@ -5,13 +5,13 @@
   <parent>
     <artifactId>ambra</artifactId>
     <groupId>org.ambraproject</groupId>
-    <version>2.5.4</version>
+    <version>REDESIGN-ARTICLE-PAGE</version>
   </parent>
 
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-queue</artifactId>
   <packaging>jar</packaging>
-  <version>2.5.4</version>
+  <version>REDESIGN-ARTICLE-PAGE</version>
 
   <name>Ambra Queue</name>
   <url>http://www.plos.org</url>
