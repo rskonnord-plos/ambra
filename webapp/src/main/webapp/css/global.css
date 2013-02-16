@@ -2325,7 +2325,7 @@ ul.bulletlist li {
 }
 
 .reply .reply_content {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .reply a {
@@ -2340,12 +2340,10 @@ ul.bulletlist li {
 
 .reply form fieldset {
   min-width: 49%;
+  float: left;
  }
 
 /* spacing for correction checkbox and comment title fields in next two rules*/
-.reply form fieldset div{
-  margin: 5 !important;
-}
 .reply form fieldset #correction_checkbox{
   margin-bottom: 10px;
 }
@@ -2367,17 +2365,6 @@ ul.bulletlist li {
   margin-bottom: 20px;
   }
 
-/*comments input */
-div#respond textarea, div#respond input[type="text"],
-div.reply input[type="text"], .comment_field
-{
-  border: 0 !important;
-  padding-right: 0 !important;
-  padding-left: 0 !important;
-  overflow:hidden !important;
-}
-/* end comments input styling */
-
 .reply.review form fieldset {
   float: none;
   width: 100%;
@@ -2392,7 +2379,7 @@ div.reply input[type="text"], .comment_field
 .reply form fieldset textarea {
   display: block;
   padding: 3px;
-  width: 94%;
+  width: 700px;
   border: 1px solid #f2f2f2;
   margin: 0 0 10px 0 !important;
   overflow: auto;
@@ -2414,17 +2401,10 @@ div.reply input[type="text"], .comment_field
   margin-bottom: 15px;
 }
 
-.reply form input[type=checkbox] {
+.reply form input[type=radio], .reply form input[type=checkbox] {
   float: left;
   width: auto;
-  margin: 0 5px 8px 0 !important;
-  border: none;
-}
-
-.reply form input[type=radio]  {
-  float: left;
-  width: auto;
-  margin: 0 5px 0 0 !important;
+  margin: 3px 5px 8px 0 !important;
   border: none;
 }
 
