@@ -2343,11 +2343,6 @@ ul.bulletlist li {
   float: left;
  }
 
-/* spacing for correction checkbox and comment title fields in next two rules*/
-.reply form fieldset #correction_checkbox{
-  margin-bottom: 10px;
-}
-
 /* space between help text and competing interest radio buttons */
 .reply form fieldset div.help{
   margin-bottom: 20px;
@@ -2382,7 +2377,7 @@ ul.bulletlist li {
   width: 700px;
   border: 1px solid #f2f2f2;
   margin: 0 0 10px 0 !important;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .reply form fieldset textarea {
