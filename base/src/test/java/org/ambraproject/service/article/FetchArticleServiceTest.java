@@ -74,7 +74,10 @@ public class FetchArticleServiceTest extends BaseTest {
       add("<a href=\"mailto:bach@bu.edu\">bach@bu.edu</a>");
     }};
 
-    return new Object[][] { { a1, authors1 }, { a2, authors2 } };
+    ArticleInfo a3 = new ArticleInfo("info:doi/10.1371/image.ppat.v04.i11");
+    List<String> authors3 = new ArrayList<String>();
+
+    return new Object[][] { { a1, authors1 }, { a2, authors2 }, { a3, authors3 } };
   }
 
   @DataProvider(name = "snippetsForCorrespondingTest")

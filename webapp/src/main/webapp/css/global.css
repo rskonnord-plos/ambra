@@ -1,7 +1,7 @@
 /*
  * $HeadURL$
  * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -2243,6 +2243,7 @@ ul.bulletlist li {
   padding: 35px 50px;
   background: #efefef;
   float: right;
+  word-wrap: break-word;
 }
 
 #thread ul#threads li div.title span {
@@ -2284,6 +2285,11 @@ ul.bulletlist li {
 
 #responses .response .response_content {
   padding: 20px 15px;
+  word-wrap: break-word;
+}
+
+#responses .response .response_title  {
+  word-wrap: break-word;
 }
 
 #responses .response .toolbar {
@@ -2319,7 +2325,7 @@ ul.bulletlist li {
 }
 
 .reply .reply_content {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .reply a {
@@ -2334,7 +2340,38 @@ ul.bulletlist li {
 
 .reply form fieldset {
   min-width: 49%;
-  float: left;
+ }
+
+/* spacing for correction checkbox and comment title fields in next two rules*/
+.reply form fieldset div{
+  margin: 5 !important;
+}
+.reply form fieldset #correction_checkbox{
+  margin-bottom: 10px;
+}
+
+/* space between help text and competing interest radio buttons */
+.reply form fieldset div.help{
+  margin-bottom: 20px;
+}
+
+/* spacing between competing interest radio buttons */
+.reply form fieldset div.cf{
+  height: 15px;
+  margin-bottom: 10px;
+}
+
+/* competing interest text area margins */
+.reply form fieldset div.competing_text,
+.reply form fieldset #flag_text{
+  margin-top: 5px;
+  margin-bottom: 20px;
+  }
+
+/* max width of text area for expanding text areas and min-height */
+.expandingText{
+  min-height: 80px;
+  max-width: 695px;
 }
 
 .reply.review form fieldset {
@@ -2376,7 +2413,7 @@ ul.bulletlist li {
 .reply form input[type=radio], .reply form input[type=checkbox] {
   float: left;
   width: auto;
-  margin: 3px 5px 8px 0 !important;
+  margin: 0px 5px 8px 0 !important;
   border: none;
 }
 
@@ -2407,7 +2444,6 @@ ul.bulletlist li {
 .reply form fieldset label {
   font-size: 0.813em;
   position: relative;
-
 }
 
 .reply .help {
@@ -5051,4 +5087,17 @@ div.findArticle h4 {
 
 .collapsibleContainerContent {
   padding: 10px;
+}
+
+/***************************** Adv search checkboxes *****************/
+.checkboxWrapper {
+  position: relative;
+}
+.checkboxOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
 }

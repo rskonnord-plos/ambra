@@ -21,15 +21,24 @@
 
 package org.ambraproject.service.search;
 
+import org.ambraproject.util.XPathUtil;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -53,8 +62,10 @@ import java.util.Map;
 public class SolrHttpServiceImpl implements SolrHttpService {
 
   private static final Logger log = LoggerFactory.getLogger(SolrHttpServiceImpl.class);
+  private XPathUtil xPathUtil = new XPathUtil();
   private String solrUrl;
   private Configuration config;
+  private HttpClient httpClient;
 
   private static final String XML = "xml";
   private static final String URL_CONFIG_PARAM = "ambra.services.search.server.url";
@@ -66,6 +77,9 @@ public class SolrHttpServiceImpl implements SolrHttpService {
    */
   private static final int CONNECTION_TIMEOUT = 100;
 
+  /**
+   * @inheritDoc
+   */
   @Override
   public Document makeSolrRequest(Map<String, String> params) throws SolrException {
     if (solrUrl == null || solrUrl.isEmpty()) {
@@ -153,10 +167,9 @@ public class SolrHttpServiceImpl implements SolrHttpService {
     this.solrUrl = this.solrUrl.replaceAll("\\?", "");
   }
 
-  public void setConfig(Configuration config) {
-    this.config = config;
-  }
-
+  /**
+   * @inheritDoc
+   */
   public Document makeSolrRequestForRss(String queryString) throws SolrException {
 
     if (solrUrl == null || solrUrl.isEmpty()) {
@@ -205,4 +218,91 @@ public class SolrHttpServiceImpl implements SolrHttpService {
     return doc;
   }
 
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public void makeSolrPostRequest(Map<String, String> params, String data, boolean isCSV) throws SolrException {
+    String postUrl = config.getString(URL_CONFIG_PARAM);
+
+    String queryString = "?";
+    for (String param : params.keySet()) {
+      String value = params.get(param);
+      if (queryString.length() > 1) {
+        queryString += "&";
+      }
+      queryString += (cleanInput(param) + "=" + cleanInput(value));
+    }
+
+    String filename;
+    String contentType;
+
+    if(isCSV) {
+      postUrl = postUrl + "/update/csv" + queryString;
+      filename = "data.csv";
+      contentType = "text/plain";
+    } else {
+      postUrl = postUrl + "/update" + queryString;
+      filename = "data.xml";
+      contentType = "text/xml";
+    }
+
+    log.debug("Making Solr http post request to " + postUrl);
+
+    PostMethod filePost = new PostMethod(postUrl);
+
+    try {
+      filePost.setRequestEntity(
+        new MultipartRequestEntity(new Part[] {
+          new FilePart(filename, new ByteArrayPartSource(filename,
+            data.getBytes("UTF-8")), contentType, "UTF-8")
+        }, filePost.getParams())
+      );
+    } catch (UnsupportedEncodingException ex) {
+      throw new SolrException(ex);
+    }
+
+    try {
+      int response = httpClient.executeMethod(filePost);
+
+      if(response == 200) {
+        log.info("Request Complete: {}", response);
+
+        //Confirm SOLR result status is 0
+
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        InputSource source = new InputSource(filePost.getResponseBodyAsStream());
+
+        Document doc = db.parse(source);
+
+        String result = xPathUtil.evaluate(doc, "//int[@name=\'status\']");
+
+        if(!"0".equals(result)) {
+          log.error("SOLR Returned non zero result: {}", result);
+          throw new SolrException("SOLR Returned non zero result: " + result);
+        }
+      } else {
+        log.error("Request Failed: {}", response);
+        throw new SolrException("Request Failed: " + response);
+      }
+    } catch (IOException ex) {
+      throw new SolrException(ex);
+    } catch (ParserConfigurationException ex) {
+      throw new SolrException(ex);
+    } catch (SAXException ex) {
+      throw new SolrException(ex);
+    } catch (XPathExpressionException ex) {
+      throw new SolrException(ex);
+    }
+  }
+
+  @Required
+  public void setConfig(Configuration config) {
+    this.config = config;
+  }
+
+  @Required
+  public void setHttpClient(HttpClient httpClient) {
+    this.httpClient = httpClient;
+  }
 }
