@@ -19,6 +19,9 @@
  */
 package org.ambraproject.views.article;
 
+import org.apache.commons.configuration.Configuration;
+import org.topazproject.ambra.configuration.ConfigurationStore;
+
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -31,9 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.Configuration;
-import org.topazproject.ambra.configuration.ConfigurationStore;
-
 @SuppressWarnings("serial")
 public class ArticleType implements Serializable {
   /**
@@ -44,6 +44,7 @@ public class ArticleType implements Serializable {
    * TODO: 3) Test against the URI, not the value that will be displayed to the user
    */
   public static final String ARTICLE_TYPE_HEADING_RESEARCH = "Research Article";
+  public static final String ARTICLE_TYPE_HEADING_EOC = "Expression of Concern";
 
   private static Map<URI, ArticleType> knownArticleTypes = new HashMap<URI, ArticleType>();
   private static Map<URI, ArticleType> newArticleTypes = new HashMap<URI, ArticleType>();

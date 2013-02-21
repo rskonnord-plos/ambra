@@ -134,6 +134,27 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
+   * Check if the article is of type Expression of Concern
+   * @param articleTypes The ArticleType object
+   * @return
+   * @throws ApplicationException
+   * @throws NoSuchArticleIdException
+   */
+  public boolean isEocArticle(final  Set<ArticleType> articleTypes)
+      throws ApplicationException, NoSuchArticleIdException {
+
+    ArticleType articleType = ArticleType.getDefaultArticleType();
+
+    for (ArticleType artType : articleTypes) {
+      if (ArticleType.getKnownArticleTypeForURI(artType.getUri()) != null) {
+        articleType = ArticleType.getKnownArticleTypeForURI(artType.getUri());
+        break;
+      }
+    }
+    return articleType == null ? false :ArticleType.ARTICLE_TYPE_HEADING_EOC.equals(articleType.getHeading());
+  }
+
+  /**
    * Change an articles state.
    *
    * @param articleDoi uri
@@ -599,6 +620,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           relatedArticleInfo.setDoi(otherArticle.getDoi());
           relatedArticleInfo.setDate(otherArticle.getDate());
           relatedArticleInfo.seteIssn(otherArticle.geteIssn());
+          relatedArticleInfo.setRelationType(relationship.getType());
 
           journals = otherArticle.getJournals();
           journalViews = new HashSet<JournalView>(journals.size());

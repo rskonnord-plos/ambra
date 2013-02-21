@@ -184,8 +184,16 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("^E-mail:"),
     Pattern.compile("^\\* E-mail:"),
     Pattern.compile("\\*To whom"),
-    Pattern.compile("\\* To whom")
+    Pattern.compile("\\* To whom"),
+    Pattern.compile("<sec(?:.*)*>(.*?)"),
+    Pattern.compile("</list>"),
+    Pattern.compile("<list(?:.*)*>(.*?)"),
+    Pattern.compile("<list-item>"),
+    Pattern.compile("</list-item>"),
+    Pattern.compile("<title(?:.*)*>(.*?)")
+
   };
+
 
   /**
    *  Pattern replaceements for <corresp></corresp>  and <email></email> tags
@@ -197,7 +205,14 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">*</span>To whom",
-    "<span class=\"email\">*</span>To whom"
+    "<span class=\"email\">*</span>To whom" ,
+    "",
+    "",
+    "",
+    "",
+    "<li>",
+    "</li>",
+    ""
   };
 
   /**
@@ -666,6 +681,17 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     return otherFootnotesMap;
   }
 
+
+  public String  getEocBody(Document doc) throws TransformerException, XPathExpressionException {
+
+    Node eocBody = xPathUtil.selectSingleNode(doc, "//body/sec[@id='s1']");
+    String bodyText = TextUtils.getAsXMLString(eocBody);
+    for (int index = 0; index < PATTERNS.length; index++) {
+      bodyText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
+    }
+
+    return TextUtils.getAsXMLString(eocBody);
+  }
   /**
    * @param document        a document to search for nodes
    * @param xpathExpression XPath describing the nodes to find
