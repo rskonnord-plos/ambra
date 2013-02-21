@@ -1807,10 +1807,10 @@
         <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
         <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
       </xsl:element>
+      <xsl:variable name="objURI"><xsl:value-of select="@xlink:href"/></xsl:variable>
       <p>
         <strong>
           <xsl:element name="a">
-            <xsl:variable name="objURI"><xsl:value-of select="@xlink:href"/></xsl:variable>
             <xsl:attribute name="href">
               <xsl:value-of select="concat($pubAppContext,'/article/fetchSingleRepresentation.action?uri=',$objURI)"/>
             </xsl:attribute>
@@ -1819,7 +1819,58 @@
           <xsl:apply-templates select="caption/title"/>
         </strong>
       </p>
-      <xsl:apply-templates select="caption/p"/>
+
+      <!--here, we're appending SI DOI after the caption but before the file type-->
+      <xsl:variable name="sIDOI">
+        <xsl:value-of select="replace($objURI,'info:','')"/>
+      </xsl:variable>
+      <!--need to know number of caption paragraph nodes for placement-->
+      <xsl:variable name="captionCount">
+        <xsl:value-of select="count(caption/p)"/>
+      </xsl:variable>
+
+
+      <xsl:for-each select="caption/p">
+        <xsl:choose>
+
+          <!--if only one node-->
+          <!--NOTE: If the template match "p" changes, then the following-->
+          <xsl:when test="$captionCount = 1">
+            <a>
+              <xsl:call-template name="makeIdNameFromXpathLocation"/>
+            </a>
+            <p>
+              <xsl:value-of select="$sIDOI"/>
+              <br/>
+              <br/>
+              <xsl:apply-templates/>
+            </p>
+            <xsl:call-template name="newline1"/>
+          </xsl:when>
+
+          <!--if more than one node-->
+          <xsl:otherwise>
+            <xsl:choose>
+              <!--NOTE same as above, if match="p" changes, this has to-->
+              <xsl:when test="position() = $captionCount - 1">
+                <a>
+                  <xsl:call-template name="makeIdNameFromXpathLocation"/>
+                </a>
+                <p>
+                  <xsl:apply-templates/>
+                  <br/>
+                  <xsl:value-of select="$sIDOI"/>
+                </p>
+                <xsl:call-template name="newline1"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="."/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+
     </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use -->
