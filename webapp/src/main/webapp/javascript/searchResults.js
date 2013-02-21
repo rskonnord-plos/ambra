@@ -282,20 +282,23 @@ $(document).ready(
               .html("Views: Not available"));
         }
 
-        if(cites != null) {
-          // Citation Sources should always start with Scopus (if an entry for Scopus exists)
-          //   followed by the rest of the sources in alphabetical order.
+        //only using scopus so get a reference if possible and use information contained therein
+        var scopus = null;
+        if (cites != null) {
+          //citations should always be sorted with Scopus first
           cites = cites.sort(sortCitesByName);
 
-          //get count of citations
-          var citeCount = 0;
+          //see if a reference to scopus exists
           for(a = 0; a < cites.length; a++) {
-            citeCount += cites[a].count;
+            if (cites[a].source.toLowerCase() == 'scopus' && cites[a].count > 0) {
+              scopus = cites[a];
+            }
           }
-
+        }
+        if (scopus) {
           newNode = $("<a></a>")
               .attr("href", metricsURL + "#citations")
-              .html("Citations: " + citeCount)
+              .html("Citations: " + scopus.count)
               .addClass("data");
 
           newNode.tooltip({

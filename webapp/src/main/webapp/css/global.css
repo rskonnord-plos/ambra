@@ -2325,7 +2325,7 @@ ul.bulletlist li {
 }
 
 .reply .reply_content {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .reply a {
@@ -2340,7 +2340,38 @@ ul.bulletlist li {
 
 .reply form fieldset {
   min-width: 49%;
-  float: left;
+ }
+
+/* spacing for correction checkbox and comment title fields in next two rules*/
+.reply form fieldset div{
+  margin: 5 !important;
+}
+.reply form fieldset #correction_checkbox{
+  margin-bottom: 10px;
+}
+
+/* space between help text and competing interest radio buttons */
+.reply form fieldset div.help{
+  margin-bottom: 20px;
+}
+
+/* spacing between competing interest radio buttons */
+.reply form fieldset div.cf{
+  height: 15px;
+  margin-bottom: 10px;
+}
+
+/* competing interest text area margins */
+.reply form fieldset div.competing_text,
+.reply form fieldset #flag_text{
+  margin-top: 5px;
+  margin-bottom: 20px;
+  }
+
+/* max width of text area for expanding text areas and min-height */
+.expandingText{
+  min-height: 80px;
+  max-width: 695px;
 }
 
 .reply.review form fieldset {
@@ -2382,7 +2413,7 @@ ul.bulletlist li {
 .reply form input[type=radio], .reply form input[type=checkbox] {
   float: left;
   width: auto;
-  margin: 3px 5px 8px 0 !important;
+  margin: 0px 5px 8px 0 !important;
   border: none;
 }
 
@@ -2413,7 +2444,6 @@ ul.bulletlist li {
 .reply form fieldset label {
   font-size: 0.813em;
   position: relative;
-
 }
 
 .reply .help {
