@@ -22,15 +22,14 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.views.CitedArticleView;
-import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.CitedArticle;
-import org.ambraproject.views.article.ArticleType;
+import org.ambraproject.views.CitedArticleView;
+import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.BaseArticleInfo;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Joe Osowski
@@ -65,13 +64,12 @@ public interface ArticleService {
   /**
    * Determines if the articleURI is of type expression of concern
    *
-   * @param articleTypes The ArticleType object
+   * @param articleInfo The ArticleType object
    * @return True if the article is a eoc article
    * @throws ApplicationException
-   *                                  if there was a problem talking to the OTM
    * @throws NoSuchArticleIdException When the article does not exist
    */
-  public boolean isEocArticle(final Set<ArticleType> articleTypes)
+  public boolean isEocArticle(final BaseArticleInfo articleInfo)
       throws NoSuchArticleIdException, ApplicationException;
 
 

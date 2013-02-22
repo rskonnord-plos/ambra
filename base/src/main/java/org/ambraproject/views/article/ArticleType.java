@@ -243,6 +243,16 @@ public class ArticleType implements Serializable {
   }
 
   /**
+   * Is the given {@link ArticleType} is of type Expression of Concern?
+   * @param articleType an articleType
+   * @return true/false
+   */
+  public static boolean isEocArticle(ArticleType articleType) {
+    return articleType == null ? false :
+        ARTICLE_TYPE_HEADING_EOC.equals(articleType.getHeading());
+  }
+
+  /**
    * Is the collection of {@link ArticleType}s research related?
    * <p>
    * This method returns <code>true</code> when one occurrence of

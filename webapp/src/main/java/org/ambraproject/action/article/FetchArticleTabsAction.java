@@ -82,6 +82,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * Returned by fetchArticle() when the given DOI is not in the repository.
    */
   public static final String ARTICLE_NOT_FOUND = "articleNotFound";
+  public static final String OBJECT_OF_CONCERN_RELATION = "object-of-concern";
 
   private String articleURI;
   private String transformedArticle;
@@ -196,36 +197,39 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   /**
    * check if the article has Expression of concern, if so fetch the value
-   * @return boolean
+   * @return String
    */
   private String fetchExpressionOfConcern() {
 
     if(articleInfoX.getRelatedArticles() != null ) {
 
       for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
+
         try {
+          if((relatedArticleInfo.getArticleTypes() != null) &&
+              OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType())){ // &&
+             // articleService.isEocArticle(relatedArticleInfo)) {
 
-          if((relatedArticleInfo.getArticleTypes() != null)
-              && relatedArticleInfo.getRelationType().equalsIgnoreCase("object-of-concern")
-              && articleService.isEocArticle(relatedArticleInfo.getArticleTypes())) {
-
-              ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
-              Document document = this.fetchArticleService.getArticleDocument(articleInfo);
-              expressionOfConcern = this.fetchArticleService.getEocBody(document);
+            ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
+            Document document = this.fetchArticleService.getArticleDocument(articleInfo);
+            expressionOfConcern = this.fetchArticleService.getEocBody(document);
 
           }
         } catch (NoSuchArticleIdException e) {
-          messages.add("No article found for id: " + articleURI);
-          log.info("Could not find article: " + articleURI, e);
+          messages.add("No article found for id: " + relatedArticleInfo.getDoi());
+          log.info("Could not find article: " + relatedArticleInfo.getDoi(), e);
+          return ERROR;
         } catch (Exception e) {
           messages.add(e.getMessage());
-          log.error("Error retrieving article: " + articleURI, e);
+          log.error("Error retrieving article: " + relatedArticleInfo.getDoi(), e);
+          return ERROR;
         }
       }
     }
 
     return expressionOfConcern;
   }
+
   /**
    * Fetch common data and annotations
    *

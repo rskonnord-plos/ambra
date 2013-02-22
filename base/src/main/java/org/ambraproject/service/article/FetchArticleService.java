@@ -62,9 +62,9 @@ public interface FetchArticleService extends HibernateService {
   public List<AuthorView> getAuthors(Document doc);
 
   /**
-   * Get the eoc content from the article.
+   * Get the Expression of Concern content from the article.
    * @param doc
-   * @return
+   * @return expressionOfConcern text
    * @throws TransformerException
    * @throws XPathExpressionException
    */

@@ -172,7 +172,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   *  Patterns for <corresp></corresp>  and <email></email> tags
+   *  Patterns for <corresp></corresp>  | <email></email> | <sec></sec> etc., tags and other content
    */
   private static final Pattern[] PATTERNS = {
     Pattern.compile("<corresp(.*?)>"),
@@ -186,17 +186,21 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("\\*To whom"),
     Pattern.compile("\\* To whom"),
     Pattern.compile("<sec(?:.*)*>(.*?)"),
+    Pattern.compile("</sec>"),
     Pattern.compile("</list>"),
     Pattern.compile("<list(?:.*)*>(.*?)"),
     Pattern.compile("<list-item>"),
     Pattern.compile("</list-item>"),
-    Pattern.compile("<title(?:.*)*>(.*?)")
+    Pattern.compile("<title(?:.*)*>(.*?)"),
+    Pattern.compile("\\*Expression of Concern:\\*"),
+      Pattern.compile("<article-title(?:.*)*>"),
+      Pattern.compile("</article-title>")
 
   };
 
 
   /**
-   *  Pattern replaceements for <corresp></corresp>  and <email></email> tags
+   *  Pattern replacements for <corresp></corresp>  | <email></email> | <sec></sec> etc., tags and other content
    */
   private static final String[] REPLACEMENTS = {
     "",
@@ -206,13 +210,16 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">*</span>To whom",
     "<span class=\"email\">*</span>To whom" ,
-    "",
+    "$1",
     "",
     "",
     "",
     "<li>",
     "</li>",
-    ""
+    "" ,
+    "<p class='fch'>Expression of Concern:</p>"  ,
+      "",
+      ""
   };
 
   /**
@@ -681,17 +688,30 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     return otherFootnotesMap;
   }
 
-
-  public String  getEocBody(Document doc) throws TransformerException, XPathExpressionException {
+  /**
+   * Extract the body content from EoC article, clean the text and return it.
+   * @param doc
+   * @return expressionOfConcern text
+   * @throws TransformerException
+   * @throws XPathExpressionException
+   */
+  public String getEocBody(Document doc) throws TransformerException, XPathExpressionException {
 
     Node eocBody = xPathUtil.selectSingleNode(doc, "//body/sec[@id='s1']");
-    String bodyText = TextUtils.getAsXMLString(eocBody);
+    Node eocTitle =  xPathUtil.selectSingleNode(doc, "//title-group/article-title");
+    StringBuilder bodyText = new StringBuilder();
+    bodyText.append(TextUtils.getAsXMLString(eocTitle));
+    bodyText.append(TextUtils.getAsXMLString(eocBody)) ;
+
+    String cleanText = null;
+
     for (int index = 0; index < PATTERNS.length; index++) {
-      bodyText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
+      cleanText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
     }
 
-    return TextUtils.getAsXMLString(eocBody);
+    return cleanText;
   }
+
   /**
    * @param document        a document to search for nodes
    * @param xpathExpression XPath describing the nodes to find
