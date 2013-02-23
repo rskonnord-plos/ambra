@@ -625,6 +625,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           relatedArticleInfo.setDate(otherArticle.getDate());
           relatedArticleInfo.seteIssn(otherArticle.geteIssn());
           relatedArticleInfo.setRelationType(relationship.getType());
+          relatedArticleInfo.setTypes(otherArticle.getTypes());
 
           journals = otherArticle.getJournals();
           journalViews = new HashSet<JournalView>(journals.size());

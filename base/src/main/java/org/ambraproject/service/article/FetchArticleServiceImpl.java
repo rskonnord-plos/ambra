@@ -185,17 +185,14 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("^\\* E-mail:"),
     Pattern.compile("\\*To whom"),
     Pattern.compile("\\* To whom"),
-    Pattern.compile("<sec(?:.*)*>(.*?)"),
+    Pattern.compile("<sec(?:.*)*>"),
     Pattern.compile("</sec>"),
     Pattern.compile("</list>"),
-    Pattern.compile("<list(?:.*)*>(.*?)"),
+    Pattern.compile("<list(?:.*)*>"),
+    Pattern.compile("<title(?:.*)*>"),
     Pattern.compile("<list-item>"),
     Pattern.compile("</list-item>"),
-    Pattern.compile("<title(?:.*)*>(.*?)"),
-    Pattern.compile("\\*Expression of Concern:\\*"),
-      Pattern.compile("<article-title(?:.*)*>"),
-      Pattern.compile("</article-title>")
-
+    Pattern.compile("^Expression of Concern: ")
   };
 
 
@@ -209,17 +206,15 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">*</span>To whom",
-    "<span class=\"email\">*</span>To whom" ,
-    "$1",
+    "<span class=\"email\">*</span>To whom",
+    "</p>",
     "",
     "",
     "",
+    "" ,
     "<li>",
     "</li>",
-    "" ,
-    "<p class='fch'>Expression of Concern:</p>"  ,
-      "",
-      ""
+    "<p><strong>Expression of Concern:</strong>"
   };
 
   /**
@@ -699,17 +694,13 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
     Node eocBody = xPathUtil.selectSingleNode(doc, "//body/sec[@id='s1']");
     Node eocTitle =  xPathUtil.selectSingleNode(doc, "//title-group/article-title");
-    StringBuilder bodyText = new StringBuilder();
-    bodyText.append(TextUtils.getAsXMLString(eocTitle));
-    bodyText.append(TextUtils.getAsXMLString(eocBody)) ;
-
-    String cleanText = null;
+    String bodyText = eocTitle.getTextContent()+TextUtils.getAsXMLString(eocBody);
 
     for (int index = 0; index < PATTERNS.length; index++) {
-      cleanText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
+      bodyText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
     }
 
-    return cleanText;
+    return bodyText;
   }
 
   /**

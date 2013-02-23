@@ -207,8 +207,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
         try {
           if((relatedArticleInfo.getArticleTypes() != null) &&
-              OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType())){ // &&
-             // articleService.isEocArticle(relatedArticleInfo)) {
+              OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+              articleService.isEocArticle(relatedArticleInfo)) {
 
             ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
             Document document = this.fetchArticleService.getArticleDocument(articleInfo);

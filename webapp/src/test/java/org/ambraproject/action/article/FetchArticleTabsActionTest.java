@@ -19,13 +19,21 @@ import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
+import org.ambraproject.models.ArticleAuthor;
+import org.ambraproject.models.ArticleEditor;
+import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.ArticleView;
+import org.ambraproject.models.Category;
+import org.ambraproject.models.CitedArticle;
+import org.ambraproject.models.CitedArticleAuthor;
+import org.ambraproject.models.CitedArticleEditor;
 import org.ambraproject.models.Trackback;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.user.UserService;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.LinkbackView;
+import org.ambraproject.views.article.ArticleInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -34,11 +42,13 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
@@ -67,6 +77,223 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     action.getFormalCorrections().clear();
     action.getMinorCorrections().clear();
     action.getRetractions().clear();
+  }
+
+  @DataProvider(name = "articleWithEoc")
+  public Article getArticle1() {
+    Article article1 = new Article();
+    article1.setDoi("info:doi/10.1371/Fake-Doi-For-article1-test-eoc");
+    article1.setTitle("Fake Title for Article 1");
+    article1.seteIssn("Fake EIssn for Article 1");
+    article1.setState(Article.STATE_ACTIVE);
+    article1.setArchiveName("Fake ArchiveName for Article 1");
+    article1.setDescription("Fake Description for Article 1");
+    article1.setRights("Fake Rights for Article 1");
+    article1.setLanguage("Fake Language for Article 1");
+    article1.setFormat("Fake Format for Article 1");
+    article1.setVolume("Fake Volume for Article 1");
+    article1.setIssue("Fake Issue for Article 1");
+    article1.setPublisherLocation("Fake PublisherLocation for Article 1");
+    article1.setPublisherName("Fake PublisherName for Article 1");
+    article1.setJournal("Fake Journal for Article 1");
+
+
+    List<String> collaborativeAuthorsForArticle1 = new LinkedList<String>();
+    collaborativeAuthorsForArticle1.add("Fake CollaborativeAuthor ONE for Article 1");
+    collaborativeAuthorsForArticle1.add("Fake CollaborativeAuthor TWO for Article 1");
+    collaborativeAuthorsForArticle1.add("Fake CollaborativeAuthor THREE for Article 1");
+    collaborativeAuthorsForArticle1.add("Fake CollaborativeAuthor FOUR for Article 1");
+    article1.setCollaborativeAuthors(collaborativeAuthorsForArticle1);
+
+    Set<Category> categoriesForArticle1 = new HashSet<Category>();
+    Category category1ForArticle1 = new Category();
+    category1ForArticle1.setPath("/Fake Main Category/for/category1ForArticle1");
+    category1ForArticle1.setCreated(new Date());
+    category1ForArticle1.setLastModified(new Date());
+    categoriesForArticle1.add(category1ForArticle1);
+    Category category2ForArticle1 = new Category();
+    category2ForArticle1.setPath("/Fake Main Category/for/category2ForArticle1");
+    category2ForArticle1.setCreated(new Date());
+    category2ForArticle1.setLastModified(new Date());
+    categoriesForArticle1.add(category2ForArticle1);
+    Category category3ForArticle1 = new Category();
+    category3ForArticle1.setPath("Fake Main Category/for/category3ForArticle1");
+    categoriesForArticle1.add(category3ForArticle1);
+    article1.setCategories(categoriesForArticle1);
+
+    List<ArticleAsset> assetsForArticle1 = new LinkedList<ArticleAsset>();
+    ArticleAsset asset1ForArticle1 = new ArticleAsset();
+    asset1ForArticle1.setContentType("Fake ContentType for asset1ForArticle1");
+    asset1ForArticle1.setContextElement("Fake ContextElement for asset1ForArticle1");
+    asset1ForArticle1.setDoi("info:doi/10.1371/Fake-Doi-For-asset1ForArticle1");
+    asset1ForArticle1.setExtension("Fake Name for asset1ForArticle1");
+    asset1ForArticle1.setSize(1000001l);
+    asset1ForArticle1.setCreated(new Date());
+    asset1ForArticle1.setLastModified(new Date());
+    assetsForArticle1.add(asset1ForArticle1);
+    ArticleAsset asset2ForArticle1 = new ArticleAsset();
+    asset2ForArticle1.setContentType("Fake ContentType for asset2ForArticle1");
+    asset2ForArticle1.setContextElement("Fake ContextElement for asset2ForArticle1");
+    asset2ForArticle1.setDoi("info:doi/10.1371/Fake-Doi-For-asset2ForArticle1");
+    asset2ForArticle1.setExtension("Fake Name for asset2ForArticle1");
+    asset2ForArticle1.setSize(1000002l);
+    assetsForArticle1.add(asset2ForArticle1);
+    ArticleAsset asset3ForArticle1 = new ArticleAsset();
+    asset3ForArticle1.setContentType("Fake ContentType for asset3ForArticle1");
+    asset3ForArticle1.setContextElement("Fake ContextElement for asset3ForArticle1");
+    asset3ForArticle1.setDoi("info:doi/10.1371/Fake-Doi-For-asset3ForArticle1");
+    asset3ForArticle1.setExtension("Fake Name for asset3ForArticle1");
+    asset3ForArticle1.setSize(1000003l);
+    assetsForArticle1.add(asset3ForArticle1);
+    article1.setAssets(assetsForArticle1);
+
+    List<CitedArticle> citedArticlesForArticle1 = new LinkedList<CitedArticle>();
+    CitedArticle citedArticle1ForArticle1 = new CitedArticle();
+
+    List<CitedArticleAuthor> citedArticleAuthorsForCitedArticle1ForArticle1 = new LinkedList<CitedArticleAuthor>();
+    CitedArticleAuthor citedArticleAuthor1ForCitedArticle1ForArticle1 = new CitedArticleAuthor();
+    citedArticleAuthor1ForCitedArticle1ForArticle1.setFullName("Fake FullName for citedArticleAuthor1ForCitedArticle1ForArticle1");
+    citedArticleAuthor1ForCitedArticle1ForArticle1.setGivenNames("Fake GivenNames for citedArticleAuthor1ForCitedArticle1ForArticle1");
+    citedArticleAuthor1ForCitedArticle1ForArticle1.setSuffix("Fake Suffix for citedArticleAuthor1ForCitedArticle1ForArticle1");
+    citedArticleAuthor1ForCitedArticle1ForArticle1.setSurnames("Fake Surnames for citedArticleAuthor1ForCitedArticle1ForArticle1");
+    citedArticleAuthorsForCitedArticle1ForArticle1.add(citedArticleAuthor1ForCitedArticle1ForArticle1);
+    CitedArticleAuthor citedArticleAuthor2ForCitedArticle1ForArticle1 = new CitedArticleAuthor();
+    citedArticleAuthor2ForCitedArticle1ForArticle1.setFullName("Fake FullName for citedArticleAuthor2ForCitedArticle1ForArticle1");
+    citedArticleAuthor2ForCitedArticle1ForArticle1.setGivenNames("Fake GivenNames for citedArticleAuthor2ForCitedArticle1ForArticle1");
+    citedArticleAuthor2ForCitedArticle1ForArticle1.setSuffix("Fake Suffix for citedArticleAuthor2ForCitedArticle1ForArticle1");
+    citedArticleAuthor2ForCitedArticle1ForArticle1.setSurnames("Fake Surnames for citedArticleAuthor2ForCitedArticle1ForArticle1");
+    citedArticleAuthorsForCitedArticle1ForArticle1.add(citedArticleAuthor2ForCitedArticle1ForArticle1);
+    citedArticle1ForArticle1.setAuthors(citedArticleAuthorsForCitedArticle1ForArticle1);
+    citedArticle1ForArticle1.setCitationType("Fake CitationType for citedArticle1ForArticle1");
+
+    List<String> collaborativeAuthorsForCitedArticle1ForArticle1 = new LinkedList<String>();
+    collaborativeAuthorsForCitedArticle1ForArticle1.add("Fake CollaborativeAuthor ONE for collaborativeAuthorsForCitedArticle1ForArticle1");
+    collaborativeAuthorsForCitedArticle1ForArticle1.add("Fake CollaborativeAuthor TWO for collaborativeAuthorsForCitedArticle1ForArticle1");
+    collaborativeAuthorsForCitedArticle1ForArticle1.add("Fake CollaborativeAuthor THREE for collaborativeAuthorsForCitedArticle1ForArticle1");
+    collaborativeAuthorsForCitedArticle1ForArticle1.add("Fake CollaborativeAuthor FOUR for collaborativeAuthorsForCitedArticle1ForArticle1");
+    citedArticle1ForArticle1.setCollaborativeAuthors(collaborativeAuthorsForCitedArticle1ForArticle1);
+
+    citedArticle1ForArticle1.setDay("Fake Day for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setDisplayYear("Fake DisplayYear for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setDoi("Fake Doi for citedArticle1ForArticle1");
+
+    List<CitedArticleEditor> citedArticleEditorsForArticle1 = new LinkedList<CitedArticleEditor>();
+    CitedArticleEditor citedArticleEditor1ForCitedArticle1ForArticle1 = new CitedArticleEditor();
+    citedArticleEditor1ForCitedArticle1ForArticle1.setFullName("Fake FullName for citedArticleEditor1ForCitedArticle1ForArticle1");
+    citedArticleEditor1ForCitedArticle1ForArticle1.setGivenNames("Fake GivenNames for citedArticleEditor1ForCitedArticle1ForArticle1");
+    citedArticleEditor1ForCitedArticle1ForArticle1.setSuffix("Fake Suffix for citedArticleEditor1ForCitedArticle1ForArticle1");
+    citedArticleEditor1ForCitedArticle1ForArticle1.setSurnames("Fake Surnames for citedArticleEditor1ForCitedArticle1ForArticle1");
+    citedArticleEditorsForArticle1.add(citedArticleEditor1ForCitedArticle1ForArticle1);
+    CitedArticleEditor citedArticleEditor2ForCitedArticle1ForArticle1 = new CitedArticleEditor();
+    citedArticleEditor2ForCitedArticle1ForArticle1.setFullName("Fake FullName for citedArticleEditor2ForCitedArticle1ForArticle1");
+    citedArticleEditor2ForCitedArticle1ForArticle1.setGivenNames("Fake GivenNames for citedArticleEditor2ForCitedArticle1ForArticle1");
+    citedArticleEditor2ForCitedArticle1ForArticle1.setSuffix("Fake Suffix for citedArticleEditor2ForCitedArticle1ForArticle1");
+    citedArticleEditor2ForCitedArticle1ForArticle1.setSurnames("Fake Surnames for citedArticleEditor2ForCitedArticle1ForArticle1");
+    citedArticleEditorsForArticle1.add(citedArticleEditor2ForCitedArticle1ForArticle1);
+    citedArticle1ForArticle1.setEditors(citedArticleEditorsForArticle1);
+
+    citedArticle1ForArticle1.seteLocationID("Fake eLocationID for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setIssue("Fake Issue for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setJournal("Fake Journal for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setKey("Fake Key for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setMonth("Fake Month for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setNote("Fake Note for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setPages("Fake Pages for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setPublisherLocation("Fake PublisherLocation for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setSummary("Fake Summary for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setTitle("Fake Title for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setUrl("Fake Url for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setVolume("Fake Volume for citedArticle1ForArticle1");
+    citedArticle1ForArticle1.setVolumeNumber(new Integer(1000004));
+    citedArticle1ForArticle1.setYear(new Integer(1000005));
+    article1.setCitedArticles(citedArticlesForArticle1);
+
+    List<ArticleAuthor> authorsForArticle1 = new LinkedList<ArticleAuthor>();
+    ArticleAuthor articleAuthor1ForArticle1 = new ArticleAuthor();
+    articleAuthor1ForArticle1.setFullName("Fake FullName for articleAuthor1ForArticle1");
+    articleAuthor1ForArticle1.setGivenNames("Fake GivenNames for articleAuthor1ForArticle1");
+    articleAuthor1ForArticle1.setSuffix("Fake Suffix for articleAuthor1ForArticle1");
+    articleAuthor1ForArticle1.setSurnames("Fake Surnames for articleAuthor1ForArticle1");
+    authorsForArticle1.add(articleAuthor1ForArticle1);
+    ArticleAuthor articleAuthor2ForArticle1 = new ArticleAuthor();
+    articleAuthor2ForArticle1.setFullName("Fake FullName for articleAuthor2ForArticle1");
+    articleAuthor2ForArticle1.setGivenNames("Fake GivenNames for articleAuthor2ForArticle1");
+    articleAuthor2ForArticle1.setSuffix("Fake Suffix for articleAuthor2ForArticle1");
+    articleAuthor2ForArticle1.setSurnames("Fake Surnames for articleAuthor2ForArticle1");
+    authorsForArticle1.add(articleAuthor2ForArticle1);
+    ArticleAuthor articleAuthor3ForArticle1 = new ArticleAuthor();
+    articleAuthor3ForArticle1.setFullName("Fake FullName for articleAuthor3ForArticle1");
+    articleAuthor3ForArticle1.setGivenNames("Fake GivenNames for articleAuthor3ForArticle1");
+    articleAuthor3ForArticle1.setSuffix("Fake Suffix for articleAuthor3ForArticle1");
+    articleAuthor3ForArticle1.setSurnames("Fake Surnames for articleAuthor3ForArticle1");
+    authorsForArticle1.add(articleAuthor3ForArticle1);
+    article1.setAuthors(authorsForArticle1);
+
+    List<ArticleEditor> editorsForArticle1 = new LinkedList<ArticleEditor>();
+    ArticleEditor articleEditor1ForArticle1 = new ArticleEditor();
+    articleEditor1ForArticle1.setFullName("Fake FullName for articleEditor1ForArticle1");
+    articleEditor1ForArticle1.setGivenNames("Fake GivenNames for articleEditor1ForArticle1");
+    articleEditor1ForArticle1.setSuffix("Fake Suffix for articleEditor1ForArticle1");
+    articleEditor1ForArticle1.setSurnames("Fake Surnames for articleEditor1ForArticle1");
+    editorsForArticle1.add(articleEditor1ForArticle1);
+    ArticleEditor articleEditor2ForArticle1 = new ArticleEditor();
+    articleEditor2ForArticle1.setFullName("Fake FullName for articleEditor2ForArticle1");
+    articleEditor2ForArticle1.setGivenNames("Fake GivenNames for articleEditor2ForArticle1");
+    articleEditor2ForArticle1.setSuffix("Fake Suffix for articleEditor2ForArticle1");
+    articleEditor2ForArticle1.setSurnames("Fake Surnames for articleEditor2ForArticle1");
+    editorsForArticle1.add(articleEditor2ForArticle1);
+    ArticleEditor articleEditor3ForArticle1 = new ArticleEditor();
+    articleEditor3ForArticle1.setFullName("Fake FullName for articleEditor3ForArticle1");
+    articleEditor3ForArticle1.setGivenNames("Fake GivenNames for articleEditor3ForArticle1");
+    articleEditor3ForArticle1.setSuffix("Fake Suffix for articleEditor3ForArticle1");
+    articleEditor3ForArticle1.setSurnames("Fake Surnames for articleEditor3ForArticle1");
+    editorsForArticle1.add(articleEditor3ForArticle1);
+    article1.setEditors(editorsForArticle1);
+
+    article1.setDate(new Date());
+
+    Article eocArticle = new Article();
+    eocArticle.setDoi("id:doi-object-of-concern-relationship-article");
+    eocArticle.setState(Article.STATE_ACTIVE);
+    eocArticle.setTitle("foo");
+    Set<String> typesForEocArticle = new HashSet<String>();
+    typesForEocArticle.add("http://rdf.plos.org/RDF/articleType/Expression%20of%20Concern");
+    eocArticle.setTypes(typesForEocArticle);
+
+    List<ArticleRelationship> articleRelationships = new ArrayList<ArticleRelationship>(1);
+    //Expression of Concern relationship
+    ArticleRelationship eocRelationship = new ArticleRelationship();
+    eocRelationship.setParentArticle(article1);
+    eocRelationship.setOtherArticleID(Long.valueOf(dummyDataStore.store(eocArticle)));
+    eocRelationship.setType("object-of-concern");
+    eocRelationship.setOtherArticleDoi(eocArticle.getDoi());
+    articleRelationships.add(eocRelationship);
+
+
+    Set<String> typesForArticle1 = new HashSet<String>();
+    typesForArticle1.add("Fake Type ONE for Article1");
+    typesForArticle1.add("Fake Type TWO for Article1");
+    typesForArticle1.add("Fake Type THREE for Article1");
+    typesForArticle1.add("Fake Type FOUR for Article1");
+    article1.setTypes(typesForArticle1);
+
+    return article1;
+  }
+
+
+
+  @DataProvider(name = "articlesWithEoc")
+  public Object[][] getArticlesWithEoc()
+  {
+    //Test an  article with Expression of concern
+    ArticleInfo a1 = new ArticleInfo("info:doi/10.1371/journal.pone.0049703");
+    return new Object[][] { {a1} };
+  }
+
+  @Test(dataProvider = "articleWithEoc")
+  public void testEoc(ArticleInfo articleInfo) throws Exception {
+     getArticle1();
+     action.fetchArticle();
   }
 
   @DataProvider(name = "articleAffiliations")
