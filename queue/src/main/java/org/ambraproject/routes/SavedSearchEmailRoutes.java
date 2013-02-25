@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +30,6 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
   private String fromEmailAddress;
   private String imagePath;
 
-
   @Override
   public void configure() throws Exception {
 
@@ -51,8 +48,6 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
         .setBody(constant(SavedSearchRetriever.AlertType.MONTHLY))
         .setHeader("alertType", simple("monthly"))
         .to("direct:getemaildata");
-
-
 
     from("direct:getemaildata")
         .split().method("savedSearchRetriever", "retrieveSearchAlerts")      // custom spliting
@@ -82,7 +77,6 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
         "&multiline=true");
 
   }
-
 
   @Required
   public void setWeeklyCron(String weeklyCron) {
