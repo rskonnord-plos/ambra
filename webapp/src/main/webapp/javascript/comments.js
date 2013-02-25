@@ -115,14 +115,7 @@ $.fn.comments = function () {
     box.show();
     animatedShow(container);
 
-    //activate expanding text plugin for reply elements that exist
-//    if($('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]')){
-//    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').expandingTextarea();
-//    }
-//    if(true){
-//    var x = $('#reply-' + replyId + ' form[class="cf"] textarea[name="competing_interests"').expandingTextarea();
-//    alert('hi');
-//    }
+
   };
 
   /**
@@ -138,7 +131,7 @@ $.fn.comments = function () {
         });
       });
     //activate expanding text area
-    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="additional_info"]').expandingTextarea();
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="additional_info"]').TextAreaExpander(106,99999);
   };
 
   /**
@@ -159,8 +152,8 @@ $.fn.comments = function () {
         outer.wireCompetingInterestRadioButtons(box);
       });
     //activate expanding text area
-    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').expandingTextarea();
-    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="competing_interests"]').expandingTextarea();
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="comment"]').TextAreaExpander(106,99999);
+    $('#reply-' + replyId +  ' form[class="cf"] textarea[name="competing_interests"]').TextAreaExpander(88,99999);
   };
 
   /**
@@ -307,6 +300,27 @@ $.fn.comments = function () {
         if (errors.length > 0) {
           errorMsgElement.html(errors.join('<br/>'));
           animatedShow(errorMsgElement);
+
+          // #respond starting a discussion
+          // .report_container reporting a concern
+          // .respond_container responding to this posting
+
+          var commentParent = null;
+
+          if (errorMsgElement.closest("#respond").length > 0) {
+            commentParent = errorMsgElement.closest("#respond");
+          } else if (errorMsgElement.closest(".report_container").length > 0) {
+            commentParent = errorMsgElement.closest(".report_container");
+          } else if (errorMsgElement.closest(".respond_container").length > 0) {
+            commentParent = errorMsgElement.closest(".respond_container");
+          } else {
+            // do nothing, something went wrong
+          }
+
+          if (commentParent) {
+            $('html, body').animate({ scrollTop: commentParent.offset().top }, 500);
+          }
+
         } else {
           // No validation errors, meaning the comment was submitted successfully and persisted.
           submittedCallback(data);
