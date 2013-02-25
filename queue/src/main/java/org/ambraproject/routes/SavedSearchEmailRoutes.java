@@ -75,7 +75,6 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
         "&showHeaders=false" +
         "&showExchangeId=true" +
         "&multiline=true");
-
   }
 
   @Required
