@@ -2325,7 +2325,7 @@ ul.bulletlist li {
 }
 
 .reply .reply_content {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .reply a {
@@ -2340,38 +2340,19 @@ ul.bulletlist li {
 
 .reply form fieldset {
   min-width: 49%;
+  float: left;
  }
-
-/* spacing for correction checkbox and comment title fields in next two rules*/
-.reply form fieldset div{
-  margin: 5 !important;
-}
-.reply form fieldset #correction_checkbox{
-  margin-bottom: 10px;
-}
-
-/* space between help text and competing interest radio buttons */
-.reply form fieldset div.help{
-  margin-bottom: 20px;
-}
 
 /* spacing between competing interest radio buttons */
 .reply form fieldset div.cf{
-  height: 15px;
   margin-bottom: 10px;
 }
 
 /* competing interest text area margins */
 .reply form fieldset div.competing_text,
 .reply form fieldset #flag_text{
-  margin-top: 5px;
-  margin-bottom: 20px;
-  }
-
-/* max width of text area for expanding text areas and min-height */
-.expandingText{
-  min-height: 80px;
-  max-width: 695px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .reply.review form fieldset {
@@ -2388,22 +2369,22 @@ ul.bulletlist li {
 .reply form fieldset textarea {
   display: block;
   padding: 3px;
-  width: 94%;
+  width: 687px;
   border: 1px solid #f2f2f2;
   margin: 0 0 10px 0 !important;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .reply form fieldset textarea {
   height: 106px;
   resize: none;
-  margin: 0 0 20px 0 !important;
 }
 
 .reply form fieldset textarea.competing_interests {
   min-height: auto;
   height: 88px;
   resize: none;
+  margin-bottom: 12px !important;
 }
 
 .reply form fieldset div {
@@ -2412,15 +2393,18 @@ ul.bulletlist li {
 
 .reply form input[type=radio], .reply form input[type=checkbox] {
   float: left;
-  width: auto;
-  margin: 0px 5px 8px 0 !important;
   border: none;
+}
+
+.reply form input[type=radio] {
+  width: auto;
+  margin: 0px 5px 0px 0 !important;
 }
 
 .reply form input[type=checkbox] {
   width: 18px;
-  height: 18px;
-  margin: 0 5px 8px 0 !important;
+  height: 14px;
+  margin: 0 5px 10px 0 !important;
 }
 
 .reply form span.btn {
@@ -2478,10 +2462,10 @@ ul.bulletlist li {
 .reply .error {
   margin-bottom: 5px;
   padding: 5px;
-  border: 1px solid #c00;
-  background-color: #fff;
+  background-color: #333;
   font-style: normal;
-  color: #000
+  font-weight: bold;
+  color: #FF3C5C;
 }
 
 #reply_loading.loading_overlay img {
