@@ -258,6 +258,11 @@
     <property name="serviceUrl" value="http://localhost:1234/select"/>
   </bean>
 
+  <bean id="raptorService" class="org.ambraproject.service.raptor.RaptorServiceImpl">
+    <property name="httpClient" ref="httpClient"/>
+    <property name="serviceUrl" value="http://localhost:1234/select" />
+  </bean>
+
   <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">
   </bean>
 

@@ -39,6 +39,8 @@
   <!--bean definitions-->
 
   <bean class="org.ambraproject.service.search.SolrHttpServiceImpl" id="solrHttpService">
+    <property name="config" ref="ambraConfiguration"/>
+    <property name="httpClient" ref="httpClient"/>
     <property name="solrUrl" ref="httpEndpointUrl"/>
   </bean>
 

@@ -223,6 +223,7 @@
   <bean id="searchService" class="org.ambraproject.service.search.SolrSearchService">
     <property name="configuration" ref="ambraConfiguration"/>
     <property name="serverFactory" ref="solrServerFactory"/>
+    <property name="cache" ref="solrCache" />
   </bean>
 
   <bean id="journalCreator" class="org.ambraproject.service.journal.JournalCreatorImpl"
@@ -296,6 +297,10 @@
     <constructor-arg index="0" ref="taxonomyEhCache"/>
   </bean>
 
+  <bean id="solrCache" class="org.ambraproject.service.cache.EhcacheProvider">
+    <constructor-arg index="0" ref="solrEhCache"/>
+  </bean>
+
   <!-- freemarker configs -->
   <bean id="ambraFreemarkerConfig" class="org.ambraproject.freemarker.AmbraFreemarkerConfig">
     <constructor-arg index="0" ref="ambraConfiguration"/>
@@ -326,6 +331,10 @@
 
   <bean id="taxonomyEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
     <property name="cacheName" value="TaxonomyCache"/>
+  </bean>
+
+  <bean id="solrEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="SOLRCache"/>
   </bean>
 
   <!-- JMX exporting -->
@@ -407,6 +416,7 @@
 
   <bean id="solrHttpService" class="org.ambraproject.service.search.SolrHttpServiceImpl">
     <property name="config" ref="ambraConfiguration"/>
+    <property name="httpClient" ref="httpClient"/>
   </bean>
 
   <bean id="mostViewedArticleService" class="org.ambraproject.service.search.SolrMostViewedArticleService">
