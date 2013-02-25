@@ -1021,7 +1021,10 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     try {
       NodeList referenceList = getReferenceNodes(doc);
 
-      // TODO: can this ever happen?
+      // If sortOrder on citedArticle has duplicate value, you will get below error.Ideally it should not happen
+      // but since sortOrder is not unique it may be possible to update that field from backend to have duplicate value
+      // Now index is on sortOrder(article.hbm.xml), index will be only on one of those of duplicate value and
+      // hence citedArticle will have less count then the xml.
       if (referenceList.getLength() != citedArticles.size()) {
         throw new ApplicationException(String.format("Article has %d citedArticles but %d references",
             citedArticles.size(), referenceList.getLength()));
