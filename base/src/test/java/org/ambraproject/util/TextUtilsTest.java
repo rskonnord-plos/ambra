@@ -22,6 +22,7 @@ package org.ambraproject.util;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
@@ -124,6 +125,18 @@ public class TextUtilsTest {
         {"<i/> and 2>1<i>", " and 2>1"}, // brackets and tags
         {"<p></p>", ""} // nothing but tags
     };
+  }
+
+  @Test
+  public void testCreateHash() {
+    String result = TextUtils.createHash("TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST");
+    String result1 = TextUtils.createHash("TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST1");
+
+    String result2 = TextUtils.createHash("tESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST");
+    String result3 = TextUtils.createHash("TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST");
+
+    assertNotSame(result, result1);
+    assertNotSame(result2, result3);
   }
 
   @Test(dataProvider = "brokenUrls")
