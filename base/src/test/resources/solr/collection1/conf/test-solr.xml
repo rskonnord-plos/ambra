@@ -1,0 +1,5 @@
+<solr persistent="true">
+  <cores adminPath="/admin/cores" defaultCoreName="collection1" host="127.0.0.1" hostPort="${hostPort:8983}" hostContext="${hostContext:}" zkClientTimeout="8000">
+    <core name="collection1" instanceDir="collection1" />
+  </cores>
+</solr>
