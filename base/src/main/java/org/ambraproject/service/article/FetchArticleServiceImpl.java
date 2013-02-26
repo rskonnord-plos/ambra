@@ -187,12 +187,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("\\* To whom"),
     Pattern.compile("<sec(?:.*)*>"),
     Pattern.compile("</sec>"),
+    Pattern.compile("<list-item>"),
+    Pattern.compile("</list-item>"),
     Pattern.compile("</list>"),
     Pattern.compile("<list(?:.*)*>"),
     Pattern.compile("<title(?:.*)*>"),
-    Pattern.compile("<list-item>"),
-    Pattern.compile("</list-item>"),
-    Pattern.compile("^Expression of Concern: ")
   };
 
 
@@ -207,14 +206,13 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">*</span>To whom",
     "<span class=\"email\">*</span>To whom",
-    "</p>",
     "",
     "",
-    "",
-    "" ,
     "<li>",
     "</li>",
-    "<p><strong>Expression of Concern:</strong>"
+    "</ul>",
+    "<ul class=\"bulletlist\">",
+    ""
   };
 
   /**
@@ -694,12 +692,13 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
 
     Node eocBody = xPathUtil.selectSingleNode(doc, "//body/sec[@id='s1']");
     Node eocTitle =  xPathUtil.selectSingleNode(doc, "//title-group/article-title");
-    String bodyText = eocTitle.getTextContent()+TextUtils.getAsXMLString(eocBody);
+    String bodyText = TextUtils.getAsXMLString(eocBody);
 
     for (int index = 0; index < PATTERNS.length; index++) {
       bodyText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
     }
 
+    bodyText = "<p><strong>" + eocTitle.getTextContent() + "</strong></p>" + bodyText ;
     return bodyText;
   }
 
