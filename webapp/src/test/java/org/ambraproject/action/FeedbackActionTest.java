@@ -27,7 +27,7 @@ import org.ambraproject.testutils.DummyAmbraMailer;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import org.topazproject.ambra.email.impl.FreemarkerTemplateMailer;
+import org.ambraproject.email.impl.FreemarkerTemplateMailer;
 import java.util.List;
 import java.util.Map;
 

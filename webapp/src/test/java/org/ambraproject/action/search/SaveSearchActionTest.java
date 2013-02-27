@@ -83,12 +83,12 @@ public class SaveSearchActionTest extends AmbraWebTest {
     user.setAuthId("authIdForTestSearchName");
     user.setDisplayName("displayNameForTestSearchName");
 
-    SavedSearchQuery params = new SavedSearchQuery("search string", "hash");
-    dummyDataStore.store(params);
+    SavedSearchQuery query = new SavedSearchQuery("search string", "hash");
+    dummyDataStore.store(query);
 
     SavedSearch savedSearch = new SavedSearch();
     savedSearch.setSearchName("TestWithSearchName");
-    savedSearch.setSearchParams(params);
+    savedSearch.setSearchQuery(query);
     savedSearch.setLastWeeklySearchTime(new Date());
     savedSearch.setLastMonthlySearchTime(new Date());
     savedSearch.setMonthly(false);
