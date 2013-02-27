@@ -29,7 +29,7 @@
     <property name="weekly" type="boolean" column="weekly"/>
     <property name="monthly" type="boolean" column="monthly"/>
 
-    <many-to-one name="searchParams" class="SavedSearchParams" column="savedSearchParamsID"
+    <many-to-one name="searchQuery" class="org.ambraproject.models.SavedSearchQuery" column="savedSearchQueryID"
                  lazy="false" not-null="true" cascade="none"/>
   </class>
 

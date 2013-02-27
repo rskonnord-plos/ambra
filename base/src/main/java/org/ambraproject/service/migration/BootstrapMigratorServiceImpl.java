@@ -20,7 +20,7 @@
  */
 package org.ambraproject.service.migration;
 
-import org.ambraproject.models.SavedSearchParams;
+import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.Version;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.util.TextUtils;
@@ -153,9 +153,9 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     });
 
     //Now we have to populate a hash used to identify unique searchParameters
-    List<SavedSearchParams> params = hibernateTemplate.loadAll(SavedSearchParams.class);
+    List<SavedSearchQuery> params = hibernateTemplate.loadAll(SavedSearchQuery.class);
 
-    for(SavedSearchParams param : params) {
+    for(SavedSearchQuery param : params) {
       String hash = TextUtils.createHash(param.getSearchParams());
       param.setHash(hash);
 

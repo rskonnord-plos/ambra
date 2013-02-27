@@ -20,8 +20,8 @@
 
 <hibernate-mapping package="org.ambraproject.models">
 
-  <class name="SavedSearchParams" table="savedSearchParams">
-    <id name="ID" column="savedSearchParamsID" type="long">
+  <class name="SavedSearchQuery" table="savedSearchQuery">
+    <id name="ID" column="savedSearchQueryID" type="long">
       <generator class="native" />
     </id>
     <timestamp name="lastModified" column="lastModified"/>

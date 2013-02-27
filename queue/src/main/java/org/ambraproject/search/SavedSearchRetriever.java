@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -13,7 +11,7 @@
 
 package org.ambraproject.search;
 
-import org.ambraproject.views.SavedSearchView;
+import org.ambraproject.views.SavedSearchQueryView;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.PropertyProjection;
@@ -22,16 +20,16 @@ import org.hibernate.criterion.Restrictions;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA. User: stumu Date: 9/26/12 Time: 12:19 PM To change this template use File | Settings |
- * File Templates.
+ * @author stumu
+ * @author Joe Osowski
  */
 public interface SavedSearchRetriever {
 
   enum AlertType {
-    WEEKLY(Restrictions.eq("s.weekly", true),
-      Projections.property("s.lastWeeklySearchTime")),
-    MONTHLY(Restrictions.eq("s.monthly", true),
-      Projections.property("s.lastMonthlySearchTime"));
+    WEEKLY(Restrictions.eq("weekly", true),
+      Projections.property("lastWeeklySearchTime")),
+    MONTHLY(Restrictions.eq("monthly", true),
+      Projections.property("lastMonthlySearchTime"));
 
     private Criterion typeCriterion;
     private PropertyProjection typeProjection;
@@ -51,11 +49,11 @@ public interface SavedSearchRetriever {
   };
 
   /**
-   * Take a type of saved searches, and retrieve a map from email to search string
-   * @param alertType
-   * @return
+   * Retrieve a list of unique searches to perform based on the passed in type
+   *
+   * @param alertType the alertType
+
+   * @return a list of uniqueSearches
    */
-   public List<SavedSearchView> retrieveSearchAlerts(final AlertType alertType);
-
-
+   public List<SavedSearchQueryView> retrieveSearchAlerts(final AlertType alertType);
 }

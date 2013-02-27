@@ -268,18 +268,18 @@
         searchName varchar(255),
         weekly bit,
         monthly bit,
-        savedSearchParamsID bigint not null,
+        savedSearchQueryID bigint not null,
         userProfileID bigint not null,
         primary key (savedSearchID)
     );
 
-    create table savedSearchParams (
-        savedSearchParamsID bigint not null auto_increment,
+    create table savedSearchQueries (
+        savedSearchQueryID bigint not null auto_increment,
         lastModified datetime not null,
         created datetime not null,
         hash varchar(25) not null unique,
         searchParams longtext,
-        primary key (savedSearchParamsID)
+        primary key (savedSearchQueryID)
     );
 
     create table syndication (
@@ -547,10 +547,10 @@
         references userProfile (userProfileID);
 
     alter table savedSearch 
-        add index FK3407F0F16B283F1 (savedSearchParamsID), 
-        add constraint FK3407F0F16B283F1 
-        foreign key (savedSearchParamsID) 
-        references savedSearchParams (savedSearchParamsID);
+        add index FK3407F0F78328E21 (savedSearchQueryID), 
+        add constraint FK3407F0F78328E21 
+        foreign key (savedSearchQueryID) 
+        references savedSearchQueries (savedSearchQueryID);
 
     alter table userProfileRoleJoinTable 
         add index FK57F48A3078B0DAE3 (userProfileID), 

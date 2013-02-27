@@ -14,6 +14,7 @@
 package org.ambraproject.search;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.models.SavedSearch;
 import org.ambraproject.service.search.SolrSearchService;
 import org.ambraproject.views.SavedSearchHit;
 import org.ambraproject.views.SavedSearchView;
@@ -51,6 +52,22 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
         finalHitList.add(finalHit);
       }
      }
+
+
+    //TODO: When a search is executed, updated the records to indicate
+//    log.debug("Updating Last "+ alertType.name() +" Saved Search Time for Saved Search ID: {}", (Long)obj[0]);
+//
+//    SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, (Long)obj[0]);
+//    if (savedSearch != null) {
+//      if(alertType.name().equals("WEEKLY")){
+//        savedSearch.setLastWeeklySearchTime(Calendar.getInstance().getTime());
+//      }else{
+//        savedSearch.setLastMonthlySearchTime(Calendar.getInstance().getTime());
+//      }
+//      hibernateTemplate.update(savedSearch);
+//    }
+//
+//    log.debug("Updated Last "+ alertType.name() +" Saved Search Time for Saved Search ID: {}", (Long)obj[0]);
 
      savedSearchView.setSearchHitList(finalHitList.size()==0?null:finalHitList);
      savedSearchView.setCurrentTime(currentTime);

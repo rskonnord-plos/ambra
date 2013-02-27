@@ -27,7 +27,7 @@ import org.ambraproject.Constants;
 import org.ambraproject.action.AmbraWebTest;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.models.SavedSearch;
-import org.ambraproject.models.SavedSearchParams;
+import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
@@ -83,7 +83,7 @@ public class SaveSearchActionTest extends AmbraWebTest {
     user.setAuthId("authIdForTestSearchName");
     user.setDisplayName("displayNameForTestSearchName");
 
-    SavedSearchParams params = new SavedSearchParams("search string", "hash");
+    SavedSearchQuery params = new SavedSearchQuery("search string", "hash");
     dummyDataStore.store(params);
 
     SavedSearch savedSearch = new SavedSearch();

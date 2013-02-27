@@ -24,7 +24,7 @@ package org.ambraproject.service.user;
 import com.google.gson.Gson;
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.SavedSearch;
-import org.ambraproject.models.SavedSearchParams;
+import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserSearch;
@@ -196,17 +196,17 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     UserProfile user = hibernateTemplate.get(UserProfile.class, userProfileId);
 
     String savedHash = TextUtils.createHash(searchParametersString);
-    SavedSearchParams params = null;
+    SavedSearchQuery params = null;
 
     //Check to see if a matching savedSearch exists already.
-    List<SavedSearchParams> paramsList =
-      hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearchParams.class)
+    List<SavedSearchQuery> paramsList =
+      hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearchQuery.class)
         .add(Restrictions.eq("hash", savedHash))
         .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY));
 
     if(paramsList.size() == 0) {
       //It does exist, lets not create a new record
-      params = new SavedSearchParams(searchParametersString, savedHash);
+      params = new SavedSearchQuery(searchParametersString, savedHash);
       hibernateTemplate.save(params);
     } else {
       params = paramsList.get(0);

@@ -22,7 +22,7 @@ package org.ambraproject.service.user;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleView;
-import org.ambraproject.models.SavedSearchParams;
+import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
@@ -222,7 +222,7 @@ public class UserServiceTest extends BaseTest {
 
     userService.saveSearch(id2, searchParameters, "testSave", true, false);
 
-    List<SavedSearchParams> params = dummyDataStore.getAll(SavedSearchParams.class);
+    List<SavedSearchQuery> params = dummyDataStore.getAll(SavedSearchQuery.class);
     assertEquals(1, params.size(), "More then one searchparams created!");
   }
 

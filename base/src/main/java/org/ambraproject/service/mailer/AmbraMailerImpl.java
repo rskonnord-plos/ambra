@@ -22,8 +22,7 @@ package org.ambraproject.service.mailer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.topazproject.ambra.email.impl.FreemarkerTemplateMailer;
-
+import org.ambraproject.email.impl.FreemarkerTemplateMailer;
 import java.net.InetAddress;
 import java.util.Collections;
 import java.util.HashMap;

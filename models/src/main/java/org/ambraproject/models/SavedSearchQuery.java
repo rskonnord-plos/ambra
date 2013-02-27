@@ -14,17 +14,23 @@ package org.ambraproject.models;
 /**
  * POJO Object to contain all the parameters for saved searches.
  * It is mapped with table savedSearch.
+ *
+ * Each search has a serialized string of parameters, this
+ * class is used in collections representing the unique set of searches
+ * to avoid executing a search more then once
+ *
+ * @author Joe Osowski
  */
-public class SavedSearchParams extends AmbraEntity {
+public class SavedSearchQuery extends AmbraEntity {
 
   private String searchParams;
   private String hash;
 
-  public SavedSearchParams() {
+  public SavedSearchQuery() {
     super();
   }
 
-  public SavedSearchParams(String searchParams, String hash) {
+  public SavedSearchQuery(String searchParams, String hash) {
     this();
     this.searchParams = searchParams;
     this.hash = hash;
@@ -57,9 +63,9 @@ public class SavedSearchParams extends AmbraEntity {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof SavedSearchParams)) return false;
+    if (!(o instanceof SavedSearchQuery)) return false;
 
-    SavedSearchParams that = (SavedSearchParams) o;
+    SavedSearchQuery that = (SavedSearchQuery) o;
 
     if (getID() != null ? !getID().equals(that.getID()) : that.getID() != null) return false;
     if (searchParams != null ? !searchParams.equals(that.searchParams) : that.searchParams != null) return false;

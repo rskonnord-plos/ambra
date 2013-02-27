@@ -15,7 +15,7 @@ package org.ambraproject.queue;
 
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.SavedSearch;
-import org.ambraproject.models.SavedSearchParams;
+import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.TextUtils;
@@ -81,7 +81,7 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
       UserProfile user = new UserProfile("savedSearch-" + i, i + "savedSearch1@example.org", "savedSearch" + i);
 
       String query = "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      SavedSearchParams params = new SavedSearchParams(query, TextUtils.createHash(query));
+      SavedSearchQuery params = new SavedSearchQuery(query, TextUtils.createHash(query));
       dummyDataStore.store(params);
 
       SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, params);
@@ -91,7 +91,7 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
       savedSearch1.setLastMonthlySearchTime(searchTime.getTime());
 
       query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchParams(query, TextUtils.createHash(query));
+      params = new SavedSearchQuery(query, TextUtils.createHash(query));
       dummyDataStore.store(params);
 
       SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, params);
@@ -101,7 +101,7 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
       savedSearch2.setLastMonthlySearchTime(searchTime.getTime());
 
       query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchParams(query, TextUtils.createHash(query));
+      params = new SavedSearchQuery(query, TextUtils.createHash(query));
       dummyDataStore.store(params);
 
       SavedSearch savedSearch3 = new SavedSearch("both-" + i, params);
@@ -111,7 +111,7 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
       savedSearch3.setLastMonthlySearchTime(searchTime.getTime());
 
       query = "{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchParams(query, TextUtils.createHash(query));
+      params = new SavedSearchQuery(query, TextUtils.createHash(query));
       dummyDataStore.store(params);
 
       SavedSearch savedSearch4 = new SavedSearch("both-" + i, params);

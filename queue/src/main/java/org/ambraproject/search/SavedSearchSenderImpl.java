@@ -1,14 +1,11 @@
 package org.ambraproject.search;
 
-import org.ambraproject.ApplicationException;
 import org.ambraproject.views.SavedSearchView;
-import org.ambraproject.views.SearchHit;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.topazproject.ambra.email.TemplateMailer;
-
+import org.ambraproject.email.TemplateMailer;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import java.io.IOException;
@@ -19,11 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: josowski
- * Date: 2/26/13
- * Time: 3:58 PM
- * To change this template use File | Settings | File Templates.
+ * Send saved searches
  */
 public class SavedSearchSenderImpl implements SavedSearchSender {
   private static final Logger log = LoggerFactory.getLogger(SavedSearchSenderImpl.class);
@@ -65,19 +58,19 @@ public class SavedSearchSenderImpl implements SavedSearchSender {
 
   Multipart content = createContent(context);
 
-  List<String> emails = journalService.getJournalAlertSubscribers(alert.getAlertID());
-
-  //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
-  String toAddresses = StringUtils.join(emails, " ");
-
-  //TODO: move to config?
-  String fromAddress = "admin@plos.org";
-
-  mailer.mail(toAddresses, fromAddress, alert.getEmailSubject(), context, content);
-
-  log.info("Completed thread Name: {}", Thread.currentThread().getName());
-  log.info("Completed send request for: {}", alert.getAlertKey());
-}
+//  List<String> emails = journalService.getJournalAlertSubscribers(alert.getAlertID());
+//
+//  //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
+//  String toAddresses = StringUtils.join(emails, " ");
+//
+//  //TODO: move to config?
+//  String fromAddress = "admin@plos.org";
+//
+//  mailer.mail(toAddresses, fromAddress, alert.getEmailSubject(), context, content);
+//
+//  log.info("Completed thread Name: {}", Thread.currentThread().getName());
+//  log.info("Completed send request for: {}", alert.getAlertKey());
+  }
 
   private Multipart createContent(Map<String, Object> context) {
     try {

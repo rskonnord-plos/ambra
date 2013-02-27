@@ -15,11 +15,11 @@ package org.ambraproject.queue;
 
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.SavedSearch;
-import org.ambraproject.models.SavedSearchParams;
+import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.search.SavedSearchRetriever;
 import org.ambraproject.util.TextUtils;
-import org.ambraproject.views.SavedSearchView;
+import org.ambraproject.views.SavedSearchQueryView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
@@ -42,7 +42,6 @@ public class SavedSearchRetrieverTest extends BaseTest {
   @Autowired
   protected SavedSearchRetriever savedSearchRetriever;
 
-
   @Test
   public void testSavedSearch() {
 
@@ -51,59 +50,62 @@ public class SavedSearchRetrieverTest extends BaseTest {
     searchTime.set(Calendar.MONTH, 5);
     searchTime.set(Calendar.DAY_OF_MONTH, 15);
 
+    String query1 = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+    String query2 = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSOne\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+    String query3 = "{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+
     for (int i = 1; i <= 3; i++) {
       UserProfile user = new UserProfile("savedSearch1-" + i, i + "savedSearch11@example.org", "savedSearch1" + i);
 
-      String query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      SavedSearchParams params = new SavedSearchParams(query, TextUtils.createHash(query));
-      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, params);
+      SavedSearchQuery query = new SavedSearchQuery(query1, TextUtils.createHash(query1));
+      dummyDataStore.store(query);
+
+      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, query);
       savedSearch1.setWeekly(true);
       savedSearch1.setMonthly(false);
       savedSearch1.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch1.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchParams(query, TextUtils.createHash(query));
-      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, params);
+      query = new SavedSearchQuery(query2, TextUtils.createHash(query2));
+      dummyDataStore.store(query);
+
+      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, query);
       savedSearch2.setWeekly(false);
       savedSearch2.setMonthly(true);
       savedSearch2.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch2.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchParams(query, TextUtils.createHash(query));
-      SavedSearch savedSearch3 = new SavedSearch("both-" + i, params);
-      savedSearch3.setMonthly(true);
+      //Use same query params for this user
+      SavedSearch savedSearch3 = new SavedSearch("both-" + i, query);
       savedSearch3.setWeekly(true);
+      savedSearch3.setMonthly(true);
       savedSearch3.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch3.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchParams(query, TextUtils.createHash(query));
-      SavedSearch savedSearch4 = new SavedSearch("both-" + i, params);
-      savedSearch4.setMonthly(true);
+      query = new SavedSearchQuery(query3, TextUtils.createHash(query3));
+      dummyDataStore.store(query);
+
+      SavedSearch savedSearch4 = new SavedSearch("both-" + i, query);
       savedSearch4.setWeekly(true);
+      savedSearch4.setMonthly(false);
       savedSearch4.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch4.setLastMonthlySearchTime(searchTime.getTime());
 
       user.setSavedSearches(Arrays.asList(savedSearch1, savedSearch2, savedSearch3,savedSearch4));
+
       dummyDataStore.store(user);
     }
 
+    //Confirm unique views, though there are many profiles there are only a
+    //few distinct search queries, confirm this list is only three elements
+    List<SavedSearchQueryView> savedSearchParamViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
 
+    assertNotNull(savedSearchParamViews, "saved search views List is empty for weekly search");
+    assertEquals(savedSearchParamViews.size(), 3, "returned incorrect number of results");
 
-    List<SavedSearchView> savedSearchViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
+    savedSearchParamViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
 
-    assertNotNull(savedSearchViews, "saved search views List is empty for weekly search");
-    assertEquals(savedSearchViews.size(), 18, "returned incorrect number of results");
-
-
-    savedSearchViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
-
-    assertNotNull(savedSearchViews, "saved search views List is empty for monthly search");
-    assertEquals(savedSearchViews.size(), 18, "returned incorrect number of results");
-
+    assertNotNull(savedSearchParamViews, "saved search views List is empty for monthly search");
+    assertEquals(savedSearchParamViews.size(), 2, "returned incorrect number of results");
   }
-
-
 }

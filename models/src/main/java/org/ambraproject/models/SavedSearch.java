@@ -23,11 +23,13 @@ import java.util.Date;
 public class SavedSearch extends AmbraEntity {
 
   private String searchName;
-  private SavedSearchParams searchParams;
+  private SavedSearchQuery searchQuery;
   private Date lastWeeklySearchTime;
   private Date lastMonthlySearchTime;
   private boolean weekly;
   private boolean monthly;
+
+  //TODO: Define type, "User Defined" or "Journal Alert"
 
   public SavedSearch() {
     super();
@@ -35,10 +37,10 @@ public class SavedSearch extends AmbraEntity {
     lastMonthlySearchTime= Calendar.getInstance().getTime();
   }
 
-  public SavedSearch(String searchName, SavedSearchParams searchParams) {
+  public SavedSearch(String searchName, SavedSearchQuery searchQuery) {
     this();
     this.searchName = searchName;
-    this.searchParams = searchParams;
+    this.searchQuery = searchQuery;
   }
   
   /**
@@ -57,20 +59,12 @@ public class SavedSearch extends AmbraEntity {
     this.searchName = searchName;
   }
 
-  /**
-   * getter for searchParams
-   * @return
-   */
-  public SavedSearchParams getSearchParams() {
-    return searchParams;
+  public SavedSearchQuery getSearchQuery() {
+    return searchQuery;
   }
 
-  /**
-   * setter for searchParams
-   * @param searchParams
-   */
-  public void setSearchParams(SavedSearchParams searchParams) {
-    this.searchParams = searchParams;
+  public void setSearchQuery(SavedSearchQuery searchQuery) {
+    this.searchQuery = searchQuery;
   }
 
   public Date getLastWeeklySearchTime() {
@@ -128,7 +122,7 @@ public class SavedSearch extends AmbraEntity {
 
     if (getID() != null ? !getID().equals(that.getID()) : that.getID() != null) return false;
     if (searchName != null ? !searchName.equals(that.searchName) : that.searchName != null) return false;
-    if (searchParams != null ? !searchParams.equals(that.searchParams) : that.searchParams != null) return false;
+    if (searchQuery != null ? !searchQuery.equals(that.searchQuery) : that.searchQuery != null) return false;
     return true;
   }
 
@@ -136,7 +130,7 @@ public class SavedSearch extends AmbraEntity {
   public int hashCode() {
     int result = getID() != null ? getID().hashCode() : 0;
     result = 31 * result + (searchName != null ? searchName.hashCode() : 0);
-    result = 31 * result + (searchParams != null ? searchParams.hashCode() : 0);
+    result = 31 * result + (searchQuery != null ? searchQuery.hashCode() : 0);
     return result;
   }
 }
