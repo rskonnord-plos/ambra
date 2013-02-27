@@ -33,7 +33,7 @@
         factory-method="createFactory"/>
 
   <!--Ambra developer beans here -->
-  <bean id="configurationStore" class="org.topazproject.ambra.configuration.ConfigurationStore"
+  <bean id="configurationStore" class="org.ambraproject.configuration.ConfigurationStore"
         factory-method="getInstance"/>
   <bean id="ambraConfiguration" factory-bean="configurationStore" factory-method="getConfiguration"/>
 

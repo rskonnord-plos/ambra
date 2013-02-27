@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.topazproject.ambra.service.password.PasswordDigestService;
-import org.topazproject.ambra.service.password.PasswordServiceException;
+import org.ambraproject.service.password.PasswordDigestService;
+import org.ambraproject.service.password.PasswordServiceException;
 
 import java.util.HashMap;
 import java.util.Map;
