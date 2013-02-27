@@ -1,7 +1,6 @@
-/* $HeadURL::                                                                            $
- * $Id$
+/*
  *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -18,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.ambraproject.ambra.email;
+package org.ambraproject.email;
 
 import javax.mail.MessagingException;
 import javax.mail.Multipart;

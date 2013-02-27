@@ -1,7 +1,5 @@
-/* $HeadURL::                                                                            $
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -17,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ambraproject.ambra.email.impl;
+package org.ambraproject.email.impl;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -45,7 +43,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import org.ambraproject.ambra.email.TemplateMailer;
+import org.ambraproject.email.TemplateMailer;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;

@@ -18,17 +18,36 @@
  * limitations under the License.
  */
 
-package org.topazproject.ambra.email;
+package org.ambraproject.email;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
-
-import org.topazproject.ambra.email.MailerUser;
-import org.topazproject.ambra.email.TemplateMailer;
-
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import java.io.IOException;
 import java.util.Map;
 
+@Deprecated
+/**
+ * There is a mock implementation for the underlying java mail.
+ *
+ * We should use that and not mock this object
+ */
 public class MockTemplateMailer implements TemplateMailer {
+
+  public Multipart createContent(String textTemplateFilename, String htmlTemplateFilename,
+                                 final Map<String, Object> context) throws IOException, MessagingException
+  {
+    return null;
+  }
+
+
+  public void mail(final String toEmailAddress, final String fromEmailAddress, final String subject,
+            final Map<String, Object> context, final Multipart content)
+  {
+
+  }
+
   public void mail(final String toEmailAddress, final String fromEmailAddress, final String subject,
                    final Map<String, Object> context, final String textTemplateFilename,
                    final String htmlTemplateFilename) {
