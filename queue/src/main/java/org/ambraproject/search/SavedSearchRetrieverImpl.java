@@ -51,6 +51,8 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
       savedSearchViews.add(new SavedSearchQueryView((Long)obj[0], (String)obj[1], (String)obj[2]));
     }
 
+    log.debug("Returning {} saved search(es)", savedSearchViews.size());
+
     return savedSearchViews;
   }
 }

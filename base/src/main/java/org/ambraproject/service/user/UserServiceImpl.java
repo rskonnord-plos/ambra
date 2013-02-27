@@ -195,24 +195,24 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
     UserProfile user = hibernateTemplate.get(UserProfile.class, userProfileId);
 
-    String savedHash = TextUtils.createHash(searchParametersString);
-    SavedSearchQuery params = null;
+    String queryHash = TextUtils.createHash(searchParametersString);
+    SavedSearchQuery query;
 
     //Check to see if a matching savedSearch exists already.
-    List<SavedSearchQuery> paramsList =
+    List<SavedSearchQuery> queryList =
       hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearchQuery.class)
-        .add(Restrictions.eq("hash", savedHash))
+        .add(Restrictions.eq("hash", queryHash))
         .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY));
 
-    if(paramsList.size() == 0) {
+    if(queryList.size() == 0) {
       //It does exist, lets not create a new record
-      params = new SavedSearchQuery(searchParametersString, savedHash);
-      hibernateTemplate.save(params);
+      query = new SavedSearchQuery(searchParametersString, queryHash);
+      hibernateTemplate.save(query);
     } else {
-      params = paramsList.get(0);
+      query = queryList.get(0);
     }
 
-    SavedSearch savedSearch = new SavedSearch(name, params);
+    SavedSearch savedSearch = new SavedSearch(name, query);
     savedSearch.setWeekly(weekly);
     savedSearch.setMonthly(monthly);
 
