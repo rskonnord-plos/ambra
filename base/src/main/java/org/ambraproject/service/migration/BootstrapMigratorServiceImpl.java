@@ -57,7 +57,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
 
   private double dbVersion;
   private double binaryVersion;
-  private boolean isSnapshot;
 
   /**
    * Apply all migrations.
@@ -69,15 +68,13 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
 
     setVersionData();
 
-    //If this is a snapshot, we're developing and we don't need to do this check
-    if (isSnapshot == false) {
-      //Throws an exception if the database version is further into
-      //the future then this version of the ambra war
-      if (binaryVersion < dbVersion) {
-        log.error("Binary version: " + binaryVersion + ", DB version: " + dbVersion);
-        throw new Exception("The ambra war is out of date with the database, " +
-            "update this war file to the latest version.");
-      }
+
+    //Throws an exception if the database version is further into
+    //the future then this version of the ambra war
+    if (binaryVersion < dbVersion) {
+      log.error("Binary version: " + binaryVersion + ", DB version: " + dbVersion);
+      throw new Exception("The ambra war is out of date with the database, " +
+          "update this war file to the latest version.");
     }
 
     waitForOtherMigrations();
@@ -126,7 +123,7 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
       migrate249();
     }
 
-    if (dbVersion < 250) {
+    if (dbVersion < 255) {
       migrate250();
     }
 
@@ -500,8 +497,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     log.info("Migration from 210 starting");
     //First create version table and add one row
 
-    final boolean isSnapshot = this.isSnapshot;
-
     hibernateTemplate.execute(new HibernateCallback() {
       @Override
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
@@ -648,10 +643,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     prop.load(is);
 
     String sVersion = (String) prop.get("version");
-
-    if (sVersion.indexOf("-SNAPSHOT") > 0) {
-      this.isSnapshot = true;
-    }
 
     //Collapse pom version into an integer
     //Assume it is always three digits
