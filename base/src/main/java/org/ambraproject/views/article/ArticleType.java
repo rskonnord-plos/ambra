@@ -44,6 +44,7 @@ public class ArticleType implements Serializable {
    * TODO: 3) Test against the URI, not the value that will be displayed to the user
    */
   public static final String ARTICLE_TYPE_HEADING_RESEARCH = "Research Article";
+  public static final String ARTICLE_TYPE_HEADING_EOC = "Expression of Concern";
 
   private static Map<URI, ArticleType> knownArticleTypes = new HashMap<URI, ArticleType>();
   private static Map<URI, ArticleType> newArticleTypes = new HashMap<URI, ArticleType>();
@@ -239,6 +240,16 @@ public class ArticleType implements Serializable {
   public static boolean isResearchArticle(ArticleType articleType) {
     return articleType == null ? false :
                                  ARTICLE_TYPE_HEADING_RESEARCH.equals(articleType.getHeading());
+  }
+
+  /**
+   * Is the given {@link ArticleType} is of type Expression of Concern?
+   * @param articleType an articleType
+   * @return true/false
+   */
+  public static boolean isEocArticle(ArticleType articleType) {
+    return articleType == null ? false :
+        ARTICLE_TYPE_HEADING_EOC.equals(articleType.getHeading());
   }
 
   /**

@@ -22,12 +22,6 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.views.CitedArticleView;
-import org.ambraproject.views.UserProfileInfo;
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.views.article.ArticleType;
-import org.ambraproject.views.article.CitationInfo;
-import org.ambraproject.views.article.RelatedArticleInfo;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.ArticleAuthor;
@@ -39,13 +33,19 @@ import org.ambraproject.models.Journal;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.models.Volume;
-import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AssetView;
+import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.JournalView;
+import org.ambraproject.views.UserProfileInfo;
+import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.ArticleType;
+import org.ambraproject.views.article.BaseArticleInfo;
+import org.ambraproject.views.article.CitationInfo;
+import org.ambraproject.views.article.RelatedArticleInfo;
 import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -131,6 +131,31 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     return ArticleType.isResearchArticle(articleType);
+  }
+
+  /**
+   * Determines if the articleURI is of type Expression of Concern
+   *
+   * @param articleInfo The articleInfo Object
+   * @return True if the article is a Expression of Concern article
+   * @throws org.ambraproject.ApplicationException
+   * @throws NoSuchArticleIdException When the article does not exist
+   */
+  public boolean isEocArticle(final BaseArticleInfo articleInfo)
+      throws ApplicationException, NoSuchArticleIdException {
+    ArticleType articleType = ArticleType.getDefaultArticleType();
+
+    for (String artTypeUri : articleInfo.getTypes()) {
+      if (ArticleType.getKnownArticleTypeForURI(URI.create(artTypeUri)) != null) {
+        articleType = ArticleType.getKnownArticleTypeForURI(URI.create(artTypeUri));
+        break;
+      }
+    }
+    if (articleType == null) {
+      throw new ApplicationException("Unable to resolve article type for: " + articleInfo.getDoi());
+    }
+
+    return ArticleType.isEocArticle(articleType);
   }
 
   /**
@@ -599,6 +624,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           relatedArticleInfo.setDoi(otherArticle.getDoi());
           relatedArticleInfo.setDate(otherArticle.getDate());
           relatedArticleInfo.seteIssn(otherArticle.geteIssn());
+          relatedArticleInfo.setRelationType(relationship.getType());
+          relatedArticleInfo.setTypes(otherArticle.getTypes());
 
           journals = otherArticle.getJournals();
           journalViews = new HashSet<JournalView>(journals.size());

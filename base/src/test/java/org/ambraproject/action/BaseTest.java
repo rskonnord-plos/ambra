@@ -21,8 +21,6 @@
 
 package org.ambraproject.action;
 
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.views.article.RelatedArticleInfo;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.Article;
@@ -40,6 +38,8 @@ import org.ambraproject.testutils.DummyDataStore;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
+import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.RelatedArticleInfo;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,14 +53,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertEqualsNoOrder;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.*;
 
 /**
  * Base class for tests of Ambra Service Beans.  This is provided just so they can all use the same applicationContext
@@ -361,7 +354,8 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
         boolean foundMatch = false;
         for (RelatedArticleInfo actualRelatedArticle : actual.getRelatedArticles()) {
           if (otherArticle.getTitle().equals(actualRelatedArticle.getTitle()) &&
-              otherArticle.getDoi().equals(actualRelatedArticle.getUri().toString())) {
+              otherArticle.getDoi().equals(actualRelatedArticle.getUri().toString())&&
+              otherArticle.getTypes().equals(actualRelatedArticle.getTypes())) {
             foundMatch = true;
             break;
           }
