@@ -68,7 +68,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
 
     setVersionData();
 
-
     //Throws an exception if the database version is further into
     //the future then this version of the ambra war
     if (binaryVersion < dbVersion) {
