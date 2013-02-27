@@ -273,7 +273,7 @@
         primary key (savedSearchID)
     );
 
-    create table savedSearchQueries (
+    create table savedSearchQuery (
         savedSearchQueryID bigint not null auto_increment,
         lastModified datetime not null,
         created datetime not null,
@@ -550,7 +550,7 @@
         add index FK3407F0F78328E21 (savedSearchQueryID), 
         add constraint FK3407F0F78328E21 
         foreign key (savedSearchQueryID) 
-        references savedSearchQueries (savedSearchQueryID);
+        references savedSearchQuery (savedSearchQueryID);
 
     alter table userProfileRoleJoinTable 
         add index FK57F48A3078B0DAE3 (userProfileID), 
