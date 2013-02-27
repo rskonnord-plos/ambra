@@ -277,7 +277,7 @@
         savedSearchQueryID bigint not null auto_increment,
         lastModified datetime not null,
         created datetime not null,
-        hash varchar(25) not null unique,
+        hash varchar(50) not null unique,
         searchParams longtext,
         primary key (savedSearchQueryID)
     );

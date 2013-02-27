@@ -1,7 +1,7 @@
 create table savedSearchQuery (
   savedSearchQueryID bigint(20) not null auto_increment,
   searchParams text character set utf8 collate utf8_bin not null,
-  hash varchar(25) character set utf8 collate utf8_bin null,
+  hash varchar(50) character set utf8 collate utf8_bin null,
   created datetime not null,
   lastmodified datetime not null,
   primary key (savedSearchQueryID)

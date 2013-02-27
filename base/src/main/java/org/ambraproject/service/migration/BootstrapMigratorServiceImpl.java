@@ -153,13 +153,13 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     });
 
     //Now we have to populate a hash used to identify unique searchParameters
-    List<SavedSearchQuery> params = hibernateTemplate.loadAll(SavedSearchQuery.class);
+    List<SavedSearchQuery> queries = hibernateTemplate.loadAll(SavedSearchQuery.class);
 
-    for(SavedSearchQuery param : params) {
-      String hash = TextUtils.createHash(param.getSearchParams());
-      param.setHash(hash);
+    for(SavedSearchQuery query : queries) {
+      String hash = TextUtils.createHash(query.getSearchParams());
+      query.setHash(hash);
 
-      hibernateTemplate.save(param);
+      hibernateTemplate.update(query);
     }
 
     hibernateTemplate.execute(new HibernateCallback() {

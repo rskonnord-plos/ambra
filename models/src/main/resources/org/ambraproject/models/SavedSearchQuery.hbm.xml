@@ -26,7 +26,7 @@
     </id>
     <timestamp name="lastModified" column="lastModified"/>
     <property name="created" column="created" type="timestamp" not-null="true" update="false" />
-    <property name="hash" column="hash" type="string" length="25" not-null="true" unique="true" />
+    <property name="hash" column="hash" type="string" length="50" not-null="true" unique="true" />
     <property name="searchParams" column="searchParams" type="text" />
   </class>
 
