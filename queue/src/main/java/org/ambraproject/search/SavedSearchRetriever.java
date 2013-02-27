@@ -28,7 +28,10 @@ import java.util.List;
 public interface SavedSearchRetriever {
 
   enum AlertType {
-    WEEKLY(Restrictions.eq("s.weekly", true), Projections.property("s.lastWeeklySearchTime")),MONTHLY(Restrictions.eq("s.monthly", true),Projections.property("s.lastMonthlySearchTime"));
+    WEEKLY(Restrictions.eq("s.weekly", true),
+      Projections.property("s.lastWeeklySearchTime")),
+    MONTHLY(Restrictions.eq("s.monthly", true),
+      Projections.property("s.lastMonthlySearchTime"));
 
     private Criterion typeCriterion;
     private PropertyProjection typeProjection;
