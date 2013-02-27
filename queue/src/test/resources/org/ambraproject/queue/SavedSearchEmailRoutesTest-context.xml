@@ -46,9 +46,6 @@
   <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
     <property name="weeklyCron" value="0/5+*+*+*+*+?"/>
     <property name="monthlyCron" value="0/6+*+*+*+*+?"/>
-    <property name="mailEndpoint" value="mock:mail"/>
-    <property name="fromEmailAddress" value="news@lists.plos.org"></property>
-    <property name="imagePath" value="http://plosone.org/images/PLOS-generic.gif"/>
   </bean>
 
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">

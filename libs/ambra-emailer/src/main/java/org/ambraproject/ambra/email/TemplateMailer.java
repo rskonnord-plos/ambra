@@ -18,20 +18,51 @@
  * limitations under the License.
  */
 
-package org.topazproject.ambra.email;
+package org.ambraproject.ambra.email;
 
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import java.io.IOException;
 import java.util.Map;
 
 /**
  * A contract for all template based emailers.
  */
 public interface TemplateMailer {
+  public static final String TO_EMAIL_ADDRESS = "toEmailAddress";
+  public static final String USER_NAME_KEY = "name";
+
   /**
-   * Send a mail with both a text and a HTML version.
-   * @param toEmailAddress          the email address where to send the email
+   * Helper method for creating Multiparts from a freemarker template for emailing
+   *
+   * @param textTemplateFilename the text freemarker template
+   * @param htmlTemplateFilename the html freemarker template
+   * @param context a {@link java.util.Map} of objects to expose to the template engine
+   * @return the multipart content for a new email
+   * @throws IOException
+   * @throws MessagingException
+   */
+  public Multipart createContent(String textTemplateFilename, String htmlTemplateFilename,
+                                 final Map<String, Object> context) throws IOException, MessagingException;
+
+  /**
+   * Send a mail with the content specified
+   *
+   * @param toEmailAddress the email address where to send the email
    * @param fromEmailAddress fromEmailAddress
    * @param subject subject of the email
-   * @param context        a {@link java.util.Map} of objects to expose to the template engine
+   * @param context a {@link java.util.Map} of objects to expose to the template engine
+   * @param content the content of the message to send
+   */
+  void mail(final String toEmailAddress, final String fromEmailAddress, final String subject,
+            final Map<String, Object> context, final Multipart content);
+
+  /**
+   * Send a mail with both a text and a HTML version.
+   * @param toEmailAddress the email address where to send the email
+   * @param fromEmailAddress fromEmailAddress
+   * @param subject subject of the email
+   * @param context a {@link java.util.Map} of objects to expose to the template engine
    * @param textTemplateFilename textTemplateFilename
    * @param htmlTemplateFilename htmlTemplateFilename
    */

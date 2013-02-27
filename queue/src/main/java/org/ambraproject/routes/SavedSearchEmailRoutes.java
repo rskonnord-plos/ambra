@@ -24,11 +24,8 @@ import org.springframework.beans.factory.annotation.Required;
 public class SavedSearchEmailRoutes extends SpringRouteBuilder {
 
   private static final Logger log = LoggerFactory.getLogger(SavedSearchEmailRoutes.class);
-  private String mailEndpoint;
   private String weeklyCron;
   private String monthlyCron;
-  private String fromEmailAddress;
-  private String imagePath;
 
   @Override
   public void configure() throws Exception {
@@ -49,32 +46,13 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
         .setHeader("alertType", simple("monthly"))
         .to("direct:getemaildata");
 
-    from("direct:getemaildata")
-        .split().method("savedSearchRetriever", "retrieveSearchAlerts")      // custom spliting
-        .to("bean:savedSearchRunner?method=runSavedSearch")
-        .to("direct:prepareemail");
+    from("direct:getsearches")
+        .split().method("savedSearchRetriever", "retrieveSearchAlerts")
+        .to("seda:searchInParallel");
 
-    from("direct:prepareemail")
-        .setHeader("searchHitList", simple("${body.searchHitList}"))
-        .filter(header("searchHitList").isNotNull())
-        .setHeader("savedSearchId", simple("${body.savedSearchId}"))
-        .setHeader("to", simple("${body.emailAddress}"))
-        .setHeader("searchParameters", simple("${body.searchParameters}"))
-        .setHeader("currentTime", simple("${body.currentTime}"))
-        .setHeader("lastSearchTime", simple("${body.lastSearchTime}"))
-        .setHeader("subject", constant("PLOS Search Alert -").append(simple("${body.searchName}")))
-        .setHeader("imagePath",constant(imagePath))
-        .to("freemarker:email.ftl")
-        .setHeader("Content-Type",constant(("text/html; charset=UTF-8")))
-        .setHeader("from", constant(fromEmailAddress))
-        .to("direct:sendemail");
-
-    from("direct:sendemail")
-        .to(mailEndpoint)
-        .to("log:org.plos.camel.routes.SavedSearchEmailSucceeded?level=INFO" +
-        "&showHeaders=false" +
-        "&showExchangeId=true" +
-        "&multiline=true");
+    from("seda:searchInParallel?concurrentConsumers=25")
+      .to("bean:savedSearchRunner?method=runSavedSearch")
+      .to("bead:sendmail");
   }
 
   @Required
@@ -85,20 +63,5 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
   @Required
   public void setMonthlyCron(String monthlyCron) {
     this.monthlyCron = monthlyCron;
-  }
-
-  @Required
-  public void setMailEndpoint(String mailEndpoint) {
-    this.mailEndpoint = mailEndpoint;
-  }
-
-  @Required
-  public void setFromEmailAddress(String fromEmailAddress) {
-    this.fromEmailAddress = fromEmailAddress;
-  }
-
-  @Required
-  public void setImagePath(String imagePath) {
-    this.imagePath = imagePath;
   }
 }

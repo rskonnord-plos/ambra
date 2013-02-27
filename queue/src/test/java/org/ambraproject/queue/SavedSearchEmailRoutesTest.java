@@ -15,8 +15,10 @@ package org.ambraproject.queue;
 
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.SavedSearch;
+import org.ambraproject.models.SavedSearchParams;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
+import org.ambraproject.util.TextUtils;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
@@ -78,31 +80,43 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
     for (int i = 1; i <= 3; i++) {
       UserProfile user = new UserProfile("savedSearch-" + i, i + "savedSearch1@example.org", "savedSearch" + i);
 
-      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, "weekly-" + i);
+      String query = "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+      SavedSearchParams params = new SavedSearchParams(query, TextUtils.createHash(query));
+      dummyDataStore.store(params);
+
+      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, params);
       savedSearch1.setWeekly(true);
       savedSearch1.setMonthly(false);
-      savedSearch1.setSearchParams("{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}");
       savedSearch1.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch1.setLastMonthlySearchTime(searchTime.getTime());
 
-      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, "monthly-" + i);
+      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+      params = new SavedSearchParams(query, TextUtils.createHash(query));
+      dummyDataStore.store(params);
+
+      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, params);
       savedSearch2.setWeekly(false);
       savedSearch2.setMonthly(true);
-      savedSearch2.setSearchParams("{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}");
       savedSearch2.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch2.setLastMonthlySearchTime(searchTime.getTime());
 
-      SavedSearch savedSearch3 = new SavedSearch("both-" + i, "both-" + i);
+      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+      params = new SavedSearchParams(query, TextUtils.createHash(query));
+      dummyDataStore.store(params);
+
+      SavedSearch savedSearch3 = new SavedSearch("both-" + i, params);
       savedSearch3.setMonthly(true);
       savedSearch3.setWeekly(true);
-      savedSearch3.setSearchParams("{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}");
       savedSearch3.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch3.setLastMonthlySearchTime(searchTime.getTime());
 
-      SavedSearch savedSearch4 = new SavedSearch("both-" + i, "both-" + i);
+      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+      params = new SavedSearchParams(query, TextUtils.createHash(query));
+      dummyDataStore.store(params);
+
+      SavedSearch savedSearch4 = new SavedSearch("both-" + i, params);
       savedSearch4.setMonthly(true);
       savedSearch4.setWeekly(true);
-      savedSearch4.setSearchParams("{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}");
       savedSearch4.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch4.setLastMonthlySearchTime(searchTime.getTime());
 

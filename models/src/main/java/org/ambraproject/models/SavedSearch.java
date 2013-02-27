@@ -23,7 +23,7 @@ import java.util.Date;
 public class SavedSearch extends AmbraEntity {
 
   private String searchName;
-  private String searchParams;
+  private SavedSearchParams searchParams;
   private Date lastWeeklySearchTime;
   private Date lastMonthlySearchTime;
   private boolean weekly;
@@ -35,7 +35,7 @@ public class SavedSearch extends AmbraEntity {
     lastMonthlySearchTime= Calendar.getInstance().getTime();
   }
 
-  public SavedSearch(String searchName, String searchParams) {
+  public SavedSearch(String searchName, SavedSearchParams searchParams) {
     this();
     this.searchName = searchName;
     this.searchParams = searchParams;
@@ -61,7 +61,7 @@ public class SavedSearch extends AmbraEntity {
    * getter for searchParams
    * @return
    */
-  public String getSearchParams() {
+  public SavedSearchParams getSearchParams() {
     return searchParams;
   }
 
@@ -69,7 +69,7 @@ public class SavedSearch extends AmbraEntity {
    * setter for searchParams
    * @param searchParams
    */
-  public void setSearchParams(String searchParams) {
+  public void setSearchParams(SavedSearchParams searchParams) {
     this.searchParams = searchParams;
   }
 

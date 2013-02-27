@@ -43,10 +43,13 @@ public class SavedSearchTest extends BaseHibernateTest {
   public void testSavedSearch() {
     long testStart = new Date().getTime();
     final UserProfile user = new UserProfile("savedSearchAuthId", "savedSearchEmail", "savedSearchDisplayName");
-    SavedSearch savedSearch = new SavedSearch();
 
+    SavedSearchParams params = new SavedSearchParams("search string", "search hash");
+    hibernateTemplate.save(params);
+
+    SavedSearch savedSearch = new SavedSearch();
     savedSearch.setSearchName("search name");
-    savedSearch.setSearchParams("search string");
+    savedSearch.setSearchParams(params);
     savedSearch.setLastWeeklySearchTime(new Date());
     savedSearch.setLastMonthlySearchTime(new Date());
     savedSearch.setMonthly(false);
@@ -62,6 +65,8 @@ public class SavedSearchTest extends BaseHibernateTest {
     assertEquals(storedSearch.getMonthly(), false);
     assertEquals(storedSearch.getWeekly(), true);
     assertEquals(storedSearch.getSearchName(), "search name");
+    assertEquals(storedSearch.getSearchParams().getSearchParams(), "search string");
+    assertEquals(storedSearch.getSearchParams().getHash(), "search hash");
 
     Calendar lastSearchTime = Calendar.getInstance();
     lastSearchTime.add(Calendar.YEAR, 1);

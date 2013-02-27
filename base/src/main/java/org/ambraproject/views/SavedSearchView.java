@@ -46,7 +46,7 @@ public class SavedSearchView {
     this.lastWeeklySearchTime = savedSearch.getLastWeeklySearchTime();
 
     Gson gson = new Gson();
-    this.searchParameters = gson.fromJson(savedSearch.getSearchParams(), SearchParameters.class);
+    this.searchParameters = gson.fromJson(savedSearch.getSearchParams().getSearchParams(), SearchParameters.class);
   }
 
   public SavedSearchView(Long savedSearchId, String searchName, String searchParams,Date lastSearchTime, String emailAddress){

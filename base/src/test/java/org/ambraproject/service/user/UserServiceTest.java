@@ -22,6 +22,7 @@ package org.ambraproject.service.user;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleView;
+import org.ambraproject.models.SavedSearchParams;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
@@ -186,6 +187,45 @@ public class UserServiceTest extends BaseTest {
     assertEquals(params.getStartPage(), 5, "Search params not parsed correctly");
     assertEquals(params.getVolume(), "volumne", "Search params not parsed correctly");
   }
+
+  @Test
+  public void testSaveSearchHashing() {
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("nameForHashingTest");
+    userProfile.setEmail("nameForHashingTest@Login.org");
+    userProfile.setAuthId("authIDnameForHashingTest");
+    userProfile.setPassword("pass");
+
+    Long id1 = Long.valueOf(dummyDataStore.store(userProfile));
+
+    SearchParameters searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("test query");
+    searchParameters.setStartPage(5);
+    searchParameters.setVolume("volumne");
+
+    userService.saveSearch(id1, searchParameters, "testSave", true, false);
+
+    userProfile = new UserProfile();
+    userProfile.setDisplayName("nameForHashingTest1");
+    userProfile.setEmail("nameForHashingTest1@Login.org");
+    userProfile.setAuthId("authIdnameForHashingTest1");
+    userProfile.setPassword("pass");
+
+    Long id2 = Long.valueOf(dummyDataStore.store(userProfile));
+
+    searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("test query");
+    searchParameters.setStartPage(5);
+    searchParameters.setVolume("volumne");
+
+    userService.saveSearch(id2, searchParameters, "testSave", true, false);
+
+    List<SavedSearchParams> params = dummyDataStore.getAll(SavedSearchParams.class);
+    assertEquals(1, params.size(), "More then one searchparams created!");
+  }
+
 
   @Test(dataProvider = "userProfileDelete")
   public void testDeleteSearch(Long id, UserProfile userProfile) {

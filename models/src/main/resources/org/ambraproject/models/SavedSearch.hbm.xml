@@ -23,12 +23,14 @@
 
     <timestamp name="lastModified" column="lastModified"/>
     <property name="created" column="created" type="timestamp" not-null="true" update="false"/>
-    <property name="searchParams" column="searchParams" type="string" not-null="true"/>
     <property name="lastWeeklySearchTime" column="lastWeeklySearchTime" type="timestamp" not-null="true"/>
     <property name="lastMonthlySearchTime" column="lastMonthlySearchTime" type="timestamp" not-null="true"/>
     <property name="searchName" type="string" column="searchName"/>
     <property name="weekly" type="boolean" column="weekly"/>
     <property name="monthly" type="boolean" column="monthly"/>
+
+    <many-to-one name="searchParams" class="SavedSearchParams" column="savedSearchParamsID"
+                 lazy="false" not-null="true" cascade="none"/>
   </class>
 
 </hibernate-mapping>

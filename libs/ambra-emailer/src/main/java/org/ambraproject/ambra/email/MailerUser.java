@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.topazproject.ambra.email;
+package org.ambraproject.ambra.email;
 
 /**
  * Mailer User. Has properties that are required for emailing to a given user.
