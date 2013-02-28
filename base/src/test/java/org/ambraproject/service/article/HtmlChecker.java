@@ -4,7 +4,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * This is an abstract class for testing xsl transform of the article xml.
@@ -36,6 +40,31 @@ public enum HtmlChecker {
           }
         }
       }
+    }
+  },
+  checkForSupplementaryDOI {
+    void check(Document html) {
+      //Methodology:
+      //get all <p> tags
+      //make sure at least one tag has a doi in it and nothing more
+
+      //Rationale:
+      //article xml varies from article to article, so the desired tag could be in any <section>
+      //and within the section, it could appear in a variety of infeasible-to-predict locations
+      //Instead of getting each section and searching for the desired tag, just get all paragraphs
+      //and make sure at least one satisfies the test condition
+
+      Matcher m = Pattern.compile("doi/10.1371/journal\\.[a-z]{4}\\.[0-9]{7}").matcher("");
+
+      boolean hasDOI = true;
+      for (Element element : html.getElementsByTag("p")) {
+        m.reset( element.text() );
+        hasDOI = m.find();
+        if(hasDOI){
+          break;
+        }
+      }
+      assertTrue(hasDOI, "Failed insert doi into supplementary information section");
     }
   };
 
