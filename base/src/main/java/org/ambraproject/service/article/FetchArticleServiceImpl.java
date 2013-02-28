@@ -192,6 +192,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("</list>"),
     Pattern.compile("<list(?:.*)*>"),
     Pattern.compile("<title(?:.*)*>"),
+    Pattern.compile("<body(?:.*)*>"),
+    Pattern.compile("</body>")
   };
 
 
@@ -208,10 +210,12 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "<span class=\"email\">*</span>To whom",
     "",
     "",
-    "<li>",
+    "\n<li>",
     "</li>",
     "</ul>",
     "<ul class=\"bulletlist\">",
+    "",
+    "",
     ""
   };
 
@@ -690,7 +694,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
    */
   public String getEocBody(Document doc) throws TransformerException, XPathExpressionException {
 
-    Node eocBody = xPathUtil.selectSingleNode(doc, "//body/sec[@id='s1']");
+    Node eocBody = xPathUtil.selectSingleNode(doc, "//body");
     Node eocTitle =  xPathUtil.selectSingleNode(doc, "//title-group/article-title");
     String bodyText = TextUtils.getAsXMLString(eocBody);
 
