@@ -1229,7 +1229,7 @@
 	    <xsl:call-template name="newline1"/>
 	  </xsl:template>
 
-    <!-- 1/4/12: suppress, we don't use -->
+   <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="@content-type" />
 
     <!-- 1/4/12: plos-specific template (overrides nlm list-item/p[not(preceding-sibling::*[not(self::label)])]) -->
@@ -1821,55 +1821,82 @@
       </p>
 
       <!--here, we're appending SI DOI after the caption but before the file type-->
-      <xsl:variable name="sIDOI">
+      <xsl:variable name="siDOI">
         <xsl:value-of select="replace($objURI,'info:','')"/>
       </xsl:variable>
-      <!--need to know number of caption paragraph nodes for placement-->
-      <xsl:variable name="captionCount">
+
+
+      <!--these variables are here because they can't be declared in the choose-->
+      <xsl:variable name="paragraphCount">
         <xsl:value-of select="count(caption/p)"/>
       </xsl:variable>
 
+      <xsl:variable name="pcMinus1">
+        <xsl:value-of select="$paragraphCount - 1"/>
+      </xsl:variable>
 
-      <xsl:for-each select="caption/p">
-        <xsl:choose>
+      <xsl:choose>
+        <!--If one or no caption/p, insert doi-->
+        <xsl:when test="count(caption/p) &lt; 2">
+          <!--doi-->
+          <p>
+            <xsl:value-of select="$siDOI"/>
+          </p>
+          <!--normal caption paragraphs-->
+          <xsl:apply-templates select="caption/p"/>
+        </xsl:when>
 
-          <!--if only one node-->
-          <!--NOTE: If the template match "p" changes, then the following-->
-          <xsl:when test="$captionCount = 1">
-            <a>
-              <xsl:call-template name="makeIdNameFromXpathLocation"/>
-            </a>
-            <p>
-              <xsl:value-of select="$sIDOI"/>
-              <br/>
-              <br/>
-              <xsl:apply-templates/>
-            </p>
-            <xsl:call-template name="newline1"/>
-          </xsl:when>
+        <!--if more than one caption, process first n-2 as normal, add a class for styling to n-1, insert doi, then do last as normal-->
+        <xsl:when test="count(caption/p) &gt; 1">
+          <xsl:apply-templates select="caption/p[position() &lt; $pcMinus1]"/>
 
-          <!--if more than one node-->
-          <xsl:otherwise>
-            <xsl:choose>
-              <!--NOTE same as above, if match="p" changes, this has to-->
-              <xsl:when test="position() = $captionCount - 1">
-                <a>
-                  <xsl:call-template name="makeIdNameFromXpathLocation"/>
-                </a>
-                <p>
-                  <xsl:apply-templates/>
-                  <br/>
-                  <xsl:value-of select="$sIDOI"/>
-                </p>
-                <xsl:call-template name="newline1"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates select="."/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
+          <xsl:for-each select="caption/p[position() = $pcMinus1]">
+            <!--<xsl:attribute name="class">-->
+              <!--<xsl:value-of select="concat(@class, ' preSiDOI')"/>-->
+            <!--</xsl:attribute>-->
+            <xsl:apply-templates select="."/>
+          </xsl:for-each>
+
+          <!--doi goes here-->
+          <p class="siDOI">
+            <xsl:value-of select="$siDOI"/>
+          </p>
+
+          <!--final element-->
+          <xsl:for-each select="caption/p[last()]">
+            <xsl:apply-templates/>
+          </xsl:for-each>
+
+        </xsl:when>
+      </xsl:choose>
+      <!--<xsl:for-each select="caption/p">-->
+        <!--<xsl:choose>-->
+
+          <!--&lt;!&ndash;if only one node&ndash;&gt;-->
+          <!--&lt;!&ndash;NOTE: If the template match "p" changes, then the following&ndash;&gt;-->
+          <!--<xsl:when test="$captionCount = 1">-->
+            <!--<p>-->
+              <!--<xsl:value-of select="$sIDOI"/>-->
+            <!--</p>-->
+            <!--<xsl:apply-templates select="."/>-->
+          <!--</xsl:when>-->
+
+          <!--&lt;!&ndash;if more than one node, process first n-2 nodes as normal&ndash;&gt;-->
+          <!--&lt;!&ndash;node n-1 needs a special id for styling, as does the doi node&ndash;&gt;-->
+          <!--&lt;!&ndash;process last node normally&ndash;&gt;-->
+          <!--<xsl:otherwise>-->
+            <!--<xsl:choose>-->
+              <!--&lt;!&ndash;NOTE same as above, if match="p" changes, this has to&ndash;&gt;-->
+              <!--<xsl:when test="position() = $captionCount - 2">-->
+                <!--<xsl:apply-templates select="."/>-->
+              <!--</xsl:when>-->
+              <!--<xsl:otherwise>-->
+                <!--<xsl:apply-templates select="."/>-->
+              <!--</xsl:otherwise>-->
+            <!--</xsl:choose>-->
+          <!--</xsl:otherwise>-->
+        <!--</xsl:choose>-->
+      <!--</xsl:for-each>-->
 
     </xsl:template>
 
