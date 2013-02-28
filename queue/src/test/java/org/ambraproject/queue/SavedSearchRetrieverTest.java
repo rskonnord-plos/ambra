@@ -17,20 +17,17 @@ import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.search.SavedSearchJob;
 import org.ambraproject.search.SavedSearchRetriever;
 import org.ambraproject.util.TextUtils;
-import org.ambraproject.views.SavedSearchQueryView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-
 
 /**
  * Created with IntelliJ IDEA. User: stumu Date: 10/3/12 Time: 10:32 AM To change this template use File | Settings |
@@ -98,7 +95,7 @@ public class SavedSearchRetrieverTest extends BaseTest {
 
     //Confirm unique views, though there are many profiles there are only a
     //few distinct search queries, confirm this list is only three elements
-    List<SavedSearchQueryView> savedSearchParamViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
+    List<SavedSearchJob> savedSearchParamViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
 
     assertNotNull(savedSearchParamViews, "saved search views List is empty for weekly search");
     assertEquals(savedSearchParamViews.size(), 3, "returned incorrect number of results");

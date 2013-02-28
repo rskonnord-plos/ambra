@@ -36,7 +36,7 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
     from("quartz:ambra/savedsearch/weeklyemail?cron=" + weeklyCron)
       .setBody(constant(SavedSearchRetriever.AlertType.WEEKLY))
         .setHeader("alertType", simple("weekly"))
-        .to("direct:getemaildata");
+        .to("direct:getsearches");
 
     //Monthly alert emails
     log.info("Setting Route for sending 'Monthly' saved search emails");
@@ -44,13 +44,14 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
     from("quartz:ambra/savedsearch/monthlyemail?cron=" + monthlyCron)
         .setBody(constant(SavedSearchRetriever.AlertType.MONTHLY))
         .setHeader("alertType", simple("monthly"))
-        .to("direct:getemaildata");
+        .to("direct:getsearches");
 
     from("direct:getsearches")
         .split().method("savedSearchRetriever", "retrieveSearchAlerts")
-        .to("seda:searchInParallel");
+        .to("seda:runInParallel");
 
-    from("seda:searchInParallel?concurrentConsumers=25")
+    //Hard coding this for 15 threads, can increase later if needed
+    from("seda:runInParallel?concurrentConsumers=15")
       .to("bean:savedSearchRunner?method=runSavedSearch")
       .to("bead:sendmail");
   }

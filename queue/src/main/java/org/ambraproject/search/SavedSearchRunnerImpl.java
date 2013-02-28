@@ -14,65 +14,60 @@
 package org.ambraproject.search;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.models.SavedSearch;
 import org.ambraproject.service.search.SolrSearchService;
 import org.ambraproject.views.SavedSearchHit;
-import org.ambraproject.views.SavedSearchView;
 import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA. User: stumu Date: 9/26/12 Time: 2:00 PM To change this template use File | Settings |
- * File Templates.
+ * @inheritDoc
  */
 public class SavedSearchRunnerImpl implements SavedSearchRunner {
 
   private SolrSearchService searchService;
   private static final Logger log = LoggerFactory.getLogger(SavedSearchRunnerImpl.class);
 
+  /**
+   * @inheritDoc
+   */
   @Override
-  public SavedSearchView runSavedSearch(SavedSearchView savedSearchView) throws ApplicationException {
+  @SuppressWarnings("unchecked")
+  public SavedSearchJob runSavedSearch(SavedSearchJob searchJob) throws ApplicationException {
+    log.debug("Received thread Name: {}", Thread.currentThread().getName());
+    log.debug("Running Saved Search for the search query ID : {}, {}" ,
+      searchJob.getSavedSearchQueryID(), searchJob.getType());
 
-     List<SearchHit> results = null;
-     Date currentTime = Calendar.getInstance().getTime();
-     log.debug("Running Saved Search for the search name :  {}" , savedSearchView.getSearchName());
-     results = searchService.savedSearchAlerts(savedSearchView.getSearchParameters(), savedSearchView.getLastSearchTime(), currentTime);
+    searchJob.setEndDate(Calendar.getInstance().getTime());
 
-     SavedSearchHit finalHit;
-     List<SavedSearchHit> finalHitList = new ArrayList<SavedSearchHit>();
-     if(results.size()>0){
+    if(searchJob.getType().equals("WEEKLY")) {
+      //7 days into the past
+      Calendar date = Calendar.getInstance();
+      date.add(Calendar.DAY_OF_MONTH, -7);
+      searchJob.setStartDate(date.getTime());
+    } else {
+      //30 days into the past
+      Calendar date = Calendar.getInstance();
+      date.add(Calendar.DAY_OF_MONTH, -30);
+      searchJob.setStartDate(date.getTime());
+    }
+
+    List<SearchHit> results = searchService.savedSearchAlerts(searchJob.getSearchParams(),
+      searchJob.getStartDate(), searchJob.getEndDate());
+    List<SavedSearchHit> finalHitList = new ArrayList<SavedSearchHit>();
+
+    if(results.size() > 0) {
       for(SearchHit hit :results){
-        finalHit = new SavedSearchHit(hit.getUri(), hit.getTitle(),hit.getCreator());
-        finalHitList.add(finalHit);
+        finalHitList.add(new SavedSearchHit(hit.getUri(), hit.getTitle(),hit.getCreator()));
       }
      }
 
+    searchJob.setSearchHitList(finalHitList);
 
-    //TODO: When a search is executed, updated the records to indicate
-//    log.debug("Updating Last "+ alertType.name() +" Saved Search Time for Saved Search ID: {}", (Long)obj[0]);
-//
-//    SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, (Long)obj[0]);
-//    if (savedSearch != null) {
-//      if(alertType.name().equals("WEEKLY")){
-//        savedSearch.setLastWeeklySearchTime(Calendar.getInstance().getTime());
-//      }else{
-//        savedSearch.setLastMonthlySearchTime(Calendar.getInstance().getTime());
-//      }
-//      hibernateTemplate.update(savedSearch);
-//    }
-//
-//    log.debug("Updated Last "+ alertType.name() +" Saved Search Time for Saved Search ID: {}", (Long)obj[0]);
-
-     savedSearchView.setSearchHitList(finalHitList.size()==0?null:finalHitList);
-     savedSearchView.setCurrentTime(currentTime);
-
-     return savedSearchView;
+    return searchJob;
   }
 
   public void setSearchService(SolrSearchService searchService) {

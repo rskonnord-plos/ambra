@@ -11,7 +11,6 @@
 
 package org.ambraproject.search;
 
-import org.ambraproject.views.SavedSearchQueryView;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.PropertyProjection;
@@ -55,5 +54,5 @@ public interface SavedSearchRetriever {
 
    * @return a list of uniqueSearches
    */
-   public List<SavedSearchQueryView> retrieveSearchAlerts(final AlertType alertType);
+   public List<SavedSearchJob> retrieveSearchAlerts(final AlertType alertType);
 }

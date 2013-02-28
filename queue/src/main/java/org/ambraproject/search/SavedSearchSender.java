@@ -12,7 +12,6 @@
 package org.ambraproject.search;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.views.SavedSearchView;
 
 /**
  * Send saved searches
@@ -21,9 +20,9 @@ public interface SavedSearchSender {
   /**
    * Send the saved search to all the users that are associated with it.
    *
-   * @param savedSearchView
+   * @param searchJob
    *
    * @throws ApplicationException
    */
-  public void sendSavedSearch(SavedSearchView savedSearchView) throws ApplicationException;
+  public void sendSavedSearch(SavedSearchJob searchJob) throws ApplicationException;
 }

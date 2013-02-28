@@ -32,10 +32,6 @@ public class SavedSearchView {
   private boolean monthly;
   private Date lastWeeklySearchTime;
   private Date lastMonthlySearchTime;
-  private String emailAddress;
-  private List<SavedSearchHit> searchHitList;
-  private Date lastSearchTime;
-  private Date currentTime;
 
   public SavedSearchView(SavedSearch savedSearch) {
     this.savedSearchId = savedSearch.getID();
@@ -49,11 +45,9 @@ public class SavedSearchView {
     this.searchParameters = gson.fromJson(savedSearch.getSearchQuery().getSearchParams(), SearchParameters.class);
   }
 
-  public SavedSearchView(Long savedSearchId, String searchName, String searchParams,Date lastSearchTime, String emailAddress){
+  public SavedSearchView(Long savedSearchId, String searchName, String searchParams) {
     this.savedSearchId = savedSearchId;
     this.searchName = searchName;
-    this.lastSearchTime = lastSearchTime;
-    this.emailAddress = emailAddress;
 
     Gson gson = new Gson();
     this.searchParameters = gson.fromJson(searchParams, SearchParameters.class);
@@ -109,31 +103,4 @@ public class SavedSearchView {
   public Date getLastMonthlySearchTime() {
     return lastMonthlySearchTime;
   }
-
-  public String getEmailAddress() {
-    return emailAddress;
-  }
-
-  public List<SavedSearchHit> getSearchHitList() {
-    return searchHitList;
-  }
-
-  public void setSearchHitList(List<SavedSearchHit> searchHitList) {
-    this.searchHitList = searchHitList;
-  }
-
-  public Date getLastSearchTime() {
-    return lastSearchTime;
-  }
-
-
-  public Date getCurrentTime() {
-    return currentTime;
-  }
-
-  public void setCurrentTime(Date currentTime) {
-    this.currentTime = currentTime;
-  }
-
-
 }

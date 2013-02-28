@@ -14,16 +14,10 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
-
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
 
-  <bean id="savedSearchRetriever" class="org.ambraproject.search.SavedSearchRetrieverImpl">
-    <property name="sessionFactory" ref="sessionFactory"/>
-  </bean>
 
   <bean id="savedSearchRunner" class="org.ambraproject.search.SavedSearchRunnerImpl">
     <property name="searchService" ref="searchService"/>
@@ -37,21 +31,10 @@
   <!--Solr server factory-->
   <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
 
+
   <bean id="ambraConfiguration" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
         factory-method="getConfiguration">
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
-  <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
-    <!-- Basically, never run, the route is started manually in the test -->
-    <property name="weeklyCron" value="*+*+*+1+*+?"/>
-    <property name="monthlyCron" value="*+*+*+1+*+?"/>
-  </bean>
-
-  <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-    <jmxAgent id="ambra-queue" createConnector="false"/>
-    <routeBuilder ref="routeBuilder"/>
-  </camelContext>
-
 </beans>
-

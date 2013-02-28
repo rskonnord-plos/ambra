@@ -1,7 +1,13 @@
 package org.ambraproject.search;
 
-import org.ambraproject.views.SavedSearchView;
+import org.ambraproject.models.SavedSearch;
+import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -9,16 +15,17 @@ import org.ambraproject.email.TemplateMailer;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Send saved searches
+ *
+ * @author Joe Osowski
  */
-public class SavedSearchSenderImpl implements SavedSearchSender {
+public class SavedSearchSenderImpl extends HibernateServiceImpl implements SavedSearchSender {
   private static final Logger log = LoggerFactory.getLogger(SavedSearchSenderImpl.class);
 
   private TemplateMailer mailer;
@@ -26,50 +33,62 @@ public class SavedSearchSenderImpl implements SavedSearchSender {
   /**
    * @inheritDoc
    */
-  public void sendSavedSearch(SavedSearchView savedSearchView) {
-  log.info("Received thread Name: {}", Thread.currentThread().getName());
-  log.info("Starting send request for: {}", savedSearchView.getSearchName());
+  public void sendSavedSearch(SavedSearchJob searchJob) {
 
-  final Map<String, Object> context = new HashMap<String, Object>();
+    log.info("Received thread Name: {}", Thread.currentThread().getName());
+    log.info("Send emails for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getType());
 
-  Date startTime;
-  Date endTime = Calendar.getInstance().getTime();
+    final Map<String, Object> context = new HashMap<String, Object>();
 
-  if(savedSearchView.getMonthly()) {
-    //30 days into the past
-    Calendar date = Calendar.getInstance();
-    date.add(Calendar.DAY_OF_MONTH, -30);
-    startTime = date.getTime();
-  } else {
-    //7 days into the past
-    Calendar date = Calendar.getInstance();
-    date.add(Calendar.DAY_OF_MONTH, -7);
-    startTime = date.getTime();
+    context.put("searchHitList", searchJob.getSearchHitList());
+    context.put("startTime", searchJob.getStartDate());
+    context.put("endTime", searchJob.getEndDate());
+
+    //TODO: Move to config
+    context.put("imagePath", "/bleh.gif");
+
+    //Create message
+    Multipart content = createContent(context);
+
+    List<String> emails = getSavedSearchEmails(searchJob.getSavedSearchQueryID(), searchJob.getType());
+
+    //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
+    String toAddresses = StringUtils.join(emails, " ");
+
+    //TODO: move to config?
+    String fromAddress = "admin@plos.org";
+
+    String subject = "bleh";
+
+    mailer.mail(toAddresses, fromAddress, subject, context, content);
+
+    log.info("Completed thread Name: {}", Thread.currentThread().getName());
+    log.info("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getType());
+
+    //When a results are sent updated the records to indicate
+    markSent(searchJob);
   }
 
-  context.put("searchHitList", null);
-  context.put("startTime", startTime);
-  context.put("endTime", endTime);
+  @SuppressWarnings("unchecked")
+  private void markSent(SavedSearchJob searchJob)
+  {
+    //Find all the saved searches associated with this search
+    List<SavedSearch> savedSearches = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearch.class)
+      .createAlias("searchQuery", "q")
+      .add(Restrictions.eq("q.ID", searchJob.getSavedSearchQueryID()))
+      .add(Restrictions.eq("weekly", searchJob.getType().equals("WEEKLY"))));
 
-  //TODO: Move to config
-  context.put("imagePath", "/bleh.gif");
+    for(SavedSearch savedSearch : savedSearches) {
+      if(searchJob.getType().equals("WEEKLY")) {
+        savedSearch.setLastWeeklySearchTime(searchJob.getEndDate());
+      } else {
+        savedSearch.setLastMonthlySearchTime(searchJob.getEndDate());
+      }
 
-  //Create message
+      hibernateTemplate.update(savedSearch);
 
-  Multipart content = createContent(context);
-
-//  List<String> emails = journalService.getJournalAlertSubscribers(alert.getAlertID());
-//
-//  //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
-//  String toAddresses = StringUtils.join(emails, " ");
-//
-//  //TODO: move to config?
-//  String fromAddress = "admin@plos.org";
-//
-//  mailer.mail(toAddresses, fromAddress, alert.getEmailSubject(), context, content);
-//
-//  log.info("Completed thread Name: {}", Thread.currentThread().getName());
-//  log.info("Completed send request for: {}", alert.getAlertKey());
+      log.debug("Updated Last {} saved Search Time for Saved Search ID: {}", searchJob.getType(), savedSearch.getID());
+    }
   }
 
   private Multipart createContent(Map<String, Object> context) {
@@ -81,6 +100,24 @@ public class SavedSearchSenderImpl implements SavedSearchSender {
     } catch(MessagingException ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<String> getSavedSearchEmails(Long savedSearchQueryID, String type) {
+    List<String> emails = new ArrayList<String>();
+
+    List<Object[]> results = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(UserProfile.class)
+        .setProjection(Projections.property("email"))
+      .createAlias("savedSearches", "ss")
+      .createAlias("searchQuery", "q")
+      .add(Restrictions.eq("q.ID", savedSearchQueryID))
+      .add(Restrictions.eq("ss.weekly", type)));
+
+    for(Object[] record : results) {
+      emails.add((String)record[0]);
+    }
+
+    return new ArrayList<String>();
   }
 
   @Required

@@ -13,7 +13,6 @@ package org.ambraproject.search;
 
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.ambraproject.views.SavedSearchQueryView;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
@@ -34,8 +33,8 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
    */
   @Override
   @SuppressWarnings("unchecked")
-  public List<SavedSearchQueryView> retrieveSearchAlerts(AlertType alertType) {
-    List<SavedSearchQueryView> savedSearchViews = new ArrayList<SavedSearchQueryView>();
+  public List<SavedSearchJob> retrieveSearchAlerts(AlertType alertType) {
+    List<SavedSearchJob> searchJobs = new ArrayList<SavedSearchJob>();
     List<Object[]> paramsList = (List<Object[]>)hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearch.class)
                     .createAlias("searchQuery", "s")
                     .add(alertType.getTypeCriterion())
@@ -44,15 +43,19 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
                     .setProjection(Projections.projectionList()
                         .add(Projections.property("s.ID"))
                         .add(Projections.property("s.hash"))
-                        .add(Projections.property("s.searchParams"))
-                        .add(alertType.getTypeProjection()))); //lastWeeklySearchTime (or) lastMonthlySearchTime
+                        .add(Projections.property("s.searchParams"))));
 
     for(Object[] obj : paramsList) {
-      savedSearchViews.add(new SavedSearchQueryView((Long)obj[0], (String)obj[1], (String)obj[2]));
+      searchJobs.add(SavedSearchJob.builder()
+          .setSavedSearchQueryID((Long)obj[0])
+          .setHash((String)obj[1])
+          .setSearchString((String)obj[2])
+          .setType(alertType.name())
+         .build());
     }
 
-    log.debug("Returning {} saved search(es)", savedSearchViews.size());
+    log.debug("Returning {} saved search(es)", searchJobs.size());
 
-    return savedSearchViews;
+    return searchJobs;
   }
 }

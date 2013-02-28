@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -19,44 +17,28 @@ import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.TextUtils;
-import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.mock.MockEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA. User: stumu Date: 10/1/12 Time: 10:52 AM To change this template use File | Settings |
- * File Templates.
+ * Unit test for the savedSearch camel route
+ *
+ * @author stumu
+ * @author
  */
 @ContextConfiguration
 public class SavedSearchEmailRoutesTest extends BaseTest {
 
-  @EndpointInject(uri = "mock:mail")
-  protected MockEndpoint mailEndpoint;
-
-  @EndpointInject(uri = "mock:direct:weekly")
-  protected MockEndpoint weeklyStart;
-
-  @EndpointInject(uri = "mock:direct:monthly")
-  protected MockEndpoint monthlyStart;
-
-  @Produce(uri = "direct:weekly")
-  protected ProducerTemplate weekly;
-
-  @Produce(uri = "direct:monthly")
-  protected ProducerTemplate monthly;
-
-  @EndpointInject(uri = "mock:direct:start")
-  protected MockEndpoint sdirectStart;
+  @Produce(uri = "direct:getsearches")
+  protected ProducerTemplate start;
 
   @Autowired
   protected EmbeddedSolrServerFactory solrServerFactory;
@@ -212,10 +194,19 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
 
   @Test
   public void testWeeklyCron() throws InterruptedException {
-    mailEndpoint.setMinimumExpectedMessageCount(1);
-    Thread.sleep(4000l);
+    start.sendBody("WEEKLY");
 
-    mailEndpoint.assertIsSatisfied();
+    //WAIT 10 seconds
+    //TODO: Check for emails
+
+  }
+
+  @Test
+  public void testMonthlyCron() throws InterruptedException {
+    start.sendBody("MONTHLY");
+
+    //WAIT 10 seconds
+    //TODO: Check for emails
   }
 
 
