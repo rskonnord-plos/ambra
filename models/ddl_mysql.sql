@@ -266,6 +266,7 @@
         lastWeeklySearchTime datetime not null,
         lastMonthlySearchTime datetime not null,
         searchName varchar(255),
+        searchType varchar(255) not null,
         weekly bit,
         monthly bit,
         savedSearchQueryID bigint not null,

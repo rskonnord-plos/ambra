@@ -26,6 +26,15 @@
     <property name="lastWeeklySearchTime" column="lastWeeklySearchTime" type="timestamp" not-null="true"/>
     <property name="lastMonthlySearchTime" column="lastMonthlySearchTime" type="timestamp" not-null="true"/>
     <property name="searchName" type="string" column="searchName"/>
+
+    <property name="searchType" column="searchType" not-null="true">
+      <type name="org.ambraproject.hibernate.GenericEnumUserType">
+        <param name="enumClass">org.ambraproject.models.SavedSearchType</param>
+        <param name="identifierMethod">toString</param>
+        <param name="valueOfMethod">fromString</param>
+      </type>
+    </property>
+
     <property name="weekly" type="boolean" column="weekly"/>
     <property name="monthly" type="boolean" column="monthly"/>
 

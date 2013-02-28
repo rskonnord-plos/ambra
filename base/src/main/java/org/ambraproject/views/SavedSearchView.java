@@ -14,6 +14,7 @@ package org.ambraproject.views;
 
 import com.google.gson.Gson;
 import org.ambraproject.models.SavedSearch;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.service.search.SearchParameters;
 
 import java.util.Date;
@@ -30,12 +31,14 @@ public class SavedSearchView {
   private String searchName;
   private boolean weekly;
   private boolean monthly;
+  private SavedSearchType searchType;
   private Date lastWeeklySearchTime;
   private Date lastMonthlySearchTime;
 
   public SavedSearchView(SavedSearch savedSearch) {
     this.savedSearchId = savedSearch.getID();
     this.searchName = savedSearch.getSearchName();
+    this.searchType = savedSearch.getSearchType();
     this.weekly = savedSearch.getWeekly();
     this.monthly = savedSearch.getMonthly();
     this.lastMonthlySearchTime = savedSearch.getLastMonthlySearchTime();
@@ -76,6 +79,15 @@ public class SavedSearchView {
    */
   public String getSearchName() {
     return searchName;
+  }
+
+  /**
+   * Is this savedSearch used defined or a journal alert?
+   *
+   * @return the search type
+   */
+  public SavedSearchType getSearchType() {
+    return searchType;
   }
 
   /**

@@ -23,6 +23,7 @@ import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
@@ -261,6 +262,8 @@ public class UserServiceTest extends BaseTest {
     assertEquals(savedSearches.size(), 1, "Saved search not saved");
 
     SavedSearchView ss = savedSearches.get(0);
+
+    assertEquals(ss.getSearchType(), SavedSearchType.USER_DEFINED, "Search type is not user defined.");
     assertEquals(ss.getMonthly(), true, "Saved search not saved correctly");
     assertEquals(ss.getWeekly(), true, "Saved search not saved correctly");
 

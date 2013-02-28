@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserSearch;
@@ -213,6 +214,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     }
 
     SavedSearch savedSearch = new SavedSearch(name, query);
+    savedSearch.setSearchType(SavedSearchType.USER_DEFINED);
     savedSearch.setWeekly(weekly);
     savedSearch.setMonthly(monthly);
 

@@ -50,6 +50,7 @@ public class SavedSearchTest extends BaseHibernateTest {
     SavedSearch savedSearch = new SavedSearch();
     savedSearch.setSearchName("search name");
     savedSearch.setSearchQuery(query);
+    savedSearch.setSearchType(SavedSearchType.USER_DEFINED);
     savedSearch.setLastWeeklySearchTime(new Date());
     savedSearch.setLastMonthlySearchTime(new Date());
     savedSearch.setMonthly(false);
@@ -62,6 +63,7 @@ public class SavedSearchTest extends BaseHibernateTest {
     assertEquals(storedSearch.getSearchQuery(), savedSearch.getSearchQuery());
     assertTrue(storedSearch.getLastModified().getTime() >= testStart,
         "savedsearch didn't get last submit timestamp set correctly");
+    assertEquals(storedSearch.getSearchType(), SavedSearchType.USER_DEFINED);
     assertEquals(storedSearch.getMonthly(), false);
     assertEquals(storedSearch.getWeekly(), true);
     assertEquals(storedSearch.getSearchName(), "search name");

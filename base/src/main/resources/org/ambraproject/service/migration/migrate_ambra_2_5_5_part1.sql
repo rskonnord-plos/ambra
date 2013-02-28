@@ -9,6 +9,7 @@ create table savedSearchQuery (
 
 alter table savedSearch
   add column savedSearchQueryID bigint(20) null after userProfileID,
+  add column searchType varchar(16) not null default 'User Defined' after searchName,
   add constraint foreign key (savedSearchQueryID) references savedSearchQuery(savedSearchQueryID);
 
 insert into savedSearchQuery(searchParams, created, lastmodified)
@@ -20,4 +21,5 @@ update savedSearch, savedSearchQuery
 
 alter table savedSearch
   modify column savedSearchQueryID bigint(20) not null,
+  modify column searchType varchar(16) not null,
   drop column searchParams;
