@@ -955,30 +955,35 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test an  article with Expression of concern
     ArticleInfo a1 = new ArticleInfo("info:doi/10.1371/journal.pone.0049703");
 
-    String eocTest = "<p><strong>Expression of Concern: Novel Allelic Variants in the Canine Cyclooxgenase-2" +
-        " (Cox-2) Promoter Are Associated with Renal Dysplasia in Dogs</strong></p>\n" +
+    String eocTest = "<p><strong>Expression of Concern: Novel Allelic Variants in the Canine Cyclooxgenase-2 (Cox-2) " +
+        "Promoter Are Associated with Renal Dysplasia in Dogs</strong></p>\n" +
+        "    \n" +
         "      \n" +
         "      <p>After the publication of this article, a number of concerns were raised in relation to different " +
         "aspects of the research reported. The <italic>PLOS ONE</italic> editors carried out an evaluation of the " +
-        "history of the manuscript, which revealed that due to a failure in the peer review process, several aspects" +
-        " of the research were not adequately evaluated before publication.</p>\n" +
+        "history of the manuscript, which revealed that due to a failure in the peer review process, several aspects " +
+        "of the research were not adequately evaluated before publication.</p>\n" +
         "      <p>As a result, the <italic>PLOS ONE</italic> editors have undertaken a thorough re-examination of " +
         "this study, involving both external and internal advisers. This assessment has revealed the following " +
         "concerns regarding the study:</p>\n" +
         "      <ul class=\"bulletlist\">\n" +
-        "        <li>\n" +
+        "        \n" +
+        "<li>\n" +
         "          <p>The description of the alleles in the article is inadequate.</p>\n" +
         "        </li>\n" +
-        "        <li>\n" +
+        "        \n" +
+        "<li>\n" +
         "          <p>There are concerns over the study design employed to study the association; a single-gene " +
         "association study based on Cox-2 or a genome-wide association study have been recommended as more " +
         "appropriate approaches to study this association.</p>\n" +
         "        </li>\n" +
-        "        <li>\n" +
+        "        \n" +
+        "<li>\n" +
         "          <p>The validity of the control population employed in the study is compromised as it " +
         "involved a different breed.</p>\n" +
         "        </li>\n" +
-        "        <li>\n" +
+        "        \n" +
+        "<li>\n" +
         "          <p>There are concerns about the strength of the evidence shown to support an association " +
         "between the Cox-2 variant and the dogs' phenotypes, as the evidence from other breeds suggests that " +
         "this may be a neutral DNA variant.</p>\n" +
