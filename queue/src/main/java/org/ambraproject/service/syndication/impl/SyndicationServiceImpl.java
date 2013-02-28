@@ -73,12 +73,10 @@ public class SyndicationServiceImpl extends HibernateServiceImpl implements Synd
    *
    * @param messageService The Service through which syndication messages will be pushed to the message queue
    */
-  @Required
   public void setMessageService(MessageService messageService) {
     this.messageService = messageService;
   }
 
-  @Required
   public void setJournalService(JournalService journalService) {
     this.journalService = journalService;
   }
