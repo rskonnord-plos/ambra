@@ -75,7 +75,7 @@ public class SavedSearchSenderTest extends BaseTest {
    * @throws Exception - if there's a problem
    */
   @BeforeMethod
-  public void sendArticlesToSolr() throws Exception {
+  public void setupTestData() throws Exception {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     //5 days into the past
@@ -169,6 +169,11 @@ public class SavedSearchSenderTest extends BaseTest {
     solrServerFactory.addDocument(document2);
     solrServerFactory.addDocument(document3);
     solrServerFactory.addDocument(document4);
+
+    //Let's make sure the database is clean
+    this.dummyDataStore.deleteAll(SavedSearch.class);
+    this.dummyDataStore.deleteAll(SavedSearchQuery.class);
+    this.dummyDataStore.deleteAll(UserProfile.class);
 
     //Create some saved searches and users to execute them.
     Date searchTime = new Date(0);

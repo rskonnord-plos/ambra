@@ -121,11 +121,11 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       criteria.add(Restrictions.eq("ss.monthly", true));
     }
 
-    List<Object[]> results = hibernateTemplate.findByCriteria(criteria);
+    List<String> results = hibernateTemplate.findByCriteria(criteria);
     List<String> emails = new ArrayList<String>();
 
-    for(Object[] record : results) {
-      emails.add((String)record[0]);
+    for(String email : results) {
+      emails.add(email);
     }
 
     return emails;

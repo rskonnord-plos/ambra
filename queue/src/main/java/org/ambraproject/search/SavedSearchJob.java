@@ -130,7 +130,7 @@ public class SavedSearchJob {
       this.searchHitList = job.getSearchHitList();
     }
 
-    public Builder setSavedSearchQueryID(Long ID) {
+    public Builder setSavedSearchQueryID(Long savedSearchQueryID) {
       this.savedSearchQueryID = savedSearchQueryID;
       return this;
     }
