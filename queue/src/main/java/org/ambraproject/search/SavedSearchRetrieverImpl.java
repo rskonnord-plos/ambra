@@ -39,11 +39,10 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
                     .createAlias("searchQuery", "s")
                     .add(alertType.getTypeCriterion())
                     .setFetchMode("searchQuery", FetchMode.JOIN)
-                    .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                    .setProjection(Projections.projectionList()
-                        .add(Projections.property("s.ID"))
-                        .add(Projections.property("s.hash"))
-                        .add(Projections.property("s.searchParams"))));
+                    .setProjection(Projections.distinct(Projections.projectionList()
+                      .add(Projections.property("s.ID"))
+                      .add(Projections.property("s.hash"))
+                      .add(Projections.property("s.searchParams")))));
 
     for(Object[] obj : paramsList) {
       searchJobs.add(SavedSearchJob.builder()

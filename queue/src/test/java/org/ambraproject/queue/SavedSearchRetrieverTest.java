@@ -16,6 +16,7 @@ package org.ambraproject.queue;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.search.SavedSearchJob;
 import org.ambraproject.search.SavedSearchRetriever;
@@ -60,6 +61,7 @@ public class SavedSearchRetrieverTest extends BaseTest {
       SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, query);
       savedSearch1.setWeekly(true);
       savedSearch1.setMonthly(false);
+      savedSearch1.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch1.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch1.setLastMonthlySearchTime(searchTime.getTime());
 
@@ -69,6 +71,7 @@ public class SavedSearchRetrieverTest extends BaseTest {
       SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, query);
       savedSearch2.setWeekly(false);
       savedSearch2.setMonthly(true);
+      savedSearch2.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch2.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch2.setLastMonthlySearchTime(searchTime.getTime());
 
@@ -76,6 +79,7 @@ public class SavedSearchRetrieverTest extends BaseTest {
       SavedSearch savedSearch3 = new SavedSearch("both-" + i, query);
       savedSearch3.setWeekly(true);
       savedSearch3.setMonthly(true);
+      savedSearch3.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch3.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch3.setLastMonthlySearchTime(searchTime.getTime());
 
@@ -85,10 +89,11 @@ public class SavedSearchRetrieverTest extends BaseTest {
       SavedSearch savedSearch4 = new SavedSearch("both-" + i, query);
       savedSearch4.setWeekly(true);
       savedSearch4.setMonthly(false);
+      savedSearch4.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch4.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch4.setLastMonthlySearchTime(searchTime.getTime());
 
-      user.setSavedSearches(Arrays.asList(savedSearch1, savedSearch2, savedSearch3,savedSearch4));
+      user.setSavedSearches(Arrays.asList(savedSearch1, savedSearch2, savedSearch3, savedSearch4));
 
       dummyDataStore.store(user);
     }

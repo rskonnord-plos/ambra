@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -162,52 +160,29 @@ public class SavedSearchRunnerTest extends BaseTest {
 
   @DataProvider(name="savedSearchViewData")
   public Object[][] savedSearchViewData(){
-
-    Calendar lastWeeklySearchTime = Calendar.getInstance();
-    lastWeeklySearchTime.set(Calendar.YEAR, 2007);
-    lastWeeklySearchTime.set(Calendar.MONTH, 5);
-    lastWeeklySearchTime.set(Calendar.DAY_OF_MONTH, 15);
-
-    Calendar lastMonthlySearchTime = Calendar.getInstance();
-    lastMonthlySearchTime.set(Calendar.YEAR, 2007);
-    lastMonthlySearchTime.set(Calendar.MONTH, 4);
-    lastMonthlySearchTime.set(Calendar.DAY_OF_MONTH, 15);
-
     SavedSearchJob savedSearchJob = new SavedSearchJob(
       new Long(1),
       "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash",
-      "WEEKLY",
-      Calendar.getInstance().getTime(),
-      Calendar.getInstance().getTime(),
-      null);
+      "WEEKLY");
 
     SavedSearchJob savedSearchJob2 = new SavedSearchJob(
       new Long(2),
       "{\"query\":\"\",\"unformattedQuery\":\"everything:testjournal\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash1",
-      "WEEKLY",
-      null,
-      null,
-      null);
+      "WEEKLY");
 
     SavedSearchJob savedSearchJob3 = new SavedSearchJob(
       new Long(3),
       "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\",\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash3",
-      "WEEKLY",
-      null,
-      null,
-      null);
+      "WEEKLY");
 
     SavedSearchJob savedSearchJob4 = new SavedSearchJob(
       new Long(4),
       "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\",\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash3",
-      "MONTHLY",
-      null,
-      null,
-      null);
+      "MONTHLY");
 
     return new Object[][]{
       { savedSearchJob, 1 },{ savedSearchJob2, 1 },{ savedSearchJob3 , 2 },{ savedSearchJob4 , 3 }

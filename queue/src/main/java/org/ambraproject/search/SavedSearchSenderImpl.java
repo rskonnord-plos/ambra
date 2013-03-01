@@ -40,6 +40,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
     final Map<String, Object> context = new HashMap<String, Object>();
 
+    context.put("searchParameters", searchJob.getSearchParams());
     context.put("searchHitList", searchJob.getSearchHitList());
     context.put("startTime", searchJob.getStartDate());
     context.put("endTime", searchJob.getEndDate());
@@ -94,7 +95,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   private Multipart createContent(Map<String, Object> context) {
     try {
       //TODO: Move filenames to configuration
-      return mailer.createContent("etoc-text.ftl", "etoc-html.ftl", context);
+      return mailer.createContent("email-text.ftl", "email-html.ftl", context);
     } catch(IOException ex) {
       throw new RuntimeException(ex);
     } catch(MessagingException ex) {
@@ -104,20 +105,30 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
   @SuppressWarnings("unchecked")
   private List<String> getSavedSearchEmails(Long savedSearchQueryID, String type) {
-    List<String> emails = new ArrayList<String>();
+    SavedSearchRetriever.AlertType alertType = SavedSearchRetriever.AlertType.valueOf(type);
 
-    List<Object[]> results = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(UserProfile.class)
-        .setProjection(Projections.property("email"))
+    DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class)
+      .setProjection(Projections.property("email"))
       .createAlias("savedSearches", "ss")
-      .createAlias("searchQuery", "q")
-      .add(Restrictions.eq("q.ID", savedSearchQueryID))
-      .add(Restrictions.eq("ss.weekly", type)));
+      .createAlias("ss.searchQuery", "q")
+      .add(Restrictions.eq("q.ID", savedSearchQueryID));
+
+    if(alertType == SavedSearchRetriever.AlertType.WEEKLY) {
+      criteria.add(Restrictions.eq("ss.weekly", true));
+    }
+
+    if(alertType == SavedSearchRetriever.AlertType.MONTHLY) {
+      criteria.add(Restrictions.eq("ss.monthly", true));
+    }
+
+    List<Object[]> results = hibernateTemplate.findByCriteria(criteria);
+    List<String> emails = new ArrayList<String>();
 
     for(Object[] record : results) {
       emails.add((String)record[0]);
     }
 
-    return new ArrayList<String>();
+    return emails;
   }
 
   @Required

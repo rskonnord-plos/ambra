@@ -21,6 +21,13 @@ public class SavedSearchJob {
   private Date endDate;
   private List<SavedSearchHit> searchHitList;
 
+  public SavedSearchJob(Long savedSearchQueryID, String searchString, String hash, String type) {
+    this.savedSearchQueryID = savedSearchQueryID;
+    this.searchString = searchString;
+    this.hash = hash;
+    this.type = type;
+  }
+
   public SavedSearchJob(Long savedSearchQueryID, String searchString, String hash, String type, Date startDate, Date endDate, List<SavedSearchHit> searchHitList) {
     this.savedSearchQueryID = savedSearchQueryID;
     this.searchString = searchString;

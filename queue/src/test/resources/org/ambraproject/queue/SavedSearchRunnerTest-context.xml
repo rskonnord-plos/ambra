@@ -18,6 +18,7 @@
 
   <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
 
+  <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
 
   <bean id="savedSearchRunner" class="org.ambraproject.search.SavedSearchRunnerImpl">
     <property name="searchService" ref="searchService"/>
@@ -27,10 +28,6 @@
     <property name="serverFactory" ref="solrServerFactory"/>
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
-
-  <!--Solr server factory-->
-  <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
-
 
   <bean id="ambraConfiguration" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
         factory-method="getConfiguration">
