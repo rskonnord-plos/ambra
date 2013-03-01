@@ -32,7 +32,7 @@ import java.util.Map;
  * Unit test for the savedSearch camel route
  *
  * @author stumu
- * @author
+ * @author Joe Osowski
  */
 @ContextConfiguration
 public class SavedSearchEmailRoutesTest extends BaseTest {
@@ -59,7 +59,7 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
     searchTime.set(Calendar.MONTH, 5);
     searchTime.set(Calendar.DAY_OF_MONTH, 15);
 
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 0; i < 3; i++) {
       UserProfile user = new UserProfile("savedSearch-" + i, i + "savedSearch1@example.org", "savedSearch" + i);
 
       String query = "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";

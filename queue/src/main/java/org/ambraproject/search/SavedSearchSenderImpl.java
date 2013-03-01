@@ -15,7 +15,7 @@ import org.ambraproject.email.TemplateMailer;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,50 +51,52 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     //Create message
     Multipart content = createContent(context);
 
-    List<String> emails = getSavedSearchEmails(searchJob.getSavedSearchQueryID(), searchJob.getType());
-
-    //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
-    String toAddresses = StringUtils.join(emails, " ");
+    List<Object[]> searchDetails = getSavedSearchDetails(searchJob.getSavedSearchQueryID(), searchJob.getType());
 
     //TODO: move to config?
     String fromAddress = "admin@plos.org";
 
-    String subject = "bleh";
+    for(int a = 0; a < searchDetails.size(); a++) {
+      //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
+      String toAddress = (String)searchDetails.get(a)[1];
 
-    mailer.mail(toAddresses, fromAddress, subject, context, content);
+      //TODO: Change based on type / move to config
+      String subject = "PLOS Search Alert - " + searchDetails.get(a)[2];
+
+      mailer.mail(toAddress, fromAddress, subject, context, content);
+
+      //When a results are sent updated the records to indicate
+      markSent((Long)searchDetails.get(a)[0], searchJob.getType(), searchJob.getEndDate());
+    }
 
     log.info("Completed thread Name: {}", Thread.currentThread().getName());
     log.info("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getType());
-
-    //When a results are sent updated the records to indicate
-    markSent(searchJob);
   }
 
   @SuppressWarnings("unchecked")
-  private void markSent(SavedSearchJob searchJob)
+  private void markSent(Long savedSearchID, String type, Date endDate)
   {
-    //Find all the saved searches associated with this search
-    List<SavedSearch> savedSearches = hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearch.class)
-      .createAlias("searchQuery", "q")
-      .add(Restrictions.eq("q.ID", searchJob.getSavedSearchQueryID()))
-      .add(Restrictions.eq("weekly", searchJob.getType().equals("WEEKLY"))));
+    SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, savedSearchID);
 
-    for(SavedSearch savedSearch : savedSearches) {
-      if(searchJob.getType().equals("WEEKLY")) {
-        savedSearch.setLastWeeklySearchTime(searchJob.getEndDate());
-      } else {
-        savedSearch.setLastMonthlySearchTime(searchJob.getEndDate());
-      }
-
-      hibernateTemplate.update(savedSearch);
-
-      log.debug("Updated Last {} saved Search Time for Saved Search ID: {}", searchJob.getType(), savedSearch.getID());
+    if(savedSearch == null) {
+      throw new RuntimeException("Could not find savedSearch: " + savedSearchID);
     }
+
+    if(type.equals("WEEKLY")) {
+      savedSearch.setLastWeeklySearchTime(endDate);
+    } else {
+      savedSearch.setLastMonthlySearchTime(endDate);
+    }
+
+    hibernateTemplate.update(savedSearch);
+
+    log.debug("Updated Last {} saved Search time for Saved Search ID: {}", type, savedSearchID);
   }
 
   private Multipart createContent(Map<String, Object> context) {
     try {
       //TODO: Move filenames to configuration
+      //TODO: Use different style template based on search type
       return mailer.createContent("email-text.ftl", "email-html.ftl", context);
     } catch(IOException ex) {
       throw new RuntimeException(ex);
@@ -104,11 +106,14 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   }
 
   @SuppressWarnings("unchecked")
-  private List<String> getSavedSearchEmails(Long savedSearchQueryID, String type) {
+  private List<Object[]> getSavedSearchDetails(Long savedSearchQueryID, String type) {
     SavedSearchRetriever.AlertType alertType = SavedSearchRetriever.AlertType.valueOf(type);
 
     DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class)
-      .setProjection(Projections.property("email"))
+      .setProjection(Projections.distinct(Projections.projectionList()
+        .add(Projections.property("ss.ID"))
+        .add(Projections.property("email"))
+        .add(Projections.property("ss.searchName"))))
       .createAlias("savedSearches", "ss")
       .createAlias("ss.searchQuery", "q")
       .add(Restrictions.eq("q.ID", savedSearchQueryID));
@@ -121,14 +126,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       criteria.add(Restrictions.eq("ss.monthly", true));
     }
 
-    List<String> results = hibernateTemplate.findByCriteria(criteria);
-    List<String> emails = new ArrayList<String>();
-
-    for(String email : results) {
-      emails.add(email);
-    }
-
-    return emails;
+    return hibernateTemplate.findByCriteria(criteria);
   }
 
   @Required

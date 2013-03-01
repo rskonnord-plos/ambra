@@ -39,7 +39,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Unit test for testing the send mail functionality
+ * Unit test for testing the mark sent functionality
+ *
+ * @author Joe Osowski
  */
 @ContextConfiguration
 public class SavedSearchSenderTest extends BaseTest {
@@ -191,8 +193,8 @@ public class SavedSearchSenderTest extends BaseTest {
     SavedSearchQuery ssq3 = new SavedSearchQuery(query3, TextUtils.createHash(query3));
     dummyDataStore.store(ssq3);
 
-    for (int i = 1; i < 4; i++) {
-      UserProfile user = new UserProfile("savedSearchSenderTest-" + i, "savedSearchSenderTest" + i + "@example.org",
+    for (int i = 0; i < 3; i++) {
+      UserProfile user = new UserProfile("savedSearchSenderTest" + i + "@example.org", "savedSearchSenderTest-" + i,
         "savedSearchSenderTest" + i);
 
       SavedSearch savedSearch1 = new SavedSearch("weekly-savedSearchSenderTest" + i, ssq1);
@@ -237,8 +239,10 @@ public class SavedSearchSenderTest extends BaseTest {
     //Check here that the database was updated to reflect the messages were sent
     Date runTime = Calendar.getInstance().getTime();
 
-    List<SavedSearchQuery> res = this.dummyDataStore.getAll(SavedSearchQuery.class);
-    List<SavedSearch> res1 = this.dummyDataStore.getAll(SavedSearch.class);
+    //Let a little bit of time pass so time based assertions will check to be true
+    try {
+      Thread.sleep(2000);
+    } catch(InterruptedException ex) {}
 
     List<SavedSearchJob> savedSearchJobs = savedSearchRetriever.
       retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
@@ -253,27 +257,21 @@ public class SavedSearchSenderTest extends BaseTest {
 
     List<SavedSearch> savedSearches = this.dummyDataStore.getAll(SavedSearch.class);
 
-    //3 users, 4 search alerts = 12 savedSearches
+    //3 users each with 4 search alerts = 12 savedSearches
     assertEquals(savedSearches.size(), 12, "Saved search count off");
 
     int totalWeekly = 0;
     int totalMonthly = 0;
 
     for(SavedSearch savedSearch : savedSearches) {
-      //assert that the weekly time was updated to not be "0"
       if(savedSearch.getWeekly()) {
+        //assert that the weekly time was updated
         assertTrue(savedSearch.getLastWeeklySearchTime().after(runTime));
         totalWeekly++;
       } else {
-        //Make sure monthly wasn't updated
-        assertTrue(savedSearch.getLastWeeklySearchTime().equals(new Date(0)));
-        totalMonthly++;
+        assertTrue(savedSearch.getLastWeeklySearchTime().getTime() == (new Date(0)).getTime());
       }
     }
-
-    //Make sure counts are correct
-    assertEquals(totalWeekly, 9);
-    assertEquals(totalMonthly, 6);
 
     //Execute monthly jobs:
     savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
@@ -288,11 +286,17 @@ public class SavedSearchSenderTest extends BaseTest {
     savedSearches = this.dummyDataStore.getAll(SavedSearch.class);
 
     for(SavedSearch savedSearch : savedSearches) {
-      //assert that the weekly time was updated to not be "0"
       if(savedSearch.getMonthly()) {
-        //Make sure monthly was updated
-        assertTrue(savedSearch.getLastWeeklySearchTime().after(runTime));
+        //assert that the monthly time was updated
+        assertTrue(savedSearch.getLastMonthlySearchTime().after(runTime));
+        totalMonthly++;
+      } else {
+        assertTrue(savedSearch.getLastMonthlySearchTime().getTime() == (new Date(0)).getTime());
       }
     }
+
+    //Make sure counts are correct
+    assertEquals(totalWeekly, 9);
+    assertEquals(totalMonthly, 6);
   }
 }

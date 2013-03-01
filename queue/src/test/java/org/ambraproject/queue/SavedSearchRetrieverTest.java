@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -31,8 +29,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Created with IntelliJ IDEA. User: stumu Date: 10/3/12 Time: 10:32 AM To change this template use File | Settings |
- * File Templates.
+ * Unit test for the SavedSearchRetriever class
+ *
+ * @author stumu
+ * @author Joe Osowski
  */
 @ContextConfiguration
 public class SavedSearchRetrieverTest extends BaseTest {
@@ -52,41 +52,43 @@ public class SavedSearchRetrieverTest extends BaseTest {
     String query2 = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSOne\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
     String query3 = "{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
 
-    for (int i = 1; i <= 3; i++) {
+    SavedSearchQuery ssq1 = new SavedSearchQuery(query1, TextUtils.createHash(query1));
+    dummyDataStore.store(ssq1);
+
+    SavedSearchQuery ssq2 = new SavedSearchQuery(query2, TextUtils.createHash(query2));
+    dummyDataStore.store(ssq2);
+
+    SavedSearchQuery ssq3 = new SavedSearchQuery(query3, TextUtils.createHash(query3));
+    dummyDataStore.store(ssq3);
+
+    for (int i = 0; i < 3; i++) {
       UserProfile user = new UserProfile("savedSearch1-" + i, i + "savedSearch11@example.org", "savedSearch1" + i);
 
-      SavedSearchQuery query = new SavedSearchQuery(query1, TextUtils.createHash(query1));
-      dummyDataStore.store(query);
-
-      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, query);
+      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, ssq1);
       savedSearch1.setWeekly(true);
       savedSearch1.setMonthly(false);
       savedSearch1.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch1.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch1.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = new SavedSearchQuery(query2, TextUtils.createHash(query2));
-      dummyDataStore.store(query);
-
-      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, query);
+      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, ssq2);
       savedSearch2.setWeekly(false);
       savedSearch2.setMonthly(true);
       savedSearch2.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch2.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch2.setLastMonthlySearchTime(searchTime.getTime());
 
-      //Use same query params for this user
-      SavedSearch savedSearch3 = new SavedSearch("both-" + i, query);
+      //Use same query another alert
+      //Kind of silly to have the same alert defined twice, but
+      //just checking the use case
+      SavedSearch savedSearch3 = new SavedSearch("both-" + i, ssq2);
       savedSearch3.setWeekly(true);
       savedSearch3.setMonthly(true);
       savedSearch3.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch3.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch3.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = new SavedSearchQuery(query3, TextUtils.createHash(query3));
-      dummyDataStore.store(query);
-
-      SavedSearch savedSearch4 = new SavedSearch("both-" + i, query);
+      SavedSearch savedSearch4 = new SavedSearch("both-" + i, ssq3);
       savedSearch4.setWeekly(true);
       savedSearch4.setMonthly(false);
       savedSearch4.setSearchType(SavedSearchType.USER_DEFINED);
@@ -98,16 +100,17 @@ public class SavedSearchRetrieverTest extends BaseTest {
       dummyDataStore.store(user);
     }
 
-    //Confirm unique views, though there are many profiles there are only a
+    //Confirm unique jobs,
+    //Though there are many profiles and saved searches there are only a
     //few distinct search queries, confirm this list is only three elements
-    List<SavedSearchJob> savedSearchParamViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
+    List<SavedSearchJob> savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
 
-    assertNotNull(savedSearchParamViews, "saved search views List is empty for weekly search");
-    assertEquals(savedSearchParamViews.size(), 3, "returned incorrect number of results");
+    assertNotNull(savedSearchJobs, "saved search views List is empty for weekly search");
+    assertEquals(savedSearchJobs.size(), 3, "returned incorrect number of results");
 
-    savedSearchParamViews = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
+    savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
 
-    assertNotNull(savedSearchParamViews, "saved search views List is empty for monthly search");
-    assertEquals(savedSearchParamViews.size(), 2, "returned incorrect number of results");
+    assertNotNull(savedSearchJobs, "saved search views List is empty for monthly search");
+    assertEquals(savedSearchJobs.size(), 1, "returned incorrect number of results");
   }
 }
