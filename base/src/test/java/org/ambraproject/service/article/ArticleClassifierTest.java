@@ -79,7 +79,7 @@ public class ArticleClassifierTest extends BaseTest {
 
     // Arbitrary minimum number of characters that we should be sending for categorization.
     // This should be longer than the article title.
-    int threshold = 200;
+    int threshold = 500;
     Document article = DocumentBuilderFactoryCreator.createFactory()
         .newDocumentBuilder().parse(new File(DATA_DIR + "pone.0048915.xml"));
     String content = articleClassifier.getCategorizationContent(article);
@@ -99,6 +99,13 @@ public class ArticleClassifierTest extends BaseTest {
     // Call it good if we have material that's at least twice as long as the abstract.
     assertTrue(content.length()
         > article.getElementsByTagName("abstract").item(0).getTextContent().length() * 2);
+
+    // Article with a very short, one-sentence "TOC" abstract that we don't even
+    // display in ambra.
+    article = DocumentBuilderFactoryCreator.createFactory()
+        .newDocumentBuilder().parse(new File(DATA_DIR + "pbio.0020302.xml"));
+    content = articleClassifier.getCategorizationContent(article);
+    assertTrue(content.length() > threshold);
   }
 
   @Test

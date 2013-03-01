@@ -189,14 +189,9 @@ public class AIArticleClassifier implements ArticleClassifier {
   String getCategorizationContent(Document dom) throws TransformerException, XPathException {
     StringBuilder sb = new StringBuilder();
     appendElementIfExists(sb, dom, "article-title");
-    boolean hasBody = false;
-    hasBody |= appendElementIfExists(sb, dom, "abstract");
-    hasBody |= appendSectionIfExists(sb, dom, "Materials and Methods", "Methods");
-    hasBody |= appendSectionIfExists(sb, dom, "Results", "Results and Discussion");
-    if (!hasBody) {
-      appendElementIfExists(sb, dom, "body");
-    }
-    return StringEscapeUtils.escapeXml(sb.toString());
+    appendElementIfExists(sb, dom, "abstract");
+    appendElementIfExists(sb, dom, "body");
+    return StringEscapeUtils.escapeXml(sb.toString().trim());
   }
 
   // Utility main method and associated code useful for grabbing categories for individual
