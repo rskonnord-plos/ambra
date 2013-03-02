@@ -1218,18 +1218,31 @@
     <xsl:template match="media" />
     <xsl:template match="license-p" /> <!-- 1/4/12: removed p from list, we process independently -->
 
-    <!-- 1/4/12: plos modifications -->
-    <xsl:template match="p">
-      <a>
-        <xsl:call-template name="makeIdNameFromXpathLocation"/>
-      </a>
-	    <p>
-	      <xsl:apply-templates/>
-	    </p>
-	    <xsl:call-template name="newline1"/>
-	  </xsl:template>
+  <!-- 1/4/12: plos modifications -->
+  <!--if this changes, template "addSiClass" has to change, too-->
+  <xsl:template match="p">
+    <a>
+      <xsl:call-template name="makeIdNameFromXpathLocation"/>
+    </a>
+    <p>
+      <xsl:apply-templates/>
+    </p>
+    <xsl:call-template name="newline1"/>
+  </xsl:template>
 
-   <!-- 1/4/12: suppress, we don't use -->
+  <!--3/1/13, add class to a specific paragraph for after styling-->
+  <!--note that if 'match="p"' changes, this will have to change-->
+  <xsl:template name="addSiClass">
+    <a>
+      <xsl:call-template name="makeIdNameFromXpathLocation"/>
+    </a>
+    <p class="preSiDOI">
+      <xsl:apply-templates/>
+    </p>
+    <xsl:call-template name="newline1"/>
+  </xsl:template>
+
+  <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="@content-type" />
 
     <!-- 1/4/12: plos-specific template (overrides nlm list-item/p[not(preceding-sibling::*[not(self::label)])]) -->
@@ -1835,13 +1848,6 @@
         <xsl:value-of select="$paragraphCount - 1"/>
       </xsl:variable>
 
-      <!--<xsl:for-each select="caption/p[position() = $pcMinus1]">-->
-      <!--<xsl:apply-templates select="."/>-->
-      <!--<xsl:attribute name="class">-->
-      <!--<xsl:value-of select="@class"/> preSiDOI-->
-      <!--</xsl:attribute>-->
-      <!--</xsl:for-each>-->
-  
       <xsl:choose>
         <!--If one or no caption/p, insert doi-->
         <xsl:when test="count(caption/p) &lt; 2">
@@ -1857,8 +1863,9 @@
         <xsl:when test="count(caption/p) &gt; 1">
           <xsl:apply-templates select="caption/p[position() &lt; $pcMinus1]"/>
 
+          <!--add a class for styling when page is rendered-->
           <xsl:for-each select="caption/p[position() = $pcMinus1]">
-            <xsl:apply-template name="addSiClass" select="."/>
+            <xsl:call-template name="addSiClass" />
           </xsl:for-each>
 
           <!--doi goes here-->
@@ -1867,18 +1874,11 @@
           </p>
 
           <!--final element-->
-          <xsl:for-each select="caption/p[last()]">
-            <xsl:apply-templates/>
-          </xsl:for-each>
-
+          <xsl:apply-templates select="caption/p[last()]"/>
+            
         </xsl:when>
       </xsl:choose>
     </xsl:template>
-
-  <!--3/1/13, add class to a specific paragraph for after styling-->
-  <xsl:template name="addSiClass">
-    <xsl:apply-templates/>
-  </xsl:template>
 
   <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="tex-math"/>
