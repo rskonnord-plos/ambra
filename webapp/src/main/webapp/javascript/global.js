@@ -1405,3 +1405,6 @@ function CollapsibleContainerTitleOnClick() {
   // The item clicked is the title div... get this parent (the overall container) and toggle the content within it.
   $(".collapsibleContainerContent", $(this).parent()).slideToggle();
 }
+
+$(document).pjax("#nav-article ul li a", "#pjax-container",
+    {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
