@@ -46,6 +46,8 @@
   <bean id="savedSearchSender" class="org.ambraproject.search.SavedSearchSenderImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="mailer" ref="freeMarkerMailer"/>
+    <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
+    <property name="imagePath" value="${ambra.queue.image.path}"/>
   </bean>
 
   <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>

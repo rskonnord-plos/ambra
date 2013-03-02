@@ -14,18 +14,25 @@ package org.ambraproject.queue;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.TextUtils;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
+import org.jvnet.mock_javamail.Mailbox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.mail.Message;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +43,7 @@ import java.util.Map;
  */
 @ContextConfiguration
 public class SavedSearchEmailRoutesTest extends BaseTest {
+  private static final Logger log = LoggerFactory.getLogger(SavedSearchEmailRoutesTest.class);
 
   @Produce(uri = "direct:getsearches")
   protected ProducerTemplate start;
@@ -59,50 +67,56 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
     searchTime.set(Calendar.MONTH, 5);
     searchTime.set(Calendar.DAY_OF_MONTH, 15);
 
+    String query1 = "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+    String query2 = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+    String query3 = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+    String query4 = "{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
+
+    SavedSearchQuery ssq1 = new SavedSearchQuery(query1, TextUtils.createHash(query1));
+    dummyDataStore.store(ssq1);
+
+    SavedSearchQuery ssq2 = new SavedSearchQuery(query2, TextUtils.createHash(query2));
+    dummyDataStore.store(ssq2);
+
+    SavedSearchQuery ssq3 = new SavedSearchQuery(query3, TextUtils.createHash(query3));
+    dummyDataStore.store(ssq3);
+
+    SavedSearchQuery ssq4 = new SavedSearchQuery(query4, TextUtils.createHash(query4));
+    dummyDataStore.store(ssq4);
+
     for (int i = 0; i < 3; i++) {
       UserProfile user = new UserProfile("savedSearch-" + i, i + "savedSearch1@example.org", "savedSearch" + i);
 
-      String query = "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      SavedSearchQuery params = new SavedSearchQuery(query, TextUtils.createHash(query));
-      dummyDataStore.store(params);
-
-      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, params);
+      SavedSearch savedSearch1 = new SavedSearch("weekly-" + i, ssq1);
       savedSearch1.setWeekly(true);
       savedSearch1.setMonthly(false);
+      savedSearch1.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch1.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch1.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchQuery(query, TextUtils.createHash(query));
-      dummyDataStore.store(params);
-
-      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, params);
+      SavedSearch savedSearch2 = new SavedSearch("monthly-" + i, ssq2);
       savedSearch2.setWeekly(false);
       savedSearch2.setMonthly(true);
+      savedSearch1.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch2.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch2.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchQuery(query, TextUtils.createHash(query));
-      dummyDataStore.store(params);
-
-      SavedSearch savedSearch3 = new SavedSearch("both-" + i, params);
+      SavedSearch savedSearch3 = new SavedSearch("both-" + i, ssq3);
       savedSearch3.setMonthly(true);
       savedSearch3.setWeekly(true);
+      savedSearch1.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch3.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch3.setLastMonthlySearchTime(searchTime.getTime());
 
-      query = "{\"query\":\"\",\"unformattedQuery\":\"everything:debug\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}";
-      params = new SavedSearchQuery(query, TextUtils.createHash(query));
-      dummyDataStore.store(params);
-
-      SavedSearch savedSearch4 = new SavedSearch("both-" + i, params);
+      SavedSearch savedSearch4 = new SavedSearch("both-" + i, ssq4);
       savedSearch4.setMonthly(true);
       savedSearch4.setWeekly(true);
+      savedSearch1.setSearchType(SavedSearchType.USER_DEFINED);
       savedSearch4.setLastWeeklySearchTime(searchTime.getTime());
       savedSearch4.setLastMonthlySearchTime(searchTime.getTime());
 
       user.setSavedSearches(Arrays.asList(savedSearch1, savedSearch2, savedSearch3,savedSearch4));
+
       dummyDataStore.store(user);
     }
   }
@@ -193,20 +207,49 @@ public class SavedSearchEmailRoutesTest extends BaseTest {
   }
 
   @Test
-  public void testWeeklyCron() throws InterruptedException {
+  public void testWeeklyCron() throws Exception {
     start.sendBody("WEEKLY");
 
-    //WAIT 10 seconds
-    //TODO: Check for emails
+    List<UserProfile> res = dummyDataStore.getAll(UserProfile.class);
+    List<SavedSearch> res1 = dummyDataStore.getAll(SavedSearch.class);
+    List<SavedSearchQuery> res2 = dummyDataStore.getAll(SavedSearchQuery.class);
 
+    //WAIT 10 seconds for queue jobs to complete
+    Thread.sleep(10000);
+
+    List<UserProfile> users = dummyDataStore.getAll(UserProfile.class);
+
+    for(UserProfile up : users) {
+      List<Message> inboxMessages = Mailbox.get(up.getEmail());
+
+      //TODO: Check message contents
+      log.debug("Inbox size: {}", inboxMessages.size());
+
+    }
+
+    //Reset the mailboxes
+    Mailbox.clearAll();
   }
 
   @Test
-  public void testMonthlyCron() throws InterruptedException {
+  public void testMonthlyCron() throws Exception {
     start.sendBody("MONTHLY");
 
-    //WAIT 10 seconds
-    //TODO: Check for emails
+    //WAIT 10 seconds for queue jobs to complete
+    Thread.sleep(10000);
+
+    //TODO: Check message contents
+    List<UserProfile> users = dummyDataStore.getAll(UserProfile.class);
+
+    for(UserProfile up : users) {
+      List<Message> inboxMessages = Mailbox.get(up.getEmail());
+
+      //TODO: Check message contents
+      log.debug("Inbox size: {}", inboxMessages.size());
+    }
+
+    //Reset the mailboxes
+    Mailbox.clearAll();
   }
 
 

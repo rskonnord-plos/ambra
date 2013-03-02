@@ -29,6 +29,8 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   private static final Logger log = LoggerFactory.getLogger(SavedSearchSenderImpl.class);
 
   private TemplateMailer mailer;
+  private String mailFromAddress;
+  private String imagePath;
 
   /**
    * @inheritDoc
@@ -44,17 +46,14 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     context.put("searchHitList", searchJob.getSearchHitList());
     context.put("startTime", searchJob.getStartDate());
     context.put("endTime", searchJob.getEndDate());
-
-    //TODO: Move to config
-    context.put("imagePath", "/bleh.gif");
+    context.put("imagePath", this.imagePath);
 
     //Create message
     Multipart content = createContent(context);
 
     List<Object[]> searchDetails = getSavedSearchDetails(searchJob.getSavedSearchQueryID(), searchJob.getType());
 
-    //TODO: move to config?
-    String fromAddress = "admin@plos.org";
+    String fromAddress = this.mailFromAddress;
 
     for(int a = 0; a < searchDetails.size(); a++) {
       //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
@@ -132,5 +131,15 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   @Required
   public void setMailer(TemplateMailer mailer) {
     this.mailer = mailer;
+  }
+
+  @Required
+  public void setMailFromAddress(String mailFromAddress) {
+    this.mailFromAddress = mailFromAddress;
+  }
+
+  @Required
+  public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
   }
 }

@@ -18,8 +18,20 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-
   <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
+
+  <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
+
+  <bean id="ambraConfiguration" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
+        factory-method="getConfiguration">
+    <constructor-arg index="0" value="ambra-test-config.xml"/>
+  </bean>
+
+  <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
+    <!-- Basically, never run, the route is started manually in the test -->
+    <property name="weeklyCron" value="*+*+*+1+*+?"/>
+    <property name="monthlyCron" value="*+*+*+1+*+?"/>
+  </bean>
 
   <bean id="savedSearchRetriever" class="org.ambraproject.search.SavedSearchRetrieverImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
@@ -34,24 +46,36 @@
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
 
-  <!--Solr server factory-->
-  <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
-
-  <bean id="ambraConfiguration" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
-        factory-method="getConfiguration">
-    <constructor-arg index="0" value="ambra-test-config.xml"/>
+  <bean id="mailer" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${plos.camel.mail"/>
   </bean>
 
-  <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
-    <!-- Basically, never run, the route is started manually in the test -->
-    <property name="weeklyCron" value="*+*+*+1+*+?"/>
-    <property name="monthlyCron" value="*+*+*+1+*+?"/>
+  <bean id="defaultEncodingCharset" class="java.lang.String">
+    <constructor-arg value="UTF-8"/>
+  </bean>
+
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPath" value="/"/>
+    <property name="defaultEncoding" ref="defaultEncodingCharset"/>
+  </bean>
+
+  <bean id="freeMarkerMailer" class="org.ambraproject.email.impl.FreemarkerTemplateMailer">
+    <property name="mailSender" ref="mailer"/>
+    <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    <property name="fromEmailAddress" value="${ambra.queue.fromEmailAddress}" />
+    <property name="fromEmailName" value="${ambra.queue.fromEmailName}" />
+  </bean>
+
+  <bean id="savedSearchSender" class="org.ambraproject.search.SavedSearchSenderImpl">
+    <property name="mailer" ref="freeMarkerMailer" />
+    <property name="sessionFactory" ref="sessionFactory" />
+    <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
+    <property name="imagePath" value="${ambra.queue.image.path}"/>
   </bean>
 
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
     <jmxAgent id="ambra-queue" createConnector="false"/>
     <routeBuilder ref="routeBuilder"/>
   </camelContext>
-
 </beans>
 

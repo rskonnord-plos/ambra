@@ -33,5 +33,4 @@
         factory-method="getConfiguration">
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
-
 </beans>

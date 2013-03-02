@@ -53,7 +53,7 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
     //Hard coding this for 15 threads, can increase later if needed
     from("seda:runInParallel?concurrentConsumers=15")
       .to("bean:savedSearchRunner?method=runSavedSearch")
-      .to("bead:sendmail");
+      .to("bean:savedSearchSender");
   }
 
   @Required
