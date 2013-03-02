@@ -1835,6 +1835,13 @@
         <xsl:value-of select="$paragraphCount - 1"/>
       </xsl:variable>
 
+      <!--<xsl:for-each select="caption/p[position() = $pcMinus1]">-->
+      <!--<xsl:apply-templates select="."/>-->
+      <!--<xsl:attribute name="class">-->
+      <!--<xsl:value-of select="@class"/> preSiDOI-->
+      <!--</xsl:attribute>-->
+      <!--</xsl:for-each>-->
+  
       <xsl:choose>
         <!--If one or no caption/p, insert doi-->
         <xsl:when test="count(caption/p) &lt; 2">
@@ -1851,10 +1858,7 @@
           <xsl:apply-templates select="caption/p[position() &lt; $pcMinus1]"/>
 
           <xsl:for-each select="caption/p[position() = $pcMinus1]">
-            <!--<xsl:attribute name="class">-->
-              <!--<xsl:value-of select="concat(@class, ' preSiDOI')"/>-->
-            <!--</xsl:attribute>-->
-            <xsl:apply-templates select="."/>
+            <xsl:apply-template name="addSiClass" select="."/>
           </xsl:for-each>
 
           <!--doi goes here-->
@@ -1869,38 +1873,14 @@
 
         </xsl:when>
       </xsl:choose>
-      <!--<xsl:for-each select="caption/p">-->
-        <!--<xsl:choose>-->
-
-          <!--&lt;!&ndash;if only one node&ndash;&gt;-->
-          <!--&lt;!&ndash;NOTE: If the template match "p" changes, then the following&ndash;&gt;-->
-          <!--<xsl:when test="$captionCount = 1">-->
-            <!--<p>-->
-              <!--<xsl:value-of select="$sIDOI"/>-->
-            <!--</p>-->
-            <!--<xsl:apply-templates select="."/>-->
-          <!--</xsl:when>-->
-
-          <!--&lt;!&ndash;if more than one node, process first n-2 nodes as normal&ndash;&gt;-->
-          <!--&lt;!&ndash;node n-1 needs a special id for styling, as does the doi node&ndash;&gt;-->
-          <!--&lt;!&ndash;process last node normally&ndash;&gt;-->
-          <!--<xsl:otherwise>-->
-            <!--<xsl:choose>-->
-              <!--&lt;!&ndash;NOTE same as above, if match="p" changes, this has to&ndash;&gt;-->
-              <!--<xsl:when test="position() = $captionCount - 2">-->
-                <!--<xsl:apply-templates select="."/>-->
-              <!--</xsl:when>-->
-              <!--<xsl:otherwise>-->
-                <!--<xsl:apply-templates select="."/>-->
-              <!--</xsl:otherwise>-->
-            <!--</xsl:choose>-->
-          <!--</xsl:otherwise>-->
-        <!--</xsl:choose>-->
-      <!--</xsl:for-each>-->
-
     </xsl:template>
 
-    <!-- 1/4/12: suppress, we don't use -->
+  <!--3/1/13, add class to a specific paragraph for after styling-->
+  <xsl:template name="addSiClass">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="tex-math"/>
 
     <!-- 1/4/12: plos modifications (remove mml prefix from all math elements, required for MathJax to work) -->
