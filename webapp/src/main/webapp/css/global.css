@@ -736,6 +736,16 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   margin-bottom: 6px;
 }
 
+/*supporting information*/
+.preSiDOI {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+.siDOI {
+  border-top:0;
+  margin-top:0;
+}
+
 /*pageftr*/
 #pageftr {
   color: #fff;

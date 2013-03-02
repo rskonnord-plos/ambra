@@ -1875,7 +1875,7 @@
 
           <!--final element-->
           <xsl:apply-templates select="caption/p[last()]"/>
-            
+
         </xsl:when>
       </xsl:choose>
     </xsl:template>
