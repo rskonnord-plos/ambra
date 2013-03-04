@@ -62,7 +62,7 @@
   </bean>
 
   <bean id="ambraConfiguration" factory-bean="configurationStore" factory-method="getConfiguration"/>
-  <bean id="configurationStore" class="org.topazproject.ambra.configuration.ConfigurationStore"
+  <bean id="configurationStore" class="org.ambraproject.configuration.ConfigurationStore"
         factory-method="getInstance"/>
 
   <bean id="searchService" class="org.ambraproject.service.search.SolrSearchService">

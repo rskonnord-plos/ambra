@@ -15,15 +15,13 @@ package org.ambraproject.action.debug;
 
 import org.ambraproject.action.InternalIpAction;
 import org.ambraproject.filestore.FileStoreService;
-import org.ambraproject.filestore.impl.FileSystemImpl;
-import org.ambraproject.filestore.impl.MogileFSImpl;
 import org.ambraproject.web.SessionCounter;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;

@@ -19,6 +19,7 @@ import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
+import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.Trackback;
 import org.ambraproject.models.UserProfile;
@@ -34,11 +35,13 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
@@ -111,6 +114,42 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     }};
 
     return new Object[][]{{doi, affiliationSets}};
+  }
+
+  /**
+   * Check if article has expression of concern
+   * @throws Exception
+   */
+  @Test
+  public void getArticleInfoForEoc() throws Exception {
+
+    Article eocArticle = new Article();
+    eocArticle.setDoi("id:doi-object-of-concern-relationship-article");
+    eocArticle.setState(Article.STATE_ACTIVE);
+    eocArticle.setTitle("foo");
+    Set<String> typesForEocArticle = new HashSet<String>();
+    typesForEocArticle.add("http://rdf.plos.org/RDF/articleType/Expression%20of%20Concern");
+    eocArticle.setTypes(typesForEocArticle);
+
+    List<ArticleRelationship> articleRelationships = new ArrayList<ArticleRelationship>(1);
+    //Expression of Concern relationship
+    ArticleRelationship eocRelationship = new ArticleRelationship();
+    eocRelationship.setParentArticle(getArticleToFetch());
+    eocRelationship.setOtherArticleID(Long.valueOf(dummyDataStore.store(eocArticle)));
+    eocRelationship.setType("object-of-concern");
+    eocRelationship.setOtherArticleDoi(eocArticle.getDoi());
+    articleRelationships.add(eocRelationship);
+    getArticleToFetch().setRelatedArticles(articleRelationships);
+
+    dummyDataStore.store(articleRelationships);
+    action.setExpressionOfConcern("Dummy Expression of Concern");
+    action.setArticleURI(getArticleToFetch().getDoi());
+    action.fetchArticle();
+
+    String eoc = action.getExpressionOfConcern();
+    assertEquals(eoc,"Dummy Expression of Concern","eoc didn't match in fetch tab" );
+
+
   }
 
   /**

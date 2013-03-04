@@ -14,7 +14,7 @@
 package org.ambraproject.util;
 
 import org.ambraproject.models.AnnotationType;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 import org.ambraproject.models.Annotation;
 import java.net.URI;
 import java.util.UUID;

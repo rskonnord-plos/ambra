@@ -26,7 +26,7 @@ import org.ambraproject.service.permission.PermissionsServiceImpl;
 /**
  * @author Alex Kudlick Date: 4/28/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 public class MockPermissionsService extends PermissionsServiceImpl {
   public void checkRole(String role) throws SecurityException {
