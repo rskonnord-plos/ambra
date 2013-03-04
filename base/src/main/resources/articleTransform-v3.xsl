@@ -1236,7 +1236,7 @@
     <a>
       <xsl:call-template name="makeIdNameFromXpathLocation"/>
     </a>
-    <p class="preSiDOI">
+    <p class="postSiDOI">
       <xsl:apply-templates/>
     </p>
     <xsl:call-template name="newline1"/>
@@ -1838,16 +1838,6 @@
         <xsl:value-of select="replace($objURI,'info:','')"/>
       </xsl:variable>
 
-
-      <!--these variables are here because they can't be declared in the choose-->
-      <xsl:variable name="paragraphCount">
-        <xsl:value-of select="count(caption/p)"/>
-      </xsl:variable>
-
-      <xsl:variable name="pcMinus1">
-        <xsl:value-of select="$paragraphCount - 1"/>
-      </xsl:variable>
-
       <xsl:choose>
         <!--If one or no caption/p, insert doi-->
         <xsl:when test="count(caption/p) &lt; 2">
@@ -1861,12 +1851,7 @@
 
         <!--if more than one caption, process first n-2 as normal, add a class for styling to n-1, insert doi, then do last as normal-->
         <xsl:when test="count(caption/p) &gt; 1">
-          <xsl:apply-templates select="caption/p[position() &lt; $pcMinus1]"/>
-
-          <!--add a class for styling when page is rendered-->
-          <xsl:for-each select="caption/p[position() = $pcMinus1]">
-            <xsl:call-template name="addSiClass" />
-          </xsl:for-each>
+          <xsl:apply-templates select="caption/p[position() &lt; count(caption/p)]"/>
 
           <!--doi goes here-->
           <p class="siDOI">

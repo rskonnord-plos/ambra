@@ -737,11 +737,11 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 }
 
 /*supporting information*/
-.preSiDOI {
+.siDOI {
   border-bottom: 0;
   margin-bottom: 0;
 }
-.siDOI {
+.postSiDOI {
   border-top:0;
   margin-top:0;
 }
