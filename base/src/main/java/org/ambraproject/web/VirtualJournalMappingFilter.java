@@ -20,10 +20,6 @@
 package org.ambraproject.web;
 
 import java.io.IOException;
-import java.io.File;
-
-import java.net.MalformedURLException;
-import java.util.StringTokenizer;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -33,12 +29,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.configuration.Configuration;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 /**
  * A Filter that maps incoming URI Requests to an appropriate virtual journal resources. If a

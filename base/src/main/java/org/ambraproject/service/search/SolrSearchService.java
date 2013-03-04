@@ -23,6 +23,7 @@ package org.ambraproject.service.search;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
+import org.ambraproject.service.cache.Cache;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -57,7 +60,10 @@ import java.util.regex.Pattern;
 public class SolrSearchService implements SearchService {
   private static final Logger log = LoggerFactory.getLogger(SolrSearchService.class);
 
+  private static final int CACHE_TTL = 3600 * 24;  // one day
+
   private SolrServerFactory serverFactory;
+  private Cache cache;
   private int queryTimeout;
 
   private static final int MAX_FACET_SIZE = 100;
@@ -272,12 +278,18 @@ public class SolrSearchService implements SearchService {
     return results;
   }
 
+  /**
+   * @enheritDoc
+   */
   @Override
   public List<String> getAllSubjects(String journal) throws ApplicationException {
     SolrQuery query = createQuery("*:*", 0, 0, false);
 
     // We don't care about results, just facet counts.
     query.setRows(0);
+
+    // We only care about full documents
+    query.addFilterQuery(createFilterFullDocuments());
 
     // Remove facets we don't use in this case.
     query.removeFacetField("author_facet");
@@ -293,9 +305,66 @@ public class SolrSearchService implements SearchService {
     QueryResponse queryResponse = getSOLRResponse(query);
     FacetField facet = queryResponse.getFacetField("subject_hierarchy");
     List<String> results = new ArrayList<String>(facet.getValues().size());
+
     for (FacetField.Count count : facet.getValues()) {
       results.add(count.getName());
     }
+
+    return results;
+  }
+
+  /**
+   * @enheritDoc
+   */
+  @Override
+  public SortedMap<String, Long> getTopSubjects() throws ApplicationException {
+    if (cache == null) {
+      return getTopSubjectsFromSOLR();
+    } else {
+      String key = "topLevelCategoriesCacheKey".intern();
+      return cache.get(key, CACHE_TTL,
+        new Cache.SynchronizedLookup<SortedMap<String, Long>, ApplicationException>(key) {
+          @Override
+          public SortedMap<String, Long> lookup() throws ApplicationException {
+            return getTopSubjectsFromSOLR();
+          }
+        });
+    }
+  }
+
+  private SortedMap<String, Long> getTopSubjectsFromSOLR() throws ApplicationException {
+    SolrQuery query = createQuery("*:*", 0, 0, false);
+
+    // We don't care about results, just facet counts.
+    query.setRows(0);
+
+    // We only care about full documents
+    query.addFilterQuery(createFilterFullDocuments());
+
+    // Remove facets we don't use in this case.
+    query.removeFacetField("author_facet");
+    query.removeFacetField("editor_facet");
+    query.removeFacetField("affiliate_facet");
+    query.removeFacetField("subject_facet");
+
+    // Add the one we do want.
+    query.addFacetField("subject_level_1");
+    query.setFacetLimit(-1);  // unlimited
+
+    QueryResponse queryResponse = getSOLRResponse(query);
+    FacetField facet = queryResponse.getFacetField("subject_level_1");
+
+    SortedMap<String, Long> results = new TreeMap<String, Long>();
+
+    //If there is no facet.  Should never happen outside a unit test
+    if(facet.getValues() == null) {
+      log.warn("No subject_level_1 facet");
+    } else {
+      for (FacetField.Count count : facet.getValues()) {
+        results.put(count.getName(), count.getCount());
+      }
+    }
+
     return results;
   }
 
@@ -732,6 +801,7 @@ public class SolrSearchService implements SearchService {
     return query;
   }
 
+  @SuppressWarnings("unchecked")
   private SearchResultSinglePage readQueryResults(QueryResponse queryResponse, SolrQuery query) {
     SolrDocumentList documentList = queryResponse.getResults();
 
@@ -837,7 +907,32 @@ public class SolrSearchService implements SearchService {
         searchResults, query.getQuery());
 
     if (queryResponse.getFacetField("subject_facet") != null) {
-      results.setSubjectFacet(facetCountsToHashMap(queryResponse.getFacetField("subject_facet")));
+      List<Map> subjects = facetCountsToHashMap(queryResponse.getFacetField("subject_facet"));
+
+      if(subjects != null) {
+        List<Map> subjectResult = new ArrayList<Map>();
+        SortedMap<String, Long> topSubjects = null;
+
+        try {
+          topSubjects = getTopSubjects();
+        } catch (ApplicationException ex) {
+          throw new RuntimeException(ex.getMessage(), ex);
+        }
+
+        //Remove top level 1 subjects from list, FEND-805
+        for(Map<String, Object> m : subjects) {
+          if(!topSubjects.containsKey(m.get("name"))) {
+            HashMap<String, Object> hm = new HashMap<String, Object>();
+            hm.put("name", m.get("name"));
+            hm.put("count", m.get("count"));
+            subjectResult.add(hm);
+          }
+        }
+
+        results.setSubjectFacet(subjectResult);
+      } else {
+        results.setSubjectFacet(null);
+      }
     }
 
     if (queryResponse.getFacetField("author_facet") != null) {
@@ -1032,4 +1127,7 @@ public class SolrSearchService implements SearchService {
     return abstractText;
   }
 
+  public void setCache(Cache cache) {
+    this.cache = cache;
+  }
 }

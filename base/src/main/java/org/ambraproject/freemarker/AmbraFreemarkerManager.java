@@ -43,7 +43,7 @@ import org.ambraproject.util.URLParametersDirective;
 import org.ambraproject.util.VersionedCSSDirective;
 import org.ambraproject.util.VersionedJSDirective;
 import org.ambraproject.web.VirtualJournalContext;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.opensymphony.xwork2.util.ValueStack;

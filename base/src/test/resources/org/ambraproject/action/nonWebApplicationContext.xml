@@ -208,7 +208,7 @@
     <property name="articleTransformService" ref="xmlService"/>
   </bean>
 
-  <bean id="passwordDigestService" class="org.topazproject.ambra.service.password.PasswordDigestService">
+  <bean id="passwordDigestService" class="org.ambraproject.service.password.PasswordDigestService">
     <property name="algorithm" value="SHA-256"/>
     <property name="encodingCharset" value="UTF-8"/>
   </bean>
@@ -256,6 +256,11 @@
   <bean id="articleClassifier" class="org.ambraproject.service.article.AIArticleClassifier" >
     <property name="httpClient" ref="httpClient"/>
     <property name="serviceUrl" value="http://localhost:1234/select"/>
+  </bean>
+
+  <bean id="raptorService" class="org.ambraproject.service.raptor.RaptorServiceImpl">
+    <property name="httpClient" ref="httpClient"/>
+    <property name="serviceUrl" value="http://localhost:1234/select" />
   </bean>
 
   <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">

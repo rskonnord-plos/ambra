@@ -732,6 +732,23 @@ public class ArticleServiceTest extends BaseTest {
     disableRelationship.setType("foo");
     articleRelationships.add(disableRelationship);
 
+
+    Article eocArticle = new Article();
+    eocArticle.setDoi("id:doi-object-of-concern-relationship-article");
+    eocArticle.setState(Article.STATE_ACTIVE);
+    eocArticle.setTitle("foo");
+    Set<String> typesForEocArticle = new HashSet<String>();
+    typesForEocArticle.add("http://rdf.plos.org/RDF/articleType/Expression%20of%20Concern");
+    eocArticle.setTypes(typesForEocArticle);
+
+    //Expression of Concern relationship
+    ArticleRelationship eocRelationship = new ArticleRelationship();
+    eocRelationship.setParentArticle(article);
+    eocRelationship.setOtherArticleID(Long.valueOf(dummyDataStore.store(eocArticle)));
+    eocRelationship.setType("object-of-concern");
+    eocRelationship.setOtherArticleDoi(eocArticle.getDoi());
+    articleRelationships.add(eocRelationship);
+
     article.setRelatedArticles(articleRelationships);
 
     dummyDataStore.store(article);
@@ -746,7 +763,8 @@ public class ArticleServiceTest extends BaseTest {
         //admins should see unpubbed article
         {article.getDoi(), article, DEFAULT_ADMIN_AUTHID, new Article[]{unpubbedArticle, pubbedArticle}},
         //users should not
-        {article.getDoi(), article, DEFAULT_USER_AUTHID, new Article[]{pubbedArticle}}
+        {article.getDoi(), article, DEFAULT_USER_AUTHID, new Article[]{pubbedArticle}},
+        {article.getDoi(), article, DEFAULT_USER_AUTHID, new Article[]{eocArticle}}
     };
   }
 

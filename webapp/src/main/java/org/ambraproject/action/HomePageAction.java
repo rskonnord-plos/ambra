@@ -20,8 +20,10 @@
 
 package org.ambraproject.action;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
+import org.ambraproject.service.search.SearchService;
 import org.ambraproject.views.BrowseResult;
 import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
@@ -51,13 +53,12 @@ public class HomePageAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(HomePageAction.class);
 
   private BrowseService browseService;
+  private SearchService searchService;
   private SortedMap<String, Long> categoryInfos;
 
   private ArrayList<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
-
-
 
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
@@ -205,36 +206,21 @@ public class HomePageAction extends BaseActionSupport {
    */
   @Override
   public String execute() {
-    String journal = getCurrentJournal();
-
-    // HACK: the PLOS ONE homepage displays all top-level categories.  With the
-    // old taxonomy, we got these results from solr.  However, the new taxonomy
-    // has many fewer top-level categories, so it's a lot simpler just to
-    // hard code them here.  Still, this should probably be moved somewhere else
-    // and/or be done more elegantly.
-    if ("PLoSONE".equals(journal)) {
-      Map<String, Long> topLevelCategories = new HashMap<String, Long>(10);
-      topLevelCategories.put("Physical sciences", 1L);
-      topLevelCategories.put("Earth sciences", 1L);
-      topLevelCategories.put("Computer and information sciences", 1L);
-      topLevelCategories.put("Environmental sciences and ecology", 1L);
-      topLevelCategories.put("Social sciences", 1L);
-      topLevelCategories.put("Science policy", 1L);
-      topLevelCategories.put("Research and analysis methods", 1L);
-      topLevelCategories.put("Medicine and health sciences", 1L);
-      topLevelCategories.put("Engineering and technology", 1L);
-      topLevelCategories.put("Biology and life sciences", 1L);
-      categoryInfos = new TreeMap<String, Long>(topLevelCategories);
-    } else {
-      categoryInfos = browseService.getSubjectsForJournal(journal);
+    try {
+      categoryInfos = searchService.getTopSubjects();
+    } catch(ApplicationException ex) {
+      throw new RuntimeException(ex);
     }
+
     initRecentArticles();
+
     return SUCCESS;
   }
 
   /**
    * @return Returns category and number of articles for each category.
-   * Categories are sorted by name.
+   *
+   * Categories are listed for all journals and sorted by name
    */
   public SortedMap<String, Long> getCategoryInfos() {
     return categoryInfos;
@@ -287,6 +273,14 @@ public class HomePageAction extends BaseActionSupport {
   @Required
   public void setBrowseService(BrowseService browseService) {
     this.browseService = browseService;
+  }
+
+  /**
+   * @param searchService The searchService to set.
+   */
+  @Required
+  public void setSearchService(SearchService searchService) {
+    this.searchService = searchService;
   }
 
   public int getNumDaysInPast() {

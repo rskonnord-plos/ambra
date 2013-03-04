@@ -1,7 +1,7 @@
 /*
  * $HeadURL$
  * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -772,7 +772,7 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 
 #pageftr .nav-aux {
   word-spacing: 7px;
-  margin-top: 30px;
+  margin-top: 45px;
 }
 
 #pageftr .nav-aux a {
@@ -2253,6 +2253,7 @@ ul.bulletlist li {
   padding: 35px 50px;
   background: #efefef;
   float: right;
+  word-wrap: break-word;
 }
 
 #thread ul#threads li div.title span {
@@ -2294,6 +2295,11 @@ ul.bulletlist li {
 
 #responses .response .response_content {
   padding: 20px 15px;
+  word-wrap: break-word;
+}
+
+#responses .response .response_title  {
+  word-wrap: break-word;
 }
 
 #responses .response .toolbar {
@@ -2345,6 +2351,18 @@ ul.bulletlist li {
 .reply form fieldset {
   min-width: 49%;
   float: left;
+ }
+
+/* spacing between competing interest radio buttons */
+.reply form fieldset div.cf{
+  margin-bottom: 10px;
+}
+
+/* competing interest text area margins */
+.reply form fieldset div.competing_text,
+.reply form fieldset #flag_text{
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .reply.review form fieldset {
@@ -2361,22 +2379,22 @@ ul.bulletlist li {
 .reply form fieldset textarea {
   display: block;
   padding: 3px;
-  width: 94%;
+  width: 687px;
   border: 1px solid #f2f2f2;
   margin: 0 0 10px 0 !important;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .reply form fieldset textarea {
   height: 106px;
   resize: none;
-  margin: 0 0 20px 0 !important;
 }
 
 .reply form fieldset textarea.competing_interests {
   min-height: auto;
   height: 88px;
   resize: none;
+  margin-bottom: 12px !important;
 }
 
 .reply form fieldset div {
@@ -2385,15 +2403,18 @@ ul.bulletlist li {
 
 .reply form input[type=radio], .reply form input[type=checkbox] {
   float: left;
-  width: auto;
-  margin: 3px 5px 8px 0 !important;
   border: none;
+}
+
+.reply form input[type=radio] {
+  width: auto;
+  margin: 0px 5px 0px 0 !important;
 }
 
 .reply form input[type=checkbox] {
   width: 18px;
-  height: 18px;
-  margin: 0 5px 8px 0 !important;
+  height: 14px;
+  margin: 0 5px 10px 0 !important;
 }
 
 .reply form span.btn {
@@ -2417,7 +2438,6 @@ ul.bulletlist li {
 .reply form fieldset label {
   font-size: 0.813em;
   position: relative;
-
 }
 
 .reply .help {
@@ -2452,10 +2472,10 @@ ul.bulletlist li {
 .reply .error {
   margin-bottom: 5px;
   padding: 5px;
-  border: 1px solid #c00;
-  background-color: #fff;
+  background-color: #333;
   font-style: normal;
-  color: #000
+  font-weight: bold;
+  color: #FF3C5C;
 }
 
 #reply_loading.loading_overlay img {
@@ -5038,7 +5058,7 @@ table.tile_mini td.data2 {
   cursor: default;
   background: #606060 url('/images/btn.close.png') no-repeat 3px 3px;
   border-radius: 9px;
-  background-size: 12px 12px;"
+  background-size: 12px 12px;
 }
 
 /********** Find article *********************/
@@ -5061,4 +5081,28 @@ div.findArticle h4 {
 
 .collapsibleContainerContent {
   padding: 10px;
+}
+
+/***************************** Adv search checkboxes *****************/
+.checkboxWrapper {
+  position: relative;
+}
+.checkboxOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
+}
+
+ol.references li {
+  list-style-type: none;
+}
+
+ol.references li span.label {
+  margin-left: -26px;
+  float: left;
+  width: 20px;
+  text-align: right;
 }

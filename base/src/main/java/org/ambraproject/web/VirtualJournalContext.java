@@ -21,7 +21,7 @@
 package org.ambraproject.web;
 
 import org.apache.commons.configuration.Configuration;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
