@@ -23,7 +23,7 @@ import org.apache.commons.configuration.Configuration;
 import org.ambraproject.service.cas.ConfigWrapper;
 import org.ambraproject.service.cas.ConfigWrapperUtil;
 import org.ambraproject.service.cas.InitParamProvider;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;

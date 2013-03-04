@@ -24,6 +24,7 @@ import java.net.URI;
 
 public class RelatedArticleInfo extends BaseArticleInfo implements Serializable {
   public URI    uri;
+  public String relationType;
 
   /**
    * Get the article uri.
@@ -36,6 +37,18 @@ public class RelatedArticleInfo extends BaseArticleInfo implements Serializable 
 
   public void setUri(URI uri) {
     this.uri = uri;
+  }
+
+  /**
+   * get the relation type
+   * @return
+   */
+  public String getRelationType() {
+    return relationType;
+  }
+
+  public void setRelationType(String relationType) {
+    this.relationType = relationType;
   }
 
   public String toString() {
