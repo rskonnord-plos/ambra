@@ -762,7 +762,7 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 
 #pageftr .nav-aux {
   word-spacing: 7px;
-  margin-top: 30px;
+  margin-top: 45px;
 }
 
 #pageftr .nav-aux a {
@@ -5048,7 +5048,7 @@ table.tile_mini td.data2 {
   cursor: default;
   background: #606060 url('/images/btn.close.png') no-repeat 3px 3px;
   border-radius: 9px;
-  background-size: 12px 12px;"
+  background-size: 12px 12px;
 }
 
 /********** Find article *********************/
@@ -5084,4 +5084,15 @@ div.findArticle h4 {
   top: 0;
   bottom: 0;
   background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
+}
+
+ol.references li {
+  list-style-type: none;
+}
+
+ol.references li span.label {
+  margin-left: -26px;
+  float: left;
+  width: 20px;
+  text-align: right;
 }

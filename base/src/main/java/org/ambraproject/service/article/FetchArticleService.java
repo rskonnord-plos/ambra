@@ -26,6 +26,7 @@ import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
 import org.w3c.dom.Document;
 
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,15 @@ public interface FetchArticleService extends HibernateService {
    * @return author affiliations
    */
   public List<AuthorView> getAuthors(Document doc);
+
+  /**
+   * Get the Expression of Concern content from the article.
+   * @param doc
+   * @return expressionOfConcern text
+   * @throws TransformerException
+   * @throws XPathExpressionException
+   */
+  public String  getEocBody(Document doc) throws TransformerException, XPathExpressionException;
 
   /**
    *
