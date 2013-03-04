@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -252,8 +253,14 @@ public class SavedSearchSenderTest extends BaseTest {
 
     for(SavedSearchJob savedSearchJob : savedSearchJobs) {
       savedSearchJob = savedSearchRunner.runSavedSearch(savedSearchJob);
+
+      assertNotNull(savedSearchJob.getStartDate(), "startDate failed to populate hitlist");
+      assertNotNull(savedSearchJob.getEndDate(), "endDate failed to populate hitlist");
+      assertNotNull(savedSearchJob.getSearchHitList(), "savedSearchRunner failed to populate hitlist");
+
       savedSearchSender.sendSavedSearch(savedSearchJob);
     }
+
 
     List<SavedSearch> savedSearches = this.dummyDataStore.getAll(SavedSearch.class);
 
@@ -276,8 +283,19 @@ public class SavedSearchSenderTest extends BaseTest {
     //Execute monthly jobs:
     savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
 
-    //There should be two jobs reflecting two distinct monthly searches
-    assertEquals(savedSearchJobs.size(), 2);
+    //There should be one job reflecting one distinct monthly search query even though
+    //There are two savesSearches
+    assertEquals(savedSearchJobs.size(), 1);
+
+    for(SavedSearchJob savedSearchJob : savedSearchJobs) {
+      savedSearchJob = savedSearchRunner.runSavedSearch(savedSearchJob);
+
+      assertNotNull(savedSearchJob.getStartDate(), "startDate failed to populate hitlist");
+      assertNotNull(savedSearchJob.getEndDate(), "endDate failed to populate hitlist");
+      assertNotNull(savedSearchJob.getSearchHitList(), "savedSearchRunner failed to populate hitlist");
+
+      savedSearchSender.sendSavedSearch(savedSearchJob);
+    }
 
     for(SavedSearchJob savedSearchJob : savedSearchJobs) {
       savedSearchSender.sendSavedSearch(savedSearchJob);

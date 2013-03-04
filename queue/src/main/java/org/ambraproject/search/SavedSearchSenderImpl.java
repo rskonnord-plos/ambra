@@ -2,6 +2,7 @@ package org.ambraproject.search;
 
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.apache.commons.lang.StringUtils;
@@ -28,8 +29,14 @@ import java.util.Map;
 public class SavedSearchSenderImpl extends HibernateServiceImpl implements SavedSearchSender {
   private static final Logger log = LoggerFactory.getLogger(SavedSearchSenderImpl.class);
 
+  private static final String WEEKLY_FREQUENCY = "WEEKLY";
+
   private TemplateMailer mailer;
   private String mailFromAddress;
+  private String alertHtmlEmail;
+  private String alertTextEmail;
+  private String savedSearchHtmlEmail;
+  private String savedSearchTextEmail;
   private String imagePath;
 
   /**
@@ -38,7 +45,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   public void sendSavedSearch(SavedSearchJob searchJob) {
 
     log.info("Received thread Name: {}", Thread.currentThread().getName());
-    log.info("Send emails for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getType());
+    log.info("Send emails for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
 
     final Map<String, Object> context = new HashMap<String, Object>();
 
@@ -49,31 +56,36 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     context.put("imagePath", this.imagePath);
 
     //Create message
-    Multipart content = createContent(context);
+    Multipart content = createContent(context, searchJob.getType());
 
-    List<Object[]> searchDetails = getSavedSearchDetails(searchJob.getSavedSearchQueryID(), searchJob.getType());
+    List<Object[]> searchDetails = getSavedSearchDetails(searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
 
     String fromAddress = this.mailFromAddress;
 
     for(int a = 0; a < searchDetails.size(); a++) {
       //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
       String toAddress = (String)searchDetails.get(a)[1];
+      String subject;
 
-      //TODO: Change based on type / move to config
-      String subject = "PLOS Search Alert - " + searchDetails.get(a)[2];
+      //TODO: Move PLOS Specific to config
+      if(searchJob.getType().equals(SavedSearchType.JOURNAL_ALERT)) {
+        subject = "PLOS Search Alert - " + searchDetails.get(a)[2];
+      } else {
+        subject = "PLOS Journal Alert";
+      }
 
       mailer.mail(toAddress, fromAddress, subject, context, content);
 
       //When a results are sent updated the records to indicate
-      markSent((Long)searchDetails.get(a)[0], searchJob.getType(), searchJob.getEndDate());
+      markSent((Long)searchDetails.get(a)[0], searchJob.getFrequency(), searchJob.getEndDate());
     }
 
     log.info("Completed thread Name: {}", Thread.currentThread().getName());
-    log.info("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getType());
+    log.info("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
   }
 
   @SuppressWarnings("unchecked")
-  private void markSent(Long savedSearchID, String type, Date endDate)
+  private void markSent(Long savedSearchID, String frequency, Date endDate)
   {
     SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, savedSearchID);
 
@@ -81,7 +93,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       throw new RuntimeException("Could not find savedSearch: " + savedSearchID);
     }
 
-    if(type.equals("WEEKLY")) {
+    if(frequency.equals(WEEKLY_FREQUENCY)) {
       savedSearch.setLastWeeklySearchTime(endDate);
     } else {
       savedSearch.setLastMonthlySearchTime(endDate);
@@ -89,14 +101,16 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
     hibernateTemplate.update(savedSearch);
 
-    log.debug("Updated Last {} saved Search time for Saved Search ID: {}", type, savedSearchID);
+    log.debug("Updated Last {} saved Search time for Saved Search ID: {}", frequency, savedSearchID);
   }
 
-  private Multipart createContent(Map<String, Object> context) {
+  private Multipart createContent(Map<String, Object> context, SavedSearchType type) {
     try {
-      //TODO: Move filenames to configuration
-      //TODO: Use different style template based on search type
-      return mailer.createContent("email-text.ftl", "email-html.ftl", context);
+      if(type.equals(SavedSearchType.JOURNAL_ALERT)) {
+        return mailer.createContent(this.alertTextEmail, this.alertHtmlEmail, context);
+      } else {
+        return mailer.createContent(this.savedSearchTextEmail, this.savedSearchHtmlEmail, context);
+      }
     } catch(IOException ex) {
       throw new RuntimeException(ex);
     } catch(MessagingException ex) {
@@ -141,5 +155,25 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   @Required
   public void setImagePath(String imagePath) {
     this.imagePath = imagePath;
+  }
+
+  @Required
+  public void setAlertHtmlEmail(String alertHtmlEmail) {
+    this.alertHtmlEmail = alertHtmlEmail;
+  }
+
+  @Required
+  public void setAlertTextEmail(String alertTextEmail) {
+    this.alertTextEmail = alertTextEmail;
+  }
+
+  @Required
+  public void setSavedSearchHtmlEmail(String savedSearchHtmlEmail) {
+    this.savedSearchHtmlEmail = savedSearchHtmlEmail;
+  }
+
+  @Required
+  public void setSavedSearchTextEmail(String savedSearchTextEmail) {
+    this.savedSearchTextEmail = savedSearchTextEmail;
   }
 }

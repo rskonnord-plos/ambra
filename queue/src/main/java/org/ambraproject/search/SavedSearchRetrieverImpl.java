@@ -12,6 +12,7 @@
 package org.ambraproject.search;
 
 import org.ambraproject.models.SavedSearch;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -42,15 +43,17 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
                     .setProjection(Projections.distinct(Projections.projectionList()
                       .add(Projections.property("s.ID"))
                       .add(Projections.property("s.hash"))
+                      .add(Projections.property("searchType"))
                       .add(Projections.property("s.searchParams")))));
 
     for(Object[] obj : paramsList) {
       searchJobs.add(SavedSearchJob.builder()
-          .setSavedSearchQueryID((Long)obj[0])
-          .setHash((String)obj[1])
-          .setSearchString((String)obj[2])
-          .setType(alertType.name())
-         .build());
+        .setSavedSearchQueryID((Long) obj[0])
+        .setHash((String) obj[1])
+        .setType((SavedSearchType) obj[2])
+        .setSearchString((String) obj[3])
+        .setFrequency(alertType.name())
+        .build());
     }
 
     log.debug("Returning {} saved search(es)", searchJobs.size());

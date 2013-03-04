@@ -18,6 +18,16 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+  <bean id="placeholderConfig"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:senduseralerts.properties</value>
+      </list>
+    </property>
+    <property name="ignoreResourceNotFound" value="true"/>
+  </bean>
+
   <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
 
   <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
@@ -71,6 +81,10 @@
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
     <property name="imagePath" value="${ambra.queue.image.path}"/>
+    <property name="alertHtmlEmail" value="${ambra.queue.sendmail.alert.html}"/>
+    <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
+    <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
+    <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
   </bean>
 
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">

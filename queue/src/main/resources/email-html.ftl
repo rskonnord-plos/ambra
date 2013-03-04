@@ -7,13 +7,13 @@
 <body>
 
 <#assign filterJournalsAsString>
-  <#list headers.searchParameters.filterJournals as journalKey>
+  <#list searchParameters.filterJournals as journalKey>
   ${journalKey}<#if journalKey_has_next> OR </#if>
   </#list>
 </#assign>
 
 <#assign filterSubjectsAsString>
-  <#list headers.searchParameters.filterSubjects as subject>
+  <#list searchParameters.filterSubjects as subject>
   "${subject}"<#if subject_has_next> AND </#if>
   </#list>
 </#assign>
@@ -49,7 +49,7 @@
       <td nowrap="">
         <div style="border: 0px solid rgb(204, 204, 204);">
           <a title="PLOS Open for Discovery" href="http://www.plosone.org">
-            <img width="728" height="73" border="0" alt="PLOS Open for Discovery" src=${headers.imagePath} /></a>
+            <img width="728" height="73" border="0" alt="PLOS Open for Discovery" src=${imagePath} /></a>
       </td>
     </tr>
   </tbody>
@@ -79,10 +79,10 @@
     <td valign="top"><a name="query"></a>
       <h3>Query:</h3>
       <p>
-        <#if headers.searchParameters.unformattedQuery?has_content>
-          <span>${headers.searchParameters.unformattedQuery}</span>
+        <#if searchParameters.unformattedQuery?has_content>
+          <span>${searchParameters.unformattedQuery}</span>
         <#else>
-          <span>${headers.searchParameters.query}</span>
+          <span>${searchParameters.query}</span>
         </#if>
       </p>
 
@@ -96,12 +96,12 @@
         Subject Category:${filterSubjectsAsString}
       </#if>
 
-      <#if headers.searchParameters.filterKeyword?has_content>
-        Keyword: ${headers.searchParameters.filterKeyword}
+      <#if searchParameters.filterKeyword?has_content>
+        Keyword: ${searchParameters.filterKeyword}
       </#if>
 
-      <#if headers.searchParameters.filterKeyword?has_content>
-        Article Type: ${headers.searchParameters.filterKeyword}
+      <#if searchParameters.filterKeyword?has_content>
+        Article Type: ${searchParameters.filterKeyword}
       </#if>
     </td>
   </tr>
@@ -114,13 +114,13 @@
     <tr>
       <td valign="top"><a name="top"></a>
         <h3>New Articles in <em>PLOS Journals</em></h3>
-        <h4>Published between ${headers.lastSearchTime?string("MMM dd yyyy")} - ${headers.currentTime?string("MMM dd yyyy")}</h4>
+        <h4>Published between ${startTime?string("MMM dd yyyy")} - ${endTime?string("MMM dd yyyy")}</h4>
       </td>
     </tr>
     <tr>
       <td valign="top">
 
-        <#list headers.searchHitList as searchHit>
+        <#list searchHitList as searchHit>
           <p><a href="http://dx.doi.org/info:doi/${searchHit.uri}"><strong>${searchHit.title}</strong></a><br />
           ${searchHit.creator}
           </p>

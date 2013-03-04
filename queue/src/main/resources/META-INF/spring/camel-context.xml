@@ -103,6 +103,10 @@
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
     <property name="imagePath" value="${ambra.queue.image.path}"/>
+    <property name="alertHtmlEmail" value="${ambra.queue.sendmail.alert.html}"/>
+    <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
+    <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
+    <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
   </bean>
 
   <bean id="quartz" class="org.apache.camel.component.quartz.QuartzComponent" />

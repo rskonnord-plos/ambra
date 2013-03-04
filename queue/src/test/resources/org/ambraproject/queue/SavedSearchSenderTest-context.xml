@@ -18,13 +18,23 @@
 
   <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
 
+  <bean id="placeholderConfig"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:senduseralerts.properties</value>
+      </list>
+    </property>
+    <property name="ignoreResourceNotFound" value="true"/>
+  </bean>
+
   <bean id="ambraConfiguration" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
         factory-method="getConfiguration">
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
   <bean id="mailer" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-    <property name="host" value="${plos.camel.mail"/>
+    <property name="host" value="${ambra.queue.fromEmailAddress}"/>
   </bean>
 
   <bean id="defaultEncodingCharset" class="java.lang.String">
@@ -48,6 +58,10 @@
     <property name="mailer" ref="freeMarkerMailer"/>
     <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
     <property name="imagePath" value="${ambra.queue.image.path}"/>
+    <property name="alertHtmlEmail" value="${ambra.queue.sendmail.alert.html}"/>
+    <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
+    <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
+    <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
   </bean>
 
   <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>

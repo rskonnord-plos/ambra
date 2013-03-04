@@ -39,11 +39,11 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
   public SavedSearchJob runSavedSearch(SavedSearchJob searchJob) throws ApplicationException {
     log.debug("Received thread Name: {}", Thread.currentThread().getName());
     log.debug("Running Saved Search for the search query ID : {}, {}" ,
-      searchJob.getSavedSearchQueryID(), searchJob.getType());
+      searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
 
     searchJob.setEndDate(Calendar.getInstance().getTime());
 
-    if(searchJob.getType().equals("WEEKLY")) {
+    if(searchJob.getFrequency().equals("WEEKLY")) {
       //7 days into the past
       Calendar date = Calendar.getInstance();
       date.add(Calendar.DAY_OF_MONTH, -7);

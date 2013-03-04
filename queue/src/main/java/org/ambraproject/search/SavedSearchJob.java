@@ -1,6 +1,7 @@
 package org.ambraproject.search;
 
 import com.google.gson.Gson;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.views.SavedSearchHit;
 
@@ -16,23 +17,26 @@ public class SavedSearchJob {
   private Long savedSearchQueryID;
   private String searchString;
   private String hash;
-  private String type;
+  private String frequency;
+  private SavedSearchType type;
   private Date startDate;
   private Date endDate;
   private List<SavedSearchHit> searchHitList;
 
-  public SavedSearchJob(Long savedSearchQueryID, String searchString, String hash, String type) {
+  public SavedSearchJob(Long savedSearchQueryID, String searchString, String hash, SavedSearchType type, String frequency) {
     this.savedSearchQueryID = savedSearchQueryID;
     this.searchString = searchString;
     this.hash = hash;
     this.type = type;
+    this.frequency = frequency;
   }
 
-  public SavedSearchJob(Long savedSearchQueryID, String searchString, String hash, String type, Date startDate, Date endDate, List<SavedSearchHit> searchHitList) {
+  public SavedSearchJob(Long savedSearchQueryID, String searchString, String hash, SavedSearchType type, String frequency, Date startDate, Date endDate, List<SavedSearchHit> searchHitList) {
     this.savedSearchQueryID = savedSearchQueryID;
     this.searchString = searchString;
     this.hash = hash;
     this.type = type;
+    this.frequency = frequency;
     this.startDate = startDate;
     this.endDate = endDate;
     this.searchHitList = searchHitList;
@@ -67,12 +71,20 @@ public class SavedSearchJob {
     this.hash = hash;
   }
 
-  public String getType() {
+  public SavedSearchType getType() {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(SavedSearchType type) {
     this.type = type;
+  }
+
+  public String getFrequency() {
+    return frequency;
+  }
+
+  public void setFrequency(String frequency) {
+    this.frequency = frequency;
   }
 
   public Date getStartDate() {
@@ -111,7 +123,8 @@ public class SavedSearchJob {
     private Long savedSearchQueryID;
     private String searchString;
     private String hash;
-    private String type;
+    private SavedSearchType type;
+    private String frequency;
     private Date startDate;
     private Date endDate;
     private List<SavedSearchHit> searchHitList;
@@ -127,6 +140,7 @@ public class SavedSearchJob {
       this.searchString = job.getSearchString();
       this.hash = job.getHash();
       this.type = job.getType();
+      this.frequency = job.getFrequency();
       this.searchHitList = job.getSearchHitList();
     }
 
@@ -145,8 +159,13 @@ public class SavedSearchJob {
       return this;
     }
 
-    public Builder setType(String type) {
+    public Builder setType(SavedSearchType type) {
       this.type = type;
+      return this;
+    }
+
+    public Builder setFrequency(String frequency) {
+      this.frequency = frequency;
       return this;
     }
 
@@ -169,6 +188,7 @@ public class SavedSearchJob {
         this.searchString,
         this.hash,
         this.type,
+        this.frequency,
         this.startDate,
         this.endDate,
         this.searchHitList);
