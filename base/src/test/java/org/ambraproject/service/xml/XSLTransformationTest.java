@@ -31,7 +31,6 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.io.BufferedInputStream;
 
 /**
  * Test that the XSL actually works and log the time it takes
@@ -47,14 +46,30 @@ public class XSLTransformationTest extends BaseTest {
 
   @Test
   public void testXSLTransformation() throws TransformerException, IOException, ApplicationException {
+    TimeIt.logTime();
 
     URL fileRef = getClass().getClassLoader().getResource(XML_SOURCE);
     InputStream in = fileRef.openStream();
 
-    InputStream transformedInput = xmlService.getTransformedInputStream(in);
+    xmlService.getTransformedInputStream(in);
 
-    BufferedInputStream buff = new BufferedInputStream(xmlService.getTransformedInputStream(in));
-    String stop;
-
+    TimeIt.logTime();
   }
+}
+
+class TimeIt {
+  public static void run(final Command command) {
+    final long startTime = System.currentTimeMillis();
+    command.execute();
+    final long endTime = System.currentTimeMillis();
+    XSLTransformationTest.log.info("Total time:" + (endTime - startTime)/1000.0 + " secs");
+  }
+
+  public static void logTime() {
+    XSLTransformationTest.log.info(Long.toString(System.currentTimeMillis()));
+  }
+}
+
+interface Command {
+  void execute();
 }

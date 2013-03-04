@@ -1848,38 +1848,38 @@
         <xsl:value-of select="$paragraphCount - 1"/>
       </xsl:variable>
 
+      <xsl:choose>
+        <!--If one or no caption/p, insert doi-->
+        <xsl:when test="count(caption/p) &lt; 2">
+          <!--doi-->
+          <p>
+            <xsl:value-of select="$siDOI"/>
+          </p>
+          <!--normal caption paragraphs-->
+          <xsl:apply-templates select="caption/p"/>
+        </xsl:when>
 
-      <xsl:apply-templates select="caption/p"/>
-      <!--<xsl:choose>-->
-        <!--&lt;!&ndash;If one or no caption/p, insert doi&ndash;&gt;-->
-        <!--<xsl:when test="count(caption/p) &lt; 2">-->
-          <!--&lt;!&ndash;doi&ndash;&gt;-->
-          <!--<p>-->
-            <!--<xsl:value-of select="$siDOI"/>-->
-          <!--</p>-->
-          <!--&lt;!&ndash;normal caption paragraphs&ndash;&gt;-->
-          <!--<xsl:apply-templates select="caption/p"/>-->
-        <!--</xsl:when>-->
+        <!--if more than one caption, process first n-2 as normal, add a class for styling to n-1, insert doi, then do last as normal-->
+        <xsl:when test="count(caption/p) &gt; 1">
+          <xsl:apply-templates select="caption/p[position() &lt; $pcMinus1]"/>
 
-        <!--&lt;!&ndash;if more than one caption, process first n-2 as normal, add a class for styling to n-1, insert doi, then do last as normal&ndash;&gt;-->
-        <!--<xsl:when test="count(caption/p) &gt; 1">-->
-          <!--<xsl:apply-templates select="caption/p[position() &lt; $pcMinus1]"/>-->
+          <!--add a class for styling when page is rendered-->
+          <xsl:for-each select="caption/p[position() = $pcMinus1]">
+            <xsl:call-template name="addSiClass" />
+          </xsl:for-each>
 
-          <!--&lt;!&ndash;add a class for styling when page is rendered&ndash;&gt;-->
-          <!--<xsl:for-each select="caption/p[position() = $pcMinus1]">-->
-            <!--<xsl:call-template name="addSiClass" />-->
-          <!--</xsl:for-each>-->
+          <!--doi goes here-->
+          <p class="siDOI">
+            <xsl:value-of select="$siDOI"/>
+          </p>
 
-          <!--&lt;!&ndash;doi goes here&ndash;&gt;-->
-          <!--<p class="siDOI">-->
-            <!--<xsl:value-of select="$siDOI"/>-->
-          <!--</p>-->
+          <!--final element-->
+          <xsl:for-each select="caption/p[last()]">
+            <xsl:call-template name="addSiClass"/>
+          </xsl:for-each>
 
-          <!--&lt;!&ndash;final element&ndash;&gt;-->
-          <!--<xsl:apply-templates select="caption/p[last()]"/>-->
-
-        <!--</xsl:when>-->
-      <!--</xsl:choose>-->
+        </xsl:when>
+      </xsl:choose>
     </xsl:template>
 
   <!-- 1/4/12: suppress, we don't use -->
