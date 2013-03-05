@@ -47,12 +47,12 @@ public class SavedSearchRouteWeeklyTest extends SavedSearchRouteBaseTest {
     start.sendBody("WEEKLY");
 
     //WAIT 10 seconds for queue jobs to complete
-    Thread.sleep(30000);
+    Thread.sleep(10000);
 
     return new Object[][]{
-      { "savedSearch0@unittestexample.org", 1 },
-      { "savedSearch1@unittestexample.org", 1 },
-      { "savedSearch2@unittestexample.org" , 2 }
+      { "savedSearch0@unittestexample.org", 2 },
+      { "savedSearch1@unittestexample.org", 2 },
+      { "savedSearch2@unittestexample.org" , 2  }
     };
   }
 
@@ -66,7 +66,7 @@ public class SavedSearchRouteWeeklyTest extends SavedSearchRouteBaseTest {
 
     log.debug("Inbox Size ({}): {} Expected: {}", new Object[] { email, inboxMessages.size(), expectedEmails });
 
-    //assertEquals(inboxMessages.size(), expectedEmails, "Inbox sizes off");
+    assertEquals(inboxMessages.size(), expectedEmails, "Inbox sizes off");
 
     //TODO: Check message contents
 

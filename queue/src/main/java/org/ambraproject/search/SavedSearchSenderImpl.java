@@ -1,11 +1,9 @@
 package org.ambraproject.search;
 
 import org.ambraproject.models.SavedSearch;
-import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -44,8 +42,8 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
    */
   public void sendSavedSearch(SavedSearchJob searchJob) {
 
-    log.info("Received thread Name: {}", Thread.currentThread().getName());
-    log.info("Send emails for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
+    log.debug("Received thread Name: {}", Thread.currentThread().getName());
+    log.debug("Send emails for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
 
     final Map<String, Object> context = new HashMap<String, Object>();
 
@@ -71,15 +69,21 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       if(searchJob.getType().equals(SavedSearchType.USER_DEFINED)) {
         subject = "PLOS Search Alert - " + searchDetails.get(a)[2];
 
-        log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
+        log.debug("Job result count: {}", searchJob.getSearchHitList().size());
 
         if(searchJob.getSearchHitList().size() > 0) {
+
+          log.debug("Sending mail: {}", toAddress);
+
           mailer.mail(toAddress, fromAddress, subject, context, content);
+        } else {
+          log.debug("Not sending mail: {}", toAddress);
         }
       } else {
         subject = "PLOS Journal Alert";
 
         log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
+        log.debug("Sending mail: {}", toAddress);
 
         mailer.mail(toAddress, fromAddress, subject, context, content);
       }
@@ -88,8 +92,8 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       markSearchRun((Long)searchDetails.get(a)[0], searchJob.getFrequency(), searchJob.getEndDate());
     }
 
-    log.info("Completed thread Name: {}", Thread.currentThread().getName());
-    log.info("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
+    log.debug("Completed thread Name: {}", Thread.currentThread().getName());
+    log.debug("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
   }
 
   @SuppressWarnings("unchecked")
