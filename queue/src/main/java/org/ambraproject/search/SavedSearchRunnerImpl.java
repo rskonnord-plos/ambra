@@ -59,11 +59,13 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
       searchJob.getStartDate(), searchJob.getEndDate());
     List<SavedSearchHit> finalHitList = new ArrayList<SavedSearchHit>();
 
+    log.debug("Search hits : {}", results.size());
+
     if(results.size() > 0) {
       for(SearchHit hit :results){
         finalHitList.add(new SavedSearchHit(hit.getUri(), hit.getTitle(),hit.getCreator()));
       }
-     }
+    }
 
     searchJob.setSearchHitList(finalHitList);
 

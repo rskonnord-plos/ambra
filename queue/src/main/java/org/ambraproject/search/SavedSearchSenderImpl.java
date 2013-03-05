@@ -67,17 +67,25 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       String toAddress = (String)searchDetails.get(a)[1];
       String subject;
 
-      //TODO: Move PLOS Specific to config
-      if(searchJob.getType().equals(SavedSearchType.JOURNAL_ALERT)) {
+      //TODO: Move subjects to config?
+      if(searchJob.getType().equals(SavedSearchType.USER_DEFINED)) {
         subject = "PLOS Search Alert - " + searchDetails.get(a)[2];
+
+        log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
+
+        if(searchJob.getSearchHitList().size() > 0) {
+          mailer.mail(toAddress, fromAddress, subject, context, content);
+        }
       } else {
         subject = "PLOS Journal Alert";
+
+        log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
+
+        mailer.mail(toAddress, fromAddress, subject, context, content);
       }
 
-      mailer.mail(toAddress, fromAddress, subject, context, content);
-
       //When a results are sent updated the records to indicate
-      markSent((Long)searchDetails.get(a)[0], searchJob.getFrequency(), searchJob.getEndDate());
+      markSearchRun((Long)searchDetails.get(a)[0], searchJob.getFrequency(), searchJob.getEndDate());
     }
 
     log.info("Completed thread Name: {}", Thread.currentThread().getName());
@@ -85,7 +93,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   }
 
   @SuppressWarnings("unchecked")
-  private void markSent(Long savedSearchID, String frequency, Date endDate)
+  private void markSearchRun(Long savedSearchID, String frequency, Date endDate)
   {
     SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, savedSearchID);
 

@@ -236,7 +236,7 @@ public class SavedSearchSenderTest extends BaseTest {
   @Test
   void testSearchSender() throws ApplicationException
   {
-    //I don't test here to check for sent emails.  The SavedSearchEmailRoutesTest does that
+    //I don't test here to check for sent emails.  The SavedSearchRouteMonthlyTest does that
     //Check here that the database was updated to reflect the messages were sent
     Date runTime = Calendar.getInstance().getTime();
 

@@ -56,7 +56,7 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
         .build());
     }
 
-    log.debug("Returning {} saved search(es)", searchJobs.size());
+    log.debug("Returning {} saved search(es) for type {}", searchJobs.size(), alertType);
 
     return searchJobs;
   }
