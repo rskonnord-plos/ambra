@@ -28,23 +28,18 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.mail.MailPreparationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
-
 import org.ambraproject.email.TemplateMailer;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.BodyPart;
@@ -77,7 +72,7 @@ public class FreemarkerTemplateMailer implements TemplateMailer {
   private static final String HTML = "html";
   private static final String SUBJECT = "subject";
 
-  private static final Log log = LogFactory.getLog(FreemarkerTemplateMailer.class);
+  private static final Logger log = LoggerFactory.getLogger(FreemarkerTemplateMailer.class);
 
   /**
    * @inheritDoc
@@ -122,9 +117,7 @@ public class FreemarkerTemplateMailer implements TemplateMailer {
 
       mailSender.send(preparator);
 
-      if (log.isDebugEnabled()) {
-        log.debug("Mail sent to:" + toEmailAddress);
-      }
+      log.debug("Mail sent to: {}", toEmailAddress);
     }
   }
 
