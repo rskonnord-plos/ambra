@@ -447,7 +447,7 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction"
+    <action name="fetchArticleRelated" class="org.ambraproject.action.article.FetchArticleTabsAction"
             method="fetchArticleRelated">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_related.ftl</param>

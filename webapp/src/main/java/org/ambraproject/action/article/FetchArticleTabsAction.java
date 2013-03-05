@@ -67,7 +67,7 @@ import static org.ambraproject.service.annotation.AnnotationService.AnnotationOr
  * <p/>
  * Gets rewritten to:
  * <p/>
- * http://localhost/fetchRelatedArticle.action&amp;articleURI=info%3Adoi%2F10.1371%2Fjournal.pone.0299
+ * http://localhost/fetchArticleRelated.action&amp;articleURI=info%3Adoi%2F10.1371%2Fjournal.pone.0299
  * <p/>
  * Struts picks this up and translates it call the FetchArticleRelated method ex: &lt;action name="fetchRelatedArticle"
  * class="org.ambraproject.article.action.FetchArticleTabsAction" method="FetchArticleRelated"&gt;

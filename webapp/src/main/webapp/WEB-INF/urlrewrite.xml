@@ -106,18 +106,18 @@
   <rule>
     <note>
       re-write incoming related Article URIs.
-      /article/related/doi -> /article/fetchRelatedArticle.action?articleURI=doi
+      /article/related/doi -> /article/fetchArticleRelated.action?articleURI=doi
     </note>
     <from>^(/.+)?/article/related/(info:doi/10\.1371/.+)$</from>
-    <to last="true">$1/article/fetchRelatedArticle.action?articleURI=$2</to>
+    <to last="true">$1/article/fetchArticleRelated.action?articleURI=$2</to>
   </rule>
 
   <outbound-rule>
     <note>
       re-write outbound related Article URIs.
-      /article/fetchRelatedArticle.action?articleURI=doi -> /article/related/doi
+      /article/fetchArticleRelated.action?articleURI=doi -> /article/related/doi
     </note>
-    <from>^(/.+)?/article/fetchRelatedArticle.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleRelated.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
     <to>$1/article/related/$2</to>
   </outbound-rule>
 
