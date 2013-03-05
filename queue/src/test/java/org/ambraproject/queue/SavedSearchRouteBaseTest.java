@@ -8,13 +8,23 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.search.SavedSearchRunner;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.TextUtils;
+import org.jvnet.mock_javamail.Mailbox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.internet.MimeMultipart;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Joe Osowski
@@ -23,20 +33,22 @@ import java.util.Map;
  *
  */
 public class SavedSearchRouteBaseTest extends BaseTest {
+  private static final Logger log = LoggerFactory.getLogger(SavedSearchRouteBaseTest.class);
+
   @Autowired
   protected EmbeddedSolrServerFactory solrServerFactory;
 
   @Autowired
   protected SavedSearchRunner savedSearchRunner;
 
-  private static final String DOI_1         = "10.1371/journal.pone.1002222";
-  private static final String DOI_2         = "10.1371/journal.pmed.1002223";
-  private static final String DOI_3         = "10.1371/journal.pone.1002224";
-  private static final String DOI_4         = "10.1371/journal.pmed.1002225";
-  private static final String JOURNAL_KEY_1 = "PLoSONE";
-  private static final String JOURNAL_KEY_2 = "PLoSMedicine";
-  private static final String CATEGORY_1    = "Category1";
-  private static final String CATEGORY_2    = "Category2";
+  protected static final String DOI_1         = "10.1371/journal.pone.1002222";
+  protected static final String DOI_2         = "10.1371/journal.pmed.1002223";
+  protected static final String DOI_3         = "10.1371/journal.pone.1002224";
+  protected static final String DOI_4         = "10.1371/journal.pmed.1002225";
+  protected static final String JOURNAL_KEY_1 = "PLoSONE";
+  protected static final String JOURNAL_KEY_2 = "PLoSMedicine";
+  protected static final String CATEGORY_1    = "Category1";
+  protected static final String CATEGORY_2    = "Category2";
 
   protected void setupUsers() throws Exception {
     Calendar searchTime = Calendar.getInstance();
@@ -167,5 +179,79 @@ public class SavedSearchRouteBaseTest extends BaseTest {
     solrServerFactory.addDocument(document2);
     solrServerFactory.addDocument(document3);
     solrServerFactory.addDocument(document4);
+  }
+
+  protected void checkEmail(String email, int expectedEmails, Map emailContents) throws Exception {
+    List<Message> inboxMessages = Mailbox.get(email);
+    int subjectsMatched = 0;
+
+    log.debug("Inbox Size ({}): {} Expected: {}", new Object[] { email, inboxMessages.size(), expectedEmails });
+
+    assertEquals(inboxMessages.size(), expectedEmails, "Inbox sizes off");
+
+    //Now we check that the subjects are correct and also check the content of the mail
+    //for the correct DOIs
+
+    for(Message m : inboxMessages) {
+      String subject = m.getSubject();
+      MimeMultipart contents = (MimeMultipart)m.getContent();
+
+      assertTrue(emailContents.containsKey(subject), "Email subject wrong: '" + subject + "'");
+      log.debug("Email subject: '{}' Correct", subject);
+      subjectsMatched++;
+
+      //Check both the HTML and text versions of the contents
+      for(int a = 0; a < contents.getCount(); a++) {
+        BodyPart bp = contents.getBodyPart(a);
+        String body = getContent(bp.getContent());
+        int doisFound = 0;
+
+        log.debug("Checking content: '{}'", bp.getContentType());
+
+        //Check DOIS for existence
+        String[] dois = (String[])emailContents.get(subject);
+
+        for(String doi : dois) {
+          int foundAt = body.indexOf(doi);
+
+          assertTrue(foundAt > 0, "DOI '" + doi + "' not found in message '" + subject + "', or not found in correct order");
+
+          log.debug("DOI: {} found in email body", doi);
+
+          //For the next search, start where this one ended
+          //To assert that order is correct
+          body = body.substring(foundAt + doi.length());
+
+          doisFound++;
+        }
+
+        assertEquals(dois.length, doisFound, "Not all DOIs found in sent email");
+      }
+    }
+
+    //Multiply the size by two as each email is matched
+    assertEquals(emailContents.size(), subjectsMatched, "Email message subjects likely wrong, " +
+      "not all emails defined where sent");
+  }
+
+  /**
+   * Get a string of the content of the email wether the part is text or HTML
+   */
+  protected String getContent(Object content) throws Exception {
+    if(content instanceof String) {
+      return (String) content;
+    }
+
+    if(content instanceof MimeMultipart) {
+      ByteArrayOutputStream s = new ByteArrayOutputStream();
+      MimeMultipart multiPart = (MimeMultipart)content;
+      BodyPart bodyPart = multiPart.getBodyPart(0);
+
+      bodyPart.writeTo(s);
+
+      return s.toString();
+    }
+
+    throw new Exception("Unknown content type: " + content.getClass());
   }
 }

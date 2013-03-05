@@ -11,20 +11,23 @@
 
 package org.ambraproject.queue;
 
-import org.ambraproject.models.SavedSearch;
-import org.ambraproject.models.SavedSearchQuery;
-import org.ambraproject.models.UserProfile;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.jvnet.mock_javamail.Mailbox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import javax.mail.BodyPart;
 import javax.mail.Message;
+import javax.mail.internet.MimeMultipart;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Unit test for the savedSearch camel route
@@ -46,31 +49,39 @@ public class SavedSearchRouteWeeklyTest extends SavedSearchRouteBaseTest {
 
     start.sendBody("WEEKLY");
 
-    //WAIT 10 seconds for queue jobs to complete
-    Thread.sleep(10000);
+    //WAIT 2.5 seconds for queue jobs to complete
+    Thread.sleep(2500);
 
+    //Build up expected emails.  Using email title for predicting contents
     return new Object[][]{
-      { "savedSearch0@unittestexample.org", 2 },
-      { "savedSearch1@unittestexample.org", 2 },
-      { "savedSearch2@unittestexample.org" , 2  }
+      { "savedSearch0@unittestexample.org", 2, new HashMap() {{
+          put("PLOS Search Alert - weekly-0", new String[] { DOI_1 });
+          put("PLOS Search Alert - both-0", new String[] { DOI_2, DOI_3, DOI_4 });
+        }}
+      },
+      { "savedSearch1@unittestexample.org", 2, new HashMap() {{
+          put("PLOS Search Alert - weekly-1", new String[] { DOI_1 });
+          put("PLOS Search Alert - both-1", new String[] { DOI_2, DOI_3, DOI_4 });
+        }}
+      },
+      { "savedSearch2@unittestexample.org", 2, new HashMap() {{
+          put("PLOS Search Alert - weekly-2", new String[] { DOI_1 });
+          put("PLOS Search Alert - both-2", new String[] { DOI_2, DOI_3, DOI_4 });
+        }}
+      }
     };
   }
 
   @Test(dataProvider = "expectedWeeklyEmails")
-  public void expectedMonthlyEmails(String email, int expectedEmails) throws Exception {
-    List<Message> inboxMessages = Mailbox.get(email);
+  public void expectedMonthlyEmails(String email, int expectedEmails, Map emailContents) throws Exception {
+    checkEmail(email, expectedEmails, emailContents);
+  }
 
-    List<UserProfile> up = dummyDataStore.getAll(UserProfile.class);
-    List<SavedSearchQuery> sq = dummyDataStore.getAll(SavedSearchQuery.class);
-    List<SavedSearch> ss = dummyDataStore.getAll(SavedSearch.class);
-
-    log.debug("Inbox Size ({}): {} Expected: {}", new Object[] { email, inboxMessages.size(), expectedEmails });
-
-    assertEquals(inboxMessages.size(), expectedEmails, "Inbox sizes off");
-
-    //TODO: Check message contents
-
+  @AfterClass
+  public void cleanup() {
     //Reset the mailboxes
+    log.debug("Clearing mailboxes");
+
     Mailbox.clearAll();
   }
 }

@@ -23,15 +23,12 @@ Filters:
 <#if filterJournalsAsString?has_content>
   Journals:${filterJournalsAsString}
 </#if>
-
 <#if filterSubjectsAsString?has_content>
   Subject Category:${filterSubjectsAsString}
 </#if>
-
 <#if searchParameters.filterKeyword?has_content>
   Keyword: ${searchParameters.filterKeyword}
 </#if>
-
 <#if searchParameters.filterKeyword?has_content>
   Article Type: ${searchParameters.filterKeyword}
 </#if>
@@ -40,5 +37,5 @@ New Articles in PLOS Journals
 Published between ${startTime?string("MMM dd yyyy")} - ${endTime?string("MMM dd yyyy")}
 
 <#list searchHitList as searchHit>
-  ${searchHit.title} - ${searchHit.creator}
+  ${searchHit.uri} - ${searchHit.title} - ${searchHit.creator}
 </#list>
