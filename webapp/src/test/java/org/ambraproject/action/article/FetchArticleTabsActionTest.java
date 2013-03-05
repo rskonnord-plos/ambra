@@ -47,7 +47,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick 2/16/12
@@ -289,49 +288,7 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
         new AnnotationView(reply, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
         "Action returned incorrect reply");
     assertEquals(action.getNumCorrections(), 2, "Action didn't count corrections");
-    assertTrue(action.getIsRetracted(), "Action didn't count retraction");
-    assertFalse(action.getIsDisplayingCorrections(), "Action didn't indicate that it was not displaying corrections");
-  }
-
-  @Test
-  public void testFetchArticleCorrections() {
-    UserProfile user = userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID);
-    login(user);
-
-    //clear any annotations made by other tests
-    dummyDataStore.deleteAll(Annotation.class);
-
-    //store some annotations on the article
-    Annotation formalCorrection = new Annotation(user, AnnotationType.FORMAL_CORRECTION, getArticleToFetch().getID());
-    formalCorrection.setTitle("Title for formal correction");
-    dummyDataStore.store(formalCorrection);
-
-    Annotation minorCorrection = new Annotation(user, AnnotationType.MINOR_CORRECTION, getArticleToFetch().getID());
-    minorCorrection.setTitle("minor correction for title");
-    dummyDataStore.store(minorCorrection);
-
-    Annotation retraction = new Annotation(user, AnnotationType.RETRACTION, getArticleToFetch().getID());
-    retraction.setTitle("title for retraction");
-    dummyDataStore.store(retraction);
-
-    dummyDataStore.store(new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.REPLY, getArticleToFetch().getID()));
-
-    action.setArticleURI(getArticleToFetch().getDoi());
-    String result = action.fetchArticleCorrections();
-    assertEquals(result, Action.SUCCESS, "Action didn't return success");
-    //check the comments
-    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect number of annotations");
-
-    //order his hard to check, we do it in annotation service test.
-    assertEqualsNoOrder(action.getCommentary(), new AnnotationView[]{
-        new AnnotationView(formalCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
-        new AnnotationView(minorCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
-        new AnnotationView(retraction, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)
-    }, "Action returned incorrect comments");
-
     assertEquals(action.getNumComments(), 1, "Action didn't count comments");
-    assertTrue(action.getIsDisplayingCorrections(), "Action didn't indicate that it was displaying corrections");
   }
 
   @Test

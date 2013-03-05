@@ -436,17 +436,6 @@
       </result>
     </action>
 
-    <action name="fetchArticleCorrections" class="org.ambraproject.action.article.FetchArticleTabsAction"
-            method="fetchArticleCorrections">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_comments.ftl</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/article/article_not_found.ftl</param>
-      </result>
-    </action>
-
     <action name="fetchArticleMetrics" class="org.ambraproject.action.article.FetchArticleTabsAction"
             method="fetchArticleMetrics">
       <result name="success" type="default_freemarker">

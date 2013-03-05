@@ -97,14 +97,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private int totalNumAnnotations = 0;
   private int numCorrections = 0;
   private int numComments = 0;
-  private boolean isRetracted = false;
+
   private List<AnnotationView> formalCorrections = new ArrayList<AnnotationView>();
   private List<AnnotationView> minorCorrections = new ArrayList<AnnotationView>();
   private List<AnnotationView> retractions = new ArrayList<AnnotationView>();
 
   //commentary holds the comments that are being listed
   private AnnotationView[] commentary = new AnnotationView[0];
-  private boolean isDisplayingCorrections = false;
 
   private boolean isResearchArticle;
   private boolean hasRated;
@@ -239,50 +238,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
 
-      //let the view layer know whether we are displaying corrections or not, so we can have different links
-      isDisplayingCorrections = false;
-
       commentary = annotationService.listAnnotations(
           articleInfoX.getId(),
           EnumSet.of(AnnotationType.COMMENT),
           AnnotationOrder.MOST_RECENT_REPLY);
 
-      //have to count the corrections so we know whether to show a 'Show All corrections' link
       numCorrections = annotationService.countAnnotations(articleInfoX.getId(),
         EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
-      //have to indicate if there's a retraction so we know whether to show a 'Show Retraction' link
-      isRetracted = annotationService.countAnnotations(articleInfoX.getId(), EnumSet.of(AnnotationType.RETRACTION)) > 0;
 
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
-    } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
-      return ERROR;
-    }
-    return SUCCESS;
-  }
-
-  /**
-   * Fetch common data and article corrections
-   *
-   * @return "success" on succes, "error" on error
-   */
-  public String fetchArticleCorrections() {
-    try {
-      setCommonData();
-      //let the view layer know whether we are displaying corrections or not, so we can have different links
-      isDisplayingCorrections = true;
-      commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
-          AnnotationOrder.MOST_RECENT_REPLY
-      );
-
-
-      //have to count comments so we know whether to show a 'View All Comments' link
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
           EnumSet.of(AnnotationType.COMMENT));
 
@@ -727,14 +690,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   public AnnotationView[] getCommentary() {
     return commentary;
-  }
-
-  public boolean getIsDisplayingCorrections() {
-    return isDisplayingCorrections;
-  }
-
-  public boolean getIsRetracted() {
-    return isRetracted;
   }
 
   /**
