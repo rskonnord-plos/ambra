@@ -24,16 +24,12 @@ package org.ambraproject.action.article;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleService;
-import org.ambraproject.service.crossref.CrossRefLookupService;
 import org.ambraproject.models.CitedArticle;
-import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.service.pubget.PubGetLookupService;
 import org.ambraproject.views.CitedArticleView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-
-import java.util.List;
 
 /**
  * Display online resources for the references in an article.
@@ -51,10 +47,8 @@ public class FindArticleAction extends BaseActionSupport {
   private String crossRefUrl;
   private String pubGetUrl;
   private String title;
-  private String author;
   private String originalDOI;
 
-  private CrossRefLookupService crossRefLookupService;
   private PubGetLookupService pubGetLookupService;
   private ArticleService articleService;
 
@@ -72,7 +66,7 @@ public class FindArticleAction extends BaseActionSupport {
     originalDOI = citedArticleView.getArticleDoi();
 
     if (doi == null || doi.isEmpty()) {
-      doi = articleService.refreshArticleCitation(citedArticle);
+      doi = articleService.refreshCitedArticle(citedArticle);
     }
 
     if (doi != null && !doi.isEmpty()) {
@@ -85,11 +79,6 @@ public class FindArticleAction extends BaseActionSupport {
     }
 
     return SUCCESS;
-  }
-
-  @Required
-  public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
-    this.crossRefLookupService = crossRefLookupService;
   }
 
   @Required
@@ -125,9 +114,5 @@ public class FindArticleAction extends BaseActionSupport {
 
   public String getTitle() {
     return title;
-  }
-
-  public String getAuthor() {
-    return author;
   }
 }

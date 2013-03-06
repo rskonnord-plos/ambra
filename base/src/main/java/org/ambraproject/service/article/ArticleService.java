@@ -220,7 +220,7 @@ public interface ArticleService {
    *
    * @throws Exception
    */
-  public String refreshArticleCitation(CitedArticle citedArticle) throws Exception;
+  public String refreshCitedArticle(CitedArticle citedArticle) throws Exception;
 
   /**
    * Populates DB objects as necessary to assign the given categories to the given article.
