@@ -92,8 +92,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private List<String> correspondingAuthor;
   private List<String> authorContributions;
   private List<String> competingInterest;
-  private int pageCount = 0;
 
+  private int pageCount = 0;
   private int totalNumAnnotations = 0;
   private int numCorrections = 0;
   private int numComments = 0;
@@ -104,11 +104,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   //commentary holds the comments that are being listed
   private AnnotationView[] commentary = new AnnotationView[0];
-
   private boolean isResearchArticle;
-  private boolean hasRated;
   private String publishedJournal = "";
-
   private ArticleInfo articleInfoX;
   private Document doc;
   private ArticleType articleType;
@@ -119,27 +116,27 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private List<CitationReference> references;
   private String journalAbbrev;
   private String relatedAuthorSearchQuery;
+  private Set<JournalView> journalList;
+  private ArticleAssetWrapper[] articleAssetWrapper;
+  private AmbraFreemarkerConfig ambraFreemarkerConfig;
 
   private FetchArticleService fetchArticleService;
   private AnnotationService annotationService;
   private ArticleService articleService;
   private TrackbackService trackbackService;
-  private AmbraFreemarkerConfig ambraFreemarkerConfig;
   private UserService userService;
-  private Set<JournalView> journalList;
-  private ArticleAssetWrapper[] articleAssetWrapper;
   private ArticleAssetService articleAssetService;
 
   /**
    * Fetch common data the article HTML text
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticle() throws Exception {
     try {
-
       setCommonData();
-      //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
+      //get the corrections without replies loaded up, and ordered oldest to newest.
+      // We do need to show a count of replies on the main article page
       AnnotationView[] annotationViews = annotationService.listAnnotations(
           articleInfoX.getId(),
           EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
@@ -200,7 +197,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   private String fetchExpressionOfConcern() {
 
-    if(articleInfoX.getRelatedArticles() != null ) {
+    if(articleInfoX.getRelatedArticles() != null) {
 
       for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
 
@@ -350,7 +347,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     return SUCCESS;
   }
 
-  /**
+  /** This method gets called when user click on crossref tile inside metrics tab
    * Fetches common data and nothing else
    *
    * @return "success" on succes, "error" on error
@@ -567,15 +564,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public List<List<String>> getArticleIssues() {
     return articleIssues;
-  }
-
-  /**
-   * Tests if this article has been rated by the current user
-   *
-   * @return Returns the hasRated.
-   */
-  public boolean getHasRated() {
-    return hasRated;
   }
 
   /**
