@@ -54,7 +54,7 @@ public enum HtmlChecker {
       //Instead of getting each section and searching for the desired tag, just get all paragraphs
       //and make sure at least one satisfies the test condition
 
-      Matcher m = Pattern.compile("doi/10.1371/journal\\.[a-z]{4}\\.[0-9]{7}").matcher("");
+      Matcher m = Pattern.compile("doi:10.1371/journal\\.[a-z]{4}\\.[0-9]{7}").matcher("");
 
       boolean hasDOI = true;
       for (Element element : html.getElementsByTag("p")) {
