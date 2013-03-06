@@ -1222,7 +1222,7 @@
     <xsl:template match="license-p" /> <!-- 1/4/12: removed p from list, we process independently -->
 
   <!-- 1/4/12: plos modifications -->
-  <!--if this changes, template "addSiClass" has to change, too-->
+  <!--if this changes, the two templates below, "preSiClass", and "postSiClass" have to change, too-->
   <xsl:template match="p">
     <a>
       <xsl:call-template name="makeIdNameFromXpathLocation"/>
@@ -1235,7 +1235,19 @@
 
   <!--3/1/13, add class to a specific paragraph for after styling-->
   <!--note that if 'match="p"' changes, this will have to change-->
-  <xsl:template name="addSiClass">
+  <xsl:template name="preSiClass">
+    <a>
+      <xsl:call-template name="makeIdNameFromXpathLocation"/>
+    </a>
+    <p class="preSiDOI">
+      <xsl:apply-templates/>
+    </p>
+    <xsl:call-template name="newline1"/>
+  </xsl:template>
+
+  <!--3/4/13 add class to paragraphs appearing after doi in supplementary doi-->
+  <!--for styling-->
+  <xsl:template name="postSiClass">
     <a>
       <xsl:call-template name="makeIdNameFromXpathLocation"/>
     </a>
@@ -1824,7 +1836,7 @@
         <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
       </xsl:element>
       <xsl:variable name="objURI"><xsl:value-of select="@xlink:href"/></xsl:variable>
-      <p>
+      <p class="siTitle">
         <strong>
           <xsl:element name="a">
             <xsl:attribute name="href">
@@ -1838,36 +1850,58 @@
 
       <!--here, we're appending SI DOI after the caption but before the file type-->
       <xsl:variable name="siDOI">
-        <xsl:value-of select="replace($objURI,'info:','')"/>
+        <xsl:value-of select="replace($objURI,'info:doi/','doi:')"/>
       </xsl:variable>
 
       <xsl:choose>
+
         <!--If one or no caption/p, insert doi-->
         <xsl:when test="count(caption/p) &lt; 2">
           <!--doi-->
-          <p>
+          <p class="siDoi">
             <xsl:value-of select="$siDOI"/>
           </p>
-          <!--normal caption paragraphs-->
-          <xsl:apply-templates select="caption/p"/>
+          <!--add class to target styling-->
+          <xsl:for-each select="caption/p">
+            <xsl:call-template name="postSiClass"/>
+          </xsl:for-each>
         </xsl:when>
 
-        <!--if more than one caption, process first n-2 as normal, add a class for styling to n-1, insert doi, then do last as normal-->
-        <xsl:when test="count(caption/p) &gt; 1">
-          <xsl:apply-templates select="caption/p[position() &lt; count(caption/p)]"/>
+        <!--if 2 caption/p elements, each needs it's own class for styling-->
+        <xsl:when test="count(caption/p) = 2">
+          <!--the first -->
+          <xsl:for-each select="caption/p[position() = 1]">
+            <xsl:call-template name="preSiClass"/>
+          </xsl:for-each>
+          <!--doi-->
+          <p class="siDoi">
+            <xsl:value-of select="$siDOI"/>
+          </p>
+          <!--the last-->
+          <xsl:for-each select="caption/p[last()]">
+            <xsl:call-template name="postSiClass"/>
+          </xsl:for-each>
+        </xsl:when>
+
+        <!--if more than 2 caption/p elements, space out the verbal elements and close spacing between doi-->
+        <!--and file type and size information-->
+        <xsl:when test="count(caption/p) &gt; 2">
+          <xsl:apply-templates select="caption/p[position() &lt; last()]"/>
+          <!--<xsl:apply-templates select="caption/p"/>-->
 
           <!--doi goes here-->
-          <p class="siDOI">
+          <p class="siDoi">
             <xsl:value-of select="$siDOI"/>
           </p>
 
           <!--final element-->
           <xsl:for-each select="caption/p[last()]">
-            <xsl:call-template name="addSiClass"/>
+            <xsl:call-template name="postSiClass"/>
           </xsl:for-each>
-
         </xsl:when>
+
       </xsl:choose>
+
     </xsl:template>
 
   <!-- 1/4/12: suppress, we don't use -->

@@ -737,13 +737,20 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 }
 
 /*supporting information*/
-.siDOI {
-  border-bottom: 0;
+.siTitle {
   margin-bottom: 0;
 }
+
+.siDoi {
+  margin-bottom: 0;
+}
+
+.preSiDOI {
+  margin-bottom: 0;
+}
+
 .postSiDOI {
-  border-top:0;
-  margin-top:0;
+  margin-top: 0;
 }
 
 /*pageftr*/
