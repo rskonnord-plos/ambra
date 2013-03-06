@@ -458,8 +458,57 @@
       </result>
     </action>
 
-    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction"
-            method="fetchArticleInfo">
+    <action name="fetchArticlePjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticlePjax">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/article_pjax.ftl</param>
+      </result>
+      <result name="articleNotFound" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleAuthorsPjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleAuthorsPjax">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/article_authors_pjax.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCommentsPjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCommentsPjax">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/article_comments_pjax.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleMetricsPjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetricsPjax">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/article_metrics_pjax.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchRelatedArticlePjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelatedPjax">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/article/article_related_pjax.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_crossref.ftl</param>
       </result>

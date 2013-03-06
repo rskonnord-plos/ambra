@@ -128,49 +128,15 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private ArticleAssetService articleAssetService;
 
   /**
-   * Fetch common data the article HTML text
+   * Fetch the data for Article Tab
    *
    * @return "success" on success, "error" on error
    */
   public String fetchArticle() throws Exception {
     try {
       setCommonData();
-      //get the corrections without replies loaded up, and ordered oldest to newest.
-      // We do need to show a count of replies on the main article page
-      AnnotationView[] annotationViews = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
-              AnnotationType.COMMENT),
-          AnnotationOrder.NEWEST_TO_OLDEST
-      );
-
-      List<AnnotationView> commentList = new LinkedList<AnnotationView>();
-      for (AnnotationView annotationView : annotationViews) {
-        AnnotationType annotationType = annotationView.getType();
-        switch (annotationType) {
-          case FORMAL_CORRECTION:
-            formalCorrections.add(annotationView);
-            break;
-          case MINOR_CORRECTION:
-            minorCorrections.add(annotationView);
-            break;
-          case RETRACTION:
-            retractions.add(annotationView);
-            break;
-          case COMMENT:
-            commentList.add(annotationView);
-            break;
-          case REPLY:
-            break;
-          default:
-            throw new RuntimeException("Unhandled enum value: " + annotationType);
-        }
-      }
-      commentary = commentList.toArray(new AnnotationView[commentList.size()]);
-      numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
-
+      populateFromAnnotations();
       fetchExpressionOfConcern();
-
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
@@ -178,16 +144,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       return ARTICLE_NOT_FOUND;
     }
 
-    //If the user is logged in, record this as an article view
-    UserProfile user = getCurrentUser();
-    if (user != null) {
-      try {
-        userService.recordArticleView(user.getID(), articleInfoX.getId(), ArticleView.Type.ARTICLE_VIEW);
-      } catch (Exception e) {
-        log.error("Error recording an article view for user: {} and article: {}", user.getID(), articleInfoX.getId());
-        log.error(e.getMessage(), e);
-      }
-    }
+    recordArticleView();
     return SUCCESS;
   }
 
@@ -227,7 +184,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * Fetch common data and annotations
+   * Fetch data for Comments Tab
    *
    * @return "success" on success, "error" on error
    */
@@ -246,103 +203,54 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
           EnumSet.of(AnnotationType.COMMENT));
 
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
+      populateErrorMessages(e);
       return ERROR;
     }
     return SUCCESS;
   }
 
   /**
-   * Fetches common data for the authors tab
+   * Fetches data for Authors Tab
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticleAuthors() {
     try {
       setCommonData();
-
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
-      return ERROR;
+      populateErrorMessages(e);
     }
     return SUCCESS;
   }
 
   /**
-   * Fetches common data and the trackback list.
+   * Fetches data for Metrics Tab
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticleMetrics() {
     try {
       setCommonData();
-
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
-
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
+      populateErrorMessages(e);
       return ERROR;
     }
     return SUCCESS;
   }
 
   /**
-   * Fetches common data and the trackback list.
+   * Fetches data for Related Content Tab
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticleRelated() {
     try {
       setCommonData();
-
-      trackbackList = trackbackService.getTrackbacksForArticle(articleURI);
-
-      // get the first two and the last two authors
-      List<String> authors = articleInfoX.getAuthors();
-      int authorSize = authors.size();
-      relatedAuthorSearchQuery = "";
-      if (authorSize <= RELATED_AUTHOR_SEARCH_QUERY_SIZE) {
-        for (String author : authors) {
-          relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + author + "\" OR ";
-        }
-        // remove the last ", OR "
-        if (relatedAuthorSearchQuery.length() > 0) {
-          relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
-        }
-
-      } else {
-        // get first 2
-        relatedAuthorSearchQuery = "\"" + authors.get(0) + "\" OR ";
-        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(1) + "\" OR ";
-        // get last 2
-        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 2) + "\" OR ";
-        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 1) + "\"";
-      }
-
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
+      populateRelatedAuthorSearchQuery();
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
-      return ERROR;
+     populateErrorMessages(e);
     }
     return SUCCESS;
   }
@@ -377,12 +285,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * @throws NoSuchArticleIdException when the article can not be found
    */
   private void setCommonData() throws ApplicationException, NoSuchArticleIdException {
-    try {
-      UriUtil.validateUri(articleURI, "articleURI=<" + articleURI + ">");
-    } catch (Exception e) {
-      throw new NoSuchArticleIdException(articleURI, e.getMessage(), e);
-    }
-
+    validateArticleURI();
     articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
     journalList = articleInfoX.getJournals();
     isResearchArticle = articleService.isResearchArticle(articleInfoX);
@@ -438,6 +341,212 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
         || CollectionUtils.isNotEmpty(correspondingAuthor)
         || CollectionUtils.isNotEmpty(authorContributions)
         || CollectionUtils.isNotEmpty(competingInterest);
+  }
+
+  /**
+   * Fetch data for Article Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticlePjax() throws Exception {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
+      populateFromAnnotations();
+      fetchExpressionOfConcern();
+      transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return (e instanceof  NoSuchArticleIdException ? ARTICLE_NOT_FOUND : ERROR);
+    }
+    //If the user is logged in, record this as an article view
+    recordArticleView();
+    return SUCCESS;
+  }
+
+  /**
+   * Fetch data for Comments Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleCommentsPjax() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      commentary = annotationService.listAnnotations(
+          articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationOrder.MOST_RECENT_REPLY);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * Fetches data for Authors Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleAuthorsPjax() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      doc = this.fetchArticleService.getArticleDocument(articleInfoX);
+      authors = this.fetchArticleService.getAuthors(doc);
+      correspondingAuthor = this.fetchArticleService.getCorrespondingAuthors(doc);
+      authorContributions = this.fetchArticleService.getAuthorContributions(doc);
+      competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * Fetches data for Metrics Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleMetricsPjax() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      totalNumAnnotations = annotationService.countAnnotations(articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
+              AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
+      trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * Fetches data for Related Content Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleRelatedPjax() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      populateRelatedAuthorSearchQuery();
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * populate the annotations
+   */
+  private void populateFromAnnotations() {
+    //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
+    AnnotationView[] annotationViews = annotationService.listAnnotations(
+        articleInfoX.getId(),
+        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
+            AnnotationType.COMMENT),
+        AnnotationOrder.NEWEST_TO_OLDEST
+    );
+    List<AnnotationView> commentList = new LinkedList<AnnotationView>();
+    for (AnnotationView annotationView : annotationViews) {
+      AnnotationType annotationType = annotationView.getType();
+      switch (annotationType) {
+        case FORMAL_CORRECTION:
+          formalCorrections.add(annotationView);
+          break;
+        case MINOR_CORRECTION:
+          minorCorrections.add(annotationView);
+          break;
+        case RETRACTION:
+          retractions.add(annotationView);
+          break;
+        case COMMENT:
+          commentList.add(annotationView);
+          break;
+        case REPLY:
+          break;
+        default:
+          throw new RuntimeException("Unhandled enum value: " + annotationType);
+      }
+    }
+    commentary = commentList.toArray(new AnnotationView[commentList.size()]);
+    numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
+  }
+
+  /**
+   * validate the article URI
+   * @throws NoSuchArticleIdException
+   */
+  private void validateArticleURI() throws NoSuchArticleIdException {
+    try {
+      UriUtil.validateUri(articleURI, "articleURI=<" + articleURI + ">");
+    } catch (Exception e) {
+      throw new NoSuchArticleIdException(articleURI, e.getMessage(), e);
+    }
+  }
+
+  /**
+   * populate the error messages
+   * @param e
+   */
+  private void populateErrorMessages(Exception e) {
+    if (e instanceof NoSuchArticleIdException) {
+      messages.add("No article found for id: " + articleURI);
+      log.info("Could not find article: " + articleURI, e);
+    }
+    else {
+      messages.add(e.getMessage());
+      log.error("Error retrieving article: " + articleURI, e);
+    }
+  }
+
+  /**
+   * populate the author search query
+   */
+  private void populateRelatedAuthorSearchQuery() {
+    // get the first two and the last two authors
+    List<String> authors = articleInfoX.getAuthors();
+    int authorSize = authors.size();
+    relatedAuthorSearchQuery = "";
+    if (authorSize <= RELATED_AUTHOR_SEARCH_QUERY_SIZE) {
+      for (String author : authors) {
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + author + "\" OR ";
+      }
+      // remove the last ", OR "
+      if (relatedAuthorSearchQuery.length() > 0) {
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
+      }
+    } else {
+      // get first 2
+      relatedAuthorSearchQuery = "\"" + authors.get(0) + "\" OR ";
+      relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(1) + "\" OR ";
+      // get last 2
+      relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 2) + "\" OR ";
+      relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 1) + "\"";
+    }
+  }
+
+  /**
+   * record the article view
+   */
+  private void recordArticleView() {
+    //If the user is logged in, record this as an article view
+    UserProfile user = getCurrentUser();
+    if (user != null) {
+      try {
+        userService.recordArticleView(user.getID(), articleInfoX.getId(), ArticleView.Type.ARTICLE_VIEW);
+      } catch (Exception e) {
+        log.error("Error recording an article view for user: {} and article: {}", user.getID(), articleInfoX.getId());
+        log.error(e.getMessage(), e);
+      }
+    }
   }
 
   /**
