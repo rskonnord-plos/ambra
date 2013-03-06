@@ -135,6 +135,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   public String fetchArticle() throws Exception {
     try {
       setCommonData();
+      articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
       populateFromAnnotations();
       fetchExpressionOfConcern();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
@@ -233,6 +234,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
+      //count all the comments and corrections
+      totalNumAnnotations = annotationService.countAnnotations(articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
+              AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
     } catch (Exception e) {
       populateErrorMessages(e);
       return ERROR;
@@ -290,11 +295,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     journalList = articleInfoX.getJournals();
     isResearchArticle = articleService.isResearchArticle(articleInfoX);
     articleIssues = articleService.getArticleIssues(articleURI);
-    //count all the comments and corrections
-    totalNumAnnotations = annotationService.countAnnotations(articleInfoX.getId(),
-        EnumSet.of(AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
-            AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
-
     articleType = articleInfoX.getKnownArticleType();
 
     String pages = this.articleInfoX.getPages();
@@ -320,8 +320,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
-
-    articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
 
     /**
      An article can be cross published, but we want the source journal.
