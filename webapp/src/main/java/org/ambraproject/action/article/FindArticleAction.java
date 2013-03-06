@@ -67,21 +67,13 @@ public class FindArticleAction extends BaseActionSupport {
     CitedArticle citedArticle = citedArticleView.getCitedArticle();
 
     title = citedArticle.getTitle() == null ? "" : citedArticle.getTitle();
-    author = getAuthorStringForLookup(citedArticle);
 
-    //TODO: Move this logic block to the service tier
-    //SE-133
-    /** BEGIN BLOCK **/
     String doi = citedArticle.getDoi();
     originalDOI = citedArticleView.getArticleDoi();
 
     if (doi == null || doi.isEmpty()) {
-      doi = crossRefLookupService.findDoi(citedArticle.getTitle(), author);
-      if (doi != null && !doi.isEmpty()) {
-        articleService.setCitationDoi(citedArticle, doi);
-      }
+      doi = articleService.refreshArticleCitation(citedArticle);
     }
-    /** END BLOCK ***/
 
     if (doi != null && !doi.isEmpty()) {
       crossRefUrl = "http://dx.doi.org/" + doi;
@@ -93,17 +85,6 @@ public class FindArticleAction extends BaseActionSupport {
     }
 
     return SUCCESS;
-  }
-
-  /**
-   * Formats a citation's authors for searching in CrossRef.
-   *
-   * @param citedArticle persistent class representing the citation
-   * @return String with author information formatted for a CrossRef query
-   */
-  private String getAuthorStringForLookup(CitedArticle citedArticle) {
-    List<CitedArticleAuthor> authors = citedArticle.getAuthors();
-    return authors.size() > 0 ? authors.get(0).getSurnames() : "";
   }
 
   @Required

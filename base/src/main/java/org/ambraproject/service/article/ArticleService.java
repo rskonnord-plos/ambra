@@ -212,6 +212,17 @@ public interface ArticleService {
   public void setCitationDoi(CitedArticle citedArticle, String doi);
 
   /**
+   * Query crossref for the latest article doi and update the database
+   *
+   * @param citedArticle the citedArticle record to update
+   *
+   * @return the DOI found
+   *
+   * @throws Exception
+   */
+  public String refreshArticleCitation(CitedArticle citedArticle) throws Exception;
+
+  /**
    * Populates DB objects as necessary to assign the given categories to the given article.
    *
    * @param article article to update
