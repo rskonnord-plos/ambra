@@ -624,17 +624,6 @@
       </result>
     </action>
 
-    <action name="fetchBody" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
-      <result name="success" type="default_freemarker">
-        <param name="location">/article/article_content.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/article/article_not_found.ftl</param>
-      </result>
-    </action>
-
     <action name="citationList" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/citationList.ftl</param>
