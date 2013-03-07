@@ -118,7 +118,7 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
    * @throws Exception
    */
   @Test
-  public void getArticleInfoForEoc() throws Exception {
+  public void testArticleInfoForEoc() throws Exception {
 
     Article eocArticle = new Article();
     eocArticle.setDoi("id:doi-object-of-concern-relationship-article");
@@ -227,7 +227,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
         "Action didn't record this as an article view");
 
     //check the comments
-    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect number of comments");
     assertEquals(action.getFormalCorrections().toArray(), new AnnotationView[]{
         new AnnotationView(formalCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)},
         "Action returned incorrect formal corrections");
