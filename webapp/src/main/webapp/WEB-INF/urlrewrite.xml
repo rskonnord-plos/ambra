@@ -424,15 +424,6 @@
   <rule>
     <note>
       re-write incoming advanced search requests
-      /search/advanced/ -> /search/advancedSearch.action
-    </note>
-    <from>^(/.+)?/search/advanced/$</from>
-    <to>$1/search/advancedSearch.action</to>
-  </rule>
-
-  <rule>
-    <note>
-      re-write incoming advanced search requests
       /search/advanced -> /search/advancedSearch.action
     </note>
     <from>^(/.+)?/search/advanced(.*)?</from>
