@@ -22,10 +22,14 @@ var $pagebdy = $('#pagebdy');
 //For analytics tracking
 var close_time;
 
-// on document ready
 $(document).ready(function () {
+  onReadyDocument();
+  onReadyMainContainer();
+});
 
-  // detect touch screen
+// on document ready
+function onReadyDocument() {
+// detect touch screen
   $.support.touchEvents = (function () {
     return (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
   })();
@@ -59,21 +63,13 @@ $(document).ready(function () {
     this.tabs();
   });
 
-  $article = $('#article-block').find('div.article').eq(0);
-
-  $('#nav-article-page').doOnce(function () {
-    this.buildNav({
-      content:$article
-    });
-  });
-
   $('#nav-toc').doOnce(function () {
     this.buildNav({
       content:$('#toc-block').find('div.col-2')
     });
   });
 
-  // enable the floating nav for non-touch-enabled devices due to issue with 
+  // enable the floating nav for non-touch-enabled devices due to issue with
   // zoom and position:fixed.
   // FIXME: temp patch; needs more refinement.
   if (!$.support.touchEvents) {
@@ -83,15 +79,41 @@ $(document).ready(function () {
         sections:$('#toc-block').find('div.section')
       });
     });
+  }
 
+  $('.authors').doOnce(function () {
+    this.authorsMeta();
+  })
+
+  $('.article-kicker').doOnce(function () {
+    this.articleType();
+  })
+
+  var collapsible = $('.collapsibleContainer');
+  if (collapsible) {
+    collapsible.collapsiblePanel();
+  }
+}
+
+function onReadyMainContainer() {
+  $article = $('#article-block').find('div.article').eq(0);
+
+  $('#nav-article-page').doOnce(function () {
+    this.buildNav({
+      content:$article
+    });
+  });
+
+  // enable the floating nav for non-touch-enabled devices due to issue with
+  // zoom and position:fixed.
+  // FIXME: temp patch; needs more refinement.
+  if (!$.support.touchEvents) {
     $('#nav-article-page').doOnce(function () {
       this.floatingNav({
         sections:$article.find('a[toc]').closest('div')
       });
     });
-
   }
-
 
   $('#figure-thmbs').doOnce(function () {
     this.carousel({
@@ -118,33 +140,12 @@ $(document).ready(function () {
     });
   });
 
-
-  $('.authors').doOnce(function () {
-    this.authorsMeta();
-  })
-
-  $('.article-kicker').doOnce(function () {
-    this.articleType();
-  })
-
   if (!$.support.touchEvents) {
     $article.doOnce(function () {
       this.scrollFrame();
     });
   }
-
-  var collapsible = $('.collapsibleContainer');
-  if (collapsible) {
-    collapsible.collapsiblePanel();
-  }
-});
-
-var $nav_article = $('#nav-article');
-if ($nav_article.length) {
-  items_l = $nav_article.find('li').length
-  $nav_article.addClass('items-' + items_l);
 }
-
 
 (function ($) {
   $.fn.authorsMeta = function (options) {
@@ -1132,113 +1133,6 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   buildFigs();
 };
 
-
-var $figure_thmbs = $('#figure-thmbs');
-if ($figure_thmbs.length) {
-  $lnks = $figure_thmbs.find('.item a');
-  $wrap = $figure_thmbs.find('div.wrapper');
-  if ($lnks.length) {
-    $lnks.on('click', function (e) {
-      e.preventDefault();
-      doi = $(this).data('doi');
-      ref = $(this).data('uri');
-      launchModal(doi, ref, 'fig');
-    });
-    $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
-        $wrap.hide();
-        $figure_thmbs.find('div.buttons').hide();
-        $figure_thmbs.find('div.controls').hide();
-        $fig_tog.html('Show Figures')
-          .toggleClass('hide');
-      },function () {
-        $wrap.show();
-        $figure_thmbs.find('div.buttons').show();
-        $figure_thmbs.find('div.controls').show();
-        $fig_tog.html('Hide Figures')
-          .toggleClass('hide');
-      }
-    ).insertAfter($figure_thmbs)
-      .wrap('<div id="fig-toggle" class="cf" />');
-  } else {
-    $figure_thmbs.addClass('collapse');
-  }
-}
-
-
-// inline figures
-var $fig_inline = $('#article-block').find('div.figure');
-if ($fig_inline.length) {
-  $lnks = $fig_inline.find('.img a');
-  $lnks.on('click', function (e) {
-    e.preventDefault();
-    ref = $(this).data('uri');
-    doi = $(this).data('doi');
-    launchModal(doi, ref, 'fig');
-  });
-  $lnks.append('<div class="expand" />');
-}
-
-
-// figure search results
-var $fig_results = $('#fig-search-results');
-if ($fig_results.length) {
-  $fig_results.find('a.figures').on('click', function () {
-    doi = $(this).data('doi');
-    launchModal(doi, null, 'fig', true);
-  });
-  $fig_results.find('a.abstract').on('click', function () {
-    doi = $(this).data('doi');
-    launchModal(doi, null, 'abstract', true);
-  });
-}
-
-//if search box is empty, don't submit the form
-//This is a little weird, but there are multiple forms on multiple pages
-//The home/global and advanced search pages
-$('form[name="searchForm"], form[name="searchStripForm"]').each(function (index, item) {
-  $(item).submit(function () {
-    //Form fields are sometimes name differently pending on where the search came from
-    //namely simple or advanced
-    if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
-      return false;
-    }
-    else {
-      $('#db input[name="startPage"]').val('0');
-    }
-  });
-});
-
-// figure link in article floating nav
-var $nav_figs = $('#nav-figures a');
-if ($nav_figs.length) {
-  $nav_figs.on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'fig');
-  });
-}
-
-// figure link in the toc
-var $toc_block_links = $('#toc-block div.links');
-if ($toc_block_links.length) {
-  $toc_block_links.find('a.figures').on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'fig', true);
-  });
-
-  $toc_block_links.find('a.abstract').on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'abstract', true);
-  });
-}
-
-var $toc_block_cover = $('#toc-block .cover img');
-if ($toc_block_cover.length) {
-  var doi = $toc_block_cover.data('doi');
-  $toc_block_cover.click(function () {
-    launchModal(doi, null, 'fig', true);
-  });
-}
-
 var killModal = function () {
   $('div.modal').remove();
   $('#modal-mask').remove();
@@ -1251,10 +1145,6 @@ var killModal = function () {
   close_time = event.timeStamp;
 };
 
-var toggleModalState = function () {
-  $('#fig-viewer').toggleClass('abstract');
-};
-
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
   var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -1265,16 +1155,6 @@ function getParameterByName(name) {
   else
     return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-
-var imageURI = getParameterByName("imageURI");
-if (imageURI) {
-  var index = imageURI.lastIndexOf(".");
-  if (index > 0) {
-    var doi = imageURI.substr(0, index);
-    launchModal(doi, imageURI, 'fig');
-  }
-}
-delete imageURI;
 
 //Stolen from:
 //http://stackoverflow.com/questions/149055/how-can-i-format-numbers-as-money-in-javascript
@@ -1292,20 +1172,6 @@ Array.prototype.remove = function (from, to) {
   return this.push.apply(this, rest);
 };
 
-
-//******************************
-//Browse / issue page functions
-//******************************
-// on window load
-$(window).load(function () {
-  $('.journal_issues').doOnce(function () {
-    this.journalArchive({
-      navID:'#journal_years',
-      slidesContainer:'#journal_slides',
-      initialTab:0
-    });
-  });
-});
 
 (function ($) {
   $.fn.journalArchive = function (options) {
@@ -1339,33 +1205,6 @@ $(window).load(function () {
   };
 })(jQuery);
 
-$(document).bind('keydown', function (e) {
-  if (e.which == 27) {
-    killModal();
-  }
-});
-
-//load article asset sizes for inline figure download links
-$('.assetSize').each(function (index, assetInput) {
-  var span = $('span[id="' + assetInput.getAttribute('name') + '"]');
-  if (span) {
-    val = assetInput.getAttribute('value');
-    if (val >= 1000000) {
-      val /= 1000000;
-      val = Math.round(val * 100) / 100;
-      val = String(val).concat("MB");
-    }
-    else if (val < 1000000 && val >= 1000) {
-      val /= 1000;
-      val = Math.round(val);
-      val = String(val).concat("KB");
-    }
-    else {
-      val = String(val).concat("Bytes");
-    }
-    span.html(val);
-  }
-});
 
 // Collapsible div used on the 500 page (error.ftl) to hold the exception stacktrace.
 // Based on code from http://www.darreningram.net/pages/examples/jQuery/CollapsiblePanelPlugin.aspx
@@ -1406,5 +1245,185 @@ function CollapsibleContainerTitleOnClick() {
   $(".collapsibleContainerContent", $(this).parent()).slideToggle();
 }
 
+//if search box is empty, don't submit the form
+//This is a little weird, but there are multiple forms on multiple pages
+//The home/global and advanced search pages
+$('form[name="searchForm"], form[name="searchStripForm"]').each(function (index, item) {
+  $(item).submit(function () {
+    //Form fields are sometimes name differently pending on where the search came from
+    //namely simple or advanced
+    if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
+      return false;
+    }
+    else {
+      $('#db input[name="startPage"]').val('0');
+    }
+  });
+});
+
+var $toc_block_cover = $('#toc-block .cover img');
+if ($toc_block_cover.length) {
+  var doi = $toc_block_cover.data('doi');
+  $toc_block_cover.click(function () {
+    launchModal(doi, null, 'fig', true);
+  });
+}
+
+var toggleModalState = function () {
+  $('#fig-viewer').toggleClass('abstract');
+};
+
+var imageURI = getParameterByName("imageURI");
+if (imageURI) {
+  var index = imageURI.lastIndexOf(".");
+  if (index > 0) {
+    var doi = imageURI.substr(0, index);
+    launchModal(doi, imageURI, 'fig');
+  }
+}
+delete imageURI;
+
+
+//******************************
+//Browse / issue page functions
+//******************************
+// on window load
+$(window).load(function () {
+  $('.journal_issues').doOnce(function () {
+    this.journalArchive({
+      navID:'#journal_years',
+      slidesContainer:'#journal_slides',
+      initialTab:0
+    });
+  });
+});
+
+
+$(document).bind('keydown', function (e) {
+  if (e.which == 27) {
+    killModal();
+  }
+});
+
+
+// refactor initialization for pjax-container code
+
+function initMainContainer() {
+  var $nav_article = $('#nav-article');
+  if ($nav_article.length) {
+    items_l = $nav_article.find('li').length
+    $nav_article.addClass('items-' + items_l);
+  }
+
+  var $figure_thmbs = $('#figure-thmbs');
+  if ($figure_thmbs.length) {
+    $lnks = $figure_thmbs.find('.item a');
+    $wrap = $figure_thmbs.find('div.wrapper');
+    if ($lnks.length) {
+      $lnks.on('click', function (e) {
+        e.preventDefault();
+        doi = $(this).data('doi');
+        ref = $(this).data('uri');
+        launchModal(doi, ref, 'fig');
+      });
+      $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
+          $wrap.hide();
+          $figure_thmbs.find('div.buttons').hide();
+          $figure_thmbs.find('div.controls').hide();
+          $fig_tog.html('Show Figures')
+            .toggleClass('hide');
+        },function () {
+          $wrap.show();
+          $figure_thmbs.find('div.buttons').show();
+          $figure_thmbs.find('div.controls').show();
+          $fig_tog.html('Hide Figures')
+            .toggleClass('hide');
+        }
+      ).insertAfter($figure_thmbs)
+        .wrap('<div id="fig-toggle" class="cf" />');
+    } else {
+      $figure_thmbs.addClass('collapse');
+    }
+  }
+
+  // inline figures
+  var $fig_inline = $('#article-block').find('div.figure');
+  if ($fig_inline.length) {
+    $lnks = $fig_inline.find('.img a');
+    $lnks.on('click', function (e) {
+      e.preventDefault();
+      ref = $(this).data('uri');
+      doi = $(this).data('doi');
+      launchModal(doi, ref, 'fig');
+    });
+    $lnks.append('<div class="expand" />');
+  }
+
+  // figure search results
+  var $fig_results = $('#fig-search-results');
+  if ($fig_results.length) {
+    $fig_results.find('a.figures').on('click', function () {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'fig', true);
+    });
+    $fig_results.find('a.abstract').on('click', function () {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'abstract', true);
+    });
+  }
+
+  // figure link in article floating nav
+  var $nav_figs = $('#nav-figures a');
+  if ($nav_figs.length) {
+    $nav_figs.on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'fig');
+    });
+  }
+
+  // figure link in the toc
+  var $toc_block_links = $('#toc-block div.links');
+  if ($toc_block_links.length) {
+    $toc_block_links.find('a.figures').on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'fig', true);
+    });
+
+    $toc_block_links.find('a.abstract').on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'abstract', true);
+    });
+  }
+
+  //load article asset sizes for inline figure download links
+  $('.assetSize').each(function (index, assetInput) {
+    var span = $('span[id="' + assetInput.getAttribute('name') + '"]');
+    if (span) {
+      val = assetInput.getAttribute('value');
+      if (val >= 1000000) {
+        val /= 1000000;
+        val = Math.round(val * 100) / 100;
+        val = String(val).concat("MB");
+      }
+      else if (val < 1000000 && val >= 1000) {
+        val /= 1000;
+        val = Math.round(val);
+        val = String(val).concat("KB");
+      }
+      else {
+        val = String(val).concat("Bytes");
+      }
+      span.html(val);
+    }
+  });
+}
+
+initMainContainer();
+
 $(document).pjax("#nav-article ul li a", "#pjax-container",
     {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
+
+$("#pjax-container").on("pjax:complete", function() {
+  onReadyMainContainer();
+  initMainContainer();
+});
