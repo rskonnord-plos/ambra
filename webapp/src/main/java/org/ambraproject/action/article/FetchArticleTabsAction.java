@@ -344,7 +344,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return "success" on success, "error" on error
    */
-  public String fetchArticlePjax() throws Exception {
+  public String fetchArticleContent() throws Exception {
     try {
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
@@ -366,7 +366,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return "success" on success, "error" on error
    */
-  public String fetchArticleCommentsPjax() {
+  public String fetchArticleCommentsContent() {
     try {
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
@@ -386,7 +386,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return "success" on success, "error" on error
    */
-  public String fetchArticleAuthorsPjax() {
+  public String fetchArticleAuthorsContent() {
     try {
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
@@ -407,7 +407,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return "success" on success, "error" on error
    */
-  public String fetchArticleMetricsPjax() {
+  public String fetchArticleMetricsContent() {
     try {
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
@@ -426,7 +426,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return "success" on success, "error" on error
    */
-  public String fetchArticleRelatedPjax() {
+  public String fetchArticleRelatedContent() {
     try {
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());

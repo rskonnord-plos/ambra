@@ -458,9 +458,9 @@
       </result>
     </action>
 
-    <action name="fetchArticlePjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticlePjax">
+    <action name="fetchArticleContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleContent">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_pjax.ftl</param>
+        <param name="templateFile">/article/article_content.ftl</param>
       </result>
       <result name="articleNotFound" type="default_freemarker">
         <param name="status">404</param>
@@ -468,9 +468,9 @@
       </result>
     </action>
 
-    <action name="fetchArticleAuthorsPjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleAuthorsPjax">
+    <action name="fetchArticleAuthorsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleAuthorsContent">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_authors_pjax.ftl</param>
+        <param name="templateFile">/article/article_authors_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
@@ -478,9 +478,9 @@
       </result>
     </action>
 
-    <action name="fetchArticleCommentsPjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCommentsPjax">
+    <action name="fetchArticleCommentsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCommentsContent">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_comments_pjax.ftl</param>
+        <param name="templateFile">/article/article_comments_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
@@ -488,9 +488,9 @@
       </result>
     </action>
 
-    <action name="fetchArticleMetricsPjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetricsPjax">
+    <action name="fetchArticleMetricsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetricsContent">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_metrics_pjax.ftl</param>
+        <param name="templateFile">/article/article_metrics_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
@@ -498,9 +498,9 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticlePjax" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelatedPjax">
+    <action name="fetchRelatedArticleContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelatedContent">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_related_pjax.ftl</param>
+        <param name="templateFile">/article/article_related_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
