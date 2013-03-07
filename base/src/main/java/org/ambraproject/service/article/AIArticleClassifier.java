@@ -81,9 +81,6 @@ public class AIArticleClassifier implements ArticleClassifier {
   @Override
   public List<String> classifyArticle(Document articleXml) throws Exception {
     String toCategorize = getCategorizationContent(articleXml);
-
-    log.info("CALLAWAY: using thesaurus " + thesaurus);
-
     String aiMessage = String.format(MESSAGE_BEGIN, thesaurus) + toCategorize + MESSAGE_END;
     PostMethod post = new PostMethod(serviceUrl);
     post.setRequestEntity(new StringRequestEntity(aiMessage, "application/xml", "UTF-8"));
