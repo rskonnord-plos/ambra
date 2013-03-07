@@ -94,7 +94,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private List<String> competingInterest;
 
   private int pageCount = 0;
-  private int totalNumAnnotations = 0;
   private int numCorrections = 0;
   private int numComments = 0;
 
@@ -234,10 +233,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
-      //count all the comments and corrections
-      totalNumAnnotations = annotationService.countAnnotations(articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
-              AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
+      //count all the comments
+      numComments = annotationService.countAnnotations(articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT));
     } catch (Exception e) {
       populateErrorMessages(e);
       return ERROR;
@@ -413,9 +411,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
-      totalNumAnnotations = annotationService.countAnnotations(articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
-              AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
+      numComments = annotationService.countAnnotations(articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT));
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
     } catch (Exception e) {
       populateErrorMessages(e);
@@ -777,10 +774,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   public int getNumCorrections() {
     return numCorrections;
-  }
-
-  public int getTotalNumAnnotations() {
-    return totalNumAnnotations;
   }
 
   public AnnotationView[] getCommentary() {

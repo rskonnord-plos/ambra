@@ -341,6 +341,7 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     action.setArticleURI(getArticleToFetch().getDoi());
     String resultComments = action.fetchArticleComments();
     assertEquals(resultComments, Action.SUCCESS, "Action didn't return success");
-    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect annotation count");
+    assertEquals(action.getNumComments(), 1, "Action returned incorrect comments count");
+    assertEquals(action.getNumCorrections(), 2, "Action returned incorrect annotations count");
   }
 }
