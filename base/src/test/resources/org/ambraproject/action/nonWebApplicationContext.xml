@@ -208,7 +208,7 @@
     <property name="articleTransformService" ref="xmlService"/>
   </bean>
 
-  <bean id="passwordDigestService" class="org.topazproject.ambra.service.password.PasswordDigestService">
+  <bean id="passwordDigestService" class="org.ambraproject.service.password.PasswordDigestService">
     <property name="algorithm" value="SHA-256"/>
     <property name="encodingCharset" value="UTF-8"/>
   </bean>

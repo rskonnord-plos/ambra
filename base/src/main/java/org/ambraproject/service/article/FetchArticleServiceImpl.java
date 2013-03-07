@@ -172,7 +172,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   *  Patterns for <corresp></corresp>  and <email></email> tags
+   *  Patterns for <corresp></corresp>  | <email></email> | <sec></sec> etc., tags and other content
    */
   private static final Pattern[] PATTERNS = {
     Pattern.compile("<corresp(.*?)>"),
@@ -184,11 +184,21 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("^E-mail:"),
     Pattern.compile("^\\* E-mail:"),
     Pattern.compile("\\*To whom"),
-    Pattern.compile("\\* To whom")
+    Pattern.compile("\\* To whom"),
+    Pattern.compile("<sec(?:.*)*>"),
+    Pattern.compile("</sec>"),
+    Pattern.compile("<list-item>"),
+    Pattern.compile("</list-item>"),
+    Pattern.compile("</list>"),
+    Pattern.compile("<list(?:.*)*>"),
+    Pattern.compile("<title(?:.*)*>"),
+    Pattern.compile("<body(?:.*)*>"),
+    Pattern.compile("</body>")
   };
 
+
   /**
-   *  Pattern replaceements for <corresp></corresp>  and <email></email> tags
+   *  Pattern replacements for <corresp></corresp>  | <email></email> | <sec></sec> etc., tags and other content
    */
   private static final String[] REPLACEMENTS = {
     "",
@@ -197,7 +207,16 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">* E-mail:</span>",
     "<span class=\"email\">*</span>To whom",
-    "<span class=\"email\">*</span>To whom"
+    "<span class=\"email\">*</span>To whom",
+    "",
+    "",
+    "\n<li>",
+    "</li>",
+    "</ul>",
+    "<ul class=\"bulletlist\">",
+    "",
+    "",
+    ""
   };
 
   /**
@@ -667,6 +686,27 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
+   * Extract the body content from EoC article, clean the text and return it.
+   * @param doc
+   * @return expressionOfConcern text
+   * @throws TransformerException
+   * @throws XPathExpressionException
+   */
+  public String getEocBody(Document doc) throws TransformerException, XPathExpressionException {
+
+    Node eocBody = xPathUtil.selectSingleNode(doc, "//body");
+    Node eocTitle =  xPathUtil.selectSingleNode(doc, "//title-group/article-title");
+    String bodyText = TextUtils.getAsXMLString(eocBody);
+
+    for (int index = 0; index < PATTERNS.length; index++) {
+      bodyText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
+    }
+
+    bodyText = "<p><strong>" + eocTitle.getTextContent() + "</strong></p>" + bodyText ;
+    return bodyText;
+  }
+
+  /**
    * @param document        a document to search for nodes
    * @param xpathExpression XPath describing the nodes to find
    * @return a list of the text content of the nodes found, or {@code null} if none
@@ -1021,7 +1061,10 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     try {
       NodeList referenceList = getReferenceNodes(doc);
 
-      // TODO: can this ever happen?
+      // If sortOrder on citedArticle has duplicate value, you will get below error.Ideally it should not happen
+      // but since sortOrder is not unique it may be possible to update that field from backend to have duplicate value
+      // Now index is on sortOrder(article.hbm.xml), index will be only on one of those of duplicate value and
+      // hence citedArticle will have less count then the xml.
       if (referenceList.getLength() != citedArticles.size()) {
         throw new ApplicationException(String.format("Article has %d citedArticles but %d references",
             citedArticles.size(), referenceList.getLength()));

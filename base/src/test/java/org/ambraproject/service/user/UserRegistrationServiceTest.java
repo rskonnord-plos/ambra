@@ -5,8 +5,8 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.testutils.DummyAmbraMailer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import org.topazproject.ambra.service.password.PasswordDigestService;
-import org.topazproject.ambra.service.password.PasswordServiceException;
+import org.ambraproject.service.password.PasswordDigestService;
+import org.ambraproject.service.password.PasswordServiceException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;

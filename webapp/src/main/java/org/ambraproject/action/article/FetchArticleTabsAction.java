@@ -37,6 +37,7 @@ import org.ambraproject.views.JournalView;
 import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
+import org.ambraproject.views.article.RelatedArticleInfo;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,10 +82,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * Returned by fetchArticle() when the given DOI is not in the repository.
    */
   public static final String ARTICLE_NOT_FOUND = "articleNotFound";
+  public static final String OBJECT_OF_CONCERN_RELATION = "object-of-concern";
 
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
+  private String expressionOfConcern = "";
+
   private List<String> correspondingAuthor;
   private List<String> authorContributions;
   private List<String> competingInterest;
@@ -169,6 +173,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       commentary = commentList.toArray(new AnnotationView[commentList.size()]);
       numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
 
+      fetchExpressionOfConcern();
 
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
@@ -188,6 +193,41 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       }
     }
     return SUCCESS;
+  }
+
+  /**
+   * check if the article has Expression of concern, if so fetch the value
+   * @return String
+   */
+  private String fetchExpressionOfConcern() {
+
+    if(articleInfoX.getRelatedArticles() != null ) {
+
+      for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
+
+        try {
+          if((relatedArticleInfo.getArticleTypes() != null) &&
+              OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+              articleService.isEocArticle(relatedArticleInfo)) {
+
+            ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
+            Document document = this.fetchArticleService.getArticleDocument(articleInfo);
+            expressionOfConcern = this.fetchArticleService.getEocBody(document);
+
+          }
+        } catch (NoSuchArticleIdException e) {
+          messages.add("No article found for id: " + relatedArticleInfo.getDoi());
+          log.info("Could not find article: " + relatedArticleInfo.getDoi(), e);
+          return ERROR;
+        } catch (Exception e) {
+          messages.add(e.getMessage());
+          log.error("Error retrieving article: " + relatedArticleInfo.getDoi(), e);
+          return ERROR;
+        }
+      }
+    }
+
+    return expressionOfConcern;
   }
 
   /**
@@ -650,8 +690,21 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
+   *
+   * @return Expression Of Concern data
+   */
+  public String getExpressionOfConcern() {
+    return expressionOfConcern;
+  }
+
+  public void setExpressionOfConcern(String expressionOfConcern) {
+    this.expressionOfConcern = expressionOfConcern;
+  }
+
+  /**
    * @return an array of retractions
    */
+
   public List<AnnotationView> getRetractions() {
     return this.retractions;
   }

@@ -23,8 +23,8 @@ import java.net.URISyntaxException;
 
 import javax.xml.transform.TransformerException;
 
-import org.topazproject.dom.ranges.SelectionRange;
-import org.topazproject.dom.ranges.SelectionRangeList;
+import org.ambraproject.dom.ranges.SelectionRange;
+import org.ambraproject.dom.ranges.SelectionRangeList;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

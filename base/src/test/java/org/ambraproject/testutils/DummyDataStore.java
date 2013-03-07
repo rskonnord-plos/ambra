@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author Alex Kudlick Date: 5/2/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 public interface DummyDataStore {
 
