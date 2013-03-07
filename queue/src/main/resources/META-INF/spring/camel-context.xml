@@ -87,6 +87,46 @@
     <property name="searchService"   ref="searchService" />
   </bean>
 
+  <bean id="rolesEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="RolesCache"/>
+  </bean>
+
+  <bean id="rolesCache" class="org.ambraproject.service.cache.EhcacheProvider">
+    <constructor-arg index="0" ref="rolesEhCache"/>
+  </bean>
+
+  <bean id="permissionsService" class="org.ambraproject.service.permission.PermissionsServiceImpl">
+    <property name="sessionFactory" ref="hibernateSessionFactory"/>
+    <property name="rolesCache" ref="rolesCache"/>
+  </bean>
+
+  <!--Http Client-->
+  <bean id="httpConnectionManagerParams" class="org.apache.commons.httpclient.params.HttpConnectionManagerParams">
+    <!-- time out after 30 sec -->
+    <property name="soTimeout" value="30000"/>
+    <property name="connectionTimeout" value="30000"/>
+  </bean>
+
+  <bean id="multiThreadedHttpConnectionManager"
+        class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
+    <property name="params" ref="httpConnectionManagerParams"/>
+  </bean>
+
+  <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
+    <constructor-arg index="0" ref="multiThreadedHttpConnectionManager"/>
+  </bean>
+
+  <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
+    <property name="httpClient" ref="httpClient"/>
+    <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
+  </bean>
+
+  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
+    <property name="sessionFactory" ref="hibernateSessionFactory"/>
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="crossRefLookupService" ref="crossRefLookupService"/>
+  </bean>
+
   <bean id="quartz" class="org.apache.camel.component.quartz.QuartzComponent">
   </bean>
 
@@ -94,7 +134,4 @@
     <jmxAgent id="ambra-queue" disabled="true"/>
     <routeBuilder ref="emailRouteBuilder"/>
   </camelContext>
-
-
-
 </beans>
