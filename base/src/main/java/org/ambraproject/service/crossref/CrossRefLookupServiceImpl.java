@@ -102,6 +102,8 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
    * @see CrossRefArticle
    */
   public List<CrossRefArticle> findArticles(String title, String author) throws Exception {
+    //TODO: Update to use new API
+
     List<CrossRefArticle> articles = new ArrayList<CrossRefArticle>();
       String crossReefQueryURL = crossRefUrl + createPipedQuery(title, author);
 
