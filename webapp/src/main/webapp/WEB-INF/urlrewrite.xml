@@ -424,6 +424,16 @@
   <rule>
     <note>
       re-write incoming advanced search requests
+      /search/advanced/ -> /search/advancedSearch.action
+    </note>
+    <from>^(/.+)?/search/advanced/$</from>
+    <to>$1/search/advancedSearch.action</to>
+  </rule>
+
+  <!--above rule is not duplicate of this one. That has trailing "/" at the end -->
+  <rule>
+    <note>
+      re-write incoming advanced search requests
       /search/advanced -> /search/advancedSearch.action
     </note>
     <from>^(/.+)?/search/advanced(.*)?</from>
