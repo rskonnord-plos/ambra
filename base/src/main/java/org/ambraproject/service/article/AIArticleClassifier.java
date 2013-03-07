@@ -49,7 +49,7 @@ public class AIArticleClassifier implements ArticleClassifier {
 
   private static final Logger log = LoggerFactory.getLogger(AIArticleClassifier.class);
 
-  private static final String MESSAGE_BEGIN = "<TMMAI project='plos2012thes' location = '.'>\n" +
+  private static final String MESSAGE_BEGIN = "<TMMAI project='%s' location = '.'>\n" +
       "  <Method name='getSuggestedTermsFullPath' returnType='java.util.Vector'/>\n" +
       "  <VectorParam>\n" +
       "    <VectorElement>";
@@ -60,11 +60,17 @@ public class AIArticleClassifier implements ArticleClassifier {
 
 
   private String serviceUrl;
+  private String thesaurus;
   private HttpClient httpClient;
 
   @Required
   public void setServiceUrl(String serviceUrl) {
     this.serviceUrl = serviceUrl;
+  }
+
+  @Required
+  public void setThesaurus(String thesaurus) {
+    this.thesaurus = thesaurus;
   }
 
   @Required
@@ -75,7 +81,10 @@ public class AIArticleClassifier implements ArticleClassifier {
   @Override
   public List<String> classifyArticle(Document articleXml) throws Exception {
     String toCategorize = getCategorizationContent(articleXml);
-    String aiMessage = MESSAGE_BEGIN + toCategorize + MESSAGE_END;
+
+    log.info("CALLAWAY: using thesaurus " + thesaurus);
+
+    String aiMessage = String.format(MESSAGE_BEGIN, thesaurus) + toCategorize + MESSAGE_END;
     PostMethod post = new PostMethod(serviceUrl);
     post.setRequestEntity(new StringRequestEntity(aiMessage, "application/xml", "UTF-8"));
     httpClient.executeMethod(post);
@@ -241,6 +250,8 @@ public class AIArticleClassifier implements ArticleClassifier {
       System.out.println("\n\n" + classifier.getCategorizationContent(dom) + "\n\n");
 
       classifier.setServiceUrl("http://tax.plos.org:9080/servlet/dh");
+      classifier.setThesaurus("plos2012thes");
+//      classifier.setThesaurus("plosthes.2013-2");
       classifier.setHttpClient(new HttpClient(new MultiThreadedHttpConnectionManager()));
       List<String> terms = classifier.classifyArticle(dom);
       System.out.println("\n\nTerms returned by taxonomy server:");
