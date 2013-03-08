@@ -86,6 +86,51 @@
   </outbound-rule>
 
   <rule>
+    <note>re-write incoming article authors URIs.
+      /article/authors/doi?... -> /article/fetchArticleAuthorsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/authors/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleAuthorsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming related Article URIs
+      /article/related/doi?... -> to /article/fetchArticleRelatedContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/related/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleRelatedContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article Metrics URIs
+      /article/metrics/doi?... -> /article/fetchArticleMetricsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/metrics/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleMetricsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article comment URIs
+      /article/comments/doi?... to /article/fetchArticleCommentsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/comments/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleCommentsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article URIs
+      /article/doi?... to /article/fetchArticleContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
     <note>
       re-write incoming article author URIs.
       /article/authors/doi -> /article/fetchArticleAuthors.action?articleURI=doi
