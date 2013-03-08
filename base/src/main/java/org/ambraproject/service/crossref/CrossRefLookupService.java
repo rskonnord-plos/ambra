@@ -41,6 +41,8 @@ public interface CrossRefLookupService {
    */
   public String findDoi(String title, String author) throws Exception;
 
+  public String findDoi(String title, String author, String journal, String volume, String pages) throws Exception;
+
   /**
    * Find article based on title and first author.
    *

@@ -10,16 +10,12 @@
  */
 package org.ambraproject.routes;
 
-import org.ambraproject.models.CitedArticle;
 import org.ambraproject.views.article.ArticleInfo;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * @author Joe Osowski
@@ -27,6 +23,12 @@ import java.util.List;
  * Camel routes for looking up crossref cited articles
  */
 public class CrossRefLookupRoutes extends SpringRouteBuilder {
+  /**
+   * The key to fetch the value for the authorization ID for the given request in the
+   * header
+   */
+  public static final String HEADER_AUTH_ID = "authId";
+
   private static final Logger log = LoggerFactory.getLogger(CrossRefLookupRoutes.class);
 
   @Override
@@ -36,7 +38,7 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
     //Route for updating all the citedArticles for an article
     //Requires articleDoi as the body and authId set on the header
     from("direct:updatedCitedArticles")
-      .beanRef("articleService", "getArticleInfo(${body}, ${headers.authId})")
+      .beanRef("articleService", "getArticleInfo(${body}, ${headers." + HEADER_AUTH_ID + "})")
       .process(new Processor() {
         @Override
         public void process(Exchange exchange) throws Exception {
@@ -45,8 +47,7 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
             exchange.getIn().getBody(ArticleInfo.class).getCitedArticles());
         }
       })
-      //Create a job for each CitedArticle
-      .split().body()
+      .split().body() //Create a job for each CitedArticle
       .to("direct:updateCitedArticle");
 
     //Route for updating one citedArticle

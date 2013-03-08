@@ -44,7 +44,9 @@
   <bean id="mockHttpClient" class="org.apache.commons.httpclient.HttpClientMock">
     <!-- Fake response code and body defined below -->
     <constructor-arg index="0" value="200"/>
-    <constructor-arg index="1" value="TEST"/>
+    <!-- Fake response for crossref -->
+    <!--<constructor-arg index="1" value="test-response-isbn|test-response-title|test-response-firstAuthor|test-response-volume|1|4|2012|test-response-resourceType|test-response-key|10.33002/fkfkdaa.103033fkfkf/fff"/>-->
+    <constructor-arg index="1" value="{ &quot;results&quot;: [ { &quot;text&quot;: &quot;Rober AS,Herpetichthyes, Amphibioidei, Choanichthyes, or Sarcopterygii?;Nature;176;126&quot;,&quot;match&quot;: true, &quot;doi&quot;: &quot;10.1038/176126a0&quot;, &quot;score&quot;: 5.8360705 } ], &quot;query_ok&quot;: true }"/>
   </bean>
 
   <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">

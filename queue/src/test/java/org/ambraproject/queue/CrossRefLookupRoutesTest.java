@@ -15,19 +15,18 @@ import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.CitedArticleAuthor;
-import org.ambraproject.models.CitedArticleEditor;
+import org.ambraproject.routes.CrossRefLookupRoutes;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Unit test for the cross ref lookup route
@@ -97,10 +96,11 @@ public class CrossRefLookupRoutesTest extends BaseTest {
   }
 
   @Test(dataProvider = "testData")
+  @SuppressWarnings("unchecked")
   public void testRoute(final Article article1) throws Exception {
 
     start.sendBodyAndHeaders(article1.getDoi(), new HashMap() {{
-      put("authId", BaseTest.DEFAULT_USER_AUTHID);
+      put(CrossRefLookupRoutes.HEADER_AUTH_ID, BaseTest.DEFAULT_USER_AUTHID);
     }});
 
     //Let the queue do it's job before checking results
@@ -109,6 +109,8 @@ public class CrossRefLookupRoutesTest extends BaseTest {
     Article result = dummyDataStore.get(Article.class, article1.getID());
 
     //TODO: Check that records are updated
-    List<CitedArticle> citedArticles = result.getCitedArticles();
+    for(CitedArticle citedArticle : result.getCitedArticles()) {
+      assertNotNull(citedArticle.getDoi());
+    }
   }
 }

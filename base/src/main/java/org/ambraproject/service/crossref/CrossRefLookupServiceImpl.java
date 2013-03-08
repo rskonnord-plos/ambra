@@ -21,9 +21,13 @@
 
 package org.ambraproject.service.crossref;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +35,9 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -104,6 +110,8 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
   public List<CrossRefArticle> findArticles(String title, String author) throws Exception {
     //TODO: Update to use new API
 
+    //throw new Exception("This method deprecated!  Delete me!");
+
     List<CrossRefArticle> articles = new ArrayList<CrossRefArticle>();
       String crossReefQueryURL = crossRefUrl + createPipedQuery(title, author);
 
@@ -158,6 +166,86 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     return null;
   }
 
+  private PostMethod createCrossRefPost(String title, String author, String journal, String volume, String pages)
+  {
+    StringBuilder builder = new StringBuilder();
+
+    //["Young GC,Analytical methods in palaeobiogeography, and the role of early vertebrate studies;Palaeoworld;19;160-173"]
+
+    builder.append("[\"")
+      .append(author)
+      .append(",")
+      .append(title)
+      .append(";")
+      .append(journal)
+      .append(";")
+      .append(volume)
+      .append(";")
+      .append(pages);
+
+    final String json = builder.toString();
+
+    //TODO: Move URL to configuration?
+    return new PostMethod("http://search.labs.crossref.org/links") {{
+      addRequestHeader("Content-Type","application/json");
+      setRequestEntity(new RequestEntity() {
+        @Override
+        public boolean isRepeatable() {
+          return false;
+        }
+
+        @Override
+        public void writeRequest(OutputStream outputStream) throws IOException {
+          outputStream.write(json.getBytes());
+        }
+
+        @Override
+        public long getContentLength() {
+          return json.getBytes().length;
+        }
+
+        @Override
+        public String getContentType() {
+          return "application/json";
+        }
+      });
+    }};
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public String findDoi(String title, String author, String journal, String volume, String pages) throws Exception {
+    PostMethod post = createCrossRefPost(title, author, journal, volume, pages);
+    Gson gson = new Gson();
+
+    try {
+      long timestamp = System.currentTimeMillis();
+      int response = httpClient.executeMethod(post);
+
+      log.debug("Http post finished in {} ms", System.currentTimeMillis() - timestamp);
+
+      if (response == 200) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
+        CrossRefResponse res = gson.fromJson(reader, CrossRefResponse.class);
+
+        //Just grab the first result
+        if(res.results.length > 0) {
+          return res.results[0].doi;
+        } else {
+          return null;
+        }
+      } else {
+        log.error("Received response code {} when executing query {}", response, crossRefUrl);
+      }
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+    } finally {
+      // be sure the connection is released back to the connection manager
+      post.releaseConnection();
+    }
+    return null;
+  }
+
   private String createPipedQuery(String title, String author) throws UnsupportedEncodingException {
     return escapeString(URLEncoder.encode(title + "|" + author + "|||", "UTF-8"));
   }
@@ -191,4 +279,29 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
         .replaceAll("&", "%26")
         .replaceAll("\n", "%0A");
   }
+
+  public class CrossRefResponse {
+    public CrossRefResponse() {}
+
+    public class CrossRefResult {
+      public CrossRefResult() {}
+
+      @SerializedName("text")
+      public String text;
+      @SerializedName("match")
+      public Boolean match;
+      @SerializedName("doi")
+      public String doi;
+      @SerializedName("score")
+      public Long score;
+    }
+
+    @SerializedName("results")
+    public CrossRefResult[] results;
+
+    @SerializedName("query_ok")
+    public Boolean queryOK;
+  }
 }
+
+

@@ -792,7 +792,11 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     log.debug("refreshArticleCitation for citedArticleID: {}", citedArticle.getID());
 
     String author = getAuthorStringForLookup(citedArticle);
-    String doi = crossRefLookupService.findDoi(citedArticle.getTitle(), author);
+    String doi = crossRefLookupService.findDoi(citedArticle.getTitle(),
+      author,
+      citedArticle.getJournal(),
+      citedArticle.getVolume(),
+      citedArticle.getPages());
 
     if (doi != null && !doi.isEmpty()) {
       log.debug("refreshArticleCitation doi found: {}", doi);
@@ -812,7 +816,15 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   private String getAuthorStringForLookup(CitedArticle citedArticle) {
     List<CitedArticleAuthor> authors = citedArticle.getAuthors();
-    return authors.size() > 0 ? authors.get(0).getSurnames() : "";
+
+    if(authors.size() > 0) {
+      String surname = authors.get(0).getSurnames();
+      String givenName = authors.get(0).getGivenNames();
+
+      return (givenName == null)? surname : surname + " " + givenName;
+    } else {
+      return "";
+    }
   }
 
   /**
