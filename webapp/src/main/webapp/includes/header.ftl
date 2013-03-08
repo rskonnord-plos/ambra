@@ -20,7 +20,7 @@
     <meta name="solrApiKey" content="${freemarker_config.get("solrApiKey")}" />
     <meta name="pubGetHost" content="${freemarker_config.pubGetURL}" />
 
-    <#include "/includes/article_variables.ftl">
+    <#include "/article/article_variables.ftl">
 
     <link rel="shortcut icon" href="${freemarker_config.context}/images/favicon.ico" type="image/x-icon" />
     <link rel="home" title="home" href="${homeURL}" />
