@@ -1886,8 +1886,14 @@
         <!--if more than 2 caption/p elements, space out the verbal elements and close spacing between doi-->
         <!--and file type and size information-->
         <xsl:when test="count(caption/p) &gt; 2">
-          <xsl:apply-templates select="caption/p[position() &lt; last()]"/>
+          <xsl:apply-templates select="caption/p[position() &lt; last() - 1]"/>
           <!--<xsl:apply-templates select="caption/p"/>-->
+
+          <!--second from last element gets a class for styling targetting-->
+          <!--<xsl:apply-templates select="caption/p[position() = last() - 1]"/>-->
+          <xsl:for-each select="caption/p[position() = last() - 1]">
+            <xsl:call-template name="preSiClass"/>
+          </xsl:for-each>
 
           <!--doi goes here-->
           <p class="siDoi">
