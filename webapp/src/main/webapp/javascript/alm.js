@@ -63,7 +63,7 @@ $.fn.alm = function () {
   this.getRelatedBlogs = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Nature,Researchblogging,Wikipedia";
+    var request = "articles/" + doi + ".json?events=1&source=Nature,Researchblogging,Wikipedia,scienceseeker";
     this.getData(request, callBack, errorCallback);
   }
 
