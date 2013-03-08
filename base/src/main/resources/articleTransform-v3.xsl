@@ -1221,18 +1221,43 @@
     <xsl:template match="media" />
     <xsl:template match="license-p" /> <!-- 1/4/12: removed p from list, we process independently -->
 
-    <!-- 1/4/12: plos modifications -->
-    <xsl:template match="p">
-      <a>
-        <xsl:call-template name="makeIdNameFromXpathLocation"/>
-      </a>
-	    <p>
-	      <xsl:apply-templates/>
-	    </p>
-	    <xsl:call-template name="newline1"/>
-	  </xsl:template>
+  <!-- 1/4/12: plos modifications -->
+  <!--if this changes, the two templates below, "preSiClass", and "postSiClass" have to change, too-->
+  <xsl:template match="p">
+    <a>
+      <xsl:call-template name="makeIdNameFromXpathLocation"/>
+    </a>
+    <p>
+      <xsl:apply-templates/>
+    </p>
+    <xsl:call-template name="newline1"/>
+  </xsl:template>
 
-    <!-- 1/4/12: suppress, we don't use -->
+  <!--3/1/13, add class to a specific paragraph for after styling-->
+  <!--note that if 'match="p"' changes, this will have to change-->
+  <xsl:template name="preSiClass">
+    <a>
+      <xsl:call-template name="makeIdNameFromXpathLocation"/>
+    </a>
+    <p class="preSiDOI">
+      <xsl:apply-templates/>
+    </p>
+    <xsl:call-template name="newline1"/>
+  </xsl:template>
+
+  <!--3/4/13 add class to paragraphs appearing after doi in supplementary doi-->
+  <!--for styling-->
+  <xsl:template name="postSiClass">
+    <a>
+      <xsl:call-template name="makeIdNameFromXpathLocation"/>
+    </a>
+    <p class="postSiDOI">
+      <xsl:apply-templates/>
+    </p>
+    <xsl:call-template name="newline1"/>
+  </xsl:template>
+
+  <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="@content-type" />
 
     <!-- 1/4/12: plos-specific template (overrides nlm list-item/p[not(preceding-sibling::*[not(self::label)])]) -->
@@ -1810,10 +1835,10 @@
         <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
         <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
       </xsl:element>
-      <p>
+      <xsl:variable name="objURI"><xsl:value-of select="@xlink:href"/></xsl:variable>
+      <p class="siTitle">
         <strong>
           <xsl:element name="a">
-            <xsl:variable name="objURI"><xsl:value-of select="@xlink:href"/></xsl:variable>
             <xsl:attribute name="href">
               <xsl:value-of select="concat($pubAppContext,'/article/fetchSingleRepresentation.action?uri=',$objURI)"/>
             </xsl:attribute>
@@ -1822,10 +1847,70 @@
           <xsl:apply-templates select="caption/title"/>
         </strong>
       </p>
-      <xsl:apply-templates select="caption/p"/>
+
+      <!--here, we're appending SI DOI after the caption but before the file type-->
+      <xsl:variable name="siDOI">
+        <xsl:value-of select="replace($objURI,'info:doi/','doi:')"/>
+      </xsl:variable>
+
+      <xsl:choose>
+
+        <!--If one or no caption/p, insert doi-->
+        <xsl:when test="count(caption/p) &lt; 2">
+          <!--doi-->
+          <p class="siDoi">
+            <xsl:value-of select="$siDOI"/>
+          </p>
+          <!--add class to target styling-->
+          <xsl:for-each select="caption/p">
+            <xsl:call-template name="postSiClass"/>
+          </xsl:for-each>
+        </xsl:when>
+
+        <!--if 2 caption/p elements, each needs it's own class for styling-->
+        <xsl:when test="count(caption/p) = 2">
+          <!--the first -->
+          <xsl:for-each select="caption/p[position() = 1]">
+            <xsl:call-template name="preSiClass"/>
+          </xsl:for-each>
+          <!--doi-->
+          <p class="siDoi">
+            <xsl:value-of select="$siDOI"/>
+          </p>
+          <!--the last-->
+          <xsl:for-each select="caption/p[last()]">
+            <xsl:call-template name="postSiClass"/>
+          </xsl:for-each>
+        </xsl:when>
+
+        <!--if more than 2 caption/p elements, space out the verbal elements and close spacing between doi-->
+        <!--and file type and size information-->
+        <xsl:when test="count(caption/p) &gt; 2">
+          <xsl:apply-templates select="caption/p[position() &lt; last() - 1]"/>
+          <!--<xsl:apply-templates select="caption/p"/>-->
+
+          <!--second from last element gets a class for styling targetting-->
+          <!--<xsl:apply-templates select="caption/p[position() = last() - 1]"/>-->
+          <xsl:for-each select="caption/p[position() = last() - 1]">
+            <xsl:call-template name="preSiClass"/>
+          </xsl:for-each>
+
+          <!--doi goes here-->
+          <p class="siDoi">
+            <xsl:value-of select="$siDOI"/>
+          </p>
+
+          <!--final element-->
+          <xsl:for-each select="caption/p[last()]">
+            <xsl:call-template name="postSiClass"/>
+          </xsl:for-each>
+        </xsl:when>
+
+      </xsl:choose>
+
     </xsl:template>
 
-    <!-- 1/4/12: suppress, we don't use -->
+  <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="tex-math"/>
 
     <!-- 1/4/12: plos modifications (remove mml prefix from all math elements, required for MathJax to work) -->
