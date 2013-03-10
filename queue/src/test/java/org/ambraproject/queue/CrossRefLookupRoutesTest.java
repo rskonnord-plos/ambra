@@ -35,7 +35,7 @@ import static org.testng.Assert.assertNotNull;
  */
 @ContextConfiguration
 public class CrossRefLookupRoutesTest extends BaseTest {
-  @Produce(uri = "direct:updatedCitedArticles")
+  @Produce(uri = CrossRefLookupRoutes.UPDATE_CITED_ARTICLE)
   protected ProducerTemplate start;
 
   private static final String DOI_1 = "info:doi/10.1371/journal.joe.1030540";

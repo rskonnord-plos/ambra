@@ -28,6 +28,8 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
    * header
    */
   public static final String HEADER_AUTH_ID = "authId";
+  public static final String UPDATE_CITED_ARTICLES = "direct:updatedCitedArticles";
+  public static final String UPDATE_CITED_ARTICLE = "direct:updateCitedArticle";
 
   private static final Logger log = LoggerFactory.getLogger(CrossRefLookupRoutes.class);
 
@@ -37,7 +39,7 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
 
     //Route for updating all the citedArticles for an article
     //Requires articleDoi as the body and authId set on the header
-    from("direct:updatedCitedArticles")
+    from(UPDATE_CITED_ARTICLES)
       .beanRef("articleService", "getArticleInfo(${body}, ${headers." + HEADER_AUTH_ID + "})")
       .process(new Processor() {
         @Override
@@ -48,10 +50,10 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
         }
       })
       .split().body() //Create a job for each CitedArticle
-      .to("direct:updateCitedArticle");
+      .to(UPDATE_CITED_ARTICLE);
 
     //Route for updating one citedArticle
-    from("direct:updateCitedArticle")
+    from(UPDATE_CITED_ARTICLE)
       .beanRef("articleService", "refreshCitedArticle");
   }
 }
