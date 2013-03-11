@@ -459,7 +459,7 @@
     </action>
 
     <action name="fetchArticleContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleContent">
-      <result name="success" type="default_freemarker">
+      <result name="success" type="naked">
         <param name="templateFile">/article/article_content.ftl</param>
       </result>
       <result name="articleNotFound" type="default_freemarker">
@@ -469,7 +469,7 @@
     </action>
 
     <action name="fetchArticleAuthorsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleAuthorsContent">
-      <result name="success" type="default_freemarker">
+      <result name="success" type="naked">
         <param name="templateFile">/article/article_authors_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
@@ -479,7 +479,7 @@
     </action>
 
     <action name="fetchArticleCommentsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCommentsContent">
-      <result name="success" type="default_freemarker">
+      <result name="success" type="naked">
         <param name="templateFile">/article/article_comments_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
@@ -489,7 +489,7 @@
     </action>
 
     <action name="fetchArticleMetricsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetricsContent">
-      <result name="success" type="default_freemarker">
+      <result name="success" type="naked">
         <param name="templateFile">/article/article_metrics_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
@@ -498,8 +498,8 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticleContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelatedContent">
-      <result name="success" type="default_freemarker">
+    <action name="fetchArticleRelatedContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelatedContent">
+      <result name="success" type="naked">
         <param name="templateFile">/article/article_related_content.ftl</param>
       </result>
       <result name="error" type="default_freemarker">

@@ -85,6 +85,7 @@
     <to>$1/pingback</to>
   </outbound-rule>
 
+  <!-- if request has header "X-PJAX" following rule will apply -->
   <rule>
     <note>re-write incoming article authors URIs.
       /article/authors/doi?... -> /article/fetchArticleAuthorsContent.action?articleURI=doi&amp;...
@@ -129,6 +130,7 @@
     <from>^(/.+)?/article/(info:doi/10\.1371/.+)$</from>
     <to last="true">$1/article/fetchArticleContent.action?articleURI=$2</to>
   </rule>
+  <!-- end "X-PJAX" -->
 
   <rule>
     <note>

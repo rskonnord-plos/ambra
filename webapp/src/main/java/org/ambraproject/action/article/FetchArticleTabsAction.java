@@ -34,7 +34,6 @@ import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
-import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.RelatedArticleInfo;
@@ -109,7 +108,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private Document doc;
   private ArticleType articleType;
   private List<List<String>> articleIssues;
-  private List<LinkbackView> trackbackList;
   private int trackbackCount;
   private List<AuthorView> authors;
   private List<CitationReference> references;
@@ -168,13 +166,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
             expressionOfConcern = this.fetchArticleService.getEocBody(document);
 
           }
-        } catch (NoSuchArticleIdException e) {
-          messages.add("No article found for id: " + relatedArticleInfo.getDoi());
-          log.info("Could not find article: " + relatedArticleInfo.getDoi(), e);
-          return ERROR;
         } catch (Exception e) {
-          messages.add(e.getMessage());
-          log.error("Error retrieving article: " + relatedArticleInfo.getDoi(), e);
+          populateErrorMessages(e);
           return ERROR;
         }
       }
@@ -340,7 +333,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * Fetch data for Article Tab
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
+   * Fetch data for Article tab
    *
    * @return "success" on success, "error" on error
    */
@@ -362,6 +358,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
    * Fetch data for Comments Tab
    *
    * @return "success" on success, "error" on error
@@ -382,6 +381,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
    * Fetches data for Authors Tab
    *
    * @return "success" on success, "error" on error
@@ -403,6 +405,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
    * Fetches data for Metrics Tab
    *
    * @return "success" on success, "error" on error
@@ -422,6 +427,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
    * Fetches data for Related Content Tab
    *
    * @return "success" on success, "error" on error
@@ -675,13 +683,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public boolean getIsResearchArticle() {
     return isResearchArticle;
-  }
-
-  /**
-   * @return Returns the trackbackList.
-   */
-  public List<LinkbackView> getTrackbackList() {
-    return trackbackList;
   }
 
   public int getTrackbackCount() {
