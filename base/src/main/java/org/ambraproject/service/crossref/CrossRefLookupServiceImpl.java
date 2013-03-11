@@ -22,24 +22,19 @@
 package org.ambraproject.service.crossref;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
-import org.apache.commons.beanutils.BeanUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +69,47 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
    * @see CrossRefArticle
    */
   public List<CrossRefArticle> findArticles(String title, String author, String journal, String volume, String pages) throws Exception {
+    CrossRefResponse response = queryCrossRef(title, author, journal, volume, pages);
+
+    //TODO: I don't believe this method is used any longer, remove it
+    //It is called in one place, and that method is not called anyplace I can find
+    List<CrossRefArticle> results = new ArrayList<CrossRefArticle>();
+
+    for(final CrossRefResult res : response.results) {
+      CrossRefArticle article = new CrossRefArticle();
+
+      //Split up text string into various parts
+      String[] data = res.text.split(";|,");
+
+      //Basic protection against an incomplete response, not sure if this
+      //ever actually happens
+      article.setFirstAuthor((data.length > 0)?data[0]:null);
+      article.setSerTitle((data.length > 1)?data[1]:null);
+      article.setTitle((data.length > 2)?data[2]:null);
+      article.setVolume((data.length > 3)?data[3]:null);
+      article.setPage((data.length > 4)?data[4]:null);
+      article.setDoi(res.doi);
+
+      results.add(article);
+    }
+
+    return results;
+   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public String findDoi(String title, String author, String journal, String volume, String pages) throws Exception {
+    CrossRefResponse response = queryCrossRef(title, author, journal, volume, pages);
+
+    if(response.results.length > 0) {
+      return response.results[0].doi;
+    } else {
+      return null;
+    }
+  }
+
+  private CrossRefResponse queryCrossRef(String title, String author, String journal, String volume, String pages)
+  {
     PostMethod post = createCrossRefPost(title, author, journal, volume, pages);
     Gson gson = new Gson();
 
@@ -84,14 +120,7 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
       log.debug("Http post finished in {} ms", System.currentTimeMillis() - timestamp);
 
       if (response == 200) {
-        String json = post.getResponseBodyAsString();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
-        CrossRefResponse res = gson.fromJson(reader, CrossRefResponse.class);
-
-        //TODO: Build up list from CrossRef Response.  Just annotate CrossRefArticle?
-
-        List<CrossRefArticle> results = new ArrayList<CrossRefArticle>();
-        return results;
+        return parseJSON(post.getResponseBodyAsString());
       } else {
         log.error("Received response code {} when executing query {}", response, crossRefUrl);
       }
@@ -104,26 +133,45 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     return null;
   }
 
-  @Override
-  @Transactional(readOnly = true)
-  public String findDoi(String title, String author, String journal, String volume, String pages) throws Exception {
-    List<CrossRefArticle> articles = findArticles(title, author, journal, volume, pages);
+  /**
+   * Parse the JSON into native types
+   *
+   * @param json the JSON string to convert to a java native type
+   *
+   * @return a CrossRefResponse object
+   */
+  private CrossRefResponse parseJSON(final String json) {
+    return new CrossRefResponse() {{
+      JsonParser parser = new JsonParser();
+      JsonObject responseObject = parser.parse(json).getAsJsonObject();
 
-    if(articles.size() > 0) {
-      return articles.get(0).getDoi();
-    } else {
-      return null;
-    }
+      queryOK = (responseObject.getAsJsonPrimitive("query_ok")).getAsBoolean();
+
+      List<CrossRefResult> resultTemp = new ArrayList<CrossRefResult>();
+
+      for(final JsonElement resultElement : responseObject.getAsJsonArray("results")) {
+        resultTemp.add(new CrossRefResult() {{
+          JsonObject resultObj = resultElement.getAsJsonObject();
+
+          text = resultObj.getAsJsonPrimitive("text").getAsString();
+          match = resultObj.getAsJsonPrimitive("match").getAsBoolean();
+          doi = resultObj.getAsJsonPrimitive("doi").getAsString();
+          score = resultObj.getAsJsonPrimitive("score").getAsLong();
+        }});
+      }
+
+      this.results = resultTemp.toArray(new CrossRefResult[resultTemp.size()]);
+    }};
   }
 
   private PostMethod createCrossRefPost(String title, String author, String journal, String volume, String pages)
   {
     StringBuilder builder = new StringBuilder();
 
+    //Example query to post:
     //["Young GC,Analytical methods in palaeobiogeography, and the role of early vertebrate studies;Palaeoworld;19;160-173"]
 
-    builder.append("[\"")
-      .append(author)
+    builder.append(author)
       .append(",")
       .append(title)
       .append(";")
@@ -133,10 +181,14 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
       .append(";")
       .append(pages);
 
-    final String json = builder.toString();
+    //Use toJSON to encode strings with proper escaping
+    final String json = "[" + (new Gson()).toJson(builder.toString()) + "]";
 
-    //TODO: Move URL to configuration?
-    return new PostMethod("http://search.crossref.org/links") {{
+    if(this.crossRefUrl == null) {
+      throw new RuntimeException("ambra.services.crossref.query.url value not found in configuration.");
+    }
+
+    return new PostMethod(this.crossRefUrl) {{
       addRequestHeader("Content-Type","application/json");
       setRequestEntity(new RequestEntity() {
         @Override
@@ -162,26 +214,17 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     }};
   }
 
-  public class CrossRefResponse {
-    public CrossRefResponse() {}
+  /* utility class for internally tracking data */
+  private class CrossRefResult {
+    public String text;
+    public Boolean match;
+    public String doi;
+    public Long score;
+  }
 
-    public class CrossRefResult {
-      public CrossRefResult() {}
-
-      @SerializedName("text")
-      public String text;
-      @SerializedName("match")
-      public Boolean match;
-      @SerializedName("doi")
-      public String doi;
-      @SerializedName("score")
-      public Long score;
-    }
-
-    @SerializedName("results")
+  /* utility class for internally tracking data */
+  private class CrossRefResponse {
     public CrossRefResult[] results;
-
-    @SerializedName("query_ok")
     public Boolean queryOK;
   }
 }
