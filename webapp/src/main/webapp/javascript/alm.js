@@ -835,7 +835,8 @@ $.fn.alm = function () {
   };
 
   this.setRelatedBlogs = function (response, relatedBlogPostsID) {
-    var html = "";
+    //tileHtml used to enforce order
+    var html = "", tileHtmlList = [];
     var doi = escape($('meta[name=citation_doi]').attr("content"));
     var articleTitle = $('meta[name=citation_title]').attr("content");
     var natureViews = 0;
@@ -859,30 +860,51 @@ $.fn.alm = function () {
           if (tileName == "research-blogging") {
             if (count > 0) {
               //Research blogging wants the DOI to search on
-              html = html + this.createMetricsTile(tileName,
+              tileHtml = this.createMetricsTile(tileName,
                 url,
                 "/images/logo-" + tileName + ".png",
                 count + '\n');
+
+              tileHtmlList.push({
+                name : tileName,
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+              });
             }
           } else {
             //Only list links that HAVE DEFINED URLS
             if (url && count > 0) {
-              html = html + this.createMetricsTile(tileName,
-                url,
-                "/images/logo-" + tileName + ".png",
-                count + '\n');
+
+              tileHtmlList.push({
+                name : tileName,
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+              });
+
             } else if (response.article.source[a].search_url != null
               && response.article.source[a].search_url.length > 0) {
 
-              html = html + this.createMetricsTile(tileName,
-                response.article.source[a].search_url + articleTitle,
-                "/images/logo-" + tileName + ".png",
-                count + '\n');
+              tileHtmlList.push({
+                name : tileName,
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+              });
+
             }
           }
         }
       }
     }
+
+
+    //enforce order by appending all tiles excluding science seeker
+    var sSeekerIndex;
+    $.each(tileHtmlList, function (index, tileObject) {
+          if (tileObject.name != 'scienceseeker') {
+            html += tileObject.html;
+          }
+          else {
+            sSeekerIndex = index;
+          }
+        }
+    );
 
     //  If the count for Nature is positive, then show the Nature tile.
     if (natureViews > 0) {
@@ -905,6 +927,11 @@ $.fn.alm = function () {
       "/images/logo-googleblogs.png",
       "Search")
       + '\n';
+
+    // now add science seeker using previously obtained index
+    if( sSeekerIndex ){
+      html += tileHtmlList[sSeekerIndex].html;
+    }
 
     $("#" + relatedBlogPostsID).html($("#" + relatedBlogPostsID).html() + html);
     $("#" + relatedBlogPostsID).show("blind", 500);
