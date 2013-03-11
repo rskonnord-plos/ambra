@@ -130,8 +130,11 @@
   <bean id="quartz" class="org.apache.camel.component.quartz.QuartzComponent">
   </bean>
 
+  <bean id="crossRefLookupRouteBuilder" class="org.ambraproject.routes.CrossRefLookupRoutes" />
+
   <camelContext xmlns="http://camel.apache.org/schema/spring">
     <jmxAgent id="ambra-queue" disabled="true"/>
     <routeBuilder ref="emailRouteBuilder"/>
+    <routeBuilder ref="crossRefLookupRouteBuilder"/>
   </camelContext>
 </beans>
