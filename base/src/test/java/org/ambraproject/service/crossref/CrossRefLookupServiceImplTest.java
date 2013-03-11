@@ -30,6 +30,7 @@ import static org.testng.Assert.*;
 
 /**
  * @author Dragisa Krsmanovic
+ * @author Joe Osowski
  */
 public class CrossRefLookupServiceImplTest {
 
@@ -54,6 +55,7 @@ public class CrossRefLookupServiceImplTest {
     expectedArticle.setResourceType("full_text");
     expectedArticle.setDoi("10.1073/pnas.94.24.13215");
 
+    List<CrossRefArticle> result = service.findArticles("Proc. Natl Acad. Sci. USA", "Zhou", "", "", "");
 
     List<CrossRefArticle> result = service.findArticles("Proc. Natl Acad. Sci. USA", "Zhou");
 
@@ -71,6 +73,7 @@ public class CrossRefLookupServiceImplTest {
 
     HttpClientMock mockHttpClient = new HttpClientMock(200,
                                                        "00278424,10916490|Proceedings of the National Academy of Sciences|Zhou|94|24|13215|1997|full_text||10.1073/pnas.94.24.13215");
+
     service.setHttpClient(mockHttpClient);
     service.setCrossRefUrl("http://test.org?qdata=");
 
@@ -85,8 +88,7 @@ public class CrossRefLookupServiceImplTest {
     expectedArticle.setResourceType("full_text");
     expectedArticle.setDoi("10.1073/pnas.94.24.13215");
 
-
-    List<CrossRefArticle> result = service.findArticles("Proc; Natl/ Acad? Sci: USA & Canada\n a = b", "Zhou");
+    List<CrossRefArticle> result = service.findArticles("Proc; Natl/ Acad? Sci: USA & Canada\n a = b", "Zhou", "", "", "");
 
     assertEquals(result.size(), 1, "Expected 1 result");
     assertEquals(result.get(0), expectedArticle);
@@ -104,6 +106,7 @@ public class CrossRefLookupServiceImplTest {
     HttpClientMock mockHttpClient = new HttpClientMock(200,
                                                        "00278424,10916490|Proceedings of the National Academy of Sciences|Zhou|94|24|13215|1997|full_text||10.1073/pnas.94.24.13215\n" +
                                                            "00278425,10916491|Foo|O'Zhou|95|25|13216|2007|||10.1073/pnas.94.24.13216");
+
     service.setHttpClient(mockHttpClient);
     service.setCrossRefUrl("http://test.org?qdata=");
 

@@ -56,7 +56,7 @@ public class FindArticleServiceImpl implements FindArticleService {
   }
 
   private ThisArticleFound performSearch(String title, String author) throws Exception {
-    List<CrossRefArticle> results = crossRefLookupService.findArticles(title, author);
+    List<CrossRefArticle> results = crossRefLookupService.findArticles(title, author, "", "", "");
 
     if (results.isEmpty()) {
       log.debug("No articles found on CrossRef");
