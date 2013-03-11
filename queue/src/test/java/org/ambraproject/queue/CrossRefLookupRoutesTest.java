@@ -26,7 +26,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Unit test for the cross ref lookup route
@@ -35,7 +38,7 @@ import static org.testng.Assert.assertNotNull;
  */
 @ContextConfiguration
 public class CrossRefLookupRoutesTest extends BaseTest {
-  @Produce(uri = CrossRefLookupRoutes.UPDATE_CITED_ARTICLE)
+  @Produce(uri = CrossRefLookupRoutes.UPDATE_CITED_ARTICLES)
   protected ProducerTemplate start;
 
   private static final String DOI_1 = "info:doi/10.1371/journal.joe.1030540";
@@ -108,9 +111,10 @@ public class CrossRefLookupRoutesTest extends BaseTest {
 
     Article result = dummyDataStore.get(Article.class, article1.getID());
 
-    //TODO: Check that records are updated
+    //The dummy service returns the same data for all cited articles.
+    //Let's just check here that they all match this dummy data
     for(CitedArticle citedArticle : result.getCitedArticles()) {
-      assertNotNull(citedArticle.getDoi());
+      assertEquals(citedArticle.getDoi(), "10.1038/176126a0");
     }
   }
 }
