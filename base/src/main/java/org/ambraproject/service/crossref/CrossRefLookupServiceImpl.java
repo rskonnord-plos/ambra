@@ -119,7 +119,12 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
       log.debug("Http post finished in {} ms", System.currentTimeMillis() - timestamp);
 
       if (response == 200) {
-        return parseJSON(post.getResponseBodyAsString());
+        String result = post.getResponseBodyAsString();
+        if(result != null) {
+          log.debug("JSON response received: {}", result);
+          return parseJSON(result);
+        }
+        log.error("Received empty response, response code {}, when executing query  {}", response, crossRefUrl);
       } else {
         log.error("Received response code {} when executing query {}", response, crossRefUrl);
       }
@@ -149,14 +154,29 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
       List<CrossRefResult> resultTemp = new ArrayList<CrossRefResult>();
 
       for(final JsonElement resultElement : responseObject.getAsJsonArray("results")) {
-        resultTemp.add(new CrossRefResult() {{
-          JsonObject resultObj = resultElement.getAsJsonObject();
+        JsonObject resultObj = resultElement.getAsJsonObject();
+        CrossRefResult res = new CrossRefResult();
 
-          text = resultObj.getAsJsonPrimitive("text").getAsString();
-          match = resultObj.getAsJsonPrimitive("match").getAsBoolean();
-          doi = resultObj.getAsJsonPrimitive("doi").getAsString();
-          score = resultObj.getAsJsonPrimitive("score").getAsLong();
-        }});
+        if(resultObj.getAsJsonPrimitive("text") != null) {
+          res.text = resultObj.getAsJsonPrimitive("text").getAsString();
+        }
+
+        if(resultObj.getAsJsonPrimitive("match") != null) {
+          res.match = resultObj.getAsJsonPrimitive("match").getAsBoolean();
+        }
+
+        if(resultObj.getAsJsonPrimitive("doi") != null) {
+          res.doi = resultObj.getAsJsonPrimitive("doi").getAsString();
+        }
+
+        if(resultObj.getAsJsonPrimitive("score") != null) {
+          res.score = resultObj.getAsJsonPrimitive("score").getAsLong();
+        }
+
+        //Some results aren't actually valid
+        if(res.doi != null) {
+          resultTemp.add(res);
+        }
       }
 
       this.results = resultTemp.toArray(new CrossRefResult[resultTemp.size()]);
