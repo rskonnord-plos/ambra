@@ -19,7 +19,7 @@
   <#include "${templateFile}">
   <#recover>
     ${response.setStatus(404)}
-    <#include "/static/pageNotFound.ftl">
+    <#include "/article/article_not_found.ftl">
 </#attempt>
 <!--include the footer-->
 <#include "/includes/footer.ftl">
