@@ -101,7 +101,7 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
   public String findDoi(String title, String author, String journal, String volume, String pages) throws Exception {
     CrossRefResponse response = queryCrossRef(title, author, journal, volume, pages);
 
-    if(response.results.length > 0) {
+    if(response != null && response.results.length > 0) {
       return response.results[0].doi;
     } else {
       return null;
