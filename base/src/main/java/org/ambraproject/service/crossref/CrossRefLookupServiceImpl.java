@@ -111,7 +111,6 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
   private CrossRefResponse queryCrossRef(String title, String author, String journal, String volume, String pages)
   {
     PostMethod post = createCrossRefPost(title, author, journal, volume, pages);
-    Gson gson = new Gson();
 
     try {
       long timestamp = System.currentTimeMillis();
