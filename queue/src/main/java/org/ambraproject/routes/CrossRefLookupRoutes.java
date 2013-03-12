@@ -31,6 +31,11 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
   public static final String UPDATE_CITED_ARTICLES = "seda:updatedCitedArticles";
   public static final String UPDATE_CITED_ARTICLE = "seda:updateCitedArticle";
 
+  //Currently the jobs run asynchronously, but do not use activemq.  To do so the routes
+  //Need to be defined as below, and some tweaks would need to occur in the unit test
+  //public static final String UPDATE_CITED_ARTICLES = "activemq:plos.updatedCitedArticles";
+  //public static final String UPDATE_CITED_ARTICLE = "activemq:plos.updateCitedArticle";
+
   private static final Logger log = LoggerFactory.getLogger(CrossRefLookupRoutes.class);
 
   @Override
