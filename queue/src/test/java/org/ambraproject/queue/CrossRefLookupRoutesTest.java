@@ -101,10 +101,15 @@ public class CrossRefLookupRoutesTest extends BaseTest {
   @Test(dataProvider = "testData")
   @SuppressWarnings("unchecked")
   public void testRoute(final Article article1) throws Exception {
+    Long time1 = System.currentTimeMillis();
 
     start.sendBodyAndHeaders(article1.getDoi(), new HashMap() {{
       put(CrossRefLookupRoutes.HEADER_AUTH_ID, BaseTest.DEFAULT_USER_AUTHID);
     }});
+
+    Long time2 = System.currentTimeMillis();
+
+    assertTrue(time2 - time1 < 20, "Queuing the jobs took too long, are you sure they are asynchronous?");
 
     //Let the queue do it's job before checking results
     Thread.sleep(5000);

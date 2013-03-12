@@ -28,8 +28,8 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
    * header
    */
   public static final String HEADER_AUTH_ID = "authId";
-  public static final String UPDATE_CITED_ARTICLES = "direct:updatedCitedArticles";
-  public static final String UPDATE_CITED_ARTICLE = "direct:updateCitedArticle";
+  public static final String UPDATE_CITED_ARTICLES = "seda:updatedCitedArticles";
+  public static final String UPDATE_CITED_ARTICLE = "seda:updateCitedArticle";
 
   private static final Logger log = LoggerFactory.getLogger(CrossRefLookupRoutes.class);
 
