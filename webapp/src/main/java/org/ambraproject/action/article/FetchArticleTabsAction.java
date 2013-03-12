@@ -326,10 +326,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   @Override
   public boolean getHasAboutAuthorContent() {
-    return AuthorView.anyHasAffiliation(authors)
+    return authors != null ? AuthorView.anyHasAffiliation(authors)
         || CollectionUtils.isNotEmpty(correspondingAuthor)
         || CollectionUtils.isNotEmpty(authorContributions)
-        || CollectionUtils.isNotEmpty(competingInterest);
+        || CollectionUtils.isNotEmpty(competingInterest) : false;
   }
 
   /**

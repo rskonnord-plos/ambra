@@ -222,7 +222,10 @@
       }
     }
 
-    options.success = function(data, status, xhr) {
+    options.success = function(data, status, xhr, nostore) {
+      if (nostore == undefined && $.pjax.contentCache !== null) {
+        $.pjax.contentCache[options.url] = {data: data, status: status, xhr: xhr};
+      }
       // If $.pjax.defaults.version is a function, invoke it first.
       // Otherwise it can be a static string.
       var currentVersion = (typeof $.pjax.defaults.version === 'function') ?
@@ -316,7 +319,19 @@
     }
 
     pjax.options = options
-    var xhr = pjax.xhr = $.ajax(options)
+    var xhr = null
+    if ($.pjax.contentCache !== null && $.pjax.contentCache[options.url] !== undefined) {
+      var cached = $.pjax.contentCache[options.url];
+      xhr = pjax.xhr = cached.xhr;
+      options.requestUrl = parseURL(options.url).href;
+      setTimeout(function() {
+        options.success(cached.data, cached.status, cached.xhr, true);
+        options.complete(cached.xhr, "success");
+      }, 0);
+    }
+    else {
+      xhr = pjax.xhr = $.ajax(options)
+    }
 
     if (xhr.readyState > 0) {
       if (options.push && !options.replace) {
@@ -773,6 +788,7 @@
       maxCacheLength: 20,
       version: findVersion
     }
+    $.pjax.contentCache = {}; // set to null to disable
     $(window).bind('popstate.pjax', onPjaxPopstate)
   }
 

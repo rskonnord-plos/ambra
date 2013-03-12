@@ -1416,14 +1416,57 @@ function initMainContainer() {
       span.html(val);
     }
   });
+
+  $("#nav-article li a").on("click", function(event) {
+    console.log("pjax click " + this.name);
+    if(pjax_selected_tab == "metrics") {
+      if($.pjax.contentCache[window.location.href] !== undefined) {
+        $.pjax.contentCache[window.location.href].data = $("#pjax-container").outerHTML();
+        $.pjax.contentCache[window.location.href].loaded = true;
+      }
+    }
+    pjax_selected_tab = this.name;
+    return true;
+  });
+
+}
+
+//http://css-tricks.com/snippets/jquery/outerhtml-jquery-plugin/
+$.fn.outerHTML = function(){
+  // IE, Chrome & Safari will comply with the non-standard outerHTML, all others (FF) will have a fall-back for cloning
+  return (!this.length) ? this : (this[0].outerHTML || (
+    function(el){
+      var div = document.createElement('div');
+      div.appendChild(el.cloneNode(true));
+      var contents = div.innerHTML;
+      div = null;
+      return contents;
+    })(this[0]));
 }
 
 initMainContainer();
 
+// pjax related code
+var pjax_selected_tab = null; // last clicked pjax content
+
 $(document).pjax("#nav-article ul li a", "#pjax-container",
     {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
 
-$("#pjax-container").on("pjax:complete", function() {
+$("#pjax-container").on("pjax:complete", function(event) {
   onReadyMainContainer();
   initMainContainer();
+  if (pjax_selected_tab == "metrics") {
+    if (typeof Highcharts == "undefined") {
+      $.getScript("/javascript/highcharts.js", function(data, textStatus, jqxhr) {
+        onLoadALM();
+      });
+    }
+    else {
+      if($.pjax.contentCache[window.location.href] === undefined ||
+          !$.pjax.contentCache[window.location.href].loaded) {
+        onLoadALM();
+      }
+      //onLoadALM();
+    }
+  }
 });
