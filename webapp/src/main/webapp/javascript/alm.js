@@ -843,6 +843,7 @@ $.fn.alm = function () {
 
     if (response.article.source.length > 0) {
       html = "";
+      wikiHtml = "";
       // If there is at least one hit for a blog site, then create a link to those blogs.
       // else, if there are zero hits for a blog site, then create a "search for title" link instead.
       for (var a = 0; a < response.article.source.length; a++) {
@@ -855,6 +856,11 @@ $.fn.alm = function () {
           natureViews = count;
         } else if (tileName == "wikipedia") {
           wikiViews = count;
+          wikiHtml = this.createMetricsTile("wikipedia",
+            url,
+            "/images/logo-wikipedia.png",
+            wikiViews)
+            + '\n';
         } else {
           if (tileName == "research-blogging") {
             if (count > 0) {
@@ -893,10 +899,7 @@ $.fn.alm = function () {
     }
 
     if (wikiViews > 0) {
-      html = html + this.createMetricsTileNoLink("wikipedia",
-        "/images/logo-wikipedia.png",
-        wikiViews)
-        + '\n';
+      html = html + wikiHtml;
     }
 
     //  Always show the Google Blogs tile.
