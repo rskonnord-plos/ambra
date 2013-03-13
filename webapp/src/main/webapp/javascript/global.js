@@ -865,7 +865,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           if (imgNotOnPage) { // the image is on another page
             context_hash = '/article/' + page_url + context_hash;
           }
-          var desc = '<div class="desc">' + this.transformedDescription + '</div>';
+          var desc = '<div class="desc">' + this.transformedDescription + '<p>' + this.doi.replace('info:doi/','doi:') + '</p></div>';
           var img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + image_title + '"></div>'
           var lnks_txt = '<ul class="download">'
             + '<li class="label">Download: </li>'
