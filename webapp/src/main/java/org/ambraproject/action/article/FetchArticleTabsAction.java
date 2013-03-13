@@ -185,11 +185,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
 
-      commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT),
-          AnnotationOrder.MOST_RECENT_REPLY);
-
       numCorrections = annotationService.countAnnotations(articleInfoX.getId(),
         EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
 
@@ -210,11 +205,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public String fetchArticleAuthors() {
     try {
-      setCommonData();
-      commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT),
-          AnnotationOrder.MOST_RECENT_REPLY);
+      setCommonData();      
     } catch (Exception e) {
       populateErrorMessages(e);
     }
@@ -229,10 +220,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   public String fetchArticleMetrics() {
     try {
       setCommonData();
-      commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT),
-          AnnotationOrder.MOST_RECENT_REPLY);
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
       //count all the comments
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
@@ -251,11 +238,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public String fetchArticleRelated() {
     try {
-      setCommonData();
-      commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT),
-          AnnotationOrder.MOST_RECENT_REPLY);
+      setCommonData();      
       populateRelatedAuthorSearchQuery();
     } catch (Exception e) {
      populateErrorMessages(e);
@@ -323,7 +306,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
-
+    commentary = this.annotationService.listAnnotations(articleInfoX.getId(),
+        EnumSet.of(AnnotationType.COMMENT), 
+        AnnotationOrder.MOST_RECENT_REPLY);
     /**
      An article can be cross published, but we want the source journal.
      If in this collection an article eIssn matches the article's eIssn keep that value.
@@ -465,11 +450,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
     AnnotationView[] annotationViews = annotationService.listAnnotations(
         articleInfoX.getId(),
-        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
-            AnnotationType.COMMENT),
+        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
         AnnotationOrder.NEWEST_TO_OLDEST
     );
-    List<AnnotationView> commentList = new LinkedList<AnnotationView>();
     for (AnnotationView annotationView : annotationViews) {
       AnnotationType annotationType = annotationView.getType();
       switch (annotationType) {
@@ -483,15 +466,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
           retractions.add(annotationView);
           break;
         case COMMENT:
-          commentList.add(annotationView);
+          //this is already handled in setCommonData()
           break;
         case REPLY:
           break;
         default:
           throw new RuntimeException("Unhandled enum value: " + annotationType);
       }
-    }
-    commentary = commentList.toArray(new AnnotationView[commentList.size()]);
+    }    
     numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
   }
 
