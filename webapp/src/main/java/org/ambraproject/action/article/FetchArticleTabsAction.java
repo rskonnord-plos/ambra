@@ -211,6 +211,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   public String fetchArticleAuthors() {
     try {
       setCommonData();
+      commentary = annotationService.listAnnotations(
+          articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationOrder.MOST_RECENT_REPLY);
     } catch (Exception e) {
       populateErrorMessages(e);
     }
@@ -225,6 +229,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   public String fetchArticleMetrics() {
     try {
       setCommonData();
+      commentary = annotationService.listAnnotations(
+          articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationOrder.MOST_RECENT_REPLY);
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
       //count all the comments
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
@@ -244,6 +252,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   public String fetchArticleRelated() {
     try {
       setCommonData();
+      commentary = annotationService.listAnnotations(
+          articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationOrder.MOST_RECENT_REPLY);
       populateRelatedAuthorSearchQuery();
     } catch (Exception e) {
      populateErrorMessages(e);
