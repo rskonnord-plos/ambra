@@ -897,7 +897,7 @@ $.fn.alm = function () {
     //enforce order by appending all tiles excluding science seeker
     var sSeekerIndex;
     $.each(tileHtmlList, function (index, tileObject) {
-          if (tileObject.name != 'scienceseeker') {
+          if (tileObject.name != 'scienceseeker' || tileObject.name != 'Scienceseeker') {
             html += tileObject.html;
           }
           else {
