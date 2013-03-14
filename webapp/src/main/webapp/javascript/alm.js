@@ -895,14 +895,14 @@ $.fn.alm = function () {
 
 
     //enforce order by appending all tiles excluding science seeker
-    var sSeekerIndex;
+    var sSeekerIndex = null;
     $.each(tileHtmlList, function (index, tileObject) {
-          if (tileObject.name != 'scienceseeker' || tileObject.name != 'Scienceseeker') {
-            html += tileObject.html;
-          }
-          else {
+          if (tileObject.name.toLowerCase() == 'scienceseeker') {
             sSeekerIndex = index;
           }
+          else {
+            html += tileObject.html;
+            }
         }
     );
 
@@ -929,7 +929,7 @@ $.fn.alm = function () {
       + '\n';
 
     // now add science seeker using previously obtained index
-    if( sSeekerIndex ){
+    if( !sSeekerIndex ){
       html += tileHtmlList[sSeekerIndex].html;
     }
 
