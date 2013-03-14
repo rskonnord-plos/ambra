@@ -112,7 +112,7 @@ $.fn.alm = function () {
   this.getSocialData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Connotea,Facebook,Twitter,Mendeley";
+    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Facebook,Twitter,Mendeley";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -730,7 +730,7 @@ $.fn.alm = function () {
         }
 
         if (countToShowOnTile > 0) {
-          if (tileName == 'facebook') {  //  Facebook does NOT get links
+          if (tileName == 'facebook' || tileName == 'connotea') {  //Facebook and Connotea do NOT get links
             html = html + this.createMetricsTileNoLink(tileName,
               "/images/logo-" + tileName + ".png",
               countToShowOnTile)
@@ -1288,7 +1288,7 @@ $(document).ready(
                 scopus = count;
               }
 
-              if (name == "Mendeley" || name == "CiteULike" || name == "Connotea") {
+              if (name == "Mendeley" || name == "CiteULike") {
                 bookmarks += count;
               }
 
@@ -1317,7 +1317,7 @@ $(document).ready(
               text = "ACADEMIC BOOKMARK";
             }
 
-            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley, CiteULike, and Connotea " +
+            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike" +
               "bookmarks", "/static/almInfo#socialBookmarks");
 
             $("#almSignPost").append(li);
