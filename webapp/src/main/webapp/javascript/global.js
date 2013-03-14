@@ -283,6 +283,17 @@ function initMainContainer() {
 
 }
 
+//For Google Analytics Event Tracking
+var category, action, label;
+category = "tab menu actions";
+action = "tab menu click";
+$(document).ajaxComplete(function(){
+    if(pjax_selected_tab != null){ label = pjax_selected_tab;};
+    pageTracker._trackEvent(category,action,label);  
+});
+
+
+
 // Begin $ function definitions
 
 (function ($) {
