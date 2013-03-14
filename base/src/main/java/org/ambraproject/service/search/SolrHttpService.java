@@ -46,7 +46,7 @@ public interface SolrHttpService {
   public Document makeSolrRequestForRss(String queryString) throws SolrException;
 
   /**
-   * Basic method for making a put request to the Solr server, with a Map of key/value pairs to pass as parameters
+   * Basic method for making a post request to the Solr server, with a Map of key/value pairs to pass as parameters
    *
    * @param params  the params to pass to solr. these are URL encoded and passed as part of the get request
    * @param data the data to pass via a HTTP put
