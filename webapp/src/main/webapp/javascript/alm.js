@@ -1317,7 +1317,7 @@ $(document).ready(
               text = "ACADEMIC BOOKMARK";
             }
 
-            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike" +
+            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike " +
               "bookmarks", "/static/almInfo#socialBookmarks");
 
             $("#almSignPost").append(li);
