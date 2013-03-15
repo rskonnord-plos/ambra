@@ -18,6 +18,25 @@
 
   <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
 
+  <bean id="jmsFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false"/>
+  </bean>
+
+  <bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
+    <property name="connectionFactory" ref="jmsFactory"/>
+  </bean>
+
+  <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+    <property name="connectionFactory" ref="jmsFactory"/>
+    <property name="transactionManager" ref="jmsTransactionManager"/>
+    <property name="transacted" value="true"/>
+    <property name="concurrentConsumers" value="1"/>
+  </bean>
+
+  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="configuration" ref="jmsConfig"/>
+  </bean>
+
   <bean id="placeholderConfig"
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
@@ -65,7 +84,8 @@
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
-  <bean id="routeBuilder" class="org.ambraproject.routes.CrossRefLookupRoutes" />
+  <bean id="routeBuilder" class="org.ambraproject.routes.CrossRefLookupRoutes"
+    depends-on="activemq, articleService"/>
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
     <jmxAgent id="ambra-queue" disabled="true"/>

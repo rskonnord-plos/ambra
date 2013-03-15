@@ -66,7 +66,7 @@ public class FindArticleAction extends BaseActionSupport {
     originalDOI = citedArticleView.getArticleDoi();
 
     if (doi == null || doi.isEmpty()) {
-      doi = articleService.refreshCitedArticle(citedArticle);
+      doi = articleService.refreshCitedArticle(citedArticle.getID());
     }
 
     if (doi != null && !doi.isEmpty()) {

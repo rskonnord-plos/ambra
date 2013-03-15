@@ -788,8 +788,10 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   @Override
   @Transactional
-  public String refreshCitedArticle(CitedArticle citedArticle) throws Exception {
-    log.debug("refreshArticleCitation for citedArticleID: {}", citedArticle.getID());
+  public String refreshCitedArticle(Long citedArticleID) throws Exception {
+    log.debug("refreshArticleCitation for citedArticleID: {}", citedArticleID);
+
+    CitedArticle citedArticle = hibernateTemplate.get(CitedArticle.class, citedArticleID);
 
     String author = getAuthorStringForLookup(citedArticle);
     String doi = crossRefLookupService.findDoi(citedArticle.getTitle(),

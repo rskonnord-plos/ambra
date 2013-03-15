@@ -18,6 +18,7 @@ import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.routes.CrossRefLookupRoutes;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -38,10 +39,8 @@ import static org.testng.Assert.assertTrue;
  */
 @ContextConfiguration
 public class CrossRefLookupRoutesTest extends BaseTest {
-  @Produce(uri = CrossRefLookupRoutes.UPDATE_CITED_ARTICLES)
+  @Produce(uri = CrossRefLookupRoutes.UPDATE_CITED_ARTICLES_QUEUE)
   protected ProducerTemplate start;
-
-  private static final String DOI_1 = "info:doi/10.1371/journal.joe.1030540";
 
   @DataProvider(name="testData")
   public Object[][] testData() {
@@ -109,7 +108,7 @@ public class CrossRefLookupRoutesTest extends BaseTest {
 
     Long time2 = System.currentTimeMillis();
 
-    assertTrue(time2 - time1 < 20, "Queuing the jobs took too long, are you sure they are asynchronous?");
+    assertTrue(time2 - time1 < 500, "Queuing the jobs took too long, are you sure they are asynchronous?");
 
     //Let the queue do it's job before checking results
     Thread.sleep(5000);

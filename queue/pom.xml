@@ -20,7 +20,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <camel.version>2.10.4</camel.version>
-    <activemq.version>5.6.0</activemq.version>
+    <activemq.version>5.2.0</activemq.version>
   </properties>
 
   <dependencies>
@@ -81,7 +81,6 @@
       <version>${camel.version}</version>
     </dependency>
 
-
     <dependency>
       <groupId>org.apache.xbean</groupId>
       <artifactId>xbean-spring</artifactId>
@@ -118,8 +117,6 @@
       <version>${camel.version}</version>
     </dependency>
 
-
-
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
@@ -142,7 +139,6 @@
       <scope>test</scope>
     </dependency>
 
-
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-test-framework</artifactId>
@@ -163,6 +159,13 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-camel</artifactId>
+      <version>${activemq.version}</version>
       <scope>test</scope>
     </dependency>
 

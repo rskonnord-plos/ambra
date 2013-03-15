@@ -10,12 +10,15 @@
  */
 package org.ambraproject.routes;
 
-import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.models.Article;
+import org.ambraproject.models.CitedArticle;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Joe Osowski
@@ -28,13 +31,8 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
    * header
    */
   public static final String HEADER_AUTH_ID = "authId";
-  public static final String UPDATE_CITED_ARTICLES = "seda:updatedCitedArticles";
-  public static final String UPDATE_CITED_ARTICLE = "seda:updateCitedArticle";
-
-  //Currently the jobs run asynchronously, but do not use activemq.  To do so the routes
-  //Need to be defined as below, and some tweaks would need to occur in the unit test
-  //public static final String UPDATE_CITED_ARTICLES = "activemq:plos.updatedCitedArticles";
-  //public static final String UPDATE_CITED_ARTICLE = "activemq:plos.updateCitedArticle";
+  public static final String UPDATE_CITED_ARTICLE_QUEUE = "activemq:plos.updateCitedArticle";
+  public static final String UPDATE_CITED_ARTICLES_QUEUE = "activemq:plos.updatedCitedArticles";
 
   private static final Logger log = LoggerFactory.getLogger(CrossRefLookupRoutes.class);
 
@@ -44,21 +42,27 @@ public class CrossRefLookupRoutes extends SpringRouteBuilder {
 
     //Route for updating all the citedArticles for an article
     //Requires articleDoi as the body and authId set on the header
-    from(UPDATE_CITED_ARTICLES)
-      .beanRef("articleService", "getArticleInfo(${body}, ${headers." + HEADER_AUTH_ID + "})")
+    from(UPDATE_CITED_ARTICLES_QUEUE)
+      .to("bean:articleService?method=getArticle(${body}, ${headers." + HEADER_AUTH_ID + "})")
       .process(new Processor() {
         @Override
         public void process(Exchange exchange) throws Exception {
-          //All we care about is the citedArticleCollection
-          exchange.getOut().setBody(
-            exchange.getIn().getBody(ArticleInfo.class).getCitedArticles());
+          //All we care about is the citedArticle IDs list
+          List<CitedArticle> citedArticles = exchange.getIn().getBody(Article.class).getCitedArticles();
+          List<Long> ids = new ArrayList<Long>();
+
+          for(CitedArticle ca : citedArticles) {
+            ids.add(ca.getID());
+          }
+
+          exchange.getOut().setBody(ids);
         }
       })
       .split().body() //Create a job for each CitedArticle
-      .to(UPDATE_CITED_ARTICLE);
+      .to(UPDATE_CITED_ARTICLE_QUEUE);
 
     //Route for updating one citedArticle
-    from(UPDATE_CITED_ARTICLE)
-      .beanRef("articleService", "refreshCitedArticle");
+    from(UPDATE_CITED_ARTICLE_QUEUE)
+      .to("bean:articleService?method=refreshCitedArticle");
   }
 }
