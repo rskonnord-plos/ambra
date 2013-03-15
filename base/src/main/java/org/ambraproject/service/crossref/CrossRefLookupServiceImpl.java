@@ -121,7 +121,7 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
       if (response == 200) {
         String result = post.getResponseBodyAsString();
         if(result != null) {
-          log.debug("JSON response received: {}", result);
+          log.trace("JSON response received: {}", result);
           return parseJSON(result);
         }
         log.error("Received empty response, response code {}, when executing query  {}", response, crossRefUrl);
