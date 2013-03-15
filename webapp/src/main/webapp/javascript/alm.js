@@ -112,7 +112,7 @@ $.fn.alm = function () {
   this.getSocialData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Connotea,Facebook,Twitter,Mendeley";
+    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Facebook,Twitter,Mendeley";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -730,7 +730,7 @@ $.fn.alm = function () {
         }
 
         if (countToShowOnTile > 0) {
-          if (tileName == 'facebook') {  //  Facebook does NOT get links
+          if (tileName == 'facebook' || tileName == 'connotea') {  //Facebook and Connotea do NOT get links
             html = html + this.createMetricsTileNoLink(tileName,
               "/images/logo-" + tileName + ".png",
               countToShowOnTile)
@@ -843,6 +843,7 @@ $.fn.alm = function () {
 
     if (response.article.source.length > 0) {
       html = "";
+      wikiHtml = "";
       // If there is at least one hit for a blog site, then create a link to those blogs.
       // else, if there are zero hits for a blog site, then create a "search for title" link instead.
       for (var a = 0; a < response.article.source.length; a++) {
@@ -855,6 +856,11 @@ $.fn.alm = function () {
           natureViews = count;
         } else if (tileName == "wikipedia") {
           wikiViews = count;
+          wikiHtml = this.createMetricsTile("wikipedia",
+            url,
+            "/images/logo-wikipedia.png",
+            wikiViews)
+            + '\n';
         } else {
           if (tileName == "research-blogging") {
             if (count > 0) {
@@ -893,10 +899,7 @@ $.fn.alm = function () {
     }
 
     if (wikiViews > 0) {
-      html = html + this.createMetricsTileNoLink("wikipedia",
-        "/images/logo-wikipedia.png",
-        wikiViews)
-        + '\n';
+      html = html + wikiHtml;
     }
 
     //  Always show the Google Blogs tile.
@@ -1285,7 +1288,7 @@ $(document).ready(
                 scopus = count;
               }
 
-              if (name == "Mendeley" || name == "CiteULike" || name == "Connotea") {
+              if (name == "Mendeley" || name == "CiteULike") {
                 bookmarks += count;
               }
 
@@ -1314,7 +1317,7 @@ $(document).ready(
               text = "ACADEMIC BOOKMARK";
             }
 
-            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley, CiteULike, and Connotea " +
+            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike " +
               "bookmarks", "/static/almInfo#socialBookmarks");
 
             $("#almSignPost").append(li);
