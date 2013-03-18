@@ -18,7 +18,8 @@
  **/
 
 $.fn.alm = function () {
-  this.almHost = $('meta[name=almHost]').attr("content");
+//  this.almHost = $('meta[name=almHost]').attr("content");
+  this.almHost = "http://localhost:3000/";
   this.pubGetHost = $('meta[name=pubGetHost]').attr("content");
 
   if (this.almHost == null) {
@@ -77,7 +78,7 @@ $.fn.alm = function () {
   this.getChartData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Counter,PMC";
+    var request = "articles/" + doi + ".json?events=1&source=Counter,PMC,RelativeMetric";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -200,6 +201,12 @@ $.fn.alm = function () {
           pmcViews = sources[a].events;
           //Make sure everything is in the right order
           pmcViews = pmcViews.sort(this.sortByYearMonth);
+        }
+      }
+
+      if (sources[a].source.toLowerCase() == "relative metric" ) {
+        if (sources[a].events != null) {
+          result.relativeMetricData = sources[a].events;
         }
       }
     }
@@ -1072,7 +1079,6 @@ $.fn.alm = function () {
             var options = {
               chart:{
                 renderTo:"chart",
-                type:"column",
                 animation:false,
                 margin:[40, 40, 40, 80]
               },
@@ -1139,11 +1145,13 @@ $.fn.alm = function () {
               series:[
                 {
                   name:"PMC",
+                  type:"column",
                   data:[],
                   color:"#6d84bf"
                 },
                 {
                   name:"PLOS",
+                  type:"column",
                   data:[],
                   color:"#3c63af"
                 }
@@ -1212,6 +1220,57 @@ $.fn.alm = function () {
               .css("height", "200px"));
 
             var chart = new Highcharts.Chart(options);
+
+            var subject_areas_dropdown = $('<select id="subject_areas"></select>');
+
+            var dataSize = dataHistoryKeys.length;
+            var subjectAreas = data.relativeMetricData.subject_areas;
+            if (subjectAreas != null && subjectAreas.length > 0) {
+              for (var i = 0; i < subjectAreas.length; i++) {
+                for (var subjectAreaKey in subjectAreas[i]) {
+
+                  var subjectAreaData = subjectAreas[i][subjectAreaKey];
+
+                  if (subjectAreaData.length > dataSize) {
+                    subjectAreaData = subjectAreaData.slice(0, dataSize);
+                  }
+
+                  chart.addSeries({
+                        id:  subjectAreaKey,
+                        data: subjectAreaData,
+                        type:"line",
+                        color:"#01DF01",
+                        marker:{
+                          enabled:false,
+                          states: {
+                            hover: {
+                              enabled: false
+                            }
+                          }
+                        }
+                      }
+                  );
+                  subject_areas_dropdown.append($("<option></option>").attr('id', subjectAreaKey).text(subjectAreaKey));
+                  chart.get(subjectAreaKey).hide();
+                }
+              }
+            }
+
+            subject_areas_dropdown.change(function() {
+
+              $("#subject_areas option").each(function() {
+                var the_id = $(this).val();
+                chart.get(the_id).hide();
+              });
+
+              var the_id = $(this).val();
+              chart.get(the_id).show();
+
+            });
+
+            var relativeMetricDiv = $('<div></div>').append(subject_areas_dropdown);
+            $usage.append(relativeMetricDiv);
+
           } // end if (isGraphDisplayed)
 
           $usage.append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
