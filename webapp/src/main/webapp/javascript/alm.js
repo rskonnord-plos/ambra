@@ -1221,55 +1221,76 @@ $.fn.alm = function () {
 
             var chart = new Highcharts.Chart(options);
 
-            var subject_areas_dropdown = $('<select id="subject_areas"></select>');
 
             var dataSize = dataHistoryKeys.length;
             var subjectAreas = data.relativeMetricData.subject_areas;
+
             if (subjectAreas != null && subjectAreas.length > 0) {
+
+              var startDate = data.relativeMetricData.start_date;
+              var endDate = data.relativeMetricData.end_date;
+              startDate = new Date(startDate);
+              endDate = new Date(endDate);
+
+              var subjectAreaList = new Array();
+
               for (var i = 0; i < subjectAreas.length; i++) {
-                for (var subjectAreaKey in subjectAreas[i]) {
+                var subjectAreaId = subjectAreas[i].subject_area;
+                var subjectAreaData = subjectAreas[i].average_usage;
 
-                  var subjectAreaData = subjectAreas[i][subjectAreaKey];
+                subjectAreaList.push(subjectAreaId);
 
-                  if (subjectAreaData.length > dataSize) {
-                    subjectAreaData = subjectAreaData.slice(0, dataSize);
-                  }
+                if (subjectAreaData.length > dataSize) {
+                  subjectAreaData = subjectAreaData.slice(0, dataSize);
+                }
 
-                  chart.addSeries({
-                        id:  subjectAreaKey,
-                        data: subjectAreaData,
-                        type:"line",
-                        color:"#01DF01",
-                        marker:{
-                          enabled:false,
-                          states: {
-                            hover: {
-                              enabled: false
-                            }
+                chart.addSeries({
+                      id:  subjectAreaId,
+                      data: subjectAreaData,
+                      type:"line",
+                      color:"#01DF01",
+                      marker:{
+                        enabled:false,
+                        states: {
+                          hover: {
+                            enabled: false
                           }
                         }
                       }
-                  );
-                  subject_areas_dropdown.append($("<option></option>").attr('id', subjectAreaKey).text(subjectAreaKey));
-                  chart.get(subjectAreaKey).hide();
+                    }
+                );
+                chart.get(subjectAreaId).hide();
+              }
+
+              var subjectAreasDropdown = $('<select id="subject_areas"></select>');
+              subjectAreaList.sort();
+              for (i = 0; i < subjectAreaList.length; i++) {
+                var subjectArea = subjectAreaList[i].substr(1);
+                var subjectAreaLevels = subjectArea.split("/");
+                if (subjectAreaLevels.length == 1) {
+                  subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
+                } else if (subjectAreaLevels.length == 2) {
+                  subjectAreasDropdown.append($('<option class="optmember"></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
                 }
               }
-            }
 
-            subject_areas_dropdown.change(function() {
+              subjectAreasDropdown.change(function() {
 
-              $("#subject_areas option").each(function() {
-                var the_id = $(this).val();
-                chart.get(the_id).hide();
+                $("#subject_areas option").each(function() {
+                  var subjectAreaId = $(this).val();
+                  chart.get(subjectAreaId).hide();
+                });
+
+                var subjectAreaId = $(this).val();
+                chart.get(subjectAreaId).show();
               });
 
-              var the_id = $(this).val();
-              chart.get(the_id).show();
+              var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>' + startDate.getUTCFullYear() + " - " + endDate.getUTCFullYear() + "</b> in the subject area: " + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
+              var description2Div = $('<div></div>').append(subjectAreasDropdown).append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="">Show reference set</a>');
+              var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
 
-            });
-
-            var relativeMetricDiv = $('<div></div>').append(subject_areas_dropdown);
-            $usage.append(relativeMetricDiv);
+              $usage.append(relativeMetricDiv);
+            }
 
           } // end if (isGraphDisplayed)
 

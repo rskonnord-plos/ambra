@@ -4730,6 +4730,46 @@ table#pageViewsTable tr.percent td {
   color: black;
 }
 
+/* styling for average usage stat information */
+#averageViewsSummary {
+  width: 600px;
+  border: 1px solid #cccccc;
+  background-color: #e5e4e4;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+#averageViewsSummary div {
+  padding: 8px 8px 0px 8px;
+}
+
+#averageViewsSummary .colorbox {
+  border: 1px solid #cccccc;
+  background-color: #01DF01;
+  width: 9px;
+  height: 9px;
+  display: block;
+  float: left;
+  margin-top: 4px;
+}
+
+#averageViewsSummary .ir {
+  float: right;
+  border-radius: 8.5px;
+  -webkit-border-radius: 8.5px;
+  -moz-border-radius: 8.5px;
+}
+
+#averageViewsSummary select {
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+
+#averageViewsSummary select option {
+  background-color: #ffffff;
+}
+/* END styling for average usage stat information */
+
 a.ir {
   display: inline-block;
   text-indent: -9999px;
