@@ -1270,7 +1270,7 @@ $.fn.alm = function () {
                 if (subjectAreaLevels.length == 1) {
                   subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
                 } else if (subjectAreaLevels.length == 2) {
-                  subjectAreasDropdown.append($('<option class="optmember"></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
+                  subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
                 }
               }
 
