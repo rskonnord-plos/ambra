@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +11,14 @@
 
 package org.ambraproject.views;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Immutable view object for academic editors.  Used with the raptorService to refresh the SOLR index
+ *
+ * @author Joe Osowski
+ */
 public class AcademicEditorView {
 
   private final String id;
