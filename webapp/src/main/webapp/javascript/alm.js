@@ -1222,9 +1222,9 @@ $.fn.alm = function () {
             var chart = new Highcharts.Chart(options);
 
 
-            var dataSize = dataHistoryKeys.length;
             var subjectAreas = data.relativeMetricData.subject_areas;
 
+            // check to see if there is any data
             if (subjectAreas != null && subjectAreas.length > 0) {
 
               var startDate = data.relativeMetricData.start_date;
@@ -1234,16 +1234,19 @@ $.fn.alm = function () {
 
               var subjectAreaList = new Array();
 
+              // loop through each subject area and add the data to the chart
               for (var i = 0; i < subjectAreas.length; i++) {
                 var subjectAreaId = subjectAreas[i].subject_area;
                 var subjectAreaData = subjectAreas[i].average_usage;
 
                 subjectAreaList.push(subjectAreaId);
 
-                if (subjectAreaData.length > dataSize) {
-                  subjectAreaData = subjectAreaData.slice(0, dataSize);
+                // make sure the data will fit the graph
+                if (subjectAreaData.length > dataHistoryKeys.length) {
+                  subjectAreaData = subjectAreaData.slice(0, dataHistoryKeys.length);
                 }
 
+                // add the data for the given subject area to the chart
                 chart.addSeries({
                       id: subjectAreaId,
                       data: subjectAreaData,
@@ -1259,32 +1262,54 @@ $.fn.alm = function () {
                       }
                     }
                 );
+
+                // hide the line
                 chart.get(subjectAreaId).hide();
               }
 
+              // build the drop down list of subject areas
+              var defaultSubjectAreaSelected;
               var subjectAreasDropdown = $('<select id="subject_areas"></select>');
+              // sort the list so that the subject areas are grouped correctly
               subjectAreaList.sort();
               for (i = 0; i < subjectAreaList.length; i++) {
                 var subjectArea = subjectAreaList[i].substr(1);
                 var subjectAreaLevels = subjectArea.split("/");
+
                 if (subjectAreaLevels.length == 1) {
+                  // add the first level subject area
                   subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
                 } else if (subjectAreaLevels.length == 2) {
+                  // add the second level subject area
                   subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
+
+                  if (defaultSubjectAreaSelected == null) {
+                    defaultSubjectAreaSelected = subjectAreaList[i];
+                  }
                 }
               }
 
+              // if there wasn't a second level subject area to pick, pick the first first level subject area
+              if (defaultSubjectAreaSelected == null) {
+                defaultSubjectAreaSelected = subjectAreaList[0];
+              }
+
+              // select the subject area that should be selected when the page loads
+              subjectAreasDropdown.find('option[value="' + defaultSubjectAreaSelected + '"]').attr("selected", "selected")
+              // display the line in the chart for the selected subject area
+              chart.get(defaultSubjectAreaSelected).show();
+
+              // when a subject area is selected, display the correct data (line)
               subjectAreasDropdown.change(function () {
 
                 $("#subject_areas option").each(function () {
-                  var subjectAreaId = $(this).val();
-                  chart.get(subjectAreaId).hide();
+                  chart.get($(this).val()).hide();
                 });
 
-                var subjectAreaId = $(this).val();
-                chart.get(subjectAreaId).show();
+                chart.get($(this).val()).show();
               });
 
+              // build the output
               var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>' + startDate.getUTCFullYear() + " - " + endDate.getUTCFullYear() + "</b> in the subject area: " + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
               var description2Div = $('<div></div>').append(subjectAreasDropdown).append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="">Show reference set</a>');
               var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
