@@ -1227,11 +1227,6 @@ $.fn.alm = function () {
             // check to see if there is any data
             if (subjectAreas != null && subjectAreas.length > 0) {
 
-              var startDate = data.relativeMetricData.start_date;
-              var endDate = data.relativeMetricData.end_date;
-              startDate = new Date(startDate);
-              endDate = new Date(endDate);
-
               var subjectAreaList = new Array();
 
               // loop through each subject area and add the data to the chart
@@ -1307,11 +1302,22 @@ $.fn.alm = function () {
                 });
 
                 chart.get($(this).val()).show();
+                var linkToRefset = $('input[name="refsetLinkValue"]').val();
+                $('#linkToRefset').attr("href", linkToRefset.replace("SUBJECT_AREA", $(this).val()))
+
               });
 
               // build the output
-              var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>' + startDate.getUTCFullYear() + " - " + endDate.getUTCFullYear() + "</b> in the subject area: " + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
-              var description2Div = $('<div></div>').append(subjectAreasDropdown).append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="">Show reference set</a>');
+              var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
+                  + new Date(data.relativeMetricData.start_date).getUTCFullYear() + " - " + new Date(data.relativeMetricData.end_date).getUTCFullYear() + "</b> in the subject area: "
+                  + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
+
+              var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
+
+              var description2Div = $('<div></div>').append(subjectAreasDropdown)
+                  .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
+                  .append('<input type="hidden" name="refsetLinkValue" value="' + encodeURI(linkToRefset) + '" >');
+
               var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
 
               $usage.append(relativeMetricDiv);
