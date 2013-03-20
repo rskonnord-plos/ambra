@@ -112,7 +112,7 @@ $.fn.alm = function () {
   this.getSocialData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Connotea,Facebook,Twitter,Mendeley";
+    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Facebook,Twitter,Mendeley";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -730,7 +730,7 @@ $.fn.alm = function () {
         }
 
         if (countToShowOnTile > 0) {
-          if (tileName == 'facebook') {  //  Facebook does NOT get links
+          if (tileName == 'facebook' || tileName == 'connotea') {  //  Facebook and Connotea does NOT get links
             html = html + this.createMetricsTileNoLink(tileName,
               "/images/logo-" + tileName + ".png",
               countToShowOnTile)
@@ -843,6 +843,7 @@ $.fn.alm = function () {
 
     if (response.article.source.length > 0) {
       html = "";
+      wikiHtml = "";
       // If there is at least one hit for a blog site, then create a link to those blogs.
       // else, if there are zero hits for a blog site, then create a "search for title" link instead.
       for (var a = 0; a < response.article.source.length; a++) {
@@ -855,6 +856,11 @@ $.fn.alm = function () {
           natureViews = count;
         } else if (tileName == "wikipedia") {
           wikiViews = count;
+          wikiHtml = this.createMetricsTile("wikipedia",
+              url,
+              "/images/logo-wikipedia.png",
+              wikiViews)
+              + '\n';
         } else {
           if (tileName == "research-blogging") {
             if (count > 0) {
@@ -893,10 +899,7 @@ $.fn.alm = function () {
     }
 
     if (wikiViews > 0) {
-      html = html + this.createMetricsTileNoLink("wikipedia",
-        "/images/logo-wikipedia.png",
-        wikiViews)
-        + '\n';
+      html = html + wikiHtml;
     }
 
     //  Always show the Google Blogs tile.
@@ -1234,109 +1237,118 @@ $.fn.alm = function () {
   }
 }
 
-$(document).ready(
-  function () {
-    //If the almViews node exists, assume almCitations exists as well and populate them with
-    //TODO: Review if this should go into it's own file or not.
-    //Appropriate results.
+function onReadyALM() {
+  //If the almViews node exists, assume almCitations exists as well and populate them with
+  //TODO: Review if this should go into it's own file or not.
+  //Appropriate results.
 
-    var fadeInDuration = 300, twoDaysInMilliseconds = 172800000;
+  var fadeInDuration = 300, twoDaysInMilliseconds = 172800000;
 
-    if ($("#almSignPost").length > 0) {
-      var almService = new $.fn.alm(),
-        doi = $('meta[name=citation_doi]').attr("content"),
-        publishDate = $.datepicker.parseDate("yy/m/d", $('meta[name=citation_date]').attr("content")),
-        publishDatems = publishDate.getTime();
+  if ($("#almSignPost").length > 0) {
+    var almService = new $.fn.alm(),
+      doi = $('meta[name=citation_doi]').attr("content"),
+      publishDate = $.datepicker.parseDate("yy/m/d", $('meta[name=citation_date]').attr("content")),
+      publishDatems = publishDate.getTime();
 
-      var almError = function (message) {
-        $("#almSignPostSpinner").css("display", "none");
+    var almError = function (message) {
+      $("#almSignPostSpinner").css("display", "none");
 
-        if (publishDatems > ((new Date().getTime()) - twoDaysInMilliseconds)) {
-          //If the article is less then two days old and there might not be any data for the article
-          // do not display anything
-        } else {
-          $('#almSignPost').append($('<li></li>').text("metrics unavailable").css('vertical-align', 'middle'));
-          $('#almSignPost').fadeIn(fadeInDuration);
+      if (publishDatems > ((new Date().getTime()) - twoDaysInMilliseconds)) {
+        //If the article is less then two days old and there might not be any data for the article
+        // do not display anything
+      } else {
+        $('#almSignPost').append($('<li></li>').text("metrics unavailable").css('vertical-align', 'middle'));
+        $('#almSignPost').fadeIn(fadeInDuration);
+      }
+    };
+
+    var almSuccess = function (response) {
+      if(response && response.length > 0 ) {
+        if (response[0].groups.length > 0) {
+          var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
+
+          li = almService.makeSignPostLI("VIEWS", viewdata.total,
+            "Sum of PLOS and PubMed Central page views and downloads",
+            "/static/almInfo#usageInfo");
+
+          $("#almSignPost").append(li);
         }
-      };
 
-      var almSuccess = function (response) {
-        if(response && response.length > 0 ) {
-          if (response[0].groups.length > 0) {
-            var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
+        var scopus = 0;
+        var bookmarks = 0;
+        var shares = 0;
 
-            li = almService.makeSignPostLI("VIEWS", viewdata.total,
-              "Sum of PLOS and PubMed Central page views and downloads",
-              "/static/almInfo#usageInfo");
+        for (var curGroup = 0; curGroup < response[0].groupcounts.length; curGroup++) {
+          for (var curSource = 0; curSource < response[0].groupcounts[curGroup].sources.length; curSource++) {
+            var name = response[0].groupcounts[curGroup].sources[curSource].source;
+            var count = response[0].groupcounts[curGroup].sources[curSource].count;
 
-            $("#almSignPost").append(li);
-          }
-
-          var scopus = 0;
-          var bookmarks = 0;
-          var shares = 0;
-
-          for (var curGroup = 0; curGroup < response[0].groupcounts.length; curGroup++) {
-            for (var curSource = 0; curSource < response[0].groupcounts[curGroup].sources.length; curSource++) {
-              var name = response[0].groupcounts[curGroup].sources[curSource].source;
-              var count = response[0].groupcounts[curGroup].sources[curSource].count;
-
-              if (name == "Scopus") {
-                scopus = count;
-              }
-
-              if (name == "Mendeley" || name == "CiteULike" || name == "Connotea") {
-                bookmarks += count;
-              }
-
-              if (name == "Facebook" || name == "Twitter") {
-                shares += count;
-              }
-            }
-          }
-
-          var text, li;
-          if (scopus > 0) {
-            text = "CITATIONS";
-            if (scopus == 1) {
-              text = "CITATION";
+            if (name == "Scopus") {
+              scopus = count;
             }
 
-            li = almService.makeSignPostLI(text, scopus, "Paper's citation count computed by Scopus",
-              "/static/almInfo#citationInfo");
-
-            $("#almSignPost").append(li);
-          }
-
-          if (bookmarks > 0) {
-            text = "ACADEMIC BOOKMARKS";
-            if (bookmarks == 1) {
-              text = "ACADEMIC BOOKMARK";
+            if (name == "Mendeley" || name == "CiteULike") {
+              bookmarks += count;
             }
 
-            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley, CiteULike, and Connotea " +
-              "bookmarks", "/static/almInfo#socialBookmarks");
-
-            $("#almSignPost").append(li);
-          }
-
-          if (shares > 0) {
-            text = "SOCIAL SHARES";
-            if (shares == 1) {
-              text = "SOCIAL SHARE";
+            if (name == "Facebook" || name == "Twitter") {
+              shares += count;
             }
-
-            li = almService.makeSignPostLI(text, shares, "Sum of Facebook and Twitter activity",
-              "/static/almInfo#socialBookmarks");
-
-            $("#almSignPost").append(li);
           }
-
-          $('#almSignPost').fadeIn(fadeInDuration);
         }
-      };
 
-      almService.getSummaryForArticles([ doi ], almSuccess, almError);
-    }
+        var text, li;
+        if (scopus > 0) {
+          text = "CITATIONS";
+          if (scopus == 1) {
+            text = "CITATION";
+          }
+
+          li = almService.makeSignPostLI(text, scopus, "Paper's citation count computed by Scopus",
+            "/static/almInfo#citationInfo");
+
+          $("#almSignPost").append(li);
+        }
+
+        if (bookmarks > 0) {
+          text = "ACADEMIC BOOKMARKS";
+          if (bookmarks == 1) {
+            text = "ACADEMIC BOOKMARK";
+          }
+
+          li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike " +
+            "bookmarks", "/static/almInfo#socialBookmarks");
+
+          $("#almSignPost").append(li);
+        }
+
+        if (shares > 0) {
+          text = "SOCIAL SHARES";
+          if (shares == 1) {
+            text = "SOCIAL SHARE";
+          }
+
+          li = almService.makeSignPostLI(text, shares, "Sum of Facebook and Twitter activity",
+            "/static/almInfo#socialBookmarks");
+
+          $("#almSignPost").append(li);
+        }
+
+        $('#almSignPost').fadeIn(fadeInDuration);
+      }
+    };
+
+    almService.getSummaryForArticles([ doi ], almSuccess, almError);
   }
-);
+}
+
+$(document).ready(onReadyALM);
+
+function onLoadALM() {
+  var almService = new $.fn.alm();
+  var doi = $('meta[name=citation_doi]').attr("content");
+  almService.setBookmarksText(doi, "relatedBookmarks", "relatedBookmarksSpinner");
+  almService.setRelatedBlogsText(doi, "relatedBlogPosts", "relatedBlogPostsError", "relatedBlogPostsSpinner");
+  almService.setCitesText(doi, "relatedCites", "relatedCitesSpinner");
+  almService.setChartData(doi, "usage", "chartSpinner");
+}
