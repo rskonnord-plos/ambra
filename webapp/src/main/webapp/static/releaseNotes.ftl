@@ -35,6 +35,14 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.5.7</h2>
+  <p>Released March 26th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.7</h3>
+  <ul>
+      <li>Added figure DOI information in the figure viewer</li>
+      <li>Gather DOI information for article citations</li>
+  </ul>
+
   <h2>Ambra 2.5.3</h2>
   <p>Released January 22nd, 2013</p>
   <h3>Features Implemented in Ambra 2.5.3</h3>
