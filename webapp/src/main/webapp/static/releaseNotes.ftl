@@ -43,6 +43,29 @@
       <li>Gather DOI information for article citations</li>
   </ul>
 
+  <h2>Ambra 2.5.6</h2>
+  <p>Released March 19th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.6</h3>
+  <ul>
+    <li>Displays Supporting Information DOIs</li>
+    <li>Many bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.5.5</h2>
+  <p>Released March 5th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.5</h3>
+  <ul>
+    <li>Expressions of Concern displays at the top of the article </li>
+    <li>Many bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.5.4</h2>
+  <p>Released February 26th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.4</h3>
+  <ul>
+    <li>Many bug fixes</li>
+  </ul>
+
   <h2>Ambra 2.5.3</h2>
   <p>Released January 22nd, 2013</p>
   <h3>Features Implemented in Ambra 2.5.3</h3>
