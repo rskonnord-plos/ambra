@@ -44,6 +44,7 @@ if (typeof(bamGAID) != 'undefined') {
   _bamGA = [];
 
 // required Functions for basic tracking
+//Makes sure to always get only 2nd-level and TLDs; no subdomain
   _bamGA.getDomain = function (url) {
     return url.replace(/^https?\:\/\//i, "").split('.').reverse()[1] + '.' + url.split('.').reverse()[0];
   }
