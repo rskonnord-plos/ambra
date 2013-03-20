@@ -1533,7 +1533,6 @@ span.author span.rel-footnote {
   background: url(../images/bul.pt.blu.gif) no-repeat 0 3px;
 }
 
-
 #nav-figures {
   display: none;
 }
@@ -2183,7 +2182,6 @@ ul.bulletlist li {
   padding-left: 12px;
 }
 
-
 /* comments */
 #thread h2 {
   margin: 30px 10px;
@@ -2305,7 +2303,7 @@ ul.bulletlist li {
   word-wrap: break-word;
 }
 
-#responses .response .response_title  {
+#responses .response .response_title {
   word-wrap: break-word;
 }
 
@@ -2358,16 +2356,16 @@ ul.bulletlist li {
 .reply form fieldset {
   min-width: 49%;
   float: left;
- }
+}
 
 /* spacing between competing interest radio buttons */
-.reply form fieldset div.cf{
+.reply form fieldset div.cf {
   margin-bottom: 10px;
 }
 
 /* competing interest text area margins */
 .reply form fieldset div.competing_text,
-.reply form fieldset #flag_text{
+.reply form fieldset #flag_text {
   margin-top: 12px;
   margin-bottom: 12px;
 }
@@ -2815,7 +2813,7 @@ ul.bulletlist li {
 }
 
 .journal_current .issue_container {
-  overflow:auto;
+  overflow: auto;
 }
 
 .journal_issues {
@@ -4307,7 +4305,7 @@ legend.conjunction span {
 #fig-viewer-slides .txt .titleexpand {
   width: 605px !important;
   white-space: normal !important;
-  float:none !important;
+  float: none !important;
 }
 
 #fig-viewer-slides .txt .hidden {
@@ -4339,10 +4337,10 @@ legend.conjunction span {
   text-decoration: underline;
   cursor: pointer;
   margin-left: 5px;
-  float:right;
+  float: right;
 }
 
-#fig-viewer-slides .txt .toggle.less{
+#fig-viewer-slides .txt .toggle.less {
   margin-bottom: 5px;
 }
 
@@ -4768,6 +4766,7 @@ table#pageViewsTable tr.percent td {
 #averageViewsSummary select option {
   background-color: #ffffff;
 }
+
 /* END styling for average usage stat information */
 
 a.ir {
@@ -4868,18 +4867,26 @@ a.irs {
 }
 
 .formlabel {
-    margin-bottom: 6px;
-    display: block;
-    font-size: 12px;
-    color: #333;
-    font-weight: bold;}
+  margin-bottom: 6px;
+  display: block;
+  font-size: 12px;
+  color: #333;
+  font-weight: bold;
+}
 
-.form ol .form-error { color: #f03; }
+.form ol .form-error {
+  color: #f03;
+}
 
-.emailrequired {color:#A61200 }
+.emailrequired {
+  color: #A61200
+}
 
-.required {color: #f03; font-size:13px;  font-weight: bold;}
-
+.required {
+  color: #f03;
+  font-size: 13px;
+  font-weight: bold;
+}
 
 /************* Article Metrics page: Metrics Tiles and Rating Tile *****************/
 
@@ -5045,7 +5052,6 @@ table.tile_mini td.data2 {
 
 /* styles for static page content */
 
-
 #static-wrap, #static-content-wrap {
   padding: 30px 30px 30px 10px;
 }
@@ -5068,7 +5074,7 @@ table.tile_mini td.data2 {
   margin-top: 0px
 }
 
-#static-content-wrap  ul, ol{
+#static-content-wrap  ul, ol {
   padding-left: 45px;
 }
 
@@ -5077,7 +5083,7 @@ table.tile_mini td.data2 {
 }
 
 #static-content-wrap p.intro {
-    font-style: italic
+  font-style: italic
 }
 
 /************* edboard pages *****************/
@@ -5118,12 +5124,12 @@ div.findArticle h4 {
 }
 
 .collapsibleContainerTitle {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .collapsibleContainerTitle div {
-  padding-top:5px;
-  padding-left:10px;
+  padding-top: 5px;
+  padding-left: 10px;
 }
 
 .collapsibleContainerContent {
@@ -5134,6 +5140,7 @@ div.findArticle h4 {
 .checkboxWrapper {
   position: relative;
 }
+
 .checkboxOverlay {
   position: absolute;
   left: 0;
