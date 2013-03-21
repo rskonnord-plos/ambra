@@ -152,7 +152,9 @@ function onReadyMainContainer() {
     });
   }
 
-  $("#print-article").css("display", selected_tab == "article" ? "list-item" : "none");
+  if (typeof selected_tab != "undefined") {
+    $("#print-article").css("display", selected_tab == "article" ? "list-item" : "none");
+  }
 }
 
 
@@ -1489,10 +1491,11 @@ initMainContainer();
 
 var pjax_selected_tab = null; // last clicked pjax content
 
-$(document).pjax("#nav-article ul li a", "#pjax-container",
-    {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
+if ($(document).pjax) {
+  $(document).pjax("#nav-article ul li a", "#pjax-container",
+      {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
 
-$("#pjax-container").on("pjax:complete", function(event) {
+  $("#pjax-container").on("pjax:complete", function(event) {
   // invoke document ready and window initialization code
   onReadyMainContainer();
   initMainContainer();
@@ -1515,5 +1518,6 @@ $("#pjax-container").on("pjax:complete", function(event) {
     }
   }
 });
+}
 
 // End Pjax related code
