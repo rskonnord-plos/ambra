@@ -929,7 +929,7 @@ $.fn.alm = function () {
       + '\n';
 
     // now add science seeker using previously obtained index
-    if( !sSeekerIndex ){
+    if( sSeekerIndex != null ){
       html += tileHtmlList[sSeekerIndex].html;
     }
 
