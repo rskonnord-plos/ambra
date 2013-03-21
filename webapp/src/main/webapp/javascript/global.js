@@ -291,7 +291,9 @@ category = "tab menu actions";
 action = "tab menu click";
 $(document).ajaxComplete(function(){
     if(pjax_selected_tab != null){ label = pjax_selected_tab;};
-    pageTracker._trackEvent(category,action,label);
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',category,action,label]);
+    }
 });
 
 
