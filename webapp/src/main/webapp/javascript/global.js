@@ -1496,28 +1496,28 @@ if ($(document).pjax) {
       {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
 
   $("#pjax-container").on("pjax:complete", function(event) {
-  // invoke document ready and window initialization code
-  onReadyMainContainer();
-  initMainContainer();
+    // invoke document ready and window initialization code
+    onReadyMainContainer();
+    initMainContainer();
 
-  // when metrics tab is selected, load highcharts.js only
-  // if it was not already loaded. If the tab content was loaded from
-  // pjax (and not from cache) then also initialize ALM.
+    // when metrics tab is selected, load highcharts.js only
+    // if it was not already loaded. If the tab content was loaded from
+    // pjax (and not from cache) then also initialize ALM.
 
-  if (pjax_selected_tab == "metrics") {
-    if (typeof Highcharts == "undefined") {
-      $.getScript("/javascript/highcharts.js", function(data, textStatus, jqxhr) {
-        onLoadALM();
-      });
-    }
-    else {
-      if($.pjax.contentCache[window.location.href] === undefined ||
-          !$.pjax.contentCache[window.location.href].loaded) {
-        onLoadALM();
+    if (pjax_selected_tab == "metrics") {
+      if (typeof Highcharts == "undefined") {
+        $.getScript("/javascript/highcharts.js", function(data, textStatus, jqxhr) {
+          onLoadALM();
+        });
+      }
+      else {
+        if($.pjax.contentCache[window.location.href] === undefined ||
+            !$.pjax.contentCache[window.location.href].loaded) {
+          onLoadALM();
+        }
       }
     }
-  }
-});
+  });
 }
 
 // End Pjax related code
