@@ -31,24 +31,30 @@ import java.util.List;
 public interface CrossRefLookupService {
 
   /**
-   * Find a DOI for an article based on its title and author.  If multiple articles are found that match, one is
+   * Find a DOI for an article based on the passed in parameters.  If multiple articles are found that match, one is
    * arbitrarily selected.
    *
    * @param title Article title
    * @param author Author name
+   * @param journal the journal
+   * @param volume the volume
+   * @param pages the pages text
    * @return DOI of an article that matches, or null if no match is found
    * @throws Exception
    */
-  public String findDoi(String title, String author) throws Exception;
+  public String findDoi(String title, String author, String journal, String volume, String pages) throws Exception;
 
   /**
    * Find article based on title and first author.
    *
    * @param title Article title
    * @param author Author name
+   * @param journal the journal
+   * @param volume the volume
+   * @param pages the pages text
    * @return List of articles that match criteria. Empty string if none is found.
    * @see CrossRefArticle
    * @throws Exception When an error is encountered
    */
-  public List<CrossRefArticle> findArticles(String title, String author) throws Exception;
+  public List<CrossRefArticle> findArticles(String title, String author, String journal, String volume, String pages) throws Exception;
 }

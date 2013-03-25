@@ -28,11 +28,13 @@ import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.Category;
 import org.ambraproject.models.CitedArticle;
+import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.models.Issue;
 import org.ambraproject.models.Journal;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole.Permission;
 import org.ambraproject.models.Volume;
+import org.ambraproject.service.crossref.CrossRefLookupService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.views.ArticleCategory;
@@ -76,6 +78,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
   private PermissionsService permissionsService;
+  private CrossRefLookupService crossRefLookupService;
 
   /**
    * Determines if the articleURI is of type researchArticle
@@ -785,6 +788,52 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   @Override
   @Transactional
+  public String refreshCitedArticle(Long citedArticleID) throws Exception {
+    log.debug("refreshArticleCitation for citedArticleID: {}", citedArticleID);
+
+    CitedArticle citedArticle = hibernateTemplate.get(CitedArticle.class, citedArticleID);
+
+    String author = getAuthorStringForLookup(citedArticle);
+    String doi = crossRefLookupService.findDoi(citedArticle.getTitle(),
+      author,
+      citedArticle.getJournal(),
+      citedArticle.getVolume(),
+      citedArticle.getPages());
+
+    if (doi != null && !doi.isEmpty()) {
+      log.debug("refreshArticleCitation doi found: {}", doi);
+      setCitationDoi(citedArticle, doi);
+    } else {
+      log.debug("refreshArticleCitation nothing found");
+    }
+
+    return doi;
+  }
+
+  /**
+   * Formats a citation's authors for searching in CrossRef.
+   *
+   * @param citedArticle persistent class representing the citation
+   * @return String with author information formatted for a CrossRef query
+   */
+  private String getAuthorStringForLookup(CitedArticle citedArticle) {
+    List<CitedArticleAuthor> authors = citedArticle.getAuthors();
+
+    if(authors.size() > 0) {
+      String surname = authors.get(0).getSurnames();
+      String givenName = authors.get(0).getGivenNames();
+
+      return (givenName == null)? surname : surname + " " + givenName;
+    } else {
+      return "";
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
   public void setArticleCategories(Article article, List<String> categoryStrings) {
     List<Category> categories = new ArrayList<Category>(categoryStrings.size());
     int numAdded = 0;
@@ -916,5 +965,13 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Required
   public void setPermissionsService(PermissionsService permissionsService) {
     this.permissionsService = permissionsService;
+  }
+
+  /**
+   * @param crossRefLookupService the crossreflookup service to use
+   */
+  @Required
+  public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
+    this.crossRefLookupService = crossRefLookupService;
   }
 }
