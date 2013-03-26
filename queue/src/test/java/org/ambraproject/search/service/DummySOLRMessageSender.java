@@ -21,6 +21,7 @@ import org.ambraproject.queue.MessageSender;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import javax.xml.xpath.*;
+import java.util.Map;
 
 /**
  * DummyMessageSender for sending messages to SOLR.  In the normal world this class is actually a proxy to the
@@ -90,7 +91,14 @@ public class DummySOLRMessageSender implements MessageSender {
         throw new RuntimeException(ex.getMessage(), ex);
       }
     }
+  }
 
+  /**
+   * Provided as a stub so unit tests compile.  This method only passes through requests and
+   * methods are unit tested other places.
+   */
+  public void sendMessage(String destination, Object body, Map<String,Object> headers) {
+    throw new RuntimeException("Not implemented, if you are calling this method, implement a unit test");
   }
 
   private Node XPathSingleNodeQuery(Document dom, String statement) throws XPathExpressionException {
