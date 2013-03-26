@@ -586,7 +586,7 @@ $.fn.edBoard = function () {
             {name: "facet.field", value: "ae_subject_facet"},
             {name: "facet.sort", value: "index"},
             {name: "facet.mincount", value: 0},
-            {name: "facet.limit", value: 50000}
+            {name: "facet.limit", value: 500}
           ];
 
           console.log("First Query: " + query_withNewTerm.join(" AND "));
