@@ -461,11 +461,13 @@ $.fn.edBoard = function () {
       },
 
       source: function(entry, response) {
-        var actual_query = [];
+        var entered_query = []; //Holds the list of already entered terms
         var terms = entry.term.split(",");
 
+        console.log("Terms: " + terms);
+
         if(terms.length > 0) {
-          var prefix = $.trim(terms.pop());
+          var searchTerm = $.trim(terms.pop());
 
           // once the subject facet and name facet queries complete,
           // invoke the response handler with the list of options.
@@ -491,23 +493,37 @@ $.fn.edBoard = function () {
               var subjects = json_subjects.facet_counts.facet_fields.ae_subject_facet;
 
               var subject_title = false;
+              var areas_added = 0;
+
               $.each(subjects, function (index, subject) {
                 //solr returns a list that looks like
                 // ["biology",2411, "biophysics",344]
 
                 //Only push terms that haven't been selected.
-                if($.inArray(subject, terms) == -1) {
-                  if ((index / 2) < areas_count && index % 2 == 0 && subjects[index + 1] > 0) {
-                    if (!subject_title) {
-                      subject_title = true;
-                      options.push({ label: "<b>Areas of Expertise</b>", type: "html", value: ""});
-                    }
-                    var label = subject + " (" + subjects[index+1] + ")";;
-                    if (prefix.length > 0) {
-                      label = "<b>" + label.substr(0, prefix.length) + "</b>" + label.substr(prefix.length);
-                    }
-                    options.push({ label:label, value:subject, type: "html" });
+                if($.inArray(subject, terms) == -1 &&
+                  //Limit length to areas_count
+                  areas_added < areas_count &&
+                  //Skip every other element, and only list facets with count > 0
+                  index % 2 == 0 && subjects[index + 1] > 0 &&
+                  //Only push terms that have a matching sub string
+                  subject.indexOf(searchTerm) > -1) {
+
+                  if (!subject_title) {
+                    subject_title = true;
+                    options.push({ label: "<b>Areas of Expertise</b>", type: "html", value: ""});
                   }
+
+                  var label = subject + " (" + subjects[index+1] + ")";
+
+                  if (searchTerm.length > 0) {
+                    //var regex = new RegExp( '(' + word + ')', 'gi' );
+                    //return line.replace( regex, "<b>$1</b>" );
+                    label = label.replace(searchTerm, "<b>" + searchTerm + "</b>");
+                    //label = "<b>" + label.substr(0, prefix.length) + "</b>" + label.substr(prefix.length);
+                  }
+                  options.push({ label:label, value:subject, type: "html" });
+
+                  areas_added++;
                 }
               });
             }
@@ -516,7 +532,7 @@ $.fn.edBoard = function () {
             if (json_names && json_names.response.docs) {
               var names = json_names.response.docs;
 
-              var prefix_parts = prefix.split(" ");
+              var searchTerm_parts = searchTerm.split(" ");
               var name_title = false;
               if (names.length > 0) {
                 $.each(names, function (index, name0) {
@@ -532,10 +548,10 @@ $.fn.edBoard = function () {
                         options.push({ label: "<b>People</b>", type: "html", value: ""});
                       }
                       var label = last_first;
-                      if (prefix.length > 0) {
-                        for (var j=0; j<prefix_parts.length; ++j) {
-                          if (prefix_parts[j]) {
-                            var re = RegExp("\\b(" + prefix_parts[j] + ")", "ig");
+                      if (searchTerm.length > 0) {
+                        for (var j=0; j < searchTerm_parts.length; ++j) {
+                          if (searchTerm_parts[j]) {
+                            var re = RegExp("\\b(" + searchTerm_parts[j] + ")", "ig");
                             label = label.replace(re, "<b>$1</b>");
                           }
                         }
@@ -552,43 +568,29 @@ $.fn.edBoard = function () {
             response(options);
           };
 
-          // all except the last item is queried exactly via name or subject
+          // all is queried exactly via name or subject
           $.each(terms, function(index, term) {
             var item = $.trim(term);
             if(item.length > 0) {
-              if (item[0] == '"' && item[item.length-1] == '"') {
-                actual_query.push("ae_name:" + item);
-              }
-              else {
-                actual_query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
-              }
+              entered_query.push("(ae_subject_autocomplete:\"" + item + "\" OR ae_name:\"" + item + "\")");
             }
           });
 
-          // actual_query now has list of exact match query for all items except the last.
-
-          // for subject facet query, if no query exists (only one item)
-          // then use a wild-card *:* query (q).
-          var query = actual_query.slice(0);
-
-          if(query.length == 0) {
-            query.push("*:*")
-          }
-
-          // subject facet query for 3 items A, B, C looks like
-          // q=(A AND B)&facet.prefix=C...
+          query_withNewTerm = entered_query.slice(0);
+          query_withNewTerm.push("(ae_subject_autocomplete:" + searchTerm + " OR ae_name:" + searchTerm + ")");
 
           var data = [
             {name: "wt", value: "json"},
-            {name: "q", value: query.join(" AND ")},
+            {name: "q", value: query_withNewTerm.join(" AND ")},
             {name: "fq", value: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE"},
             {name: "facet", value: true},
             {name: "facet.field", value: "ae_subject_facet"},
             {name: "facet.sort", value: "index"},
-            {name: "facet.mincount", value: 1},
-            {name: "facet.limit", value: 20},
-            {name: "facet.prefix", value: prefix.toLowerCase()}
+            {name: "facet.mincount", value: 0},
+            {name: "facet.limit", value: 50000}
           ];
+
+          console.log("First Query: " + query_withNewTerm.join(" AND "));
 
           $.jsonp({
             url: solrHost,
@@ -597,34 +599,35 @@ $.fn.edBoard = function () {
             data: data,
             callbackParameter: "json.wrf",
             success: function(json_subjects, textStatus, xOptions) {
-              if (prefix.length < 3) {
-                success_handler(json_subjects);
-                return;
-              }
-
               // for items A, B, C the name query looks like
               // q=(A AND B AND (C OR C*))
 
-              var query = actual_query.slice(0);
-              var prefix_parts = prefix.split(" ");
-              var last_part = prefix_parts.pop();
-              for (var i=0; i<prefix_parts.length; ++i) {
-                if (prefix_parts[i]) {
-                  query.push("ae_name_facet:" + prefix_parts[i].toLowerCase());
+              console.log("searchTerm: " + searchTerm);
+
+              var query_withNewTerm = entered_query.slice(0);
+              var searchTerm_parts = searchTerm.split(" ");
+              var last_part = searchTerm_parts.pop();
+
+              for (var i = 0; i < searchTerm_parts.length; ++i) {
+                if (searchTerm_parts[i]) {
+                  query_withNewTerm.push("ae_name_facet:\"" + searchTerm_parts[i].toLowerCase() + "\"");
                 }
               }
-              query.push("(ae_name_facet:" + last_part.toLowerCase()
+
+              query_withNewTerm.push("(ae_name_facet:" + last_part.toLowerCase()
                   + "* OR ae_name_facet:" + last_part.toLowerCase() + ")");
 
               var data = [
                 {name: "wt", value: "json"},
-                {name: "q", value: query.join(" AND ")},
+                {name: "q", value: query_withNewTerm.join(" AND ")},
                 {name: "fl", value: "ae_name"},
                 {name: "rows", value: 20},
                 {name: "fq", value: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE"},
                 {name: "sort", value: "ae_last_name asc"},
                 {name: "facet", value: false}
               ];
+
+              console.log("Second Query: " + query_withNewTerm.join(" AND "));
 
               $.jsonp({
                 url: solrHost,
