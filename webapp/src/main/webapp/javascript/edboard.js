@@ -506,7 +506,7 @@ $.fn.edBoard = function () {
                   //Skip every other element, and only list facets with count > 0
                   index % 2 == 0 && subjects[index + 1] > 0 &&
                   //Only push terms that have a matching sub string
-                  subject.indexOf(searchTerm) > -1) {
+                  subject.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
 
                   if (!subject_title) {
                     subject_title = true;
@@ -516,9 +516,8 @@ $.fn.edBoard = function () {
                   var label = subject + " (" + subjects[index+1] + ")";
 
                   if (searchTerm.length > 0) {
-                    //var regex = new RegExp( '(' + word + ')', 'gi' );
-                    //return line.replace( regex, "<b>$1</b>" );
-                    label = label.replace(searchTerm, "<b>" + searchTerm + "</b>");
+                    //label = label.replace(searchTerm, "<b>" + searchTerm + "</b>");
+                    label = label.replace(new RegExp('(' + searchTerm + ')', 'gi'), "<b>$1</b>");
                     //label = "<b>" + label.substr(0, prefix.length) + "</b>" + label.substr(prefix.length);
                   }
                   options.push({ label:label, value:subject, type: "html" });
