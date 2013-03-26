@@ -11,11 +11,14 @@
 
 package org.ambraproject.queue;
 
+import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.UserProfile;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.jvnet.mock_javamail.Mailbox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.DataProvider;
@@ -73,6 +76,7 @@ public class SavedSearchRouteWeeklyTest extends SavedSearchRouteBaseTest {
   }
 
   @Test(dataProvider = "expectedWeeklyEmails")
+  @DirtiesContext
   public void expectedMonthlyEmails(String email, int expectedEmails, Map emailContents) throws Exception {
     checkEmail(email, expectedEmails, emailContents);
   }

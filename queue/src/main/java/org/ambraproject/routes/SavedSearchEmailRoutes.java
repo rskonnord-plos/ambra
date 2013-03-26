@@ -33,22 +33,24 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
     //Weekly alert emails
     log.info("Setting Route for sending 'Weekly' saved search emails");
 
+    //TODO: Is header and body required to have the same value?
     from("quartz:ambra/savedsearch/weeklyemail?cron=" + weeklyCron)
       .setBody(constant(SavedSearchRetriever.AlertType.WEEKLY))
-        .setHeader("alertType", simple("weekly"))
-        .to("direct:getsearches");
+      .setHeader("alertType", simple("weekly"))
+      .to("direct:getsearches");
 
     //Monthly alert emails
     log.info("Setting Route for sending 'Monthly' saved search emails");
 
+    //TODO: Is header and body required to have the same value?
     from("quartz:ambra/savedsearch/monthlyemail?cron=" + monthlyCron)
-        .setBody(constant(SavedSearchRetriever.AlertType.MONTHLY))
-        .setHeader("alertType", simple("monthly"))
-        .to("direct:getsearches");
+      .setBody(constant(SavedSearchRetriever.AlertType.MONTHLY))
+      .setHeader("alertType", simple("monthly"))
+      .to("direct:getsearches");
 
     from("direct:getsearches")
-        .split().method("savedSearchRetriever", "retrieveSearchAlerts")
-        .to("seda:runInParallel");
+      .split().method("savedSearchRetriever", "retrieveSearchAlerts")
+      .to("seda:runInParallel");
 
     //Hard coding this for 15 threads, can increase later if needed
     from("seda:runInParallel?concurrentConsumers=15")

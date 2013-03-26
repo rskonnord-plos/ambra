@@ -19,8 +19,11 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.search.SavedSearchJob;
 import org.ambraproject.search.SavedSearchRetriever;
 import org.ambraproject.util.TextUtils;
+import org.junit.BeforeClass;
+import org.jvnet.mock_javamail.Mailbox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -42,6 +45,7 @@ public class SavedSearchRetrieverTest extends BaseTest {
 
   @Test
   public void testSavedSearch() {
+    cleanup();
 
     Calendar searchTime = Calendar.getInstance();
     searchTime.set(Calendar.YEAR, 2008);
@@ -112,5 +116,14 @@ public class SavedSearchRetrieverTest extends BaseTest {
 
     assertNotNull(savedSearchJobs, "saved search views List is empty for monthly search");
     assertEquals(savedSearchJobs.size(), 1, "returned incorrect number of results");
+  }
+
+  @AfterClass
+  public void cleanup() {
+    logger.debug("Cleaning up data");
+
+    dummyDataStore.deleteAll(SavedSearch.class);
+    dummyDataStore.deleteAll(UserProfile.class);
+    dummyDataStore.deleteAll(SavedSearchQuery.class);
   }
 }
