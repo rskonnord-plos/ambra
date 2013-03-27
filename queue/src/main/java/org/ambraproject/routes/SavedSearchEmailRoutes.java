@@ -27,28 +27,26 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
   private String weeklyCron;
   private String monthlyCron;
 
+  public static final String SEARCH_ALERTS_QUEUE = "activemq:ambra.searchAlerts";
+
   @Override
   public void configure() throws Exception {
 
     //Weekly alert emails
     log.info("Setting Route for sending 'Weekly' saved search emails");
 
-    //TODO: Is header and body required to have the same value?
     from("quartz:ambra/savedsearch/weeklyemail?cron=" + weeklyCron)
       .setBody(constant(SavedSearchRetriever.AlertType.WEEKLY))
-      .setHeader("alertType", simple("weekly"))
-      .to("direct:getsearches");
+      .to(SEARCH_ALERTS_QUEUE);
 
     //Monthly alert emails
     log.info("Setting Route for sending 'Monthly' saved search emails");
 
-    //TODO: Is header and body required to have the same value?
     from("quartz:ambra/savedsearch/monthlyemail?cron=" + monthlyCron)
       .setBody(constant(SavedSearchRetriever.AlertType.MONTHLY))
-      .setHeader("alertType", simple("monthly"))
-      .to("direct:getsearches");
+      .to(SEARCH_ALERTS_QUEUE);
 
-    from("direct:getsearches")
+    from(SEARCH_ALERTS_QUEUE)
       .split().method("savedSearchRetriever", "retrieveSearchAlerts")
       .to("seda:runInParallel");
 

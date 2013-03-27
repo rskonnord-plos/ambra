@@ -145,6 +145,7 @@
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
     <property name="imagePath" value="${ambra.queue.image.path}"/>
+    <property name="sendMode" value="${ambra.queue.sendmail.sendMode}"/>
     <property name="alertHtmlEmail" value="${ambra.queue.sendmail.alert.html}"/>
     <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
     <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>

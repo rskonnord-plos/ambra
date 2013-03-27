@@ -11,8 +11,7 @@
 
 package org.ambraproject.queue;
 
-import org.ambraproject.models.SavedSearchQuery;
-import org.ambraproject.models.UserProfile;
+import org.ambraproject.routes.SavedSearchEmailRoutes;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.jvnet.mock_javamail.Mailbox;
@@ -21,15 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import javax.mail.Message;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static org.testng.Assert.assertEquals;
 
 /**
  * Unit test for the savedSearch camel route
@@ -41,7 +35,7 @@ import static org.testng.Assert.assertEquals;
 public class SavedSearchRouteMonthlyTest extends SavedSearchRouteBaseTest {
   private static final Logger log = LoggerFactory.getLogger(SavedSearchRouteMonthlyTest.class);
 
-  @Produce(uri = "direct:getsearches")
+  @Produce(uri = SavedSearchEmailRoutes.SEARCH_ALERTS_QUEUE)
   protected ProducerTemplate start;
 
   @DataProvider(name="expectedMonthlyEmails")

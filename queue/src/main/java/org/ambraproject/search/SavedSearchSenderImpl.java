@@ -28,9 +28,11 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   private static final Logger log = LoggerFactory.getLogger(SavedSearchSenderImpl.class);
 
   private static final String WEEKLY_FREQUENCY = "WEEKLY";
+  private static final String PRODUCTION_MODE = "PRODUCTION";
 
   private TemplateMailer mailer;
   private String mailFromAddress;
+  private String sendMode;
   private String alertHtmlEmail;
   private String alertTextEmail;
   private String savedSearchHtmlEmail;
@@ -61,7 +63,6 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     String fromAddress = this.mailFromAddress;
 
     for(int a = 0; a < searchDetails.size(); a++) {
-      //TODO: provide override for dev mode and allow QA to adjust in ambra.xml
       String toAddress = (String)searchDetails.get(a)[1];
       String subject;
 
@@ -75,7 +76,9 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
           log.debug("Sending mail: {}", toAddress);
 
-          mailer.mail(toAddress, fromAddress, subject, context, content);
+          if(sendMode != null && sendMode.toUpperCase().equals(PRODUCTION_MODE)) {
+            mailer.mail(toAddress, fromAddress, subject, context, content);
+          }
         } else {
           log.debug("Not sending mail: {}", toAddress);
         }
@@ -85,10 +88,12 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
         log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
         log.debug("Sending mail: {}", toAddress);
 
-        mailer.mail(toAddress, fromAddress, subject, context, content);
+        if(sendMode != null && sendMode.toUpperCase().equals(PRODUCTION_MODE)) {
+          mailer.mail(toAddress, fromAddress, subject, context, content);
+        }
       }
 
-      //When a results are sent updated the records to indicate
+      //When results are sent update the records to indicate
       markSearchRun((Long)searchDetails.get(a)[0], searchJob.getFrequency(), searchJob.getEndDate());
     }
 
@@ -187,5 +192,10 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   @Required
   public void setSavedSearchTextEmail(String savedSearchTextEmail) {
     this.savedSearchTextEmail = savedSearchTextEmail;
+  }
+
+  @Required
+  public void setSendMode(String sendMode) {
+    this.sendMode = sendMode;
   }
 }

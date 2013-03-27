@@ -38,12 +38,6 @@
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
-  <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
-    <!-- Basically, never run, the route is started manually in the test -->
-    <property name="weeklyCron" value="*+*+*+1+*+?"/>
-    <property name="monthlyCron" value="*+*+*+1+*+?"/>
-  </bean>
-
   <bean id="savedSearchRetriever" class="org.ambraproject.search.SavedSearchRetrieverImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
@@ -82,10 +76,37 @@
     <property name="sessionFactory" ref="sessionFactory" />
     <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
     <property name="imagePath" value="${ambra.queue.image.path}"/>
+    <property name="sendMode" value="${ambra.queue.sendmail.sendMode}"/>
     <property name="alertHtmlEmail" value="${ambra.queue.sendmail.alert.html}"/>
     <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
     <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
     <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
+  </bean>
+
+  <bean id="jmsFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false"/>
+  </bean>
+
+  <bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
+    <property name="connectionFactory" ref="jmsFactory"/>
+  </bean>
+
+  <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+    <property name="connectionFactory" ref="jmsFactory"/>
+    <property name="transactionManager" ref="jmsTransactionManager"/>
+    <property name="transacted" value="true"/>
+    <property name="concurrentConsumers" value="1"/>
+  </bean>
+
+  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="configuration" ref="jmsConfig"/>
+  </bean>
+
+  <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes"
+    depends-on="activemq">
+    <!-- Basically, never run, the route is started manually in the test -->
+    <property name="weeklyCron" value="*+*+*+1+*+?"/>
+    <property name="monthlyCron" value="*+*+*+1+*+?"/>
   </bean>
 
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
