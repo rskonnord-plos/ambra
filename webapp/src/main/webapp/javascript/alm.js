@@ -19,7 +19,6 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
-  this.almHost = "http://localhost:3000";
   this.pubGetHost = $('meta[name=pubGetHost]').attr("content");
 
   if (this.almHost == null) {
