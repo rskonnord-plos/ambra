@@ -19,6 +19,7 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
+  this.almHost = "http://localhost:3000";
   this.pubGetHost = $('meta[name=pubGetHost]').attr("content");
 
   if (this.almHost == null) {
@@ -1232,93 +1233,99 @@ $.fn.alm = function () {
                   var subjectAreaId = subjectAreas[i].subject_area;
                   var subjectAreaData = subjectAreas[i].average_usage;
 
-                  subjectAreaList.push(subjectAreaId);
+                  // product wants the graph to display if and only if it is a line (not a dot)
+                  if (subjectAreaData.length >= 2) {
+                    subjectAreaList.push(subjectAreaId);
 
-                  // make sure the data will fit the graph
-                  if (subjectAreaData.length > dataHistoryKeys.length) {
-                    subjectAreaData = subjectAreaData.slice(0, dataHistoryKeys.length);
-                  }
+                    // make sure the data will fit the graph
+                    if (subjectAreaData.length > dataHistoryKeys.length) {
+                      subjectAreaData = subjectAreaData.slice(0, dataHistoryKeys.length);
+                    }
 
-                  // add the data for the given subject area to the chart
-                  chart.addSeries({
-                        id: subjectAreaId,
-                        data: subjectAreaData,
-                        type: "line",
-                        color: "#01DF01",
-                        marker: {
-                          enabled: false,
-                          states: {
-                            hover: {
-                              enabled: false
+                    // add the data for the given subject area to the chart
+                    chart.addSeries({
+                          id: subjectAreaId,
+                          data: subjectAreaData,
+                          type: "line",
+                          color: "#01DF01",
+                          marker: {
+                            enabled: false,
+                            states: {
+                              hover: {
+                                enabled: false
+                              }
                             }
                           }
                         }
-                      }
-                  );
+                    );
 
-                  // hide the line
-                  chart.get(subjectAreaId).hide();
-                }
-
-                // build the drop down list of subject areas
-                var defaultSubjectAreaSelected;
-                var subjectAreasDropdown = $('<select id="subject_areas"></select>');
-                // sort the list so that the subject areas are grouped correctly
-                subjectAreaList.sort();
-                for (i = 0; i < subjectAreaList.length; i++) {
-                  var subjectArea = subjectAreaList[i].substr(1);
-                  var subjectAreaLevels = subjectArea.split("/");
-
-                  if (subjectAreaLevels.length == 1) {
-                    // add the first level subject area
-                    subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
-                  } else if (subjectAreaLevels.length == 2) {
-                    // add the second level subject area
-                    subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
-
-                    if (defaultSubjectAreaSelected == null) {
-                      defaultSubjectAreaSelected = subjectAreaList[i];
-                    }
+                    // hide the line
+                    chart.get(subjectAreaId).hide();
                   }
                 }
 
-                // if there wasn't a second level subject area to pick, pick the first first level subject area
-                if (defaultSubjectAreaSelected == null) {
-                  defaultSubjectAreaSelected = subjectAreaList[0];
-                }
+                // make sure we have subject areas to add to the select control
+                if (subjectAreaList.length > 0) {
+                  // build the drop down list of subject areas
+                  var defaultSubjectAreaSelected;
+                  var subjectAreasDropdown = $('<select id="subject_areas"></select>');
+                  // sort the list so that the subject areas are grouped correctly
+                  subjectAreaList.sort();
+                  for (i = 0; i < subjectAreaList.length; i++) {
+                    var subjectArea = subjectAreaList[i].substr(1);
+                    var subjectAreaLevels = subjectArea.split("/");
 
-                // select the subject area that should be selected when the page loads
-                subjectAreasDropdown.find('option[value="' + defaultSubjectAreaSelected + '"]').attr("selected", "selected")
-                // display the line in the chart for the selected subject area
-                chart.get(defaultSubjectAreaSelected).show();
+                    if (subjectAreaLevels.length == 1) {
+                      // add the first level subject area
+                      subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
+                    } else if (subjectAreaLevels.length == 2) {
+                      // add the second level subject area
+                      subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
 
-                // when a subject area is selected, display the correct data (line)
-                subjectAreasDropdown.change(function () {
+                      if (defaultSubjectAreaSelected == null) {
+                        defaultSubjectAreaSelected = subjectAreaList[i];
+                      }
+                    }
+                  }
 
-                  $("#subject_areas option").each(function () {
-                    chart.get($(this).val()).hide();
+                  // if there wasn't a second level subject area to pick, pick the first first level subject area
+                  if (defaultSubjectAreaSelected == null) {
+                    defaultSubjectAreaSelected = subjectAreaList[0];
+                  }
+
+                  // select the subject area that should be selected when the page loads
+                  subjectAreasDropdown.find('option[value="' + defaultSubjectAreaSelected + '"]').attr("selected", "selected")
+                  // display the line in the chart for the selected subject area
+                  chart.get(defaultSubjectAreaSelected).show();
+
+                  // when a subject area is selected, display the correct data (line)
+                  subjectAreasDropdown.change(function () {
+
+                    $("#subject_areas option").each(function () {
+                      chart.get($(this).val()).hide();
+                    });
+
+                    chart.get($(this).val()).show();
+                    var linkToRefset = $('input[name="refsetLinkValue"]').val();
+                    $('#linkToRefset').attr("href", linkToRefset.replace("SUBJECT_AREA", $(this).val()))
+
                   });
 
-                  chart.get($(this).val()).show();
-                  var linkToRefset = $('input[name="refsetLinkValue"]').val();
-                  $('#linkToRefset').attr("href", linkToRefset.replace("SUBJECT_AREA", $(this).val()))
+                  // build the output
+                  var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
+                      + new Date(data.relativeMetricData.start_date).getUTCFullYear() + " - " + new Date(data.relativeMetricData.end_date).getUTCFullYear() + "</b> in the subject area: "
+                      + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
 
-                });
+                  var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
 
-                // build the output
-                var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
-                    + new Date(data.relativeMetricData.start_date).getUTCFullYear() + " - " + new Date(data.relativeMetricData.end_date).getUTCFullYear() + "</b> in the subject area: "
-                    + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
+                  var description2Div = $('<div></div>').append(subjectAreasDropdown)
+                      .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
+                      .append('<input type="hidden" name="refsetLinkValue" value="' + encodeURI(linkToRefset) + '" >');
 
-                var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
+                  var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
 
-                var description2Div = $('<div></div>').append(subjectAreasDropdown)
-                    .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
-                    .append('<input type="hidden" name="refsetLinkValue" value="' + encodeURI(linkToRefset) + '" >');
-
-                var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
-
-                $usage.append(relativeMetricDiv);
+                  $usage.append(relativeMetricDiv);
+                }
               }
             }
 
