@@ -29,10 +29,12 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
   private static final String WEEKLY_FREQUENCY = "WEEKLY";
   private static final String PRODUCTION_MODE = "PRODUCTION";
+  private static final String QA_MODE = "QA";
 
   private TemplateMailer mailer;
   private String mailFromAddress;
   private String sendMode;
+  private String sendModeQAEMail;
   private String alertHtmlEmail;
   private String alertTextEmail;
   private String savedSearchHtmlEmail;
@@ -76,9 +78,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
           log.debug("Sending mail: {}", toAddress);
 
-          if(sendMode != null && sendMode.toUpperCase().equals(PRODUCTION_MODE)) {
-            mailer.mail(toAddress, fromAddress, subject, context, content);
-          }
+          mail(toAddress, fromAddress, subject, context, content);
         } else {
           log.debug("Not sending mail: {}", toAddress);
         }
@@ -88,9 +88,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
         log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
         log.debug("Sending mail: {}", toAddress);
 
-        if(sendMode != null && sendMode.toUpperCase().equals(PRODUCTION_MODE)) {
-          mailer.mail(toAddress, fromAddress, subject, context, content);
-        }
+        mail(toAddress, fromAddress, subject, context, content);
       }
 
       //When results are sent update the records to indicate
@@ -99,6 +97,23 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
     log.debug("Completed thread Name: {}", Thread.currentThread().getName());
     log.debug("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
+  }
+
+  private void mail(String toAddress, String fromAddress, String subject, Map<String, Object> context,
+    Multipart content) {
+
+    //If sendMode empty, do nothing
+    if(sendMode != null) {
+      if(sendMode.toUpperCase().equals(PRODUCTION_MODE)) {
+        mailer.mail(toAddress, fromAddress, subject, context, content);
+      }
+
+      if(sendMode.toUpperCase().equals(QA_MODE)) {
+        mailer.mail(sendModeQAEMail, fromAddress, "(" + toAddress + ")" + subject, context, content);
+      }
+
+      //If sendMode does not match "production" or "QA", do nothing
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -197,5 +212,10 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   @Required
   public void setSendMode(String sendMode) {
     this.sendMode = sendMode;
+  }
+
+  @Required
+  public void setSendModeQAEMail(String sendModeQAEMail) {
+    this.sendModeQAEMail = sendModeQAEMail;
   }
 }
