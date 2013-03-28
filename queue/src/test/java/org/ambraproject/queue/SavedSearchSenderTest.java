@@ -246,7 +246,7 @@ public class SavedSearchSenderTest extends BaseTest {
     } catch(InterruptedException ex) {}
 
     List<SavedSearchJob> savedSearchJobs = savedSearchRetriever.
-      retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
+      retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY, null, null);
 
     //There should be three jobs reflecting three distinct weekly searches
     assertEquals(savedSearchJobs.size(), 3, "Wrong number of saved search jobs returned");
@@ -281,7 +281,7 @@ public class SavedSearchSenderTest extends BaseTest {
     }
 
     //Execute monthly jobs:
-    savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
+    savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY, null, null);
 
     //There should be one job reflecting one distinct monthly search query even though
     //There are two savesSearches

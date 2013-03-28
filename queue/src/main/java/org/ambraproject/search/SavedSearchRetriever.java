@@ -16,6 +16,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.PropertyProjection;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,8 +52,9 @@ public interface SavedSearchRetriever {
    * Retrieve a list of unique searches to perform based on the passed in type
    *
    * @param alertType the alertType
-
+   * @param startTime the time to use as the start date.  Can be null, but if specified will override
+   * @param endTime the time to use as the end date.  Can be null, but if specified will override
    * @return a list of uniqueSearches
    */
-   public List<SavedSearchJob> retrieveSearchAlerts(final AlertType alertType);
+   public List<SavedSearchJob> retrieveSearchAlerts(final AlertType alertType, Date startTime, Date endTime);
 }

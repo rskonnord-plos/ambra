@@ -28,6 +28,8 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
   private String monthlyCron;
 
   public static final String SEARCH_ALERTS_QUEUE = "activemq:ambra.searchAlerts";
+  public static final String HEADER_STARTTIME = "ambra.searchAlerts.header.startTime";
+  public static final String HEADER_ENDTIME = "ambra.searchAlerts.header.endTime";
 
   @Override
   public void configure() throws Exception {
@@ -47,7 +49,9 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
       .to(SEARCH_ALERTS_QUEUE);
 
     from(SEARCH_ALERTS_QUEUE)
-      .split().method("savedSearchRetriever", "retrieveSearchAlerts")
+      .split().method("savedSearchRetriever","retrieveSearchAlerts(${body}," +
+        "${headers." + HEADER_STARTTIME + "}," +
+        "${headers." + HEADER_ENDTIME + "})")
       .to("seda:runInParallel");
 
     //Hard coding this for 15 threads, can increase later if needed

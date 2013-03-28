@@ -14,13 +14,13 @@ package org.ambraproject.search;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,7 +34,7 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
    */
   @Override
   @SuppressWarnings("unchecked")
-  public List<SavedSearchJob> retrieveSearchAlerts(AlertType alertType) {
+  public List<SavedSearchJob> retrieveSearchAlerts(AlertType alertType, Date startTime, Date endTime) {
     List<SavedSearchJob> searchJobs = new ArrayList<SavedSearchJob>();
     List<Object[]> paramsList = (List<Object[]>)hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearch.class)
                     .createAlias("searchQuery", "s")
@@ -53,6 +53,8 @@ public class SavedSearchRetrieverImpl extends HibernateServiceImpl implements Sa
         .setType((SavedSearchType) obj[2])
         .setSearchString((String) obj[3])
         .setFrequency(alertType.name())
+        .setStartDate(startTime)
+        .setEndDate(endTime)
         .build());
     }
 

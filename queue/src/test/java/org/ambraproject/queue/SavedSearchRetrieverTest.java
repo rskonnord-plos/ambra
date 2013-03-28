@@ -27,6 +27,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -107,15 +108,29 @@ public class SavedSearchRetrieverTest extends BaseTest {
     //Confirm unique jobs,
     //Though there are many profiles and saved searches there are only a
     //few distinct search queries, confirm this list is only three elements
-    List<SavedSearchJob> savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY);
+    List<SavedSearchJob> savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.WEEKLY,
+      null, null);
 
     assertNotNull(savedSearchJobs, "saved search views List is empty for weekly search");
     assertEquals(savedSearchJobs.size(), 3, "returned incorrect number of results");
 
-    savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY);
+    savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY,
+      null, null);
 
     assertNotNull(savedSearchJobs, "saved search views List is empty for monthly search");
     assertEquals(savedSearchJobs.size(), 1, "returned incorrect number of results");
+
+    Date then = new Date(1000);
+    Date now = new Date();
+
+    savedSearchJobs = savedSearchRetriever.retrieveSearchAlerts(SavedSearchRetriever.AlertType.MONTHLY,
+      then, now);
+
+    assertNotNull(savedSearchJobs, "saved search views List is empty for monthly search");
+    assertEquals(savedSearchJobs.size(), 1, "returned incorrect number of results");
+
+    assertEquals(savedSearchJobs.get(0).getStartDate(), then, "Start date specified, but not correct.");
+    assertEquals(savedSearchJobs.get(0).getEndDate(), now, "End date specified, but not correct.");
   }
 
   @AfterClass

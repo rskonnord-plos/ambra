@@ -169,12 +169,14 @@ public class SavedSearchJob {
       return this;
     }
 
-    public void setStartDate(Date startDate) {
+    public Builder setStartDate(Date startDate) {
       this.startDate = startDate;
+      return this;
     }
 
-    public void setEndDate(Date endDate) {
+    public Builder setEndDate(Date endDate) {
       this.endDate = endDate;
+      return this;
     }
 
     public Builder setSearchHitList(List<SavedSearchHit> searchHitList) {

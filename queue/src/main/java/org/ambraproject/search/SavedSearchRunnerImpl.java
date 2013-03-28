@@ -41,18 +41,22 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
     log.debug("Running Saved Search for the search query ID : {}, {}" ,
       searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
 
-    searchJob.setEndDate(Calendar.getInstance().getTime());
+    if(searchJob.getStartDate() == null) {
+      if(searchJob.getFrequency().equals("WEEKLY")) {
+        //7 days into the past
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DAY_OF_MONTH, -7);
+        searchJob.setStartDate(date.getTime());
+      } else {
+        //30 days into the past
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DAY_OF_MONTH, -30);
+        searchJob.setStartDate(date.getTime());
+      }
+    }
 
-    if(searchJob.getFrequency().equals("WEEKLY")) {
-      //7 days into the past
-      Calendar date = Calendar.getInstance();
-      date.add(Calendar.DAY_OF_MONTH, -7);
-      searchJob.setStartDate(date.getTime());
-    } else {
-      //30 days into the past
-      Calendar date = Calendar.getInstance();
-      date.add(Calendar.DAY_OF_MONTH, -30);
-      searchJob.setStartDate(date.getTime());
+    if(searchJob.getEndDate() == null) {
+      searchJob.setEndDate(Calendar.getInstance().getTime());
     }
 
     List<SearchHit> results = searchService.savedSearchAlerts(searchJob.getSearchParams(),
