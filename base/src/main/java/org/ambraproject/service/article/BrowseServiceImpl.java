@@ -919,7 +919,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, "author_display", String.class, message);
 
     SearchHit hit = new SearchHit(null, id, title, null, authorList, publicationDate, eissn, null, articleType,
-      StringUtils.join(abstractDisplayList, ", "));
+      StringUtils.join(abstractDisplayList, ", "), Collections.<String>emptyList());
 
     return hit;
   }
