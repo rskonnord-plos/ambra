@@ -12,10 +12,16 @@
 package org.ambraproject.routes;
 
 import org.ambraproject.search.SavedSearchRetriever;
+import org.apache.camel.Exchange;
+import org.apache.camel.TypeConversionException;
 import org.apache.camel.spring.SpringRouteBuilder;
+import org.apache.camel.support.TypeConverterSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA. User: stumu Date: 9/20/12 Time: 5:03 PM To change this template use File | Settings |
@@ -58,6 +64,22 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
     from("seda:runInParallel?concurrentConsumers=15")
       .to("bean:savedSearchRunner?method=runSavedSearch")
       .to("bean:savedSearchSender");
+
+    //Register type converter for Dates to Strings
+    //Assume the format is "MM/dd/yyyy"
+    getContext().getTypeConverterRegistry().addTypeConverter(Date.class, String.class, new TypeConverterSupport() {
+      SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+
+      @Override
+      @SuppressWarnings("unchecked")
+      public <T> T convertTo(Class<T> tClass, Exchange exchange, Object object) throws TypeConversionException {
+        try {
+          return (T) formatter.parse(object.toString());
+        } catch (ParseException ex) {
+          throw new TypeConversionException(object, tClass, ex);
+        }
+      }
+    });
   }
 
   @Required
