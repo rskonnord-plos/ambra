@@ -71,6 +71,9 @@ public class SolrSearchService implements SearchService {
   private static final int MIN_FACET_COUNT = 1;
   private static final int MAX_HIGHLIGHT_SNIPPETS = 3;
 
+  //For saved search alerts, just assume we want all records, 750 seems like a reasonable limit
+  private static final int MAX_SAVED_SEARCH_SIZE = 750;
+
   // sort option possible values (sort direction is optional)
   // field desc|asc
   // sum(field1, field2) desc|asc
@@ -1047,7 +1050,7 @@ public class SolrSearchService implements SearchService {
             + sParams.getQuery().trim());
       }
 
-      query = createQuery(sParams.getQuery(), sParams.getStartPage(), sParams.getPageSize(), false);
+      query = createQuery(sParams.getQuery(), 0, MAX_SAVED_SEARCH_SIZE, false);
       query.setQuery(sParams.getQuery());
       //If the keywords parameter is specified, we need to change what field we're querying against
       //aka, body, conclusions, materials and methods ... etc ...
@@ -1071,12 +1074,13 @@ public class SolrSearchService implements SearchService {
       log.debug("Advanced Saved Search performed on the unformattedSearch String: {}",
           sParams.getUnformattedQuery().trim());
       sp = cleanStrings(sParams);
-      query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
+      query = createQuery(null, 0, MAX_SAVED_SEARCH_SIZE, false);
       query.setQuery(sParams.getUnformattedQuery());
       setFilters(query, sp, true);
     }
 
     query.addFilterQuery(createFilterLimitForPublishDate(lastSearchTime, currentSearchTime));
+
     SearchResultSinglePage results = search(query);
 
     return results.getHits();
