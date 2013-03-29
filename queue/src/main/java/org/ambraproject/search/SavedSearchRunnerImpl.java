@@ -50,7 +50,7 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
       } else {
         //30 days into the past
         Calendar date = Calendar.getInstance();
-        date.add(Calendar.DAY_OF_MONTH, -30);
+        date.add(Calendar.MONTH, -1);
         searchJob.setStartDate(date.getTime());
       }
     }
