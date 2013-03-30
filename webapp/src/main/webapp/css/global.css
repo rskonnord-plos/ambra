@@ -4767,6 +4767,11 @@ table#pageViewsTable tr.percent td {
   background-color: #ffffff;
 }
 
+#beta {
+  font: italic bold 10px Arial;
+  color: #00be00;
+}
+
 /* END styling for average usage stat information */
 
 a.ir {

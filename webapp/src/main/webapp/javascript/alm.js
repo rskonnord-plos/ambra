@@ -1312,10 +1312,11 @@ $.fn.alm = function () {
 
                   // build the output
                   var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
-                      + new Date(data.relativeMetricData.start_date).getUTCFullYear() + " - " + new Date(data.relativeMetricData.end_date).getUTCFullYear() + "</b> in the subject area: "
+                      + new Date(data.relativeMetricData.start_date).getUTCFullYear() + "</b> in the subject area: "
                       + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
 
-                  var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
+                  // build the link to the search result reference set
+                  var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date:[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
 
                   var description2Div = $('<div></div>').append(subjectAreasDropdown)
                       .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
@@ -1323,6 +1324,9 @@ $.fn.alm = function () {
 
                   var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
 
+                  var betaDiv = $('<div id="beta">BETA</div>');
+
+                  $usage.append(betaDiv);
                   $usage.append(relativeMetricDiv);
                 }
               }
