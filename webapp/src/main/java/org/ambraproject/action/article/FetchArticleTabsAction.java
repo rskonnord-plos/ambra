@@ -342,6 +342,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
+      commentary = annotationService.listAnnotations(
+          articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationOrder.MOST_RECENT_REPLY);
       populateFromAnnotations();
       fetchExpressionOfConcern();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
