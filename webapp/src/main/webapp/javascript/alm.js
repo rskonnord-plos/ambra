@@ -112,7 +112,7 @@ $.fn.alm = function () {
   this.getSocialData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Facebook,Twitter,Mendeley";
+    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Connotea,Facebook,Twitter,Mendeley";
     this.getData(request, callBack, errorCallback);
   }
 
