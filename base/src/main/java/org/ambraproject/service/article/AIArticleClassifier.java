@@ -50,7 +50,7 @@ public class AIArticleClassifier implements ArticleClassifier {
   private static final Logger log = LoggerFactory.getLogger(AIArticleClassifier.class);
 
   private static final String MESSAGE_BEGIN = "<TMMAI project='plos2012thes' location = '.'>\n" +
-      "  <Method name='getSuggestedTermsFullPath' returnType='java.util.Vector'/>\n" +
+      "  <Method name='getSuggestedTermsFullPaths' returnType='java.util.Vector'/>\n" +
       "  <VectorParam>\n" +
       "    <VectorElement>";
 
