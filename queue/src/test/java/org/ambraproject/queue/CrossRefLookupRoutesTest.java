@@ -108,7 +108,7 @@ public class CrossRefLookupRoutesTest extends BaseTest {
 
     Long time2 = System.currentTimeMillis();
 
-    assertTrue(time2 - time1 < 500, "Queuing the jobs took too long, are you sure they are asynchronous?");
+    assertTrue(time2 - time1 < 2500, "Queuing the jobs took too long, are you sure they are asynchronous?");
 
     //Let the queue do it's job before checking results
     Thread.sleep(5000);
