@@ -64,8 +64,7 @@
   <#if userSearchAlerts?has_content>
     <div class="btnwrap"><input type="submit" id="formSubmit" class="btn primary" name="formSubmit" value="Save" tabindex="99"/></div>
   <#else>
-    You have no search alerts defined.  You can create one by performing a <a href="/search/advanced">search</a> on our site and selecting
-    to save it by click on the "Search Alert" button.
+    You have no search alerts defined.  You can create one by performing a <a href="/search/advanced">search</a> on our site and save it by clicking on the "Search Alert" button.
   </#if>
 </fieldset>
 </@s.form>
