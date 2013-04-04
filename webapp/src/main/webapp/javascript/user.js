@@ -1,12 +1,33 @@
+
 $(function () {
 
   var indexes = {
-    preferences:0,
-    alerts:1,
+    profile:0,
+    journalAlerts:1,
     savedSearchAlerts:2
   };
 
-  var activeIndex = indexes[getParameterByName("tabId")] || 0;
+  var activeIndex = indexes[$("#user-forms").attr('active')] || 0;
+
+  //TODO: Remove one day
+  //Support for OLD URLs:
+  //user/secure/editProfile.action?tabId=preferences
+  //user/secure/editProfile.action?tabId=alerts$
+  //user/secure/editProfile.action?tabId=savedSearchAlerts
+  tabParam = getParameterByName("tabId");
+  if(tabParam) {
+    if(tabParam == "preferences") {
+      activeIndex = 0;
+    }
+
+    if(tabParam == "alerts") {
+      activeIndex = 1;
+    }
+
+    if(tabParam == "savedSearchAlerts") {
+      activeIndex = 2;
+    }
+  }//End block to delete
 
   //setup tabs
   $("#user-forms").tabs();
@@ -26,6 +47,7 @@ $(function () {
     $("li.alerts-weekly input").not(":first")
       .attr("checked", $(this).is(":checked"));
   });
+
   $("#checkAllMonthly").click(function () {
     $("li.alerts-monthly input").not(":first")
       .attr("checked", $(this).is(":checked"));
@@ -46,5 +68,5 @@ $(function () {
     $("li.search-alerts-delete input").not(":first")
         .attr("checked", $(this).is(":checked"));
   });
-
 });
+

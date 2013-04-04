@@ -877,6 +877,15 @@
       </result>
     </action>
 
+    <action name="editUserAlerts" class="org.ambraproject.action.user.EditUserAction" method="retrieveAlerts">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
+      </result>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
+      </result>
+    </action>
+
     <action name="saveUserAlerts" class="org.ambraproject.action.user.EditUserAction" method="saveAlerts">
       <result name="success" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>

@@ -16,6 +16,9 @@ public class EditUserAction extends UserActionSupport {
 
   private List<SavedSearchView> savedSearches;
 
+  //tabID maps to tabs defined in user.js
+  private String tabID = "profile";
+
   @Override
   public String execute() throws Exception {
     String authId = getUserAuthId();
@@ -30,11 +33,25 @@ public class EditUserAction extends UserActionSupport {
 
     monthlyAlerts = monthlyAlertsList.toArray(new String[monthlyAlertsList.size()]);
     weeklyAlerts = weeklyAlertsList.toArray(new String[weeklyAlertsList.size()]);
+    savedSearches = userService.getSavedSearches(userProfile.getID());
 
     return SUCCESS;
   }
 
-  @SuppressWarnings("unchecked")
+  public String retrieveAlerts() throws Exception {
+
+    tabID = "journalAlerts";
+
+    return execute();
+  }
+
+  public String retrieveSearchAlerts() throws Exception {
+
+    tabID = "savedSearchAlerts";
+
+    return execute();
+  }
+
   public String saveUser() throws Exception {
     boolean valid = validateProfileInput();
 
@@ -51,9 +68,8 @@ public class EditUserAction extends UserActionSupport {
     UserProfile savedProfile = userService.updateProfile(profile);
 
     session.put(Constants.AMBRA_USER_KEY, savedProfile);
-    setFieldsFromProfile(savedProfile);
 
-    return SUCCESS;
+    return execute();
   }
 
   /**
@@ -71,9 +87,8 @@ public class EditUserAction extends UserActionSupport {
 
     UserProfile profile = userService.setAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts));
     session.put(Constants.AMBRA_USER_KEY, profile);
-    setFieldsFromProfile(profile);
 
-    return SUCCESS;
+    return retrieveAlerts();
   }
 
   /**
@@ -90,30 +105,19 @@ public class EditUserAction extends UserActionSupport {
 
     UserProfile profile = userService.setSavedSearchAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts), Arrays.asList(deleteAlerts));
     session.put(Constants.AMBRA_USER_KEY, profile);
-    setFieldsFromProfile(profile);
 
-    return SUCCESS;
-  }
-
-  public String retrieveSearchAlerts() throws Exception {
-    final String authId = getUserAuthId();
-
-    if (authId == null) {
-      throw new ServletException("Unable to resolve ambra user");
-    }
-
-    final UserProfile user = userService.getUserByAuthId(authId);
-    savedSearches = userService.getSavedSearches(user.getID());
-    setFieldsFromProfile(user);
-
-    return SUCCESS;
+    return retrieveSearchAlerts();
   }
 
   private String getUserAuthId() {
     return (String) session.get(Constants.AUTH_KEY);
   }
 
-  public Collection<SavedSearchView> getUserSearchAlerts() throws Exception{
+  public String getTabID() {
+    return tabID;
+  }
+
+  public Collection<SavedSearchView> getUserSearchAlerts() throws Exception {
     return savedSearches;
   }
 }

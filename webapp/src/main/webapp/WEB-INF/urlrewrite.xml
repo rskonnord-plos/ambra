@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  $HeadURL::                                                                            $
-  $Id$
-  
-  Copyright (c) 2006-2010 by Public Library of Science
+  Copyright (c) 2006-2013 by Public Library of Science
   
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,6 +28,7 @@
     <from>^/?$</from>
     <to>/home.action</to>
   </rule>
+
   <rule>
     <note>
       re-write incoming user profile requests.
@@ -47,6 +45,123 @@
     </note>
     <from>^(/.+)?/user/showUser.action\?userId=(\d+)$</from>
     <to>$1/user/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming edit user profile requests.
+      /user/secure/profile -> /user/secure/editProfile.action
+    </note>
+    <from>^(/.+)?/user/secure/profile$</from>
+    <to>$1/user/secure/editProfile.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound user profile requests.
+      /user/secure/editProfile.action -> /user/secure/profile
+    </note>
+    <from>^(/.+)?/user/secure/editProfile.action$</from>
+    <to>$1/user/secure/profile</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming save user profile requests.
+      /user/secure/profile/save -> /user/secure/saveProfile.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/save$</from>
+    <to>$1/user/secure/saveProfile.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound save user profile requests.
+      /user/secure/saveProfile.action -> /user/secure/profile/save
+    </note>
+    <from>^(/.+)?/user/secure/saveProfile.action$</from>
+    <to>$1/user/secure/profile/save</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming edit journal alert requests.
+      /user/secure/profile/alerts/journal -> /user/secure/editUserAlerts.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/alerts/journal$</from>
+    <to>$1/user/secure/editUserAlerts.action</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write incoming edit journal alert requests.
+      /user/secure/profile/alerts/journal -> /user/secure/editUserAlerts.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/alerts/journal$</from>
+    <to>$1/user/secure/editUserAlerts.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound edit journal alert requests.
+      /user/secure/editUserAlerts.action -> /user/secure/profile/alerts/journal
+    </note>
+    <from>^(/.+)?/user/secure/editUserAlerts.action$</from>
+    <to>$1/user/secure/profile/alerts/journal</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming edit journal alert requests.
+      /user/secure/profile/alerts/journal/save -> /user/secure/saveUserAlerts.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/alerts/journal/save$</from>
+    <to>$1/user/secure/saveUserAlerts.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound edit journal alert requests.
+      /user/secure/saveUserAlerts.action -> /user/secure/profile/alerts/journal/save
+    </note>
+    <from>^(/.+)?/user/secure/saveUserAlerts.action$</from>
+    <to>$1/user/secure/profile/alerts/journal/save</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming edit search alert requests.
+      /user/secure/profile/alerts/search -> /user/secure/editSearchAlerts.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/alerts/search$</from>
+    <to>$1/user/secure/editSearchAlerts.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound edit search alert requests.
+      /user/secure/editSearchAlerts.action -> /user/secure/profile/alerts/search
+    </note>
+    <from>^(/.+)?/user/secure/editSearchAlerts.action$</from>
+    <to>$1/user/secure/profile/alerts/search</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming save search alert requests.
+      /user/secure/profile/alerts/search/save -> /user/secure/saveSearchAlerts.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/alerts/search/save$</from>
+    <to>$1/user/secure/saveSearchAlerts.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound saved search alert requests.
+      /user/secure/saveSearchAlerts.action -> /user/secure/profile/alerts/search/save
+    </note>
+    <from>^(/.+)?/user/secure/saveSearchAlerts.action$</from>
+    <to>$1/user/secure/profile/alerts/search/save</to>
   </outbound-rule>
 
   <rule>

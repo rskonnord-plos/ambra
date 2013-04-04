@@ -37,19 +37,19 @@
   </li>
 </ul>
 
-<div id="user-forms" class="tab-block">
+<div id="user-forms" class="tab-block" active="${tabID}">
   <div id="user-tabs" class="nav tab-nav">
     <ul>
-      <li><a href="#profile">Profile</a></li>
-      <li><a href="#alerts">Journal Alerts</a></li>
-      <li><a href="#savedSearchAlerts">Search Alerts</a></li>
+      <li><a href="#profile" url="/user/secure/profile">Profile</a></li>
+      <li><a href="#journalAlerts" url="/user/secure/profile/alerts/journal">Journal Alerts</a></li>
+      <li><a href="#savedSearchAlerts" url="/user/secure/profile/alerts/search">Search Alerts</a></li>
     </ul>
   </div>
   <div class="tab-content">
     <div id="profile" class="tab-pane">
       <#include "profileForm.ftl">
     </div>
-    <div id="alerts" class="tab-pane">
+    <div id="journalAlerts" class="tab-pane">
       <#include "alertsForm.ftl">
     </div>
     <div id="savedSearchAlerts" class="tab-pane">
