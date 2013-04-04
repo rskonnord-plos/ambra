@@ -26,10 +26,8 @@ div#user-tabs ul {
 
 .ambra-form fieldset {
   position: relative;
-  margin: 20px 0 0 0;
-  padding: 0;
-  border:none;
 }
+
 .ambra-form fieldset legend {
   font-family: Verdana, Arial, Helvetica, san-serif, serif;
   font-size: 1.6em;
@@ -38,6 +36,7 @@ div#user-tabs ul {
   padding:0;
   margin: 0 0 20px 0;
 }
+
 .ambra-form ol { list-style-type: none; margin: 0; padding: 0; position: relative; overflow:hidden; }
 
 .ambra-form ol li {
@@ -66,7 +65,7 @@ div#user-tabs ul {
   float: none;
 }
 /************* general comambrant styles *****************/
-.ambra-form ol li label { display: block; font-size:12px; color:#333; margin-bottom:2px; line-height:normal; }
+.ambra-form ol li label, label { display: block; font-size:12px; color:#333; margin-bottom:2px; line-height:normal; }
 .ambra-form ol li input { width: 206px; border:1px solid #999; padding: 2px; }
 .ambra-form ol li input.radio { border-width: 0; }
 .ambra-form ol li .long-input { width: 430px; }
@@ -90,22 +89,11 @@ div#user-tabs ul {
 .ambra-form ol .form-error label { font-weight:bold; color: #f03; font-style:normal; }
 .ambra-form ol .form-error input, .ambra-form ol .form-error select, .ambra-form ol .form-error textarea { border-color:#c03; }
 .ambra-form .errorMessage { padding-left:16px; }
+
 /************* success message styles *****************/
 .ambra-form .form-success { padding: 25px 0 25px 10px; }
 
-
 .ambra-form ol .note.top { }
-
-/************* create profile styles *****************/
-
-.ambra-form .public-private {
-  background-image: none;
-  margin-top:0;
-  clear: both;
-  border: none;
-}
-
-.public-private label { position:relative; top: -2px; }
 
 /************ two column layout *******************/
 .ambra-form .col { float:left; clear:none; margin-right:9px;  }
@@ -172,4 +160,26 @@ div.profile ol li input {
   border: 1px solid #FDAE7A;
   padding: 2px;
   width: 200px;
+}
+
+#pagehdr-wrap {
+  border-top: 6px solid #3C63AF;
+  background: #efefef;
+}
+
+#user .btn-style a {
+  background: #3C63AF;
+  border-radius: 0 0 4px 4px;
+  color: #FFFFFF
+}
+
+.tab-nav .active a,
+.tab-nav .active a:hover {
+  background-color: #3C63AF;
+  color: #FFF;
+}
+
+.btn.primary {
+  background-color: #3C63AF;
+  color: #FFFFFF;
 }

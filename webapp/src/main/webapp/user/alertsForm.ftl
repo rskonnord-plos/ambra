@@ -31,7 +31,7 @@
 <@s.form action="saveUserAlerts" namespace="/user/secure" method="post" cssClass="ambra-form" method="post"
 title="Alert Form" name="userAlerts">
 <fieldset id="alert-form">
-  <legend>Email Alerts</legend>
+  <legend>Manage your journal alert emails</legend>
   <ol>
     <li>
       <span class="alerts-title">&nbsp;</span>
@@ -72,7 +72,8 @@ title="Alert Form" name="userAlerts">
   </li>
 
   </ol>
-  <div class="btnwrap"><input type="submit" id="formSubmit" name="formSubmit" value="Save" tabindex="99"/></div>
+
+  <div class="btnwrap"><input type="submit" class="btn primary" id="formSubmit" name="formSubmit" value="Save" tabindex="99"/></div>
 
 </fieldset>
 </@s.form>

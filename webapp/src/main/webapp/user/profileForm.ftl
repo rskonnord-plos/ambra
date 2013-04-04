@@ -1,8 +1,5 @@
 <#--
-  $HeadURL::                                                                            $
-  $Id$
-  
-  Copyright (c) 2007-2010 by Public Library of Science
+  Copyright (c) 2007-2013 by Public Library of Science
   http://plos.org
   http://ambraproject.org
   
@@ -54,16 +51,13 @@ title="User Information Form" cssClass="ambra-form" enctype="multipart/form-data
     <@s.select label="Position Type" name="positionType" value="positionType" list="%{#selectList.allPositionTypes}" tabindex="14"  col=true />
   </ol>
 </fieldset>
-<fieldset class="public-private">
-  <@s.checkbox name="organizationVisibility" tabIndex="15" label="Display my Additional Information publicly." />
-<#--
-  <input type="checkbox" name="organizationVisibility" id="organizationVisibility" tabindex="15"/>
-  <label for="organizationVisibility">Display my Additional Information publicly.</label>
--->
+<fieldset>
+  <label for="organizationVisibility">
+    <@s.checkbox name="organizationVisibility" tabIndex="15"/>Display my Additional Information publicly.
+  </label>
 </fieldset>
 
-
-<div class="btnwrap"><input type="submit" id="formSubmit" name="formSubmit" value="Save" tabindex="16"/></div>
+<div class="btnwrap"><input type="submit" id="formSubmit" class="btn primary" name="formSubmit" value="Save" tabindex="16"/></div>
 
 </@s.form>
 
