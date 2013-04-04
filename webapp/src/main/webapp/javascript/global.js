@@ -1519,6 +1519,35 @@ if ($(document).pjax) {
         }
       }
     }
+
+    else if (pjax_selected_tab == "article"){
+      // figshare_widget_load variable is defined if figshare was loaded before.
+      // but plos_widget.js must be loaded again to show the figshare when
+      // switching to article tab
+      // if switching from another tab to article tab
+      // then add figshare css and js files.
+      // e.g. metrics --> article
+      // do not add css if article tab was already opened before.
+      // e.g: article --> metrics --> article
+      // if landing page is article then p_widget.js is included from article.ftl
+      if (typeof figshare_widget_load == "undefined") {
+        function add_widget_css() {
+          var headtg = document.getElementsByTagName('head')[0];
+          if (!headtg) {
+            return;
+          }
+          var linktg = document.createElement('link');
+          linktg.type = 'text/css';
+          linktg.rel = 'stylesheet';
+          linktg.href = 'http://wl.figshare.com/static/css/p_widget.css?v=8';
+          headtg.appendChild(linktg);
+        }
+        add_widget_css();
+      }
+      $.getScript("/javascript/figshare/plos_widget.js?v=8");
+      $.getScript("http://wl.figshare.com/static/jmvc/main_app/resources/jwplayer/jwplayer.js");
+      figshare_widget_load = true;
+    }
   });
 }
 
