@@ -42,18 +42,18 @@
       <ol>
         <li class="search-alerts-weekly">
           <label for="${ua.savedSearchId}">
-            <@s.checkbox name="weeklyAlerts" fieldValue="${ua.savedSearchId}" value="${ua.weekly?string}"/>
+            <@s.checkbox name="weeklyAlerts" fieldValue="${ua.savedSearchId?c}" value="${ua.weekly?string}"/>
             Weekly </label>
         </li>
 
         <li class="search-alerts-monthly">
           <label for="${ua.savedSearchId}">
-            <@s.checkbox name="monthlyAlerts" fieldValue="${ua.savedSearchId}" value="${ua.monthly?string}"/>
+            <@s.checkbox name="monthlyAlerts" fieldValue="${ua.savedSearchId?c}" value="${ua.monthly?string}"/>
             Monthly </label>
         </li>
         <li class="search-alerts-delete">
           <label for="${ua.savedSearchId}">
-            <@s.checkbox name="deleteAlerts" fieldValue="${ua.savedSearchId}" value="false"/>
+            <@s.checkbox name="deleteAlerts" fieldValue="${ua.savedSearchId?c}" value="false"/>
             Delete </label>
         </li>
       </ol>
