@@ -35,6 +35,45 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.5.8</h2>
+  <p>Released April 9th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.8</h3>
+  <ul>
+      <li>New Science Seeker tile on article page metrics tab</li>
+      <li>Bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.5.7</h2>
+  <p>Released March 26th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.7</h3>
+  <ul>
+      <li>Added figure DOI information in the figure viewer</li>
+      <li>Gather DOI information for article citations</li>
+  </ul>
+
+  <h2>Ambra 2.5.6</h2>
+  <p>Released March 19th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.6</h3>
+  <ul>
+    <li>Displays Supporting Information DOIs</li>
+    <li>Many bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.5.5</h2>
+  <p>Released March 5th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.5</h3>
+  <ul>
+    <li>Expressions of Concern displays at the top of the article </li>
+    <li>Many bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.5.4</h2>
+  <p>Released February 26th, 2013</p>
+  <h3>Features Implemented in Ambra 2.5.4</h3>
+  <ul>
+    <li>Many bug fixes</li>
+  </ul>
+
   <h2>Ambra 2.5.3</h2>
   <p>Released January 22nd, 2013</p>
   <h3>Features Implemented in Ambra 2.5.3</h3>
