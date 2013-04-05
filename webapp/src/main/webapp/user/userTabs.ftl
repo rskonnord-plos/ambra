@@ -54,3 +54,7 @@
     </div>
   </div>
 </div>
+
+<div id="save-confirm">
+  Your preferences have been saved
+</div>

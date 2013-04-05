@@ -68,5 +68,113 @@ $(function () {
     $("li.search-alerts-delete input").not(":first")
         .attr("checked", $(this).is(":checked"));
   });
+
+  var confirmedSaved = function() {
+    var confirmBox = $("#save-confirm");
+
+    //Set the center alignment padding + border see css style
+    var popMargTop = ($(confirmBox).height() + 24) / 2;
+    var popMargLeft = ($(confirmBox).width() + 24) / 2;
+
+    $(confirmBox).css({
+      'margin-top' : -popMargTop,
+      'margin-left' : -popMargLeft
+    });
+
+    //Fade in the Popup
+    $(confirmBox).fadeIn(500)
+      .delay(1000)
+      .fadeOut(1000);
+  };
+
+  //Remove error messages before adding new ones
+  var cleanMesssages = function() {
+    $("p.required").remove();
+    $("div.required").remove();
+    $("li").removeClass("form-error");
+  }
+
+  var validateResponse = function(formObj, response) {
+    if($(response.fieldErrors).length > 0) {
+      var message = "Please correct the errors below.";
+
+      if($(formObj).find("p.required").size() == 0) {
+        var errorP = $('<p class="required"/>');
+
+        errorP.text(message);
+        $(formObj).prepend(errorP);
+      } else {
+        $(formObj).find("p.required").text(message);
+      }
+
+      $.each(response.fieldErrors, function(index, value) {
+        $(formObj).find(":input[name='" + index + "']").each(function(formIndex, element) {
+          //Append  class to parent LI
+          $(element).parent().addClass("form-error");
+          $(element).after(" <span class='required'>" + response.fieldErrors[index] + "</span>");
+        });
+      });
+    } else {
+      return true;
+    }
+  };
+
+  var displaySystemError = function(formObj, response) {
+    var message = "System error.  Code: " + response.status + " (" + response.statusText + ")";
+
+    if($(formObj).find("div#formError").size() == 0) {
+      var errorP = $('<p class="required"/>');
+
+      errorP.text(message);
+      $(formObj).prepend(errorP);
+    } else {
+      $(formObj).find("p.required").text(message);
+    }
+  };
+
+  //Make the forms submit via ajax
+  $('form[name=userForm]').submit(function(event) {
+    event.preventDefault();
+
+    $.post("/user/secure/saveProfileJSON.action", $(this).serialize())
+      .done(function(response) {
+        cleanMesssages();
+        if(validateResponse($('form[name=userForm]'), response)) {
+          confirmedSaved();
+        }
+      })
+      .fail(function(response) {
+        displaySystemError($('form[name=userForm]'), response);
+        console.log(data);
+      });
+  });
+
+  $('form[name=userAlerts]').submit(function(event) {
+    event.preventDefault();
+
+    $.post("/user/secure/saveUserAlertsJSON.action", $(this).serialize())
+      .done(function(json) {
+        //There is no form to validate
+        confirmedSaved();
+      })
+      .fail(function(response) {
+        displaySystemError($('form[name=userAlerts]'), response);
+        console.log(data);
+      });
+  });
+
+  $('form[name=userSearchAlerts]').submit(function(event) {
+    event.preventDefault();
+
+    $.post("/user/secure/saveSearchAlertsJSON.action", $(this).serialize())
+      .done(function(json) {
+        //There is no form to validate
+        confirmedSaved();
+      })
+      .fail(function(response) {
+        displaySystemError($('form[name=userSearchAlerts]'), response);
+        console.log(data);
+      });
+  });
 });
 
