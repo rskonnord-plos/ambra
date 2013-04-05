@@ -28,52 +28,51 @@
   </#list>
   <#return "false">
 </#function>
-<@s.form action="saveUserAlerts" namespace="/user/secure" method="post" cssClass="ambra-form" method="post"
-title="Alert Form" name="userAlerts">
-<fieldset id="alert-form">
-  <legend>Manage your journal alert emails</legend>
-  <ol>
-    <li>
-      <span class="alerts-title">&nbsp;</span>
-      <ol>
-        <li class="alerts-weekly">
-          <label for="checkAllWeekly">
-            <input type="checkbox" value="checkAllWeekly" name="checkAllWeekly" id="checkAllWeekly"/> Select All
-          </label>
-        </li>
-        <li class="alerts-monthly">
-          <label for="checkAllMonthly">
-            <input type="checkbox" value="checkAllMonthly" name="checkAllMonthly"  id="checkAllMonthly"/> Select All
-          </label>
-        </li>
-      </ol>
-    </li>
-    <#list userAlerts as ua>
-    <li>
-      <span class="alerts-title">${ua.name}</span>
-      <ol>
-        <li class="alerts-weekly">
-          <#if ua.weeklyAvailable>
-            <label for="${ua.key}">
-              <@s.checkbox name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
-              Weekly </label>
-          </#if>
-        </li>
+<form action="/user/secure/profile/alerts/journal/save" method="post" class="ambra-form" method="post"
+  title="Alert Form" name="userAlerts">
+  <fieldset id="alert-form">
+    <legend>Manage your journal alert emails</legend>
+    <ol>
+      <li>
+        <span class="alerts-title">&nbsp;</span>
+        <ol>
+          <li class="alerts-weekly">
+            <label for="checkAllWeekly">
+              <input type="checkbox" value="checkAllWeekly" name="checkAllWeekly" id="checkAllWeekly"/> Select All
+            </label>
+          </li>
+          <li class="alerts-monthly">
+            <label for="checkAllMonthly">
+              <input type="checkbox" value="checkAllMonthly" name="checkAllMonthly"  id="checkAllMonthly"/> Select All
+            </label>
+          </li>
+        </ol>
+      </li>
+      <#list userAlerts as ua>
+        <li>
+          <span class="alerts-title">${ua.name}</span>
+          <ol>
+            <li class="alerts-weekly">
+              <#if ua.weeklyAvailable>
+                <label for="${ua.key}">
+                  <@s.checkbox name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
+                  Weekly </label>
+              </#if>
+            </li>
 
-        <li class="alerts-monthly">
-          <#if ua.monthlyAvailable>
-            <label for="${ua.key}">
-              <@s.checkbox name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
-              Monthly </label>
-          </#if>
+            <li class="alerts-monthly">
+              <#if ua.monthlyAvailable>
+                <label for="${ua.key}">
+                  <@s.checkbox name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
+                  Monthly </label>
+              </#if>
+            </li>
+          </ol>
         </li>
-      </ol>
-    </#list>
-  </li>
+      </#list>
+    </ol>
 
-  </ol>
+    <div class="btnwrap"><input type="submit" class="btn primary" id="formSubmit" name="formSubmit" value="Save" tabindex="99"/></div>
 
-  <div class="btnwrap"><input type="submit" class="btn primary" id="formSubmit" name="formSubmit" value="Save" tabindex="99"/></div>
-
-</fieldset>
-</@s.form>
+  </fieldset>
+</form>
