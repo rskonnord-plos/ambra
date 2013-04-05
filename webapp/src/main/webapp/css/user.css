@@ -198,6 +198,11 @@ div#save-confirm {
   opacity: 0.9;
 }
 
+form > p.required:first-child
+{
+  padding-left: 3px;
+}
+
 div#formError {
   color: red;
   padding: 10px;
