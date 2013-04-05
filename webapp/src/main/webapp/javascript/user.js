@@ -90,22 +90,15 @@ $(function () {
   //Remove error messages before adding new ones
   var cleanMesssages = function() {
     $("p.required").remove();
-    $("div.required").remove();
+    $("span.required").remove();
     $("li").removeClass("form-error");
   }
 
   var validateResponse = function(formObj, response) {
     if($(response.fieldErrors).length > 0) {
-      var message = "Please correct the errors below.";
+      var message = $('<p class="required">Please correct the errors below.</p>');
 
-      if($(formObj).find("p.required").size() == 0) {
-        var errorP = $('<p class="required"/>');
-
-        errorP.text(message);
-        $(formObj).prepend(errorP);
-      } else {
-        $(formObj).find("p.required").text(message);
-      }
+      $(formObj).prepend(message);
 
       $.each(response.fieldErrors, function(index, value) {
         $(formObj).find(":input[name='" + index + "']").each(function(formIndex, element) {
