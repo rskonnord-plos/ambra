@@ -1,8 +1,5 @@
 <#--
-  $HeadURL:: http://ambraproject.org/svn/ambra/ambra/branches/ginzu/webapp/src/main/web#$
-  $Id: editUser.ftl 10266 2012-02-09 19:41:41Z akudlick $
-  
-  Copyright (c) 2007-2010 by Public Library of Science
+  Copyright (c) 2007-2013 by Public Library of Science
   http://plos.org
   http://ambraproject.org
   
