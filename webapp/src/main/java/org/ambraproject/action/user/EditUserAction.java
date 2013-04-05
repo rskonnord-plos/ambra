@@ -56,6 +56,9 @@ public class EditUserAction extends UserActionSupport {
     boolean valid = validateProfileInput();
 
     if (!valid) {
+      //Fill in values for the front end
+      execute();
+
       return INPUT;
     }
 
