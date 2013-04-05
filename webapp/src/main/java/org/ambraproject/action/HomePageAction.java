@@ -34,12 +34,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
@@ -209,7 +207,8 @@ public class HomePageAction extends BaseActionSupport {
     try {
       categoryInfos = searchService.getTopSubjects();
     } catch(ApplicationException ex) {
-      throw new RuntimeException(ex);
+      log.error("Failed to query search service", ex);
+      categoryInfos = new TreeMap<String, Long>();
     }
 
     initRecentArticles();

@@ -63,7 +63,7 @@ $.fn.alm = function () {
   this.getRelatedBlogs = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Nature,Researchblogging,Wikipedia";
+    var request = "articles/" + doi + ".json?events=1&source=Nature,Researchblogging,Wikipedia,scienceseeker";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -112,7 +112,7 @@ $.fn.alm = function () {
   this.getSocialData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Connotea,Facebook,Twitter,Mendeley";
+    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Facebook,Twitter,Mendeley";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -730,7 +730,7 @@ $.fn.alm = function () {
         }
 
         if (countToShowOnTile > 0) {
-          if (tileName == 'facebook') {  //  Facebook does NOT get links
+          if (tileName == 'facebook' || tileName == 'connotea') {  //Facebook and Connotea do NOT get links
             html = html + this.createMetricsTileNoLink(tileName,
               "/images/logo-" + tileName + ".png",
               countToShowOnTile)
@@ -835,7 +835,8 @@ $.fn.alm = function () {
   };
 
   this.setRelatedBlogs = function (response, relatedBlogPostsID) {
-    var html = "";
+    //tileHtml used to enforce order
+    var html = "", tileHtmlList = [];
     var doi = escape($('meta[name=citation_doi]').attr("content"));
     var articleTitle = $('meta[name=citation_title]').attr("content");
     var natureViews = 0;
@@ -843,6 +844,7 @@ $.fn.alm = function () {
 
     if (response.article.source.length > 0) {
       html = "";
+      wikiHtml = "";
       // If there is at least one hit for a blog site, then create a link to those blogs.
       // else, if there are zero hits for a blog site, then create a "search for title" link instead.
       for (var a = 0; a < response.article.source.length; a++) {
@@ -855,34 +857,60 @@ $.fn.alm = function () {
           natureViews = count;
         } else if (tileName == "wikipedia") {
           wikiViews = count;
+          wikiHtml = this.createMetricsTile("wikipedia",
+            url,
+            "/images/logo-wikipedia.png",
+            wikiViews)
+            + '\n';
         } else {
           if (tileName == "research-blogging") {
             if (count > 0) {
               //Research blogging wants the DOI to search on
-              html = html + this.createMetricsTile(tileName,
+              tileHtml = this.createMetricsTile(tileName,
                 url,
                 "/images/logo-" + tileName + ".png",
                 count + '\n');
+
+              tileHtmlList.push({
+                name : tileName,
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+              });
             }
           } else {
             //Only list links that HAVE DEFINED URLS
             if (url && count > 0) {
-              html = html + this.createMetricsTile(tileName,
-                url,
-                "/images/logo-" + tileName + ".png",
-                count + '\n');
+
+              tileHtmlList.push({
+                name : tileName,
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+              });
+
             } else if (response.article.source[a].search_url != null
               && response.article.source[a].search_url.length > 0) {
 
-              html = html + this.createMetricsTile(tileName,
-                response.article.source[a].search_url + articleTitle,
-                "/images/logo-" + tileName + ".png",
-                count + '\n');
+              tileHtmlList.push({
+                name : tileName,
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+              });
+
             }
           }
         }
       }
     }
+
+
+    //enforce order by appending all tiles excluding science seeker
+    var sSeekerIndex = null;
+    $.each(tileHtmlList, function (index, tileObject) {
+          if (tileObject.name.toLowerCase() == 'scienceseeker') {
+            sSeekerIndex = index;
+          }
+          else {
+            html += tileObject.html;
+            }
+        }
+    );
 
     //  If the count for Nature is positive, then show the Nature tile.
     if (natureViews > 0) {
@@ -893,10 +921,7 @@ $.fn.alm = function () {
     }
 
     if (wikiViews > 0) {
-      html = html + this.createMetricsTileNoLink("wikipedia",
-        "/images/logo-wikipedia.png",
-        wikiViews)
-        + '\n';
+      html = html + wikiHtml;
     }
 
     //  Always show the Google Blogs tile.
@@ -905,6 +930,11 @@ $.fn.alm = function () {
       "/images/logo-googleblogs.png",
       "Search")
       + '\n';
+
+    // now add science seeker using previously obtained index
+    if( sSeekerIndex != null ){
+      html += tileHtmlList[sSeekerIndex].html;
+    }
 
     $("#" + relatedBlogPostsID).html($("#" + relatedBlogPostsID).html() + html);
     $("#" + relatedBlogPostsID).show("blind", 500);
@@ -1285,7 +1315,7 @@ $(document).ready(
                 scopus = count;
               }
 
-              if (name == "Mendeley" || name == "CiteULike" || name == "Connotea") {
+              if (name == "Mendeley" || name == "CiteULike") {
                 bookmarks += count;
               }
 
@@ -1314,7 +1344,7 @@ $(document).ready(
               text = "ACADEMIC BOOKMARK";
             }
 
-            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley, CiteULike, and Connotea " +
+            li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike " +
               "bookmarks", "/static/almInfo#socialBookmarks");
 
             $("#almSignPost").append(li);
