@@ -21,10 +21,8 @@
 package org.ambraproject.freemarker;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import org.ambraproject.web.VirtualJournalContextFilter;
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -155,13 +153,13 @@ public class AmbraFreemarkerConfig {
         log.trace("Default Title: " + j.getDefaultTitle());
         log.trace("Default CSS: " + j.getDefaultCss());
         log.trace("Default JavaScript: " + j.getDefaultCss());
-        Multimap<String, String> map = j.getCssFiles();
-        for (Entry<String, Collection<String>> entry : map.asMap().entrySet()) {
+        Map<String, ? extends Collection<String>> map = j.getCssFiles();
+        for (Entry<String, ? extends Collection<String>> entry : map.entrySet()) {
           log.trace("PageName: " + entry.getKey());
           log.trace("CSS FILES: " + entry.getValue());
         }
         map = j.getJavaScriptFiles();
-        for (Entry<String, Collection<String>> entry : map.asMap().entrySet()) {
+        for (Entry<String, ? extends Collection<String>> entry : map.entrySet()) {
           log.trace("PageName: " + entry.getKey());
           log.trace("JS FILES: " + entry.getValue());
         }
@@ -895,18 +893,25 @@ public class AmbraFreemarkerConfig {
   }
 
 
-  private static <K, V> ImmutableListMultimap<K, V> copyToMultimap(Map<? extends K, ? extends V[]> map) {
-    ImmutableListMultimap.Builder<K, V> builder = ImmutableListMultimap.builder();
+  /*
+   * NOT quite the same as an ImmutableListMap, because this can make the distinction between a key being mapped to an
+   * empty list versus being entirely absent. (Calling ImmutableListMap.get on an absent key returns an empty list.)
+   */
+  private static <K, V> ImmutableMap<K, ImmutableList<V>> immutableListValues(Map<? extends K, ? extends V[]> map) {
+    if (map == null) {
+      return null;
+    }
+    ImmutableMap.Builder<K, ImmutableList<V>> builder = ImmutableMap.builder();
     for (Entry<? extends K, ? extends V[]> entry : map.entrySet()) {
-      builder.putAll(entry.getKey(), entry.getValue());
+      builder.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
     }
     return builder.build();
   }
 
   private static class JournalConfig {
 
-    private final ImmutableListMultimap<String, String> cssFiles;
-    private final ImmutableListMultimap<String, String> javaScriptFiles;
+    private final ImmutableMap<String, ImmutableList<String>> cssFiles;
+    private final ImmutableMap<String, ImmutableList<String>> javaScriptFiles;
     private final ImmutableMap<String, String> titles;
 
     private final ImmutableList<String> defaultCss;
@@ -923,20 +928,13 @@ public class AmbraFreemarkerConfig {
 
     private JournalConfig(JournalConfigBuilder builder) {
       super();
-      this.cssFiles = (builder.cssFiles == null)
-          ? ImmutableListMultimap.<String, String>of()
-          : copyToMultimap(builder.cssFiles);
-      this.javaScriptFiles = (builder.javaScriptFiles == null)
-          ? ImmutableListMultimap.<String, String>of()
-          : copyToMultimap(builder.javaScriptFiles);
-      this.titles = (builder.titles == null)
-          ? ImmutableMap.<String, String>of()
+      this.cssFiles = immutableListValues(builder.cssFiles);
+      this.javaScriptFiles = immutableListValues(builder.javaScriptFiles);
+      this.titles = (builder.titles == null) ? null
           : ImmutableMap.copyOf(builder.titles);
-      this.defaultCss = (builder.defaultCss == null)
-          ? ImmutableList.<String>of()
+      this.defaultCss = (builder.defaultCss == null) ? null
           : ImmutableList.copyOf(builder.defaultCss);
-      this.defaultJavaScript = (builder.defaultJavaScript == null)
-          ? ImmutableList.<String>of()
+      this.defaultJavaScript = (builder.defaultJavaScript == null) ? null
           : ImmutableList.copyOf(builder.defaultJavaScript);
       this.defaultTitle = builder.defaultTitle;
       this.metaKeywords = builder.metaKeywords;
@@ -948,11 +946,11 @@ public class AmbraFreemarkerConfig {
       this.issn = builder.issn;
     }
 
-    public ImmutableListMultimap<String, String> getCssFiles() {
+    public ImmutableMap<String, ImmutableList<String>> getCssFiles() {
       return cssFiles;
     }
 
-    public ImmutableListMultimap<String, String> getJavaScriptFiles() {
+    public ImmutableMap<String, ImmutableList<String>> getJavaScriptFiles() {
       return javaScriptFiles;
     }
 
