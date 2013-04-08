@@ -18,6 +18,7 @@ div#user-tabs ul {
 
 /*****************Styles for the forms******************************/
 .required {color: #f03; font-size:12px; font-weight: bold; }
+input.btn + span.required { padding-left: 5px; }
 
 .ambra-form {
   position: relative;

@@ -89,22 +89,23 @@ $(function () {
 
   //Remove error messages before adding new ones
   var cleanMesssages = function() {
-    $("p.required").remove();
-    $("span.required").remove();
+    $("span.required.temp").remove();
     $("li").removeClass("form-error");
   }
 
   var validateResponse = function(formObj, response) {
-    if($(response.fieldErrors).length > 0) {
-      var message = $('<p class="required">Please correct the errors below.</p>');
+    var formBtn = $(formObj).find(":input[name='formSubmit']");
 
-      $(formObj).prepend(message);
+    if(!$.isEmptyObject(response.fieldErrors)) {
+      var message = $('<span class="required temp">Please correct the errors above.</span>');
+
+      formBtn.after(message);
 
       $.each(response.fieldErrors, function(index, value) {
         $(formObj).find(":input[name='" + index + "']").each(function(formIndex, element) {
-          //Append  class to parent LI
+          //Append class to parent LI
           $(element).parent().addClass("form-error");
-          $(element).after(" <span class='required'>" + response.fieldErrors[index] + "</span>");
+          $(element).after(" <span class='required temp'>" + response.fieldErrors[index] + "</span>");
         });
       });
     } else {
@@ -114,14 +115,15 @@ $(function () {
 
   var displaySystemError = function(formObj, response) {
     var message = "System error.  Code: " + response.status + " (" + response.statusText + ")";
+    var formBtn = $(formObj).find(":input[name='formSubmit']");
 
-    if($(formObj).find("div#formError").size() == 0) {
-      var errorP = $('<p class="required"/>');
+    if($(formObj).find("span.required.temp").size() == 0) {
+      var errorP = $('<span class="required temp"/>');
 
       errorP.text(message);
-      $(formObj).prepend(errorP);
+      $(formBtn).after(errorP);
     } else {
-      $(formObj).find("p.required").text(message);
+      $(formBtn).find("span.required.temp").text(message);
     }
   };
 
@@ -138,7 +140,7 @@ $(function () {
       })
       .fail(function(response) {
         displaySystemError($('form[name=userForm]'), response);
-        console.log(data);
+        console.log(response);
       });
   });
 
@@ -152,7 +154,7 @@ $(function () {
       })
       .fail(function(response) {
         displaySystemError($('form[name=userAlerts]'), response);
-        console.log(data);
+        console.log(response);
       });
   });
 
@@ -166,7 +168,7 @@ $(function () {
       })
       .fail(function(response) {
         displaySystemError($('form[name=userSearchAlerts]'), response);
-        console.log(data);
+        console.log(response);
       });
   });
 });
