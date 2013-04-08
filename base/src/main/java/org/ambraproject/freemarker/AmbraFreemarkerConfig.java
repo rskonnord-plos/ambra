@@ -449,7 +449,7 @@ public class AmbraFreemarkerConfig {
    * @param journalName  Journal name
    * @return Returns list of css files given a template name.
    */
-  public String[] getCss(String templateName, String journalName) {
+  public ImmutableList<String> getCss(String templateName, String journalName) {
     JournalConfig jc = journals.get(journalName);
     boolean usingDefault = false;
     if (jc == null) {
@@ -457,7 +457,7 @@ public class AmbraFreemarkerConfig {
       jc = journals.get(defaultJournalName);
     }
     String defaultTemplateName = "/" + trimJournalFromTemplatePath(templateName);
-    List<String> retVal = getCssForJournal(jc, templateName, defaultTemplateName);
+    ImmutableList<String> retVal = getCssForJournal(jc, templateName, defaultTemplateName);
     if (retVal == null) {
 
       if (!usingDefault) {
@@ -465,8 +465,7 @@ public class AmbraFreemarkerConfig {
         retVal = getCssForJournal(defaultJc, templateName, defaultTemplateName);
       }
     }
-    retVal = retVal != null ? retVal : DEFAULT_CSS_FILES;
-    return retVal.toArray(new String[retVal.size()]);
+    return retVal != null ? retVal : DEFAULT_CSS_FILES;
   }
 
   private ImmutableList<String> getCssForJournal(JournalConfig jc, String templateName,
@@ -488,7 +487,7 @@ public class AmbraFreemarkerConfig {
    * @param templateName Template name
    * @return array of css filename for the page
    */
-  public String[] getCss(String templateName) {
+  public ImmutableList<String> getCss(String templateName) {
     return getCss(templateName, defaultJournalName);
   }
 
@@ -500,7 +499,7 @@ public class AmbraFreemarkerConfig {
    * @param journalName  Journal name
    * @return Returns the list of JavaScript files given a template name.
    */
-  public String[] getJavaScript(String templateName, String journalName) {
+  public ImmutableList<String> getJavaScript(String templateName, String journalName) {
     JournalConfig jc = journals.get(journalName);
     boolean usingDefault = false;
     if (jc == null) {
@@ -508,7 +507,7 @@ public class AmbraFreemarkerConfig {
       jc = journals.get(defaultJournalName);
     }
     String defaultTemplateName = "/" + trimJournalFromTemplatePath(templateName);
-    List<String> retVal = getJavascriptsForJournal(jc, templateName, defaultTemplateName);
+    ImmutableList<String> retVal = getJavascriptsForJournal(jc, templateName, defaultTemplateName);
     if (retVal == null) {
 
       if (!usingDefault) {
@@ -516,8 +515,7 @@ public class AmbraFreemarkerConfig {
         retVal = getJavascriptsForJournal(defaultJc, templateName, defaultTemplateName);
       }
     }
-    retVal = retVal != null ? retVal : DEFAULT_JS_FILES;
-    return retVal.toArray(new String[retVal.size()]);
+    return retVal != null ? retVal : DEFAULT_JS_FILES;
   }
 
   private ImmutableList<String> getJavascriptsForJournal(JournalConfig jc, String templateName,
@@ -539,7 +537,7 @@ public class AmbraFreemarkerConfig {
    * @param templateName Template name
    * @return list of javascript files for the given page
    */
-  public String[] getJavaScript(String templateName) {
+  public ImmutableList<String> getJavaScript(String templateName) {
     return getJavaScript(templateName, defaultJournalName);
   }
 
