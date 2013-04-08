@@ -20,6 +20,7 @@
 
 package org.ambraproject.action;
 
+import com.google.common.collect.ImmutableSortedMap;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
@@ -206,9 +207,9 @@ public class HomePageAction extends BaseActionSupport {
   public String execute() {
     try {
       categoryInfos = searchService.getTopSubjects();
-    } catch(ApplicationException ex) {
+    } catch (Exception ex) {
       log.error("Failed to query search service", ex);
-      categoryInfos = new TreeMap<String, Long>();
+      categoryInfos = ImmutableSortedMap.of();
     }
 
     initRecentArticles();

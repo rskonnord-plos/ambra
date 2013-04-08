@@ -875,7 +875,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
         articles.add(sh);
       }
 
-    } catch (SolrServerException e) {
+    } catch (Exception e) {
       log.error("Unable to execute a query on the Solr Server.", e);
     }
 

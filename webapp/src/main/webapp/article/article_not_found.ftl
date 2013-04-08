@@ -27,13 +27,6 @@
 
         <h1>Article Not Found</h1>
 
-        <div id="image">
-          <img id="bottles" src="/images/error.404.png" alt="no image to display"/>
-
-          <p><a href="http://creativecommons.org/licenses/by/2.0/deed.en">CC</a> Image courtesy of
-            <a href="http://www.flickr.com/photos/heypaul/107326169/">Hey Paul on Flickr</a></p>
-        </div>
-
         <div id="text">
           <p>Sorry, the article that you've requested cannot be found; it may have been moved, changed or removed.</p>
 
