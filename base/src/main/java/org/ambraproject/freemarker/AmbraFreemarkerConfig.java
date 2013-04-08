@@ -20,6 +20,7 @@
 
 package org.ambraproject.freemarker;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -837,12 +838,7 @@ public class AmbraFreemarkerConfig {
    * @return URL of journal
    */
   public String getJournalUrl(String journalKey) {
-    JournalConfig jc = journals.get(journalKey);
-    String url = "";
-    if (jc != null) {
-      url = jc.getUrl();
-    }
-    return url;
+    return getJournalUrl(journalKey, journals);
   }
 
   /**
@@ -852,13 +848,14 @@ public class AmbraFreemarkerConfig {
    * @return URL of journal
    */
   public String getJournalUrlFromIssn(String journalIssn) {
-    JournalConfig jc = journalsByIssn.get(journalIssn);
-    String url = "";
-    if (jc != null) {
-      url = jc.getUrl();
-    }
-    return url;
+    return getJournalUrl(journalIssn, journalsByIssn);
   }
+
+  private static String getJournalUrl(String key, Map<String, JournalConfig> journalMap) {
+    JournalConfig jc = journalMap.get(key);
+    return (jc == null) ? "" : Strings.nullToEmpty(jc.getUrl());
+  }
+
 
   /**
    * Utility procedure that takes out journal-specific beggining of template name. For example templateName
