@@ -132,13 +132,21 @@ public class AmbraFreemarkerConfig {
     Map<String, JournalConfigBuilder> builders = Maps.newLinkedHashMap();
     builders = loadConfig(builders, configuration);
     builders = processVirtualJournalConfig(builders, configuration);
+    if (!builders.containsKey(defaultJournalName)) {
+      log.warn("No journal configuration found for default name ({}). Applying all defaults.", defaultJournalName);
+      builders.put(defaultJournalName, new JournalConfigBuilder());
+    }
     journals = buildJournals(builders);
 
     // Now that the "journals" Map exists, index that map by Eissn to populate "journalsByEissn".
     ImmutableMap.Builder<String, JournalConfig> journalsByIssnBuilder = ImmutableMap.builder();
     for (Entry<String, JournalConfig> e : journals.entrySet()) {
-      JournalConfig j = e.getValue();
-      journalsByIssnBuilder.put(j.getIssn(), j);
+      String issn = e.getValue().getIssn();
+      if (issn != null) {
+        journalsByIssnBuilder.put(issn, e.getValue());
+      } else {
+        log.warn("No ISSN found for journal: {}", e.getKey());
+      }
     }
     journalsByIssn = journalsByIssnBuilder.build();
 
@@ -703,7 +711,13 @@ public class AmbraFreemarkerConfig {
   private static ImmutableMap<String, String> buildUrlMap(Map<String, JournalConfig> journals) {
     ImmutableMap.Builder<String, String> urls = ImmutableMap.builder();
     for (Entry<String, JournalConfig> entry : journals.entrySet()) {
-      urls.put(entry.getKey(), entry.getValue().getUrl());
+      String key = entry.getKey();
+      String url = entry.getValue().getUrl();
+      if (url != null) {
+        urls.put(key, url);
+      } else {
+        log.warn("No URL found for journal: {}", key);
+      }
     }
     return urls.build();
   }
