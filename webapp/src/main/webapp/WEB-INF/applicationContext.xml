@@ -123,6 +123,7 @@
   <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
+    <property name="crossRefLookupService" ref="crossRefLookupService"/>
   </bean>
 
   <bean id="feedService" class="org.ambraproject.service.feed.FeedServiceImpl">

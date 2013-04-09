@@ -865,7 +865,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           if (imgNotOnPage) { // the image is on another page
             context_hash = '/article/' + page_url + context_hash;
           }
-          var desc = '<div class="desc">' + this.transformedDescription + '</div>';
+          var desc = '<div class="desc">' + this.transformedDescription + '<p>' + this.doi.replace('info:doi/','doi:') + '</p></div>';
           var img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + image_title + '"></div>'
           var lnks_txt = '<ul class="download">'
             + '<li class="label">Download: </li>'
@@ -1405,3 +1405,15 @@ function CollapsibleContainerTitleOnClick() {
   // The item clicked is the title div... get this parent (the overall container) and toggle the content within it.
   $(".collapsibleContainerContent", $(this).parent()).slideToggle();
 }
+
+$(function() {
+  //Stolen from:
+  //http://www.vancelucas.com/blog/fixing-ie7-z-index-issues-with-jquery/
+  if($.browser.msie && jQuery.browser.version < 10) {
+    var zIndexNumber = 1000;
+    $('div.sidebar').find('div').each(function() {
+      $(this).css('zIndex', zIndexNumber);
+      zIndexNumber -= 10;
+    });
+  }
+});
