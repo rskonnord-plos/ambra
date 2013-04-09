@@ -7,6 +7,9 @@
 
           <h1>Something's Broken!</h1>
 
+          <div id="image">
+          </div>
+
           <div id="text">
             <p>We're sorry, our server has encountered an internal error or misconfiguration and is unable to complete your
               request. This is likely a temporary condition so please try again later.</p>

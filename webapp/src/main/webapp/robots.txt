@@ -1,5 +1,11 @@
+User-agent: 008
+Disallow: /
+
 User-agent: *
 Crawl-delay: 30
+Disallow: /admin/
+Disallow: /annotation/secure/
+Disallow: /article/emailArticle.action
 Disallow: /article/feed/
 Disallow: /article/fetchObject.action
 Disallow: /article/fetchObjectAttachment.action
@@ -9,6 +15,6 @@ Disallow: /article/getRisCitation.action
 Disallow: /article/slideshow.action
 Disallow: /feedbackCreate.action
 Disallow: /search/
-Disallow: /images/
+Disallow: /secure/
 Disallow: /user/secure/
 

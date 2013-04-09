@@ -14,7 +14,7 @@
   <div id="pagebdy">
     <div id="static-wrap">
       <!--include the template-->
-    <#include "${templateFile}">
+      <#include "${templateFile}">
     </div>
   </div>
 </div>

@@ -4,9 +4,11 @@
   <#assign journalContext = "">
 </#if>
 
-<!--include the headers-->
-<#include "/includes/header.ftl">
-<!--include the template-->
+<#--include global variables -->
+<#include "/global/variables.ftl">
+<#--include the headers-->
+<#include "/global/header.ftl">
+<#--include the template-->
 <#include "${templateFile}">
-<!--include the footer-->
-<#include "/includes/footer.ftl">
+<#--include the footer-->
+<#include "/global/footer.ftl">

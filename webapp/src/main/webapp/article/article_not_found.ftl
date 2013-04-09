@@ -1,6 +1,6 @@
 <#--
-  $HeadURL:: http://ambraproject.org/svn/plos/templates/branches/ginzu/journals/PLoSDef#$
-  $Id: pageNotFound.ftl 12105 2012-10-25 22:09:34Z josowski $
+  $HeadURL:: http://svn.ambraproject.org/svn/plos/templates/head/journals/PLoSDefault/w#$
+  $Id: article_not_found.ftl 12936 2012-11-30 21:54:56Z josowski $
 
   Copyright (c) 2007-2010 by Public Library of Science
   http://plos.org
@@ -27,8 +27,11 @@
 
         <h1>Article Not Found</h1>
 
-        <div id="text">
-          <p>Sorry, the article that you've requested cannot be found; it may have been moved, changed or removed.</p>
+          <div id="image">
+          </div>
+
+          <div id="text">
+          <p>Sorry, the article that you've requested cannot be found; please check the Digital Object Identifier (DOI) and try again.</p>
 
           <p class="in-between">Please use the <a href="${searchAdvancedURL}">advanced search form</a> to locate an
             article.</p>

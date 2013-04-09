@@ -49,8 +49,43 @@ import java.util.StringTokenizer;
 public class AmbraFreemarkerConfig {
   private static final Logger log = LoggerFactory.getLogger(AmbraFreemarkerConfig.class);
 
-  private static final ImmutableList<String> DEFAULT_CSS_FILES = ImmutableList.of("/css/iepc.css", "/css/screen.css");
-  private static final ImmutableList<String> DEFAULT_JS_FILES = ImmutableList.of("/javascript/all.js");
+  private static final ImmutableList<String> DEFAULT_CSS_FILES = ImmutableList.copyOf(new String[]{
+      "/css/global.css",
+      "/css/home.css",
+      "/css/jquery-ui-1.9.0.custom.css",
+      "/css/jquery-ui.css",
+      "/css/lte_ie7.css",
+      "/css/print.css",
+      "/css/savedSearch.css",
+      "/css/twitter.css",
+      "/css/uniform.default.css",
+      "/css/user.css",
+  });
+  private static final ImmutableList<String> DEFAULT_JS_FILES = ImmutableList.copyOf(new String[]{
+      // Order is significant for dependencies
+
+      "/javascript/jquery-1.8.1.js",
+      "/javascript/jquery-ui-1.9.0.js",
+      "/javascript/jquery.hoverIntent.js",
+      "/javascript/jquery.jsonp-2.4.0.js",
+      "/javascript/jquery.overlay-1.2.5.js",
+      "/javascript/jquery.placeholder.js",
+      "/javascript/jquery.textarea-expander.js",
+      "/javascript/jquery.toolbox.expose.js",
+      "/javascript/jquery.tooltip.js",
+      "/javascript/jquery.uniform.js",
+
+      "/javascript/advancedSearch.js",
+      "/javascript/alm.js",
+      "/javascript/comments.js",
+      "/javascript/edboard.js",
+      "/javascript/global.js",
+      "/javascript/related_content.js",
+      "/javascript/searchResults.js",
+      "/javascript/twitter.js",
+      "/javascript/user.js",
+  });
+
   private static final String DEFAULT_TITLE = "Journal";
   private static final String DEFAULT_JOURNAL_NAME_CONFIG_KEY = "ambra.virtualJournals.default";
   private static final int DEFAULT_TEMPLATE_UPDATE_DELAY = 600;
@@ -903,8 +938,8 @@ public class AmbraFreemarkerConfig {
 
 
   /*
-   * NOT quite the same as an ImmutableListMap, because this can make the distinction between a key being mapped to an
-   * empty list versus being entirely absent. (Calling ImmutableListMap.get on an absent key returns an empty list.)
+   * NOT quite the same as an ImmutableListMultimap, because this can make the distinction between a key being mapped
+   * to an empty list versus being entirely absent. (Calling ListMultimap.get on an absent key returns an empty list.)
    */
   private static <K, V> ImmutableMap<K, ImmutableList<V>> immutableListValues(Map<? extends K, ? extends V[]> map) {
     if (map == null) {
