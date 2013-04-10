@@ -1552,3 +1552,16 @@ if ($(document).pjax) {
 }
 
 // End Pjax related code
+
+$(function() {
+  //Stolen from:
+  //http://www.vancelucas.com/blog/fixing-ie7-z-index-issues-with-jquery/
+  if($.browser.msie && jQuery.browser.version < 10) {
+    var zIndexNumber = 1000;
+    $('div.sidebar').find('div').each(function() {
+      $(this).css('zIndex', zIndexNumber);
+      zIndexNumber -= 10;
+    });
+  }
+});
+
