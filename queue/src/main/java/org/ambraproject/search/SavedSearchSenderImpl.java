@@ -74,6 +74,10 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
         log.debug("Job result count: {}", searchJob.getSearchHitList().size());
 
+        //We might filter the search hitlist based on publish and the last time the search was run for each user 
+        //here.  We track the last time a search was run in the user's savedSearch table, seemed like overkill to
+        //to me though.  
+
         if(searchJob.getSearchHitList().size() > 0) {
 
           log.debug("Sending mail: {}", toAddress);
