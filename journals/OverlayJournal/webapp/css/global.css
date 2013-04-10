@@ -39,7 +39,7 @@ ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
 
 
 /*global styles & helper classes*/
-body { font: 81.25%/1.385 arial, sans-serif; background: #333;  }
+body { font: 81.25%/1.385 arial, sans-serif; background: #444;  }
 
 a { color: #3c63af; text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -74,7 +74,7 @@ h2 { font-size: 18px; line-height: 1.222; margin-bottom: 20px; }
 .flt-l { float: left; }
 .flt-r { float: right; }
 
-.btn { background: #f8af2d; font-size: 15px; line-height: 35px; font-weight: bold; color: #333; text-align: center; padding: 0 10px; display: inline-block; border-radius: 4px; }
+.btn { background: #f8af2d; font-size: 15px; line-height: 35px; font-weight: bold; color: #444; text-align: center; padding: 0 10px; display: inline-block; border-radius: 4px; }
 .btn.active,
 .btn:hover { background: #3c63af !important; color: #fff !important; text-decoration: none; }
  
@@ -115,8 +115,8 @@ ul.style-a li { font-size: 1.077em; line-height: 1.286; margin-bottom: 4px; padd
 #db label { position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 #db .wrap { background: #fff; width: 180px; padding: 9px 0 10px 10px; margin-bottom: 6px; }
 #db input#search { border: 0; background: #fff; width: 145px; padding: 0; outline: 0; line-height: 22px; height: 22px; }	
-input#search:-moz-placeholder { font-size: 20px;color: #333; font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }
-input#search::-webkit-input-placeholder { font-size: 20px; color: #333; font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }
+input#search:-moz-placeholder { font-size: 20px;color: #444; font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }
+input#search::-webkit-input-placeholder { font-size: 20px; color: #444; font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }
 #db .placeholder { font-size: 20px; font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }	
 #pagehdr #advSearch { font-size: 0.923em; float: right; }
 
@@ -124,8 +124,8 @@ input#search::-webkit-input-placeholder { font-size: 20px; color: #333; font: 20
 #nav-main li { float: left; font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; padding-bottom: 18px; }
 #nav-main li:first-child a { border: 0; }
 #nav-main a { display: block; height: 30px; padding: 10px 17px 0; border-left: 1px solid #bbb; }
-#nav-main a:hover { color: #333; text-decoration: none; }
-#nav-main li.active a { color: #333; }
+#nav-main a:hover { color: #444; text-decoration: none; }
+#nav-main li.active a { color: #444; }
 #nav-main li.active { background: url(../images/icon.nav.active.png) no-repeat 50% 100%; }
 
 #nav-main.txt-lg li { font-size: 28px; padding: 0; }
@@ -227,7 +227,7 @@ input#search::-webkit-input-placeholder { font-size: 20px; color: #333; font: 20
 #nav-article-page { width: 160px; }
 #nav-article-page ul { padding-bottom: 7px; margin-bottom: 18px; }
 #nav-article-page li { line-height: 1.154; margin-bottom: 9px; padding-left: 10px; }
-#nav-article-page a { color: #333; }
+#nav-article-page a { color: #444; }
 #nav-article-page .active { background: url(../images/bul.pt.blu.gif) no-repeat 0 3px; }
 #nav-article-page .active a { color: #3c63af; }
 .nav-page { border-bottom: 1px solid #d1d1d1; }
@@ -235,7 +235,7 @@ input#search::-webkit-input-placeholder { font-size: 20px; color: #333; font: 20
 .article-actions { margin-bottom: 40px; }
 .article-actions .btn { margin-bottom: 5px; width: 140px; }
 .btn-reveal { position: relative; }
-.btn-reveal .btn { background: #333; color: #fff; }
+.btn-reveal .btn { background: #444; color: #fff; }
 .article-actions .btn-reveal .btn { width: 57px; }
 .btn-reveal .content { display: none; background: #3c63af; color: #a7bee9; border-radius: 4px; position: absolute; padding: 15px 10px 20px; width: 140px; font-size: 16px; line-height: 1; min-height: 85px; }
 .btn-reveal:hover .btn { background: #3c63af; color: #fff; }
@@ -295,13 +295,13 @@ input#search::-webkit-input-placeholder { font-size: 20px; color: #333; font: 20
 .pagination { text-align: center; position: relative; padding: 0 30px; margin: 20px 0; }
 .pagination a,
 .pagination span,
-.pagination strong { background: #c2c2c2; display: inline-block; font-weight: bold; color: #333; font-size: 14px; line-height: 24px; padding: 0 4px; min-width: 16px; border-radius: 4px; margin: 0 1px; }
+.pagination strong { background: #c2c2c2; display: inline-block; font-weight: bold; color: #444; font-size: 14px; line-height: 24px; padding: 0 4px; min-width: 16px; border-radius: 4px; margin: 0 1px; }
 .pagination a:hover,
 .pagination strong { background-color: #f8af2d !important; text-decoration: none; }
 .pagination .prev,
 .pagination .next { position: absolute; background: #ddd url(../images/icon.sprite.page.gif) no-repeat; text-indent: -9999px; overflow: hidden; }
 .pagination  a.prev,
-.pagination a.next { background-color: #333; }
+.pagination a.next { background-color: #444; }
 .pagination .prev { left: 0; background-position: 0 -24px; }
 .pagination .next { right: 0; }
 
@@ -342,7 +342,7 @@ input#search::-webkit-input-placeholder { font-size: 20px; color: #333; font: 20
 #journalFacet label a,
 #subjectFacet label a { padding-left: 22px; }
 
-#search-display { background: #333 url(../images/icon.sprite.toggle.gif) no-repeat 100% 18px; color: #fff; font-size: 14px; font-weight: bold; line-height: 40px; display: inline-block; cursor: pointer; padding: 0 50px 0 20px; min-width: 60px; border-radius: 0 0 4px 4px; position: absolute; top: 0; left: 1px; }
+#search-display { background: #444 url(../images/icon.sprite.toggle.gif) no-repeat 100% 18px; color: #fff; font-size: 14px; font-weight: bold; line-height: 40px; display: inline-block; cursor: pointer; padding: 0 50px 0 20px; min-width: 60px; border-radius: 0 0 4px 4px; position: absolute; top: 0; left: 1px; }
 #search-display.open { background-color: #efefef; background-position: 100% -32px; color: #3c63af; }
 
 #fig-search-block .header { position: relative; padding-top: 18px; min-height: 34px; }

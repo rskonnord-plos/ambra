@@ -4,8 +4,11 @@
   <#assign journalContext = "">
 </#if>
 
-<!--include the headers-->
-<#include "/includes/header.ftl">
+<#--include global variables -->
+<#include "/global/variables.ftl">
+
+<#--include the headers-->
+<#include "/global/header.ftl">
 <!--include the template-->
 
 <#--
@@ -15,11 +18,20 @@
   TODO: There should be away to check for the files existence in the virturalJournalContext.
   Handling the error here results in a 400 response code instead of a 404
 -->
-<#attempt>
-  <#include "${templateFile}">
-  <#recover>
-    ${response.setStatus(404)}
-    <#include "/article/article_not_found.ftl">
-</#attempt>
-<!--include the footer-->
-<#include "/includes/footer.ftl">
+<div id="pagebdy-wrap">
+  <div id="pagebdy">
+    <div id="static-content-wrap">
+
+      <#attempt>
+        <#include "${templateFile}">
+        <#recover>
+        ${response.setStatus(404)}
+        <#include "/pageNotFoundContent.ftl">
+      </#attempt>
+
+    </div><!-- static-wrap -->
+  </div><!-- pagebdy -->
+</div><!-- pagebdy-wrap -->
+
+<#--include the footer-->
+<#include "/global/footer.ftl">

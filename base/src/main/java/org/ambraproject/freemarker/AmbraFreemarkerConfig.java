@@ -20,6 +20,10 @@
 
 package org.ambraproject.freemarker;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.ambraproject.web.VirtualJournalContextFilter;
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -29,9 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,37 +49,72 @@ import java.util.StringTokenizer;
 public class AmbraFreemarkerConfig {
   private static final Logger log = LoggerFactory.getLogger(AmbraFreemarkerConfig.class);
 
-  private static final String[] DEFAULT_CSS_FILES = {"/css/iepc.css", "/css/screen.css"};
-  private static final String[] DEFAULT_JS_FILES = {"/javascript/all.js"};
+  private static final ImmutableList<String> DEFAULT_CSS_FILES = ImmutableList.copyOf(new String[]{
+      "/css/global.css",
+      "/css/home.css",
+      "/css/jquery-ui-1.9.0.custom.css",
+      "/css/jquery-ui.css",
+      "/css/lte_ie7.css",
+      "/css/print.css",
+      "/css/savedSearch.css",
+      "/css/twitter.css",
+      "/css/uniform.default.css",
+      "/css/user.css",
+  });
+  private static final ImmutableList<String> DEFAULT_JS_FILES = ImmutableList.copyOf(new String[]{
+      // Order is significant for dependencies
+
+      "/javascript/jquery-1.8.1.js",
+      "/javascript/jquery-ui-1.9.0.js",
+      "/javascript/jquery.hoverIntent.js",
+      "/javascript/jquery.jsonp-2.4.0.js",
+      "/javascript/jquery.overlay-1.2.5.js",
+      "/javascript/jquery.placeholder.js",
+      "/javascript/jquery.textarea-expander.js",
+      "/javascript/jquery.toolbox.expose.js",
+      "/javascript/jquery.tooltip.js",
+      "/javascript/jquery.uniform.js",
+
+      "/javascript/advancedSearch.js",
+      "/javascript/alm.js",
+      "/javascript/comments.js",
+      "/javascript/edboard.js",
+      "/javascript/global.js",
+      "/javascript/related_content.js",
+      "/javascript/searchResults.js",
+      "/javascript/twitter.js",
+      "/javascript/user.js",
+  });
+
   private static final String DEFAULT_TITLE = "Journal";
-  private static String DEFAULT_JOURNAL_NAME_CONFIG_KEY = "ambra.virtualJournals.default";
-  private static int DEFAULT_TEMPLATE_UPDATE_DELAY = 600;
-  private static int DEFAULT_TEMPLATE_CACHE_STRONG = 350;
-  private static int DEFAULT_TEMPLATE_CACHE_SOFT = 100;
+  private static final String DEFAULT_JOURNAL_NAME_CONFIG_KEY = "ambra.virtualJournals.default";
+  private static final int DEFAULT_TEMPLATE_UPDATE_DELAY = 600;
+  private static final int DEFAULT_TEMPLATE_CACHE_STRONG = 350;
+  private static final int DEFAULT_TEMPLATE_CACHE_SOFT = 100;
 
   private final boolean debug;
-  private Map<String, JournalConfig> journals;
-  private Map<String, JournalConfig> journalsByIssn;
-  private Map<String, String> journalUrls;
-  private Map<String, String> journalsUrlsByIssn;
-  private Configuration freemarkerProperties;
-  private String dirPrefix;
-  private String subdirPrefix;
-  private String host;
-  private String casLoginURL;
-  private String casLogoutURL;
-  private String registrationURL;
-  private String changePasswordURL;
-  private String doiResolverURL;
-  private String changeEmailURL;
-  private String pubGetURL;
-  private String defaultJournalName;
-  private String orgName;
-  private String feedbackEmail;
-  private Date cisStartDate;
-  private int cache_storage_strong;
-  private int cache_storage_soft;
-  private int templateUpdateDelay;
+  private final ImmutableMap<String, JournalConfig> journals;
+  private final ImmutableMap<String, JournalConfig> journalsByIssn;
+  private final ImmutableMap<String, String> journalUrls;
+  private final ImmutableMap<String, String> journalsUrlsByIssn;
+  private final Configuration freemarkerProperties;
+  private final String dirPrefix;
+  private final String subdirPrefix;
+  private final String host;
+  private final String casLoginURL;
+  private final String casLogoutURL;
+  private final String registrationURL;
+  private final String changePasswordURL;
+  private final String doiResolverURL;
+  private final String changeEmailURL;
+  private final String pubGetURL;
+  private final String defaultJournalName;
+  private final String orgName;
+  private final String feedbackEmail;
+  private final Date cisStartDate;
+  private final int cache_storage_strong;
+  private final int cache_storage_soft;
+  private final int templateUpdateDelay;
 
   /**
    * Constructor that loads the list of css and javascript files and page titles for pages which follow the standard
@@ -103,8 +140,6 @@ public class AmbraFreemarkerConfig {
     doiResolverURL = configuration.getString("ambra.services.crossref.plos.doiurl");
     pubGetURL = configuration.getString("ambra.services.pubget.url");
     defaultJournalName = configuration.getString(DEFAULT_JOURNAL_NAME_CONFIG_KEY);
-    journals = new HashMap<String, JournalConfig>();
-    journalsByIssn = new HashMap<String, JournalConfig>();
     orgName = configuration.getString("ambra.platform.name");
     feedbackEmail = configuration.getString("ambra.platform.email.feedback");
     cache_storage_strong = configuration.getInt("ambra.platform.template_cache.strong",
@@ -130,17 +165,26 @@ public class AmbraFreemarkerConfig {
           "following format: dd/mm/yyyy", ex);
     }
 
-    loadConfig(configuration);
-
-    processVirtualJournalConfig(configuration);
+    Map<String, JournalConfigBuilder> builders = Maps.newLinkedHashMap();
+    builders = loadConfig(builders, configuration);
+    builders = processVirtualJournalConfig(builders, configuration);
+    if (!builders.containsKey(defaultJournalName)) {
+      log.warn("No journal configuration found for default name ({}). Applying all defaults.", defaultJournalName);
+      builders.put(defaultJournalName, new JournalConfigBuilder());
+    }
+    journals = buildJournals(builders);
 
     // Now that the "journals" Map exists, index that map by Eissn to populate "journalsByEissn".
-    if (journals.entrySet() != null && journals.entrySet().size() > 0) {
-      for (Entry<String, JournalConfig> e : journals.entrySet()) {
-        JournalConfig j = e.getValue();
-        journalsByIssn.put(j.getIssn(), j);
+    ImmutableMap.Builder<String, JournalConfig> journalsByIssnBuilder = ImmutableMap.builder();
+    for (Entry<String, JournalConfig> e : journals.entrySet()) {
+      String issn = e.getValue().getIssn();
+      if (issn != null) {
+        journalsByIssnBuilder.put(issn, e.getValue());
+      } else {
+        log.warn("No ISSN found for journal: {}", e.getKey());
       }
     }
+    journalsByIssn = journalsByIssnBuilder.build();
 
     journalUrls = buildUrlMap(journals);
     journalsUrlsByIssn = buildUrlMap(journalsByIssn);
@@ -151,17 +195,17 @@ public class AmbraFreemarkerConfig {
         log.trace("Journal: " + e.getKey());
         log.trace("Journal url: " + j.getUrl());
         log.trace("Default Title: " + j.getDefaultTitle());
-        log.trace("Default CSS: " + printArray(j.getDefaultCss()));
-        log.trace("Default JavaScript: " + printArray(j.getDefaultCss()));
-        Map<String, String[]> map = j.getCssFiles();
-        for (Entry<String, String[]> entry : map.entrySet()) {
+        log.trace("Default CSS: " + j.getDefaultCss());
+        log.trace("Default JavaScript: " + j.getDefaultCss());
+        Map<String, ? extends Collection<String>> map = j.getCssFiles();
+        for (Entry<String, ? extends Collection<String>> entry : map.entrySet()) {
           log.trace("PageName: " + entry.getKey());
-          log.trace("CSS FILES: " + printArray(entry.getValue()));
+          log.trace("CSS FILES: " + entry.getValue());
         }
         map = j.getJavaScriptFiles();
-        for (Entry<String, String[]> entry : map.entrySet()) {
+        for (Entry<String, ? extends Collection<String>> entry : map.entrySet()) {
           log.trace("PageName: " + entry.getKey());
-          log.trace("JS FILES: " + printArray(entry.getValue()));
+          log.trace("JS FILES: " + entry.getValue());
         }
 
         for (Entry<String, String> entry : j.getTitles().entrySet()) {
@@ -186,17 +230,26 @@ public class AmbraFreemarkerConfig {
     }
   }
 
-  private void loadConfig(Configuration myConfig) {
+  private ImmutableMap<String, JournalConfig> buildJournals(Map<String, JournalConfigBuilder> builders) {
+    ImmutableMap.Builder<String, JournalConfig> mapBuilder = ImmutableMap.builder();
+    for (Entry<String, JournalConfigBuilder> entry : builders.entrySet()) {
+      mapBuilder.put(entry.getKey(), entry.getValue().build());
+    }
+    return mapBuilder.build();
+  }
+
+  private Map<String, JournalConfigBuilder> loadConfig(Map<String, JournalConfigBuilder> journalBuilders, Configuration myConfig) {
     if (!(myConfig instanceof CombinedConfiguration))
-      loadConfig2(myConfig);
+      loadJournals(journalBuilders, myConfig);
     else {
       int numConfigs = ((CombinedConfiguration) myConfig).getNumberOfConfigurations();
       for (int c = 0; c < numConfigs; c++)
-        loadConfig(((CombinedConfiguration) myConfig).getConfiguration(c));
+        loadConfig(journalBuilders, ((CombinedConfiguration) myConfig).getConfiguration(c));
     }
+    return journalBuilders;
   }
 
-  private void loadConfig2(Configuration configuration) {
+  private void loadJournals(Map<String, JournalConfigBuilder> journalBuilders, Configuration configuration) {
     int numJournals = configuration.getList("ambra.freemarker.journal.name").size();
     for (int k = 0; k < numJournals; k++) {
       final String journal = "ambra.freemarker.journal(" + k + ")";
@@ -204,13 +257,13 @@ public class AmbraFreemarkerConfig {
       if (log.isDebugEnabled()) {
         log.debug("reading journal name: " + journalName);
       }
-      JournalConfig jc = journals.get(journalName);
+      JournalConfigBuilder jc = journalBuilders.get(journalName);
       if (jc == null) {
         if (log.isDebugEnabled()) {
           log.debug("journal Not found, creating: " + journalName);
         }
-        jc = new JournalConfig();
-        journals.put(journalName, jc);
+        jc = new JournalConfigBuilder();
+        journalBuilders.put(journalName, jc);
       }
 
       if (jc.getDefaultTitle() == null) {
@@ -337,27 +390,16 @@ public class AmbraFreemarkerConfig {
 
   }
 
-  private String printArray(String[] in) {
-    StringBuilder s = new StringBuilder();
-    if (in != null) {
-      for (String i : in) {
-        s.append(i);
-        s.append(", ");
-      }
-    }
-    return s.toString();
-  }
-
-  private void processVirtualJournalConfig(Configuration configuration) {
+  private Map<String, JournalConfigBuilder> processVirtualJournalConfig(Map<String, JournalConfigBuilder> journalBuilders, Configuration configuration) {
     final Collection<String> virtualJournals =
         configuration.getList(VirtualJournalContextFilter.CONF_VIRTUALJOURNALS_JOURNALS);
     String defaultVirtualJournal =
         configuration.getString(VirtualJournalContextFilter.CONF_VIRTUALJOURNALS_DEFAULT +
             ".journal");
-    JournalConfig jour;
+    JournalConfigBuilder jour;
 
     if ((defaultVirtualJournal != null) && (!"".equals(defaultVirtualJournal))) {
-      jour = journals.get(defaultVirtualJournal);
+      jour = journalBuilders.get(defaultVirtualJournal);
       if (jour != null) {
         jour.setUrl(configuration.getString(
             VirtualJournalContextFilter.CONF_VIRTUALJOURNALS_DEFAULT + ".url"));
@@ -367,7 +409,7 @@ public class AmbraFreemarkerConfig {
     }
 
     for (final String journalName : virtualJournals) {
-      jour = journals.get(journalName);
+      jour = journalBuilders.get(journalName);
       if (jour != null) {
         jour.setUrl(configuration.getString(VirtualJournalContextFilter.CONF_VIRTUALJOURNALS +
             "." + journalName + ".url"));
@@ -375,6 +417,7 @@ public class AmbraFreemarkerConfig {
             "." + journalName + ".eIssn"));
       }
     }
+    return journalBuilders;
   }
 
   /**
@@ -441,6 +484,7 @@ public class AmbraFreemarkerConfig {
     return getTitle(templateName, defaultJournalName);
   }
 
+
   /**
    * Gets the array of CSS files associated with templateName and journalName or returns the default values if not
    * available.
@@ -449,7 +493,7 @@ public class AmbraFreemarkerConfig {
    * @param journalName  Journal name
    * @return Returns list of css files given a template name.
    */
-  public String[] getCss(String templateName, String journalName) {
+  public ImmutableList<String> getCss(String templateName, String journalName) {
     JournalConfig jc = journals.get(journalName);
     boolean usingDefault = false;
     if (jc == null) {
@@ -457,20 +501,20 @@ public class AmbraFreemarkerConfig {
       jc = journals.get(defaultJournalName);
     }
     String defaultTemplateName = "/" + trimJournalFromTemplatePath(templateName);
-    String[] retVal = getCssForJournal(jc, templateName, defaultTemplateName);
-    if (retVal != null)
-      return retVal;
+    ImmutableList<String> retVal = getCssForJournal(jc, templateName, defaultTemplateName);
+    if (retVal == null) {
 
-    if (!usingDefault) {
-      JournalConfig defaultJc = journals.get(defaultJournalName);
-      retVal = getCssForJournal(defaultJc, templateName, defaultTemplateName);
+      if (!usingDefault) {
+        JournalConfig defaultJc = journals.get(defaultJournalName);
+        retVal = getCssForJournal(defaultJc, templateName, defaultTemplateName);
+      }
     }
     return retVal != null ? retVal : DEFAULT_CSS_FILES;
   }
 
-  private String[] getCssForJournal(JournalConfig jc, String templateName,
-                                    String defaultTemplateName) {
-    String[] retVal = jc.getCssFiles().get(templateName);
+  private ImmutableList<String> getCssForJournal(JournalConfig jc, String templateName,
+                                                 String defaultTemplateName) {
+    ImmutableList<String> retVal = jc.getCssFiles().get(templateName);
     if (retVal != null)
       return retVal;
 
@@ -487,7 +531,7 @@ public class AmbraFreemarkerConfig {
    * @param templateName Template name
    * @return array of css filename for the page
    */
-  public String[] getCss(String templateName) {
+  public ImmutableList<String> getCss(String templateName) {
     return getCss(templateName, defaultJournalName);
   }
 
@@ -499,7 +543,7 @@ public class AmbraFreemarkerConfig {
    * @param journalName  Journal name
    * @return Returns the list of JavaScript files given a template name.
    */
-  public String[] getJavaScript(String templateName, String journalName) {
+  public ImmutableList<String> getJavaScript(String templateName, String journalName) {
     JournalConfig jc = journals.get(journalName);
     boolean usingDefault = false;
     if (jc == null) {
@@ -507,20 +551,20 @@ public class AmbraFreemarkerConfig {
       jc = journals.get(defaultJournalName);
     }
     String defaultTemplateName = "/" + trimJournalFromTemplatePath(templateName);
-    String[] retVal = getJavascriptsForJournal(jc, templateName, defaultTemplateName);
-    if (retVal != null)
-      return retVal;
+    ImmutableList<String> retVal = getJavascriptsForJournal(jc, templateName, defaultTemplateName);
+    if (retVal == null) {
 
-    if (!usingDefault) {
-      JournalConfig defaultJc = journals.get(defaultJournalName);
-      retVal = getJavascriptsForJournal(defaultJc, templateName, defaultTemplateName);
+      if (!usingDefault) {
+        JournalConfig defaultJc = journals.get(defaultJournalName);
+        retVal = getJavascriptsForJournal(defaultJc, templateName, defaultTemplateName);
+      }
     }
     return retVal != null ? retVal : DEFAULT_JS_FILES;
   }
 
-  private String[] getJavascriptsForJournal(JournalConfig jc, String templateName,
-                                            String defaultTemplateName) {
-    String[] retVal = jc.getJavaScriptFiles().get(templateName);
+  private ImmutableList<String> getJavascriptsForJournal(JournalConfig jc, String templateName,
+                                                         String defaultTemplateName) {
+    ImmutableList<String> retVal = jc.getJavaScriptFiles().get(templateName);
     if (retVal != null)
       return retVal;
 
@@ -537,7 +581,7 @@ public class AmbraFreemarkerConfig {
    * @param templateName Template name
    * @return list of javascript files for the given page
    */
-  public String[] getJavaScript(String templateName) {
+  public ImmutableList<String> getJavaScript(String templateName) {
     return getJavaScript(templateName, defaultJournalName);
   }
 
@@ -700,12 +744,18 @@ public class AmbraFreemarkerConfig {
    * @param journals a map of journals with arbitrary keys
    * @return an unmodifiable map from the same keys to journal URLs
    */
-  private static Map<String, String> buildUrlMap(Map<String, JournalConfig> journals) {
-    Map<String, String> urls = new HashMap<String, String>(journals.size() * 4 / 3);
+  private static ImmutableMap<String, String> buildUrlMap(Map<String, JournalConfig> journals) {
+    ImmutableMap.Builder<String, String> urls = ImmutableMap.builder();
     for (Entry<String, JournalConfig> entry : journals.entrySet()) {
-      urls.put(entry.getKey(), entry.getValue().getUrl());
+      String key = entry.getKey();
+      String url = entry.getValue().getUrl();
+      if (url != null) {
+        urls.put(key, url);
+      } else {
+        log.warn("No URL found for journal: {}", key);
+      }
     }
-    return Collections.unmodifiableMap(urls);
+    return urls.build();
   }
 
   /**
@@ -735,24 +785,10 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * @param dirPrefix The dirPrefix to set.
-   */
-  public void setDirPrefix(String dirPrefix) {
-    this.dirPrefix = dirPrefix;
-  }
-
-  /**
    * @return Returns the subdirPrefix.
    */
   public String getSubdirPrefix() {
     return subdirPrefix;
-  }
-
-  /**
-   * @param subdirPrefix The subdirPrefix to set.
-   */
-  public void setSubdirPrefix(String subdirPrefix) {
-    this.subdirPrefix = subdirPrefix;
   }
 
   /**
@@ -763,24 +799,10 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * @param casLoginURL The casLoginURL to set.
-   */
-  public void setCasLoginURL(String casLoginURL) {
-    this.casLoginURL = casLoginURL;
-  }
-
-  /**
    * @return Returns the host.
    */
   public String getHost() {
     return host;
-  }
-
-  /**
-   * @param host The ambra hostname to set.
-   */
-  public void setHost(String host) {
-    this.host = host;
   }
 
   /**
@@ -791,24 +813,10 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * @param casLogoutURL The casLogoutURL to set.
-   */
-  public void setCasLogoutURL(String casLogoutURL) {
-    this.casLogoutURL = casLogoutURL;
-  }
-
-  /**
    * @return Returns the registrationURL.
    */
   public String getRegistrationURL() {
     return registrationURL;
-  }
-
-  /**
-   * @param registrationURL The registrationURL to set.
-   */
-  public void setRegistrationURL(String registrationURL) {
-    this.registrationURL = registrationURL;
   }
 
   /**
@@ -821,15 +829,6 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * Setter for changePasswordURL.
-   *
-   * @param changePasswordURL Value to set for changePasswordURL.
-   */
-  public void setChangePasswordURL(final String changePasswordURL) {
-    this.changePasswordURL = changePasswordURL;
-  }
-
-  /**
    * @return Returns the changeEmailURL.
    */
   public String getChangeEmailURL() {
@@ -837,24 +836,10 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * @param changeEmailURL The changeEmailURL to set.
-   */
-  public void setChangeEmailURL(String changeEmailURL) {
-    this.changeEmailURL = changeEmailURL;
-  }
-
-  /**
    * @return Returns the doiResolverURL.
    */
   public String getDoiResolverURL() {
     return doiResolverURL;
-  }
-
-  /**
-   * @param doiResolverURL The doiResolverURL to set.
-   */
-  public void setDoiResolverURL(String doiResolverURL) {
-    this.doiResolverURL = doiResolverURL;
   }
 
   /**
@@ -888,12 +873,7 @@ public class AmbraFreemarkerConfig {
    * @return URL of journal
    */
   public String getJournalUrl(String journalKey) {
-    JournalConfig jc = journals.get(journalKey);
-    String url = "";
-    if (jc != null) {
-      url = jc.getUrl();
-    }
-    return url;
+    return getJournalUrl(journalKey, journals);
   }
 
   /**
@@ -903,13 +883,14 @@ public class AmbraFreemarkerConfig {
    * @return URL of journal
    */
   public String getJournalUrlFromIssn(String journalIssn) {
-    JournalConfig jc = journalsByIssn.get(journalIssn);
-    String url = "";
-    if (jc != null) {
-      url = jc.getUrl();
-    }
-    return url;
+    return getJournalUrl(journalIssn, journalsByIssn);
   }
+
+  private static String getJournalUrl(String key, Map<String, JournalConfig> journalMap) {
+    JournalConfig jc = journalMap.get(key);
+    return (jc == null) ? "" : Strings.nullToEmpty(jc.getUrl());
+  }
+
 
   /**
    * Utility procedure that takes out journal-specific beggining of template name. For example templateName
@@ -947,15 +928,6 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * Set the maximum number of templates to store in the soft cache
-   *
-   * @param cache_storage_soft cache_storage_soft
-   */
-  public void setCache_storage_soft(int cache_storage_soft) {
-    this.cache_storage_soft = cache_storage_soft;
-  }
-
-  /**
    * Get the maximum number of templates to store in the strong cache
    *
    * @return cache_storage_strong
@@ -964,24 +936,124 @@ public class AmbraFreemarkerConfig {
     return cache_storage_strong;
   }
 
-  /**
-   * Get the maximum number of templates to store in the strong cache
-   *
-   * @param cache_storage_strong cache_storage_strong
+
+  /*
+   * NOT quite the same as an ImmutableListMultimap, because this can make the distinction between a key being mapped
+   * to an empty list versus being entirely absent. (Calling ListMultimap.get on an absent key returns an empty list.)
    */
-  public void setCache_storage_strong(int cache_storage_strong) {
-    this.cache_storage_strong = cache_storage_strong;
+  private static <K, V> ImmutableMap<K, ImmutableList<V>> immutableListValues(Map<? extends K, ? extends V[]> map) {
+    if (map == null) {
+      return null;
+    }
+    ImmutableMap.Builder<K, ImmutableList<V>> builder = ImmutableMap.builder();
+    for (Entry<? extends K, ? extends V[]> entry : map.entrySet()) {
+      builder.put(entry.getKey(), ImmutableList.copyOf(entry.getValue()));
+    }
+    return builder.build();
   }
 
   private static class JournalConfig {
-    private Map<String, String[]> cssFiles;
-    private Map<String, String[]> javaScriptFiles;
-    private Map<String, String> titles;
+
+    private final ImmutableMap<String, ImmutableList<String>> cssFiles;
+    private final ImmutableMap<String, ImmutableList<String>> javaScriptFiles;
+    private final ImmutableMap<String, String> titles;
+
+    private final ImmutableList<String> defaultCss;
+    private final ImmutableList<String> defaultJavaScript;
+
+    private final String defaultTitle;
+    private final String metaKeywords;
+    private final String metaDescription;
+    private final String articleTitlePrefix;
+    private final String displayName;
+    private final String hashTag;
+    private final String url;
+    private final String issn;
+
+    private JournalConfig(JournalConfigBuilder builder) {
+      super();
+      this.cssFiles = immutableListValues(builder.cssFiles);
+      this.javaScriptFiles = immutableListValues(builder.javaScriptFiles);
+      this.titles = (builder.titles == null) ? null
+          : ImmutableMap.copyOf(builder.titles);
+      this.defaultCss = (builder.defaultCss == null) ? null
+          : ImmutableList.copyOf(builder.defaultCss);
+      this.defaultJavaScript = (builder.defaultJavaScript == null) ? null
+          : ImmutableList.copyOf(builder.defaultJavaScript);
+      this.defaultTitle = builder.defaultTitle;
+      this.metaKeywords = builder.metaKeywords;
+      this.metaDescription = builder.metaDescription;
+      this.articleTitlePrefix = builder.articleTitlePrefix;
+      this.displayName = builder.displayName;
+      this.hashTag = builder.hashTag;
+      this.url = builder.url;
+      this.issn = builder.issn;
+    }
+
+    public ImmutableMap<String, ImmutableList<String>> getCssFiles() {
+      return cssFiles;
+    }
+
+    public ImmutableMap<String, ImmutableList<String>> getJavaScriptFiles() {
+      return javaScriptFiles;
+    }
+
+    public ImmutableMap<String, String> getTitles() {
+      return titles;
+    }
+
+    public ImmutableList<String> getDefaultCss() {
+      return defaultCss;
+    }
+
+    public ImmutableList<String> getDefaultJavaScript() {
+      return defaultJavaScript;
+    }
+
+    public String getDefaultTitle() {
+      return defaultTitle;
+    }
+
+    public String getMetaKeywords() {
+      return metaKeywords;
+    }
+
+    public String getMetaDescription() {
+      return metaDescription;
+    }
+
+    public String getArticleTitlePrefix() {
+      return articleTitlePrefix;
+    }
+
+    public String getDisplayName() {
+      return displayName;
+    }
+
+    public String getHashTag() {
+      return hashTag;
+    }
+
+    public String getUrl() {
+      return url;
+    }
+
+    public String getIssn() {
+      return issn;
+    }
+
+  }
+
+  private static class JournalConfigBuilder {
+
+    private Map<String, String[]> cssFiles = Maps.newLinkedHashMap();
+    private Map<String, String[]> javaScriptFiles = Maps.newLinkedHashMap();
+    private Map<String, String> titles = Maps.newLinkedHashMap();
 
     private String[] defaultCss;
     private String[] defaultJavaScript;
-    private String defaultTitle;
 
+    private String defaultTitle;
     private String metaKeywords;
     private String metaDescription;
     private String articleTitlePrefix;
@@ -990,202 +1062,113 @@ public class AmbraFreemarkerConfig {
     private String url;
     private String issn;
 
-    public JournalConfig() {
-      cssFiles = new HashMap<String, String[]>();
-      javaScriptFiles = new HashMap<String, String[]>();
-      titles = new HashMap<String, String>();
-    }
-
-    /**
-     * @return Returns the cssFiles.
-     */
-    public Map<String, String[]> getCssFiles() {
-      return cssFiles;
-    }
-
-    /**
-     * @param cssFiles The cssFiles to set.
-     */
-    public void setCssFiles(Map<String, String[]> cssFiles) {
-      this.cssFiles = cssFiles;
-    }
-
-    /**
-     * @return Returns the defaultCss.
-     */
-    public String[] getDefaultCss() {
-      return defaultCss;
-    }
-
-    /**
-     * @param defaultCss The defaultCss to set.
-     */
-    public void setDefaultCss(String[] defaultCss) {
-      this.defaultCss = defaultCss;
-    }
-
-    /**
-     * @return Returns the defaultJavaScript.
-     */
-    public String[] getDefaultJavaScript() {
-      return defaultJavaScript;
-    }
-
-    /**
-     * @param defaultJavaScript The defaultJavaScript to set.
-     */
-    public void setDefaultJavaScript(String[] defaultJavaScript) {
-      this.defaultJavaScript = defaultJavaScript;
-    }
-
-    /**
-     * @return Returns the defaultTitle.
-     */
-    public String getDefaultTitle() {
-      return defaultTitle;
-    }
-
-    /**
-     * @param defaultTitle The defaultTitle to set.
-     */
-    public void setDefaultTitle(String defaultTitle) {
-      this.defaultTitle = defaultTitle;
-    }
-
-    /**
-     * @return Returns the javaScriptFiles.
-     */
-    public Map<String, String[]> getJavaScriptFiles() {
-      return javaScriptFiles;
-    }
-
-    /**
-     * @param javaScriptFiles The javaScriptFiles to set.
-     */
-    public void setJavaScriptFiles(Map<String, String[]> javaScriptFiles) {
-      this.javaScriptFiles = javaScriptFiles;
-    }
-
-    /**
-     * @return Returns the titles.
-     */
-    public Map<String, String> getTitles() {
-      return titles;
-    }
-
-    /**
-     * @param titles The titles to set.
-     */
-    public void setTitles(Map<String, String> titles) {
-      this.titles = titles;
-    }
-
-    /**
-     * @return Returns the articleTitlePrefix.
-     */
     public String getArticleTitlePrefix() {
       return articleTitlePrefix;
     }
 
-    /**
-     * @param articleTitlePrefix The articleTitlePrefix to set.
-     */
-    public void setArticleTitlePrefix(String articleTitlePrefix) {
-      this.articleTitlePrefix = articleTitlePrefix;
+    public Map<String, String[]> getCssFiles() {
+      return cssFiles;
     }
 
-    /**
-     * @return Returns the metaDescription.
-     */
-    public String getMetaDescription() {
-      return metaDescription;
+    public String[] getDefaultCss() {
+      return defaultCss;
     }
 
-    /**
-     * @param metaDescription The metaDescription to set.
-     */
-    public void setMetaDescription(String metaDescription) {
-      this.metaDescription = metaDescription;
+    public String[] getDefaultJavaScript() {
+      return defaultJavaScript;
     }
 
-    /**
-     * @return Returns the metaKeywords.
-     */
-    public String getMetaKeywords() {
-      return metaKeywords;
+    public String getDefaultTitle() {
+      return defaultTitle;
     }
 
-    /**
-     * @param metaKeywords The metaKeywords to set.
-     */
-    public void setMetaKeywords(String metaKeywords) {
-      this.metaKeywords = metaKeywords;
-    }
-
-    /**
-     * @return Returns the displayName.
-     */
     public String getDisplayName() {
       return displayName;
     }
 
-    /**
-     * @param displayName The displayName to set.
-     */
-    public void setDisplayName(String displayName) {
-      this.displayName = displayName;
-    }
-
-    /**
-     * @return Returns the url.
-     */
-    public String getUrl() {
-      return url;
-    }
-
-    /**
-     * @param url The url to set.
-     */
-    public void setUrl(String url) {
-      this.url = url;
-    }
-
-    /**
-     * Get the issn which is the unique identifier for this journal
-     *
-     * @return The issn which is the unique identifier for this journal
-     */
-    public String getIssn() {
-      return issn;
-    }
-
-    /**
-     * Set the issn which is the unique identifier for this journal
-     *
-     * @param issn The issn which is the unique identifier for this journal
-     */
-    public void setIssn(String issn) {
-      this.issn = issn;
-    }
-
-    /**
-     * Get the hashtag to use for social media
-     *
-     * @return the hashtag to use for social media
-     */
     public String getHashTag() {
       return hashTag;
     }
 
-    /**
-     * Set the hashtag to use for social media
-     *
-     * @param hashTag the hashtag to use for social media
-     */
-    public void setHashTag(String hashTag) {
+    public String getIssn() {
+      return issn;
+    }
+
+    public Map<String, String[]> getJavaScriptFiles() {
+      return javaScriptFiles;
+    }
+
+    public String getMetaDescription() {
+      return metaDescription;
+    }
+
+    public String getMetaKeywords() {
+      return metaKeywords;
+    }
+
+    public Map<String, String> getTitles() {
+      return titles;
+    }
+
+    public String getUrl() {
+      return url;
+    }
+
+    public JournalConfigBuilder setDefaultCss(String[] defaultCss) {
+      this.defaultCss = defaultCss;
+      return this;
+    }
+
+    public JournalConfigBuilder setDefaultJavaScript(String[] defaultJavaScript) {
+      this.defaultJavaScript = defaultJavaScript;
+      return this;
+    }
+
+    public JournalConfigBuilder setDefaultTitle(String defaultTitle) {
+      this.defaultTitle = defaultTitle;
+      return this;
+    }
+
+    public JournalConfigBuilder setMetaKeywords(String metaKeywords) {
+      this.metaKeywords = metaKeywords;
+      return this;
+    }
+
+    public JournalConfigBuilder setMetaDescription(String metaDescription) {
+      this.metaDescription = metaDescription;
+      return this;
+    }
+
+    public JournalConfigBuilder setArticleTitlePrefix(String articleTitlePrefix) {
+      this.articleTitlePrefix = articleTitlePrefix;
+      return this;
+    }
+
+    public JournalConfigBuilder setDisplayName(String displayName) {
+      this.displayName = displayName;
+      return this;
+    }
+
+    public JournalConfigBuilder setHashTag(String hashTag) {
       this.hashTag = hashTag;
+      return this;
+    }
+
+    public JournalConfigBuilder setUrl(String url) {
+      this.url = url;
+      return this;
+    }
+
+    public JournalConfigBuilder setIssn(String issn) {
+      this.issn = issn;
+      return this;
+    }
+
+    public JournalConfig build() {
+      return new JournalConfig(this);
     }
   }
+
 
   /**
    * @return the orgName
@@ -1195,24 +1178,10 @@ public class AmbraFreemarkerConfig {
   }
 
   /**
-   * @param orgName the orgName to set
-   */
-  public void setOrgName(String orgName) {
-    this.orgName = orgName;
-  }
-
-  /**
    * @return the feedbackEmail
    */
   public String getFeedbackEmail() {
     return feedbackEmail;
-  }
-
-  /**
-   * @param feedbackEmail the feedbackEmail to set
-   */
-  public void setFeedbackEmail(String feedbackEmail) {
-    this.feedbackEmail = feedbackEmail;
   }
 
   /**

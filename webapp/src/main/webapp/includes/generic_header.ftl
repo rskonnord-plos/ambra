@@ -3,9 +3,9 @@
 <html lang="en">
 <head>
 <#include "/includes/global_variables.ftl">
-  <title>${pgTitle}</title>
+  <title>PLOS Journals : A Peer-Reviewed, Open-Access Journal</title>
 
-  <#include "/includes/css.ftl">
+<#include "/includes/css.ftl">
 
   <!--chartbeat -->
   <script type="text/javascript">var _sf_startpt = (new Date()).getTime()</script>
@@ -13,11 +13,8 @@
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9"/>
-  <meta name="description" content="${freemarker_config.getMetaDescription(journalContext)}"/>
-  <meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}"/>
   <meta name="almHost" content="${freemarker_config.get("almHost")}"/>
   <meta name="solrHost" content="${freemarker_config.get("solrHost")}"/>
-  <meta name="solrApiKey" content="${freemarker_config.get("solrApiKey")}" />
   <meta name="pubGetHost" content="${freemarker_config.pubGetURL}"/>
 
   <link rel="shortcut icon" href="${freemarker_config.context}/images/favicon.ico" type="image/x-icon"/>
@@ -31,7 +28,7 @@
 
       <div id="user" class="nav">
         <ul>
-          <li><a href="/">Ambra</a></li>
+          <li><a href="http://www.plos.org">plos.org</a></li>
         <#if Session["AMBRA_USER"]?exists>
           <@s.url id="editProfileURL" includeParams="none" namespace="/user/secure" action="editProfile" tabId="preferences"/>
           <li><a href="${editProfileURL}" title="Edit your account profile and alert settings">preferences</a></li>
@@ -48,7 +45,7 @@
       </div>
 
       <div class="logo-generic">
-        <a href="${homeURL}"><img src="/images/ambra.png" alt="${freemarker_config.getDisplayName(journalContext)}"></a>
+        <a href="http://www.plos.org"><img src="/images/plos_logo.png" alt="plos.org"></a>
       </div>
 
     </div>

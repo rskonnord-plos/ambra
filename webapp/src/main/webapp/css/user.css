@@ -1,5 +1,5 @@
 /*basic styles for user page*/
-h2.displayName { font: 30px/1 'FS Albert Web Regular', Verdana, sans-serif; font-size-adjust: 0.48; }
+h2.displayName { font: 30px/1 Georgia, serif; font-size-adjust: 0.48; }
 
 .note { color: #999; font-style:italic; font-size:12px; line-height:15px; margin-top:2px; }
 
@@ -31,9 +31,9 @@ div#user-tabs ul {
   border:none;
 }
 .ambra-form fieldset legend {
-  font-family: Verdana, Arial, Helvetica, san-serif, serif;
+  font-family: Verdana, Georgia, serif, Helvetica, san-serif, serif;
   font-size: 1.6em;
-  color: #333;
+  color: #444;
   background-color: #FFFFFF;
   padding:0;
   margin: 0 0 20px 0;
@@ -66,7 +66,7 @@ div#user-tabs ul {
   float: none;
 }
 /************* general comambrant styles *****************/
-.ambra-form ol li label { display: block; font-size:12px; color:#333; margin-bottom:2px; line-height:normal; }
+.ambra-form ol li label { display: block; font-size:12px; color:#444; margin-bottom:2px; line-height:normal; }
 .ambra-form ol li input { width: 206px; border:1px solid #999; padding: 2px; }
 .ambra-form ol li input.radio { border-width: 0; }
 .ambra-form ol li .long-input { width: 430px; }
