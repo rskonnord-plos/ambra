@@ -14,7 +14,7 @@
 /********** home.css **********/
 
 #pagebdy-wrap {
-  background: #efefef;
+  /*background: #efefef;*/
 }
 
 #pagebdy {
@@ -53,11 +53,11 @@
 }
 
 #headlines ul.articles a {
-  color: #333;
+  color: #444;
 }
 
 #headlines ul.articles a:hover {
-  color: #3c63af;
+  color: #b04e0f;
   text-decoration: none;
 }
 
@@ -78,7 +78,7 @@
 }
 
 #headlines ul.articles li.more a {
-  color: #3c63af;
+  color: #b04e0f;
   text-decoration: underline;
 }
 
@@ -97,7 +97,7 @@
 }
 
 .promoted .type {
-  font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif !important;
+  font: 20px/1 Georgia, serif !important;
   font-size-adjust: 0.48;
   margin-bottom: 10px;
 }
@@ -118,16 +118,16 @@
 .promoted h3 {
   font-size: 16px;
   line-height: 1.125;
-  color: #333;
+  color: #444;
   margin-bottom: 10px;
 }
 
 .promoted h3 a {
-  color: #333;
+  color: #444;
 }
 
 .promoted h3 a:hover {
-  color: #3c63af;
+  color: #b04e0f;
   text-decoration: none;
 }
 
@@ -162,7 +162,7 @@
 #issue h3 {
   color: #fff;
   text-align: center;
-  font: 20px/1 'FS Albert Web Regular', Verdana, sans-serif;
+  font: 20px/1 Georgia, serif;
   font-size-adjust: 0.48;
   margin: 0 17px 17px;
 }
@@ -216,7 +216,7 @@
   border-radius: 4px;
   color: #fff;
   margin-bottom: 30px;
-  font: 20px/1.1 'FS Albert Web Regular', Verdana, sans-serif;
+  font: 20px/1.1 Georgia, serif;
   font-size-adjust: 0.48;
   padding: 18px 15px 25px;
 }
@@ -230,7 +230,7 @@
 }
 
 .publish a {
-  color: #8aa1cf;
+  color: #b04e0f;
 }
 
 .publish .body {
@@ -265,7 +265,7 @@
 }
 
 #blog h3 {
-  font: 20px/1.1 'FS Albert Web Regular', Verdana, sans-serif;
+  font: 20px/1.1 Georgia, serif;
   font-size-adjust: 0.48;
   text-align: center;
   margin-bottom: 25;
@@ -277,11 +277,11 @@
 }
 
 #blog h4 a {
-  color: #333;
+  color: #444;
 }
 
 #blog h4 a:hover {
-  color: #3c63af;
+  color: #b04e0f;
   text-decoration: none;
 }
 
@@ -304,7 +304,7 @@
 }
 
 #homepageTwitterStream .twtr-widget h4 {
-  font: 30px/1 'FS Albert Web Regular', Verdana, sans-serif !important;
+  font: 30px/1 Georgia, serif !important;
   font-size-adjust: 0.48;
   background: url(../images/icon.twtr.28.png) no-repeat 0 50% !important;
   padding-left: 37px !important;
@@ -357,7 +357,7 @@
 }
 
 .twtr-ft span a {
-  background: #f8af2d;
+  background: #4a0100;
   font-size: 15px;
   font-weight: bold;
   line-height: 35px;
@@ -367,7 +367,7 @@
 }
 
 .twtr-ft span a:hover {
-  background: #3c63af;
+  background: #b04e0f;
   color: #fff !important;
   text-decoration: none !important;
 }
@@ -387,7 +387,7 @@
 
 #search-home p.intro {
   text-align: center;
-  font: 20px/24px 'FS Albert Web Regular', Verdana, sans-serif;
+  font: 20px/24px Georgia, serif;
   font-size-adjust: 0.48;
 }
 
@@ -417,6 +417,8 @@
   position: absolute;
   top: 2px;
   right: 0;
+  font-family: Arial, sans-serif;
+  text-transform: uppercase;
 }
 
 .explore {
@@ -425,7 +427,7 @@
 }
 
 .explore h2 {
-  font: 30px 'FS Albert Web Regular', Verdana, sans-serif;
+  font: 30px Georgia, serif;
   font-size-adjust: 0.48;
   margin-bottom: 25px;
 }
