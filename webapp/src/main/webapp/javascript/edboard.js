@@ -185,7 +185,10 @@ $.fn.edBoard = function () {
     if(numOfEditors>0){
       editorsDiv.append("Displaying  "+ parseInt(startIndex+1) +"-" + endIndex +
         " of " + parseInt(numOfEditors) + " Editors.");
+    } else {
+      editorsDiv.append("No Results found for query.");
     }
+
     editorsDiv.append("</br>") ;
 
     var singlePage = $("<div></div>");
@@ -471,12 +474,13 @@ $.fn.edBoard = function () {
 
           // once the subject facet and name facet queries complete,
           // invoke the response handler with the list of options.
-          var success_handler = function(json_subjects, json_names) {
+          var success_handler = function(json_terms, json_names) {
             var options = [];
 
             // areas and names total is at most 20
-            var areas_count = json_subjects ? json_subjects.facet_counts.facet_fields.ae_subject_facet.length / 2 : 0;
+            var areas_count = json_terms ? json_terms.terms.ae_subject_facet.length / 2 : 0;
             var names_count =  json_names ? json_names.response.docs.length : 0;
+
             if (areas_count >= 10 && names_count >= 10) {
               areas_count = 10;
               names_count = 10;
@@ -489,8 +493,8 @@ $.fn.edBoard = function () {
             }
 
             //push the subjects
-            if (json_subjects && json_subjects.facet_counts.facet_fields.ae_subject_facet) {
-              var subjects = json_subjects.facet_counts.facet_fields.ae_subject_facet;
+            if (json_terms && json_terms.terms.ae_subject_facet) {
+              var subjects = json_terms.terms.ae_subject_facet;
 
               var subject_title = false;
               var areas_added = 0;
@@ -503,10 +507,9 @@ $.fn.edBoard = function () {
                 if($.inArray(subject, terms) == -1 &&
                   //Limit length to areas_count
                   areas_added < areas_count &&
-                  //Skip every other element, and only list facets with count > 0
-                  index % 2 == 0 && subjects[index + 1] > 0 &&
-                  //Only push terms that have a matching sub string
-                  subject.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                  //Skip every other element
+                  index % 2 == 0 &&
+                  subject.trim().length > 0) {
 
                   if (!subject_title) {
                     subject_title = true;
@@ -571,33 +574,40 @@ $.fn.edBoard = function () {
           $.each(terms, function(index, term) {
             var item = $.trim(term);
             if(item.length > 0) {
-              entered_query.push("(ae_subject_autocomplete:\"" + item + "\" OR ae_name:\"" + item + "\")");
+              entered_query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
             }
           });
 
           query_withNewTerm = entered_query.slice(0);
-          query_withNewTerm.push("(ae_subject_autocomplete:" + searchTerm + " OR ae_name:" + searchTerm + ")");
+          query_withNewTerm.push("(ae_subject:" + searchTerm + " OR ae_name:" + searchTerm + ")");
 
           var data = [
             {name: "wt", value: "json"},
-            {name: "q", value: query_withNewTerm.join(" AND ")},
-            {name: "fq", value: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE"},
-            {name: "facet", value: true},
-            {name: "facet.field", value: "ae_subject_facet"},
-            {name: "facet.sort", value: "index"},
-            {name: "facet.mincount", value: 0},
-            {name: "facet.limit", value: 500}
+            {name: "terms.fl", value: "ae_subject_facet"},
+            {name: "terms.limit", value: 10},
+            {name: "terms.sort", value: "index"},
+            {name: "terms.regex.flag", value: "case_insensitive"},
+            {name: "facet", value: false}
           ];
 
-          console.log("First Query: " + query_withNewTerm.join(" AND "));
+          if(searchTerm.trim().length > 0) {
+            data.push({name: "terms.regex", value: ".*" + searchTerm + ".*"});
+          } else {
+            //Find all terms that are not empty
+            data.push({name: "terms.regex", value: "^(?!\\s*$).+"});
+          }
+
+          console.log("First Query: terms.regex=" + searchTerm);
 
           $.jsonp({
-            url: solrHost,
+            //TODO: Refactor this so select is not part of host specification
+            //Change host from select to terms
+            url: solrHost.replace("select", "terms"),
             context: document.body,
             timeout: 10000,
             data: data,
             callbackParameter: "json.wrf",
-            success: function(json_subjects, textStatus, xOptions) {
+            success: function(json_terms, textStatus, xOptions) {
               // for items A, B, C the name query looks like
               // q=(A AND B AND (C OR C*))
 
@@ -635,11 +645,11 @@ $.fn.edBoard = function () {
                 data: data,
                 callbackParameter: "json.wrf",
                 success: function(json_names, textStatus, xOptions) {
-                  success_handler(json_subjects, json_names);
+                  success_handler(json_terms, json_names);
                 },
                 error: function(xOptions, error) {
                   console.log(error);
-                  success_handler(json_subjects);
+                  success_handler(json_terms);
                 }
               });
             },
