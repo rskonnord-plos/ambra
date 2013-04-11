@@ -39,7 +39,7 @@
  <p>Released April 16th, 2013</p>
  <h3>Features Implemented in Ambra 2.5.9</h3>
  <ul>
-     <li>Relavtive metric front end support for Metrics tab</li>
+     <li>Relative metric front end support for Metrics tab</li>
      <li>Article page client side tabs navigation instead of full page refresh tabs navigation</li>
      <li>Bug fixes</li>
  </ul>
