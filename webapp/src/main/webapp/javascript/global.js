@@ -1544,7 +1544,7 @@ if ($(document).pjax) {
         }
         add_widget_css();
       }
-      $.getScript("/javascript/figshare/plos_widget.js?v=8");
+      $.getScript("http://wl.figshare.com/static/plos_widget.js?v=10");
       $.getScript("http://wl.figshare.com/static/jmvc/main_app/resources/jwplayer/jwplayer.js");
       figshare_widget_load = true;
     }
