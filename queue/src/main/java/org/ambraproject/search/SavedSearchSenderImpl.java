@@ -110,10 +110,12 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     if(sendMode != null) {
       if(sendMode.toUpperCase().equals(PRODUCTION_MODE)) {
         mailer.mail(toAddress, fromAddress, subject, context, content);
+        log.debug("Mail sent, mode: {}, address: {}", new Object[] { PRODUCTION_MODE, toAddress});
       }
 
       if(sendMode.toUpperCase().equals(QA_MODE)) {
         mailer.mail(sendModeQAEMail, fromAddress, "(" + toAddress + ")" + subject, context, content);
+        log.debug("Mail sent, mode: {}, address: {}", new Object[] { QA_MODE, sendModeQAEMail});
       }
 
       //If sendMode does not match "production" or "QA", do nothing
