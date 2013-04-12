@@ -729,13 +729,11 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
         subjectQuery.append("\"").append(subject).append("\"").append(" AND ");
       }
       // remove the last " AND "
-      query.setQuery("subject_level_1:(" +  subjectQuery.substring(0, subjectQuery.length() - 5) + ")");
+      query.setQuery("subject:(" +  subjectQuery.substring(0, subjectQuery.length() - 5) + ")");
     }
 
-    // we use subject_level_1 field instead of subject_facet field because
-    // we are only interested in the top level subjects
     query.setFacet(true);
-    query.addFacetField("subject_level_1");
+    query.addFacetField("subject_facet");
     query.setFacetMinCount(1);
     query.setFacetSort("index");
 
