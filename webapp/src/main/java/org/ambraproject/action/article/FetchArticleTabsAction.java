@@ -34,7 +34,6 @@ import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
-import org.ambraproject.views.LinkbackView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.RelatedArticleInfo;
@@ -67,7 +66,7 @@ import static org.ambraproject.service.annotation.AnnotationService.AnnotationOr
  * <p/>
  * Gets rewritten to:
  * <p/>
- * http://localhost/fetchRelatedArticle.action&amp;articleURI=info%3Adoi%2F10.1371%2Fjournal.pone.0299
+ * http://localhost/fetchArticleRelated.action&amp;articleURI=info%3Adoi%2F10.1371%2Fjournal.pone.0299
  * <p/>
  * Struts picks this up and translates it call the FetchArticleRelated method ex: &lt;action name="fetchRelatedArticle"
  * class="org.ambraproject.article.action.FetchArticleTabsAction" method="FetchArticleRelated"&gt;
@@ -92,89 +91,50 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private List<String> correspondingAuthor;
   private List<String> authorContributions;
   private List<String> competingInterest;
-  private int pageCount = 0;
 
-  private int totalNumAnnotations = 0;
+  private int pageCount = 0;
   private int numCorrections = 0;
   private int numComments = 0;
-  private boolean isRetracted = false;
+
   private List<AnnotationView> formalCorrections = new ArrayList<AnnotationView>();
   private List<AnnotationView> minorCorrections = new ArrayList<AnnotationView>();
   private List<AnnotationView> retractions = new ArrayList<AnnotationView>();
 
   //commentary holds the comments that are being listed
   private AnnotationView[] commentary = new AnnotationView[0];
-  private boolean isDisplayingCorrections = false;
-
   private boolean isResearchArticle;
-  private boolean hasRated;
   private String publishedJournal = "";
-
   private ArticleInfo articleInfoX;
   private Document doc;
   private ArticleType articleType;
   private List<List<String>> articleIssues;
-  private List<LinkbackView> trackbackList;
   private int trackbackCount;
   private List<AuthorView> authors;
   private List<CitationReference> references;
   private String journalAbbrev;
   private String relatedAuthorSearchQuery;
+  private Set<JournalView> journalList;
+  private ArticleAssetWrapper[] articleAssetWrapper;
+  private AmbraFreemarkerConfig ambraFreemarkerConfig;
 
   private FetchArticleService fetchArticleService;
   private AnnotationService annotationService;
   private ArticleService articleService;
   private TrackbackService trackbackService;
-  private AmbraFreemarkerConfig ambraFreemarkerConfig;
   private UserService userService;
-  private Set<JournalView> journalList;
-  private ArticleAssetWrapper[] articleAssetWrapper;
   private ArticleAssetService articleAssetService;
 
   /**
-   * Fetch common data the article HTML text
+   * Fetch the data for Article Tab
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticle() throws Exception {
     try {
-
       setCommonData();
-      //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
-      AnnotationView[] annotationViews = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION,
-              AnnotationType.COMMENT),
-          AnnotationOrder.NEWEST_TO_OLDEST
-      );
-
-      List<AnnotationView> commentList = new LinkedList<AnnotationView>();
-      for (AnnotationView annotationView : annotationViews) {
-        AnnotationType annotationType = annotationView.getType();
-        switch (annotationType) {
-          case FORMAL_CORRECTION:
-            formalCorrections.add(annotationView);
-            break;
-          case MINOR_CORRECTION:
-            minorCorrections.add(annotationView);
-            break;
-          case RETRACTION:
-            retractions.add(annotationView);
-            break;
-          case COMMENT:
-            commentList.add(annotationView);
-            break;
-          case REPLY:
-            break;
-          default:
-            throw new RuntimeException("Unhandled enum value: " + annotationType);
-        }
-      }
-      commentary = commentList.toArray(new AnnotationView[commentList.size()]);
-      numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
-
+      articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
+      populateFromAnnotations();
       fetchExpressionOfConcern();
-
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
@@ -182,16 +142,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       return ARTICLE_NOT_FOUND;
     }
 
-    //If the user is logged in, record this as an article view
-    UserProfile user = getCurrentUser();
-    if (user != null) {
-      try {
-        userService.recordArticleView(user.getID(), articleInfoX.getId(), ArticleView.Type.ARTICLE_VIEW);
-      } catch (Exception e) {
-        log.error("Error recording an article view for user: {} and article: {}", user.getID(), articleInfoX.getId());
-        log.error(e.getMessage(), e);
-      }
-    }
+    recordArticleView();
     return SUCCESS;
   }
 
@@ -201,7 +152,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   private String fetchExpressionOfConcern() {
 
-    if(articleInfoX.getRelatedArticles() != null ) {
+    if(articleInfoX.getRelatedArticles() != null) {
 
       for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
 
@@ -215,13 +166,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
             expressionOfConcern = this.fetchArticleService.getEocBody(document);
 
           }
-        } catch (NoSuchArticleIdException e) {
-          messages.add("No article found for id: " + relatedArticleInfo.getDoi());
-          log.info("Could not find article: " + relatedArticleInfo.getDoi(), e);
-          return ERROR;
         } catch (Exception e) {
-          messages.add(e.getMessage());
-          log.error("Error retrieving article: " + relatedArticleInfo.getDoi(), e);
+          populateErrorMessages(e);
           return ERROR;
         }
       }
@@ -231,7 +177,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * Fetch common data and annotations
+   * Fetch data for Comments Tab
    *
    * @return "success" on success, "error" on error
    */
@@ -239,155 +185,68 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
 
-      //let the view layer know whether we are displaying corrections or not, so we can have different links
-      isDisplayingCorrections = false;
-
-      commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT),
-          AnnotationOrder.MOST_RECENT_REPLY);
-
-      //have to count the corrections so we know whether to show a 'Show All corrections' link
       numCorrections = annotationService.countAnnotations(articleInfoX.getId(),
         EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
-      //have to indicate if there's a retraction so we know whether to show a 'Show Retraction' link
-      isRetracted = annotationService.countAnnotations(articleInfoX.getId(), EnumSet.of(AnnotationType.RETRACTION)) > 0;
 
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
-    } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
-      return ERROR;
-    }
-    return SUCCESS;
-  }
-
-  /**
-   * Fetch common data and article corrections
-   *
-   * @return "success" on succes, "error" on error
-   */
-  public String fetchArticleCorrections() {
-    try {
-      setCommonData();
-      //let the view layer know whether we are displaying corrections or not, so we can have different links
-      isDisplayingCorrections = true;
-      commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
-          AnnotationOrder.MOST_RECENT_REPLY
-      );
-
-
-      //have to count comments so we know whether to show a 'View All Comments' link
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
           EnumSet.of(AnnotationType.COMMENT));
 
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
+      populateErrorMessages(e);
       return ERROR;
     }
     return SUCCESS;
   }
 
   /**
-   * Fetches common data for the authors tab
+   * Fetches data for Authors Tab
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticleAuthors() {
     try {
-      setCommonData();
-
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
+      setCommonData();      
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
-      return ERROR;
+      populateErrorMessages(e);
     }
     return SUCCESS;
   }
 
   /**
-   * Fetches common data and the trackback list.
+   * Fetches data for Metrics Tab
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticleMetrics() {
     try {
       setCommonData();
-
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
-
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
+      //count all the comments
+      numComments = annotationService.countAnnotations(articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT));
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
+      populateErrorMessages(e);
       return ERROR;
     }
     return SUCCESS;
   }
 
   /**
-   * Fetches common data and the trackback list.
+   * Fetches data for Related Content Tab
    *
-   * @return "success" on succes, "error" on error
+   * @return "success" on success, "error" on error
    */
   public String fetchArticleRelated() {
     try {
-      setCommonData();
-
-      trackbackList = trackbackService.getTrackbacksForArticle(articleURI);
-
-      // get the first two and the last two authors
-      List<String> authors = articleInfoX.getAuthors();
-      int authorSize = authors.size();
-      relatedAuthorSearchQuery = "";
-      if (authorSize <= RELATED_AUTHOR_SEARCH_QUERY_SIZE) {
-        for (String author : authors) {
-          relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + author + "\" OR ";
-        }
-        // remove the last ", OR "
-        if (relatedAuthorSearchQuery.length() > 0) {
-          relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
-        }
-
-      } else {
-        // get first 2
-        relatedAuthorSearchQuery = "\"" + authors.get(0) + "\" OR ";
-        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(1) + "\" OR ";
-        // get last 2
-        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 2) + "\" OR ";
-        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 1) + "\"";
-      }
-
-    } catch (NoSuchArticleIdException e) {
-      messages.add("No article found for id: " + articleURI);
-      log.info("Could not find article: " + articleURI, e);
-      return ERROR;
+      setCommonData();      
+      populateRelatedAuthorSearchQuery();
     } catch (Exception e) {
-      messages.add(e.getMessage());
-      log.error("Error retrieving article: " + articleURI, e);
-      return ERROR;
+     populateErrorMessages(e);
     }
     return SUCCESS;
   }
 
-  /**
+  /** This method gets called when user click on crossref tile inside metrics tab
    * Fetches common data and nothing else
    *
    * @return "success" on succes, "error" on error
@@ -417,21 +276,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * @throws NoSuchArticleIdException when the article can not be found
    */
   private void setCommonData() throws ApplicationException, NoSuchArticleIdException {
-    try {
-      UriUtil.validateUri(articleURI, "articleURI=<" + articleURI + ">");
-    } catch (Exception e) {
-      throw new NoSuchArticleIdException(articleURI, e.getMessage(), e);
-    }
-
+    validateArticleURI();
     articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
     journalList = articleInfoX.getJournals();
     isResearchArticle = articleService.isResearchArticle(articleInfoX);
     articleIssues = articleService.getArticleIssues(articleURI);
-    //count all the comments and corrections
-    totalNumAnnotations = annotationService.countAnnotations(articleInfoX.getId(),
-        EnumSet.of(AnnotationType.COMMENT, AnnotationType.MINOR_CORRECTION,
-            AnnotationType.FORMAL_CORRECTION, AnnotationType.RETRACTION));
-
     articleType = articleInfoX.getKnownArticleType();
 
     String pages = this.articleInfoX.getPages();
@@ -457,9 +306,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
     references = this.fetchArticleService.getReferences(doc);
     journalAbbrev = this.fetchArticleService.getJournalAbbreviation(doc);
-
-    articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
-
+    commentary = this.annotationService.listAnnotations(articleInfoX.getId(),
+        EnumSet.of(AnnotationType.COMMENT), 
+        AnnotationOrder.MOST_RECENT_REPLY);
     /**
      An article can be cross published, but we want the source journal.
      If in this collection an article eIssn matches the article's eIssn keep that value.
@@ -474,10 +323,231 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   @Override
   public boolean getHasAboutAuthorContent() {
-    return AuthorView.anyHasAffiliation(authors)
+    return authors != null ? AuthorView.anyHasAffiliation(authors)
         || CollectionUtils.isNotEmpty(correspondingAuthor)
         || CollectionUtils.isNotEmpty(authorContributions)
-        || CollectionUtils.isNotEmpty(competingInterest);
+        || CollectionUtils.isNotEmpty(competingInterest) : false;
+  }
+
+  /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
+   * Fetch data for Article tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleContent() throws Exception {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
+      commentary = annotationService.listAnnotations(
+          articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationOrder.MOST_RECENT_REPLY);
+      populateFromAnnotations();
+      fetchExpressionOfConcern();
+      transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return (e instanceof  NoSuchArticleIdException ? ARTICLE_NOT_FOUND : ERROR);
+    }
+    //If the user is logged in, record this as an article view
+    recordArticleView();
+    return SUCCESS;
+  }
+
+  /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
+   * Fetch data for Comments Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleCommentsContent() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      commentary = annotationService.listAnnotations(
+          articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationOrder.MOST_RECENT_REPLY);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
+   * Fetches data for Authors Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleAuthorsContent() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      doc = this.fetchArticleService.getArticleDocument(articleInfoX);
+      authors = this.fetchArticleService.getAuthors(doc);
+      correspondingAuthor = this.fetchArticleService.getCorrespondingAuthors(doc);
+      authorContributions = this.fetchArticleService.getAuthorContributions(doc);
+      competingInterest = this.fetchArticleService.getAuthorCompetingInterests(doc);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
+   * Fetches data for Metrics Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleMetricsContent() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      numComments = annotationService.countAnnotations(articleInfoX.getId(),
+          EnumSet.of(AnnotationType.COMMENT));
+      trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * This method is called only when request has x-pjax in its header. Rule is defined
+   * in urlrewrite.xml
+   *
+   * Fetches data for Related Content Tab
+   *
+   * @return "success" on success, "error" on error
+   */
+  public String fetchArticleRelatedContent() {
+    try {
+      validateArticleURI();
+      articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+      populateRelatedAuthorSearchQuery();
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
+    }
+    return SUCCESS;
+  }
+
+  /**
+   * populate the annotations
+   */
+  private void populateFromAnnotations() {
+    //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
+    AnnotationView[] annotationViews = annotationService.listAnnotations(
+        articleInfoX.getId(),
+        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
+        AnnotationOrder.NEWEST_TO_OLDEST
+    );
+    for (AnnotationView annotationView : annotationViews) {
+      AnnotationType annotationType = annotationView.getType();
+      switch (annotationType) {
+        case FORMAL_CORRECTION:
+          formalCorrections.add(annotationView);
+          break;
+        case MINOR_CORRECTION:
+          minorCorrections.add(annotationView);
+          break;
+        case RETRACTION:
+          retractions.add(annotationView);
+          break;
+        case COMMENT:
+          //this is already handled in setCommonData()
+          break;
+        case REPLY:
+          break;
+        default:
+          throw new RuntimeException("Unhandled enum value: " + annotationType);
+      }
+    }    
+    numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
+  }
+
+  /**
+   * validate the article URI
+   * @throws NoSuchArticleIdException
+   */
+  private void validateArticleURI() throws NoSuchArticleIdException {
+    try {
+      UriUtil.validateUri(articleURI, "articleURI=<" + articleURI + ">");
+    } catch (Exception e) {
+      throw new NoSuchArticleIdException(articleURI, e.getMessage(), e);
+    }
+  }
+
+  /**
+   * populate the error messages
+   * @param e
+   */
+  private void populateErrorMessages(Exception e) {
+    if (e instanceof NoSuchArticleIdException) {
+      messages.add("No article found for id: " + articleURI);
+      log.info("Could not find article: " + articleURI, e);
+    }
+    else {
+      messages.add(e.getMessage());
+      log.error("Error retrieving article: " + articleURI, e);
+    }
+  }
+
+  /**
+   * populate the author search query
+   */
+  private void populateRelatedAuthorSearchQuery() {
+    // get the first two and the last two authors
+    List<String> authors = articleInfoX.getAuthors();
+    int authorSize = authors.size();
+    relatedAuthorSearchQuery = "";
+    if (authorSize <= RELATED_AUTHOR_SEARCH_QUERY_SIZE) {
+      for (String author : authors) {
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + author + "\" OR ";
+      }
+      // remove the last ", OR "
+      if (relatedAuthorSearchQuery.length() > 0) {
+        relatedAuthorSearchQuery = relatedAuthorSearchQuery.substring(0, relatedAuthorSearchQuery.length() - 4);
+      }
+    } else {
+      // get first 2
+      relatedAuthorSearchQuery = "\"" + authors.get(0) + "\" OR ";
+      relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(1) + "\" OR ";
+      // get last 2
+      relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 2) + "\" OR ";
+      relatedAuthorSearchQuery = relatedAuthorSearchQuery + "\"" + authors.get(authorSize - 1) + "\"";
+    }
+  }
+
+  /**
+   * record the article view
+   */
+  private void recordArticleView() {
+    //If the user is logged in, record this as an article view
+    UserProfile user = getCurrentUser();
+    if (user != null) {
+      try {
+        userService.recordArticleView(user.getID(), articleInfoX.getId(), ArticleView.Type.ARTICLE_VIEW);
+      } catch (Exception e) {
+        log.error("Error recording an article view for user: {} and article: {}", user.getID(), articleInfoX.getId());
+        log.error(e.getMessage(), e);
+      }
+    }
   }
 
   /**
@@ -607,26 +677,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * Tests if this article has been rated by the current user
-   *
-   * @return Returns the hasRated.
-   */
-  public boolean getHasRated() {
-    return hasRated;
-  }
-
-  /**
    * @return the isResearchArticle
    */
   public boolean getIsResearchArticle() {
     return isResearchArticle;
-  }
-
-  /**
-   * @return Returns the trackbackList.
-   */
-  public List<LinkbackView> getTrackbackList() {
-    return trackbackList;
   }
 
   public int getTrackbackCount() {
@@ -721,20 +775,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     return numCorrections;
   }
 
-  public int getTotalNumAnnotations() {
-    return totalNumAnnotations;
-  }
-
   public AnnotationView[] getCommentary() {
     return commentary;
-  }
-
-  public boolean getIsDisplayingCorrections() {
-    return isDisplayingCorrections;
-  }
-
-  public boolean getIsRetracted() {
-    return isRetracted;
   }
 
   /**

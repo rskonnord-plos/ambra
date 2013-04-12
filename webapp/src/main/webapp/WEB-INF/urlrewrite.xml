@@ -54,7 +54,7 @@
       re-write incoming trackbacks URIs.
       /article/doi/trackback -> /trackback.action?doi=doi
     </note>
-    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/trackback$</from>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/trackback$</from>
     <to>$1/trackback.action?doi=$2</to>
   </rule>
 
@@ -63,7 +63,7 @@
       re-write outbound trackbacks URIs.
       /trackback.action?doi=doi -> /article/doi/trackback
     </note>
-    <from>^(/.+)?/trackback.action\?doi=(info%3Adoi%2F10\.1371%2F.+)$</from>
+    <from>^(/.+)?/trackback.action\?doi=(info%3Adoi%2F\d+\.\d+%2F.+)$</from>
     <to>$1/article/$2/trackback</to>
   </outbound-rule>
 
@@ -85,12 +85,59 @@
     <to>$1/pingback</to>
   </outbound-rule>
 
+  <!-- if request has header "X-PJAX" following rule will apply -->
+  <rule>
+    <note>re-write incoming article authors URIs.
+      /article/authors/doi?... -> /article/fetchArticleAuthorsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/authors/(info:doi/\d+\.\d+/.+)$</from>
+    <to last="true">$1/article/fetchArticleAuthorsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming related Article URIs
+      /article/related/doi?... -> to /article/fetchArticleRelatedContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/related/(info:doi/\d+\.\d+/.+)$</from>
+    <to last="true">$1/article/fetchArticleRelatedContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article Metrics URIs
+      /article/metrics/doi?... -> /article/fetchArticleMetricsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/metrics/(info:doi/\d+\.\d+/.+)$</from>
+    <to last="true">$1/article/fetchArticleMetricsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article comment URIs
+      /article/comments/doi?... to /article/fetchArticleCommentsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/comments/(info:doi/\d+\.\d+/.+)$</from>
+    <to last="true">$1/article/fetchArticleCommentsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article URIs
+      /article/doi?... to /article/fetchArticleContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)$</from>
+    <to last="true">$1/article/fetchArticleContent.action?articleURI=$2</to>
+  </rule>
+  <!-- end "X-PJAX" -->
+
   <rule>
     <note>
       re-write incoming article author URIs.
       /article/authors/doi -> /article/fetchArticleAuthors.action?articleURI=doi
     </note>
-    <from>^(/.+)?/article/authors/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/authors/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleAuthors.action?articleURI=$2</to>
   </rule>
 
@@ -99,25 +146,25 @@
       re-write outbound Article author URIs.
       /article/fetchArticleAuthors.action?articleURI=doi -> /article/authors/doi
     </note>
-    <from>^(/.+)?/article/fetchArticleAuthors.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleAuthors.action\?articleURI=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/article/authors/$2</to>
   </outbound-rule>
 
   <rule>
     <note>
       re-write incoming related Article URIs.
-      /article/related/doi -> /article/fetchRelatedArticle.action?articleURI=doi
+      /article/related/doi -> /article/fetchArticleRelated.action?articleURI=doi
     </note>
-    <from>^(/.+)?/article/related/(info:doi/10\.1371/.+)$</from>
-    <to last="true">$1/article/fetchRelatedArticle.action?articleURI=$2</to>
+    <from>^(/.+)?/article/related/(info:doi/\d+\.\d+/.+)$</from>
+    <to last="true">$1/article/fetchArticleRelated.action?articleURI=$2</to>
   </rule>
 
   <outbound-rule>
     <note>
       re-write outbound related Article URIs.
-      /article/fetchRelatedArticle.action?articleURI=doi -> /article/related/doi
+      /article/fetchArticleRelated.action?articleURI=doi -> /article/related/doi
     </note>
-    <from>^(/.+)?/article/fetchRelatedArticle.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleRelated.action\?articleURI=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/article/related/$2</to>
   </outbound-rule>
 
@@ -126,7 +173,7 @@
       re-write incoming Article Metrics Tab URIs.
       /article/metrics/doi -> /article/fetchArticleMetrics.action?articleURI=doi
     </note>
-    <from>^(/.+)?/article/metrics/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/metrics/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleMetrics.action?articleURI=$2</to>
   </rule>
 
@@ -135,7 +182,7 @@
       re-write outbound Article Metrics Tab URIs.
       /article/fetchArticleMetrics.action?articleURI=doi -> /article/metrics/doi
     </note>
-    <from>^(/.+)?/article/fetchArticleMetrics.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleMetrics.action\?articleURI=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/article/metrics/$2</to>
   </outbound-rule>
 
@@ -144,7 +191,7 @@
       re-write incoming Article CrossRef page URIs.
       /article/crossref/doi -> /article/fetchArticleCrossRef.action?articleURI=doi
     </note>
-    <from>^(/.+)?/article/crossref/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/crossref/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleCrossRef.action?articleURI=$2</to>
   </rule>
 
@@ -153,7 +200,7 @@
       re-write outbound Article CrossRef page URIs.
       /article/fetchArticleCrossRef.action?articleURI=doi -> /article/metrics/doi
     </note>
-    <from>^(/.+)?/article/fetchArticleCrossRef.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleCrossRef.action\?articleURI=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/article/crossref/$2</to>
   </outbound-rule>
 
@@ -162,7 +209,7 @@
       re-write incoming Article Twitter page URIs.
       /article/twitter/doi -> /article/fetchArticleTwitter.action?articleURI=doi
     </note>
-    <from>^(/.+)?/article/twitter/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/twitter/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleTwitter.action?articleURI=$2</to>
   </rule>
 
@@ -171,7 +218,7 @@
       re-write outbound Article Twitter page URIs.
       /article/fetchArticleTwitter.action?articleURI=doi -> /article/twitter/doi
     </note>
-    <from>^(/.+)?/article/fetchArticleTwitter.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleTwitter.action\?articleURI=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/article/twitter/$2</to>
   </outbound-rule>
 
@@ -180,7 +227,7 @@
       re-write incoming article comment URIs.
       /article/comments/doi -> /article/fetchArticleComments.action?articleURI=doi
     </note>
-    <from>^(/.+)?/article/comments/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/comments/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleComments.action?articleURI=$2</to>
   </rule>
 
@@ -190,7 +237,7 @@
       /article/fetchArticleComments.action?articleURI=doi -> /article/comments/doi
     </note>
 
-    <from>^(/.+)?/article/fetchArticleComments.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleComments.action\?articleURI=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/article/comments/$2</to>
   </outbound-rule>
 
@@ -199,7 +246,7 @@
       re-write incoming PowerPoint URIs.
       /article/doi/powerpoint -> /article/fetchPowerPoint.action?uri=doi
     </note>
-    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/powerpoint$</from>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/powerpoint$</from>
     <to>$1/article/fetchPowerPoint.action?uri=$2</to>
   </rule>
 
@@ -208,7 +255,7 @@
       re-write outbound PowerPoint URIs.
       /article/fetchPowerPoint.action?uri=doi -> /article/doi/powerpoint
     </note>
-    <from>^(/.+)?/article/fetchPowerPoint.action\?uri=(info%3Adoi%2F10\.1371%2F.+)$</from>
+    <from>^(/.+)?/article/fetchPowerPoint.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)$</from>
     <to>$1/article/$2/powerpoint</to>
   </outbound-rule>
 
@@ -217,7 +264,7 @@
       re-write incoming larger image URIs.
       /article/doi/largerimage -> /article/fetchObjectAttachment.action?uri=doi&amp;representation=PNG_L
     </note>
-    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/largerimage$</from>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/largerimage$</from>
     <to>$1/article/fetchObjectAttachment.action?uri=$2&amp;representation=PNG_L</to>
   </rule>
 
@@ -226,7 +273,7 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=PNG_L -> /article/doi/largerimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F10\.1371%2F.+)&amp;representation=PNG_L$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=PNG_L$</from>
     <to>$1/article/$2/largerimage</to>
   </outbound-rule>
 
@@ -235,7 +282,7 @@
       re-write incoming original image URIs.
       /article/doi/originalimage -> /article/fetchObjectAttachment.action?uri=doi&amp;representation=TIF
     </note>
-    <from>^(/.+)?/article/(info:doi/10\.1371/.+)/originalimage$</from>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/originalimage$</from>
     <to>$1/article/fetchObjectAttachment.action?uri=$2&amp;representation=TIF</to>
   </rule>
 
@@ -244,7 +291,7 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=TIF -> /article/doi/originalimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F10\.1371%2F.+)&amp;representation=TIF$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=TIF$</from>
     <to>$1/article/$2/originalimage</to>
   </outbound-rule>
 
@@ -253,7 +300,7 @@
       re-write incoming Article URIs.
       /article/doi -> /article/fetchArticle.action?articleURI=doi
     </note>
-    <from>^(/.+)?/article/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticle.action?articleURI=$2</to>
   </rule>
 
@@ -262,7 +309,7 @@
       re-write outbound Article URIs.
       /article/fetchArticle.action?articleURI=doi -> /article/doi
     </note>
-    <from>^(/.+)?/article/fetchArticle.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticle.action\?articleURI=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/article/$2</to>
   </outbound-rule>
 
@@ -271,7 +318,7 @@
       re-write incoming Annotation URIs.
       /annotation/xxxx -> /annotation/listThread.action?root=xxxx
     </note>
-    <from>^(/.+)?/annotation/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/annotation/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/annotation/listThread.action?root=$2</to>
   </rule>
 
@@ -280,7 +327,7 @@
       re-write outbound Article URIs.
       /annotation/listThread.action?doi=xxxx -> /annotation/xxxx
     </note>
-    <from>^(/.+)?/annotation/listThread.action\?root=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/annotation/listThread.action\?root=(info%3Adoi%2F\d+\.\d+%2F.+)</from>
     <to>$1/annotation/$2</to>
   </outbound-rule>
 
@@ -430,6 +477,7 @@
     <to>$1/search/advancedSearch.action</to>
   </rule>
 
+  <!--above rule is not duplicate of this one. That has trailing "/" at the end -->
   <rule>
     <note>
       re-write incoming advanced search requests
