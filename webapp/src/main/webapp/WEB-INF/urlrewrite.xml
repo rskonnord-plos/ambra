@@ -91,7 +91,7 @@
       /article/authors/doi?... -> /article/fetchArticleAuthorsContent.action?articleURI=doi&amp;...
     </note>
     <condition type="header" name="X-PJAX">true</condition>
-    <from>^(/.+)?/article/authors/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/authors/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleAuthorsContent.action?articleURI=$2</to>
   </rule>
 
@@ -100,7 +100,7 @@
       /article/related/doi?... -> to /article/fetchArticleRelatedContent.action?articleURI=doi&amp;...
     </note>
     <condition type="header" name="X-PJAX">true</condition>
-    <from>^(/.+)?/article/related/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/related/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleRelatedContent.action?articleURI=$2</to>
   </rule>
 
@@ -109,7 +109,7 @@
       /article/metrics/doi?... -> /article/fetchArticleMetricsContent.action?articleURI=doi&amp;...
     </note>
     <condition type="header" name="X-PJAX">true</condition>
-    <from>^(/.+)?/article/metrics/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/metrics/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleMetricsContent.action?articleURI=$2</to>
   </rule>
 
@@ -118,7 +118,7 @@
       /article/comments/doi?... to /article/fetchArticleCommentsContent.action?articleURI=doi&amp;...
     </note>
     <condition type="header" name="X-PJAX">true</condition>
-    <from>^(/.+)?/article/comments/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/comments/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleCommentsContent.action?articleURI=$2</to>
   </rule>
 
@@ -127,7 +127,7 @@
       /article/doi?... to /article/fetchArticleContent.action?articleURI=doi&amp;...
     </note>
     <condition type="header" name="X-PJAX">true</condition>
-    <from>^(/.+)?/article/(info:doi/10\.1371/.+)$</from>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)$</from>
     <to last="true">$1/article/fetchArticleContent.action?articleURI=$2</to>
   </rule>
   <!-- end "X-PJAX" -->
