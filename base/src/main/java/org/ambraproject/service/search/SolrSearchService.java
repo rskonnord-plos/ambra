@@ -887,14 +887,20 @@ public class SolrSearchService implements SearchService {
         }
       }
 
-      SearchHit hit = new SearchHit(
-          score, id, title, highlights, authorList, publicationDate, eissn, journal, articleType,
-          abstractResult);
-
-      hit.setStrikingImage(strikingImage);
-      if (figureTableCaptions.size() > 0) {
-        hit.setHasAssets(true);
-      }
+      SearchHit hit = SearchHit.builder()
+        .setHitScore(score)
+        .setUri(id)
+        .setTitle(title)
+        .setHighlight(highlights)
+        .setListOfCreators(authorList)
+        .setDate(publicationDate)
+        .setIssn(eissn)
+        .setJournalTitle(journal)
+        .setArticleTypeForDisplay(articleType)
+        .setAbstractText(abstractResult)
+        .setStrikingImage(strikingImage)
+        .setHasAssets(figureTableCaptions.size() > 0)
+        .build();
 
       if (log.isDebugEnabled())
         log.debug(hit.toString());

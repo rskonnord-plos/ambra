@@ -29,7 +29,6 @@ import java.util.Date;
 
 /**
  * Value object that holds the result of a single search item
- *
  */
 public class SearchHit implements Serializable {
 
@@ -37,51 +36,43 @@ public class SearchHit implements Serializable {
 
   private static final int TITLE_LENGTH = 120;
 
-  private final float  hitScore;
+  private final float hitScore;
   private final String uri;
   private final String title;
   private final String highlight;
-  private final Date   date;
+  private final Date date;
   private final String creator;
   private final Collection<String> listOfCreators;
   private final String issn;
   private final String journalTitle;
   private final String articleTypeForDisplay;
-  private String abstractText;
-  private String strikingImage;
-  private Boolean hasAssets = Boolean.FALSE;
+  private final String abstractText;
+  private final String strikingImage;
+  private final Boolean hasAssets;
 
-  /**
-   * Create a search hit with the values set
-   *
-   * @param hitScore Hit score
-   * @param uri Article ID
-   * @param title Article title
-   * @param highlight Highlights
-   * @param creators Creators
-   * @param date Article date
-   * @param issn eIssn of the journal
-   * @param journalTitle Journal title
-   * @param articleTypeForDisplay Article type
-   */
-  public SearchHit(Float hitScore, String uri, String title, String highlight,
-                   Collection<String> creators, Date date, String issn,
-                   String journalTitle, String articleTypeForDisplay, String abstractText) {
+  private SearchHit(Float hitScore, String uri, String title, String highlight,
+                    Date date, String creator, Collection<String> listOfCreators, String issn,
+                    String journalTitle, String articleTypeForDisplay, String abstractText,
+                    String strikingImage, Boolean hasAssets) {
+
     if (hitScore == null) {
-      this.hitScore   = 0f;
+      this.hitScore = 0f;
     } else {
-      this.hitScore   = hitScore;
+      this.hitScore = hitScore;
     }
-    this.uri        = uri;
-    this.title      = title;
-    this.highlight  = highlight;
-    this.creator    = StringUtils.join(creators, ", ");
-    this.listOfCreators = creators;
-    this.date       = date;
-    this.issn      = issn;
+
+    this.uri = uri;
+    this.title = title;
+    this.highlight = highlight;
+    this.date = date;
+    this.creator = creator;
+    this.listOfCreators = listOfCreators;
+    this.issn = issn;
     this.journalTitle = journalTitle;
     this.articleTypeForDisplay = articleTypeForDisplay;
     this.abstractText = abstractText;
+    this.strikingImage = strikingImage;
+    this.hasAssets = hasAssets;
   }
 
   /**
@@ -93,6 +84,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Getter for property 'hitScore'.
+   *
    * @return Value for property 'hitScore'.
    */
   public float getHitScore() {
@@ -101,6 +93,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Getter for property 'creator'.
+   *
    * @return Value for property 'creator'.
    */
   public String getCreator() {
@@ -109,6 +102,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Getter for property 'date'.
+   *
    * @return Value for property 'date'.
    */
   public Date getDate() {
@@ -117,6 +111,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Getter for property 'highlight'.
+   *
    * @return Value for property 'highlight'.
    */
   public String getHighlight() {
@@ -125,6 +120,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Getter for property 'title'.
+   *
    * @return Value for property 'title'.
    */
   public String getTitle() {
@@ -133,6 +129,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Return truncated article title
+   *
    * @return truncated article title
    */
   public String getTruncatedTitle() {
@@ -141,6 +138,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Get the issn for the Journal to which this SearchHit belongs.
+   *
    * @return The issn for the Journal to which this SearchHit belongs.
    */
   public String getIssn() {
@@ -149,6 +147,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Get the Dublin Core Title for the Journal to which this SearchHit belongs.
+   *
    * @return Dublin Core Title for the Journal to which this SearchHit belongs.
    */
   public String getJournalTitle() {
@@ -157,6 +156,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Get the type of the Article as a String ready for display.
+   *
    * @return Type of the Article as a String ready for display
    */
   public String getArticleTypeForDisplay() {
@@ -165,6 +165,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Get the abstract
+   *
    * @return abstract text
    */
   public String getAbstract() {
@@ -173,6 +174,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Get the creators in a list
+   *
    * @return
    */
   public Collection<String> getListOfCreators() {
@@ -183,34 +185,129 @@ public class SearchHit implements Serializable {
     return strikingImage;
   }
 
-  public void setStrikingImage(String strikingImage) {
-    this.strikingImage = strikingImage;
-  }
-
   public Boolean getHasAssets() {
     return hasAssets;
   }
 
-  public void setHasAssets(Boolean hasAssets) {
-    this.hasAssets = hasAssets;
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    private Builder() {
+      super();
+    }
+
+    private float hitScore;
+    private String uri;
+    private String title;
+    private String highlight;
+    private Date date;
+    private String creator;
+    private Collection<String> listOfCreators;
+    private String issn;
+    private String journalTitle;
+    private String articleTypeForDisplay;
+    private String abstractText;
+    private String strikingImage;
+    private Boolean hasAssets = Boolean.FALSE;
+
+    public Builder setHasAssets(Boolean hasAssets) {
+      this.hasAssets = hasAssets;
+      return this;
+    }
+
+    public Builder setHitScore(float hitScore) {
+      this.hitScore = hitScore;
+      return this;
+    }
+
+    public Builder setUri(String uri) {
+      this.uri = uri;
+      return this;
+    }
+
+    public Builder setTitle(String title) {
+      this.title = title;
+      return this;
+    }
+
+    public Builder setHighlight(String highlight) {
+      this.highlight = highlight;
+      return this;
+    }
+
+    public Builder setDate(Date date) {
+      this.date = date;
+      return this;
+    }
+
+    public Builder setListOfCreators(Collection<String> listOfCreators) {
+      this.listOfCreators = listOfCreators;
+      this.creator = StringUtils.join(listOfCreators, ", ");
+      return this;
+    }
+
+    public Builder setIssn(String issn) {
+      this.issn = issn;
+      return this;
+    }
+
+    public Builder setJournalTitle(String journalTitle) {
+      this.journalTitle = journalTitle;
+      return this;
+    }
+
+    public Builder setArticleTypeForDisplay(String articleTypeForDisplay) {
+      this.articleTypeForDisplay = articleTypeForDisplay;
+      return this;
+    }
+
+    public Builder setAbstractText(String abstractText) {
+      this.abstractText = abstractText;
+      return this;
+    }
+
+    public Builder setStrikingImage(String strikingImage) {
+      this.strikingImage = strikingImage;
+      return this;
+    }
+
+    public SearchHit build() {
+      return new SearchHit(
+        hitScore,
+        uri,
+        title,
+        highlight,
+        date,
+        creator,
+        listOfCreators,
+        issn,
+        journalTitle,
+        articleTypeForDisplay,
+        abstractText,
+        strikingImage,
+        hasAssets);
+    }
+
   }
 
   @Override
   public String toString() {
     return "SearchHit{" +
-        "hitScore=" + hitScore +
-        ", uri='" + uri + '\'' +
-        ", title='" + title + '\'' +
-        ", highlight='" + highlight + '\'' +
-        ", date=" + date +
-        ", creator='" + creator + '\'' +
-        ", issn='" + issn + '\'' +
-        ", journalTitle='" + journalTitle + '\'' +
-        ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
-        ", abstract='" + abstractText + '\'' +
-        ", strikingImage='" + strikingImage + '\'' +
-        ", hasAssets='" + hasAssets + '\'' +
-        '}';
+      "hitScore=" + hitScore +
+      ", uri='" + uri + '\'' +
+      ", title='" + title + '\'' +
+      ", highlight='" + highlight + '\'' +
+      ", date=" + date +
+      ", creator='" + creator + '\'' +
+      ", issn='" + issn + '\'' +
+      ", journalTitle='" + journalTitle + '\'' +
+      ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
+      ", abstract='" + abstractText + '\'' +
+      ", strikingImage='" + strikingImage + '\'' +
+      ", hasAssets='" + hasAssets + '\'' +
+      '}';
   }
 
   @Override
