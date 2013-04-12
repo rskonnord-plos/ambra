@@ -721,6 +721,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     query.addField("publication_date");
     query.addField("id");
     query.addField("abstract_primary_display");
+    query.addField("striking_image");
     query.addField("eissn");
 
     if (params.getSubjects() != null && params.getSubjects().length > 0) {
@@ -732,10 +733,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
       query.setQuery("subject:(" +  subjectQuery.substring(0, subjectQuery.length() - 5) + ")");
     }
 
-    query.setFacet(true);
-    query.addFacetField("subject_facet");
-    query.setFacetMinCount(1);
-    query.setFacetSort("index");
+    query.setFacet(false);
 
     setSort(query, params);
 
@@ -751,8 +749,6 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
         SearchHit sh = createArticleBrowseDisplay(document, query.toString());
         articles.add(sh);
       }
-
-      result.setSubjectFacet(facetCountsToHashMap(response.getFacetField("subject_level_1")));
     } catch (SolrServerException e) {
       log.error("Unable to execute a query on the Solr Server.", e);
     }
@@ -912,12 +908,21 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     Date publicationDate = SolrServiceUtil.getFieldValue(document, "publication_date", Date.class, message);
     String eissn = SolrServiceUtil.getFieldValue(document, "eissn", String.class, message);
     String articleType = SolrServiceUtil.getFieldValue(document, "article_type", String.class, message);
+    String strikingImage = SolrServiceUtil.getFieldValue(document, "striking_image", String.class, message);
     List<String> abstractDisplayList = SolrServiceUtil.getFieldMultiValue(document, "abstract_primary_display", String.class, message);
 
     List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, "author_display", String.class, message);
 
-    SearchHit hit = new SearchHit(null, id, title, null, authorList, publicationDate, eissn, null, articleType,
-      StringUtils.join(abstractDisplayList, ", "));
+    SearchHit hit = SearchHit.builder()
+      .setUri(id)
+      .setTitle(title)
+      .setListOfCreators(authorList)
+      .setDate(publicationDate)
+      .setIssn(eissn)
+      .setArticleTypeForDisplay(articleType)
+      .setArticleTypeForDisplay(StringUtils.join(abstractDisplayList, ", "))
+      .setStrikingImage(strikingImage)
+      .build();
 
     return hit;
   }
