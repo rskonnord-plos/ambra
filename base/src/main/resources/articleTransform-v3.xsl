@@ -1353,6 +1353,10 @@
       <xsl:apply-templates select="surname"/>
       <xsl:text> </xsl:text>
       <xsl:apply-templates select="given-names"/>
+      <xsl:if test="suffix">
+        <xsl:text> </xsl:text>
+        <xsl:apply-templates select="suffix"/>
+      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific templates for legacy references (element-citation: journal/no citation, book/other, supporting templates -->

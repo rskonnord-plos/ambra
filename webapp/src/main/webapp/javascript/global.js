@@ -22,10 +22,17 @@ var $pagebdy = $('#pagebdy');
 //For analytics tracking
 var close_time;
 
-// on document ready
 $(document).ready(function () {
+  onReadyDocument();
+  onReadyMainContainer();
+});
 
-  // detect touch screen
+// on document ready.
+// this should include global initialization that runs once.
+// For each tab content initialization use onReadyMainContainer.
+
+function onReadyDocument() {
+// detect touch screen
   $.support.touchEvents = (function () {
     return (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
   })();
@@ -59,21 +66,13 @@ $(document).ready(function () {
     this.tabs();
   });
 
-  $article = $('#article-block').find('div.article').eq(0);
-
-  $('#nav-article-page').doOnce(function () {
-    this.buildNav({
-      content:$article
-    });
-  });
-
   $('#nav-toc').doOnce(function () {
     this.buildNav({
       content:$('#toc-block').find('div.col-2')
     });
   });
 
-  // enable the floating nav for non-touch-enabled devices due to issue with 
+  // enable the floating nav for non-touch-enabled devices due to issue with
   // zoom and position:fixed.
   // FIXME: temp patch; needs more refinement.
   if (!$.support.touchEvents) {
@@ -83,15 +82,44 @@ $(document).ready(function () {
         sections:$('#toc-block').find('div.section')
       });
     });
+  }
 
+  $('.authors').doOnce(function () {
+    this.authorsMeta();
+  })
+
+  $('.article-kicker').doOnce(function () {
+    this.articleType();
+  })
+
+  var collapsible = $('.collapsibleContainer');
+  if (collapsible) {
+    collapsible.collapsiblePanel();
+  }
+}
+
+// This is tab content initialization that is run once on page load,
+// and then everytime on tab navigation when the tab content loads.
+
+function onReadyMainContainer() {
+  $article = $('#article-block').find('div.article').eq(0);
+
+  $('#nav-article-page').doOnce(function () {
+    this.buildNav({
+      content:$article
+    });
+  });
+
+  // enable the floating nav for non-touch-enabled devices due to issue with
+  // zoom and position:fixed.
+  // FIXME: temp patch; needs more refinement.
+  if (!$.support.touchEvents) {
     $('#nav-article-page').doOnce(function () {
       this.floatingNav({
         sections:$article.find('a[toc]').closest('div')
       });
     });
-
   }
-
 
   $('#figure-thmbs').doOnce(function () {
     this.carousel({
@@ -118,33 +146,159 @@ $(document).ready(function () {
     });
   });
 
-
-  $('.authors').doOnce(function () {
-    this.authorsMeta();
-  })
-
-  $('.article-kicker').doOnce(function () {
-    this.articleType();
-  })
-
   if (!$.support.touchEvents) {
     $article.doOnce(function () {
       this.scrollFrame();
     });
   }
 
-  var collapsible = $('.collapsibleContainer');
-  if (collapsible) {
-    collapsible.collapsiblePanel();
+  if (typeof selected_tab != "undefined") {
+    $("#print-article").css("display", selected_tab == "article" ? "list-item" : "none");
   }
-});
-
-var $nav_article = $('#nav-article');
-if ($nav_article.length) {
-  items_l = $nav_article.find('li').length
-  $nav_article.addClass('items-' + items_l);
 }
 
+
+// Initialization code include blocks that run once on page load
+// and then everytime when the tab content loads via Pjax.
+
+function initMainContainer() {
+  var $nav_article = $('#nav-article');
+  if ($nav_article.length) {
+    items_l = $nav_article.find('li').length
+    $nav_article.addClass('items-' + items_l);
+  }
+
+  var $figure_thmbs = $('#figure-thmbs');
+  if ($figure_thmbs.length) {
+    $lnks = $figure_thmbs.find('.item a');
+    $wrap = $figure_thmbs.find('div.wrapper');
+    if ($lnks.length) {
+      $lnks.on('click', function (e) {
+        e.preventDefault();
+        doi = $(this).data('doi');
+        ref = $(this).data('uri');
+        launchModal(doi, ref, 'fig');
+      });
+      $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
+          $wrap.hide();
+          $figure_thmbs.find('div.buttons').hide();
+          $figure_thmbs.find('div.controls').hide();
+          $fig_tog.html('Show Figures')
+            .toggleClass('hide');
+        },function () {
+          $wrap.show();
+          $figure_thmbs.find('div.buttons').show();
+          $figure_thmbs.find('div.controls').show();
+          $fig_tog.html('Hide Figures')
+            .toggleClass('hide');
+        }
+      ).insertAfter($figure_thmbs)
+        .wrap('<div id="fig-toggle" class="cf" />');
+    } else {
+      $figure_thmbs.addClass('collapse');
+    }
+  }
+
+  // inline figures
+  var $fig_inline = $('#article-block').find('div.figure');
+  if ($fig_inline.length) {
+    $lnks = $fig_inline.find('.img a');
+    $lnks.on('click', function (e) {
+      e.preventDefault();
+      ref = $(this).data('uri');
+      doi = $(this).data('doi');
+      launchModal(doi, ref, 'fig');
+    });
+    $lnks.append('<div class="expand" />');
+  }
+
+  // figure search results
+  var $fig_results = $('#fig-search-results');
+  if ($fig_results.length) {
+    $fig_results.find('a.figures').on('click', function () {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'fig', true);
+    });
+    $fig_results.find('a.abstract').on('click', function () {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'abstract', true);
+    });
+  }
+
+  // figure link in article floating nav
+  var $nav_figs = $('#nav-figures a');
+  if ($nav_figs.length) {
+    $nav_figs.on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'fig');
+    });
+  }
+
+  // figure link in the toc
+  var $toc_block_links = $('#toc-block div.links');
+  if ($toc_block_links.length) {
+    $toc_block_links.find('a.figures').on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'fig', true);
+    });
+
+    $toc_block_links.find('a.abstract').on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'abstract', true);
+    });
+  }
+
+  //load article asset sizes for inline figure download links
+  $('.assetSize').each(function (index, assetInput) {
+    var span = $('span[id="' + assetInput.getAttribute('name') + '"]');
+    if (span) {
+      val = assetInput.getAttribute('value');
+      if (val >= 1000000) {
+        val /= 1000000;
+        val = Math.round(val * 100) / 100;
+        val = String(val).concat("MB");
+      }
+      else if (val < 1000000 && val >= 1000) {
+        val /= 1000;
+        val = Math.round(val);
+        val = String(val).concat("KB");
+      }
+      else {
+        val = String(val).concat("Bytes");
+      }
+      span.html(val);
+    }
+  });
+
+  $("#nav-article li a").on("click", function(event) {
+    console.log("pjax click " + this.name);
+    if(selected_tab == "metrics") {
+      if($.pjax.contentCache[window.location.href] !== undefined) {
+        $.pjax.contentCache[window.location.href].data = $("#pjax-container").outerHTML();
+        $.pjax.contentCache[window.location.href].loaded = true;
+      }
+    }
+    pjax_selected_tab = this.name;
+    selected_tab = this.name;
+    return true;
+  });
+
+}
+
+//For Google Analytics Event Tracking
+var category, action, label;
+category = "tab menu actions";
+action = "tab menu click";
+$(document).ajaxComplete(function(){
+    if(pjax_selected_tab != null){ label = pjax_selected_tab;};
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',category,action,label]);
+    }
+});
+
+
+
+// Begin $ function definitions
 
 (function ($) {
   $.fn.authorsMeta = function (options) {
@@ -779,7 +933,56 @@ if ($nav_article.length) {
   };
 })(jQuery);
 
-// BEGIN Figure Viewer
+(function ($) {
+  $.fn.journalArchive = function (options) {
+    defaults = {
+      navID:'',
+      slidesContainer:'',
+      initialTab:0
+    };
+    var options = $.extend(defaults, options);
+    var $navContainer = $(options.navID);
+    var $slidesContainer = $(options.slidesContainer);
+    init = function () {
+      $navContainer.find('li').eq(options.initialTab).addClass('selected');
+      var initial_slide = $slidesContainer.find('li.slide').eq(options.initialTab);
+      var aheight = initial_slide.height();
+      $slidesContainer.css('height', aheight);
+      initial_slide.addClass('selected').fadeIn();
+    };
+    $navContainer.find('li a').on('click', function (e) {
+      e.preventDefault();
+      $this = $(this);
+      var target = $this.attr('href');
+      $navContainer.find('li.selected').removeClass('selected');
+      $slidesContainer.find('li.slide.selected').removeClass('selected').fadeOut();
+      $this.parent('li').addClass('selected');
+      var targetElement = $slidesContainer.find('li' + target);
+      targetElement.addClass('selected').fadeIn();
+      $slidesContainer.animate({'height':targetElement.height()});
+    });
+    init();
+  };
+})(jQuery);
+
+
+//http://css-tricks.com/snippets/jquery/outerhtml-jquery-plugin/
+$.fn.outerHTML = function(){
+  // IE, Chrome & Safari will comply with the non-standard outerHTML, all others (FF) will have a fall-back for cloning
+  return (!this.length) ? this : (this[0].outerHTML || (
+    function(el){
+      var div = document.createElement('div');
+      div.appendChild(el.cloneNode(true));
+      var contents = div.innerHTML;
+      div = null;
+      return contents;
+    })(this[0]));
+}
+
+// End of $ function definitions
+
+// Begin Figure Viewer
+
 var launchModal = function (doi, ref, state, imgNotOnPage) {
   var path = '/article/fetchObject.action?uri='
   //var path = 'article/';
@@ -1132,113 +1335,6 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   buildFigs();
 };
 
-
-var $figure_thmbs = $('#figure-thmbs');
-if ($figure_thmbs.length) {
-  $lnks = $figure_thmbs.find('.item a');
-  $wrap = $figure_thmbs.find('div.wrapper');
-  if ($lnks.length) {
-    $lnks.on('click', function (e) {
-      e.preventDefault();
-      doi = $(this).data('doi');
-      ref = $(this).data('uri');
-      launchModal(doi, ref, 'fig');
-    });
-    $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
-        $wrap.hide();
-        $figure_thmbs.find('div.buttons').hide();
-        $figure_thmbs.find('div.controls').hide();
-        $fig_tog.html('Show Figures')
-          .toggleClass('hide');
-      },function () {
-        $wrap.show();
-        $figure_thmbs.find('div.buttons').show();
-        $figure_thmbs.find('div.controls').show();
-        $fig_tog.html('Hide Figures')
-          .toggleClass('hide');
-      }
-    ).insertAfter($figure_thmbs)
-      .wrap('<div id="fig-toggle" class="cf" />');
-  } else {
-    $figure_thmbs.addClass('collapse');
-  }
-}
-
-
-// inline figures
-var $fig_inline = $('#article-block').find('div.figure');
-if ($fig_inline.length) {
-  $lnks = $fig_inline.find('.img a');
-  $lnks.on('click', function (e) {
-    e.preventDefault();
-    ref = $(this).data('uri');
-    doi = $(this).data('doi');
-    launchModal(doi, ref, 'fig');
-  });
-  $lnks.append('<div class="expand" />');
-}
-
-
-// figure search results
-var $fig_results = $('#fig-search-results');
-if ($fig_results.length) {
-  $fig_results.find('a.figures').on('click', function () {
-    doi = $(this).data('doi');
-    launchModal(doi, null, 'fig', true);
-  });
-  $fig_results.find('a.abstract').on('click', function () {
-    doi = $(this).data('doi');
-    launchModal(doi, null, 'abstract', true);
-  });
-}
-
-//if search box is empty, don't submit the form
-//This is a little weird, but there are multiple forms on multiple pages
-//The home/global and advanced search pages
-$('form[name="searchForm"], form[name="searchStripForm"]').each(function (index, item) {
-  $(item).submit(function () {
-    //Form fields are sometimes name differently pending on where the search came from
-    //namely simple or advanced
-    if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
-      return false;
-    }
-    else {
-      $('#db input[name="startPage"]').val('0');
-    }
-  });
-});
-
-// figure link in article floating nav
-var $nav_figs = $('#nav-figures a');
-if ($nav_figs.length) {
-  $nav_figs.on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'fig');
-  });
-}
-
-// figure link in the toc
-var $toc_block_links = $('#toc-block div.links');
-if ($toc_block_links.length) {
-  $toc_block_links.find('a.figures').on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'fig', true);
-  });
-
-  $toc_block_links.find('a.abstract').on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'abstract', true);
-  });
-}
-
-var $toc_block_cover = $('#toc-block .cover img');
-if ($toc_block_cover.length) {
-  var doi = $toc_block_cover.data('doi');
-  $toc_block_cover.click(function () {
-    launchModal(doi, null, 'fig', true);
-  });
-}
-
 var killModal = function () {
   $('div.modal').remove();
   $('#modal-mask').remove();
@@ -1251,9 +1347,9 @@ var killModal = function () {
   close_time = event.timeStamp;
 };
 
-var toggleModalState = function () {
-  $('#fig-viewer').toggleClass('abstract');
-};
+// End Figure Viewer
+
+// Begin other global functions
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -1265,16 +1361,6 @@ function getParameterByName(name) {
   else
     return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-
-var imageURI = getParameterByName("imageURI");
-if (imageURI) {
-  var index = imageURI.lastIndexOf(".");
-  if (index > 0) {
-    var doi = imageURI.substr(0, index);
-    launchModal(doi, imageURI, 'fig');
-  }
-}
-delete imageURI;
 
 //Stolen from:
 //http://stackoverflow.com/questions/149055/how-can-i-format-numbers-as-money-in-javascript
@@ -1293,79 +1379,7 @@ Array.prototype.remove = function (from, to) {
 };
 
 
-//******************************
-//Browse / issue page functions
-//******************************
-// on window load
-$(window).load(function () {
-  $('.journal_issues').doOnce(function () {
-    this.journalArchive({
-      navID:'#journal_years',
-      slidesContainer:'#journal_slides',
-      initialTab:0
-    });
-  });
-});
-
-(function ($) {
-  $.fn.journalArchive = function (options) {
-    defaults = {
-      navID:'',
-      slidesContainer:'',
-      initialTab:0
-    };
-    var options = $.extend(defaults, options);
-    var $navContainer = $(options.navID);
-    var $slidesContainer = $(options.slidesContainer);
-    init = function () {
-      $navContainer.find('li').eq(options.initialTab).addClass('selected');
-      var initial_slide = $slidesContainer.find('li.slide').eq(options.initialTab);
-      var aheight = initial_slide.height();
-      $slidesContainer.css('height', aheight);
-      initial_slide.addClass('selected').fadeIn();
-    };
-    $navContainer.find('li a').on('click', function (e) {
-      e.preventDefault();
-      $this = $(this);
-      var target = $this.attr('href');
-      $navContainer.find('li.selected').removeClass('selected');
-      $slidesContainer.find('li.slide.selected').removeClass('selected').fadeOut();
-      $this.parent('li').addClass('selected');
-      var targetElement = $slidesContainer.find('li' + target);
-      targetElement.addClass('selected').fadeIn();
-      $slidesContainer.animate({'height':targetElement.height()});
-    });
-    init();
-  };
-})(jQuery);
-
-$(document).bind('keydown', function (e) {
-  if (e.which == 27) {
-    killModal();
-  }
-});
-
-//load article asset sizes for inline figure download links
-$('.assetSize').each(function (index, assetInput) {
-  var span = $('span[id="' + assetInput.getAttribute('name') + '"]');
-  if (span) {
-    val = assetInput.getAttribute('value');
-    if (val >= 1000000) {
-      val /= 1000000;
-      val = Math.round(val * 100) / 100;
-      val = String(val).concat("MB");
-    }
-    else if (val < 1000000 && val >= 1000) {
-      val /= 1000;
-      val = Math.round(val);
-      val = String(val).concat("KB");
-    }
-    else {
-      val = String(val).concat("Bytes");
-    }
-    span.html(val);
-  }
-});
+// Begin collapsible
 
 // Collapsible div used on the 500 page (error.ftl) to hold the exception stacktrace.
 // Based on code from http://www.darreningram.net/pages/examples/jQuery/CollapsiblePanelPlugin.aspx
@@ -1406,6 +1420,139 @@ function CollapsibleContainerTitleOnClick() {
   $(".collapsibleContainerContent", $(this).parent()).slideToggle();
 }
 
+// End collapsible
+
+// Begin global blocks
+
+//if search box is empty, don't submit the form
+//This is a little weird, but there are multiple forms on multiple pages
+//The home/global and advanced search pages
+$('form[name="searchForm"], form[name="searchStripForm"]').each(function (index, item) {
+  $(item).submit(function () {
+    //Form fields are sometimes name differently pending on where the search came from
+    //namely simple or advanced
+    if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
+      return false;
+    }
+    else {
+      $('#db input[name="startPage"]').val('0');
+    }
+  });
+});
+
+var $toc_block_cover = $('#toc-block .cover img');
+if ($toc_block_cover.length) {
+  var doi = $toc_block_cover.data('doi');
+  $toc_block_cover.click(function () {
+    launchModal(doi, null, 'fig', true);
+  });
+}
+
+var toggleModalState = function () {
+  $('#fig-viewer').toggleClass('abstract');
+};
+
+var imageURI = getParameterByName("imageURI");
+if (imageURI) {
+  var index = imageURI.lastIndexOf(".");
+  if (index > 0) {
+    var doi = imageURI.substr(0, index);
+    launchModal(doi, imageURI, 'fig');
+  }
+}
+delete imageURI;
+
+
+//Browse / issue page functions
+// on window load
+$(window).load(function () {
+  $('.journal_issues').doOnce(function () {
+    this.journalArchive({
+      navID:'#journal_years',
+      slidesContainer:'#journal_slides',
+      initialTab:0
+    });
+  });
+});
+
+
+$(document).bind('keydown', function (e) {
+  if (e.which == 27) {
+    killModal();
+  }
+});
+
+// End global block
+
+// call the initialization function
+
+initMainContainer();
+
+
+// Begin PJAX related code
+
+var pjax_selected_tab = null; // last clicked pjax content
+
+if ($(document).pjax) {
+  $(document).pjax("#nav-article ul li a", "#pjax-container",
+      {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
+
+  $("#pjax-container").on("pjax:complete", function(event) {
+    // invoke document ready and window initialization code
+    onReadyMainContainer();
+    initMainContainer();
+
+    // when metrics tab is selected, load highcharts.js only
+    // if it was not already loaded. If the tab content was loaded from
+    // pjax (and not from cache) then also initialize ALM.
+
+    if (pjax_selected_tab == "metrics") {
+      if (typeof Highcharts == "undefined") {
+        $.getScript("/javascript/highcharts.js", function(data, textStatus, jqxhr) {
+          onLoadALM();
+        });
+      }
+      else {
+        if($.pjax.contentCache[window.location.href] === undefined ||
+            !$.pjax.contentCache[window.location.href].loaded) {
+          onLoadALM();
+        }
+      }
+    }
+
+    else if (pjax_selected_tab == "article"){
+      // figshare_widget_load variable is defined if figshare was loaded before.
+      // but plos_widget.js must be loaded again to show the figshare when
+      // switching to article tab
+      // if switching from another tab to article tab
+      // then add figshare css and js files.
+      // e.g. metrics --> article
+      // do not add css if article tab was already opened before.
+      // e.g: article --> metrics --> article
+      // if landing page is article then p_widget.js is included from article.ftl
+      if (typeof figshare_widget_load == "undefined") {
+        function add_widget_css() {
+          var headtg = document.getElementsByTagName('head')[0];
+          if (!headtg) {
+            return;
+          }
+          var linktg = document.createElement('link');
+          linktg.type = 'text/css';
+          linktg.rel = 'stylesheet';
+          linktg.href = 'http://wl.figshare.com/static/css/p_widget.css?v=8';
+          headtg.appendChild(linktg);
+        }
+        add_widget_css();
+      }
+      $.getScript("http://wl.figshare.com/static/plos_widget.js?v=10");
+      $.getScript("http://wl.figshare.com/static/jmvc/main_app/resources/jwplayer/jwplayer.js");
+      figshare_widget_load = true;
+    }
+  });
+}
+
+// End Pjax related code
+
 $(function() {
   //Stolen from:
   //http://www.vancelucas.com/blog/fixing-ie7-z-index-issues-with-jquery/
@@ -1417,3 +1564,4 @@ $(function() {
     });
   }
 });
+
