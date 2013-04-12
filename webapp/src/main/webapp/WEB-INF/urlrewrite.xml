@@ -588,6 +588,24 @@
 
   <rule>
     <note>
+      re-write browse subject
+      /article/browse/subject/geology -> /article/browse/subject.action?selectedSubjects=geology
+    </note>
+    <from>^(/.+)?/article/browse/subject/(.*)?</from>
+    <to>$1/article/browse/subject.action?selectedSubjects=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse subject
+      /article/browse/subject.action?selectedSubjects=geology -> /article/browse/subject/geology
+    </note>
+    <from>^(/.+)?/article/browse/subject.action\?selectedSubjects=(.*)?</from>
+    <to>$1/article/browse/subject/$2</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
       re-write email article submit
       /article/email/send -> /article/emailThisArticleSubmit.action
     </note>
