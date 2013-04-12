@@ -14,21 +14,15 @@ package org.ambraproject.search;
 import org.ambraproject.ApplicationException;
 
 /**
- * Execute the saved queries
- *
- * @author: stumu
- * @author: Joe Osowski
+ * Send saved searches
  */
-public interface SavedSearchRunner {
-
+public interface SavedSearchSender {
   /**
-   * Query solr to get search results
+   * Send the saved search to all the users that are associated with it.
    *
-   * @param savedSearchJob
-   *
-   * @return SavedSearchView populated with results
+   * @param searchJob
    *
    * @throws ApplicationException
    */
-  public SavedSearchJob runSavedSearch(SavedSearchJob savedSearchJob) throws ApplicationException;
+  public void sendSavedSearch(SavedSearchJob searchJob) throws ApplicationException;
 }

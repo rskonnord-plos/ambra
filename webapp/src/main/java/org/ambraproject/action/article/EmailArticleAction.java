@@ -28,7 +28,7 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.ambraproject.ambra.email.impl.FreemarkerTemplateMailer;
+import org.ambraproject.email.impl.FreemarkerTemplateMailer;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

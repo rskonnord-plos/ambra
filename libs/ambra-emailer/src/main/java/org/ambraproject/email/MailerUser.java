@@ -1,7 +1,5 @@
-/* $HeadURL::                                                                            $
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -17,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ambraproject.ambra.email;
+package org.ambraproject.email;
 
 /**
  * Mailer User. Has properties that are required for emailing to a given user.

@@ -55,6 +55,7 @@
   <!-- used by AmbraFreeMarkerConfigTest -->
   <bean id="ambraConfiguration2" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
         factory-method="getConfiguration">
+
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
@@ -91,7 +92,7 @@
 
   <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
     <property name="httpClient" ref="httpClient"/>
-    <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
+    <property name="crossRefUrl" value="http://search.crossref.org/links"/>
   </bean>
 
   <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
