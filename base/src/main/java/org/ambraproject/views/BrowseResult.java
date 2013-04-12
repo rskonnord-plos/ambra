@@ -31,11 +31,10 @@ import java.util.Map;
  */
 public class BrowseResult implements Serializable {
 
-  private static final long serialVersionUID = -5896324074315268868L;
+  private static final long serialVersionUID = -5896324074315264468L;
 
   private long total;
   private ArrayList<SearchHit> articles;
-  private Map<String, Long>subjectFacet;
 
   public ArrayList<SearchHit> getArticles() {
     return articles;
@@ -44,15 +43,6 @@ public class BrowseResult implements Serializable {
   public void setArticles(ArrayList<SearchHit> articles) {
     this.articles = articles;
   }
-
-  public Map<String, Long> getSubjectFacet() {
-    return subjectFacet;
-  }
-
-  public void setSubjectFacet(Map<String, Long> subjectFacet) {
-    this.subjectFacet = subjectFacet;
-  }
-
 
   public long getTotal() {
     return total;
