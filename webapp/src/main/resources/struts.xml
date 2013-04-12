@@ -339,13 +339,13 @@
   </package>
 
   <package name="browse" extends="default" namespace="/article/browse">
-    <action name="browse" class="org.ambraproject.action.article.BrowseArticlesAction">
+    <action name="subject" class="org.ambraproject.action.article.BrowseArticlesAction">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/browse.ftl</param>
+        <param name="templateFile">/article/browseSubject.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">500</param>
-        <param name="templateFile">/static/browseError.ftl</param>
+        <param name="templateFile">error.ftl</param>
       </result>
     </action>
 
@@ -357,10 +357,9 @@
         <param name="status">404</param>
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
-      <!-- TODO: Make a real error page -->
       <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
+        <param name="status">500</param>
+        <param name="templateFile">error.ftl</param>
       </result>
     </action>
 
@@ -369,8 +368,8 @@
         <param name="templateFile">/article/browseVolume.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
+        <param name="status">500</param>
+        <param name="templateFile">error.ftl</param>
       </result>
     </action>
   </package>
