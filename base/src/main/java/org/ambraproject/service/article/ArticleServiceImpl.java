@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-$today.year by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -834,18 +831,30 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   @Override
   @Transactional
-  public void setArticleCategories(Article article, List<String> categoryStrings) {
+  public List<Category> setArticleCategories(Article article, List<String> categoryStrings) {
     List<Category> categories = new ArrayList<Category>(categoryStrings.size());
-    int numAdded = 0;
+    Set<String> uniqueLeafs = new HashSet<String>();
+
     for (String s : categoryStrings) {
       if (s.charAt(0) != '/') {
         throw new IllegalArgumentException("Bad category: " + s);
       }
       Category category = new Category();
       category.setPath(s);
-      categories.add(category);
-      if (++numAdded == 8) {
+
+      //We want a count of distinct lead nodes.  When this
+      //Reaches eight stop.  Note the second check, we can be at
+      //eight uniqueLeafs, but still finding different paths.  Stop
+      //Adding when a new unique leaf is found.  Yes, a little confusing
+      if (uniqueLeafs.size() == 8 &&
+        //getSubCategory returns leaf node of the path
+        !uniqueLeafs.contains(category.getSubCategory())
+        ) {
         break;
+      } else {
+        //getSubCategory returns leaf node of the path
+        uniqueLeafs.add(category.getSubCategory());
+        categories.add(category);
       }
     }
 
@@ -855,6 +864,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     // if we want to change that.
     article.setCategories(new HashSet<Category>(categories));
     updateWithExistingCategories(article);
+
+    return categories;
   }
 
   /**

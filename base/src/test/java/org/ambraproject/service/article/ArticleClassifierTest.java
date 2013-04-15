@@ -100,7 +100,7 @@ public class ArticleClassifierTest extends BaseTest {
     // Article with a very short, one-sentence "TOC" abstract that we don't even
     // display in ambra.
     article = DocumentBuilderFactoryCreator.createFactory()
-        .newDocumentBuilder().parse(new File(DATA_DIR + "pbio.0020302.xml"));
+        .newDocumentBuilder().parse(new File(ClassLoader.getSystemResource("articles/pbio.0020302.xml").toURI()));
     content = articleClassifier.getCategorizationContent(article);
     assertTrue(content.length() > threshold);
   }
