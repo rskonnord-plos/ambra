@@ -26,7 +26,6 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.user.UserService;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.AuthorView;
-import org.ambraproject.views.LinkbackView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -46,8 +45,6 @@ import java.util.Set;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick 2/16/12
@@ -121,7 +118,7 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
    * @throws Exception
    */
   @Test
-  public void getArticleInfoForEoc() throws Exception {
+  public void testArticleInfoForEoc() throws Exception {
 
     Article eocArticle = new Article();
     eocArticle.setDoi("id:doi-object-of-concern-relationship-article");
@@ -230,7 +227,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
         "Action didn't record this as an article view");
 
     //check the comments
-    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect number of comments");
     assertEquals(action.getFormalCorrections().toArray(), new AnnotationView[]{
         new AnnotationView(formalCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)},
         "Action returned incorrect formal corrections");
@@ -277,7 +273,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     action.setArticleURI(getArticleToFetch().getDoi());
     String result = action.fetchArticleComments();
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
-    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect annotation count");
     //order his hard to check, we do it in annotation service test.
     assertEqualsNoOrder(action.getCommentary(), new AnnotationView[]{
         new AnnotationView(comment, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)
@@ -289,76 +284,14 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
         new AnnotationView(reply, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
         "Action returned incorrect reply");
     assertEquals(action.getNumCorrections(), 2, "Action didn't count corrections");
-    assertTrue(action.getIsRetracted(), "Action didn't count retraction");
-    assertFalse(action.getIsDisplayingCorrections(), "Action didn't indicate that it was not displaying corrections");
-  }
-
-  @Test
-  public void testFetchArticleCorrections() {
-    UserProfile user = userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID);
-    login(user);
-
-    //clear any annotations made by other tests
-    dummyDataStore.deleteAll(Annotation.class);
-
-    //store some annotations on the article
-    Annotation formalCorrection = new Annotation(user, AnnotationType.FORMAL_CORRECTION, getArticleToFetch().getID());
-    formalCorrection.setTitle("Title for formal correction");
-    dummyDataStore.store(formalCorrection);
-
-    Annotation minorCorrection = new Annotation(user, AnnotationType.MINOR_CORRECTION, getArticleToFetch().getID());
-    minorCorrection.setTitle("minor correction for title");
-    dummyDataStore.store(minorCorrection);
-
-    Annotation retraction = new Annotation(user, AnnotationType.RETRACTION, getArticleToFetch().getID());
-    retraction.setTitle("title for retraction");
-    dummyDataStore.store(retraction);
-
-    dummyDataStore.store(new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.REPLY, getArticleToFetch().getID()));
-
-    action.setArticleURI(getArticleToFetch().getDoi());
-    String result = action.fetchArticleCorrections();
-    assertEquals(result, Action.SUCCESS, "Action didn't return success");
-    //check the comments
-    assertEquals(action.getTotalNumAnnotations(), 4, "Action returned incorrect number of annotations");
-
-    //order his hard to check, we do it in annotation service test.
-    assertEqualsNoOrder(action.getCommentary(), new AnnotationView[]{
-        new AnnotationView(formalCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
-        new AnnotationView(minorCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
-        new AnnotationView(retraction, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)
-    }, "Action returned incorrect comments");
-
     assertEquals(action.getNumComments(), 1, "Action didn't count comments");
-    assertTrue(action.getIsDisplayingCorrections(), "Action didn't indicate that it was displaying corrections");
   }
 
   @Test
   public void testFetchArticleRelated() {
-    Trackback trackback1 = new Trackback(getArticleToFetch().getID(), "http://coolblog.net");
-    trackback1.setBlogName("My Cool Blog");
-    trackback1.setTitle("Blog title 1");
-    trackback1.setExcerpt("Once upon a time....");
-    dummyDataStore.store(trackback1);
-    Trackback trackback2 = new Trackback(getArticleToFetch().getID(), "http://coolblog.net/foo");
-    trackback2.setBlogName("My Cool Blog");
-    trackback2.setTitle("Blog title 2");
-    trackback2.setExcerpt("There was a prince....");
-    dummyDataStore.store(trackback2);
-
-
     action.setArticleURI(getArticleToFetch().getDoi());
     String result = action.fetchArticleRelated();
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
-
-    assertNotNull(action.getTrackbackList(), "action had null trackback list");
-    assertEqualsNoOrder(
-        action.getTrackbackList().toArray(),
-        new LinkbackView[]{
-            new LinkbackView(trackback1, getArticleToFetch().getDoi(), getArticleToFetch().getTitle()),
-            new LinkbackView(trackback2, getArticleToFetch().getDoi(), getArticleToFetch().getTitle())},
-        "Action had incorrect trackback list");
   }
 
   @Test
@@ -381,5 +314,34 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getTrackbackCount(), 2, "Action returned incorrect trackback count");
 
+    UserProfile user = userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID);
+    login(user);
+
+    Calendar lastYear = Calendar.getInstance();
+    lastYear.add(Calendar.YEAR, -1);
+
+    //store some annotations on the article
+    dummyDataStore.deleteAll(Annotation.class);
+    //corrections shouldn't get listed
+    dummyDataStore.store(new Annotation(user, AnnotationType.FORMAL_CORRECTION, getArticleToFetch().getID()));
+    dummyDataStore.store(new Annotation(user, AnnotationType.MINOR_CORRECTION, getArticleToFetch().getID()));
+    dummyDataStore.store(new Annotation(user, AnnotationType.RETRACTION, getArticleToFetch().getID()));
+
+    Annotation comment = new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID());
+    comment.setTitle("comment title");
+    comment.setCreated(lastYear.getTime());
+    dummyDataStore.store(comment);
+
+    //replies don't get counted as a comment
+    Annotation reply = new Annotation(user, AnnotationType.REPLY, getArticleToFetch().getID());
+    reply.setTitle("reply title");
+    reply.setParentID(comment.getID());
+    dummyDataStore.store(reply);
+
+    action.setArticleURI(getArticleToFetch().getDoi());
+    String resultComments = action.fetchArticleComments();
+    assertEquals(resultComments, Action.SUCCESS, "Action didn't return success");
+    assertEquals(action.getNumComments(), 1, "Action returned incorrect comments count");
+    assertEquals(action.getNumCorrections(), 2, "Action returned incorrect annotations count");
   }
 }
