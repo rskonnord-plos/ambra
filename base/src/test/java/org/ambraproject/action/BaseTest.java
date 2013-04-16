@@ -54,6 +54,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Base class for tests of Ambra Service Beans.  This is provided just so they can all use the same applicationContext
@@ -352,7 +353,17 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
           "returned incorrect number of related articles");
       for (Article otherArticle : expectedRelatedArticles) {
         boolean foundMatch = false;
+
         for (RelatedArticleInfo actualRelatedArticle : actual.getRelatedArticles()) {
+
+          assertNotNull(otherArticle.getTitle(), "Title value of other article is null");
+          assertNotNull(otherArticle.getDoi(), "DOI value of other article is null");
+          assertNotNull(otherArticle.getTypes(), "Types value of other article is null");
+
+          assertNotNull(actualRelatedArticle.getTitle(), "Title value of actual article is null");
+          assertNotNull(actualRelatedArticle.getUri(), "URI value of actual article is null");
+          assertNotNull(actualRelatedArticle.getTypes(), "Types value of actual article is null");
+
           if (otherArticle.getTitle().equals(actualRelatedArticle.getTitle()) &&
               otherArticle.getDoi().equals(actualRelatedArticle.getUri().toString())&&
               otherArticle.getTypes().equals(actualRelatedArticle.getTypes())) {

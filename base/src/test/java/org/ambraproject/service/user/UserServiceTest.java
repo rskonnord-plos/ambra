@@ -51,6 +51,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfile")
   private Object[][] getUserProfile() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("nameForTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
@@ -65,6 +67,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfileSave")
   private Object[][] getUserProfileForSave() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("saveTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
@@ -79,6 +83,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfileUpdate")
   private Object[][] getUserProfileForUpdate() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("updateTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
@@ -93,6 +99,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfileDelete")
   private Object[][] getUserProfileForDelete() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("deleteTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
