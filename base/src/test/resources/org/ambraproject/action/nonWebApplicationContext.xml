@@ -95,11 +95,6 @@
     <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
   </bean>
 
-  <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
-    <property name="httpClient" ref="httpClient"/>
-    <property name="crossRefUrl" value="http://search.crossref.org/links"/>
-  </bean>
-
   <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
