@@ -55,6 +55,7 @@
   <!-- used by AmbraFreeMarkerConfigTest -->
   <bean id="ambraConfiguration2" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
         factory-method="getConfiguration">
+
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
