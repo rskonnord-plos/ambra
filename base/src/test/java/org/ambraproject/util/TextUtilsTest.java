@@ -19,8 +19,16 @@
  */
 package org.ambraproject.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertTrue;
@@ -28,6 +36,7 @@ import static org.testng.Assert.assertEquals;
 
 
 public class TextUtilsTest {
+  private static Logger log = LoggerFactory.getLogger(TextUtilsTest.class);
 
   @DataProvider(name = "brokenUrls")
   public String[][] createBrokenData() {
@@ -69,6 +78,64 @@ public class TextUtilsTest {
         {"http://www.google.com", "http://www.google.com"},
         {"ftp://www.google.com", "ftp://www.google.com"},
         {"https://www.google.com", "https://www.google.com"},
+    };
+  }
+
+  @DataProvider(name = "makeMap")
+  public Object[][] createMap() {
+    return new Object[][]{
+      {
+        new ArrayList() {{
+          add("/f");
+          add("/a/b/c");
+          add("/a/b/c/d");
+          add("/g");
+          add("/a/c/e");
+          add("/a/b/c/d/e");
+          add("/e");
+          add("/z");
+          add("/1/2/3");
+          add("/x/y");
+        }},
+        new TreeMap() {{
+          put("a",
+          new TreeMap() {{
+            put("b",
+            new TreeMap() {{
+              put("c",
+              new TreeMap() {{
+                put("d",
+                new TreeMap() {{
+                  put("e",
+                  new TreeMap());
+                }});
+              }});
+            }});
+
+            put("c",
+              new TreeMap() {{
+                put("e",
+                new TreeMap());
+              }});
+          }});
+
+          put("e", new TreeMap());
+          put("g", new TreeMap());
+          put("f", new TreeMap());
+          put("z", new TreeMap());
+          put("1",
+            new TreeMap() {{
+              put("2",
+                new TreeMap() {{
+                  put("3", new TreeMap());
+                }});
+            }});
+          put("x",
+            new TreeMap() {{
+              put("y", new TreeMap());
+            }});
+        }}
+      }
     };
   }
 
@@ -199,4 +266,46 @@ public class TextUtilsTest {
     assertEquals(TextUtils.simpleStripAllTags(before), after);
   }
 
+  @Test(dataProvider = "makeMap")
+  public void testCreateMap(List<String> before, TreeMap expected) {
+    for(String string : before) {
+      log.debug(string);
+    }
+
+    TreeMap result = TextUtils.createMapFromStringList(before);
+
+    if(log.isDebugEnabled()) {
+      log.debug("Result Map:");
+      printMap(result, 0);
+    }
+
+    if(log.isDebugEnabled()) {
+      log.debug("Expected Map:");
+      printMap(expected, 0);
+    }
+
+    //Compare both ways to get around testNG bug
+    assertEqualRecursive(result, expected);
+    assertEqualRecursive(expected, result);
+  }
+
+  private void assertEqualRecursive(TreeMap result, TreeMap expected) {
+    assertEquals(result, expected);
+
+    for(Object key : result.keySet()) {
+      assertEqualRecursive((TreeMap)result.get(key), (TreeMap)expected.get(key));
+    }
+  }
+
+  private void printMap(TreeMap map, int depth) {
+    String spacer = StringUtils.repeat("-", depth);
+
+    for(Object key : map.keySet()) {
+      log.debug("{}Key: {}, Size: {}", new Object[] { spacer, key, ((TreeMap)map.get(key)).size() });
+
+      if(((TreeMap)map.get(key)).size() > 0) {
+        printMap((TreeMap)map.get(key), depth + 1);
+      }
+    }
+  }
 }

@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.List;
@@ -948,4 +949,40 @@ public class TextUtils {
     return shortenedText;
   }
 
+  /**
+   * Given a list of "/" delimited strings build a structured map
+   *
+   * @param strings
+   *
+   * @return a new treeMap
+   */
+  public static TreeMap createMapFromStringList(List<String> strings) {
+    TreeMap structure = new TreeMap();
+
+    for (String string : strings) {
+      if(string.charAt(0) == '/') {
+        //Ignore first "/"
+        structure = recurseValues(structure, string.substring(1).split("\\/"), 0);
+      } else {
+        structure = recurseValues(structure, string.split("\\/"), 0);
+      }
+    }
+
+    return structure;
+  }
+
+  private static TreeMap recurseValues(TreeMap structure, String category[], int index) {
+    TreeMap rootDir = (TreeMap) structure.get(category[index]);
+
+    if (rootDir == null) {
+      rootDir = new TreeMap();
+      structure.put(category[index], rootDir);
+    }
+
+    if ((index + 1) < category.length) { // path end
+      recurseValues(rootDir, category, index + 1);
+    }
+
+    return structure;
+  }
 }
