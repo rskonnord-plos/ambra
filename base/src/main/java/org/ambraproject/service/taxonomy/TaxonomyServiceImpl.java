@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -13,8 +11,11 @@
 
 package org.ambraproject.service.taxonomy;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.service.cache.Cache;
-
+import org.ambraproject.service.search.SearchService;
+import org.ambraproject.util.TextUtils;
+import org.springframework.beans.factory.annotation.Required;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,29 +33,33 @@ public class TaxonomyServiceImpl implements TaxonomyService {
 
   private static final int CACHE_TTL = 3600 * 24;  // one day
 
+  private SearchService searchService;
   private Cache cache;
 
   /**
    * {@inheritDoc}
    */
-  public SortedMap<String, List<String>> parseTopAndSecondLevelCategories(
-      final List<String> fullCategoryPaths) {
+  public SortedMap<String, List<String>> parseTopAndSecondLevelCategories(final String currentJournal)
+    throws ApplicationException {
     if (cache == null) {
-      return parseTopAndSecondLevelCategoriesWithoutCache(fullCategoryPaths);
+      return parseTopAndSecondLevelCategoriesWithoutCache(currentJournal);
     } else {
-      String key = "topAndSecondLevelCategoriesCacheKey".intern();
+      String key = ("topAndSecondLevelCategoriesCacheKey" + currentJournal).intern();
+
       return cache.get(key, CACHE_TTL,
-          new Cache.SynchronizedLookup<SortedMap<String, List<String>>, RuntimeException>(key) {
+          new Cache.SynchronizedLookup<SortedMap<String, List<String>>, ApplicationException>(key) {
             @Override
-            public SortedMap<String, List<String>> lookup() throws RuntimeException {
-              return parseTopAndSecondLevelCategoriesWithoutCache(fullCategoryPaths);
+            public SortedMap<String, List<String>> lookup() throws ApplicationException {
+              return parseTopAndSecondLevelCategoriesWithoutCache(currentJournal);
             }
           });
     }
   }
 
-  private SortedMap<String, List<String>> parseTopAndSecondLevelCategoriesWithoutCache(
-      List<String> fullCategoryPaths) {
+  private SortedMap<String, List<String>> parseTopAndSecondLevelCategoriesWithoutCache(String currentJournal)
+    throws ApplicationException {
+
+    List<String> fullCategoryPaths = searchService.getAllSubjects(currentJournal);
 
     // Since there are lots of duplicates, we start by adding the second-level
     // categories to a Set instead of a List.
@@ -86,7 +91,41 @@ public class TaxonomyServiceImpl implements TaxonomyService {
     return results;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public SortedMap<String, List<Object>> parseCategories(final String currentJournal)
+    throws ApplicationException {
+    if (cache == null) {
+      return parseCategoriesWithoutCache(currentJournal);
+    } else {
+      String key = ("categoriesCacheKey" + currentJournal).intern();
+
+      return cache.get(key, CACHE_TTL,
+        new Cache.SynchronizedLookup<SortedMap<String, List<Object>>, ApplicationException>(key) {
+          @Override
+          public SortedMap<String, List<Object>> lookup() throws ApplicationException {
+            return parseCategoriesWithoutCache(currentJournal);
+          }
+        });
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private SortedMap<String, List<Object>> parseCategoriesWithoutCache(String currentJournal)
+    throws ApplicationException {
+
+    List<String> subjects = searchService.getAllSubjects(currentJournal);
+
+    return TextUtils.createMapFromStringList(subjects);
+  }
+
   public void setCache(Cache cache) {
     this.cache = cache;
+  }
+
+  @Required
+  public void setSearchService(final SearchService searchService) {
+    this.searchService = searchService;
   }
 }
