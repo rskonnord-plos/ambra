@@ -164,6 +164,16 @@ $(function () {
     $.post("/user/secure/saveSearchAlertsJSON.action", $(this).serialize())
       .done(function(json) {
         //There is no form to validate
+        $.each(json.deleteAlerts, function(index, value) {
+          $("#saID" + value).slideUp(400, function(target) {
+            $("#saID" + value).remove();
+
+            if($(".saID").size() == 0) {
+              $("#saOL").slideUp();
+              $("#sa_none_defined").slideDown();
+            }
+          });
+        });
         confirmedSaved();
       })
       .fail(function(response) {
