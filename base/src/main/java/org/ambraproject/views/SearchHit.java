@@ -24,6 +24,7 @@ import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -50,6 +51,7 @@ public class SearchHit implements Serializable {
   private String abstractText;
   private String strikingImage;
   private Boolean hasAssets = Boolean.FALSE;
+  private Collection<String> subjects;
 
   /**
    * Create a search hit with the values set
@@ -66,7 +68,8 @@ public class SearchHit implements Serializable {
    */
   public SearchHit(Float hitScore, String uri, String title, String highlight,
                    Collection<String> creators, Date date, String issn,
-                   String journalTitle, String articleTypeForDisplay, String abstractText) {
+                   String journalTitle, String articleTypeForDisplay, String abstractText,
+                   Collection<String> subjects) {
     if (hitScore == null) {
       this.hitScore   = 0f;
     } else {
@@ -82,6 +85,7 @@ public class SearchHit implements Serializable {
     this.journalTitle = journalTitle;
     this.articleTypeForDisplay = articleTypeForDisplay;
     this.abstractText = abstractText;
+    this.subjects = subjects;
   }
 
   /**
@@ -172,6 +176,14 @@ public class SearchHit implements Serializable {
   }
 
   /**
+   * Get the subjects
+   * @return a collection of subjects
+   */
+  public Collection<String> getSubjects() {
+    return subjects;
+  }
+
+  /**
    * Get the creators in a list
    * @return
    */
@@ -210,6 +222,7 @@ public class SearchHit implements Serializable {
         ", abstract='" + abstractText + '\'' +
         ", strikingImage='" + strikingImage + '\'' +
         ", hasAssets='" + hasAssets + '\'' +
+        ", subjects='" + (subjects == null ? null : Arrays.asList(subjects)) + "'" +
         '}';
   }
 

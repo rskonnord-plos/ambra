@@ -35,6 +35,30 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.0</h2>
+ <p>Released April 23rd, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.0</h3>
+ <ul>
+     <li>Subject Areas display on Related Content article page tab for all PLOS journals(new to community journals)</li>
+     <li>Subject Area terms for all articles derive from machine aided indexing(MAI) of the full text of the article - excluding Reference lists</li>
+     <li>Support for all paths through the taxonomy polyhierarchy in indexing and search</li>
+     <li>AI thesaurus configurable from Ambra</li>
+     <li>Fix for XLST bug in taxonomy backfiller</li>
+     <li>Fix for "More by these authors" display on Related Content article tab</li>
+     <li>Saved search queue multithreading optimization</li>
+     <li>Refactor of article syndication flow</li>
+ </ul>
+
+ <h2>Ambra 2.5.9</h2>
+ <p>Released April 16th, 2013</p>
+ <h3>Features Implemented in Ambra 2.5.9</h3>
+ <ul>
+     <li>Relative metric front end support for Metrics tab</li>
+     <li>Article page client side tabs navigation instead of full page refresh tabs navigation</li>
+     <li>Bug fixes</li>
+ </ul>
+
+
   <h2>Ambra 2.5.8</h2>
   <p>Released April 9th, 2013</p>
   <h3>Features Implemented in Ambra 2.5.8</h3>
