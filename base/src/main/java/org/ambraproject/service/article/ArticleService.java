@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-$today.year by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -23,11 +20,11 @@ package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.models.Article;
+import org.ambraproject.models.Category;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.BaseArticleInfo;
-
 import java.text.ParseException;
 import java.util.List;
 
@@ -227,8 +224,10 @@ public interface ArticleService {
    *
    * @param article article to update
    * @param categories List of category strings
+   *
+   * @return The list of categories applied to the article
    */
-  public void setArticleCategories(Article article, List<String> categories);
+  public List<Category> setArticleCategories(Article article, List<String> categories);
 
   /**
    * Throw a NoSuchArticleIdException exception if the article doesn't exist or the user does not have permission
