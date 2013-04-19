@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-base</artifactId>
-  <version>2.5.7</version>
+  <version>2.6.0</version>
   <packaging>jar</packaging>
   <name>Ambra Base Web Application</name>
 
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-    <version>2.5.7</version>
+    <version>2.6.0</version>
   </parent>
 
   <dependencies>
@@ -531,6 +531,14 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/main/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
     <plugins>
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>

@@ -22,6 +22,7 @@ package org.ambraproject.util;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
@@ -88,6 +89,19 @@ public class TextUtilsTest {
     };
   }
 
+  @DataProvider(name = "hashStrings")
+  public String[][] strings2Hash () {
+    return new String[][] {
+      { "1" },
+      { "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSOne\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}" },
+      { "Nulla diam lectus, venenatis non adipiscing in, dictum lacinia lorem. Sed a lorem justo, molestie sagittis lectus. In ante nunc, tristique at venenatis sed, iaculis ut ipsum. Donec suscipit hendrerit ultrices. Vivamus volutpat consectetur blandit. Curabitur commodo malesuada pretium. Vestibulum aliquet lacinia consequat. Morbi porttitor orci eget neque pellentesque volutpat. Curabitur laoreet diam vel nunc congue sagittis sit amet nec urna. Aliquam erat volutpat. Vestibulum viverra augue a tortor convallis posuere. Vestibulum in felis vel libero tincidunt vulputate quis nec sem. Cras imperdiet molestie diam nec hendrerit. Integer accumsan volutpat leo, sit amet molestie leo condimentum vitae. Nam arcu leo, luctus in semper nec, tempus at tellus. Vivamus tempus lectus at augue eleifend eu ullamcorper orci molestie. " },
+      { "bleh" },
+      { "TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST"},
+      { "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" },
+      { "fffffffffffffffffffffffffffffffffffffffffff fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" }
+    };
+  }
+
   @DataProvider(name = "nonMalicious")
   public String[][] createNonMaliciousData() {
     return new String[][]{
@@ -124,6 +138,25 @@ public class TextUtilsTest {
         {"<i/> and 2>1<i>", " and 2>1"}, // brackets and tags
         {"<p></p>", ""} // nothing but tags
     };
+  }
+
+  @Test
+  public void testUniqueHash() {
+    String result = TextUtils.createHash("TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST");
+    String result1 = TextUtils.createHash("TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST1");
+
+    String result2 = TextUtils.createHash("tESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST");
+    String result3 = TextUtils.createHash("TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST");
+
+    assertNotSame(result, result1);
+    assertNotSame(result2, result3);
+  }
+
+  @Test(dataProvider = "hashStrings")
+  public void testHashLength(String hash) {
+    String result = TextUtils.createHash(hash);
+
+    assertEquals(result.length(), 27);
   }
 
   @Test(dataProvider = "brokenUrls")

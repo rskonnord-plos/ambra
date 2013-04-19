@@ -221,6 +221,14 @@ public class DummyHibernateDataStore implements DummyDataStore {
     });
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List findByCriteria(DetachedCriteria criteria) {
+    return hibernateTemplate.findByCriteria(criteria);
+  }
+
   @Override
   @SuppressWarnings("unchecked")
   public <T> List<T> getAll(final Class<T> clazz) {

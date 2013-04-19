@@ -43,7 +43,7 @@
   </bean>
 
   <bean id="fileStoreService" class="org.ambraproject.filestore.impl.FileSystemImpl">
-    <constructor-arg index="0" value="${project.basedir}/target/test-classes/filestore"/>
+    <constructor-arg index="0" value="filestore"/>
     <constructor-arg index="1" value=""/>
   </bean>
 
@@ -55,6 +55,7 @@
   <!-- used by AmbraFreeMarkerConfigTest -->
   <bean id="ambraConfiguration2" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
         factory-method="getConfiguration">
+
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
@@ -86,7 +87,7 @@
     <property name="largeImageRep" value="png_l"/>
     <property name="fileStoreService" ref="fileStoreService"/>
     <property name="secondaryObjectService" ref="xmlService"/>
-    <property name="templatesDirectory" value="${project.basedir}/src/test/resources/templates"/>
+    <property name="templatesDirectory" value="templates/"/>
   </bean>
 
   <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
@@ -94,7 +95,7 @@
     <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
   </bean>
 
-  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
+  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl" depends-on="ambraConfiguration2">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="crossRefLookupService" ref="crossRefLookupService"/>
@@ -154,14 +155,14 @@
 
   <util:map id="xslArticleTransformStyleSheetMap">
     <entry key="default"
-           value="${project.basedir}/target/classes/articleTransform-v3.xsl"/>
+           value="articleTransform-v3.xsl"/>
     <entry key="3.0"
-           value="${project.basedir}/target/classes/articleTransform-v3.xsl"/>
+           value="articleTransform-v3.xsl"/>
   </util:map>
 
   <bean id="viewNLMService" class="org.ambraproject.service.xml.XMLServiceImpl" init-method="init">
     <property name="articleRep" value="XML"/>
-    <property name="xslDefaultTemplate" value="${project.basedir}/target/classes/articleTransform-v3.xsl"/>
+    <property name="xslDefaultTemplate" value="articleTransform-v3.xsl"/>
     <property name="xslTemplateMap" ref="xslArticleTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
@@ -169,22 +170,20 @@
 
   <bean id="xmlService" class="org.ambraproject.service.xml.XMLServiceImpl" init-method="init">
     <property name="articleRep" value="XML"/>
-    <property name="xslDefaultTemplate" value="${project.basedir}/target/classes/articleTransform-v3.xsl"/>
+    <property name="xslDefaultTemplate" value="articleTransform-v3.xsl"/>
     <property name="xslTemplateMap" ref="xslArticleTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
   </bean>
 
   <util:map id="xslObjTransformStyleSheetMap">
-    <entry key="default"
-           value="${project.basedir}/src/main/resources/objInfo.xsl"/>
-    <entry key="3.0"
-           value="${project.basedir}/src/main/resources/objInfo.xsl"/>
+    <entry key="default" value="objInfo.xsl"/>
+    <entry key="3.0" value="objInfo.xsl"/>
   </util:map>
 
   <bean id="secondaryObjectService" class="org.ambraproject.service.xml.XMLServiceImpl" init-method="init">
     <property name="articleRep" value="XML"/>
-    <property name="xslDefaultTemplate" value="${project.basedir}/src/main/resources/objInfo-v3.xsl"/>
+    <property name="xslDefaultTemplate" value="objInfo-v3.xsl"/>
     <property name="xslTemplateMap" ref="xslObjTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
@@ -262,6 +261,7 @@
   <bean id="articleClassifier" class="org.ambraproject.service.article.AIArticleClassifier" >
     <property name="httpClient" ref="httpClient"/>
     <property name="serviceUrl" value="http://localhost:1234/select"/>
+    <property name="thesaurus" value="fake"/>
   </bean>
 
   <bean id="raptorService" class="org.ambraproject.service.raptor.RaptorServiceImpl">

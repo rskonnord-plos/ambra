@@ -85,6 +85,53 @@
     <to>$1/pingback</to>
   </outbound-rule>
 
+  <!-- if request has header "X-PJAX" following rule will apply -->
+  <rule>
+    <note>re-write incoming article authors URIs.
+      /article/authors/doi?... -> /article/fetchArticleAuthorsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/authors/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleAuthorsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming related Article URIs
+      /article/related/doi?... -> to /article/fetchArticleRelatedContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/related/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleRelatedContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article Metrics URIs
+      /article/metrics/doi?... -> /article/fetchArticleMetricsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/metrics/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleMetricsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article comment URIs
+      /article/comments/doi?... to /article/fetchArticleCommentsContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/comments/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleCommentsContent.action?articleURI=$2</to>
+  </rule>
+
+  <rule>
+    <note>re-write incoming article URIs
+      /article/doi?... to /article/fetchArticleContent.action?articleURI=doi&amp;...
+    </note>
+    <condition type="header" name="X-PJAX">true</condition>
+    <from>^(/.+)?/article/(info:doi/10\.1371/.+)$</from>
+    <to last="true">$1/article/fetchArticleContent.action?articleURI=$2</to>
+  </rule>
+  <!-- end "X-PJAX" -->
+
   <rule>
     <note>
       re-write incoming article author URIs.
@@ -106,18 +153,18 @@
   <rule>
     <note>
       re-write incoming related Article URIs.
-      /article/related/doi -> /article/fetchRelatedArticle.action?articleURI=doi
+      /article/related/doi -> /article/fetchArticleRelated.action?articleURI=doi
     </note>
     <from>^(/.+)?/article/related/(info:doi/10\.1371/.+)$</from>
-    <to last="true">$1/article/fetchRelatedArticle.action?articleURI=$2</to>
+    <to last="true">$1/article/fetchArticleRelated.action?articleURI=$2</to>
   </rule>
 
   <outbound-rule>
     <note>
       re-write outbound related Article URIs.
-      /article/fetchRelatedArticle.action?articleURI=doi -> /article/related/doi
+      /article/fetchArticleRelated.action?articleURI=doi -> /article/related/doi
     </note>
-    <from>^(/.+)?/article/fetchRelatedArticle.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
+    <from>^(/.+)?/article/fetchArticleRelated.action\?articleURI=(info%3Adoi%2F10\.1371%2F.+)</from>
     <to>$1/article/related/$2</to>
   </outbound-rule>
 
@@ -430,6 +477,7 @@
     <to>$1/search/advancedSearch.action</to>
   </rule>
 
+  <!--above rule is not duplicate of this one. That has trailing "/" at the end -->
   <rule>
     <note>
       re-write incoming advanced search requests
