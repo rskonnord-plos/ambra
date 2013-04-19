@@ -39,7 +39,8 @@ public class UserRole extends AmbraEntity {
     CROSS_PUB_ARTICLES,
     DELETE_ARTICLES,
     VIEW_UNPUBBED_ARTICLES,
-    MANAGE_CORRECTIONS
+    MANAGE_CORRECTIONS,
+    RESEND_EMAIL_ALERTS
   }
 
   private String roleName;

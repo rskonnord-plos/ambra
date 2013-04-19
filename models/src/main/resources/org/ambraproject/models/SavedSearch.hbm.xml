@@ -23,12 +23,23 @@
 
     <timestamp name="lastModified" column="lastModified"/>
     <property name="created" column="created" type="timestamp" not-null="true" update="false"/>
-    <property name="searchParams" column="searchParams" type="string" not-null="true"/>
     <property name="lastWeeklySearchTime" column="lastWeeklySearchTime" type="timestamp" not-null="true"/>
     <property name="lastMonthlySearchTime" column="lastMonthlySearchTime" type="timestamp" not-null="true"/>
     <property name="searchName" type="string" column="searchName"/>
+
+    <property name="searchType" column="searchType" not-null="true">
+      <type name="org.ambraproject.hibernate.GenericEnumUserType">
+        <param name="enumClass">org.ambraproject.models.SavedSearchType</param>
+        <param name="identifierMethod">toString</param>
+        <param name="valueOfMethod">fromString</param>
+      </type>
+    </property>
+
     <property name="weekly" type="boolean" column="weekly"/>
     <property name="monthly" type="boolean" column="monthly"/>
+
+    <many-to-one name="searchQuery" class="org.ambraproject.models.SavedSearchQuery" column="savedSearchQueryID"
+                 lazy="false" not-null="true" cascade="none"/>
   </class>
 
 </hibernate-mapping>
