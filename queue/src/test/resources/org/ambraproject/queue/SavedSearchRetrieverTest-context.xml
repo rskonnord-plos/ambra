@@ -21,11 +21,7 @@
 
   <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
 
-
   <bean id="savedSearchRetriever" class="org.ambraproject.search.SavedSearchRetrieverImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
-
-
-
 </beans>

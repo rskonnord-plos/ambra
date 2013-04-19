@@ -14,8 +14,10 @@ plosGApropId["ntds-demo.plosjournals.org"] = "UA-36675610-6";
 plosGApropId["pathogens-demo.plosjournals.org"] = "UA-36675610-7";
 plosGApropId["one-demo.plosjournals.org"] = "UA-36675610-1";
 
-//production sites
+//Flashlight test server
+plosGApropId["one-taurus.plosjournals.org"] = "UA-36675108-8";
 
+//production sites
 plosGApropId["www.plosbiology.org"] = "UA-36675108-2";
 plosGApropId["www.ploscompbiol.org"] = "UA-36675108-3";
 plosGApropId["www.plosgenetics.org"] = "UA-36675108-4";
@@ -24,6 +26,8 @@ plosGApropId["www.plosntds.org"] = "UA-36675108-6";
 plosGApropId["www.plospathogens.org"] = "UA-36675108-7";
 plosGApropId["www.plosone.org"] = "UA-36675108-1";
 plosGApropId["www.ploscollections.org"] = "UA-36675108-8";
+
+
 
 
 //No matter which journal or demo site is served, the identifier for the correct site will be used
@@ -40,6 +44,7 @@ if (typeof(bamGAID) != 'undefined') {
   _bamGA = [];
 
 // required Functions for basic tracking
+//Makes sure to always get only 2nd-level and TLDs; no subdomain
   _bamGA.getDomain = function (url) {
     return url.replace(/^https?\:\/\//i, "").split('.').reverse()[1] + '.' + url.split('.').reverse()[0];
   }

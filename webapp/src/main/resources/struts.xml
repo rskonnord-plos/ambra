@@ -436,17 +436,6 @@
       </result>
     </action>
 
-    <action name="fetchArticleCorrections" class="org.ambraproject.action.article.FetchArticleTabsAction"
-            method="fetchArticleCorrections">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_comments.ftl</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/article/article_not_found.ftl</param>
-      </result>
-    </action>
-
     <action name="fetchArticleMetrics" class="org.ambraproject.action.article.FetchArticleTabsAction"
             method="fetchArticleMetrics">
       <result name="success" type="default_freemarker">
@@ -458,7 +447,7 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction"
+    <action name="fetchArticleRelated" class="org.ambraproject.action.article.FetchArticleTabsAction"
             method="fetchArticleRelated">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_related.ftl</param>
@@ -469,8 +458,57 @@
       </result>
     </action>
 
-    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction"
-            method="fetchArticleInfo">
+    <action name="fetchArticleContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_content.ftl</param>
+      </result>
+      <result name="articleNotFound" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleAuthorsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleAuthorsContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_authors_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCommentsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCommentsContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_comments_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleMetricsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetricsContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_metrics_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleRelatedContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelatedContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_related_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_crossref.ftl</param>
       </result>
@@ -580,17 +618,6 @@
 
     <action name="fetchAnnotatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction" method="displayAnnotatedArticle">
       <result name="success">/article/displayArticle.ftl</result>
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/article/article_not_found.ftl</param>
-      </result>
-    </action>
-
-    <action name="fetchBody" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
-      <result name="success" type="default_freemarker">
-        <param name="location">/article/article_content.ftl</param>
-        <param name="noCache">true</param>
-      </result>
       <result name="error" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/article/article_not_found.ftl</param>
