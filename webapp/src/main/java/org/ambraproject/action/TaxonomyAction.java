@@ -29,7 +29,7 @@ public class TaxonomyAction extends BaseActionSupport {
 
   private static final Logger log = LoggerFactory.getLogger(TaxonomyAction.class);
 
-  private SortedMap<String, List<String>> categories;
+  private SortedMap<String, List<String>> topAndSecondLevelCategories;
   private TaxonomyService taxonomyService;
 
   @Override
@@ -40,7 +40,7 @@ public class TaxonomyAction extends BaseActionSupport {
       return ERROR;
     }
 
-    categories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
+    topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
 
     return SUCCESS;
   }
@@ -49,8 +49,8 @@ public class TaxonomyAction extends BaseActionSupport {
    * @return a map from top-level category to list of second-level subcategories
    *     associated with that top-level category
    */
-  public SortedMap<String, List<String>> getCategories() {
-    return categories;
+  public SortedMap<String, List<String>> getTopAndSecondLevelCategories() {
+    return topAndSecondLevelCategories;
   }
 
   @Required
