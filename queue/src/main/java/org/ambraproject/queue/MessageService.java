@@ -1,4 +1,5 @@
-/* $HeadURL::                                                                            $
+/*
+ * $HeadURL$
  * $Id$
  *
  * Copyright (c) 2006-2010 by Public Library of Science
@@ -17,14 +18,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ambraproject.ambra.email;
+
+package org.ambraproject.queue;
+
+import org.ambraproject.ApplicationException;
 
 /**
- * Mailer User. Has properties that are required for emailing to a given user.
+ * Service for sending syndications to queuing system
+ * @author Dragisa Krsmanovic
  */
-public interface MailerUser {
+public interface MessageService {
+
   /**
-   * @return the user's email address
+   * Send syndication message to the queue. 
+   * @param target Syndication system
+   * @param articleId Article DOI
+   * @param archive Article archive name
+   * @throws org.ambraproject.ApplicationException if sending syndication message to queue fails
    */
-  String getEmailAddress();
+  public void sendSyndicationMessage(String target, String articleId, String archive)
+      throws ApplicationException;
 }

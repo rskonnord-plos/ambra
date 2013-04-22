@@ -23,6 +23,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.List;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import freemarker.template.TemplateModelException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -44,6 +48,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import com.opensymphony.util.UrlUtils;
 import org.xml.sax.InputSource;
+import sun.misc.BASE64Encoder;
 
 /**
  * Provides some useful text manipulation functions.
@@ -59,6 +64,48 @@ public class TextUtils {
   private static final Pattern subscriptPattern = Pattern.compile("~~");
 
   private static Logger log = LoggerFactory.getLogger(TextUtils.class);
+
+  /**
+   * Create a hash of a string
+   *
+   * @param string the string to make the hash
+   *
+   * @return the hash of the string
+   */
+  public static String createHash(String string) {
+    return createHash(string.getBytes());
+  }
+
+  /**
+   * Create a hash of a byte array
+   *
+   * @param bytes
+   *
+   * @return the hash of the byte array
+   */
+  public static String createHash(byte[] bytes) {
+    try {
+      MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+      messageDigest.update(bytes);
+
+      return encodeText(messageDigest.digest());
+    } catch(NoSuchAlgorithmException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  /**
+   * Produces a String value suitable for rendering in HTML for the given binary data.
+   */
+  private static String encodeText(byte[] data) {
+    BASE64Encoder encoder = new BASE64Encoder();
+    String base64 = encoder.encodeBuffer(data);
+
+    // Make the returned value a little prettier by replacing slashes with underscores, and removing the trailing
+    // "=".
+    base64 = base64.replace('/', '_').trim();
+    return base64.substring(0, base64.length() - 1);
+  }
 
   /**
    * Convert a List of URIs to a List of Strings

@@ -23,11 +23,12 @@ import java.util.Date;
 public class SavedSearch extends AmbraEntity {
 
   private String searchName;
-  private String searchParams;
+  private SavedSearchQuery searchQuery;
   private Date lastWeeklySearchTime;
   private Date lastMonthlySearchTime;
   private boolean weekly;
   private boolean monthly;
+  private SavedSearchType searchType;
 
   public SavedSearch() {
     super();
@@ -35,10 +36,10 @@ public class SavedSearch extends AmbraEntity {
     lastMonthlySearchTime= Calendar.getInstance().getTime();
   }
 
-  public SavedSearch(String searchName, String searchParams) {
+  public SavedSearch(String searchName, SavedSearchQuery searchQuery) {
     this();
     this.searchName = searchName;
-    this.searchParams = searchParams;
+    this.searchQuery = searchQuery;
   }
   
   /**
@@ -57,20 +58,12 @@ public class SavedSearch extends AmbraEntity {
     this.searchName = searchName;
   }
 
-  /**
-   * getter for searchParams
-   * @return
-   */
-  public String getSearchParams() {
-    return searchParams;
+  public SavedSearchQuery getSearchQuery() {
+    return searchQuery;
   }
 
-  /**
-   * setter for searchParams
-   * @param searchParams
-   */
-  public void setSearchParams(String searchParams) {
-    this.searchParams = searchParams;
+  public void setSearchQuery(SavedSearchQuery searchQuery) {
+    this.searchQuery = searchQuery;
   }
 
   public Date getLastWeeklySearchTime() {
@@ -119,24 +112,43 @@ public class SavedSearch extends AmbraEntity {
     this.monthly = monthly;
   }
 
+  public SavedSearchType getSearchType() {
+    return searchType;
+  }
+
+  public void setSearchType(SavedSearchType searchType) {
+    this.searchType = searchType;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof SavedSearch)) return false;
+    if (o == null || getClass() != o.getClass()) return false;
 
     SavedSearch that = (SavedSearch) o;
 
-    if (getID() != null ? !getID().equals(that.getID()) : that.getID() != null) return false;
+    if (monthly != that.monthly) return false;
+    if (weekly != that.weekly) return false;
+    if (lastMonthlySearchTime != null ? !lastMonthlySearchTime.equals(that.lastMonthlySearchTime) : that.lastMonthlySearchTime != null)
+      return false;
+    if (lastWeeklySearchTime != null ? !lastWeeklySearchTime.equals(that.lastWeeklySearchTime) : that.lastWeeklySearchTime != null)
+      return false;
+    if (searchType != that.searchType) return false;
     if (searchName != null ? !searchName.equals(that.searchName) : that.searchName != null) return false;
-    if (searchParams != null ? !searchParams.equals(that.searchParams) : that.searchParams != null) return false;
+    if (searchQuery != null ? !searchQuery.equals(that.searchQuery) : that.searchQuery != null) return false;
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = getID() != null ? getID().hashCode() : 0;
-    result = 31 * result + (searchName != null ? searchName.hashCode() : 0);
-    result = 31 * result + (searchParams != null ? searchParams.hashCode() : 0);
+    int result = searchName != null ? searchName.hashCode() : 0;
+    result = 31 * result + (searchQuery != null ? searchQuery.hashCode() : 0);
+    result = 31 * result + (lastWeeklySearchTime != null ? lastWeeklySearchTime.hashCode() : 0);
+    result = 31 * result + (lastMonthlySearchTime != null ? lastMonthlySearchTime.hashCode() : 0);
+    result = 31 * result + (weekly ? 1 : 0);
+    result = 31 * result + (monthly ? 1 : 0);
+    result = 31 * result + (searchType != null ? searchType.hashCode() : 0);
     return result;
   }
 }
