@@ -85,6 +85,17 @@ public interface UserService {
   public UserProfile setSavedSearchAlerts(String userAuthId, List<String> monthlyAlerts, List<String> weeklyAlerts, List<String> deleteAlerts);
 
   /**
+   * Create a weekly filtered savedSearch alert for the passed in journal
+   *
+   * @param userProfileId the auth id of the user to set the alerts on
+   * @param subjects the subjects to filter on
+   * @param journal the journal to filter on
+   *
+   * @return the userProfile
+   */
+  public UserProfile setFilteredWeeklySearchAlert(Long userProfileId, String[] subjects, String journal);
+
+  /**
    * Remove the saved search
    *
    * @param savedSearchId the savedSearchId to remove
