@@ -17,11 +17,12 @@ public class MapUtils {
    *
    * @return a map of keys and the count of children
    */
-  public static Map<String, Integer> treeMapFacet(SortedMap<String, List<Object>> categories) {
+  @SuppressWarnings("unchecked")
+  public static Map<String, Integer> keyCounts(SortedMap<String, Object> categories) {
     Map<String, Integer> results = new HashMap<String, Integer>();
 
     for(String key : categories.keySet()) {
-      results.put(key, categories.get(key).size());
+      results.put(key, ((TreeMap<String, Object>)categories.get(key)).size());
     }
 
     return results;
