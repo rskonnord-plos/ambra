@@ -746,4 +746,13 @@
     <to>$1/article/findArticle.action?citedArticleID=$2</to>
   </rule>
 
+  <rule>
+    <note>
+      re-write find this taxonomy json
+      /taxonomy/json -> /taxonomyJSON.action
+    </note>
+    <from>^(/.+)?/taxonomy/json(.*)$</from>
+    <to>$1/taxonomy/taxonomyJSON.action?root=$2</to>
+  </rule>
+
 </urlrewrite>

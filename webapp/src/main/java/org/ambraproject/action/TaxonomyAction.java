@@ -12,10 +12,12 @@
 package org.ambraproject.action;
 
 import org.ambraproject.service.taxonomy.TaxonomyService;
+import org.ambraproject.util.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 
 /**
@@ -30,7 +32,9 @@ public class TaxonomyAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(TaxonomyAction.class);
 
   private SortedMap<String, List<String>> topAndSecondLevelCategories;
+  private SortedMap<String, Object> categories;
   private TaxonomyService taxonomyService;
+  private String root;
 
   @Override
   public String execute() throws Exception {
@@ -41,6 +45,7 @@ public class TaxonomyAction extends BaseActionSupport {
     }
 
     topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
+    categories = taxonomyService.parseCategories(getCurrentJournal());
 
     return SUCCESS;
   }
@@ -56,5 +61,48 @@ public class TaxonomyAction extends BaseActionSupport {
   @Required
   public void setTaxonomyService(TaxonomyService taxonomyService) {
     this.taxonomyService = taxonomyService;
+  }
+
+  /**
+   * Returns a set of categories and the count of children
+   *
+   * Note: This is will return a subset of categories post filter applied.
+   *
+   * If there is no filter, the set returned will be the root nodes
+   * If "/Biotech" is set as the filter, the set returned will have "/BioTech" as the root node.
+   * If "/Biotech/Genetics" is set as the filter, the set returned will have "/BioTech/Genetics" as the root node.
+   *
+   * @return A map of categories
+   */
+  @SuppressWarnings("unchecked")
+  public Map<String, Integer> getCategories() {
+    if(this.root == null) {
+      return MapUtils.keyCounts(categories);
+    }
+
+    //Ignore first slash if it exists
+    if(this.root.trim().length() > 0 && this.root.charAt(0) == '/') {
+      this.root = this.root.substring(1);
+    }
+
+    if(this.root.trim().length() == 0) {
+      return MapUtils.keyCounts(categories);
+    } else {
+      String[] levels = this.root.split("/");
+      SortedMap<String, Object> res = categories;
+
+      for(String level : levels) {
+        res = (SortedMap<String, Object>)res.get(level);
+      }
+
+      return MapUtils.keyCounts(res);
+    }
+  }
+
+  /**
+   * Set the root for what categories are to be returned
+   */
+  public void setRoot(String root) {
+    this.root = root;
   }
 }
