@@ -43,5 +43,5 @@ public interface TaxonomyService {
    *
    * @throws ApplicationException
    */
-  SortedMap<String, List<Object>> parseCategories(String currentJournal) throws ApplicationException;
+  SortedMap<String, Object> parseCategories(String currentJournal) throws ApplicationException;
 }
