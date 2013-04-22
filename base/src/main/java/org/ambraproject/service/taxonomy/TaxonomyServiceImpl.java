@@ -14,7 +14,7 @@ package org.ambraproject.service.taxonomy;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.search.SearchService;
-import org.ambraproject.util.TextUtils;
+import org.ambraproject.util.MapUtils;
 import org.springframework.beans.factory.annotation.Required;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -117,7 +117,7 @@ public class TaxonomyServiceImpl implements TaxonomyService {
 
     List<String> subjects = searchService.getAllSubjects(currentJournal);
 
-    return TextUtils.createMapFromStringList(subjects);
+    return MapUtils.createMapFromStringList(subjects);
   }
 
   public void setCache(Cache cache) {
