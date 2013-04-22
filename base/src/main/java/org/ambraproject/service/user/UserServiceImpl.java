@@ -72,6 +72,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   private static final String ALERTS_CATEGORIES_CATEGORY = "ambra.userAlerts.categories.category";
   private static final String ALERTS_WEEKLY = "ambra.userAlerts.weekly";
   private static final String ALERTS_MONTHLY = "ambra.userAlerts.monthly";
+  private static final String SUBJECT_FILTER = "ambra.userAlerts.subjectFilter";
 
   private PermissionsService permissionsService;
   private Configuration configuration;
@@ -354,6 +355,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
     final String[] weeklyCategories = hc.getStringArray(ALERTS_WEEKLY);
     final String[] monthlyCategories = hc.getStringArray(ALERTS_MONTHLY);
+    final String[] subjectFilters = hc.getStringArray(SUBJECT_FILTER);
 
     final Set<Map.Entry<String, String>> categoryNamesSet = categoryNames.entrySet();
 
@@ -361,13 +363,17 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
       final String key = category.getKey();
       boolean weeklyCategoryKey = false;
       boolean monthlyCategoryKey = false;
+      boolean subjectFilter = false;
       if (ArrayUtils.contains(weeklyCategories, key)) {
         weeklyCategoryKey = true;
       }
       if (ArrayUtils.contains(monthlyCategories, key)) {
         monthlyCategoryKey = true;
       }
-      alerts.add(new UserAlert(key, category.getValue(), weeklyCategoryKey, monthlyCategoryKey));
+      if (ArrayUtils.contains(subjectFilters, key)) {
+        subjectFilter = true;
+      }
+      alerts.add(new UserAlert(key, category.getValue(), weeklyCategoryKey, monthlyCategoryKey, subjectFilter));
     }
     return alerts;
   }
