@@ -90,6 +90,65 @@ public class MapUtilsTest {
   }
 
 
+  @DataProvider(name = "filterMap")
+  public Object[][] filterMap() {
+    return new Object[][]{
+      {
+        "a",
+        new TreeMap() {{
+          put("a", new TreeMap());
+
+          put("d",
+            new TreeMap() {{
+              put("e",
+                new TreeMap() {{
+                  put("f",
+                    new TreeMap() {{
+                      put("a", new TreeMap());
+                    }});
+                }});
+            }});
+
+          put("b",
+            new TreeMap() {{
+              put("a", new TreeMap());
+            }});
+        }},
+        new TreeMap() {{
+          put("a",
+            new TreeMap() {{
+              put("b",
+                new TreeMap() {{
+                  put("c", new TreeMap());
+                }});
+
+              put("c",
+                new TreeMap() {{
+                  put("e",
+                    new TreeMap());
+                }});
+            }});
+
+          put("d",
+            new TreeMap() {{
+              put("e",
+                new TreeMap() {{
+                  put("f",
+                    new TreeMap() {{
+                      put("a", new TreeMap());
+                    }});
+                }});
+            }});
+
+          put("b",
+            new TreeMap() {{
+              put("a", new TreeMap());
+            }});
+        }}
+      }
+    };
+  }
+
   @Test(dataProvider = "makeMap")
   public void testCreateMap(List<String> before, TreeMap expected) {
     for(String string : before) {
@@ -107,6 +166,21 @@ public class MapUtilsTest {
       log.debug("Expected Map:");
       printMap(expected, 0);
     }
+
+    //Compare both ways to get around testNG bug
+    assertEqualRecursive(result, expected);
+    assertEqualRecursive(expected, result);
+  }
+
+  @Test(dataProvider = "filterMap")
+  @SuppressWarnings("unchecked")
+  public void testFilterMap(String filter, Map expected, Map source) {
+    Map result = MapUtils.filterMap(source, new String[] { filter });
+
+    log.debug("Source");
+    printMap(source, 0);
+    log.debug("Result");
+    printMap(result, 0);
 
     //Compare both ways to get around testNG bug
     assertEqualRecursive(result, expected);
