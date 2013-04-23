@@ -751,8 +751,7 @@
       re-write find this taxonomy json
       /taxonomy/json -> /taxonomyJSON.action
     </note>
-    <from>^(/.+)?/taxonomy/json(.*)$</from>
-    <to>$1/taxonomy/taxonomyJSON.action?root=$2</to>
+    <from>^(/.+)?/taxonomy/json(.*)\??(.*)$</from>
+    <to>$1/taxonomy/taxonomyJSON.action?root=$2&amp;$3</to>
   </rule>
-
 </urlrewrite>
