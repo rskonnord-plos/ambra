@@ -12,9 +12,8 @@
 package org.ambraproject.service.taxonomy;
 
 import org.ambraproject.ApplicationException;
-
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
 /**
  * Provides services related to the subject category taxonomy.
@@ -32,7 +31,7 @@ public interface TaxonomyService {
    *
    * @return map with keys of (sorted) top-level categories
    */
-  SortedMap<String, List<String>> parseTopAndSecondLevelCategories(String currentJournal) throws ApplicationException;
+  Map<String, List<String>> parseTopAndSecondLevelCategories(String currentJournal) throws ApplicationException;
 
   /**
    * For the current journal return a complete structured map of the taxonomic categories
@@ -43,5 +42,5 @@ public interface TaxonomyService {
    *
    * @throws ApplicationException
    */
-  SortedMap<String, Object> parseCategories(String currentJournal) throws ApplicationException;
+  Map<String, Object> parseCategories(String currentJournal) throws ApplicationException;
 }

@@ -31,8 +31,8 @@ public class TaxonomyAction extends BaseActionSupport {
 
   private static final Logger log = LoggerFactory.getLogger(TaxonomyAction.class);
 
-  private SortedMap<String, List<String>> topAndSecondLevelCategories;
-  private SortedMap<String, Object> categories;
+  private Map<String, List<String>> topAndSecondLevelCategories;
+  private Map<String, Object> categories;
   private TaxonomyService taxonomyService;
   private String root;
 
@@ -54,7 +54,7 @@ public class TaxonomyAction extends BaseActionSupport {
    * @return a map from top-level category to list of second-level subcategories
    *     associated with that top-level category
    */
-  public SortedMap<String, List<String>> getTopAndSecondLevelCategories() {
+  public Map<String, List<String>> getTopAndSecondLevelCategories() {
     return topAndSecondLevelCategories;
   }
 
@@ -89,7 +89,7 @@ public class TaxonomyAction extends BaseActionSupport {
       return MapUtils.keyCounts(categories);
     } else {
       String[] levels = this.root.split("/");
-      SortedMap<String, Object> res = categories;
+      Map<String, Object> res = categories;
 
       for(String level : levels) {
         res = (SortedMap<String, Object>)res.get(level);

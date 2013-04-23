@@ -18,15 +18,16 @@ public class MapUtils {
    * @return a map of keys and the count of children
    */
   @SuppressWarnings("unchecked")
-  public static Map<String, Integer> keyCounts(SortedMap<String, Object> categories) {
+  public static Map<String, Integer> keyCounts(Map<String, Object> categories) {
     Map<String, Integer> results = new HashMap<String, Integer>();
 
     for(String key : categories.keySet()) {
-      results.put(key, ((TreeMap<String, Object>)categories.get(key)).size());
+      results.put(key, ((Map<String, Object>)categories.get(key)).size());
     }
 
     return results;
   }
+
   /**
    * Given a list of "/" delimited strings build a structured map
    *
@@ -34,8 +35,8 @@ public class MapUtils {
    *
    * @return a new treeMap
    */
-  public static TreeMap createMapFromStringList(List<String> strings) {
-    TreeMap structure = new TreeMap();
+  public static Map createMapFromStringList(List<String> strings) {
+    Map structure = new TreeMap();
 
     for (String string : strings) {
       if(string.charAt(0) == '/') {
@@ -49,7 +50,7 @@ public class MapUtils {
     return structure;
   }
 
-  private static TreeMap recurseValues(TreeMap structure, String category[], int index) {
+  private static Map recurseValues(Map structure, String category[], int index) {
     TreeMap rootDir = (TreeMap) structure.get(category[index]);
 
     if (rootDir == null) {

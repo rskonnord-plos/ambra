@@ -94,7 +94,7 @@ public class TaxonomyServiceImpl implements TaxonomyService {
   /**
    * {@inheritDoc}
    */
-  public SortedMap<String, Object> parseCategories(final String currentJournal)
+  public Map<String, Object> parseCategories(final String currentJournal)
     throws ApplicationException {
     if (cache == null) {
       return parseCategoriesWithoutCache(currentJournal);
@@ -102,9 +102,9 @@ public class TaxonomyServiceImpl implements TaxonomyService {
       String key = ("categoriesCacheKey" + currentJournal).intern();
 
       return cache.get(key, CACHE_TTL,
-        new Cache.SynchronizedLookup<SortedMap<String, Object>, ApplicationException>(key) {
+        new Cache.SynchronizedLookup<Map<String, Object>, ApplicationException>(key) {
           @Override
-          public SortedMap<String, Object> lookup() throws ApplicationException {
+          public Map<String, Object> lookup() throws ApplicationException {
             return parseCategoriesWithoutCache(currentJournal);
           }
         });
@@ -112,7 +112,7 @@ public class TaxonomyServiceImpl implements TaxonomyService {
   }
 
   @SuppressWarnings("unchecked")
-  private SortedMap<String, Object> parseCategoriesWithoutCache(String currentJournal)
+  private Map<String, Object> parseCategoriesWithoutCache(String currentJournal)
     throws ApplicationException {
 
     List<String> subjects = searchService.getAllSubjects(currentJournal);

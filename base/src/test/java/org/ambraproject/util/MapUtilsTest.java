@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import static org.testng.Assert.assertEquals;
 
@@ -95,7 +96,7 @@ public class MapUtilsTest {
       log.debug(string);
     }
 
-    TreeMap result = MapUtils.createMapFromStringList(before);
+    Map result = MapUtils.createMapFromStringList(before);
 
     if(log.isDebugEnabled()) {
       log.debug("Result Map:");
@@ -112,15 +113,15 @@ public class MapUtilsTest {
     assertEqualRecursive(expected, result);
   }
 
-  private void assertEqualRecursive(TreeMap result, TreeMap expected) {
+  private void assertEqualRecursive(Map result, Map expected) {
     assertEquals(result, expected);
 
     for(Object key : result.keySet()) {
-      assertEqualRecursive((TreeMap)result.get(key), (TreeMap)expected.get(key));
+      assertEqualRecursive((Map)result.get(key), (Map)expected.get(key));
     }
   }
 
-  private void printMap(TreeMap map, int depth) {
+  private void printMap(Map map, int depth) {
     String spacer = StringUtils.repeat("-", depth);
 
     for(Object key : map.keySet()) {
