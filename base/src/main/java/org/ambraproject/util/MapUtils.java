@@ -52,7 +52,7 @@ public class MapUtils {
       }
 
       for(String filter : filters) {
-        if(filter.equals(key)) {
+        if(key.equals(filter)) {
           finalRes.put(key, new TreeMap<String, Object>());
         }
       }
