@@ -35,6 +35,7 @@ public class TaxonomyAction extends BaseActionSupport {
   private Map<String, Object> categories;
   private TaxonomyService taxonomyService;
   private String root;
+  private String[] filter;
 
   @Override
   public String execute() throws Exception {
@@ -76,13 +77,16 @@ public class TaxonomyAction extends BaseActionSupport {
    */
   @SuppressWarnings("unchecked")
   public Map<String, Integer> getCategories() {
+    //Should probably implement this in the setter if the getter ever starts to get
+    //called more then once
+
     if(this.root == null) {
       return MapUtils.keyCounts(categories);
     }
 
     //Ignore first slash if it exists
-    if(this.root.trim().length() > 0 && this.root.charAt(0) == '/') {
-      this.root = this.root.substring(1);
+    if(this.root.trim().length() > 0 && this.root.trim().charAt(0) == '/') {
+      this.root = this.root.trim().substring(1);
     }
 
     if(this.root.trim().length() == 0) {
@@ -97,6 +101,29 @@ public class TaxonomyAction extends BaseActionSupport {
 
       return MapUtils.keyCounts(res);
     }
+  }
+
+  /**
+   * We never want to return the entire map as it is too large.  However,
+   * if filters are defined, we can return a subset
+   *
+   * @return
+   */
+  public Map<String, Object> getMap() {
+    //Should probably implement this in the setter if the getter ever starts to get
+    //called more then once
+    if(this.filter != null && this.filter.length > 0) {
+      return MapUtils.filterMap(categories, this.filter);
+    }
+
+    return null;
+  }
+
+  /**
+   * Set the root for what categories are to be returned
+   */
+  public void setFilter(String[] filter) {
+    this.filter = filter;
   }
 
   /**
