@@ -47,7 +47,7 @@ public class MapUtils {
     for(String key : categories.keySet()) {
       Map<String, Object> res = filterMap((Map<String, Object>)categories.get(key), filters);
 
-      if(res != null) {
+      if(res.size() > 0) {
         finalRes.put(key, res);
       }
 

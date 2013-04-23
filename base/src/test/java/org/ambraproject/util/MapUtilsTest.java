@@ -140,6 +140,16 @@ public class MapUtilsTest {
                 }});
             }});
 
+          put("g",
+            new TreeMap() {{
+              put("f", new TreeMap());
+            }});
+
+          put("z",
+            new TreeMap() {{
+              put("x", new TreeMap());
+            }});
+
           put("b",
             new TreeMap() {{
               put("a", new TreeMap());
