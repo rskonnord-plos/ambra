@@ -1120,6 +1120,16 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           $thmb_1.trigger('click');
         }
         buildAbs(data, imgNotOnPage);
+
+        // rerun mathjax
+        try {
+          var domelem = $modal[0];
+          if (domelem && typeof MathJax != "undefined") {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,domelem]);
+          }
+        } catch (e) {
+          // ignore
+        }
       }
     });
   };
