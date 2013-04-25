@@ -35,6 +35,14 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.1</h2>
+ <p>Released April 30th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.1</h3>
+ <ul>
+     <li>Early integration of mathjax support</li>
+     <li>Find this article online link mapping fix</li>
+ </ul>
+
  <h2>Ambra 2.6.0</h2>
  <p>Released April 23rd, 2013</p>
  <h3>Features Implemented in Ambra 2.6.0</h3>
