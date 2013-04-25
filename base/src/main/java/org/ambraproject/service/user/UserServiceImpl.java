@@ -191,13 +191,27 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     SavedSearchQuery query = saveSearchQuery(searchParameters);
 
     UserProfile user = getUser(userProfileId);
+    SavedSearch newSearch = null;
 
-    SavedSearch savedSearch = new SavedSearch("Journal Alert for " + journal, query);
-    savedSearch.setSearchType(SavedSearchType.JOURNAL_ALERT);
-    savedSearch.setWeekly(true);
-    savedSearch.setMonthly(false);
+    //See if a record exists already, we only allow one weekly alert of type JOURNAL_ALERT per journal
+    //We key off of the title as it is not user facing
+    for(SavedSearch savedSearch : user.getSavedSearches()) {
+      if(savedSearch.getSearchType() == SavedSearchType.JOURNAL_ALERT
+        && savedSearch.getWeekly()
+        && savedSearch.getSearchName().equals(journal)) {
+        newSearch = savedSearch;
+      }
+    }
 
-    user.getSavedSearches().add(savedSearch);
+    if(newSearch == null) {
+      newSearch = new SavedSearch(journal, query);
+      newSearch.setSearchType(SavedSearchType.JOURNAL_ALERT);
+      newSearch.setWeekly(true);
+      newSearch.setMonthly(false);
+      user.getSavedSearches().add(newSearch);
+    } else {
+      newSearch.setSearchQuery(query);
+    }
 
     hibernateTemplate.save(user);
 
