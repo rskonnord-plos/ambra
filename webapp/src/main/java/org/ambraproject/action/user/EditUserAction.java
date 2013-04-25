@@ -1,15 +1,19 @@
 package org.ambraproject.action.user;
 
 import org.ambraproject.Constants;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.views.SavedSearchView;
 
 import javax.servlet.ServletException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 /**
+ * @author Joe Osowski 04/12/2013
  * @author Alex Kudlick 10/23/12
  */
 public class EditUserAction extends UserActionSupport {
@@ -27,7 +31,31 @@ public class EditUserAction extends UserActionSupport {
     setFieldsFromProfile(userProfile);
 
     showDisplayName = false;
-    savedSearches = userService.getSavedSearches(userProfile.getID());
+
+    List<SavedSearchView> searches = userService.getSavedSearches(userProfile.getID());
+
+    savedSearches = new ArrayList<SavedSearchView>();
+    journalSubjectFilters = new HashMap<String, String[]>();
+
+    for(SavedSearchView search : searches) {
+      if(search.getSearchType() == SavedSearchType.USER_DEFINED) {
+        savedSearches.add(search);
+      } else {
+        //Only two types are supported the above and "SavedSearchType.JOURNAL_ALERT"
+        //The second should be grouped by journal for the view
+        String[] journals = search.getSearchParameters().getFilterJournals();
+
+        if(journals == null || journals.length != 1) {
+          throw new RuntimeException("Journal not specified for filter or specified multiple times.");
+        }
+
+        String curJournal = journals[0];
+        String[] subjectFilters = search.getSearchParameters().getFilterSubjectsDisjunction();
+
+        //Assume one search alert per journal
+        journalSubjectFilters.put(curJournal, subjectFilters);
+      }
+    }
 
     return SUCCESS;
   }
@@ -83,6 +111,15 @@ public class EditUserAction extends UserActionSupport {
     }
 
     UserProfile profile = userService.setAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts));
+
+    if(this.journalSubjectFilters != null) {
+      for(String journal : journalSubjectFilters.keySet()) {
+        String[] subjects = journalSubjectFilters.get(journal);
+
+        profile = userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journal);
+      }
+    }
+
     session.put(Constants.AMBRA_USER_KEY, profile);
 
     return retrieveAlerts();

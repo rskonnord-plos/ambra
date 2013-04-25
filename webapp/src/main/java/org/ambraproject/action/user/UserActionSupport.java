@@ -34,6 +34,7 @@ import org.ambraproject.service.user.UserService;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Base class for user actions in order to have a userService object accessible
@@ -85,6 +86,10 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   protected String[] monthlyAlerts = new String[]{};
   protected String[] weeklyAlerts = new String[]{};
   protected String[] deleteAlerts = new String[]{};
+
+  //Used for setting of filtered journal alerts
+  protected Map<String, String[]> journalSubjectFilters;
+
   //Need to hide the username text box field on the edit Profile page. Should display the text box only on create profile page.
   protected boolean showDisplayName = true;
   private ProfanityCheckingService profanityCheckingService;
@@ -412,5 +417,15 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
 
   public void setDeleteAlerts(String[] deleteAlerts) {
     this.deleteAlerts = deleteAlerts;
+  }
+
+  public Map getJournalSubjectFilters()
+  {
+    return journalSubjectFilters;
+  }
+
+  public void setJournalSubjectFilters(Map<String, String[]> journalSubjectFilters)
+  {
+    this.journalSubjectFilters = journalSubjectFilters;
   }
 }
