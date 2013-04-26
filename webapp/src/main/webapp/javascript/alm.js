@@ -879,7 +879,7 @@ $.fn.alm = function () {
 
               tileHtmlList.push({
                 name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
               });
             }
           } else {
@@ -888,7 +888,7 @@ $.fn.alm = function () {
 
               tileHtmlList.push({
                 name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
               });
 
             } else if (response.article.source[a].search_url != null
@@ -896,7 +896,7 @@ $.fn.alm = function () {
 
               tileHtmlList.push({
                 name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count + '\n')
+                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
               });
 
             }

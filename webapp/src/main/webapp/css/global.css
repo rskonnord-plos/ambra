@@ -4956,7 +4956,6 @@ div.metrics_tile_footer_no_link {
   font-size: 1.30em;
   text-decoration: none;
   font-weight: bold;
-  padding-top: 1px;
 }
 
 div.metrics_tile:hover .metrics_tile_rating_footer {
