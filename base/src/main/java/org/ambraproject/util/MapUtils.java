@@ -53,7 +53,7 @@ public class MapUtils {
 
       for(String filter : filters) {
         if(key.toLowerCase().contains(filter.toLowerCase())) {
-          finalRes.put(key, new TreeMap<String, Object>());
+          finalRes.put(key, filterMap((Map<String, Object>)categories.get(key), filters));
         }
       }
     }
