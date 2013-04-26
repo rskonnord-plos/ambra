@@ -14,11 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
 import static org.testng.Assert.assertNotNull;
@@ -57,11 +55,12 @@ public class EditUserActionTest extends AmbraWebTest {
     user.setCountry("my country");
     user.setAuthId("auth-id-for-MemberUserActionTest");
     user.setPassword("pass");
-    user.setAlertsJournals("journal_weekly,journal_monthly");
+    user.setAlertsJournals("journal_weekly,journal_monthly,journal1_monthly");
+
     dummyDataStore.store(user);
 
     String[] expectedWeeklyAlerts = new String[]{"journal"};
-    String[] expectedMonthlyAlerts = new String[]{"journal"};
+    String[] expectedMonthlyAlerts = new String[]{"journal", "journal1"};
 
     //these come from the config
     List<UserAlert> alerts = new ArrayList<UserAlert>(2);

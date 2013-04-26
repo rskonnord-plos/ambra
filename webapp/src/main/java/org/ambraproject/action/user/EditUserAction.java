@@ -32,6 +32,12 @@ public class EditUserAction extends UserActionSupport {
 
     showDisplayName = false;
 
+    final List<String> monthlyAlertsList = userProfile.getMonthlyAlerts();
+    final List<String> weeklyAlertsList = userProfile.getWeeklyAlerts();
+
+    monthlyAlerts = monthlyAlertsList.toArray(new String[monthlyAlertsList.size()]);
+    weeklyAlerts = weeklyAlertsList.toArray(new String[weeklyAlertsList.size()]);
+
     List<SavedSearchView> searches = userService.getSavedSearches(userProfile.getID());
 
     savedSearches = new ArrayList<SavedSearchView>();
