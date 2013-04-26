@@ -113,7 +113,15 @@ public class TaxonomyAction extends BaseActionSupport {
     //Should probably implement this in the setter if the getter ever starts to get
     //called more then once
     if(this.filter != null && this.filter.length > 0) {
-      return MapUtils.filterMap(categories, this.filter);
+      for(String filter : this.filter) {
+        if(filter.length() < 3) {
+          addActionError("All filters defined must be at least 3 characters long");
+        }
+      }
+
+      if(getActionErrors().size() == 0) {
+        return MapUtils.filterMap(categories, this.filter);
+      }
     }
 
     return null;
