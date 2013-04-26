@@ -14,6 +14,7 @@ package org.ambraproject.views;
 
 import com.google.gson.Gson;
 import org.ambraproject.models.SavedSearch;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.service.search.SearchParameters;
 
 import java.util.Date;
@@ -30,30 +31,26 @@ public class SavedSearchView {
   private String searchName;
   private boolean weekly;
   private boolean monthly;
+  private SavedSearchType searchType;
   private Date lastWeeklySearchTime;
   private Date lastMonthlySearchTime;
-  private String emailAddress;
-  private List<SavedSearchHit> searchHitList;
-  private Date lastSearchTime;
-  private Date currentTime;
 
   public SavedSearchView(SavedSearch savedSearch) {
     this.savedSearchId = savedSearch.getID();
     this.searchName = savedSearch.getSearchName();
+    this.searchType = savedSearch.getSearchType();
     this.weekly = savedSearch.getWeekly();
     this.monthly = savedSearch.getMonthly();
     this.lastMonthlySearchTime = savedSearch.getLastMonthlySearchTime();
     this.lastWeeklySearchTime = savedSearch.getLastWeeklySearchTime();
 
     Gson gson = new Gson();
-    this.searchParameters = gson.fromJson(savedSearch.getSearchParams(), SearchParameters.class);
+    this.searchParameters = gson.fromJson(savedSearch.getSearchQuery().getSearchParams(), SearchParameters.class);
   }
 
-  public SavedSearchView(Long savedSearchId, String searchName, String searchParams,Date lastSearchTime, String emailAddress){
+  public SavedSearchView(Long savedSearchId, String searchName, String searchParams) {
     this.savedSearchId = savedSearchId;
     this.searchName = searchName;
-    this.lastSearchTime = lastSearchTime;
-    this.emailAddress = emailAddress;
 
     Gson gson = new Gson();
     this.searchParameters = gson.fromJson(searchParams, SearchParameters.class);
@@ -85,6 +82,15 @@ public class SavedSearchView {
   }
 
   /**
+   * Is this savedSearch used defined or a journal alert?
+   *
+   * @return the search type
+   */
+  public SavedSearchType getSearchType() {
+    return searchType;
+  }
+
+  /**
    * Is this search meant to run weekly?
    *
    * @return boolean
@@ -109,31 +115,4 @@ public class SavedSearchView {
   public Date getLastMonthlySearchTime() {
     return lastMonthlySearchTime;
   }
-
-  public String getEmailAddress() {
-    return emailAddress;
-  }
-
-  public List<SavedSearchHit> getSearchHitList() {
-    return searchHitList;
-  }
-
-  public void setSearchHitList(List<SavedSearchHit> searchHitList) {
-    this.searchHitList = searchHitList;
-  }
-
-  public Date getLastSearchTime() {
-    return lastSearchTime;
-  }
-
-
-  public Date getCurrentTime() {
-    return currentTime;
-  }
-
-  public void setCurrentTime(Date currentTime) {
-    this.currentTime = currentTime;
-  }
-
-
 }

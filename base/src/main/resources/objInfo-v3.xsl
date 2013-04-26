@@ -168,6 +168,14 @@
   <xsl:apply-templates/>END_TITLE
 </xsl:template>
 
+<!-- mml:math -->
+<xsl:template match="mml:*">
+  <xsl:element name="{local-name()}">
+    <xsl:copy-of copy-namespaces="no" select="@*"/>
+    <xsl:apply-templates/>
+  </xsl:element>
+</xsl:template>
+
 <!-- 2/9/12: keep old version -->
 <xsl:template match="text()">
   <xsl:value-of select="translate(., '&#x200A;&#8764;', ' ~') "/>

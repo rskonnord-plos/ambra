@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +70,9 @@ public class SolrSearchService implements SearchService {
   private static final int MAX_FACET_SIZE = 100;
   private static final int MIN_FACET_COUNT = 1;
   private static final int MAX_HIGHLIGHT_SNIPPETS = 3;
+
+  //For saved search alerts, just assume we want all records, 750 seems like a reasonable limit
+  private static final int MAX_SAVED_SEARCH_SIZE = 750;
 
   // sort option possible values (sort direction is optional)
   // field desc|asc
@@ -596,6 +600,11 @@ public class SolrSearchService implements SearchService {
       query.addFilterQuery(createFilterLimitForSubject(sp.getFilterSubjects()));
     }
 
+    // Not used in form, but in savedSearch alerts
+    if (sp.getFilterSubjectsDisjunction() != null && sp.getFilterSubjectsDisjunction().length > 0) {
+      query.addFilterQuery(createFilterLimitForSubjectDisjunction(sp.getFilterSubjectsDisjunction()));
+    }
+
     // Form field description: "Article Types".  Query Filter.
     if (sp.getFilterArticleType() != null && sp.getFilterArticleType().length() > 0) {
       query.addFilterQuery(createFilterLimitForArticleType(sp.getFilterArticleType()));
@@ -648,6 +657,15 @@ public class SolrSearchService implements SearchService {
       fq.append("subject:\"").append(category).append("\" AND ");
     }
     return fq.replace(fq.length() - 5, fq.length(), "").toString(); // Remove last " AND".
+  }
+
+  private String createFilterLimitForSubjectDisjunction(String[] subjects) {
+    Arrays.sort(subjects); // Consistent order so that each filter will only be cached once.
+    StringBuilder fq = new StringBuilder();
+    for (String category : subjects) {
+      fq.append("subject:\"").append(category).append("\" OR ");
+    }
+    return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
   private String createFilterLimitForArticleType(String artycleType) {
@@ -748,7 +766,8 @@ public class SolrSearchService implements SearchService {
     query.setRows(pageSize); // The number of results elements to return.
     // request only fields that we need to display
     query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type",
-        "author_display", "abstract", "abstract_primary_display", "striking_image", "figure_table_caption");
+        "author_display", "abstract", "abstract_primary_display", "striking_image", "figure_table_caption",
+        "subject");
     query.addFacetField("subject_facet");
     query.addFacetField("author_facet");
     query.addFacetField("editor_facet");
@@ -870,6 +889,7 @@ public class SolrSearchService implements SearchService {
       List<String> authorList = SolrServiceUtil.getFieldMultiValue(document, "author_display", String.class, message);
       // TODO create a dedicated field for checking the existence of assets for a given article.
       List<String> figureTableCaptions = SolrServiceUtil.getFieldMultiValue(document, "figure_table_caption", String.class, message);
+      List<String> subjects = SolrServiceUtil.getFieldMultiValue(document, "subject", String.class, message);
 
       String highlights = null;
       if (query.getHighlight()) {
@@ -887,9 +907,19 @@ public class SolrSearchService implements SearchService {
         }
       }
 
+      //Flatten the list of subjects to a unique set
+      Set<String> flattenedSubjects = new HashSet<String>();
+      for(String subject : subjects) {
+        for(String temp : subject.split("/")) {
+          if(temp.trim().length() > 0) {
+            flattenedSubjects.add(temp);
+          }
+        }
+      }
+
       SearchHit hit = new SearchHit(
           score, id, title, highlights, authorList, publicationDate, eissn, journal, articleType,
-          abstractResult);
+          abstractResult, flattenedSubjects);
 
       hit.setStrikingImage(strikingImage);
       if (figureTableCaptions.size() > 0) {
@@ -1020,7 +1050,7 @@ public class SolrSearchService implements SearchService {
             + sParams.getQuery().trim());
       }
 
-      query = createQuery(sParams.getQuery(), sParams.getStartPage(), sParams.getPageSize(), false);
+      query = createQuery(sParams.getQuery(), 0, MAX_SAVED_SEARCH_SIZE, false);
       query.setQuery(sParams.getQuery());
       //If the keywords parameter is specified, we need to change what field we're querying against
       //aka, body, conclusions, materials and methods ... etc ...
@@ -1044,12 +1074,13 @@ public class SolrSearchService implements SearchService {
       log.debug("Advanced Saved Search performed on the unformattedSearch String: {}",
           sParams.getUnformattedQuery().trim());
       sp = cleanStrings(sParams);
-      query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
+      query = createQuery(null, 0, MAX_SAVED_SEARCH_SIZE, false);
       query.setQuery(sParams.getUnformattedQuery());
       setFilters(query, sp, true);
     }
 
     query.addFilterQuery(createFilterLimitForPublishDate(lastSearchTime, currentSearchTime));
+
     SearchResultSinglePage results = search(query);
 
     return results.getHits();
