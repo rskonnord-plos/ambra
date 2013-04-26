@@ -67,7 +67,7 @@ input.btn + span.required { padding-left: 5px; }
 }
 /************* general comambrant styles *****************/
 .ambra-form ol li label, label { display: block; font-size:12px; color:#333; margin-bottom:2px; line-height:normal; }
-.ambra-form ol li input { width: 206px; border:1px solid #999; padding: 2px; }
+.ambra-form ol li input:not([type="submit"]) { width: 206px; border:1px solid #999; padding: 2px; }
 .ambra-form ol li input.radio { border-width: 0; }
 .ambra-form ol li .long-input { width: 430px; }
 .ambra-form ol li select { padding: 1px; width:213px; margin-top: -2px; }
@@ -105,7 +105,7 @@ input.btn + span.required { padding-left: 5px; }
 .public-private label { position:relative; top:-2px; }
 
 /************* alerts styles *****************/
-#alert-form ol { overflow:hidden; position:relative; width:545px; }
+#alert-form ol { overflow:hidden; position:relative; width:900px; }
 #alert-form ol ol { width:auto; }
 #alert-form .alerts-title { width: 300px; float:left; font-weight:bold; margin:0; padding:5px 0; }
 #alert-form .alerts-weekly { width:160px; margin:0; padding:5px 0; }
@@ -209,3 +209,163 @@ div#formError {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+/** CSS for journal alerts selector **/
+
+.alertToggle {
+  width: 4px;
+  height: 7px;
+  background-image: url(../images/bul.pt.blu.gif);
+  float: right;
+  margin-top: 7px;
+  margin-right: 3px;
+}
+
+li.filtered :hover {
+  background-color: #3C63AF;
+}
+
+li.filtered {
+  border: 0 !important;
+}
+
+li.subjectAreaSelector > div:nth-child(3) {
+  margin-bottom: 10px;
+}
+
+li.subjectAreaSelector div.selectSubjectAreas {
+  float:left;
+  border: 1px solid black;
+}
+
+li.subjectAreaSelector div.selectedSubjectAreas {
+  float:left;
+  margin-left: 10px;
+}
+
+li.subjectAreaSelector div.row {
+  clear:both;
+}
+
+li.subjectAreaSelector div.selectSubjectAreas {
+  width: 380px;
+  height: 450px;
+  overflow: auto;
+}
+
+#alert-form ol.selector {
+
+}
+
+#alert-form div.row .subjectSearchInput {
+  float:left;
+}
+
+#alert-form div.row .subjectSearchInput input[type="button"] {
+  float:left;
+  margin-left: 10px;
+}
+
+#alert-form div.row div.clearFilter {
+  background: url("/images/btn.close.png") no-repeat scroll 3px 3px / 12px 12px #606060;
+  border-radius: 3px 3px 3px 3px;
+  cursor: pointer;
+  height: 17px;
+  width: 18px;
+  float: left;
+  padding: 0;
+  margin: 0;
+  top: 41px;
+  left: 192px;
+  position:absolute;
+}
+
+#alert-form ol.selector li {
+  cursor: default;
+  padding: 0;
+  float: none;
+}
+
+#alert-form ol.selector li span {
+  padding: 5px;
+  cursor: pointer;
+}
+
+#alert-form ol.selector li span:hover {
+  /* TODO: Fix color */
+  background-color: #add8e6;
+}
+
+#alert-form ol.selector li span:hover:after {
+  /*content: '  ✚  ';*/
+  content: '  +  ';
+}
+
+#alert-form ol.selector li span.checked {
+  cursor: default;
+}
+
+#alert-form ol.selector li span.checked:after {
+  content: ' ✓ ';
+}
+
+#alert-form ol.selector li span.checked:hover {
+  background-color: transparent;
+}
+
+#alert-form ol.selector li span.checked {
+  color: #afafaf;
+}
+
+#alert-form ol.selector li ol li {
+  padding-left: 15px;
+}
+
+#alert-form ol.selector li img {
+  margin-left: 8px;
+  background-repeat:no-repeat;
+  background-position: center;
+  width: 12px;
+  height: 14px;
+}
+
+#alert-form ol.selector li img.expand {
+  background-image: url('/images/bul.pt.blu.gif');
+  cursor: pointer;
+}
+
+#alert-form ol.selector li img.expanded {
+  background-image: url('/images/bul.pt.blu.dn.gif');
+  cursor: pointer;
+}
+
+#alert-form div.selectedSubjectAreas ol li {
+  float: none;
+}
+
+#alert-form div.selectedSubjectAreas div.subjectsSelected h4 {
+  margin-bottom: 0;
+}
+
+#alert-form div.selectedSubjectAreas ol li div {
+  background: none repeat scroll 0 0 #646464;
+  border-radius: 4px 4px 4px 4px;
+  color: #FFFFFF;
+  font-weight: bold;
+  line-height: 28px;
+  margin: 0 6px 6px 0;
+  padding: 0 9px 0 10px;
+}
+
+#alert-form div.selectedSubjectAreas ol li div img {
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* TODO: Remove me! */
+li.subjectAreaSelector div {
+  /*border: 1px solid black;*/
+  /*margin: 5px;*/
+}
+
+/** END CSS for journal alerts selector **/
