@@ -1100,23 +1100,11 @@
       </xsl:if>
       <xsl:if test="not(.//graphic)">
         <xsl:if test=".//table">
-          <!--<xsl:variable name="articleDoi">
-            <xsl:value-of select="//article/front/article-meta/article-id[@pub-id-type='doi']"/>
-          </xsl:variable>
-          <xsl:variable name="tableShowURL">
-            <xsl:value-of select="concat($pubAppContext, '/article/fetchTable.action?articleURI=info:doi/',
-                $articleDoi, '&amp;tableId=', $figId, '&amp;representation=HTML')"/>
-          </xsl:variable>
-          <xsl:variable name="tableDownloadURL">
-            <xsl:value-of select="concat($pubAppContext, '/article/fetchTable.action?articleURI=info:doi/',
-                $articleDoi, '&amp;tableId=', $figId, '&amp;representation=CSV')"/>
-          </xsl:variable>-->
           <div class="table-wrap">
             <xsl:attribute name="name">
               <xsl:value-of select="$figId"/>
             </xsl:attribute>
             <div class="expand">
-              <!--window.open(<xsl:value-of select="concat($apos, $tableShowURL, $apos)"/>);-->
               <xsl:attribute name="onclick">
                 return tableOpen(<xsl:value-of select="concat($apos, $figId, $apos)"/>, "HTML");
               </xsl:attribute>
@@ -1132,11 +1120,6 @@
               </xsl:if>
             </p>
             <xsl:apply-templates select="caption/node()[not(self::title)]"/>
-            <!--
-            <xsl:if test="object-id[@pub-id-type='doi']">
-              <span><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
-            </xsl:if>
-            -->
             <div class="table-download">
               <div class="icon">
                 <xsl:attribute name="onclick">
@@ -1145,7 +1128,6 @@
                 CSV
               </div>
               <a class="label">
-                <!--<xsl:attribute name="href"><xsl:value-of select="$tableDownloadURL"/></xsl:attribute>-->
                 <xsl:attribute name="onclick">
                   return tableOpen(<xsl:value-of select="concat($apos, $figId, $apos)"/>, "CSV");
                 </xsl:attribute>
