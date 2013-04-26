@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +10,11 @@
  */
 package org.ambraproject.views;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Value object that holds the result of a single search item
@@ -25,6 +27,7 @@ public class SavedSearchHit implements Serializable {
   private final String uri;
   private final String title;
   private final String creator;
+  private final Collection<String> subjects;
 
   /**
    * Create a search hit with the values set
@@ -32,14 +35,14 @@ public class SavedSearchHit implements Serializable {
    * @param uri Article ID
    * @param title Article title
    * @param creators Creators
+   * @param subjects Subjects
    */
-  public SavedSearchHit(String uri, String title, String creators) {
+  public SavedSearchHit(String uri, String title, String creators, Collection<String> subjects) {
     this.uri        = uri;
     this.title      = title;
     this.creator    = creators;
-
+    this.subjects   = subjects;
   }
-
 
   /**
    * @return the hit object's uri
@@ -47,7 +50,6 @@ public class SavedSearchHit implements Serializable {
   public String getUri() {
     return uri;
   }
-
 
   /**
    * Getter for property 'creator'.
@@ -65,6 +67,13 @@ public class SavedSearchHit implements Serializable {
     return title;
   }
 
+  /**
+   * Getter for property 'subjects'.
+   * @return Value for property 'subjects'.
+   */
+  public Collection<String> getSubjects() {
+    return subjects;
+  }
 
   @Override
   public String toString() {
@@ -72,6 +81,7 @@ public class SavedSearchHit implements Serializable {
         ", uri='" + uri + '\'' +
         ", title='" + title + '\'' +
         ", creator='" + creator + '\'' +
+        ", subjects='" + (subjects == null ? null : Arrays.asList(subjects)) + "'" +
         '}';
   }
 
@@ -83,12 +93,10 @@ public class SavedSearchHit implements Serializable {
     SavedSearchHit searchHit = (SavedSearchHit) o;
 
     return uri.equals(searchHit.uri);
-
   }
 
   @Override
   public int hashCode() {
     return uri.hashCode();
   }
-
 }

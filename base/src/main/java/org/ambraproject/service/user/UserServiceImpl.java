@@ -24,6 +24,8 @@ package org.ambraproject.service.user;
 import com.google.gson.Gson;
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.SavedSearch;
+import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserSearch;
@@ -178,6 +180,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
    * {@inheritDoc}
    */
   @Transactional(rollbackFor = {Throwable.class})
+  @SuppressWarnings("unchecked")
   public void saveSearch(Long userProfileId,
                          SearchParameters searchParameters,
                          String name,
@@ -193,8 +196,25 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
     UserProfile user = hibernateTemplate.get(UserProfile.class, userProfileId);
 
-    SavedSearch savedSearch = new SavedSearch(name, searchParametersString);
+    String queryHash = TextUtils.createHash(searchParametersString);
+    SavedSearchQuery query;
 
+    //Check to see if a matching savedSearch exists already.
+    List<SavedSearchQuery> queryList =
+      hibernateTemplate.findByCriteria(DetachedCriteria.forClass(SavedSearchQuery.class)
+        .add(Restrictions.eq("hash", queryHash))
+        .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY));
+
+    if(queryList.size() == 0) {
+      //It does exist, lets not create a new record
+      query = new SavedSearchQuery(searchParametersString, queryHash);
+      hibernateTemplate.save(query);
+    } else {
+      query = queryList.get(0);
+    }
+
+    SavedSearch savedSearch = new SavedSearch(name, query);
+    savedSearch.setSearchType(SavedSearchType.USER_DEFINED);
     savedSearch.setWeekly(weekly);
     savedSearch.setMonthly(monthly);
 

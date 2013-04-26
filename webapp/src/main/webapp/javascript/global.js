@@ -272,7 +272,11 @@ function initMainContainer() {
 
   $("#nav-article li a").on("click", function(event) {
     console.log("pjax click " + this.name);
-    if(selected_tab == "metrics") {
+    // for metrics and related content that have dynamic javascript to populate
+    // the content, cache the content here when the user navigates away from that
+    // page. So that this cache can be reused when the user navigates back to
+    // this page later.
+    if(selected_tab == "metrics" || selected_tab == "related") {
       if($.pjax.contentCache[window.location.href] !== undefined) {
         $.pjax.contentCache[window.location.href].data = $("#pjax-container").outerHTML();
         $.pjax.contentCache[window.location.href].loaded = true;
@@ -1116,6 +1120,16 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           $thmb_1.trigger('click');
         }
         buildAbs(data, imgNotOnPage);
+
+        // rerun mathjax
+        try {
+          var domelem = $modal[0];
+          if (domelem && typeof MathJax != "undefined") {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,domelem]);
+          }
+        } catch (e) {
+          // ignore
+        }
       }
     });
   };
@@ -1548,6 +1562,19 @@ if ($(document).pjax) {
       $.getScript("http://wl.figshare.com/static/jmvc/main_app/resources/jwplayer/jwplayer.js");
       figshare_widget_load = true;
     }
+
+    // For related pages, if no item exists under more_by_authors and
+    // the page is not yet cached, reload the javascript to populate the
+    // related content.
+    else if (pjax_selected_tab == "related"){
+      if($('div[id="more_by_authors"] > ul > li').length == 0) {
+        if($.pjax.contentCache[window.location.href] === undefined ||
+            !$.pjax.contentCache[window.location.href].loaded) {
+          $.getScript("/javascript/related_content.js");
+        }
+      }
+    }
+
   });
 }
 
