@@ -757,6 +757,11 @@ $(document).ajaxComplete(function(){
         e.preventDefault();
         var this_lnk = $(this);
         var this_href = this_lnk.attr('href');
+
+        if(this_lnk.is("[url]")) {
+          window.history.pushState({}, document.title, this_lnk.attr('url'));
+        }
+
         $panes.hide();
         if (this_lnk.is('[data-loadurl]')) {
           $(this_href).load(this_lnk.data('loadurl'));
