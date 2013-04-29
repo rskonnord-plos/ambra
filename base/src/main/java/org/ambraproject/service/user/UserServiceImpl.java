@@ -218,6 +218,34 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     return user;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public UserProfile removedFilteredWeeklySearchAlert(Long userProfileId, String journal) {
+    UserProfile user = getUser(userProfileId);
+
+    SavedSearch oldSearch = null;
+
+    //We key off of the title as it is not user facing
+    for(SavedSearch savedSearch : user.getSavedSearches()) {
+      if(savedSearch.getSearchType() == SavedSearchType.JOURNAL_ALERT
+        && savedSearch.getWeekly()
+        && savedSearch.getSearchName().equals(journal)) {
+
+        oldSearch = savedSearch;
+      }
+    }
+
+    if(oldSearch != null) {
+      user.getSavedSearches().remove(oldSearch);
+    }
+
+    hibernateTemplate.save(user);
+
+    return user;
+  }
+
 
   /**
    * {@inheritDoc}

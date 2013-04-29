@@ -96,6 +96,16 @@ public interface UserService {
   public UserProfile setFilteredWeeklySearchAlert(Long userProfileId, String[] subjects, String journal);
 
   /**
+   * Removed a weekly filtered savedSearch alert for the passed in journal and userProfile
+   *
+   * @param userProfileId the userProfileID
+   * @param journal the journal entry
+   *
+   * @return
+   */
+  public UserProfile removedFilteredWeeklySearchAlert(Long userProfileId, String journal);
+
+  /**
    * Remove the saved search
    *
    * @param savedSearchId the savedSearchId to remove
