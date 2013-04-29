@@ -5110,13 +5110,17 @@ table.tile_mini td.data2 {
 #filter_container #clearFilter {
   position: absolute;
   top: 2px;
-  left: 268px;
+  left: 267px;
   width: 18px;
-  height: 18px;
+  height: 17px;
   cursor: default;
   background: #606060 url('/images/btn.close.png') no-repeat 3px 3px;
-  border-radius: 9px;
+  border-radius: 3px;
   background-size: 12px 12px;
+}
+
+#filter_container #clearFilter:hover {
+  background: #808080 url("/images/btn.close.png") no-repeat scroll 3px 3px;
 }
 
 /********** Find article *********************/
