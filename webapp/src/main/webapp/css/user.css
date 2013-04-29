@@ -267,7 +267,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 #alert-form div.row div.clearFilter {
-  background: url("/images/btn.close.png") no-repeat scroll 3px 3px / 12px 12px #606060;
+  background: #606060 url("/images/btn.close.png") no-repeat scroll 3px 3px;
   border-radius: 3px 3px 3px 3px;
   cursor: pointer;
   height: 17px;
@@ -275,9 +275,14 @@ li.subjectAreaSelector div.selectSubjectAreas {
   float: left;
   padding: 0;
   margin: 0;
-  top: 41px;
-  left: 192px;
+  top: 38px;
+  left: 191px;
   position:absolute;
+  display:none;
+}
+
+#alert-form div.row div.clearFilter:hover {
+  background: #808080 url("/images/btn.close.png") no-repeat scroll 3px 3px;
 }
 
 #alert-form ol.selector li {
