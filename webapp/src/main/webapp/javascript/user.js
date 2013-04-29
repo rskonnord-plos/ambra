@@ -182,6 +182,7 @@ $(function () {
     $.each(map, function(key, val) {
       console.log(val);
 
+      //TODO: Use different class when there are no children
       var img = "<image class=\"expanded\" src=\"/images/transparent.gif\"/>";
       var node = $("<li key=\"" + key + "\">" + img + "<span>" +
         key.replace(new RegExp("(" + filter + ")", "gi"), "<b>$1</b>")
