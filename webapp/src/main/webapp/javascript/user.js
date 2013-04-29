@@ -74,6 +74,8 @@ $(function () {
     });
 
     list.append(newNode);
+
+    enforceFormState();
   };
 
   var removeSubject = function(subject) {
@@ -89,6 +91,27 @@ $(function () {
     setJournalSubjectsFormValue(journal, selectedSubjects);
   };
 
+  /**
+   * If the user selects a subject without first making other form selections
+   * Auto selected appropriate items
+   */
+  var enforceFormState = function() {
+    $("#subjectSome_" + journal).prop('checked','true');
+    $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").prop('checked', 'true');
+  };
+
+  var toggleSubjectSelector = function(eventObj, journal) {
+    var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
+
+    if(selector.is(":visible")) {
+      $(selector).hide();
+      $(eventObj.target).find("span.alertToggle").removeClass("alertToggleOn").addClass("alertToggleOff");
+    } else {
+      $(selector).show();
+      $(eventObj.target).find("span.alertToggle").removeClass("alertToggleOff").addClass("alertToggleOn");
+    }
+  };
+
   var getTaxonomyTreeText = function(node) {
     parent = $(node).parent().parent()[0];
     if(parent.tagName == 'LI') {
@@ -96,14 +119,14 @@ $(function () {
     }
 
     return $(node).attr('key');
-  }
+  };
 
   /* Find matching subjects in the tree and mark them selected */
   var findAndDisableSubject = function(subject) {
     $("span:contains(" + subject + ")")
       .addClass("checked")
       .unbind('click');
-  }
+  };
 
   /* Find matching subjects in the tree and enable them to be selected */
   var findAndEnableSubject = function(subject) {
@@ -112,7 +135,7 @@ $(function () {
       .click(function(event) {
         selectSubject($(event.target).text());
       });
-  }
+  };
 
   var createTaxonomyNodes = function(rootNode, response) {
     $.each(response.categories, function(key, val) {
@@ -214,16 +237,17 @@ $(function () {
     });
   }
 
-
-  //Grab taxonomy data
-  $.get("/taxonomy/json", $(this).serialize())
-  .done(function(response) {
-    createTaxonomyNodes($('#subjectAreaSelector'), response);
-  })
-  .fail(function(response) {
-    displaySystemError($('form[name=userAlerts]'), response);
-    console.log(response);
-  });
+  //Grab base taxonomy data
+  var getInitialSubjectList = function() {
+    $.get("/taxonomy/json", $(this).serialize())
+    .done(function(response) {
+      createTaxonomyNodes($('#subjectAreaSelector'), response);
+    })
+    .fail(function(response) {
+      displaySystemError($('form[name=userAlerts]'), response);
+      console.log(response);
+    });
+  };
 
   $(".subjectSearchInput[type='text']").autocomplete({
     select: function(event, ul) {
@@ -273,9 +297,20 @@ $(function () {
     }
   });
 
-  //Bind events to existing elements
+  /* There is partial support here for multiple journals using the selector for the future */
+  var journal = $("li.subjectAreaSelector").attr("journal");
+
+  //Bind to UI events
   $("li div.filter-item img").click(function(event) {
     removeSubject($(event.target).parent().text().trim());
+  });
+
+  $("#subjectSome_" + journal).click(function (eventObj) {
+    enforceFormState();
+  });
+
+  $("#alert-form ol > li.filtered").click(function (eventObj) {
+    toggleSubjectSelector(eventObj, journal);
   });
 
   $(":input[name='searchSubject_btn']").click(function(eventObj) {
@@ -292,35 +327,38 @@ $(function () {
       });
   });
 
-  //TODO: Implement
-  $(":input[name='searchSubject']").keyup(function(eventObj) {
-    setTimeout(function() {
-      if ($("#searchBox").val() && $("#clearFilter").css("display") != "block") {
-        $("#clearFilter").css("display", "block");
-      }
-      else if (!$("#searchBox").val() && $("#clearFilter").css("display") == "block") {
-        $("#clearFilter").css("display", "none");
-      }
-    }, 0);
-    return true;
+  $(".subjectSearchInput[type='text']").keyup(function(eventObj) {
+    if ($(eventObj.target).val()) {
+      //enforceFormState();
+      $("div.clearFilter").css("display", "block");
+    } else {
+      $("div.clearFilter").css("display", "none");
+    }
   });
 
-  //TODO: Implement
-  $("#clearFilter").click(function(eventObj) {
-    $("#searchBox").val("");
-    $("#clearFilter").css("display", "none");
-    edBoard.getEditors();
-    $("#searchBox").focus();
+  $("div.clearFilter").click(function(eventObj) {
+    $(".subjectSearchInput[type='text']").val("");
+    $("div.clearFilter").css("display", "none");
+    $(".subjectSearchInput[type='text']").focus();
+    $('#subjectAreaSelector').children().remove();
+    getInitialSubjectList();
   });
 
-  /* There is partial support here for multiple journals using the selector for the future */
-  var journal = $("li.subjectAreaSelector").attr("journal");
+
+
+  if($('#subjectAreaSelector')) {
+    getInitialSubjectList();
+
+    //Don't bubble up the event
+    $("li.alerts-weekly input").click(function (eventObj) {
+      eventObj.stopPropagation();
+    });
+  }
 
   /*
    * End functions for the taxonomy browser
    *
    **/
-
 
   //setup tabs
   $("#user-forms").tabs();

@@ -116,6 +116,7 @@ public class EditUserAction extends UserActionSupport {
       throw new ServletException("Unable to resolve ambra user");
     }
 
+    //TODO: Better filtering here if the radio button for a custom weekly alert is selected
     UserProfile profile = userService.setAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts));
 
     if(this.journalSubjectFilters != null) {

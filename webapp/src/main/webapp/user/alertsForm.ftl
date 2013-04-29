@@ -47,23 +47,15 @@
             </li>
         <#list userAlerts as ua>
             <li<#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")> class="filtered"</#if>>
-                <span class="alerts-title">${ua.name} <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")><span class="alertToggle"></span></#if></span>
+                <span class="alerts-title">${ua.name} <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
+                  <span class="alertToggle<#if journalSubjectFilters[ua.key]??> alertToggleOn<#else> alertToggleOff</#if>"></span>
+                  </#if></span>
                 <ol>
                     <li class="alerts-weekly">
                       <#if ua.weeklyAvailable>
-                        <#--TODO: check if user has permission -->
-                        <#if ua.hasSubjectFilter()>
-
-                          <label for="${ua.key}">
-                            <@s.checkbox name="weeklyFilteredAlert" fieldValue="${ua.key}"/>
-                            Weekly
-                          </label>
-                        <#else>
-                            <label for="${ua.key}">
-                              <@s.checkbox name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
-                                Weekly </label>
-                        </#if>
-
+                        <label for="${ua.key}">
+                          <@s.checkbox name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
+                            Weekly </label>
                       </#if>
                     </li>
 
@@ -84,14 +76,14 @@
                   <input type="hidden" name="journalSubjectFilters['${ua.key}']" value="${subject}"/>
                 </#list>
               </#if>
-              <li class="subjectAreaSelector" journal="${ua.key}">
+              <li class="subjectAreaSelector" journal="${ua.key}"<#if !journalSubjectFilters[ua.key]??> style="display:none"</#if>>
                 <div class="row">
                   <label>
-                    <input id="allSubjectYes_${ua.key}" type="radio" name="allSubjectsOrNot" value="all"/>All subject areas (Sent as an
+                    <input id="subjectAll_${ua.key}" type="radio" name="allSubjectsOrNot" value="all"<#if !journalSubjectFilters[ua.key]??> checked="true"</#if>/>All subject areas (Sent as an
                     uncategorized article list, ordered by publication date)
                   </label>
                   <label>
-                    <input id="allSubjectNo_${ua.key}" type="radio" name="allSubjectsOrNot" value="some"/>Specify Subject areas (12 maximum)
+                    <input id="subjectSome_${ua.key}" type="radio" name="allSubjectsOrNot" value="some"<#if journalSubjectFilters[ua.key]??> checked="true"</#if>/>Specify Subject areas (12 maximum)
                   </label>
                 </div>
                 <div class="row">

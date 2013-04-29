@@ -213,20 +213,29 @@ div#formError {
 /** CSS for journal alerts selector **/
 
 .alertToggle {
-  width: 4px;
-  height: 7px;
-  background-image: url(../images/bul.pt.blu.gif);
   float: right;
-  margin-top: 7px;
+  margin-top: 3px;
   margin-right: 3px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 12px;
+  width: 12px;
 }
 
-li.filtered :hover {
-  background-color: #3C63AF;
+.alertToggleOff {
+  background-image: url(/images/bul.pt.blu.gif);
 }
 
-li.filtered {
-  border: 0 !important;
+.alertToggleOn {
+  background-image: url(/images/bul.pt.blu.dn.gif);
+}
+
+#alert-form ol > li.filtered {
+  cursor: pointer;
+}
+
+#alert-form ol > li.filtered:hover {
+  background-color: #add8e6;
 }
 
 li.subjectAreaSelector > div:nth-child(3) {
