@@ -32,12 +32,6 @@ public class EditUserAction extends UserActionSupport {
 
     showDisplayName = false;
 
-    final List<String> monthlyAlertsList = userProfile.getMonthlyAlerts();
-    final List<String> weeklyAlertsList = userProfile.getWeeklyAlerts();
-
-    monthlyAlerts = monthlyAlertsList.toArray(new String[monthlyAlertsList.size()]);
-    weeklyAlerts = weeklyAlertsList.toArray(new String[weeklyAlertsList.size()]);
-
     List<SavedSearchView> searches = userService.getSavedSearches(userProfile.getID());
 
     savedSearches = new ArrayList<SavedSearchView>();
@@ -60,8 +54,14 @@ public class EditUserAction extends UserActionSupport {
 
         //Assume one search alert per journal
         journalSubjectFilters.put(curJournal, subjectFilters);
+
+        //Append the weekly alert for the view
+        weeklyAlerts.add(curJournal);
       }
     }
+
+    monthlyAlerts = userProfile.getMonthlyAlerts();
+    weeklyAlerts = userProfile.getWeeklyAlerts();
 
     return SUCCESS;
   }
@@ -116,18 +116,29 @@ public class EditUserAction extends UserActionSupport {
       throw new ServletException("Unable to resolve ambra user");
     }
 
-    //TODO: Better filtering here if the radio button for a custom weekly alert is selected
-    UserProfile profile = userService.setAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts));
+    if(validateAlertInput()) {
+      UserProfile profile = userService.getUserByAuthId(authId);
 
-    if(this.journalSubjectFilters != null) {
-      for(String journal : journalSubjectFilters.keySet()) {
-        String[] subjects = journalSubjectFilters.get(journal);
+      if(this.filterSpecified != null) {
+        for(String journal : filterSpecified.keySet()) {
 
-        profile = userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journal);
+          if(filterSpecified.get(journal) != null && filterSpecified.get(journal).equals("subjects")) {
+            String[] subjects = journalSubjectFilters.get(journal);
+
+            profile = userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journal);
+
+            //The weekly alert is actually a savedSearch, remove from list
+            weeklyAlerts.remove(journal);
+          } else {
+            profile = userService.removedFilteredWeeklySearchAlert(profile.getID(), journal);
+          }
+        }
       }
-    }
 
-    session.put(Constants.AMBRA_USER_KEY, profile);
+      profile = userService.setAlerts(authId, monthlyAlerts, weeklyAlerts);
+
+      session.put(Constants.AMBRA_USER_KEY, profile);
+    }
 
     return retrieveAlerts();
   }
@@ -144,7 +155,7 @@ public class EditUserAction extends UserActionSupport {
       throw new ServletException("Unable to resolve ambra user");
     }
 
-    UserProfile profile = userService.setSavedSearchAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts), Arrays.asList(deleteAlerts));
+    UserProfile profile = userService.setSavedSearchAlerts(authId, monthlyAlerts, weeklyAlerts, deleteAlerts);
     session.put(Constants.AMBRA_USER_KEY, profile);
 
     return retrieveSearchAlerts();

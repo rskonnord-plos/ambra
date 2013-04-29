@@ -79,11 +79,11 @@
               <li class="subjectAreaSelector" journal="${ua.key}"<#if !journalSubjectFilters[ua.key]??> style="display:none"</#if>>
                 <div class="row">
                   <label>
-                    <input id="subjectAll_${ua.key}" type="radio" name="allSubjectsOrNot" value="all"<#if !journalSubjectFilters[ua.key]??> checked="true"</#if>/>All subject areas (Sent as an
+                    <input id="subjectAll_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="none"<#if !journalSubjectFilters[ua.key]??> checked="true"</#if>/>All subject areas (Sent as an
                     uncategorized article list, ordered by publication date)
                   </label>
                   <label>
-                    <input id="subjectSome_${ua.key}" type="radio" name="allSubjectsOrNot" value="some"<#if journalSubjectFilters[ua.key]??> checked="true"</#if>/>Specify Subject areas (12 maximum)
+                    <input id="subjectSome_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="subjects"<#if journalSubjectFilters[ua.key]??> checked="true"</#if>/>Specify Subject areas (12 maximum)
                   </label>
                 </div>
                 <div class="row">
