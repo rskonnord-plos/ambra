@@ -268,7 +268,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
 
 #alert-form div.row div.clearFilter {
   background: #606060 url("/images/btn.close.png") no-repeat scroll 3px 3px;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: 3px;
   cursor: pointer;
   height: 17px;
   width: 18px;
