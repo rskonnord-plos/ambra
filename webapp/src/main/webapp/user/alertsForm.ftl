@@ -88,6 +88,7 @@
                 </div>
                 <div class="row">
                   <input type="text" name="searchSubject" class="subjectSearchInput"/><div class="clearFilter"></div><input type="button" name="searchSubject_btn" value="Search" class="subjectSearchInput"/>
+                    <div class="errorMessage"></div>
                 </div>
                 <div class="row">
                   <div class="selectSubjectAreas">

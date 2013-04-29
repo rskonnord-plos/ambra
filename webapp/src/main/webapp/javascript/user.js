@@ -424,7 +424,7 @@ $(function () {
     $("li").removeClass("form-error");
   }
 
-  var validateResponse = function(formObj, response) {
+  var validateProfileResponse = function(formObj, response) {
     var formBtn = $(formObj).find(":input[name='formSubmit']");
 
     if(!$.isEmptyObject(response.fieldErrors)) {
@@ -438,6 +438,24 @@ $(function () {
           $(element).parent().addClass("form-error");
           $(element).after(" <span class='required temp'>" + response.fieldErrors[index] + "</span>");
         });
+      });
+    } else {
+      return true;
+    }
+  };
+
+  var validateAlertsResponse = function(formObj, response) {
+    //This action can only return one error
+    if(response.actionErrors.length > 0) {
+      //Display a message at the bottom of the form
+      $(formObj).find(":input[name='formSubmit']:eq(1)").each(function(index, val) {
+        var message = $('<span class="required temp">Please correct the error listed above.</span>');
+        $(val).after(message);
+      });
+
+      $(formObj).find(":input[name='formSubmit']:eq(o)").each(function(index, val) {
+        var message = $('<div class="required temp">' + response.actionErrors[0] + '</div>');
+        $(val).before(message);
       });
     } else {
       return true;
@@ -465,7 +483,7 @@ $(function () {
     $.post("/user/secure/saveProfileJSON.action", $(this).serialize())
       .done(function(response) {
         cleanMesssages();
-        if(validateResponse($('form[name=userForm]'), response)) {
+        if(validateProfileResponse($('form[name=userForm]'), response)) {
           confirmedSaved();
         }
       })
@@ -479,9 +497,11 @@ $(function () {
     event.preventDefault();
 
     $.post("/user/secure/saveUserAlertsJSON.action", $(this).serialize())
-      .done(function(json) {
-        //There is no form to validate
-        confirmedSaved();
+      .done(function(response) {
+        cleanMesssages();
+        if(validateAlertsResponse($('form[name=userAlerts]'), response)) {
+          confirmedSaved();
+        }
       })
       .fail(function(response) {
         displaySystemError($('form[name=userAlerts]'), response);
