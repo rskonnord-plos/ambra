@@ -339,6 +339,10 @@ li.subjectAreaSelector div.selectSubjectAreas {
   cursor: pointer;
 }
 
+#alert-form ol.selector li img.expanded-nopointer {
+  background-image: url('/images/bul.pt.blu.dn.gif');
+}
+
 #alert-form div.selectedSubjectAreas ol li {
   float: none;
 }
