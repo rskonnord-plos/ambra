@@ -127,22 +127,6 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
       isValid = false;
     }
 
-    for(String journal : filterSpecified.keySet()) {
-      //If the user has selected a filtered search result, check
-      //that they have selected at least one filter
-      if(filterSpecified.get(journal).equals("subjects")) {
-        if(journalSubjectFilters.get(journal) == null || journalSubjectFilters.get(journal).length == 0) {
-          addActionError("You must selected at least one subject to filter on");
-          isValid = false;
-        } else {
-          if(journalSubjectFilters.get(journal).length > 12) {
-            addActionError("You can not select more then 12 subjects to filter on");
-            isValid = false;
-          }
-        }
-      }
-    }
-
     isValid = checkProfanity() && isValid;
 
     return isValid;
