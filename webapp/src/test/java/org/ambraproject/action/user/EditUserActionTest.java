@@ -59,8 +59,8 @@ public class EditUserActionTest extends AmbraWebTest {
 
     dummyDataStore.store(user);
 
-    String[] expectedWeeklyAlerts = new String[]{"journal"};
-    String[] expectedMonthlyAlerts = new String[]{"journal", "journal1"};
+    List<String> expectedWeeklyAlerts = new ArrayList() {{  add("journal"); }};
+    List<String> expectedMonthlyAlerts = new ArrayList() {{ add("journal"); add("journal1"); }};
 
     //these come from the config
     List<UserAlert> alerts = new ArrayList<UserAlert>(2);
@@ -130,7 +130,7 @@ public class EditUserActionTest extends AmbraWebTest {
 
   @Test(dataProvider = "user")
   public void testExecuteWithExistingUser(UserProfile user, List<UserAlert> expectedAlerts,
-                                          String[] expectedWeeklyAlerts, String[] expectedMonthlyAlerts) throws Exception {
+                                          List<String> expectedWeeklyAlerts, List<String> expectedMonthlyAlerts) throws Exception {
     assertEquals(action.execute(), Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getActionErrors().size(), 0, "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
     assertEquals(action.getActionMessages().size(), 0, "Action returned messages: " + StringUtils.join(action.getActionErrors(), ";"));
@@ -162,9 +162,11 @@ public class EditUserActionTest extends AmbraWebTest {
       assertEquals(alert.isWeeklyAvailable(), matchingAlert.isWeeklyAvailable(), "alert had incorrect weekly availability");
       assertEquals(alert.getName(), matchingAlert.getName(), "alert had incorrect name");
     }
-    assertEqualsNoOrder(action.getWeeklyAlerts(), expectedWeeklyAlerts, "Action had incorrect weekly alerts for user");
-    assertEqualsNoOrder(action.getMonthlyAlerts(), expectedMonthlyAlerts, "Action had incorrect monthly alerts for user");
 
+    assertEqualsNoOrder(action.getWeeklyAlerts().toArray(), expectedWeeklyAlerts.toArray(),
+      "Action had incorrect weekly alerts for user");
+    assertEqualsNoOrder(action.getMonthlyAlerts().toArray(), expectedMonthlyAlerts.toArray(),
+      "Action had incorrect monthly alerts for user");
   }
 
   @Test(dataProvider = "user", dependsOnMethods = {"testExecuteWithExistingUser"})

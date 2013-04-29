@@ -27,8 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -39,9 +41,9 @@ public abstract class UserAlertsAction extends UserActionSupport {
   private static final Logger log = LoggerFactory.getLogger(UserAlertsAction.class);
 
   private String displayName;
-  private String[] monthlyAlerts = new String[]{};
-  private String[] weeklyAlerts = new String[]{};
-  private String[] deleteAlerts = new String[]{};
+  protected List<String> monthlyAlerts = new ArrayList<String>();
+  protected List<String> weeklyAlerts = new ArrayList<String>();
+  protected List<String> deleteAlerts = new ArrayList<String>();
   private List<SavedSearchView> savedSearches;
 
   /**
@@ -67,7 +69,7 @@ public abstract class UserAlertsAction extends UserActionSupport {
     if (authId == null) {
       throw new ServletException("Unable to resolve ambra user");
     }
-    userService.setAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts));
+    userService.setAlerts(authId, monthlyAlerts, weeklyAlerts);
     return SUCCESS;
   }
 
@@ -85,11 +87,9 @@ public abstract class UserAlertsAction extends UserActionSupport {
     }
 
     final UserProfile user = userService.getUserByAuthId(authId);
-    final List<String> monthlyAlertsList = user.getMonthlyAlerts();
-    final List<String> weeklyAlertsList = user.getWeeklyAlerts();
 
-    monthlyAlerts = monthlyAlertsList.toArray(new String[monthlyAlertsList.size()]);
-    weeklyAlerts = weeklyAlertsList.toArray(new String[weeklyAlertsList.size()]);
+    monthlyAlerts = user.getMonthlyAlerts();
+    weeklyAlerts = user.getWeeklyAlerts();
     displayName = user.getDisplayName();
 
     return SUCCESS;
@@ -115,7 +115,7 @@ public abstract class UserAlertsAction extends UserActionSupport {
     if (authId == null) {
       throw new ServletException("Unable to resolve ambra user");
     }
-    userService.setSavedSearchAlerts(authId, Arrays.asList(monthlyAlerts), Arrays.asList(weeklyAlerts), Arrays.asList(deleteAlerts));
+    userService.setSavedSearchAlerts(authId, monthlyAlerts, weeklyAlerts, deleteAlerts);
     return SUCCESS;
   }
 
@@ -134,7 +134,7 @@ public abstract class UserAlertsAction extends UserActionSupport {
   /**
    * @return categories that have monthly alerts
    */
-  public String[] getMonthlyAlerts() {
+  public List<String> getMonthlyAlerts() {
     return monthlyAlerts;
   }
 
@@ -144,13 +144,13 @@ public abstract class UserAlertsAction extends UserActionSupport {
    * @param monthlyAlerts monthlyAlerts
    */
   public void setMonthlyAlerts(final String[] monthlyAlerts) {
-    this.monthlyAlerts = monthlyAlerts;
+    this.monthlyAlerts = new LinkedList<String>(edu.emory.mathcs.backport.java.util.Arrays.asList(monthlyAlerts));
   }
 
   /**
    * @return weekly alert categories
    */
-  public String[] getWeeklyAlerts() {
+  public List<String> getWeeklyAlerts() {
     return weeklyAlerts;
   }
 
@@ -160,7 +160,7 @@ public abstract class UserAlertsAction extends UserActionSupport {
    * @param weeklyAlerts weeklyAlerts
    */
   public void setWeeklyAlerts(String[] weeklyAlerts) {
-    this.weeklyAlerts = weeklyAlerts;
+    this.weeklyAlerts = new LinkedList<String>(edu.emory.mathcs.backport.java.util.Arrays.asList(weeklyAlerts));
   }
 
   /**
@@ -177,11 +177,11 @@ public abstract class UserAlertsAction extends UserActionSupport {
     this.displayName = displayName;
   }
 
-  public String[] getDeleteAlerts() {
+  public List<String> getDeleteAlerts() {
     return deleteAlerts;
   }
 
   public void setDeleteAlerts(String[] deleteAlerts) {
-    this.deleteAlerts = deleteAlerts;
+    this.deleteAlerts = new LinkedList<String>(edu.emory.mathcs.backport.java.util.Arrays.asList(deleteAlerts));
   }
 }

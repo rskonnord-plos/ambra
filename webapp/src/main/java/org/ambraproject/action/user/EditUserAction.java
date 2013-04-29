@@ -30,6 +30,9 @@ public class EditUserAction extends UserActionSupport {
     UserProfile userProfile = userService.getUserByAuthId(authId);
     setFieldsFromProfile(userProfile);
 
+    monthlyAlerts = userProfile.getMonthlyAlerts();
+    weeklyAlerts = userProfile.getWeeklyAlerts();
+
     showDisplayName = false;
 
     List<SavedSearchView> searches = userService.getSavedSearches(userProfile.getID());
@@ -59,9 +62,6 @@ public class EditUserAction extends UserActionSupport {
         weeklyAlerts.add(curJournal);
       }
     }
-
-    monthlyAlerts = userProfile.getMonthlyAlerts();
-    weeklyAlerts = userProfile.getWeeklyAlerts();
 
     return SUCCESS;
   }
