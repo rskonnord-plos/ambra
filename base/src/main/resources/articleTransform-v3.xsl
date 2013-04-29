@@ -969,37 +969,35 @@
     <xsl:template match="fig | table-wrap">
       <xsl:variable name="figId"><xsl:value-of select="@id"/></xsl:variable>
       <xsl:variable name="apos">'</xsl:variable>
-      <xsl:variable name="imageURI"><xsl:value-of select=".//graphic/@xlink:href"/></xsl:variable>
-      <xsl:variable name="slideshowURL">
-        <xsl:value-of select="concat($pubAppContext, '/article/fetchObject.action?uri=',
-                $imageURI,'&amp;representation=PNG_M')"/>
-      </xsl:variable>
-
-      <xsl:variable name="pptURL">
-        <xsl:value-of select="concat('/article/',$imageURI, '/powerpoint')"/>
-      </xsl:variable>
-
-      <xsl:variable name="bigImgURL">
-        <xsl:value-of
-            select="concat('/article/',$imageURI,'/largerimage')"/>
-      </xsl:variable>
-      <xsl:variable name="bigImgDOI">
-        <xsl:value-of select="concat($imageURI,'.PNG_L')"/>
-      </xsl:variable>
-
-      <xsl:variable name="origImgURL">
-        <xsl:value-of select="concat('/article/',$imageURI,'/originalimage')"/>
-      </xsl:variable>
-      <xsl:variable name="origImgDOI">
-        <xsl:value-of select="concat($imageURI,'.TIF')"/>
-      </xsl:variable>
-
-
-      <xsl:variable name="targetURI">
-        <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
-      </xsl:variable>
-
       <xsl:if test=".//graphic">
+        <xsl:variable name="imageURI"><xsl:value-of select=".//graphic/@xlink:href"/></xsl:variable>
+        <xsl:variable name="slideshowURL">
+          <xsl:value-of select="concat($pubAppContext, '/article/fetchObject.action?uri=',
+                  $imageURI,'&amp;representation=PNG_M')"/>
+        </xsl:variable>
+
+        <xsl:variable name="pptURL">
+          <xsl:value-of select="concat('/article/',$imageURI, '/powerpoint')"/>
+        </xsl:variable>
+
+        <xsl:variable name="bigImgURL">
+          <xsl:value-of select="concat('/article/',$imageURI,'/largerimage')"/>
+        </xsl:variable>
+        <xsl:variable name="bigImgDOI">
+          <xsl:value-of select="concat($imageURI,'.PNG_L')"/>
+        </xsl:variable>
+
+        <xsl:variable name="origImgURL">
+          <xsl:value-of select="concat('/article/',$imageURI,'/originalimage')"/>
+        </xsl:variable>
+        <xsl:variable name="origImgDOI">
+          <xsl:value-of select="concat($imageURI,'.TIF')"/>
+        </xsl:variable>
+
+        <xsl:variable name="targetURI">
+          <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
+        </xsl:variable>
+
         <div class="figure">
           <!--id needs to be attached to "figure" div for proper anchor linking-->
           <xsl:attribute name="id"><xsl:value-of select="translate($figId, '.', '-')"/> </xsl:attribute>
@@ -1085,25 +1083,60 @@
             </ul>
           </div>
           <!--end figure download-->
-          <p><strong>
-              <strong><xsl:apply-templates select="label"/></strong>
+          <p>
+            <strong><xsl:apply-templates select="label"/></strong>
+            <xsl:if test="caption/title">
+              <xsl:text> </xsl:text>
+              <span>
+                <xsl:apply-templates select="caption/title"/>
+              </span>
+            </xsl:if>
+          </p>
+          <xsl:apply-templates select="caption/node()[not(self::title)]"/>
+          <xsl:if test="object-id[@pub-id-type='doi']">
+            <span><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
+          </xsl:if>
+        </div>
+      </xsl:if>
+      <xsl:if test="not(.//graphic)">
+        <xsl:if test=".//table">
+          <div class="table-wrap">
+            <xsl:attribute name="name">
+              <xsl:value-of select="$figId"/>
+            </xsl:attribute>
+            <div class="expand">
+              <xsl:attribute name="onclick">
+                return tableOpen(<xsl:value-of select="concat($apos, $figId, $apos)"/>, "HTML");
+              </xsl:attribute>
+            </div>
+            <div class="table"><xsl:apply-templates select=".//table"/></div>
+            <p class="caption">
+              <xsl:apply-templates select="label"/>
               <xsl:if test="caption/title">
                 <xsl:text> </xsl:text>
                 <span>
                   <xsl:apply-templates select="caption/title"/>
                 </span>
               </xsl:if>
-            </strong></p>
+            </p>
             <xsl:apply-templates select="caption/node()[not(self::title)]"/>
-            <xsl:if test="object-id[@pub-id-type='doi']">
-              <span><xsl:apply-templates select="object-id[@pub-id-type='doi']"/></span>
-            </xsl:if>
-          <div class="clearer"/>
-        </div>
-      </xsl:if>
-        <xsl:if test="not(.//graphic)">
-          <xsl:apply-templates />
+            <div class="table-download">
+              <div class="icon">
+                <xsl:attribute name="onclick">
+                  return tableOpen(<xsl:value-of select="concat($apos, $figId, $apos)"/>, "CSV");
+                </xsl:attribute>
+                CSV
+              </div>
+              <a class="label">
+                <xsl:attribute name="onclick">
+                  return tableOpen(<xsl:value-of select="concat($apos, $figId, $apos)"/>, "CSV");
+                </xsl:attribute>
+                Download CSV
+              </a>
+            </div>
+          </div>
         </xsl:if>
+      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
