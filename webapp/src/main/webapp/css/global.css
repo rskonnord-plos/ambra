@@ -2125,7 +2125,7 @@ div.table-wrap .expand {
   width: 25px;
   background: url(../images/icon.sprite.expand.png) no-repeat;
   position: absolute;
-  top: -26px;
+  top: -30px;
   right: 0px;
   cursor: pointer;
 }
