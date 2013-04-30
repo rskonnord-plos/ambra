@@ -12,7 +12,7 @@
 package org.ambraproject.action;
 
 import org.ambraproject.service.taxonomy.TaxonomyService;
-import org.ambraproject.util.MapUtils;
+import org.ambraproject.util.CategoryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -81,7 +81,7 @@ public class TaxonomyAction extends BaseActionSupport {
     //called more then once
 
     if(this.root == null) {
-      return MapUtils.keyCounts(categories);
+      return CategoryUtils.keyCounts(categories);
     }
 
     //Ignore first slash if it exists
@@ -90,7 +90,7 @@ public class TaxonomyAction extends BaseActionSupport {
     }
 
     if(this.root.trim().length() == 0) {
-      return MapUtils.keyCounts(categories);
+      return CategoryUtils.keyCounts(categories);
     } else {
       String[] levels = this.root.split("/");
       Map<String, Object> res = categories;
@@ -99,7 +99,7 @@ public class TaxonomyAction extends BaseActionSupport {
         res = (SortedMap<String, Object>)res.get(level);
       }
 
-      return MapUtils.keyCounts(res);
+      return CategoryUtils.keyCounts(res);
     }
   }
 
@@ -120,7 +120,7 @@ public class TaxonomyAction extends BaseActionSupport {
       }
 
       if(getActionErrors().size() == 0) {
-        return MapUtils.filterMap(categories, this.filter);
+        return CategoryUtils.filterMap(categories, this.filter);
       }
     }
 

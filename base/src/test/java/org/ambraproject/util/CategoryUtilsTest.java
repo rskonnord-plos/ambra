@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import static org.testng.Assert.assertEquals;
 
-public class MapUtilsTest {
-  private static Logger log = LoggerFactory.getLogger(MapUtilsTest.class);
+public class CategoryUtilsTest {
+  private static Logger log = LoggerFactory.getLogger(CategoryUtilsTest.class);
 
   @DataProvider(name = "makeMap")
   public Object[][] createMap() {
@@ -165,7 +165,7 @@ public class MapUtilsTest {
       log.debug(string);
     }
 
-    Map result = MapUtils.createMapFromStringList(before);
+    Map result = CategoryUtils.createMapFromStringList(before);
 
     if(log.isDebugEnabled()) {
       log.debug("Result Map:");
@@ -185,7 +185,7 @@ public class MapUtilsTest {
   @Test(dataProvider = "filterMap")
   @SuppressWarnings("unchecked")
   public void testFilterMap(String filter, Map expected, Map source) {
-    Map result = MapUtils.filterMap(source, new String[] { filter });
+    Map result = CategoryUtils.filterMap(source, new String[]{filter});
 
     log.debug("Source");
     printMap(source, 0);

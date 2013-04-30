@@ -10,8 +10,11 @@ import java.util.TreeMap;
 /**
  * Utilities for working with Maps
  */
-public class MapUtils {
-  private static final Logger log = LoggerFactory.getLogger(MapUtils.class);
+public class CategoryUtils {
+  private static final Logger log = LoggerFactory.getLogger(CategoryUtils.class);
+
+  private CategoryUtils() {}
+
   /**
    * For the top elements: return keys and the count of children
    *
