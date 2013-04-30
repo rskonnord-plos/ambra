@@ -79,6 +79,12 @@ $(function () {
     enforceFormState();
   };
 
+  var removeAllSubjects = function() {
+    for(var i = 0; i < selectedSubjects.length; i++) {
+      removeSubject(selectedSubjects[i]);
+    }
+  };
+
   var removeSubject = function(subject) {
     var list = $('div.subjectsSelected ol');
 
@@ -317,6 +323,22 @@ $(function () {
 
   $("#subjectSome_" + journal).click(function (eventObj) {
     enforceFormState();
+  });
+
+  $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function (eventObj) {
+    //Close the expanded subject selector
+    if(!eventObj.target.checked) {
+      var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
+
+      if(selector.is(":visible")) {
+        $(selector).slideUp();
+        $(eventObj.target).parents("li.filtered").find("span.alertToggle").removeClass("alertToggleOn").addClass("alertToggleOff");
+      }
+
+      $("#subjectAll_" + journal).prop('checked','true');
+
+      removeAllSubjects();
+    }
   });
 
   $("#alert-form ol > li.filtered").click(function (eventObj) {
