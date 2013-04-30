@@ -4,10 +4,8 @@ import org.ambraproject.Constants;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.views.SavedSearchView;
-
 import javax.servlet.ServletException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -121,16 +119,28 @@ public class EditUserAction extends UserActionSupport {
 
       if(this.filterSpecified != null) {
         for(String journal : filterSpecified.keySet()) {
+          //If the journal is not checked for weekly, just remove the alert
+          boolean weeklyChecked = false;
+          for(String s : weeklyAlerts) {
+            if(journal.equals(s)) {
+              weeklyChecked = true;
+            }
+          }
+
+          if(!weeklyChecked) {
+            userService.removedFilteredWeeklySearchAlert(profile.getID(), journal);
+            break;
+          }
 
           if(filterSpecified.get(journal) != null && filterSpecified.get(journal).equals("subjects")) {
             String[] subjects = journalSubjectFilters.get(journal);
 
-            profile = userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journal);
+            userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journal);
 
             //The weekly alert is actually a savedSearch, remove from list
             weeklyAlerts.remove(journal);
           } else {
-            profile = userService.removedFilteredWeeklySearchAlert(profile.getID(), journal);
+            userService.removedFilteredWeeklySearchAlert(profile.getID(), journal);
           }
         }
       }
