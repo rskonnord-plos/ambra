@@ -63,8 +63,9 @@ $(function () {
     setJournalSubjectsFormValue(journal, selectedSubjects);
 
     if($("div.noSubjectsSelected").is(":visible")) {
-      $("div.noSubjectsSelected").hide();
-      $('div.subjectsSelected').show();
+      $("div.noSubjectsSelected").slideUp({ complete: function() {
+        $('div.subjectsSelected').slideDown();
+      }});
     }
 
     var newNode = $("<li><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
@@ -86,9 +87,18 @@ $(function () {
       return (subject != value);
     });
 
-    list.find("div:contains(" + subject + ")").parent().remove();
+    list.find("div:contains(" + subject + ")").parent().slideUp({ complete: function() {
+      list.find("div:contains(" + subject + ")").parent().remove();
+    }});
+
     findAndEnableSubject(subject);
     setJournalSubjectsFormValue(journal, selectedSubjects);
+
+    if(selectedSubjects.length == 0) {
+      $("div.subjectsSelected").slideUp({ complete: function() {
+        $('div.noSubjectsSelected').slideDown();
+      }});
+    }
   };
 
   /**
@@ -104,10 +114,10 @@ $(function () {
     var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
 
     if(selector.is(":visible")) {
-      $(selector).hide();
+      $(selector).slideUp();
       $(eventObj.target).find("span.alertToggle").removeClass("alertToggleOn").addClass("alertToggleOff");
     } else {
-      $(selector).show();
+      $(selector).slideDown();
       $(eventObj.target).find("span.alertToggle").removeClass("alertToggleOff").addClass("alertToggleOn");
     }
   };
@@ -421,6 +431,7 @@ $(function () {
   //Remove error messages before adding new ones
   var cleanMesssages = function() {
     $("span.required.temp").remove();
+    $("div.required.temp").remove();
     $("li").removeClass("form-error");
   }
 
@@ -453,10 +464,17 @@ $(function () {
         $(val).after(message);
       });
 
-      $(formObj).find(":input[name='formSubmit']:eq(o)").each(function(index, val) {
-        var message = $('<div class="required temp">' + response.actionErrors[0] + '</div>');
-        $(val).before(message);
-      });
+      if($(formObj).find("div.noSubjectsSelected").is(":visible")) {
+        $(formObj).find("div.noSubjectsSelected:eq(0)").each(function(index, val) {
+          var message = $('<div class="required temp">' + response.actionErrors[0] + '</div>');
+          $(val).after(message);
+        });
+      } else {
+        $(formObj).find(":input[name='formSubmit']:eq(0)").each(function(index, val) {
+          var message = $('<div class="required temp">' + response.actionErrors[0] + '</div>');
+          $(val).before(message);
+        });
+      }
     } else {
       return true;
     }

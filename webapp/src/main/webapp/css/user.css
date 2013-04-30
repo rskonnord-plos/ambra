@@ -281,6 +281,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
   float:left;
   margin-left: 2px;
   width: 70px;
+  height: 26px;
 }
 
 #alert-form div.row div.clearFilter {
@@ -292,7 +293,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
   float: left;
   padding: 0;
   margin: 0;
-  top: 58px;
+  top: 57px;
   left: 287px;
   position:absolute;
   display:none;
@@ -319,7 +320,6 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 #alert-form ol.selector li span:hover:after {
-  /*content: '  ✚  ';*/
   content: '  +  ';
 }
 
@@ -328,7 +328,8 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 #alert-form ol.selector li span.checked:after {
-  content: ' ✓ ';
+  padding-left: 5px;
+  content: url('/images/icon.checkmark.png');
 }
 
 #alert-form ol.selector li span.checked:hover {
@@ -389,11 +390,23 @@ li.subjectAreaSelector div.selectSubjectAreas {
   vertical-align: middle;
   cursor: pointer;
 }
+#alert-form ol li.subjectAreaSelector div.row div.selectedSubjectAreas div.subjectsSelected div.required
+{
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
 
-/* TODO: Remove me! */
-li.subjectAreaSelector div {
-  /*border: 1px solid black;*/
-  /*margin: 5px;*/
+#alert-form ol li.subjectAreaSelector div.row div.selectedSubjectAreas div.subjectsSelected input#subjectSave.btn
+{
+  margin-bottom: 10px;
+}
+
+#alert-form ol li.subjectAreaSelector div.row div.selectedSubjectAreas div.noSubjectsSelected {
+ margin-bottom: 10px;
+}
+
+#alert-form ol li.subjectAreaSelector div.row div.selectedSubjectAreas div.noSubjectsSelected h3 {
+  margin-bottom: 0px;
 }
 
 /** END CSS for journal alerts selector **/

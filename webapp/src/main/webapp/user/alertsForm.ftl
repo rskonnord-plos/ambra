@@ -88,7 +88,6 @@
                 </div>
                 <div class="row">
                   <input type="text" name="searchSubject" class="subjectSearchInput"/><div class="clearFilter"></div><input type="button" name="searchSubject_btn" value="Search" class="btn primary"/>
-                    <div class="errorMessage"></div>
                 </div>
                 <div class="row">
                   <div class="selectSubjectAreas">
@@ -110,7 +109,7 @@
                       <input type="submit" class="btn primary" id="subjectSave" name="formSubmit" value="Save"/>
                     </div>
                     <div class="noSubjectsSelected"<#if journalSubjectFilters[ua.key]??> style="display:none;"</#if>>
-                      <h5>No subject areas specified</h5>
+                      <h3>No subject areas specified</h3>
                       Select <b>up to 12</b> subject areas from the list on the left.
                     </div>
                   </div>
