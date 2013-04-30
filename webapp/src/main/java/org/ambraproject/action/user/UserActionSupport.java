@@ -135,18 +135,20 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   protected boolean validateAlertInput() {
     boolean isValid = true;
 
-    for(String journal : filterSpecified.keySet()) {
-      //If the user has selected a filtered search result, check
-      //that they have selected at least one filter and no more then 12
-      if(filterSpecified.get(journal).equals("subjects")) {
-        if(journalSubjectFilters == null || journalSubjectFilters.get(journal) == null ||
-          journalSubjectFilters.get(journal).length == 0) {
-          addActionError("You must selected at least one subject to filter on");
-          isValid = false;
-        } else {
-          if(journalSubjectFilters.get(journal).length > 12) {
-            addActionError("You can not select more then 12 subjects to filter on");
+    if(filterSpecified != null) {
+      for(String journal : filterSpecified.keySet()) {
+        //If the user has selected a filtered search result, check
+        //that they have selected at least one filter and no more then 12
+        if(filterSpecified.get(journal).equals("subjects")) {
+          if(journalSubjectFilters == null || journalSubjectFilters.get(journal) == null ||
+            journalSubjectFilters.get(journal).length == 0) {
+            addActionError("You must selected at least one subject to filter on");
             isValid = false;
+          } else {
+            if(journalSubjectFilters.get(journal).length > 12) {
+              addActionError("You can not select more then 12 subjects to filter on");
+              isValid = false;
+            }
           }
         }
       }
@@ -422,7 +424,11 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
    * @param monthlyAlerts monthlyAlerts
    */
   public void setMonthlyAlerts(final String[] monthlyAlerts) {
-    this.monthlyAlerts = Arrays.asList(monthlyAlerts);
+    if(monthlyAlerts != null) {
+      this.monthlyAlerts = new LinkedList<String>(Arrays.asList(monthlyAlerts));
+    } else {
+      this.monthlyAlerts = null;
+    }
   }
 
   /**
@@ -439,7 +445,11 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
    */
   public void setWeeklyAlerts(String[] weeklyAlerts) {
     //Use LinkedList as it supports removing items
-    this.weeklyAlerts = new LinkedList<String>(Arrays.asList(weeklyAlerts));
+    if(weeklyAlerts != null) {
+      this.weeklyAlerts = new LinkedList<String>(Arrays.asList(weeklyAlerts));
+    } else {
+      this.weeklyAlerts = null;
+    }
   }
 
   public List<String> getDeleteAlerts() {
@@ -448,7 +458,11 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
 
   public void setDeleteAlerts(String[] deleteAlerts) {
     //Use LinkedList as it supports removing items
-    this.deleteAlerts = new LinkedList<String>(Arrays.asList(deleteAlerts));
+    if(deleteAlerts != null) {
+      this.deleteAlerts = new LinkedList<String>(Arrays.asList(deleteAlerts));
+    } else {
+      this.deleteAlerts = null;
+    }
   }
 
   public Map getJournalSubjectFilters()
