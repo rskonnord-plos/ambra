@@ -68,13 +68,15 @@ $(function () {
       }});
     }
 
-    var newNode = $("<li><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
+    var newNode = $("<li style=\"display:none;\"><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
 
     newNode.find("img").click(function(event) {
       removeSubject($(event.target).parent().text().trim());
     });
 
     list.append(newNode);
+
+    newNode.slideDown();
 
     enforceFormState();
   };
