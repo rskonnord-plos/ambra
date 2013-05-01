@@ -452,8 +452,16 @@ $(function () {
 
   //Remove error messages before adding new ones
   var cleanMesssages = function() {
-    $("span.required.temp").remove();
-    $("div.required.temp").remove();
+    $("span.required.temp").each(function(index, val) {
+      $(val).slideUp();
+      setTimeout(function() { $(val).remove() }, 500);
+    });
+
+    $("div.required.temp").each(function(index, val) {
+      $(val).slideUp();
+      setTimeout(function() { $(val).remove() }, 500);
+    });
+
     $("li").removeClass("form-error");
   }
 
@@ -482,19 +490,22 @@ $(function () {
     if(response.actionErrors.length > 0) {
       //Display a message at the bottom of the form
       $(formObj).find(":input[name='formSubmit']:eq(1)").each(function(index, val) {
-        var message = $('<span class="required temp">Please correct the error listed above.</span>');
+        var message = $('<span style=\"display:none\" class="required temp">Please correct the error listed above.</span>');
         $(val).after(message);
+        message.slideDown();
       });
 
       if($(formObj).find("div.noSubjectsSelected").is(":visible")) {
         $(formObj).find("div.noSubjectsSelected:eq(0)").each(function(index, val) {
-          var message = $('<div class="required temp">' + response.actionErrors[0] + '</div>');
+          var message = $('<div  style=\"display:none\" class="required temp">' + response.actionErrors[0] + '</div>');
           $(val).after(message);
+          message.slideDown();
         });
       } else {
         $(formObj).find(":input[name='formSubmit']:eq(0)").each(function(index, val) {
-          var message = $('<div class="required temp">' + response.actionErrors[0] + '</div>');
+          var message = $('<div  style=\"display:none\" class="required temp">' + response.actionErrors[0] + '</div>');
           $(val).before(message);
+          message.slideDown();
         });
       }
     } else {
