@@ -105,8 +105,8 @@
 
   <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes" depends-on="activemq">
     <!-- Basically, never run, the route is started manually in the test -->
-    <property name="weeklyCron" value="*+*+*+1+*+?"/>
-    <property name="monthlyCron" value="*+*+*+1+*+?"/>
+    <property name="weeklyCron" value="1+*+*+1+*+?"/>
+    <property name="monthlyCron" value="1+*+*+1+*+?"/>
   </bean>
 
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
