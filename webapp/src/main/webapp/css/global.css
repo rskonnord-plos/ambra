@@ -2056,6 +2056,7 @@ div.table-wrap div.table {
 div.table-wrap table {
   margin: 0px;
   width: 100%;
+  cursor: pointer;
 }
 
 div.table-wrap table td {
