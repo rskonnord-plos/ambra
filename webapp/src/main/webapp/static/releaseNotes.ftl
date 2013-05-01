@@ -35,6 +35,18 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.2</h2>
+ <p>Released May 7th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.2</h3>
+ <ul>
+     <li>Early integration of XHTML table support</li>
+     <li>Solr and PlOS Queue refactoring</li>
+     <li>User preferences tab clean up and enhancement</li>
+     <li>Logic to send PMC usage total, PMIDs and PMCIDs to Solr</li>
+     <li>Fix for margin bug on article page metrics tab</li>
+     <li>Fix for search alerts deletion behavior</li>
+ </ul>
+
  <h2>Ambra 2.6.1</h2>
  <p>Released April 30th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.1</h3>
