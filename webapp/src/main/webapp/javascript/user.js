@@ -378,8 +378,6 @@ $(function () {
     getInitialSubjectList();
   });
 
-
-
   if($('#subjectAreaSelector')) {
     getInitialSubjectList();
 
@@ -543,6 +541,12 @@ $(function () {
         cleanMesssages();
         if(validateAlertsResponse($('form[name=userAlerts]'), response)) {
           confirmedSaved();
+
+          if($("#subjectAll_" + journal).is(':checked')) {
+            $("li.subjectAreaSelector[journal=" + journal + "]").slideUp();
+            $("#alert-form ol").find("span.alertToggle").removeClass("alertToggleOn").addClass("alertToggleOff");
+            removeAllSubjects();
+          };
         }
       })
       .fail(function(response) {
