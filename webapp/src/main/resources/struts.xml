@@ -389,12 +389,6 @@
       </result>
     </action>
 
-    <action name="findArticle" class="org.ambraproject.action.article.FindArticleAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/findArticle.ftl</param>
-      </result>
-    </action>
-
     <action name="emailThisArticleSubmit" class="org.ambraproject.action.article.EmailArticleAction" method="executeSend">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/emailSuccess.ftl</param>
