@@ -1599,7 +1599,7 @@ function tableOpen(tableId, type) {
   try {
     var table = $('div.table-wrap[name="' + tableId + '"]')
     if (type == "HTML") {
-      var w = window.open("about:blank", "_blank");
+      var w = window.open();
       w.document.open();
       w.document.writeln('<html><head><link rel="stylesheet" type="text/css" href="/css/global.css"></head>');
       w.document.writeln('<body style="background-color: #ffffff;">');
