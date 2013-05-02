@@ -40,11 +40,12 @@
  <h3>Features Implemented in Ambra 2.6.2</h3>
  <ul>
      <li>Early integration of XHTML table support</li>
-     <li>Solr and PlOS Queue refactoring</li>
+     <li>Solr and PLOS Queue refactoring</li>
      <li>User preferences tab clean up and enhancement</li>
      <li>Logic to send PMC usage total, PMIDs and PMCIDs to Solr</li>
      <li>Fix for margin bug on article page metrics tab</li>
      <li>Fix for search alerts deletion behavior</li>
+     <li></li>
  </ul>
 
  <h2>Ambra 2.6.1</h2>
