@@ -100,26 +100,6 @@
     <property name="connectionTimeout" value="30000"/>
   </bean>
 
-  <bean id="multiThreadedHttpConnectionManager"
-        class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
-    <property name="params" ref="httpConnectionManagerParams"/>
-  </bean>
-
-  <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
-    <constructor-arg index="0" ref="multiThreadedHttpConnectionManager"/>
-  </bean>
-
-  <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
-    <property name="httpClient" ref="httpClient"/>
-    <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
-  </bean>
-
-  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
-    <property name="sessionFactory" ref="hibernateSessionFactory"/>
-    <property name="permissionsService" ref="permissionsService"/>
-    <property name="crossRefLookupService" ref="crossRefLookupService"/>
-  </bean>
-
   <bean id="mailer" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="host" value="${plos.camel.mail"/>
   </bean>
