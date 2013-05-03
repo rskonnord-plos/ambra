@@ -41,7 +41,7 @@ $(function () {
     );
 
     return results;
-  }
+  };
 
   var setJournalSubjectsFormValue = function(journal, subjects) {
     var form = $("form[name=userAlerts]");
@@ -51,7 +51,7 @@ $(function () {
     for(var i = 0; i < subjects.length; i++) {
       form.append($("<input type=\"hidden\" name=\"journalSubjectFilters['" + journal + "']\" value=\"" + subjects[i] + "\">"));
     }
-  }
+  };
 
   var selectSubject = function(subject) {
     var list = $('div.subjectsSelected ol');
@@ -186,7 +186,7 @@ $(function () {
           $(this).addClass("checked");
         } else {
           $(this).click(function(event) {
-            selectSubject($(event.target).text());
+            selectSubject($(event.target).parents("li").attr("key"));
           });
         }
       });
@@ -246,7 +246,7 @@ $(function () {
           $(this).addClass("checked");
         } else {
           $(this).click(function(event) {
-            selectSubject($(event.target).text());
+            selectSubject($(event.target).parents("li").attr("key"));
           });
         }
 
@@ -334,7 +334,10 @@ $(function () {
 
       if(selector.is(":visible")) {
         $(selector).slideUp();
-        $(eventObj.target).parents("li.filtered").find("span.alertToggle").removeClass("alertToggleOn").addClass("alertToggleOff");
+        $(eventObj.target).parents("li.filtered")
+          .find("span.alertToggle")
+          .removeClass("alertToggleOn")
+          .addClass("alertToggleOff");
       }
 
       $("#subjectAll_" + journal).prop('checked','true');
