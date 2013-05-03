@@ -45,7 +45,6 @@
      <li>Logic to send PMC usage total, PMIDs and PMCIDs to Solr</li>
      <li>Fix for margin bug on article page metrics tab</li>
      <li>Fix for search alerts deletion behavior</li>
-     <li></li>
  </ul>
 
  <h2>Ambra 2.6.1</h2>
