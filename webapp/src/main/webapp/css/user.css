@@ -66,7 +66,7 @@ input.btn + span.required { padding-left: 5px; }
   float: none;
 }
 /************* general comambrant styles *****************/
-.ambra-form ol li label, label { display: block; font-size:12px; color:#333; margin-bottom:2px; line-height:normal; }
+.ambra-form ol li label, label { display: block; font-size:12px; color:#333; margin-bottom:2px; line-height:normal; cursor: pointer}
 .ambra-form ol li input:not([type="submit"]) { width: 206px; border:1px solid #999; padding: 2px; }
 .ambra-form ol li input.radio { border-width: 0; }
 .ambra-form ol li .long-input { width: 430px; }
