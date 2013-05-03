@@ -62,6 +62,12 @@
         <param name="noCache">true</param>
         <param name="wrapWithComments">true</param>
       </result-type>
+      <result-type name="json_nocomments" class="org.ambraproject.struts2.JsonResult">
+        <param name="excludeProperties">advisors, callbacks, permissions</param>
+        <param name="ignoreHierarchy">false</param>
+        <param name="noCache">true</param>
+        <param name="wrapWithComments">false</param>
+      </result-type>
       <result-type name="feed" class="org.ambraproject.struts2.AmbraFeedResult"/>
       <result-type name="citation" class="org.ambraproject.struts2.CitationResult"/>
     </result-types>
@@ -898,6 +904,20 @@
       </result>
     </action>
 
+    <action name="saveProfileJSON" class="org.ambraproject.action.user.EditUserAction" method="saveUser">
+      <result name="success" type="json_nocomments"/>
+      <result name="input" type="json_nocomments"/>
+    </action>
+
+    <action name="editUserAlerts" class="org.ambraproject.action.user.EditUserAction" method="retrieveAlerts">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
+      </result>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
+      </result>
+    </action>
+
     <action name="saveUserAlerts" class="org.ambraproject.action.user.EditUserAction" method="saveAlerts">
       <result name="success" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>
@@ -905,6 +925,11 @@
       <result name="input" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>
       </result>
+    </action>
+
+    <action name="saveUserAlertsJSON" class="org.ambraproject.action.user.EditUserAction" method="saveAlerts">
+      <result name="success" type="json_nocomments"/>
+      <result name="input" type="json_nocomments"/>
     </action>
 
     <action name="editSearchAlerts" class="org.ambraproject.action.user.EditUserAction" method="retrieveSearchAlerts">
@@ -923,6 +948,11 @@
       <result name="input" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>
       </result>
+    </action>
+
+    <action name="saveSearchAlertsJSON" class="org.ambraproject.action.user.EditUserAction" method="saveSearchAlerts">
+      <result name="success" type="json_nocomments"/>
+      <result name="input" type="json_nocomments"/>
     </action>
 
   </package>
