@@ -81,7 +81,7 @@ button, select, textarea, input:not([type="radio"]):not([type="checkbox"]) {
   margin: 0;
 }
 
-input[type="button"], input[type="submit"], input[type="reset"], button {
+input[type="button"], input[type="submit"], input[type="reset"], select, button {
   cursor: pointer;
 }
 
