@@ -81,7 +81,7 @@ button, select, textarea, input:not([type="radio"]):not([type="checkbox"]) {
   margin: 0;
 }
 
-input[type="button"], input[type="submit"], input[type="radio"], input[type="reset"], select, button {
+input[type="button"], input[type="submit"], input[type="radio"], input[type="checkbox"], input[type="reset"], select, button {
   cursor: pointer;
 }
 
@@ -5152,6 +5152,7 @@ div.findArticle h4 {
 /***************************** Adv search checkboxes *****************/
 .checkboxWrapper {
   position: relative;
+  cursor: pointer;
 }
 
 .checkboxOverlay {
