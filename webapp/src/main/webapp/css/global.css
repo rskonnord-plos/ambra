@@ -3912,6 +3912,10 @@ form.advSearch ol {
   padding: 6px 0 0 20px;
 }
 
+#unformattedSearchFormId label {
+  cursor: pointer;
+}
+
 #unformattedSearchFormId .options fieldset p {
   margin: 2px 0 7px 3px;
 }
