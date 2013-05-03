@@ -53,16 +53,16 @@
                 <ol>
                     <li class="alerts-weekly">
                       <#if ua.weeklyAvailable>
-                        <label for="${ua.key}">
-                          <@s.checkbox name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
+                        <label>
+                          <@s.checkbox accessKey="${ua.key}" name="weeklyAlerts" fieldValue="${ua.key}" value="${isFound(weeklyAlerts, ua.key)}"/>
                             Weekly </label>
                       </#if>
                     </li>
 
                     <li class="alerts-monthly">
                       <#if ua.monthlyAvailable>
-                          <label for="${ua.key}">
-                            <@s.checkbox name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
+                          <label>
+                            <@s.checkbox accessKey="${ua.key}" name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
                               Monthly </label>
                       <#else>
                         &nbsp;&nbsp;
