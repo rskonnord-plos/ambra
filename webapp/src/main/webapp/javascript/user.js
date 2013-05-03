@@ -328,8 +328,14 @@ $(function () {
   });
 
   $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function (eventObj) {
-    //Close the expanded subject selector
-    if(!eventObj.target.checked) {
+
+    if(eventObj.target.checked) {
+      $(eventObj.target).parents("li.filtered")
+        .find("span.alertToggle")
+        .removeClass("alertToggleOff")
+        .addClass("alertToggleOn");
+    } else {
+      //Close the expanded subject selector
       var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
 
       if(selector.is(":visible")) {
