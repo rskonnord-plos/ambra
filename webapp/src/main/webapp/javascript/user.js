@@ -120,13 +120,22 @@ $(function () {
 
   var toggleSubjectSelector = function(eventObj, journal) {
     var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
+    var parentLI = $(eventObj.target).parents("li.filtered");
 
     if(selector.is(":visible")) {
       $(selector).slideUp();
-      $(eventObj.target).find("span.alertToggle").removeClass("alertToggleOn").addClass("alertToggleOff");
+      $(eventObj.target)
+        .find("span.alertToggle")
+        .removeClass("alertToggleOn")
+        .addClass("alertToggleOff");
+      parentLI.removeClass("toggleOn");
     } else {
+      parentLI.addClass("toggleOn");
       $(selector).slideDown();
-      $(eventObj.target).find("span.alertToggle").removeClass("alertToggleOff").addClass("alertToggleOn");
+      $(eventObj.target)
+        .find("span.alertToggle")
+        .removeClass("alertToggleOff")
+        .addClass("alertToggleOn");
     }
   };
 
@@ -331,6 +340,7 @@ $(function () {
 
     if(eventObj.target.checked) {
       $(eventObj.target).parents("li.filtered")
+        .addClass("toggleOn")
         .find("span.alertToggle")
         .removeClass("alertToggleOff")
         .addClass("alertToggleOn");
@@ -341,6 +351,7 @@ $(function () {
       if(selector.is(":visible")) {
         $(selector).slideUp();
         $(eventObj.target).parents("li.filtered")
+          .removeClass("toggleOn")
           .find("span.alertToggle")
           .removeClass("alertToggleOn")
           .addClass("alertToggleOff");
@@ -564,7 +575,9 @@ $(function () {
 
           if($("#subjectAll_" + journal).is(':checked')) {
             $("li.subjectAreaSelector[journal=" + journal + "]").slideUp();
-            $("#alert-form ol").find("span.alertToggle").removeClass("alertToggleOn").addClass("alertToggleOff");
+            $("#alert-form ol").find("span.alertToggle")
+              .removeClass("alertToggleOn")
+              .addClass("alertToggleOff");
             removeAllSubjects();
           };
         }

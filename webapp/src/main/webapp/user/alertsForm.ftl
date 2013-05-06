@@ -46,7 +46,7 @@
                 </ol>
             </li>
         <#list userAlerts as ua>
-            <li<#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")> class="filtered"</#if>>
+            <li<#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")> class="filtered toggleOn"</#if>>
                 <span class="alerts-title">${ua.name} <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
                   <span class="alertToggle<#if journalSubjectFilters[ua.key]??> alertToggleOn<#else> alertToggleOff</#if>"></span>
                   </#if></span>
