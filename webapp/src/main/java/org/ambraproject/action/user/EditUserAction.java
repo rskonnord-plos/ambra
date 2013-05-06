@@ -3,6 +3,7 @@ package org.ambraproject.action.user;
 import org.ambraproject.Constants;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.user.UserAlert;
 import org.ambraproject.views.SavedSearchView;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
@@ -142,6 +143,11 @@ public class EditUserAction extends UserActionSupport {
           } else {
             userService.removedFilteredWeeklySearchAlert(profile.getID(), journal);
           }
+        }
+      } else {
+        //If there is no filterSpecified make sure there are no filtered search alerts
+        for(UserAlert s : this.getUserAlerts()) {
+          userService.removedFilteredWeeklySearchAlert(profile.getID(), s.getKey());
         }
       }
 
