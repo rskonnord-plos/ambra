@@ -474,7 +474,7 @@ li.subjectAreaSelector div.row {
 }
 
 #alert-form ol li.subjectAreaSelector div.row label {
-  padding: 3px 0px 5px 0px;
+  padding: 3px 0 5px 0;
 }
 
 li.subjectAreaSelector div.selectSubjectAreas {
@@ -511,8 +511,8 @@ li.subjectAreaSelector div.selectSubjectAreas {
   float: left;
   padding: 0;
   margin: 0;
-  top: 57px;
-  left: 287px;
+  top: 63px;
+  left: 412px;
   position: absolute;
   display: none;
 }
@@ -528,14 +528,15 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 #alert-form ol.selector li span {
-  padding: 5px;
+  padding: 2px 5px 2px 5px;
+  margin: 2px 0 2px 0;
   cursor: pointer;
 }
 
 #alert-form ol.selector li span:hover {
   /* TODO: Fix color */
   background-color: #add8e6;
-
+  border-radius:8px 8px 8px 8px;
 }
 
 #alert-form ol.selector li span:hover:after {
