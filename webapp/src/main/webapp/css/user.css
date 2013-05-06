@@ -524,19 +524,19 @@ li.subjectAreaSelector div.selectSubjectAreas {
 #alert-form ol.selector li {
   cursor: default;
   padding: 0;
+  margin: 2px 0 0 0;
   float: none;
 }
 
 #alert-form ol.selector li span {
-  padding: 2px 5px 2px 5px;
-  margin: 2px 0 2px 0;
+  padding: 1px 5px 2px 5px;
   cursor: pointer;
 }
 
 #alert-form ol.selector li span:hover {
   /* TODO: Fix color */
   background-color: #add8e6;
-  border-radius:8px 8px 8px 8px;
+  border-radius:4px 4px 4px 4px;
 }
 
 #alert-form ol.selector li span:hover:after {

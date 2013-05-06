@@ -26,7 +26,7 @@
   <#return "false">
 </#function>
 <form action="/user/secure/profile/alerts/journal/save" method="post" class="ambra-form" method="post"
-      title="Alert Form" name="userAlerts">
+      name="userAlerts">
     <fieldset id="alert-form">
         <legend>Manage your journal alert emails</legend>
         <ol>

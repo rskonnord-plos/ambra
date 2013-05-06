@@ -324,6 +324,43 @@ $(function () {
     }
   });
 
+  var searchTaxonomy = function(filter) {
+    if(filter.length == 0) {
+      $('#subjectAreaSelector').children().remove();
+      getInitialSubjectList();
+      return;
+    }
+
+    if(filter.length < 3) {
+      var node = $("<li><span class=\"required temp\">You must specify a term at least three letters long</span></li>");
+      $('#subjectAreaSelector').children().remove();
+      $('#subjectAreaSelector').append(node);
+    } else {
+      $.get("/taxonomy/json?filter=" + filter)
+        .done(function(response) {
+          $('#subjectAreaSelector').children().remove();
+          if(response.map == null) {
+            response.status = 1;
+            response.statusText = 'Map is null';
+
+            displaySystemError($('form[name=userAlerts]'), response);
+          } else {
+            if($.isEmptyObject(response.map)) {
+              var node = $("<li><span class=\"required temp\">The term you specified did not return any matches</span></li>");
+              $('#subjectAreaSelector').children().remove();
+              $('#subjectAreaSelector').append(node);
+            } else {
+              createTaxonomyNodesFromMap($('#subjectAreaSelector'), filter, response.map);
+            }
+          }
+        })
+        .fail(function(response) {
+          displaySystemError($('form[name=userAlerts]'), response);
+          console.log(response);
+        });
+    }
+  };
+
   /* There is partial support here for multiple journals using the selector for the future */
   var journal = $("li.subjectAreaSelector").attr("journal");
 
@@ -370,15 +407,23 @@ $(function () {
   $(":input[name='searchSubject_btn']").click(function(eventObj) {
     var filter = $(".subjectSearchInput[type='text']").val();
 
-    $.get("/taxonomy/json?filter=" + filter, $(this).serialize())
-      .done(function(response) {
-        $('#subjectAreaSelector').children().remove();
-        createTaxonomyNodesFromMap($('#subjectAreaSelector'), filter, response.map);
-      })
-      .fail(function(response) {
-        displaySystemError($('form[name=userAlerts]'), response);
-        console.log(response);
-      });
+    searchTaxonomy(filter);
+  });
+
+  if($(".subjectSearchInput[type='text']").val()) {
+    $("div.clearFilter").css("display", "block");
+  }
+
+  $(".subjectSearchInput[type='text']").keydown(function(eventObj) {
+    //If user pressed enter, don't submit for form, just do the taxonomy search
+    if(eventObj.which == 13) {
+      eventObj.preventDefault();
+      eventObj.stopPropagation();
+      if ($(eventObj.target).val()) {
+        $(".subjectSearchInput[type='text']").autocomplete("close");
+        searchTaxonomy($(eventObj.target).val());
+      }
+    }
   });
 
   $(".subjectSearchInput[type='text']").keyup(function(eventObj) {
