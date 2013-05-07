@@ -2834,6 +2834,7 @@ ul.bulletlist li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 6px;
 }
 
 /* sidebar linked from */
