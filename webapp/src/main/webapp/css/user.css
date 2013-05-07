@@ -246,7 +246,7 @@ input.btn + span.required {
   float: left;
   font-weight: bold;
   margin: 0;
-  padding: 5px 0;
+  padding: 5px 0 0 5px;
 }
 
 #alert-form .alerts-weekly {
@@ -449,7 +449,7 @@ div#formError {
 }
 
 #alert-form ol > li.filtered:hover {
-  background-color: #add8e6;
+  background-color: #d3d3d3;
 }
 
 #alert-form ol li.subjectAreaSelector {
@@ -534,8 +534,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 #alert-form ol.selector li span:hover {
-  /* TODO: Fix color */
-  background-color: #add8e6;
+  background-color: #d3d3d3;
   border-radius:4px 4px 4px 4px;
 }
 
