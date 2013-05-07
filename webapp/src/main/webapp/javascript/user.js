@@ -78,7 +78,7 @@ $(function () {
 
     newNode.slideDown();
 
-    enforceFormState();
+    setSubjectSelectedState();
   };
 
   var removeAllSubjects = function() {
@@ -113,7 +113,7 @@ $(function () {
    * If the user selects a subject without first making other form selections
    * Auto selected appropriate items
    */
-  var enforceFormState = function() {
+  var setSubjectSelectedState = function() {
     $("#subjectSome_" + journal).prop('checked','true');
     $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").prop('checked', 'true');
   };
@@ -369,8 +369,18 @@ $(function () {
     removeSubject($(event.target).parent().text().trim());
   });
 
+  $("#subjectAll_" + journal).click(function(eventObj) {
+    if(eventObj.target.checked) {
+      $('#subjectAreaSelector').children().remove();
+      getInitialSubjectList();
+      removeAllSubjects();
+
+      $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").prop('checked', 'true');
+    }
+  });
+
   $("#subjectSome_" + journal).click(function (eventObj) {
-    enforceFormState();
+    setSubjectSelectedState();
   });
 
   $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function (eventObj) {
@@ -428,7 +438,6 @@ $(function () {
 
   $(".subjectSearchInput[type='text']").keyup(function(eventObj) {
     if ($(eventObj.target).val()) {
-      //enforceFormState();
       $("div.clearFilter").css("display", "block");
     } else {
       $("div.clearFilter").css("display", "none");
