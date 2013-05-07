@@ -55,6 +55,7 @@
   <!-- used by AmbraFreeMarkerConfigTest -->
   <bean id="ambraConfiguration2" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
         factory-method="getConfiguration">
+
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
@@ -94,7 +95,7 @@
     <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
   </bean>
 
-  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
+  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl" depends-on="ambraConfiguration2">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="crossRefLookupService" ref="crossRefLookupService"/>
@@ -260,6 +261,7 @@
   <bean id="articleClassifier" class="org.ambraproject.service.article.AIArticleClassifier" >
     <property name="httpClient" ref="httpClient"/>
     <property name="serviceUrl" value="http://localhost:1234/select"/>
+    <property name="thesaurus" value="fake"/>
   </bean>
 
   <bean id="raptorService" class="org.ambraproject.service.raptor.RaptorServiceImpl">

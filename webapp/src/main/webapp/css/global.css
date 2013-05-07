@@ -1533,7 +1533,6 @@ span.author span.rel-footnote {
   background: url(../images/bul.pt.blu.gif) no-repeat 0 3px;
 }
 
-
 #nav-figures {
   display: none;
 }
@@ -2035,6 +2034,106 @@ html:not(.js) #figure-thmbs {
   background-position: -25px -50px;
 }
 
+/* table */
+div.table-wrap {
+  position: relative;
+}
+
+.article div.table-wrap {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+div.table-wrap div.table {
+  overflow: auto;
+  border: solid 1px #efefef;
+}
+
+.article div.table-wrap div.table {
+  max-height: 550px;
+}
+
+div.table-wrap table {
+  margin: 0px;
+  width: 100%;
+}
+
+div.table-wrap table td {
+  padding: 2px;
+}
+
+div.table-wrap table thead tr:first-child {
+  background-color: #a0a0a0;
+  font-weight: bold;
+}
+
+div.table-wrap table thead tr:first-child td {
+  color: #ffffff;
+}
+
+div.table-wrap table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+div.table-wrap table tbody tr:nth-child(even) {
+  background-color: #efefef;
+}
+
+div.table-wrap p.caption {
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+div.table-wrap div.table-download {
+  display: none;
+  vertical-align: middle;
+}
+
+.article div.table-wrap div.table-download {
+  display: block;
+}
+
+div.table-wrap div.table-download .icon {
+  background-color: #f8af2d;
+  color: #333;
+  position: relative;
+  width: 30px;
+  height: 15px;
+  text-align: center;
+  font-size: 9px;
+  border-radius: 2px;
+  padding-top: 3px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+div.table-wrap div.table-download .label {
+ cursor: pointer;
+}
+
+div.table-wrap .expand {
+  display: none;
+}
+
+.article .table-wrap .expand {
+  display: block;
+  height: 25px;
+  width: 25px;
+  background: url(../images/icon.sprite.expand.png) no-repeat;
+  position: absolute;
+  top: -30px;
+  right: 0px;
+  cursor: pointer;
+}
+
+.article .table-wrap .expand:hover {
+  background-position: 0 -25px;
+}
+
 .article .abstract,
 .article .articleinfo,
 .article .editorsAbstract,
@@ -2183,7 +2282,6 @@ ul.bulletlist li {
   padding-left: 12px;
 }
 
-
 /* comments */
 #thread h2 {
   margin: 30px 10px;
@@ -2305,7 +2403,7 @@ ul.bulletlist li {
   word-wrap: break-word;
 }
 
-#responses .response .response_title  {
+#responses .response .response_title {
   word-wrap: break-word;
 }
 
@@ -2358,16 +2456,16 @@ ul.bulletlist li {
 .reply form fieldset {
   min-width: 49%;
   float: left;
- }
+}
 
 /* spacing between competing interest radio buttons */
-.reply form fieldset div.cf{
+.reply form fieldset div.cf {
   margin-bottom: 10px;
 }
 
 /* competing interest text area margins */
 .reply form fieldset div.competing_text,
-.reply form fieldset #flag_text{
+.reply form fieldset #flag_text {
   margin-top: 12px;
   margin-bottom: 12px;
 }
@@ -2815,7 +2913,7 @@ ul.bulletlist li {
 }
 
 .journal_current .issue_container {
-  overflow:auto;
+  overflow: auto;
 }
 
 .journal_issues {
@@ -4037,7 +4135,7 @@ legend.conjunction span {
   width: 870px;
   overflow: hidden;
   position: fixed;
-  z-index: 600;
+  z-index: 150;
 }
 
 #fig-viewer .header {
@@ -4307,7 +4405,7 @@ legend.conjunction span {
 #fig-viewer-slides .txt .titleexpand {
   width: 605px !important;
   white-space: normal !important;
-  float:none !important;
+  float: none !important;
 }
 
 #fig-viewer-slides .txt .hidden {
@@ -4339,10 +4437,10 @@ legend.conjunction span {
   text-decoration: underline;
   cursor: pointer;
   margin-left: 5px;
-  float:right;
+  float: right;
 }
 
-#fig-viewer-slides .txt .toggle.less{
+#fig-viewer-slides .txt .toggle.less {
   margin-bottom: 5px;
 }
 
@@ -4399,7 +4497,7 @@ legend.conjunction span {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 500;
+  z-index: 110;
   opacity: 0.6;
   filter: alpha(opacity = 60);
 }
@@ -4730,6 +4828,52 @@ table#pageViewsTable tr.percent td {
   color: black;
 }
 
+/* styling for average usage stat information */
+#averageViewsSummary {
+  width: 600px;
+  border: 1px solid #cccccc;
+  background-color: #e5e4e4;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+#averageViewsSummary div {
+  padding: 8px 8px 0px 8px;
+}
+
+#averageViewsSummary .colorbox {
+  border: 1px solid #cccccc;
+  background-color: #01DF01;
+  width: 9px;
+  height: 9px;
+  display: block;
+  float: left;
+  margin-top: 4px;
+}
+
+#averageViewsSummary .ir {
+  float: right;
+  border-radius: 8.5px;
+  -webkit-border-radius: 8.5px;
+  -moz-border-radius: 8.5px;
+}
+
+#averageViewsSummary select {
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+
+#averageViewsSummary select option {
+  background-color: #ffffff;
+}
+
+#beta {
+  font: italic bold 10px Arial;
+  color: #00be00;
+}
+
+/* END styling for average usage stat information */
+
 a.ir {
   display: inline-block;
   text-indent: -9999px;
@@ -4828,18 +4972,26 @@ a.irs {
 }
 
 .formlabel {
-    margin-bottom: 6px;
-    display: block;
-    font-size: 12px;
-    color: #333;
-    font-weight: bold;}
+  margin-bottom: 6px;
+  display: block;
+  font-size: 12px;
+  color: #333;
+  font-weight: bold;
+}
 
-.form ol .form-error { color: #f03; }
+.form ol .form-error {
+  color: #f03;
+}
 
-.emailrequired {color:#A61200 }
+.emailrequired {
+  color: #A61200
+}
 
-.required {color: #f03; font-size:13px;  font-weight: bold;}
-
+.required {
+  color: #f03;
+  font-size: 13px;
+  font-weight: bold;
+}
 
 /************* Article Metrics page: Metrics Tiles and Rating Tile *****************/
 
@@ -4904,7 +5056,6 @@ div.metrics_tile_footer_no_link {
   font-size: 1.30em;
   text-decoration: none;
   font-weight: bold;
-  padding-top: 1px;
 }
 
 div.metrics_tile:hover .metrics_tile_rating_footer {
@@ -5005,7 +5156,6 @@ table.tile_mini td.data2 {
 
 /* styles for static page content */
 
-
 #static-wrap, #static-content-wrap {
   padding: 30px 30px 30px 10px;
 }
@@ -5028,7 +5178,7 @@ table.tile_mini td.data2 {
   margin-top: 0px
 }
 
-#static-content-wrap  ul, ol{
+#static-content-wrap  ul, ol {
   padding-left: 45px;
 }
 
@@ -5037,7 +5187,7 @@ table.tile_mini td.data2 {
 }
 
 #static-content-wrap p.intro {
-    font-style: italic
+  font-style: italic
 }
 
 /************* edboard pages *****************/
@@ -5078,12 +5228,12 @@ div.findArticle h4 {
 }
 
 .collapsibleContainerTitle {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .collapsibleContainerTitle div {
-  padding-top:5px;
-  padding-left:10px;
+  padding-top: 5px;
+  padding-left: 10px;
 }
 
 .collapsibleContainerContent {
@@ -5094,6 +5244,7 @@ div.findArticle h4 {
 .checkboxWrapper {
   position: relative;
 }
+
 .checkboxOverlay {
   position: absolute;
   left: 0;

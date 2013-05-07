@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +12,23 @@
 package org.ambraproject.search;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.views.SavedSearchView;
 
 /**
- * Created with IntelliJ IDEA. User: stumu Date: 9/26/12 Time: 12:22 PM To change this template use File | Settings |
- * File Templates.
+ * Execute the saved queries
+ *
+ * @author: stumu
+ * @author: Joe Osowski
  */
 public interface SavedSearchRunner {
 
   /**
    * Query solr to get search results
-   * @param savedSearchView
-   * @return
+   *
+   * @param savedSearchJob
+   *
+   * @return SavedSearchView populated with results
+   *
    * @throws ApplicationException
    */
-  public SavedSearchView runSavedSearch(SavedSearchView savedSearchView) throws ApplicationException;
+  public SavedSearchJob runSavedSearch(SavedSearchJob savedSearchJob) throws ApplicationException;
 }
