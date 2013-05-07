@@ -426,6 +426,8 @@ $(function () {
 
   $(".subjectSearchInput[type='text']").keydown(function(eventObj) {
     //If user pressed enter, don't submit for form, just do the taxonomy search
+    setSubjectSelectedState();
+
     if(eventObj.which == 13) {
       eventObj.preventDefault();
       eventObj.stopPropagation();

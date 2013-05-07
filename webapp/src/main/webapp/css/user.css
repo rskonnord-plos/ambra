@@ -449,7 +449,7 @@ div#formError {
 }
 
 #alert-form ol > li.filtered:hover {
-  background-color: #d3d3d3;
+  background-color: #d3e2ff;
 }
 
 #alert-form ol li.subjectAreaSelector {
@@ -534,13 +534,13 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 #alert-form ol.selector li span:hover {
-  background-color: #d3d3d3;
+  background-color: #d3e2ff;
   border-radius:4px 4px 4px 4px;
 }
 
 #alert-form ol.selector li span:hover:after {
   content: url("/images/icon.plus.png");
-  padding-left: 5px;
+  padding: 0 0 0 5px;
 }
 
 #alert-form ol.selector li span.checked {
@@ -568,7 +568,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
   margin-left: 8px;
   background-repeat: no-repeat;
   background-position: center;
-  width: 12px;
+  width: 14px;
   height: 14px;
 }
 
