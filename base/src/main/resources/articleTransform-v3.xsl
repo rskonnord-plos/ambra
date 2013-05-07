@@ -234,6 +234,10 @@
       <xsl:for-each select="//back/fn-group/fn[@fn-type='other']/node()">
         <p><xsl:apply-templates/></p>
       </xsl:for-each>
+      <!--Fix for FEND-886-->
+      <xsl:for-each select="//front/article-meta/author-notes/fn[@fn-type='other']/node()">
+        <p><xsl:apply-templates/></p>
+      </xsl:for-each>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template (creates editors summary) -->
