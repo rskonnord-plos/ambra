@@ -96,13 +96,14 @@ $(function () {
     //console.log("Subject List: " + selectedSubjects);
 
     selectedSubjects = selectedSubjects.filter(function(value) {
-      return (subject != value);
+      return (subject.trim() != value.trim());
     });
 
     //console.log("Subject List: " + selectedSubjects);
-
-    list.find("div:contains(" + subject + ")").parent().slideUp({ complete: function() {
-      list.find("div:contains(" + subject + ")").parent().remove();
+    list.find("div").filter(function() {
+      return ($(this).text().trim() == subject);
+    }).parent().slideUp({ complete: function() {
+      $(this).remove();
     }});
 
     findAndEnableSubject(subject);
@@ -112,6 +113,12 @@ $(function () {
         $('div.noSubjectsSelected').slideDown();
       }});
     }
+
+    var form = $("form[name=userAlerts]");
+
+    var selector = "input[name=\"journalSubjectFilters['" + journal + "']\"][value=\"" + subject + "\"]";
+    //console.log(selector);
+    form.find(selector).remove();
   };
 
   /**
@@ -179,17 +186,21 @@ $(function () {
 
   /* Find matching subjects in the tree and mark them selected */
   var findAndDisableSubject = function(subject) {
-    $("span:contains(" + subject + ")")
-      .addClass("checked")
-      .unbind('click');
+    $("#subjectAreaSelector span").filter(function() {
+        return ($(this).text() == subject);
+      }
+    ).addClass("checked")
+     .unbind('click');
   };
 
   /* Find matching subjects in the tree and enable them to be selected */
   var findAndEnableSubject = function(subject) {
-    $("span:contains(" + subject + ")")
-      .removeClass("checked")
-      .click(function(event) {
-        selectSubject($(event.target).text());
+    $("#subjectAreaSelector span").filter(function() {
+      return ($(this).text() == subject);
+     }
+    ).removeClass("checked")
+     .click(function(event) {
+       selectSubject($(event.target).text());
       });
   };
 
@@ -316,11 +327,11 @@ $(function () {
     },
 
     source: function(entry, response) {
-      var solrHost = $('meta[name=solrHost]').attr("content");
+      var termsHost = $('meta[name=termsHost]').attr("content");
 
       //make the request to solr
       $.jsonp({
-        url: solrHost + "/terms",
+        url: termsHost,
         context: document.body,
         timeout: 10000,
         callbackParameter: "json.wrf",
