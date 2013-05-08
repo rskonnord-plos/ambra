@@ -40,27 +40,26 @@ $(function () {
       }
     );
 
+    //console.log("Subject List from form:" + results);
+
     return results;
   };
 
-  var setJournalSubjectsFormValue = function(journal, subjects) {
+  var addJournalSubjectsFormValue = function(journal, subject) {
     var form = $("form[name=userAlerts]");
 
-    $("input[name=journalSubjectFilters\\[\\'" + journal + "\\'\\]]").remove();
+    //console.log("Appending subject:" + subject);
 
-    for(var i = 0; i < subjects.length; i++) {
-      form.append($("<input type=\"hidden\" name=\"journalSubjectFilters['" + journal + "']\" value=\"" + subjects[i] + "\">"));
-    }
+    form.append($("<input type=\"hidden\" name=\"journalSubjectFilters['" + journal + "']\" value=\"" + subject + "\">"));
   };
 
   var selectSubject = function(subject) {
     var list = $('div.subjectsSelected ol');
 
-    selectedSubjects = getJournalSubjectsFormValue(journal);
     selectedSubjects.push(subject);
 
     findAndDisableSubject(subject);
-    setJournalSubjectsFormValue(journal, selectedSubjects);
+    addJournalSubjectsFormValue(journal, subject);
 
     if($("div.noSubjectsSelected").is(":visible")) {
       $("div.noSubjectsSelected").slideUp({ complete: function() {
@@ -82,25 +81,31 @@ $(function () {
   };
 
   var removeAllSubjects = function() {
-    for(var i = 0; i < selectedSubjects.length; i++) {
-      removeSubject(selectedSubjects[i]);
+    //console.log("Selected subject list: " + selectedSubjects);
+
+    var selectedSubjectsTemp = selectedSubjects;
+    for(var i = 0; i < selectedSubjectsTemp.length; i++) {
+      //console.log("Removing subject: " + selectedSubjectsTemp[i]);
+      removeSubject(selectedSubjectsTemp[i]);
     }
   };
 
   var removeSubject = function(subject) {
     var list = $('div.subjectsSelected ol');
 
-    selectedSubjects = getJournalSubjectsFormValue(journal);
+    //console.log("Subject List: " + selectedSubjects);
+
     selectedSubjects = selectedSubjects.filter(function(value) {
       return (subject != value);
     });
+
+    //console.log("Subject List: " + selectedSubjects);
 
     list.find("div:contains(" + subject + ")").parent().slideUp({ complete: function() {
       list.find("div:contains(" + subject + ")").parent().remove();
     }});
 
     findAndEnableSubject(subject);
-    setJournalSubjectsFormValue(journal, selectedSubjects);
 
     if(selectedSubjects.length == 0) {
       $("div.subjectsSelected").slideUp({ complete: function() {
@@ -205,8 +210,6 @@ $(function () {
 
       node.find("span").each(function() {
         var selected = false;
-
-        selectedSubjects = getJournalSubjectsFormValue(journal);
 
         for (var i = 0; i < selectedSubjects.length; i++) {
           if(selectedSubjects[i] == $(this).text()) {
@@ -389,6 +392,8 @@ $(function () {
   /* There is partial support here for multiple journals using the selector for the future */
   var journal = $("li.subjectAreaSelector").attr("journal");
 
+  selectedSubjects = getJournalSubjectsFormValue(journal);
+
   //Bind to UI events
   $("li div.filter-item img").click(function(event) {
     removeSubject($(event.target).parent().text().trim());
@@ -396,8 +401,8 @@ $(function () {
 
   $("#subjectAll_" + journal).click(function(eventObj) {
     if(eventObj.target.checked) {
-      resetInitialSubjectList();
-      removeAllSubjects();
+      //resetInitialSubjectList();
+      //removeAllSubjects();
 
       $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").prop('checked', 'true');
     }
