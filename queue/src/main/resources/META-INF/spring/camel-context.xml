@@ -36,6 +36,7 @@
   <bean id="emailRouteBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
     <property name="weeklyCron" value="${ambra.sendemail.weekly}" />
     <property name="monthlyCron" value="${ambra.sendemail.monthly}" />
+    <property name="threadCount" value="${ambra.queue.sendmail.threadcount}"/>
   </bean>
 
   <bean id="solrServerFactory" class="org.ambraproject.service.search.SolrServerFactory">
