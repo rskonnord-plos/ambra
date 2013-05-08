@@ -34,7 +34,7 @@
  */
 
 $.fn.edBoard = function () {
-  var solrHost = $('meta[name=solrHost]').attr("content");
+  var solrHost = $('meta[name=searchHost]').attr("content");
 
   this.getEditors = function (args) {
     //set the default arguments
