@@ -1109,6 +1109,9 @@
             <xsl:attribute name="id">
               <xsl:value-of select="$figId"/>
             </xsl:attribute>
+            <a><xsl:attribute name="name">
+              <xsl:value-of select="$figId"/>
+            </xsl:attribute></a>
             <div class="expand">
               <xsl:attribute name="onclick">
                 return tableOpen(<xsl:value-of select="concat($apos, $figId, $apos)"/>, "HTML");
