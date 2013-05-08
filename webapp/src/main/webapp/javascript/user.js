@@ -412,10 +412,9 @@ $(function () {
     setSubjectSelectedState();
   });
 
-  $("#alert-form ol > li.filtered input[name=weeklyAlerts]").mouseup(function(eventObj) {
-    //Prevent the box from being 'checked' toggleSubjectSelector takes care of it
-    eventObj.preventDefault();
-    toggleSubjectSelector(eventObj, journal);
+  $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function(eventObj) {
+    //Kind of kludge, but this forces the handle to be handled at the parent level
+    $("#alert-form ol > li.filtered").click();
   });
 
   $("#alert-form ol > li.filtered").click(function (eventObj) {
