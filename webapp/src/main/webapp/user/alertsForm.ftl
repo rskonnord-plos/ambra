@@ -46,7 +46,7 @@
                 </ol>
             </li>
         <#list userAlerts as ua>
-            <li<#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")> class="filtered<#if journalSubjectFilters[ua.key]??> toggleOn</#if>"</#if>>
+            <li<#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")> class="filtered<#if isFound(weeklyAlerts, ua.key) == "true"> toggleOn</#if>"</#if>>
                 <span class="alerts-title">${ua.name} <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
                   <span class="alertToggle<#if journalSubjectFilters[ua.key]??> alertToggleOn<#else> alertToggleOff</#if>"></span>
                   </#if></span>
@@ -76,10 +76,10 @@
                   <input type="hidden" name="journalSubjectFilters['${ua.key}']" value="${subject}"/>
                 </#list>
               </#if>
-              <li class="subjectAreaSelector" journal="${ua.key}"<#if !journalSubjectFilters[ua.key]??> style="display:none"</#if>>
+              <li class="subjectAreaSelector" journal="${ua.key}"<#if isFound(weeklyAlerts, ua.key) != "true"> style="display:none"</#if>>
                 <div class="row">
                   <label>
-                    <input id="subjectAll_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="none"/>All subject areas (Sent as an
+                    <input id="subjectAll_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="none"<#if !journalSubjectFilters[ua.key]??> checked="true"</#if>/>All subject areas (Sent as an
                     uncategorized article list, ordered by publication date)
                   </label>
                   <label>

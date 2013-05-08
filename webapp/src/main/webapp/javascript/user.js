@@ -114,29 +114,53 @@ $(function () {
    * Auto selected appropriate items
    */
   var setSubjectSelectedState = function() {
-    $("#subjectSome_" + journal).prop('checked','true');
-    $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").prop('checked', 'true');
+    $("#subjectSome_" + journal).attr('checked','true');
+    $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").attr('checked', 'true');
+  };
+
+  /**
+   * If the user selects a subject without first making other form selections
+   * Auto selected appropriate items
+   */
+  var setSubjectUnSelectedState = function() {
+    $("#subjectSome_" + journal).removeAttr('checked');
+    $("#subjectAll_" + journal).removeAttr('checked');
+    $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").removeAttr('checked');
+    resetInitialSubjectList();
+    removeAllSubjects();
   };
 
   var toggleSubjectSelector = function(eventObj, journal) {
+    console.log('toggleSubjectSelector:' + $(eventObj.target).attr('class'));
+
     var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
-    var parentLI = $(eventObj.target).parents("li.filtered");
+    //If the current clicked node is a child, find the parent instead
+    var parentLI = $(eventObj.target).hasClass("filtered")?$(eventObj.target):$(eventObj.target).parents("li.filtered");
+    var chkBox = parentLI.find("input[name=weeklyAlerts]");
+
+    //If user clicked on the checkbox or the checkbox's label
+    //force the state of the rest of the form to comply
 
     if(selector.is(":visible")) {
+      $(chkBox).attr("checked", false);
       $(selector).slideUp();
-      $(eventObj.target)
+      $(parentLI)
         .find("span.alertToggle")
         .removeClass("alertToggleOn")
         .addClass("alertToggleOff");
       parentLI.removeClass("toggleOn");
     } else {
+      $(chkBox).attr("checked", true);
       parentLI.addClass("toggleOn");
       $(selector).slideDown();
-      $(eventObj.target)
+      $(parentLI)
         .find("span.alertToggle")
         .removeClass("alertToggleOff")
         .addClass("alertToggleOn");
     }
+
+    eventObj.stopPropagation();
+    eventObj.preventDefault();
   };
 
   var getTaxonomyTreeText = function(node) {
@@ -265,7 +289,8 @@ $(function () {
   }
 
   //Grab base taxonomy data
-  var getInitialSubjectList = function() {
+  var resetInitialSubjectList = function() {
+    $('#subjectAreaSelector').children().remove();
     $.get("/taxonomy/json", $(this).serialize())
     .done(function(response) {
       createTaxonomyNodes($('#subjectAreaSelector'), response);
@@ -371,8 +396,7 @@ $(function () {
 
   $("#subjectAll_" + journal).click(function(eventObj) {
     if(eventObj.target.checked) {
-      $('#subjectAreaSelector').children().remove();
-      getInitialSubjectList();
+      resetInitialSubjectList();
       removeAllSubjects();
 
       $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").prop('checked', 'true');
@@ -383,31 +407,10 @@ $(function () {
     setSubjectSelectedState();
   });
 
-  $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function (eventObj) {
-
-    if(eventObj.target.checked) {
-      $(eventObj.target).parents("li.filtered")
-        .addClass("toggleOn")
-        .find("span.alertToggle")
-        .removeClass("alertToggleOff")
-        .addClass("alertToggleOn");
-    } else {
-      //Close the expanded subject selector
-      var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
-
-      if(selector.is(":visible")) {
-        $(selector).slideUp();
-        $(eventObj.target).parents("li.filtered")
-          .removeClass("toggleOn")
-          .find("span.alertToggle")
-          .removeClass("alertToggleOn")
-          .addClass("alertToggleOff");
-      }
-
-      $("#subjectAll_" + journal).prop('checked','true');
-
-      removeAllSubjects();
-    }
+  $("#alert-form ol > li.filtered input[name=weeklyAlerts]").mouseup(function(eventObj) {
+    //Prevent the box from being 'checked' toggleSubjectSelector takes care of it
+    eventObj.preventDefault();
+    toggleSubjectSelector(eventObj, journal);
   });
 
   $("#alert-form ol > li.filtered").click(function (eventObj) {
@@ -451,11 +454,11 @@ $(function () {
     $("div.clearFilter").css("display", "none");
     $(".subjectSearchInput[type='text']").focus();
     $('#subjectAreaSelector').children().remove();
-    getInitialSubjectList();
+    resetInitialSubjectList();
   });
 
   if($('#subjectAreaSelector')) {
-    getInitialSubjectList();
+    resetInitialSubjectList();
 
     //Don't bubble up the event
     $("li.alerts-weekly input").click(function (eventObj) {
@@ -630,10 +633,6 @@ $(function () {
           confirmedSaved();
 
           if($("#subjectAll_" + journal).is(':checked')) {
-            $("li.subjectAreaSelector[journal=" + journal + "]").slideUp();
-            $("#alert-form ol").find("span.alertToggle")
-              .removeClass("alertToggleOn")
-              .addClass("alertToggleOff");
             removeAllSubjects();
           };
         }
