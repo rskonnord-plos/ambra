@@ -529,7 +529,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
 #alert-form ol.selector li {
   cursor: default;
   padding: 0;
-  margin: 2px 0 0 0;
+  margin: 4px 0 0 0;
   float: none;
 }
 
@@ -570,7 +570,7 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 #alert-form ol.selector li img {
-  margin-left: 8px;
+  margin: 0 0 0 8px;
   background-repeat: no-repeat;
   background-position: center;
   width: 14px;
