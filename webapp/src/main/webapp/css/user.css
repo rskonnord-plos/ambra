@@ -478,6 +478,7 @@ li.subjectAreaSelector div.row {
 }
 
 li.subjectAreaSelector div.selectSubjectAreas {
+  padding-top: 2px;
   margin-left: 20px;
   width: 480px;
   height: 450px;
