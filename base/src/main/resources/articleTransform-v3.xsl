@@ -752,16 +752,53 @@
               <xsl:if test="$cit[@publication-type='journal']">
                 <xsl:variable name="apos">'</xsl:variable>
                 <xsl:if test="$cit/extraCitationInfo">
-                  <xsl:variable name="citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:variable>
-                  <xsl:variable name="findURL">
-                    <xsl:value-of select="concat($pubAppContext,'/article/findcited/', $citedArticleID)" />
-                  </xsl:variable>
-                  <!-- only output 'find this article' link if there is no ext-link already in the citation -->
                   <xsl:if test="not(element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link)">
-                    <xsl:element name="a">
+                    <xsl:element name="ul">
                       <xsl:attribute name="class">find</xsl:attribute>
-                      <xsl:attribute name="href"><xsl:value-of select="$findURL"/></xsl:attribute>
-                      Find this article online
+                      <xsl:attribute name="data-citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:attribute>
+                      <xsl:if test="$cit/extraCitationInfo/@doi">
+                        <xsl:attribute name="data-doi"><xsl:value-of select="$cit/extraCitationInfo/@doi"/></xsl:attribute>
+                      </xsl:if>
+                      <xsl:if test="$cit/extraCitationInfo/@crossRefUrl">
+                        <xsl:element name="li">
+                          <xsl:element name="a">
+                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
+                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                            <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
+                            CrossRef
+                          </xsl:element>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="$cit/extraCitationInfo/@pubGetUrl">
+                        <xsl:element name="li">
+                          <xsl:element name="a">
+                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubGetUrl"/></xsl:attribute>
+                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                            <xsl:attribute name="title">Get the full text PDF from PubGet</xsl:attribute>
+                            PubGet/PDF
+                          </xsl:element>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="$cit/extraCitationInfo/@pubMedUrl">
+                        <xsl:element name="li">
+                          <xsl:element name="a">
+                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubMedUrl"/></xsl:attribute>
+                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                            <xsl:attribute name="title">Go to article in PubMed</xsl:attribute>
+                            PubMed/NCBI
+                          </xsl:element>
+                        </xsl:element>
+                      </xsl:if>
+                      <xsl:if test="$cit/extraCitationInfo/@googleScholarUrl">
+                        <xsl:element name="li">
+                          <xsl:element name="a">
+                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@googleScholarUrl"/></xsl:attribute>
+                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                            <xsl:attribute name="title">Go to article in Google Scholar</xsl:attribute>
+                            Google Scholar
+                          </xsl:element>
+                        </xsl:element>
+                      </xsl:if>
                     </xsl:element>
                   </xsl:if>
                 </xsl:if>

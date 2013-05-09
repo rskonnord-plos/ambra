@@ -5255,6 +5255,24 @@ div.findArticle h4 {
   background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
 }
 
+ol.references ul.find {
+  margin: 0;
+  padding: 0;
+  height: 25px;
+}
+
+ol.references ul.find li {
+  float: left;
+  margin-right: 4px;
+  margin-left: 20px;
+  list-style-type: disc;
+}
+
+ol.references ul.find li:first-child {
+  margin-left: 0px;
+  list-style-type: none;
+}
+
 ol.references li {
   list-style-type: none;
 }
