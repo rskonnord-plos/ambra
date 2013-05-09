@@ -802,6 +802,11 @@
                     </xsl:element>
                   </xsl:if>
                 </xsl:if>
+                <xsl:if test="not($cit/extraCitationInfo)">
+                  <xsl:element name="ul">
+                    <xsl:attribute name="class">find-nolinks</xsl:attribute>
+                  </xsl:element>
+                </xsl:if>
               </xsl:if>
               <xsl:if test="$cit[@publication-type!='journal']">
                 <xsl:element name="ul">
