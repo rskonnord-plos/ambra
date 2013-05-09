@@ -86,7 +86,7 @@
                     <input id="subjectSome_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="subjects"<#if journalSubjectFilters[ua.key]??> checked="true"</#if>/>Specify Subject areas (12 maximum)
                   </label>
                 </div>
-                <div class="row">
+                <div class="row subjectSearchInput">
                   <input type="text" name="searchSubject" class="subjectSearchInput"/><div class="clearFilter"></div><input type="button" name="searchSubject_btn" value="Search" class="btn primary"/>
                 </div>
                 <div class="row">

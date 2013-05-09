@@ -488,6 +488,10 @@ li.subjectAreaSelector div.selectSubjectAreas {
   margin-top: 5px;
 }
 
+#alert-form div.subjectSearchInput {
+  position:relative;
+}
+
 #alert-form div.row .subjectSearchInput {
   float: left;
   margin-left: 20px;
@@ -512,8 +516,8 @@ li.subjectAreaSelector div.selectSubjectAreas {
   float: left;
   padding: 0;
   margin: 0;
-  top: 63px;
-  left: 412px;
+  top: 5px;
+  left: 402px;
   position: absolute;
   display: none;
 }
