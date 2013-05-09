@@ -154,7 +154,7 @@ $(function () {
     //force the state of the rest of the form to comply
 
     if(selector.is(":visible")) {
-      $(chkBox).attr("checked", false);
+      //$(chkBox).attr("checked", false);
       $(selector).slideUp();
       $(parentLI)
         .find("span.alertToggle")
@@ -423,9 +423,22 @@ $(function () {
     setSubjectSelectedState();
   });
 
+  $("#alert-form ol > li.filtered li.alerts-weekly label").click(function(eventObj) {
+    var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
+
+    if(!selector.is(":visible")) {
+      $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click();
+    }
+
+    eventObj.stopPropagation();
+  });
+
   $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function(eventObj) {
-    //Kind of kludge, but this forces the handle to be handled at the parent level
-    $("#alert-form ol > li.filtered").click();
+    //Kind of kludge, but this forces the event to be handled at the parent level
+    var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
+    if(!selector.is(":visible")) {
+      $("#alert-form ol > li.filtered").click();
+    }
   });
 
   $("#alert-form ol > li.filtered").click(function (eventObj) {
