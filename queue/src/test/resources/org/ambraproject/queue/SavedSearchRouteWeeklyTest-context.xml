@@ -109,6 +109,7 @@
     <!-- Basically, never run, the route is started manually in the test -->
     <property name="weeklyCron" value="*+*+*+1+*+?"/>
     <property name="monthlyCron" value="*+*+*+1+*+?"/>
+    <property name="threadCount" value="3"/>
   </bean>
 
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
