@@ -5283,3 +5283,9 @@ ol.references li span.label {
   width: 20px;
   text-align: right;
 }
+
+ol.references ul.find-nolinks {
+  margin: 0;
+  padding: 0;
+  height: 8px;
+}
