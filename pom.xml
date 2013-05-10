@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra</artifactId>
-  <version>2.6.2</version>
+  <version>2.6.3</version>
   <packaging>pom</packaging>
   <name>Ambra application</name>
 
@@ -32,7 +32,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- aggregate some documentation - javadocs & jxr -->
     <aggregate>true</aggregate>
-    <spring.version>3.1.1.RELEASE</spring.version>
+    <spring.version>3.2.2.RELEASE</spring.version>
     <struts.version>2.3.1.2</struts.version>
     <freemarker.version>2.3.19</freemarker.version>
     <slf4j.version>1.6.1</slf4j.version>
@@ -813,6 +813,7 @@
     </testResources>
 
     <defaultGoal>install</defaultGoal>
+
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -820,5 +821,6 @@
         <version>2.2</version><!-- Version 2.4 causes http://jira.codehaus.org/browse/WAGON-393 -->
       </extension>
     </extensions>
+
   </build>
 </project>

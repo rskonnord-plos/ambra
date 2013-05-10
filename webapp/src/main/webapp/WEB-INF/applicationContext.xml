@@ -40,6 +40,8 @@
     <property name="articleTransformService" ref="articleTransformService" />
     <property name="fileStoreService" ref="fileStoreService" />
     <property name="articleHtmlCache" ref="articleHtmlCache" />
+    <property name="pubGetLookupService" ref="pubGetLookupService"/>
+    <property name="guestCrossRefUrl" value="${ambra.services.crossref.guestquery.url}"/>
   </bean>
 
   <bean id="articleAssetService" class="org.ambraproject.service.article.ArticleAssetServiceImpl">
@@ -162,11 +164,6 @@
   <bean id="pubGetLookupService" class="org.ambraproject.service.pubget.PubGetLookupServiceImpl">
     <property name="httpClient" ref="httpClient"/>
     <property name="pubGetUrl" value="${ambra.services.pubget.url}"/>
-  </bean>
-
-  <bean id="findArticleService" class="org.ambraproject.service.article.FindArticleServiceImpl">
-    <property name="crossRefLookupService" ref="crossRefLookupService"/>
-    <property name="pubGetLookupService" ref="pubGetLookupService"/>
   </bean>
 
   <!-- Warning. Spring does not autowire 'simple' properties like primitives, Strings and Classes -->
