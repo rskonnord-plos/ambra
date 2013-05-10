@@ -1340,7 +1340,7 @@ $.fn.alm = function () {
                   // build the output
                   var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
                       + new Date(data.relativeMetricData.start_date).getUTCFullYear() + "</b> in the subject area: "
-                      + '<a href="/static/almInfo" class="ir" title="More information">info</a>');
+                      + '<a href="/static/almInfo#relativeMetrics" class="ir" title="More information">info</a>');
 
                   // build the link to the search result reference set
                   var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date:[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
