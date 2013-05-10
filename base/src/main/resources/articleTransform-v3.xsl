@@ -1084,13 +1084,15 @@
           </div>
           <!--end figure download-->
           <p>
-            <strong><xsl:apply-templates select="label"/></strong>
-            <xsl:if test="caption/title">
-              <xsl:text> </xsl:text>
-              <span>
-                <xsl:apply-templates select="caption/title"/>
-              </span>
-            </xsl:if>
+            <strong>
+              <xsl:apply-templates select="label"/>
+              <xsl:if test="caption/title">
+                <xsl:text> </xsl:text>
+                <span>
+                  <xsl:apply-templates select="caption/title"/>
+                </span>
+              </xsl:if>
+            </strong>
           </p>
           <xsl:apply-templates select="caption/node()[not(self::title)]"/>
           <xsl:if test="object-id[@pub-id-type='doi']">
