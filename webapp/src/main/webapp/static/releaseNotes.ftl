@@ -35,6 +35,22 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.3</h2>
+ <p>Released May 14th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.3</h3>
+ <ul>
+     <li>Provenance display support on article pages for subset of articles with unconventional XML</li>
+     <li>Fix for table title bolding on article pages</li>
+     <li>Ambra upgrade to Spring 3.2</li>
+     <li>Saved search threading fix</li>
+     <li>Ambra support for recent CrossRef API changes</li>
+     <li>PLOS Queue error handling optimizations</li>
+     <li>Find this article online link display - initial changes</li>
+     <li>XHTML tables follow up fix</li>
+     <li>Tablet optimizations - initial changes</li>
+ </ul>
+
+
  <h2>Ambra 2.6.2</h2>
  <p>Released May 7th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.2</h3>

@@ -32,6 +32,7 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
   private static final Logger log = LoggerFactory.getLogger(SavedSearchEmailRoutes.class);
   private String weeklyCron;
   private String monthlyCron;
+  private int threadCount;
 
   public static final String SEARCH_ALERTS_QUEUE = "activemq:ambra.searchAlerts";
   public static final String HEADER_STARTTIME = "ambra.searchAlerts.header.startTime";
@@ -60,8 +61,7 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
         "${headers." + HEADER_ENDTIME + "})")
       .to("seda:runInParallel");
 
-    //Hard coding this for 15 threads, can increase later if needed
-    from("seda:runInParallel?concurrentConsumers=15")
+    from("seda:runInParallel?concurrentConsumers=" + threadCount)
       .to("bean:savedSearchRunner?method=runSavedSearch")
       .to("bean:savedSearchSender");
 
@@ -90,5 +90,10 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
   @Required
   public void setMonthlyCron(String monthlyCron) {
     this.monthlyCron = monthlyCron;
+  }
+
+  @Required
+  public void setThreadCount(int threadCount) {
+    this.threadCount = threadCount;
   }
 }

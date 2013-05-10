@@ -2834,6 +2834,7 @@ ul.bulletlist li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 6px;
 }
 
 /* sidebar linked from */
@@ -5254,6 +5255,24 @@ div.findArticle h4 {
   background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
 }
 
+ol.references ul.find {
+  margin: 0;
+  padding: 0;
+  height: 25px;
+}
+
+ol.references ul.find li {
+  float: left;
+  margin-right: 4px;
+  margin-left: 20px;
+  list-style-type: disc;
+}
+
+ol.references ul.find li:first-child {
+  margin-left: 0px;
+  list-style-type: none;
+}
+
 ol.references li {
   list-style-type: none;
 }
@@ -5263,4 +5282,10 @@ ol.references li span.label {
   float: left;
   width: 20px;
   text-align: right;
+}
+
+ol.references ul.find-nolinks {
+  margin: 0;
+  padding: 0;
+  height: 8px;
 }
