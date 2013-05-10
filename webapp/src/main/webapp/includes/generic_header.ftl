@@ -30,7 +30,7 @@
         <ul>
           <li><a href="http://www.plos.org">plos.org</a></li>
         <#if Session["AMBRA_USER"]?exists>
-          <@s.url id="editProfileURL" includeParams="none" namespace="/user/secure" action="editProfile" tabId="preferences"/>
+          <@s.url id="editProfileURL" includeParams="none" namespace="/user/secure" action="editProfile"/>
           <li><a href="${editProfileURL}" title="Edit your account profile and alert settings">preferences</a></li>
           <@s.url id="logoutURL" includeParams="none" namespace="/user/secure" action="secureRedirect" goTo="${freemarker_config.casLogoutURL}?service=${Request[freemarker_config.journalContextAttributeKey].baseUrl}/logout.action"/>
           <li class="btn-style"><a href="${logoutURL}">sign out</a></li>
