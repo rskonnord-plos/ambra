@@ -1,6 +1,7 @@
 package org.ambraproject.action.user;
 
 import org.ambraproject.Constants;
+import org.ambraproject.models.Journal;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.user.UserAlert;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Joe Osowski 04/12/2013
@@ -135,8 +137,23 @@ public class EditUserAction extends UserActionSupport {
 
           if(filterSpecified.get(journal) != null && filterSpecified.get(journal).equals("subjects")) {
             String[] subjects = journalSubjectFilters.get(journal);
+            String journalKey = null;
 
-            userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journal);
+            //Kind of kludge, but we seemingly have two ways of representing journalkeys in the ambra.xml
+            //This only works as plosone is the same as "PLoSONE".  Not all journal names use this same convention.
+            //These terms need to be corrected!  However, any changes made to these keys will cause user search
+            //Alerts to be lost.  A data migration will have to be performed
+            Set<Journal> journals = journalService.getAllJournals();
+            for(Journal j  : journals) {
+              if(j.getJournalKey().toLowerCase().equals(journal)) {
+                journalKey = j.getJournalKey();
+              }
+            }
+
+            if(journalKey == null) {
+              throw new RuntimeException("Can not find journal of name:" + journal);
+            }
+            userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journalKey);
 
             //The weekly alert is actually a savedSearch, remove from list
             weeklyAlerts.remove(journal);

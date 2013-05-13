@@ -22,6 +22,7 @@ package org.ambraproject.action.user;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.service.user.UserAlert;
 import org.ambraproject.util.ProfanityCheckingService;
 import org.ambraproject.util.TextUtils;
@@ -67,6 +68,7 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   private static final String HTTP_PREFIX = "http://";
 
   protected UserService userService;
+  protected JournalService journalService;
   private String email;
   private String displayName;
   private String givenNames;
@@ -105,6 +107,14 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   @Required
   public void setUserService(UserService userService) {
     this.userService = userService;
+  }
+
+  /**
+   * @param journalService the journalService to use
+   */
+  @Required
+  public void setJournalService(JournalService journalService) {
+    this.journalService = journalService;
   }
 
   protected boolean validateProfileInput() {
