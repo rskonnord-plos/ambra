@@ -57,10 +57,14 @@ public class EditUserAction extends UserActionSupport {
         String[] subjectFilters = search.getSearchParameters().getFilterSubjectsDisjunction();
 
         //Assume one search alert per journal
-        journalSubjectFilters.put(curJournal, subjectFilters);
+        //Kludge: Deparse the journal.  This will only work for journals where the only difference between the values
+        //are case changes
+        journalSubjectFilters.put(curJournal.toLowerCase(), subjectFilters);
 
         //Append the weekly alert for the view
-        weeklyAlerts.add(curJournal);
+        //Kludge: Deparse the journal.  This will only work for journals where the only difference between the values
+        //are case changes
+        weeklyAlerts.add(curJournal.toLowerCase());
       }
     }
 
@@ -122,6 +126,8 @@ public class EditUserAction extends UserActionSupport {
 
       if(this.filterSpecified != null) {
         for(String journal : filterSpecified.keySet()) {
+          String journalKey = translateJournalKey(journal);
+
           //If the journal is not checked for weekly, just remove the alert
           boolean weeklyChecked = false;
           for(String s : weeklyAlerts) {
@@ -131,34 +137,19 @@ public class EditUserAction extends UserActionSupport {
           }
 
           if(!weeklyChecked) {
-            userService.removedFilteredWeeklySearchAlert(profile.getID(), journal);
+            userService.removedFilteredWeeklySearchAlert(profile.getID(), journalKey);
             break;
           }
 
           if(filterSpecified.get(journal) != null && filterSpecified.get(journal).equals("subjects")) {
             String[] subjects = journalSubjectFilters.get(journal);
-            String journalKey = null;
 
-            //Kind of kludge, but we seemingly have two ways of representing journalkeys in the ambra.xml
-            //This only works as plosone is the same as "PLoSONE".  Not all journal names use this same convention.
-            //These terms need to be corrected!  However, any changes made to these keys will cause user search
-            //Alerts to be lost.  A data migration will have to be performed
-            Set<Journal> journals = journalService.getAllJournals();
-            for(Journal j  : journals) {
-              if(j.getJournalKey().toLowerCase().equals(journal)) {
-                journalKey = j.getJournalKey();
-              }
-            }
-
-            if(journalKey == null) {
-              throw new RuntimeException("Can not find journal of name:" + journal);
-            }
             userService.setFilteredWeeklySearchAlert(profile.getID(), subjects, journalKey);
 
             //The weekly alert is actually a savedSearch, remove from list
             weeklyAlerts.remove(journal);
           } else {
-            userService.removedFilteredWeeklySearchAlert(profile.getID(), journal);
+            userService.removedFilteredWeeklySearchAlert(profile.getID(), journalKey);
           }
         }
       } else {
@@ -174,6 +165,28 @@ public class EditUserAction extends UserActionSupport {
     }
 
     return retrieveAlerts();
+  }
+
+  /**
+   *
+   * Kind of kludge, but we seemingly have two ways of representing journalkeys in the ambra.xml
+   * This only works as plosone is the same as "PLoSONE".  Not all journal names use this same convention.
+   * These terms need to be corrected!  However, any changes made to these keys will cause user search
+   * Alerts to be lost.  A data migration will have to be performed
+   *
+   * @param journal
+   *
+   * @return
+   */
+  private String translateJournalKey(String journal) {
+    Set<Journal> journals = journalService.getAllJournals();
+    for(Journal j  : journals) {
+      if(j.getJournalKey().toLowerCase().equals(journal)) {
+        return j.getJournalKey();
+      }
+    }
+
+    throw new RuntimeException("Can not find journal of name:" + journal);
   }
 
   /**
