@@ -184,6 +184,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   {
     SearchParameters searchParameters = new SearchParameters();
 
+    searchParameters.setQuery("*:*");
     searchParameters.setFilterJournals(new String[] { journal });
     searchParameters.setFilterSubjectsDisjunction(subjects);
 
