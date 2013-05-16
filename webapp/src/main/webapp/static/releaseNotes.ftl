@@ -35,6 +35,21 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.4</h2>
+ <p>Released May 21st, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.4</h3>
+ <ul>
+     <li>Updated taxonomy rules</li>
+     <li>Citation display for Formal Corrections and Retractions</li>
+     <li>Tablet optimizations - search results page</li>
+     <li>Refactor URL rewrites to remove hardcoded paths</li>
+     <li>Client side article PDF viewing</li>
+     <li>Fix for Find this article online display edge case</li>
+     <li>Minion configuration for datasource dependency skipping</li>
+     <li>Fix for error message in Admin if article publishes when queue is not running</li>
+ </ul>
+
+
  <h2>Ambra 2.6.3</h2>
  <p>Released May 14th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.3</h3>
