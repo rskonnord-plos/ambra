@@ -1885,7 +1885,7 @@
       <xsl:if test="not(self::node()='.')">
         <xsl:text> </xsl:text>
         <xsl:apply-templates/>
-        <xsl:if test="substring(.,string-length(.)) != '.'">
+        <xsl:if test="substring(.,string-length(.)) != '.' and not(ends-with(..,'.'))">
           <xsl:text>. </xsl:text>
         </xsl:if>
       </xsl:if>
