@@ -1437,7 +1437,7 @@
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
       <xsl:apply-templates/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1469,7 +1469,7 @@
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1485,7 +1485,7 @@
       <xsl:apply-templates select="collab" mode="book"/>
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
