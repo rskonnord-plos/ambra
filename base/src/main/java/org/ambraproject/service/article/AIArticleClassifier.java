@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -235,7 +236,13 @@ public class AIArticleClassifier implements ArticleClassifier {
    * @throws Exception
    */
   public static void main(String... args) throws Exception {
-    Matcher matcher = DOI_REGEX.matcher(args[0]);
+    if (args.length != 2) {
+      System.err.println("You must specify the thesaurus as the first argument, and the PLOS "
+          + "article as the second.  You entered: " + Arrays.toString(args));
+      System.exit(1);
+    }
+
+    Matcher matcher = DOI_REGEX.matcher(args[1]);
     matcher.find();
     String doi = matcher.group(1);
     if (doi != null) {
@@ -247,8 +254,7 @@ public class AIArticleClassifier implements ArticleClassifier {
       System.out.println("\n\n" + classifier.getCategorizationContent(dom) + "\n\n");
 
       classifier.setServiceUrl("http://tax.plos.org:9080/servlet/dh");
-      classifier.setThesaurus("plos2012thes");
-//      classifier.setThesaurus("plosthes.2013-2");
+      classifier.setThesaurus(args[0].trim());
       classifier.setHttpClient(new HttpClient(new MultiThreadedHttpConnectionManager()));
       List<String> terms = classifier.classifyArticle(dom);
       System.out.println("\n\nTerms returned by taxonomy server:");
@@ -257,7 +263,7 @@ public class AIArticleClassifier implements ArticleClassifier {
       }
       System.out.println("\n\n");
     } else {
-      System.out.println(args[0] + " is not a valid DOI");
+      System.out.println(args[1] + " is not a valid DOI");
       System.exit(1);
     }
   }
