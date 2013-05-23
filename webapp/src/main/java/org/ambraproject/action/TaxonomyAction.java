@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 
 /**
@@ -77,12 +78,12 @@ public class TaxonomyAction extends BaseActionSupport {
    * @return A map of categories
    */
   @SuppressWarnings("unchecked")
-  public Map<String, Integer> getCategories() {
+  public Map<String, Set<String>> getCategories() {
     //Should probably implement this in the setter if the getter ever starts to get
     //called more then once
 
     if(this.root == null) {
-      return CategoryUtils.keyCounts(categories);
+      return CategoryUtils.getShortTree(categories);
     }
 
     //Ignore first slash if it exists
@@ -91,7 +92,7 @@ public class TaxonomyAction extends BaseActionSupport {
     }
 
     if(this.root.trim().length() == 0) {
-      return CategoryUtils.keyCounts(categories);
+      return CategoryUtils.getShortTree(categories);
     } else {
       String[] levels = this.root.split("/");
       CategoryView res = categories;
@@ -100,7 +101,7 @@ public class TaxonomyAction extends BaseActionSupport {
         res = res.getChild(level);
       }
 
-      return CategoryUtils.keyCounts(res);
+      return CategoryUtils.getShortTree(res);
     }
   }
 

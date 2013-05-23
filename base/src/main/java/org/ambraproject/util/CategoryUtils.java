@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -29,6 +30,24 @@ public class CategoryUtils {
 
     for(String key : categoryView.getChildren().keySet()) {
       results.put(key, categoryView.getChild(key).getChildren().size());
+    }
+
+    return results;
+  }
+
+  /**
+   * For the top elements: return keys and the immediate children
+   *
+   * @param categoryView
+   *
+   * @return a map of keys and the immediate children
+   */
+  @SuppressWarnings("unchecked")
+  public static Map<String, Set<String>> getShortTree(CategoryView categoryView) {
+    Map<String, Set<String>> results = new HashMap<String, Set<String>>();
+
+    for(String key : categoryView.getChildren().keySet()) {
+      results.put(key, categoryView.getChild(key).getChildren().keySet());
     }
 
     return results;
