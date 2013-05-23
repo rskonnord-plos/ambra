@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.ambraproject.queue;
+
+import org.ambraproject.routes.SavedSearchEmailRoutes;
+import org.apache.camel.Produce;
+import org.apache.camel.ProducerTemplate;
+import org.jvnet.mock_javamail.Mailbox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Unit test for the savedSearch camel route
+ *
+ * @author stumu
+ * @author Joe Osowski
+ */
+@ContextConfiguration
+public class SavedSearchRouteWeeklyTest extends SavedSearchRouteBaseTest {
+  private static final Logger log = LoggerFactory.getLogger(SavedSearchRouteMonthlyTest.class);
+
+  @Produce(uri = SavedSearchEmailRoutes.SEARCH_ALERTS_QUEUE)
+  protected ProducerTemplate start;
+
+  @DataProvider(name="expectedWeeklyEmails")
+  public Object[][] expectedWeeklyEmails() throws Exception {
+    setupUsers();
+    setupSolr();
+
+    start.sendBody("WEEKLY");
+
+    //WAIT 2.5 seconds for queue jobs to complete
+    Thread.sleep(2500);
+
+    //Build up expected emails.  Using email title for predicting contents
+    return new Object[][]{
+      { "savedSearch0@unittestexample.org", 2, new HashMap() {{
+          put("PLOS Search Alert - weekly-0", new String[] { DOI_1 });
+          put("PLOS Search Alert - both-0", new String[] { DOI_2, DOI_3, DOI_4 });
+        }}
+      },
+      { "savedSearch1@unittestexample.org", 2, new HashMap() {{
+          put("PLOS Search Alert - weekly-1", new String[] { DOI_1 });
+          put("PLOS Search Alert - both-1", new String[] { DOI_2, DOI_3, DOI_4 });
+        }}
+      },
+      { "savedSearch2@unittestexample.org", 2, new HashMap() {{
+          put("PLOS Search Alert - weekly-2", new String[] { DOI_1 });
+          put("PLOS Search Alert - both-2", new String[] { DOI_2, DOI_3, DOI_4 });
+        }}
+      }
+    };
+  }
+
+  @Test(dataProvider = "expectedWeeklyEmails")
+  @DirtiesContext
+  public void expectedMonthlyEmails(String email, int expectedEmails, Map emailContents) throws Exception {
+    checkEmail(email, expectedEmails, emailContents);
+  }
+
+  @AfterClass
+  public void cleanup() {
+    //Reset the mailboxes
+    log.debug("Clearing mailboxes");
+
+    Mailbox.clearAll();
+  }
+}

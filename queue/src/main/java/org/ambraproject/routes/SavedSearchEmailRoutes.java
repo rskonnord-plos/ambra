@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +12,16 @@
 package org.ambraproject.routes;
 
 import org.ambraproject.search.SavedSearchRetriever;
+import org.apache.camel.Exchange;
+import org.apache.camel.TypeConversionException;
 import org.apache.camel.spring.SpringRouteBuilder;
+import org.apache.camel.support.TypeConverterSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA. User: stumu Date: 9/20/12 Time: 5:03 PM To change this template use File | Settings |
@@ -26,12 +30,13 @@ import org.springframework.beans.factory.annotation.Required;
 public class SavedSearchEmailRoutes extends SpringRouteBuilder {
 
   private static final Logger log = LoggerFactory.getLogger(SavedSearchEmailRoutes.class);
-  private String mailEndpoint;
   private String weeklyCron;
   private String monthlyCron;
-  private String fromEmailAddress;
-  private String imagePath;
+  private int threadCount;
 
+  public static final String SEARCH_ALERTS_QUEUE = "activemq:ambra.searchAlerts";
+  public static final String HEADER_STARTTIME = "ambra.searchAlerts.header.startTime";
+  public static final String HEADER_ENDTIME = "ambra.searchAlerts.header.endTime";
 
   @Override
   public void configure() throws Exception {
@@ -41,48 +46,41 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
 
     from("quartz:ambra/savedsearch/weeklyemail?cron=" + weeklyCron)
       .setBody(constant(SavedSearchRetriever.AlertType.WEEKLY))
-        .setHeader("alertType", simple("weekly"))
-        .to("direct:getemaildata");
+      .to(SEARCH_ALERTS_QUEUE);
 
     //Monthly alert emails
     log.info("Setting Route for sending 'Monthly' saved search emails");
 
     from("quartz:ambra/savedsearch/monthlyemail?cron=" + monthlyCron)
-        .setBody(constant(SavedSearchRetriever.AlertType.MONTHLY))
-        .setHeader("alertType", simple("monthly"))
-        .to("direct:getemaildata");
+      .setBody(constant(SavedSearchRetriever.AlertType.MONTHLY))
+      .to(SEARCH_ALERTS_QUEUE);
 
+    from(SEARCH_ALERTS_QUEUE)
+      .split().method("savedSearchRetriever","retrieveSearchAlerts(${body}," +
+        "${headers." + HEADER_STARTTIME + "}," +
+        "${headers." + HEADER_ENDTIME + "})")
+      .to("seda:runInParallel");
 
+    from("seda:runInParallel?concurrentConsumers=" + threadCount)
+      .to("bean:savedSearchRunner?method=runSavedSearch")
+      .to("bean:savedSearchSender");
 
-    from("direct:getemaildata")
-        .split().method("savedSearchRetriever", "retrieveSearchAlerts")      // custom spliting
-        .to("bean:savedSearchRunner?method=runSavedSearch")
-        .to("direct:prepareemail");
+    //Register type converter for Dates to Strings
+    //Assume the format is "MM/dd/yyyy"
+    getContext().getTypeConverterRegistry().addTypeConverter(Date.class, String.class, new TypeConverterSupport() {
+      SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
-    from("direct:prepareemail")
-        .setHeader("searchHitList", simple("${body.searchHitList}"))
-        .filter(header("searchHitList").isNotNull())
-        .setHeader("savedSearchId", simple("${body.savedSearchId}"))
-        .setHeader("to", simple("${body.emailAddress}"))
-        .setHeader("searchParameters", simple("${body.searchParameters}"))
-        .setHeader("currentTime", simple("${body.currentTime}"))
-        .setHeader("lastSearchTime", simple("${body.lastSearchTime}"))
-        .setHeader("subject", constant("PLOS Search Alert -").append(simple("${body.searchName}")))
-        .setHeader("imagePath",constant(imagePath))
-        .to("freemarker:email.ftl")
-        .setHeader("Content-Type",constant(("text/html; charset=UTF-8")))
-        .setHeader("from", constant(fromEmailAddress))
-        .to("direct:sendemail");
-
-    from("direct:sendemail")
-        .to(mailEndpoint)
-        .to("log:org.plos.camel.routes.SavedSearchEmailSucceeded?level=INFO" +
-        "&showHeaders=false" +
-        "&showExchangeId=true" +
-        "&multiline=true");
-
+      @Override
+      @SuppressWarnings("unchecked")
+      public <T> T convertTo(Class<T> tClass, Exchange exchange, Object object) throws TypeConversionException {
+        try {
+          return (T) formatter.parse(object.toString());
+        } catch (ParseException ex) {
+          throw new TypeConversionException(object, tClass, ex);
+        }
+      }
+    });
   }
-
 
   @Required
   public void setWeeklyCron(String weeklyCron) {
@@ -95,17 +93,7 @@ public class SavedSearchEmailRoutes extends SpringRouteBuilder {
   }
 
   @Required
-  public void setMailEndpoint(String mailEndpoint) {
-    this.mailEndpoint = mailEndpoint;
-  }
-
-  @Required
-  public void setFromEmailAddress(String fromEmailAddress) {
-    this.fromEmailAddress = fromEmailAddress;
-  }
-
-  @Required
-  public void setImagePath(String imagePath) {
-    this.imagePath = imagePath;
+  public void setThreadCount(int threadCount) {
+    this.threadCount = threadCount;
   }
 }

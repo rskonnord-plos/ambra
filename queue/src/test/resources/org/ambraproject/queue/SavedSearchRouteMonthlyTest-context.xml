@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ $HeadURL$
+  ~ $Id$
+  ~ Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <bean id="placeholderConfig"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:senduseralerts.properties</value>
+        <value>classpath:dummyCrossRef.properties</value>
+        <value>classpath:dummyPubGet.properties</value>
+      </list>
+    </property>
+    <property name="ignoreResourceNotFound" value="true"/>
+  </bean>
+
+  <import resource="classpath*:org/ambraproject/action/hibernate-context.xml"/>
+
+  <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
+
+  <bean id="ambraConfiguration" class="org.ambraproject.testutils.AmbraTestConfigurationFactory"
+        factory-method="getConfiguration">
+    <constructor-arg index="0" value="ambra-test-config.xml"/>
+  </bean>
+
+  <bean id="savedSearchRetriever" class="org.ambraproject.search.SavedSearchRetrieverImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+  <bean id="savedSearchRunner" class="org.ambraproject.search.SavedSearchRunnerImpl">
+    <property name="searchService" ref="searchService"/>
+  </bean>
+
+  <bean id="searchService" class="org.ambraproject.service.search.SolrSearchService">
+    <property name="serverFactory" ref="solrServerFactory"/>
+    <property name="configuration" ref="ambraConfiguration"/>
+  </bean>
+
+  <bean id="mailer" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${plos.camel.mail"/>
+  </bean>
+
+  <bean id="defaultEncodingCharset" class="java.lang.String">
+    <constructor-arg value="UTF-8"/>
+  </bean>
+
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPath" value="/"/>
+    <property name="defaultEncoding" ref="defaultEncodingCharset"/>
+  </bean>
+
+  <bean id="freeMarkerMailer" class="org.ambraproject.email.impl.FreemarkerTemplateMailer">
+    <property name="mailSender" ref="mailer"/>
+    <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    <property name="fromEmailAddress" value="${ambra.queue.fromEmailAddress}" />
+    <property name="fromEmailName" value="${ambra.queue.fromEmailName}" />
+  </bean>
+
+  <bean id="savedSearchSender" class="org.ambraproject.search.SavedSearchSenderImpl">
+    <property name="mailer" ref="freeMarkerMailer" />
+    <property name="sessionFactory" ref="sessionFactory" />
+    <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
+    <property name="imagePath" value="${ambra.queue.image.path}"/>
+    <property name="sendMode" value="${ambra.queue.sendmail.sendMode}"/>
+    <property name="sendModeQAEMail" value="${ambra.queue.sendmail.sendMode.qa.email}"/>
+    <property name="alertHtmlEmail" value="${ambra.queue.sendmail.alert.html}"/>
+    <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
+    <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
+    <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
+  </bean>
+
+  <bean id="jmsFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false"/>
+  </bean>
+
+  <bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
+    <property name="connectionFactory" ref="jmsFactory"/>
+  </bean>
+
+  <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+    <property name="connectionFactory" ref="jmsFactory"/>
+    <property name="transactionManager" ref="jmsTransactionManager"/>
+    <property name="transacted" value="true"/>
+    <property name="concurrentConsumers" value="1"/>
+  </bean>
+
+  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="configuration" ref="jmsConfig"/>
+  </bean>
+
+  <bean id="routeBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes" depends-on="activemq">
+    <!-- Basically, never run, the route is started manually in the test -->
+    <property name="weeklyCron" value="1+*+*+1+*+?"/>
+    <property name="monthlyCron" value="1+*+*+1+*+?"/>
+    <property name="threadCount" value="3"/>
+  </bean>
+
+  <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+    <jmxAgent id="ambra-queue" createConnector="false"/>
+    <routeBuilder ref="routeBuilder"/>
+  </camelContext>
+</beans>
+

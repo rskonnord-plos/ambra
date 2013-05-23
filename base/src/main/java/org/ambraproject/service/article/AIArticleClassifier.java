@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,8 +50,8 @@ public class AIArticleClassifier implements ArticleClassifier {
 
   private static final Logger log = LoggerFactory.getLogger(AIArticleClassifier.class);
 
-  private static final String MESSAGE_BEGIN = "<TMMAI project='plos2012thes' location = '.'>\n" +
-      "  <Method name='getSuggestedTermsFullPath' returnType='java.util.Vector'/>\n" +
+  private static final String MESSAGE_BEGIN = "<TMMAI project='%s' location = '.'>\n" +
+      "  <Method name='getSuggestedTermsFullPaths' returnType='java.util.Vector'/>\n" +
       "  <VectorParam>\n" +
       "    <VectorElement>";
 
@@ -60,11 +61,17 @@ public class AIArticleClassifier implements ArticleClassifier {
 
 
   private String serviceUrl;
+  private String thesaurus;
   private HttpClient httpClient;
 
   @Required
   public void setServiceUrl(String serviceUrl) {
     this.serviceUrl = serviceUrl;
+  }
+
+  @Required
+  public void setThesaurus(String thesaurus) {
+    this.thesaurus = thesaurus;
   }
 
   @Required
@@ -75,7 +82,7 @@ public class AIArticleClassifier implements ArticleClassifier {
   @Override
   public List<String> classifyArticle(Document articleXml) throws Exception {
     String toCategorize = getCategorizationContent(articleXml);
-    String aiMessage = MESSAGE_BEGIN + toCategorize + MESSAGE_END;
+    String aiMessage = String.format(MESSAGE_BEGIN, thesaurus) + toCategorize + MESSAGE_END;
     PostMethod post = new PostMethod(serviceUrl);
     post.setRequestEntity(new StringRequestEntity(aiMessage, "application/xml", "UTF-8"));
     httpClient.executeMethod(post);
@@ -189,14 +196,9 @@ public class AIArticleClassifier implements ArticleClassifier {
   String getCategorizationContent(Document dom) throws TransformerException, XPathException {
     StringBuilder sb = new StringBuilder();
     appendElementIfExists(sb, dom, "article-title");
-    boolean hasBody = false;
-    hasBody |= appendElementIfExists(sb, dom, "abstract");
-    hasBody |= appendSectionIfExists(sb, dom, "Materials and Methods", "Methods");
-    hasBody |= appendSectionIfExists(sb, dom, "Results", "Results and Discussion");
-    if (!hasBody) {
-      appendElementIfExists(sb, dom, "body");
-    }
-    return StringEscapeUtils.escapeXml(sb.toString());
+    appendElementIfExists(sb, dom, "abstract");
+    appendElementIfExists(sb, dom, "body");
+    return StringEscapeUtils.escapeXml(sb.toString().trim());
   }
 
   // Utility main method and associated code useful for grabbing categories for individual
@@ -234,7 +236,13 @@ public class AIArticleClassifier implements ArticleClassifier {
    * @throws Exception
    */
   public static void main(String... args) throws Exception {
-    Matcher matcher = DOI_REGEX.matcher(args[0]);
+    if (args.length != 2) {
+      System.err.println("You must specify the thesaurus as the first argument, and the PLOS "
+          + "article as the second.  You entered: " + Arrays.toString(args));
+      System.exit(1);
+    }
+
+    Matcher matcher = DOI_REGEX.matcher(args[1]);
     matcher.find();
     String doi = matcher.group(1);
     if (doi != null) {
@@ -246,6 +254,7 @@ public class AIArticleClassifier implements ArticleClassifier {
       System.out.println("\n\n" + classifier.getCategorizationContent(dom) + "\n\n");
 
       classifier.setServiceUrl("http://tax.plos.org:9080/servlet/dh");
+      classifier.setThesaurus(args[0].trim());
       classifier.setHttpClient(new HttpClient(new MultiThreadedHttpConnectionManager()));
       List<String> terms = classifier.classifyArticle(dom);
       System.out.println("\n\nTerms returned by taxonomy server:");
@@ -254,7 +263,7 @@ public class AIArticleClassifier implements ArticleClassifier {
       }
       System.out.println("\n\n");
     } else {
-      System.out.println(args[0] + " is not a valid DOI");
+      System.out.println(args[1] + " is not a valid DOI");
       System.exit(1);
     }
   }

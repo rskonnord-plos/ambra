@@ -21,8 +21,6 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-
-
   <bean id="placeholderConfig"
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
@@ -35,14 +33,10 @@
 
   <context:component-scan base-package="org.ambraproject"/>
 
-  <!-- beans-->
   <bean id="emailRouteBuilder" class="org.ambraproject.routes.SavedSearchEmailRoutes">
-    <property name="weeklyCron" value="${ambra.sendemail.weekly}"></property>
-    <property name="monthlyCron" value="${ambra.sendemail.monthly}"></property>
-    <property name="mailEndpoint" value="${plos.camel.mail}"></property>
-    <property name="fromEmailAddress" value="${ambra.queue.fromEmailAddress}"></property>
-    <property name="imagePath" value="${ambra.queue.image.path}"/>
-
+    <property name="weeklyCron" value="${ambra.sendemail.weekly}" />
+    <property name="monthlyCron" value="${ambra.sendemail.monthly}" />
+    <property name="threadCount" value="${ambra.queue.sendmail.threadcount}"/>
   </bean>
 
   <bean id="solrServerFactory" class="org.ambraproject.service.search.SolrServerFactory">
@@ -107,6 +101,39 @@
     <property name="connectionTimeout" value="30000"/>
   </bean>
 
+  <bean id="mailer" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${plos.camel.mail"/>
+  </bean>
+
+  <bean id="defaultEncodingCharset" class="java.lang.String">
+    <constructor-arg value="UTF-8"/>
+  </bean>
+
+  <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <property name="templateLoaderPath" value="/"/>
+    <property name="defaultEncoding" ref="defaultEncodingCharset"/>
+  </bean>
+
+  <bean id="freeMarkerMailer" class="org.ambraproject.email.impl.FreemarkerTemplateMailer">
+    <property name="mailSender" ref="mailer"/>
+    <property name="freemarkerConfig" ref="freemarkerConfig"/>
+    <property name="fromEmailAddress" value="${ambra.queue.fromEmailAddress}" />
+    <property name="fromEmailName" value="${ambra.queue.fromEmailName}" />
+  </bean>
+
+  <bean id="savedSearchSender" class="org.ambraproject.search.SavedSearchSenderImpl">
+    <property name="mailer" ref="freeMarkerMailer" />
+    <property name="sessionFactory" ref="sessionFactory" />
+    <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
+    <property name="imagePath" value="${ambra.queue.image.path}"/>
+    <property name="sendMode" value="${ambra.queue.sendmail.sendMode}"/>
+    <property name="sendModeQAEMail" value="${ambra.queue.sendmail.sendMode.qa.email}"/>
+    <property name="alertHtmlEmail" value="${ambra.queue.sendmail.alert.html}"/>
+    <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
+    <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
+    <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
+  </bean>
+
   <bean id="multiThreadedHttpConnectionManager"
         class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
     <property name="params" ref="httpConnectionManagerParams"/>
@@ -127,9 +154,7 @@
     <property name="crossRefLookupService" ref="crossRefLookupService"/>
   </bean>
 
-  <bean id="quartz" class="org.apache.camel.component.quartz.QuartzComponent">
-  </bean>
-
+  <bean id="quartz" class="org.apache.camel.component.quartz.QuartzComponent" />
   <bean id="crossRefLookupRouteBuilder" class="org.ambraproject.routes.CrossRefLookupRoutes" />
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">

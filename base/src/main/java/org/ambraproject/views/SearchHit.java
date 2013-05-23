@@ -24,6 +24,7 @@ import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -46,35 +47,49 @@ public class SearchHit implements Serializable {
   private final String issn;
   private final String journalTitle;
   private final String articleTypeForDisplay;
-  private final String abstractText;
-  private final String strikingImage;
-  private final Boolean hasAssets;
+  private String abstractText;
+  private String strikingImage;
+  private Boolean hasAssets = Boolean.FALSE;
+  private Collection<String> subjects;
 
-  private SearchHit(Float hitScore, String uri, String title, String highlight,
-                    Date date, String creator, Collection<String> listOfCreators, String issn,
-                    String journalTitle, String articleTypeForDisplay, String abstractText,
-                    String strikingImage, Boolean hasAssets) {
-
+  /**
+   * Create a search hit with the values set
+   *
+   * @param hitScore Hit score
+   * @param uri Article ID
+   * @param title Article title
+   * @param highlight Highlights
+   * @param creators Creators
+   * @param date Article date
+   * @param issn eIssn of the journal
+   * @param journalTitle Journal title
+   * @param articleTypeForDisplay Article type
+   * @param strikingImage
+   * @param hasAssets
+   */
+  public SearchHit(Float hitScore, String uri, String title, String highlight,
+                   Collection<String> creators, Date date, String issn,
+                   String journalTitle, String articleTypeForDisplay, String abstractText,
+                   Collection<String> subjects, String strikingImage, boolean hasAssets) {
     if (hitScore == null) {
       this.hitScore = 0f;
     } else {
       this.hitScore = hitScore;
     }
-
     this.uri = uri;
     this.title = title;
     this.highlight = highlight;
+    this.creator = StringUtils.join(creators, ", ");
+    this.listOfCreators = creators;
     this.date = date;
-    this.creator = creator;
-    this.listOfCreators = listOfCreators;
     this.issn = issn;
     this.journalTitle = journalTitle;
     this.articleTypeForDisplay = articleTypeForDisplay;
     this.abstractText = abstractText;
+    this.subjects = subjects;
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
   }
-
   /**
    * @return the hit object's uri
    */
@@ -173,6 +188,14 @@ public class SearchHit implements Serializable {
   }
 
   /**
+   * Get the subjects
+   * @return a collection of subjects
+   */
+  public Collection<String> getSubjects() {
+    return subjects;
+  }
+
+  /**
    * Get the creators in a list
    *
    * @return
@@ -205,6 +228,7 @@ public class SearchHit implements Serializable {
     private Date date;
     private String creator;
     private Collection<String> listOfCreators;
+    private Collection<String> subjects;
     private String issn;
     private String journalTitle;
     private String articleTypeForDisplay;
@@ -248,6 +272,11 @@ public class SearchHit implements Serializable {
       return this;
     }
 
+    public Builder setSubjects(Collection<String> subjects) {
+      this.subjects = subjects;
+      return this;
+    }
+
     public Builder setIssn(String issn) {
       this.issn = issn;
       return this;
@@ -279,13 +308,13 @@ public class SearchHit implements Serializable {
         uri,
         title,
         highlight,
-        date,
-        creator,
         listOfCreators,
+        date,
         issn,
         journalTitle,
         articleTypeForDisplay,
         abstractText,
+        subjects,
         strikingImage,
         hasAssets);
     }
@@ -301,12 +330,14 @@ public class SearchHit implements Serializable {
       ", highlight='" + highlight + '\'' +
       ", date=" + date +
       ", creator='" + creator + '\'' +
+      ", listOfCreators=" + listOfCreators +
       ", issn='" + issn + '\'' +
       ", journalTitle='" + journalTitle + '\'' +
       ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
-      ", abstract='" + abstractText + '\'' +
+      ", abstractText='" + abstractText + '\'' +
       ", strikingImage='" + strikingImage + '\'' +
-      ", hasAssets='" + hasAssets + '\'' +
+      ", hasAssets=" + hasAssets +
+      ", subjects=" + subjects +
       '}';
   }
 

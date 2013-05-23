@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-base</artifactId>
-  <version>2.5.9</version>
+  <version>2.6.4</version>
   <packaging>jar</packaging>
   <name>Ambra Base Web Application</name>
 
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-    <version>2.5.9</version>
+    <version>2.6.4</version>
   </parent>
 
   <dependencies>
@@ -570,6 +570,24 @@
           </execution>
         </executions>
       </plugin>
+
+<!--  Rule to build a standalone .jar with the "taxonomy command-line tool" used
+      by Rachel and Jonas.  To invoke, use "mvn assembly:single".  I'm leaving
+      this commented-out for now on the off chance it might break some other build.
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>org.ambraproject.service.article.AIArticleClassifier</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+-->
     </plugins>
   </build>
 </project>

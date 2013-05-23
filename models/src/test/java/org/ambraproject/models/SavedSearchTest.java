@@ -43,10 +43,14 @@ public class SavedSearchTest extends BaseHibernateTest {
   public void testSavedSearch() {
     long testStart = new Date().getTime();
     final UserProfile user = new UserProfile("savedSearchAuthId", "savedSearchEmail", "savedSearchDisplayName");
-    SavedSearch savedSearch = new SavedSearch();
 
+    SavedSearchQuery query = new SavedSearchQuery("search string", "search hash");
+    hibernateTemplate.save(query);
+
+    SavedSearch savedSearch = new SavedSearch();
     savedSearch.setSearchName("search name");
-    savedSearch.setSearchParams("search string");
+    savedSearch.setSearchQuery(query);
+    savedSearch.setSearchType(SavedSearchType.USER_DEFINED);
     savedSearch.setLastWeeklySearchTime(new Date());
     savedSearch.setLastMonthlySearchTime(new Date());
     savedSearch.setMonthly(false);
@@ -56,12 +60,15 @@ public class SavedSearchTest extends BaseHibernateTest {
     hibernateTemplate.save(user);
 
     SavedSearch storedSearch = hibernateTemplate.get(SavedSearch.class, savedSearch.getID());
-    assertEquals(storedSearch.getSearchParams(), savedSearch.getSearchParams());
+    assertEquals(storedSearch.getSearchQuery(), savedSearch.getSearchQuery());
     assertTrue(storedSearch.getLastModified().getTime() >= testStart,
         "savedsearch didn't get last submit timestamp set correctly");
+    assertEquals(storedSearch.getSearchType(), SavedSearchType.USER_DEFINED);
     assertEquals(storedSearch.getMonthly(), false);
     assertEquals(storedSearch.getWeekly(), true);
     assertEquals(storedSearch.getSearchName(), "search name");
+    assertEquals(storedSearch.getSearchQuery().getSearchParams(), "search string");
+    assertEquals(storedSearch.getSearchQuery().getHash(), "search hash");
 
     Calendar lastSearchTime = Calendar.getInstance();
     lastSearchTime.add(Calendar.YEAR, 1);
@@ -75,7 +82,7 @@ public class SavedSearchTest extends BaseHibernateTest {
     assertTrue(Calendar.getInstance().getTime().getTime() < storedSearch.getLastMonthlySearchTime().getTime(),
         "didn't update last search time");
 
-    List<SavedSearch> storedSavedSearchList =hibernateTemplate.execute(new HibernateCallback<List<SavedSearch>>() {
+    List<SavedSearch> storedSavedSearchList = hibernateTemplate.execute(new HibernateCallback<List<SavedSearch>>() {
       @Override
       public List<SavedSearch> doInHibernate(Session session) throws HibernateException, SQLException {
         //load up all the saved searches(they're lazy)

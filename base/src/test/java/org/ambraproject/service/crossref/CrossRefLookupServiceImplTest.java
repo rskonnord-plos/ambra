@@ -40,7 +40,7 @@ public class CrossRefLookupServiceImplTest {
 
     HttpClientMock mockHttpClient = new HttpClientMock(200,
       "{ \"results\": [ { \"text\": \"Cope ED,Synopsis of the families of Vertebrata;American Naturalist;23;" +
-        "849-887\", \"match\": true, \"doi\": \"10.1086/275018\", \"score\": 4.3371863 } ], \"query_ok\": true }");
+        "849-887\", \"match\": true, \"doi\": \"10.1086/275018\", \"score\": 2.6771188 } ], \"query_ok\": true }");
     service.setHttpClient(mockHttpClient);
     service.setCrossRefUrl("http://bleh.bleh");
 
@@ -68,7 +68,7 @@ public class CrossRefLookupServiceImplTest {
     HttpClientMock mockHttpClient = new HttpClientMock(200,
       "{ \"results\": [ {  \"text\": \"Young GC,Placoderms (armored fish): dominant vertebrates of the " +
         "Devonian Period;Annual Review of Earth and Planetary Sciences;38;523-550\", \"match\": true, \"doi\": " +
-        "\"10.1146/annurev-earth-040809-152507\", \"score\": 4.767027 } ], \"query_ok\": true }");
+        "\"10.1146/annurev-earth-040809-152507\", \"score\": \"4.767027\" } ], \"query_ok\": true }");
     service.setHttpClient(mockHttpClient);
     service.setCrossRefUrl("http://bleh.bleh");
 
