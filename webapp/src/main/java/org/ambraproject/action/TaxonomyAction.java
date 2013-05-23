@@ -13,6 +13,7 @@ package org.ambraproject.action;
 
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.util.CategoryUtils;
+import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -32,7 +33,7 @@ public class TaxonomyAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(TaxonomyAction.class);
 
   private Map<String, List<String>> topAndSecondLevelCategories;
-  private Map<String, Object> categories;
+  private CategoryView categories;
   private TaxonomyService taxonomyService;
   private String root;
   private String[] filter;
@@ -93,10 +94,10 @@ public class TaxonomyAction extends BaseActionSupport {
       return CategoryUtils.keyCounts(categories);
     } else {
       String[] levels = this.root.split("/");
-      Map<String, Object> res = categories;
+      CategoryView res = categories;
 
       for(String level : levels) {
-        res = (SortedMap<String, Object>)res.get(level);
+        res = res.getChild(level);
       }
 
       return CategoryUtils.keyCounts(res);
@@ -109,7 +110,7 @@ public class TaxonomyAction extends BaseActionSupport {
    *
    * @return
    */
-  public Map<String, Object> getMap() {
+  public CategoryView getMap() {
     //Should probably implement this in the setter if the getter ever starts to get
     //called more then once
     if(this.filter != null && this.filter.length > 0) {
@@ -120,7 +121,8 @@ public class TaxonomyAction extends BaseActionSupport {
       }
 
       if(getActionErrors().size() == 0) {
-        return CategoryUtils.filterMap(categories, this.filter);
+        CategoryView cv = CategoryUtils.filterMap(categories, this.filter);
+        return cv;
       }
     }
 

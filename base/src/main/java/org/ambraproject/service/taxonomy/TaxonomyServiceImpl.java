@@ -15,6 +15,7 @@ import org.ambraproject.ApplicationException;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.CategoryUtils;
+import org.ambraproject.views.CategoryView;
 import org.springframework.beans.factory.annotation.Required;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +95,7 @@ public class TaxonomyServiceImpl implements TaxonomyService {
   /**
    * {@inheritDoc}
    */
-  public Map<String, Object> parseCategories(final String currentJournal)
+  public CategoryView parseCategories(final String currentJournal)
     throws ApplicationException {
     if (cache == null) {
       return parseCategoriesWithoutCache(currentJournal);
@@ -102,9 +103,9 @@ public class TaxonomyServiceImpl implements TaxonomyService {
       String key = ("categoriesCacheKey" + currentJournal).intern();
 
       return cache.get(key, CACHE_TTL,
-        new Cache.SynchronizedLookup<Map<String, Object>, ApplicationException>(key) {
+        new Cache.SynchronizedLookup<CategoryView, ApplicationException>(key) {
           @Override
-          public Map<String, Object> lookup() throws ApplicationException {
+          public CategoryView lookup() throws ApplicationException {
             return parseCategoriesWithoutCache(currentJournal);
           }
         });
@@ -112,7 +113,7 @@ public class TaxonomyServiceImpl implements TaxonomyService {
   }
 
   @SuppressWarnings("unchecked")
-  private Map<String, Object> parseCategoriesWithoutCache(String currentJournal)
+  private CategoryView parseCategoriesWithoutCache(String currentJournal)
     throws ApplicationException {
 
     List<String> subjects = searchService.getAllSubjects(currentJournal);

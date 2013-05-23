@@ -17,6 +17,7 @@
  */
 package org.ambraproject.util;
 
+import org.ambraproject.views.CategoryView;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,43 +48,31 @@ public class CategoryUtilsTest {
           add("/1/2/3");
           add("/x/y");
         }},
-        new TreeMap() {{
-          put("a",
-            new TreeMap() {{
-              put("b",
-                new TreeMap() {{
-                  put("c",
-                    new TreeMap() {{
-                      put("d",
-                        new TreeMap() {{
-                          put("e",
-                            new TreeMap());
-                        }});
-                    }});
+        new CategoryView("ROOT") {{
+          addChild(new CategoryView("a") {{
+            addChild(new CategoryView("b") {{
+              addChild(new CategoryView("c") {{
+                addChild(new CategoryView("d") {{
+                  addChild(new CategoryView("e"));
                 }});
-
-              put("c",
-                new TreeMap() {{
-                  put("e",
-                    new TreeMap());
-                }});
+              }});
             }});
-
-          put("e", new TreeMap());
-          put("g", new TreeMap());
-          put("f", new TreeMap());
-          put("z", new TreeMap());
-          put("1",
-            new TreeMap() {{
-              put("2",
-                new TreeMap() {{
-                  put("3", new TreeMap());
-                }});
+            addChild(new CategoryView("c") {{
+              addChild(new CategoryView("e"));
             }});
-          put("x",
-            new TreeMap() {{
-              put("y", new TreeMap());
+          }});
+          addChild(new CategoryView("e"));
+          addChild(new CategoryView("g"));
+          addChild(new CategoryView("f"));
+          addChild(new CategoryView("z"));
+          addChild(new CategoryView("1") {{
+            addChild(new CategoryView("2") {{
+              addChild(new CategoryView("3"));
             }});
+          }});
+          addChild(new CategoryView("x") {{
+            addChild(new CategoryView("y"));
+          }});
         }}
       }
     };
@@ -95,77 +84,65 @@ public class CategoryUtilsTest {
     return new Object[][]{
       {
         "a",
-        new TreeMap() {{
-          put("a", new TreeMap());
-
-          put("d",
-            new TreeMap() {{
-              put("e",
-                new TreeMap() {{
-                  put("f",
-                    new TreeMap() {{
-                      put("a", new TreeMap());
-                    }});
-                }});
+        new CategoryView("ROOT") {{
+          addChild(new CategoryView("a"));
+          addChild(new CategoryView("d") {{
+            addChild(new CategoryView("e") {{
+              addChild(new CategoryView("f") {{
+                addChild(new CategoryView("a"));
+              }});
             }});
+          }});
 
-          put("b",
-            new TreeMap() {{
-              put("a", new TreeMap());
+          addChild(new CategoryView("d") {{
+            addChild(new CategoryView("e") {{
+              addChild(new CategoryView("f") {{
+                addChild(new CategoryView("a"));
+              }});
             }});
+          }});
+
+          addChild(new CategoryView("b") {{
+            addChild(new CategoryView("a"));
+          }});
         }},
-        new TreeMap() {{
-          put("a",
-            new TreeMap() {{
-              put("b",
-                new TreeMap() {{
-                  put("c", new TreeMap());
-                }});
-
-              put("c",
-                new TreeMap() {{
-                  put("e",
-                    new TreeMap());
-                }});
+        new CategoryView("ROOT") {{
+          addChild(new CategoryView("a") {{
+            addChild(new CategoryView("b") {{
+              addChild(new CategoryView("c"));
             }});
-
-          put("d",
-            new TreeMap() {{
-              put("e",
-                new TreeMap() {{
-                  put("f",
-                    new TreeMap() {{
-                      put("a", new TreeMap());
-                    }});
-                }});
+            addChild(new CategoryView("c") {{
+              addChild(new CategoryView("e"));
             }});
-
-          put("g",
-            new TreeMap() {{
-              put("f", new TreeMap());
+          }});
+          addChild(new CategoryView("d") {{
+            addChild(new CategoryView("e") {{
+              addChild(new CategoryView("f") {{
+                addChild(new CategoryView("a"));
+              }});
             }});
-
-          put("z",
-            new TreeMap() {{
-              put("x", new TreeMap());
-            }});
-
-          put("b",
-            new TreeMap() {{
-              put("a", new TreeMap());
-            }});
+          }});
+          addChild(new CategoryView("g") {{
+            addChild(new CategoryView("f"));
+          }});
+          addChild(new CategoryView("a") {{
+            addChild(new CategoryView("x"));
+          }});
+          addChild(new CategoryView("b") {{
+            addChild(new CategoryView("a"));
+          }});
         }}
       }
     };
   }
 
   @Test(dataProvider = "makeMap")
-  public void testCreateMap(List<String> before, TreeMap expected) {
+  public void testCreateMap(List<String> before, CategoryView expected) {
     for(String string : before) {
       log.debug(string);
     }
 
-    Map result = CategoryUtils.createMapFromStringList(before);
+    CategoryView result = CategoryUtils.createMapFromStringList(before);
 
     if(log.isDebugEnabled()) {
       log.debug("Result Map:");
@@ -184,8 +161,8 @@ public class CategoryUtilsTest {
 
   @Test(dataProvider = "filterMap")
   @SuppressWarnings("unchecked")
-  public void testFilterMap(String filter, Map expected, Map source) {
-    Map result = CategoryUtils.filterMap(source, new String[]{filter});
+  public void testFilterMap(String filter, CategoryView expected, CategoryView source) {
+    CategoryView result = CategoryUtils.filterMap(source, new String[]{filter});
 
     log.debug("Source");
     printMap(source, 0);
@@ -197,22 +174,22 @@ public class CategoryUtilsTest {
     assertEqualRecursive(expected, result);
   }
 
-  private void assertEqualRecursive(Map result, Map expected) {
-    assertEquals(result, expected);
+  private void assertEqualRecursive(CategoryView result, CategoryView expected) {
+    assertEquals(result.getName(), expected.getName());
 
-    for(Object key : result.keySet()) {
-      assertEqualRecursive((Map)result.get(key), (Map)expected.get(key));
+    for(String key : result.getChildren().keySet()) {
+      assertEqualRecursive(result.getChild(key), expected.getChild(key));
     }
   }
 
-  private void printMap(Map map, int depth) {
+  private void printMap(CategoryView view, int depth) {
     String spacer = StringUtils.repeat("-", depth);
 
-    for(Object key : map.keySet()) {
-      log.debug("{}Key: {}, Size: {}", new Object[] { spacer, key, ((TreeMap)map.get(key)).size() });
+    for(String key : view.getChildren().keySet()) {
+      log.debug("{}Key: {}, Size: {}", new Object[] { spacer, key, view.getChild(key).getChildren().size() });
 
-      if(((TreeMap)map.get(key)).size() > 0) {
-        printMap((TreeMap)map.get(key), depth + 1);
+      if(view.getChild(key).getChildren().size() > 0) {
+        printMap(view.getChild(key), depth + 1);
       }
     }
   }

@@ -12,6 +12,8 @@
 package org.ambraproject.service.taxonomy;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.views.CategoryView;
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,5 +44,5 @@ public interface TaxonomyService {
    *
    * @throws ApplicationException
    */
-  Map<String, Object> parseCategories(String currentJournal) throws ApplicationException;
+  CategoryView parseCategories(String currentJournal) throws ApplicationException;
 }
