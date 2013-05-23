@@ -81,7 +81,7 @@ button, select, textarea, input:not([type="radio"]):not([type="checkbox"]) {
   margin: 0;
 }
 
-input[type="button"], input[type="submit"], input[type="reset"], button {
+input[type="button"], input[type="submit"], input[type="radio"], input[type="checkbox"], input[type="reset"], select, button {
   cursor: pointer;
 }
 
@@ -4014,6 +4014,10 @@ form.advSearch ol {
   padding: 6px 0 0 20px;
 }
 
+#unformattedSearchFormId label {
+  cursor: pointer;
+}
+
 #unformattedSearchFormId .options fieldset p {
   margin: 2px 0 7px 3px;
 }
@@ -5211,13 +5215,17 @@ table.tile_mini td.data2 {
 #filter_container #clearFilter {
   position: absolute;
   top: 2px;
-  left: 268px;
+  left: 267px;
   width: 18px;
-  height: 18px;
+  height: 17px;
   cursor: default;
   background: #606060 url('/images/btn.close.png') no-repeat 3px 3px;
-  border-radius: 9px;
+  border-radius: 3px;
   background-size: 12px 12px;
+}
+
+#filter_container #clearFilter:hover {
+  background: #808080 url("/images/btn.close.png") no-repeat scroll 3px 3px;
 }
 
 /********** Find article *********************/
@@ -5245,6 +5253,7 @@ div.findArticle h4 {
 /***************************** Adv search checkboxes *****************/
 .checkboxWrapper {
   position: relative;
+  cursor: pointer;
 }
 
 .checkboxOverlay {

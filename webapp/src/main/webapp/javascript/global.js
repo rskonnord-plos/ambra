@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,7 +136,10 @@ function onReadyMainContainer() {
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
 
-    window.history.pushState({}, document.title, $(this).attr('href'));
+    //window.history.pushState is not on all browsers
+    if(window.history.pushState) {
+      window.history.pushState({}, document.title, $(this).attr('href'));
+    }
 
     $('html,body').animate({scrollTop:b.offset().top - 100}, 500, 'linear', function () {
       // see spec
@@ -593,7 +594,10 @@ $(document).ajaxComplete(function(){
         $this.on("click", "a.scroll", function (event) {
           var link = $(this);
 
-          window.history.pushState({}, document.title, event.target.href);
+          //window.history.pushState is not on all browsers
+          if(window.history.pushState) {
+            window.history.pushState({}, document.title, event.target.href);
+          }
 
           event.preventDefault();
           $('html,body').animate({scrollTop:$('[name="' + this.hash.substring(1) + '"]').offset().top - options.margin}, 500, function () {
@@ -758,7 +762,8 @@ $(document).ajaxComplete(function(){
         var this_lnk = $(this);
         var this_href = this_lnk.attr('href');
 
-        if(this_lnk.is("[url]")) {
+        //window.history.pushState is not on all browsers
+        if(this_lnk.is("[url]") && window.history.pushState) {
           window.history.pushState({}, document.title, this_lnk.attr('url'));
         }
 
@@ -1593,6 +1598,54 @@ $(function() {
     });
   }
 });
+
+/*
+ * jQuery UI Autocomplete HTML Extension
+ *
+ * Copyright 2010, Scott González (http://scottgonzalez.com)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * http://github.com/scottgonzalez/jquery-ui-extensions
+ */
+
+// HTML extension to autocomplete borrowed from
+// https://github.com/scottgonzalez/jquery-ui-extensions/blob/master/autocomplete/jquery.ui.autocomplete.html.js
+
+(function( $ ) {
+
+  var proto = $.ui.autocomplete.prototype,
+    initSource = proto._initSource;
+
+  function filter( array, term ) {
+    var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
+    return $.grep( array, function(value) {
+      return matcher.test( $( "<div>" ).html( value.label || value.value || value ).text() );
+    });
+  }
+
+  $.extend( proto, {
+    _initSource: function() {
+      if ($.isArray(this.options.source) ) {
+        this.source = function( request, response ) {
+          response( filter( this.options.source, request.term ) );
+        };
+      } else {
+        initSource.call( this );
+      }
+    },
+
+    _renderItem: function( ul, item) {
+      return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( $( "<a style=\"line-height: "
+          + (item.value ? 0.9 : 2)
+          + "; font-size: 12px;\"></a>" )
+          [item.type == "html" ? "html" : "text"]( item.label ) )
+        .appendTo( ul );
+    }
+  });
+
+})( jQuery );
 
 // table popup and download as CSV
 function tableOpen(tableId, type) {

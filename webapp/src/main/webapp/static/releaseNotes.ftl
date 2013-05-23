@@ -109,7 +109,6 @@
      <li>Bug fixes</li>
  </ul>
 
-
   <h2>Ambra 2.5.8</h2>
   <p>Released April 9th, 2013</p>
   <h3>Features Implemented in Ambra 2.5.8</h3>

@@ -222,6 +222,21 @@
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
+
+    <action name="taxonomyJSON" class="org.ambraproject.action.TaxonomyAction">
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
+          locale, numFieldErrors, rssName, rssPath, texts</param>
+      </result>
+
+      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+           in that case just return a 404.                              -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
   </package>
 
   <package name="debug" extends="default" namespace="/debug">
