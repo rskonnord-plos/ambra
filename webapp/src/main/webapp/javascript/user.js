@@ -208,7 +208,7 @@ $(function () {
     $.each(response.categories, function(key, val) {
       var img = "";
 
-      if(val > 0) {
+      if(val.length > 0) {
         img = "<image class=\"expand\" src=\"/images/transparent.gif\"/>";
       } else {
         img = "<image src=\"/images/transparent.gif\"/>";
@@ -238,7 +238,7 @@ $(function () {
         }
       });
 
-      if(val > 0) {
+      if(val.length > 0) {
         $(node).find('img').click(function(event) {
           //Already expanded state, remove children nodes
           if($(event.target).hasClass("expanded")) {
@@ -268,7 +268,8 @@ $(function () {
 
   var createTaxonomyNodesFromMap = function(rootNode, filter, map) {
     $.each(map, function(key, val) {
-      var hasChildren = !$.isEmptyObject(val);
+      console.log(key);
+      var hasChildren = !$.isEmptyObject(val.children);
       var img = "<image " + (hasChildren?"class=\"expanded-nopointer\" ":"") + "src=\"/images/transparent.gif\"/>";
       var node = $("<li key=\"" + key + "\">" + img + "<span>" +
         key.replace(new RegExp("(" + filter + ")", "gi"), "<b>$1</b>")
@@ -297,7 +298,7 @@ $(function () {
           });
         }
 
-        createTaxonomyNodesFromMap(node.find('ol'), filter, val);
+        createTaxonomyNodesFromMap(node.find('ol'), filter, val.children);
       });
     });
   }
@@ -389,7 +390,7 @@ $(function () {
               $('#subjectAreaSelector').children().remove();
               $('#subjectAreaSelector').append(node);
             } else {
-              createTaxonomyNodesFromMap($('#subjectAreaSelector'), filter, response.map);
+              createTaxonomyNodesFromMap($('#subjectAreaSelector'), filter, response.map.children);
             }
           }
         })
