@@ -289,17 +289,32 @@ function initMainContainer() {
 
 }
 
-//For Google Analytics Event Tracking
-var category, action, label;
-category = "tab menu actions";
-action = "tab menu click";
+/*GA Event Tracking Hooks: Menu Tab Clicks
+ *
+*/
+var tab_menu_category, tab_menu_action, tab_menu_label;
+tab_menu_category = "tab menu actions";
+tab_menu_action = "tab menu click";
 $(document).ajaxComplete(function(){
-    if(pjax_selected_tab != null){ label = pjax_selected_tab;};
+    if(pjax_selected_tab != null){ tab_menu_label = pjax_selected_tab;};
     if(typeof(_gaq) !== 'undefined'){
-      _gaq.push(['_trackEvent',category,action,label]);
+      _gaq.push(['_trackEvent',tab_menu_category,tab_menu_action,tab_menu_label]);
     }
 });
 
+/*GA Event Tracking Hook #2: PLOS Taxonomy 2nd interaction
+ *  Tracks the number of clicks on a Related Article link
+ *  note: the 1st interaction happens when a user clicks the 'related content' tab
+*/
+var taxonomy_interaction ="Taxonomy User Interactions";
+var taxonomy_related_article_click ="Related Article Click";
+$(document).ready(function(){
+  var related_article_element = $(".info h4 a");
+  related_article_element.click(function(){
+    var related_article = this.text();
+    _gaq.push(["_trackEvent", taxonomy_interaction, taxonomy_related_article_click, related_article]);
+  });
+});
 
 
 // Begin $ function definitions
