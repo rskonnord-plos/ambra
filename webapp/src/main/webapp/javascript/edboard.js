@@ -680,19 +680,21 @@ $(function () {
         // each item is either name or subject.
         // if it is "quoted" it is only a name, otherwise
         // it is either name or subject.
-
-        $.each(userString.split(","), function(index, term) {
-          var item = $.trim(term);
-          if(item.length > 0) {
-            if (item[0] == '"' && item[item.length-1] == '"') {
-              var name = item.substring(1, item.length-1);
-              query.push("ae_name:\"" + name + "\"");
+        var items = userString.match(/(\".*?\")|[^,]+/g);
+        if (items) {
+          $.each(items, function(index, term) {
+            var item = $.trim(term);
+            if(item.length > 0) {
+              if (item[0] == '"' && item[item.length-1] == '"') {
+                var name = item.substring(1, item.length-1);
+                query.push("ae_name:\"" + name + "\"");
+              }
+              else {
+                query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
+              }
             }
-            else {
-              query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
-            }
-          }
-        });
+          });
+        }
 
         edBoard.getEditors({
           "query": query.join(" AND "),
