@@ -138,7 +138,10 @@ function onReadyMainContainer() {
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
 
-    window.history.pushState({}, document.title, $(this).attr('href'));
+    //window.history.pushState is not on all browsers
+    if(window.history.pushState) {
+      window.history.pushState({}, document.title, $(this).attr('href'));
+    }
 
     $('html,body').animate({scrollTop:b.offset().top - 100}, 500, 'linear', function () {
       // see spec
@@ -593,7 +596,10 @@ $(document).ajaxComplete(function(){
         $this.on("click", "a.scroll", function (event) {
           var link = $(this);
 
-          window.history.pushState({}, document.title, event.target.href);
+          //window.history.pushState is not on all browsers
+          if(window.history.pushState) {
+            window.history.pushState({}, document.title, event.target.href);
+          }
 
           event.preventDefault();
           $('html,body').animate({scrollTop:$('[name="' + this.hash.substring(1) + '"]').offset().top - options.margin}, 500, function () {
@@ -758,7 +764,8 @@ $(document).ajaxComplete(function(){
         var this_lnk = $(this);
         var this_href = this_lnk.attr('href');
 
-        if(this_lnk.is("[url]")) {
+        //window.history.pushState is not on all browsers
+        if(this_lnk.is("[url]") && window.history.pushState) {
           window.history.pushState({}, document.title, this_lnk.attr('url'));
         }
 
