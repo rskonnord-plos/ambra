@@ -138,7 +138,10 @@ function onReadyMainContainer() {
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
 
-    window.history.pushState({}, document.title, $(this).attr('href'));
+    //window.history.pushState is not on all browsers
+    if(window.history.pushState) {
+      window.history.pushState({}, document.title, $(this).attr('href'));
+    }
 
     $('html,body').animate({scrollTop:b.offset().top - 100}, 500, 'linear', function () {
       // see spec
@@ -289,17 +292,32 @@ function initMainContainer() {
 
 }
 
-//For Google Analytics Event Tracking
-var category, action, label;
-category = "tab menu actions";
-action = "tab menu click";
+/*GA Event Tracking Hooks: Menu Tab Clicks
+ *
+*/
+var tab_menu_category, tab_menu_action, tab_menu_label;
+tab_menu_category = "tab menu actions";
+tab_menu_action = "tab menu click";
 $(document).ajaxComplete(function(){
-    if(pjax_selected_tab != null){ label = pjax_selected_tab;};
+    if(pjax_selected_tab != null){ tab_menu_label = pjax_selected_tab;};
     if(typeof(_gaq) !== 'undefined'){
-      _gaq.push(['_trackEvent',category,action,label]);
+      _gaq.push(['_trackEvent',tab_menu_category,tab_menu_action,tab_menu_label]);
     }
 });
 
+/*GA Event Tracking Hook #2: PLOS Taxonomy 2nd interaction
+ *  Tracks the number of clicks on a Related Article link
+ *  note: the 1st interaction happens when a user clicks the 'related content' tab
+*/
+var taxonomy_interaction ="Taxonomy User Interactions";
+var taxonomy_related_article_click ="Related Article Click";
+$(document).ready(function(){
+  var related_article_element = $(".info h4 a");
+  related_article_element.click(function(){
+    var related_article = this.text();
+    _gaq.push(["_trackEvent", taxonomy_interaction, taxonomy_related_article_click, related_article]);
+  });
+});
 
 
 // Begin $ function definitions
@@ -593,7 +611,10 @@ $(document).ajaxComplete(function(){
         $this.on("click", "a.scroll", function (event) {
           var link = $(this);
 
-          window.history.pushState({}, document.title, event.target.href);
+          //window.history.pushState is not on all browsers
+          if(window.history.pushState) {
+            window.history.pushState({}, document.title, event.target.href);
+          }
 
           event.preventDefault();
           $('html,body').animate({scrollTop:$('[name="' + this.hash.substring(1) + '"]').offset().top - options.margin}, 500, function () {
@@ -758,7 +779,8 @@ $(document).ajaxComplete(function(){
         var this_lnk = $(this);
         var this_href = this_lnk.attr('href');
 
-        if(this_lnk.is("[url]")) {
+        //window.history.pushState is not on all browsers
+        if(this_lnk.is("[url]") && window.history.pushState) {
           window.history.pushState({}, document.title, this_lnk.attr('url'));
         }
 
