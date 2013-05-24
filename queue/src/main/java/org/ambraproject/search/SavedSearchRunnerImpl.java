@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -19,6 +17,8 @@ import org.ambraproject.views.SavedSearchHit;
 import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -29,6 +29,8 @@ import java.util.List;
 public class SavedSearchRunnerImpl implements SavedSearchRunner {
 
   private SolrSearchService searchService;
+  private int resultLimit;
+
   private static final Logger log = LoggerFactory.getLogger(SavedSearchRunnerImpl.class);
 
   /**
@@ -60,7 +62,7 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
     }
 
     List<SearchHit> results = searchService.savedSearchAlerts(searchJob.getSearchParams(),
-      searchJob.getStartDate(), searchJob.getEndDate());
+      searchJob.getStartDate(), searchJob.getEndDate(), resultLimit);
     List<SavedSearchHit> finalHitList = new ArrayList<SavedSearchHit>();
 
     log.debug("Search hits : {}", results.size());
@@ -76,8 +78,13 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
     return searchJob;
   }
 
+  @Required
   public void setSearchService(SolrSearchService searchService) {
     this.searchService = searchService;
   }
 
+  @Required
+  public void setResultLimit(int resultLimit) {
+    this.resultLimit = resultLimit;
+  }
 }

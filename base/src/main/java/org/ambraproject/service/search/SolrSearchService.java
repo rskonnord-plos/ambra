@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -70,9 +67,6 @@ public class SolrSearchService implements SearchService {
   private static final int MAX_FACET_SIZE = 100;
   private static final int MIN_FACET_COUNT = 1;
   private static final int MAX_HIGHLIGHT_SNIPPETS = 3;
-
-  //For saved search alerts, just assume we want all records, 750 seems like a reasonable limit
-  private static final int MAX_SAVED_SEARCH_SIZE = 750;
 
   // sort option possible values (sort direction is optional)
   // field desc|asc
@@ -1038,16 +1032,9 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * Returns articles list that are published between the last search time and the current search time for saved search
-   * alerts.
-   *
-   * @param sParams
-   * @param lastSearchTime
-   * @param currentSearchTime
-   * @return
-   * @throws ApplicationException
+   * @inheritDoc
    */
-  public List savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException {
+  public List savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime, int resultLimit) throws ApplicationException {
     SolrQuery query = null;
     SearchParameters sp = null;
 
@@ -1057,7 +1044,7 @@ public class SolrSearchService implements SearchService {
             + sParams.getQuery().trim());
       }
 
-      query = createQuery(sParams.getQuery(), 0, MAX_SAVED_SEARCH_SIZE, false);
+      query = createQuery(sParams.getQuery(), 0, resultLimit, false);
       query.setQuery(sParams.getQuery());
       //If the keywords parameter is specified, we need to change what field we're querying against
       //aka, body, conclusions, materials and methods ... etc ...
@@ -1081,7 +1068,7 @@ public class SolrSearchService implements SearchService {
       log.debug("Advanced Saved Search performed on the unformattedSearch String: {}",
           sParams.getUnformattedQuery().trim());
       sp = cleanStrings(sParams);
-      query = createQuery(null, 0, MAX_SAVED_SEARCH_SIZE, false);
+      query = createQuery(null, 0, resultLimit, false);
       query.setQuery(sParams.getUnformattedQuery());
       setFilters(query, sp, true);
     }
