@@ -221,7 +221,7 @@ public class SearchHit implements Serializable {
       super();
     }
 
-    private float hitScore;
+    private Float hitScore;
     private String uri;
     private String title;
     private String highlight;
@@ -241,7 +241,7 @@ public class SearchHit implements Serializable {
       return this;
     }
 
-    public Builder setHitScore(float hitScore) {
+    public Builder setHitScore(Float hitScore) {
       this.hitScore = hitScore;
       return this;
     }
