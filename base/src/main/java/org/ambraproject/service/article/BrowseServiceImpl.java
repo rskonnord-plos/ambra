@@ -721,7 +721,6 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     query.addField("publication_date");
     query.addField("id");
     query.addField("abstract_primary_display");
-    query.addField("striking_image");
     query.addField("eissn");
 
     if (params.getSubjects() != null && params.getSubjects().length > 0) {
@@ -730,10 +729,15 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
         subjectQuery.append("\"").append(subject).append("\"").append(" AND ");
       }
       // remove the last " AND "
-      query.setQuery("subject:(" +  subjectQuery.substring(0, subjectQuery.length() - 5) + ")");
+      query.setQuery("subject_level_1:(" +  subjectQuery.substring(0, subjectQuery.length() - 5) + ")");
     }
 
-    query.setFacet(false);
+    // we use subject_level_1 field instead of subject_facet field because
+    // we are only interested in the top level subjects
+    query.setFacet(true);
+    query.addFacetField("subject_level_1");
+    query.setFacetMinCount(1);
+    query.setFacetSort("index");
 
     setSort(query, params);
 
@@ -749,6 +753,8 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
         SearchHit sh = createArticleBrowseDisplay(document, query.toString());
         articles.add(sh);
       }
+
+      result.setSubjectFacet(facetCountsToHashMap(response.getFacetField("subject_level_1")));
     } catch (SolrServerException e) {
       log.error("Unable to execute a query on the Solr Server.", e);
     }
