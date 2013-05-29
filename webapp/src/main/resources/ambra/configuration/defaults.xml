@@ -146,6 +146,7 @@
           <option displayName="Most cited\, all time">alm_scopusCiteCount desc\, id desc</option>
         </sortOptions>
       </browse>
+
       <search>
         <!-- Settings for Solr search
         <articleIndexingQueue>activemq:plos.solr.article.index?transacted=false</articleIndexingQueue>
@@ -193,7 +194,7 @@
            <option displayName="Most cited\, all time">alm_scopusCiteCount desc\, id desc</option>
            <option displayName="Most bookmarked">sum(alm_citeulikeCount\, alm_mendeleyCount) desc\, id desc</option>    
            <option displayName="Most shared in social media">sum(alm_twitterCount\, alm_facebookCount) desc\, id desc</option>
-	</sortOptions>
+	      </sortOptions>
 
         <!-- Fields that are supported for keyword counts -->
         <keywordFields>
