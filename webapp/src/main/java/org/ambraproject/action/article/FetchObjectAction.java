@@ -206,6 +206,7 @@ public class FetchObjectAction extends BaseSessionAwareActionSupport {
 
     if ("PDF".equalsIgnoreCase(representation)) {
       contentType = "application/pdf";
+      contentDisposition = getContentDisposition("pdf");
     } else {
       contentDisposition = getContentDisposition(getFileExtension(contentType));
     }
