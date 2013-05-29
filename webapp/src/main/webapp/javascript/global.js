@@ -313,7 +313,7 @@ var taxonomy_related_category;
 $(document).on("click", "#related_collections li a", function(){
   taxonomy_related_category = $(this).parent('div').children('h3').html();
 	_gaq.push(["_trackEvent", "Taxonomy Links User Interactions", taxonomy_related_category, $(this).html()]);
-)}; 
+}); 
 
 
 
