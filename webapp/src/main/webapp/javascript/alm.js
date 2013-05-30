@@ -465,7 +465,6 @@ $.fn.alm = function () {
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
   this.setCrossRefText = function (doi, crossRefID, pubGetErrorID, almErrorID, loadingID) {
-    //almService.getCitesCrossRefOnly(doi, setCrossRefLinks, setCrossRefLinksError);
 
     var pubGetError = function (response) {
       var errorDiv = $("#" + pubGetErrorID);
