@@ -21,10 +21,10 @@
           </div>
 
           <div class="body">
-            <@s.url id="quickSearchURL" includeParams="none" namespace="/search" action="quickSearch" />
+            <@s.url id="quickSearchURL" includeParams="none" namespace="/search" action="quickSearch"/>
             <form id="quickFind" name="quickSearchForm" action="${quickSearchURL}"
                   method="get" class="advSearch" title="Find An Article Search Form">
-              <@s.hidden name="pageSize" />
+              <@s.hidden name="pageSize"/>
               <p>Use citation information to quickly find a specific article.</p>
               <fieldset>
                 <legend>Enter the following:</legend>
@@ -97,13 +97,13 @@
       </div> <!-- col-1 -->
 
       <div class="col-2">
-        <@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp" />
-        <@s.url id="unformattedSearchURL" includeParams="none" namespace="/search" action="advancedSearch" />
+        <@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp"/>
+        <@s.url id="unformattedSearchURL" includeParams="none" namespace="/search" action="advancedSearch"/>
         <form id="unformattedSearchFormId" name="unformattedSearchForm" action="${unformattedSearchURL}"
               method="get" enctype="multipart/form-data" class="advSearch" title="Advanced Search">
-          <@s.hidden name="pageSize" />
-          <@s.hidden name="sort" />
-          <@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp" />
+          <@s.hidden name="pageSize"/>
+          <@s.hidden name="sort"/>
+          <@s.url id="searchHelpURL" includeParams="none" namespace="/static" action="searchHelp"/>
 
           <fieldset id="queryBuilder">
             <legend><span>Construct Your Search <a href="${searchHelpURL}">Help</a></span></legend>
@@ -128,8 +128,7 @@
                 <option value="editor" title="Editor">Editor</option>
                 <option value="elocation_id" title="eNumber">eNumber</option>
                 <option value="figure_table_caption" title="Figure &amp; Table Caption">Figure &amp; Table Captions</option>
-                <option value="financial_disclosure" title="Financial Disclosure Statement">Financial Disclosure Statement
-                </option>
+                <option value="financial_disclosure" title="Financial Disclosure Statement">Financial Disclosure Statement</option>
                 <option value="introduction" title="Introduction">Introduction</option>
                 <option value="issue" title="Issue Number">Issue Number</option>
                 <option value="materials_and_methods" title="Materials and Methods">Materials and Methods</option>
@@ -177,7 +176,6 @@
               <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?length > 1))>
                 <ol>
                   <li>You are filtering with the following parameters:</li>
-
                   <#if (filterSubjects?size > 0)>
                     <li>Subject categories:
                       <b><#list filterSubjects as subject>"${subject}"
@@ -215,23 +213,23 @@
               <li class="options">
                 <fieldset id="fsJournalOpt">
                   <ul>
-                  <#if journals??>
-                    <#list journals as journal>
-                      <li>
-                        <span class="checkboxWrapper" >
-                          <input id="filterJournals_${journal.name}" name="filterJournals" value="${journal.name}"
-                               type="checkbox" <#if (filterJournals?seq_contains(journal.name)) > checked</#if>
-                               title="Select ${freemarker_config.getDisplayName(journal.name)}"
-                               alt="Select Journal ${freemarker_config.getDisplayName(journal.name)} Check Box"/>&nbsp;
-                          <div onclick="enableCheckboxes('filterJournals_${journal.name}','journalsOpt_slct' )" class="checkboxOverlay"></div>
-                        </span>
-                        <label for="filterJournals_${journal.name}">${freemarker_config.getDisplayName(journal.name)}</label>
-                      </li>
-                    </#list>
-                  <#else>
-                    <br/>
-                    <span id="filterReset" style="color:red;">ERROR: There are no matching journals in the system.</span>
-                  </#if>
+                    <#if journals??>
+                      <#list journals as journal>
+                        <li>
+                          <span class="checkboxWrapper" >
+                            <input id="filterJournals_${journal.name}" name="filterJournals" value="${journal.name}"
+                                 type="checkbox" <#if (filterJournals?seq_contains(journal.name)) > checked</#if>
+                                 title="Select ${freemarker_config.getDisplayName(journal.name)}"
+                                 alt="Select Journal ${freemarker_config.getDisplayName(journal.name)} Check Box"/>&nbsp;
+                            <div onclick="enableCheckboxes('filterJournals_${journal.name}','journalsOpt_slct' )" class="checkboxOverlay"></div>
+                          </span>
+                          <label for="filterJournals_${journal.name}">${freemarker_config.getDisplayName(journal.name)}</label>
+                        </li>
+                      </#list>
+                    <#else>
+                      <br/>
+                      <span id="filterReset" style="color:red;">ERROR: There are no matching journals in the system.</span>
+                    </#if>
                   </ul>
                 </fieldset>
               </li>
@@ -248,55 +246,56 @@
                 Only look for articles with the following subject areas:</label></li>
               <li class="options">
                 <fieldset id="fsSubjectOpt">
-
-                <#if (filterSubjects?size gt 0)>
-                  <p>Listed below are all subject categories from
-                    <b title="Articles that already match your entered search terms">matching</b> articles.</p></#if>
-                <#if (unformattedQuery?length gt 0)>
-                  <p><i>(#) indicates the number of articles with
-                    <#if (filterSubjects?size lte 0)><b title="Articles that already match your entered search terms"></#if>
-                    matching<#if (filterSubjects?size lte 0)></b></#if> terms in each subject.</i></p>
-                <#else>
-                  <p><i>(#) indicates the number of articles in each subject.</i></p>
-                </#if>
-                <#if subjects?? && subjects?size gt 0>
-                  <#assign colSize = (subjects?size / 2) + 0.5>
-                  <ul>
-                    <#list subjects?sort_by("name") as subject>
-                      <#if (subject_index + 1) lte colSize>
-                        <#assign subjectId = subject.name?replace(" ","_","r")>
-                        <li>
-                        <span class="checkboxWrapper" >
-                          <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
-                                 type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
-                                 title="Select Subject Category ${subject.name}"
-                                 alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
-                          <div onclick="enableCheckboxes('filterSubjects_${subjectId}','subjectOption_some')" class="checkboxOverlay"></div>
-                        </span>
-                        <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
-                      </#if>
-                    </#list>
-                  </ul>
-                  <ul>
-                    <#list subjects?sort_by("name") as subject>
-                      <#if (subject_index + 1) gt colSize>
-                        <#assign subjectId = subject.name?replace(" ","_","r")>
-                        <li>
-                          <span class="checkboxWrapper" >
-                            <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
-                                 type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
-                                 title="Select Subject Category ${subject.name}"
-                                 alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
-                            <div onclick="enableCheckboxes('filterSubjects_${subjectId}','subjectOption_some')" class="checkboxOverlay"></div>
-                          </span>
-                          <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label></li>
-                      </#if>
-                    </#list>
-                  </ul>
-                <#else>
-                  <br/>
-                  <span id="filterReset" style="color:red;">There are no matching subjects in the current result set.</span>
-                </#if>
+                  <#if (filterSubjects?size gt 0)>
+                    <p>Listed below are all subject categories from
+                      <b title="Articles that already match your entered search terms">matching</b> articles.</p></#if>
+                  <#if (unformattedQuery?length gt 0)>
+                    <p><i>(#) indicates the number of articles with
+                      <#if (filterSubjects?size lte 0)><b title="Articles that already match your entered search terms"></#if>
+                      matching<#if (filterSubjects?size lte 0)></b></#if> terms in each subject.</i></p>
+                  <#else>
+                    <p><i>(#) indicates the number of articles in each subject.</i></p>
+                  </#if>
+                  <#if subjects?? && subjects?size gt 0>
+                    <#assign colSize = (subjects?size / 2) + 0.5>
+                    <ul>
+                      <#list subjects?sort_by("name") as subject>
+                        <#if (subject_index + 1) lte colSize>
+                          <#assign subjectId = subject.name?replace(" ","_","r")>
+                          <li>
+                            <span class="checkboxWrapper" >
+                              <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
+                                     type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
+                                     title="Select Subject Category ${subject.name}"
+                                     alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
+                              <div onclick="enableCheckboxes('filterSubjects_${subjectId}','subjectOption_some')" class="checkboxOverlay"></div>
+                            </span>
+                            <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label>
+                          </li>
+                        </#if>
+                      </#list>
+                    </ul>
+                    <ul>
+                      <#list subjects?sort_by("name") as subject>
+                        <#if (subject_index + 1) gt colSize>
+                          <#assign subjectId = subject.name?replace(" ","_","r")>
+                          <li>
+                            <span class="checkboxWrapper" >
+                              <input id="filterSubjects_${subjectId}" name="filterSubjects" value="${subject.name}"
+                                   type="checkbox" <#if (filterSubjects?seq_contains(subject.name)) > checked</#if>
+                                   title="Select Subject Category ${subject.name}"
+                                   alt="Select Subject Category ${subject.name} Check Box"/>&nbsp;
+                              <div onclick="enableCheckboxes('filterSubjects_${subjectId}','subjectOption_some')" class="checkboxOverlay"></div>
+                            </span>
+                            <label for="filterSubjects_${subjectId}">${subject.name} (${subject.count})</label>
+                          </li>
+                        </#if>
+                      </#list>
+                    </ul>
+                  <#else>
+                    <br/>
+                    <span id="filterReset" style="color:red;">There are no matching subjects in the current result set.</span>
+                  </#if>
                 </fieldset>
               </li>
             </ol>
@@ -311,40 +310,40 @@
                 <#if (filterArticleType?length gt 0)> checked</#if> title="Search For Only Selected Article Type"/> Search for one of the following:</label></li>
               <li class="options">
                 <fieldset id="fsarticleTypOpt">
-                <#if articleTypes?? && articleTypes?size gt 0>
-                  <#assign colSize = (articleTypes?size / 2) + 0.5>
-                  <ul>
-                    <#list articleTypes?sort_by("name") as articleType>
-                      <#if (articleType_index + 1) lte colSize>
-                        <#assign articleTypeId = articleType.name?replace(" ","_","r")>
-                        <li>
-                          <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                                 type="radio" <#if (filterArticleType == articleType.name) > checked</#if>
-                                 title="Select Article Type ${articleType.name}"
-                                 alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
-                          <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
-                        </li>
-                      </#if>
-                    </#list>
-                  </ul>
-                  <ul>
-                    <#list articleTypes?sort_by("name") as articleType>
-                      <#if (articleType_index + 1) gt colSize>
-                        <#assign articleTypeId = articleType.name?replace(" ","_","r")>
-                        <li>
-                          <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                                 type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
-                                 title="Select Article Type ${articleType.name}"
-                                 alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
-                          <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
-                        </li>
-                      </#if>
-                    </#list>
-                  </ul>
-                <#else>
-                  <br/>
-                  <span id="filterReset" style="color:red;">ERROR: There are no matching article types in the system.</span>
-                </#if>
+                  <#if articleTypes?? && articleTypes?size gt 0>
+                    <#assign colSize = (articleTypes?size / 2) + 0.5>
+                    <ul>
+                      <#list articleTypes?sort_by("name") as articleType>
+                        <#if (articleType_index + 1) lte colSize>
+                          <#assign articleTypeId = articleType.name?replace(" ","_","r")>
+                          <li>
+                            <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
+                                   type="radio" <#if (filterArticleType == articleType.name) > checked</#if>
+                                   title="Select Article Type ${articleType.name}"
+                                   alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
+                            <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+                          </li>
+                        </#if>
+                      </#list>
+                    </ul>
+                    <ul>
+                      <#list articleTypes?sort_by("name") as articleType>
+                        <#if (articleType_index + 1) gt colSize>
+                          <#assign articleTypeId = articleType.name?replace(" ","_","r")>
+                          <li>
+                            <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
+                                   type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
+                                   title="Select Article Type ${articleType.name}"
+                                   alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
+                            <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+                          </li>
+                        </#if>
+                      </#list>
+                    </ul>
+                  <#else>
+                    <br/>
+                    <span id="filterReset" style="color:red;">ERROR: There are no matching article types in the system.</span>
+                  </#if>
                 </fieldset>
               </li>
             </ol>
