@@ -51,6 +51,7 @@
      <li>Fix for DOI formatting issues</li>
      <li>Fix for PDF download name</li>
      <li>Fix for eToCs browser specific display bug</li>
+ </ul>
 
  <h2>Ambra 2.6.4</h2>
  <p>Released May 21st, 2013</p>
