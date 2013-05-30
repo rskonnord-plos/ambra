@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.ambraproject.util;
 
 import org.ambraproject.views.CategoryView;
@@ -6,8 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.SortedSet;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Utilities for working with Maps
@@ -29,6 +41,7 @@ public class CategoryUtils {
     Map<String, Integer> results = new HashMap<String, Integer>();
 
     for(String key : categoryView.getChildren().keySet()) {
+      //The size call below as this is a ConcurrentSkipListMap, might be expensive
       results.put(key, categoryView.getChild(key).getChildren().size());
     }
 
@@ -43,11 +56,14 @@ public class CategoryUtils {
    * @return a map of keys and the immediate children
    */
   @SuppressWarnings("unchecked")
-  public static Map<String, Set<String>> getShortTree(CategoryView categoryView) {
-    Map<String, Set<String>> results = new HashMap<String, Set<String>>();
+  public static Map<String, SortedSet<String>> getShortTree(CategoryView categoryView) {
+    //Use sorted map
+    Map<String, SortedSet<String>> results = new ConcurrentSkipListMap<String, SortedSet<String>>();
 
     for(String key : categoryView.getChildren().keySet()) {
-      results.put(key, categoryView.getChild(key).getChildren().keySet());
+      ConcurrentSkipListSet sortedSet = new ConcurrentSkipListSet();
+      sortedSet.addAll(categoryView.getChild(key).getChildren().keySet());
+      results.put(key, sortedSet);
     }
 
     return results;
@@ -70,7 +86,7 @@ public class CategoryUtils {
     for(String key : categoryView.getChildren().keySet()) {
       CategoryView res = filterMap(categoryView.getChild(key), filters);
 
-      if(res.getChildren().size() > 0) {
+      if(!res.getChildren().isEmpty()) {
         finalRes.addChild(res);
       }
 

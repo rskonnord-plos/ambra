@@ -19,8 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
+import java.util.SortedSet;
 
 /**
  * Action class for displaying a list of all top-level and second-level categories
@@ -78,7 +77,7 @@ public class TaxonomyAction extends BaseActionSupport {
    * @return A map of categories
    */
   @SuppressWarnings("unchecked")
-  public Map<String, Set<String>> getCategories() {
+  public Map<String, SortedSet<String>> getCategories() {
     //Should probably implement this in the setter if the getter ever starts to get
     //called more then once
 
