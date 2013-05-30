@@ -309,15 +309,12 @@ $(document).ajaxComplete(function(){
  *  Tracks the number of clicks on a Related Article link
  *  note: the 1st interaction happens when a user clicks the 'related content' tab
 */
-var taxonomy_interaction ="Taxonomy User Interactions";
-var taxonomy_related_article_click ="Related Article Click";
-$(document).ready(function(){
-  var related_article_element = $(".info h4 a");
-  related_article_element.click(function(){
-    var related_article = this.text();
-    _gaq.push(["_trackEvent", taxonomy_interaction, taxonomy_related_article_click, related_article]);
-  });
-});
+var taxonomy_related_category;
+$(document).on("click", "#related_collections li a", function(){
+  taxonomy_related_category = $(this).parent('div').children('h3').html();
+	_gaq.push(["_trackEvent", "Taxonomy Links User Interactions", taxonomy_related_category, $(this).html()]);
+}); 
+
 
 
 // Begin $ function definitions
