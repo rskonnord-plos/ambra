@@ -35,6 +35,14 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.6</h2>
+ <p>Released June 4th, 2013</p>
+ <ul>
+     <li>PLOS One Edboard search optimizations</li>
+     <li>Taxonomy tracking update</li>
+     <li>Reference DOI backfill</li>
+ </ul>
+
  <h2>Ambra 2.6.5</h2>
  <p>Released May 28th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.5</h3>
