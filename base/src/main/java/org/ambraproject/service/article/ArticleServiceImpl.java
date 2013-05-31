@@ -26,6 +26,7 @@ import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.Category;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.CitedArticleAuthor;
+import org.ambraproject.models.CitedArticleEditor;
 import org.ambraproject.models.Issue;
 import org.ambraproject.models.Journal;
 import org.ambraproject.models.UserProfile;
@@ -787,43 +788,92 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Transactional
   public String refreshCitedArticle(Long citedArticleID) throws Exception {
     log.debug("refreshArticleCitation for citedArticleID: {}", citedArticleID);
+    StringBuilder sb = new StringBuilder();
 
     CitedArticle citedArticle = hibernateTemplate.get(CitedArticle.class, citedArticleID);
 
-    String author = getAuthorStringForLookup(citedArticle);
-    String doi = crossRefLookupService.findDoi(citedArticle.getTitle(),
-      author,
-      citedArticle.getJournal(),
-      citedArticle.getVolume(),
-      citedArticle.getPages());
+    for(CitedArticleEditor editor : citedArticle.getEditors()) {
+      sb.append(", ");
+      sb.append(editor.getFullName());
+    }
 
-    if (doi != null && !doi.isEmpty()) {
-      log.debug("refreshArticleCitation doi found: {}", doi);
-      setCitationDoi(citedArticle, doi);
+    for(CitedArticleAuthor author : citedArticle.getAuthors()) {
+      sb.append(", ");
+      sb.append(author.getFullName());
+    }
+
+    if(citedArticle.getTitle() != null) {
+      sb.append(", \"");
+      sb.append(citedArticle.getTitle());
+      sb.append("\"");
+    }
+
+    if(citedArticle.getJournal() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getJournal());
+    }
+
+    if(citedArticle.getPublisherLocation() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getPublisherLocation());
+    }
+
+    if(citedArticle.getPublisherName() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getPublisherName());
+    }
+
+    if(citedArticle.getPages() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getPages());
+    }
+
+    if(citedArticle.geteLocationID() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.geteLocationID());
+    }
+
+    if(citedArticle.getYear() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getYear());
+    }
+
+    if(citedArticle.getVolume() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getVolume());
+    }
+
+    if(citedArticle.getIssue() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getIssue());
+    }
+
+    if(citedArticle.getNote() != null) {
+      sb.append(", ");
+      sb.append(citedArticle.getNote());
+    }
+
+    for(String name : citedArticle.getCollaborativeAuthors()) {
+      sb.append(", ");
+      sb.append(name);
+    }
+
+    String doi = null;
+
+    if(sb.length() == 0) {
+      log.debug("No data for citation ({}), not searching for DOI", citedArticleID);
     } else {
-      log.debug("refreshArticleCitation nothing found");
+      doi = crossRefLookupService.findDoi(sb.toString());
+
+      if (doi != null && !doi.isEmpty()) {
+        log.debug("refreshArticleCitation doi found: {}", doi);
+        setCitationDoi(citedArticle, doi);
+      } else {
+        log.debug("refreshArticleCitation nothing found");
+      }
     }
 
     return doi;
-  }
-
-  /**
-   * Formats a citation's authors for searching in CrossRef.
-   *
-   * @param citedArticle persistent class representing the citation
-   * @return String with author information formatted for a CrossRef query
-   */
-  private String getAuthorStringForLookup(CitedArticle citedArticle) {
-    List<CitedArticleAuthor> authors = citedArticle.getAuthors();
-
-    if(authors.size() > 0) {
-      String surname = authors.get(0).getSurnames();
-      String givenName = authors.get(0).getGivenNames();
-
-      return (givenName == null)? surname : surname + " " + givenName;
-    } else {
-      return "";
-    }
   }
 
   /**

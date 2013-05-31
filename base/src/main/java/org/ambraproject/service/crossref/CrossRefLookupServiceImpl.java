@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -59,46 +56,10 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     this.crossRefUrl = crossRefUrl;
   }
 
-  /**
-   * Do the author query as described in: <a href="http://www.crossref.org/help/Content/04_Queries_and_retrieving/author_title_query.htm">Author / article-title query</a>
-   *
-   * @param title  Article title
-   * @param author Author name
-   * @return List of articles that match the criteria
-   * @see CrossRefArticle
-   */
-  public List<CrossRefArticle> findArticles(String title, String author, String journal, String volume, String pages) throws Exception {
-    CrossRefResponse response = queryCrossRef(title, author, journal, volume, pages);
-
-    //TODO: I don't believe this method is used any longer, remove it
-    //It is called in one place, and that method is not called anyplace I can find
-    List<CrossRefArticle> results = new ArrayList<CrossRefArticle>();
-
-    for(final CrossRefResult res : response.results) {
-      CrossRefArticle article = new CrossRefArticle();
-
-      //Split up text string into various parts
-      String[] data = res.text.split(";|,");
-
-      //Basic protection against an incomplete response, not sure if this
-      //ever actually happens
-      article.setFirstAuthor((data.length > 0)?data[0]:null);
-      article.setSerTitle((data.length > 1)?data[1]:null);
-      article.setTitle((data.length > 2)?data[2]:null);
-      article.setVolume((data.length > 3)?data[3]:null);
-      article.setPage((data.length > 4)?data[4]:null);
-      article.setDoi(res.doi);
-
-      results.add(article);
-    }
-
-    return results;
-   }
-
   @Override
   @Transactional(readOnly = true)
-  public String findDoi(String title, String author, String journal, String volume, String pages) throws Exception {
-    CrossRefResponse response = queryCrossRef(title, author, journal, volume, pages);
+  public String findDoi(String searchString) throws Exception {
+    CrossRefResponse response = queryCrossRef(searchString);
 
     if(response != null && response.results.length > 0) {
       return response.results[0].doi;
@@ -107,9 +68,9 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     }
   }
 
-  private CrossRefResponse queryCrossRef(String title, String author, String journal, String volume, String pages)
+  private CrossRefResponse queryCrossRef(String searchString)
   {
-    PostMethod post = createCrossRefPost(title, author, journal, volume, pages);
+    PostMethod post = createCrossRefPost(searchString);
 
     try {
       long timestamp = System.currentTimeMillis();
@@ -182,25 +143,15 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     }};
   }
 
-  private PostMethod createCrossRefPost(String title, String author, String journal, String volume, String pages)
+  private PostMethod createCrossRefPost(String searchString)
   {
     StringBuilder builder = new StringBuilder();
 
     //Example query to post:
     //["Young GC,Analytical methods in palaeobiogeography, and the role of early vertebrate studies;Palaeoworld;19;160-173"]
 
-    builder.append(author)
-      .append(",")
-      .append(title)
-      .append(";")
-      .append(journal)
-      .append(";")
-      .append(volume)
-      .append(";")
-      .append(pages);
-
     //Use toJSON to encode strings with proper escaping
-    final String json = "[" + (new Gson()).toJson(builder.toString()) + "]";
+    final String json = "[" + (new Gson()).toJson(searchString) + "]";
 
     if(this.crossRefUrl == null) {
       throw new RuntimeException("ambra.services.crossref.query.url value not found in configuration.");
