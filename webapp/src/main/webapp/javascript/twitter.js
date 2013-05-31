@@ -136,8 +136,6 @@ $.fn.twitter = function () {
     //Replace URLs with a real link
     var urlRegex = /((ht|f)tp(s?):\/\/[a-zA-Z0-9\-\.\/]+?)([\s])/g;
     var newValue = tweetText.replace(urlRegex, function(match, url, eol, offset, original) {
-      //console.log(url);
-      //console.log(eol);
       return "<a href=\"" + url + "\">" + url + "</a> ";
     });
 
