@@ -173,7 +173,7 @@
           <#if filterReset>
             <fieldset id="filterReset">
               <legend><span>There are no results for this search query.</span></legend>
-              <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?length > 1))>
+              <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?size > 1))>
                 <ol>
                   <li>You are filtering with the following parameters:</li>
                   <#if (filterSubjects?size > 0)>
@@ -190,8 +190,11 @@
                           and </#if><#else><#if journal_has_next>, </#if></#if></#list></b>
                     </li>
                   </#if>
-                  <#if (filterArticleType?length > 1)>
-                    <li>Article Type: <b>${filterArticleType}</b></li>
+                  <#if (filterArticleType?size > 0)>
+                    <li>Article Type: <b><#list filterArticleType as articleType>"${articleType}"
+                      <#if (articleType_index) gt filterArticleType?size - 3><#if articleType_has_next>
+                          and </#if><#else><#if articleType_has_next>, </#if></#if></#list></b>
+                    </li>
                   </#if>
                   <li>
                     <div class="btnwrap">
@@ -304,10 +307,12 @@
           <fieldset id="artType">
             <legend><span>Filter by Article Type</span></legend>
             <ol>
-              <li><label><input id="articleType_all" type="radio" checked="checked" name="filterArticleTypeOpt" value="all"
-                <#if (filterArticleType?length == 0)> checked</#if> title="Search All Article Types"/> Search all article types</label></li>
-              <li><label><input id="articleType_one" type="radio" name="filterArticleTypeOpt" value="some"
-                <#if (filterArticleType?length gt 0)> checked</#if> title="Search For Only Selected Article Type"/> Search for one of the following:</label></li>
+              <li><label><input id="articleType_all" type="radio" name="filterArticleTypeOpt" value="all"
+                <#if (filterArticleType?size == 0)> checked</#if> title="Search All Article Types"/> Search all
+                  article types</label></li>
+              <li><label><input id="articleType_some" type="radio" name="filterArticleTypeOpt" value="some"
+                <#if (filterArticleType?size gt 0)> checked</#if> title="Search For Only Selected Article Type"/>
+                  Only look for articles with the following article type:</label></li>
               <li class="options">
                 <fieldset id="fsarticleTypOpt">
                   <#if articleTypes?? && articleTypes?size gt 0>
@@ -317,10 +322,13 @@
                         <#if (articleType_index + 1) lte colSize>
                           <#assign articleTypeId = articleType.name?replace(" ","_","r")>
                           <li>
-                            <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                                   type="radio" <#if (filterArticleType == articleType.name) > checked</#if>
-                                   title="Select Article Type ${articleType.name}"
-                                   alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
+                            <span class="checkboxWrapper">
+                              <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
+                                     type="checkbox" <#if (filterArticleType?seq_contains(articleType.name)) > checked</#if>
+                                     title="Select Article Type ${articleType.name}"
+                                     alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
+                              <div onclick="enableCheckboxes('filterArticleType_${articleTypeId}','articleType_some')" class="checkboxOverlay"></div>
+                            </span>
                             <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
                           </li>
                         </#if>
@@ -331,11 +339,14 @@
                         <#if (articleType_index + 1) gt colSize>
                           <#assign articleTypeId = articleType.name?replace(" ","_","r")>
                           <li>
-                            <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                                   type="radio" <#if (filterArticleType == articleType.name) > checked="true"</#if>
-                                   title="Select Article Type ${articleType.name}"
-                                   alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
-                            <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+                            <span class="checkboxWrapper">
+                              <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
+                                     type="checkbox" <#if (filterArticleType?seq_contains(articleType.name)) > checked="true"</#if>
+                                     title="Select Article Type ${articleType.name}"
+                                     alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
+                              <div onclick="enableCheckboxes('filterArticleType_${articleTypeId}','articleType_some')" class="checkboxOverlay"></div>
+                              <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+                            </span>
                           </li>
                         </#if>
                       </#list>

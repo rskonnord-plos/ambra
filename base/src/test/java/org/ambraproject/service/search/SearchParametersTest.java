@@ -24,7 +24,6 @@ package org.ambraproject.service.search;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.SimpleTimeZone;
 
 import static org.testng.Assert.assertEquals;
@@ -180,6 +179,7 @@ public class SearchParametersTest {
     sp.setUnformattedQuery("unformattedQuery: " + test);
     sp.setFilterSubjects(inputStringArray);
     sp.setFilterJournals(inputStringArray);
+    sp.setFilterArticleType(inputStringArray);
     sp.setSort("sort: " + test);
     sp.setStartPage(473);
     sp.setPageSize(216);
@@ -217,7 +217,13 @@ public class SearchParametersTest {
     }
     sp.setFilterJournals(new String[]{});
     assertNotSame(spCopy.getFilterJournals().length, sp.getFilterJournals().length);
-    
+
+    for (int i = 0 ; i < sp.getFilterArticleType().length ; i++) {
+      assertEquals(sp.getFilterArticleType()[i], spCopy.getFilterArticleType()[i]);
+    }
+    sp.setFilterArticleType(new String[]{});
+    assertNotSame(spCopy.getFilterArticleType().length, sp.getFilterArticleType().length);
+
     assertEquals(spCopy.getSort(), sp.getSort());
     sp.setSort(test);
     assertNotSame(spCopy.getSort(), sp.getSort());
@@ -247,7 +253,7 @@ public class SearchParametersTest {
     sp.setFilterJournals(inputStringArray);
     sp.setFilterAuthors(inputStringArray);
     sp.setFilterKeyword("keyword");
-    sp.setFilterArticleType("articleType");
+    sp.setFilterArticleType(inputStringArray);
     sp.setSort("sortString");
     sp.setStartPage(473);
     sp.setPageSize(216);
@@ -262,7 +268,7 @@ public class SearchParametersTest {
         " filterSubjectsDisjunction=[element Two]," +
         " filterAuthors=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
         " filterKeyword='keyword'," +
-        " filterArticleType='articleType'," + 
+        " filterArticleType=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
         " filterJournals=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
         " filterStartDate=null," +
         " filterEndDate=null," +

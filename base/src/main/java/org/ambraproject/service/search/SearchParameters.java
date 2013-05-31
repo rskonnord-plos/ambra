@@ -66,7 +66,7 @@ public class SearchParameters implements Serializable {
   private String[]      filterSubjectsDisjunction = {}; // Only search in these subjects inclusively (or instead of and)
   private String[]      filterAuthors             = {}; // Only search in these authors
   private String        filterKeyword             = ""; // Only search in this document part
-  private String        filterArticleType         = ""; // Only search for this article type
+  private String[]      filterArticleType         = {}; // Only search in these article type
   private String[]      filterJournals            = {}; // Only search these Journals. If no elements, then default to the current journal
 
   private Date          filterStartDate           = null; //Only search for articles published in this date range
@@ -132,15 +132,22 @@ public class SearchParameters implements Serializable {
       this.volume = volume.trim();
   }
 
-  public String getFilterArticleType() {
+  public String[] getFilterArticleType() {
     return filterArticleType;
   }
 
-  public void setFilterArticleType(String articleType) {
-    if (articleType == null || articleType.trim().length() < 1)
-      this.filterArticleType = "";
-    else
-      this.filterArticleType = articleType.trim();
+  public void setFilterArticleType(String[] articleTypes) {
+    if (articleTypes == null || articleTypes.length < 1) {
+      this.filterArticleType = new String[]{};
+    } else {
+      List<String> filterArticleTypeList = new ArrayList<String>();
+      for (String articleType : articleTypes) {
+        if (articleType != null && articleType.trim().length() > 0)
+          filterArticleTypeList.add(articleType.trim());
+      }
+      this.filterArticleType = new String[filterArticleTypeList.size()];
+      filterArticleTypeList.toArray(this.filterArticleType);
+    }
   }
 
   public String getFilterKeyword() {
@@ -338,7 +345,7 @@ public class SearchParameters implements Serializable {
         ", filterSubjectsDisjunction=" + (filterSubjectsDisjunction == null ? null : Arrays.asList(filterSubjectsDisjunction)) +
         ", filterAuthors=" + (filterAuthors == null ? null : Arrays.asList(filterAuthors)) +
         ", filterKeyword='" + filterKeyword + "'" +
-        ", filterArticleType='" + filterArticleType + "'" +
+        ", filterArticleType="+ (filterArticleType == null ? null : Arrays.asList(filterArticleType)) +
         ", filterJournals=" + (filterJournals == null ? null : Arrays.asList(filterJournals)) +
         ", filterStartDate=" + filterStartDate +
         ", filterEndDate=" + filterEndDate +
