@@ -100,7 +100,7 @@ public class TaxonomyServiceImpl implements TaxonomyService {
     if (cache == null) {
       return parseCategoriesWithoutCache(currentJournal);
     } else {
-      String key = ("categoriesCacheKey" + currentJournal).intern();
+      String key = ("categoriesCacheKey" + ((currentJournal==null)?"":currentJournal)).intern();
 
       return cache.get(key, CACHE_TTL,
         new Cache.SynchronizedLookup<CategoryView, ApplicationException>(key) {

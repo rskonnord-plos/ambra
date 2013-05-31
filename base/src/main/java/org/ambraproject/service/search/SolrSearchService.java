@@ -297,7 +297,11 @@ public class SolrSearchService implements SearchService {
 
     // Add the one we do want.
     query.addFacetField("subject_hierarchy");
-    query.addFilterQuery("cross_published_journal_key:" + journal);
+
+    if(journal != null && journal.length() > 0) {
+      query.addFilterQuery("cross_published_journal_key:" + journal);
+    }
+
     query.setFacetLimit(-1);  // unlimited
 
     QueryResponse queryResponse = getSOLRResponse(query);

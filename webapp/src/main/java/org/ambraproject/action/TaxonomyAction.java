@@ -36,6 +36,7 @@ public class TaxonomyAction extends BaseActionSupport {
   private CategoryView categories;
   private TaxonomyService taxonomyService;
   private String root;
+  private String journal;
   private String[] filter;
 
   @Override
@@ -46,8 +47,11 @@ public class TaxonomyAction extends BaseActionSupport {
       return ERROR;
     }
 
+    //topAndSecondLevelCategories defaults to current journal
     topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
-    categories = taxonomyService.parseCategories(getCurrentJournal());
+
+    //categories defaults to all journals (the categories journal can be set via parameter)
+    categories = taxonomyService.parseCategories(this.journal);
 
     return SUCCESS;
   }
@@ -141,5 +145,12 @@ public class TaxonomyAction extends BaseActionSupport {
    */
   public void setRoot(String root) {
     this.root = root;
+  }
+
+  /**
+   * Set the journal for what categories are to be returned
+   */
+  public void setJournal(String journal) {
+    this.journal = journal;
   }
 }
