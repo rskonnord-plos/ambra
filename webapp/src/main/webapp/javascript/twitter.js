@@ -47,14 +47,16 @@ $.fn.twitter = function () {
     var json = window.tweetsResponse;
     var numTweets = 0;
 
+    //assuming here the request was properly formatted to get only twitter in sources[0]
+    var twitterResponse = json[0].sources[0];
+
     var pageSize = 50;
 
     $("#tweets").empty();
 
-    if (json.article.source != null && json.article.source.length > 0
-        && json.article.source[0].events != null && json.article.source[0].events.length > 0) {
+    if (twitterResponse && twitterResponse.metrics.total > 0) {
 
-      var events = json.article.source[0].events;
+      var events = twitterResponse.events;
       events = events.sort(jQuery.proxy(this.sort_tweets_by_date,this));
 
       numTweets = events.length;
@@ -103,9 +105,9 @@ $.fn.twitter = function () {
 
       statusMsg = numTweets + " tweet" + pluralization
           + " as recorded by Twitter.  Article published "
-          + $.datepicker.formatDate("M d, yy", new Date(json.article.published))
+          + $.datepicker.formatDate("M d, yy", new Date(json[0].publication_date))
           + ". Tweets updated "
-          + $.datepicker.formatDate("M d, yy", new Date(json.article.source[0].updated_at)) + ".";
+          + $.datepicker.formatDate("M d, yy", new Date(twitterResponse.update_date)) + ".";
     }
 
     $("#tweets").prepend(statusMsg);
