@@ -98,7 +98,7 @@ $.fn.alm = function () {
   this.getCitesCrossRefOnly = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=CrossRef";
+    var request = doi + "&source=crossref&info=event";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -544,70 +544,58 @@ $.fn.alm = function () {
   }
 
   this.setCrossRefLinks = function (response, crossRefID, pubGetError) {
-    var doi = escape(response.article.doi);
+    var doi = encodeURIComponent(response[0].doi);
+    var crossRefResponse = response[0].sources[0];
     var citationDOIs = new Array();
     var numCitations = 0;
 
-    if (response.article.source != null && response.article.source.length > 0
-        && response.article.source[0].events != null && response.article.source[0].events.length > 0) {
-      numCitations = response.article.source[0].events.length;
+    if (crossRefResponse && crossRefResponse.metrics.total > 0) {
+      numCitations = crossRefResponse.metrics.total;
       var html = "";
 
-      for (var a = 0; a < numCitations; a++) {
-        var citation = response.article.source[0].events[a].event;
-        var citation_url = response.article.source[0].events[a].event_url;
+      for (var eventIndex = 0; eventIndex < crossRefResponse.events.length; eventIndex++) {
+        var citation = crossRefResponse.events[eventIndex].event;
+        var citation_url = crossRefResponse.events[eventIndex].event_url;
         //Build up list of citation DOIs to pass to pubget
-        citationDOIs[a] = citation.doi;
+        citationDOIs.push(citation.doi);
 
         //  Assume there exists: URI, Title, and DOI.  Anything else may be missing.
         html = html + "<li><span class='article'><a href=\"" + citation_url + "\">"
             + citation.article_title + "</a> <span class=\"pubGetPDFLink\" "
             + "id=\"citation_" + this.fixDoiForID(citation.doi) + "\"></span></span>";
 
-        if (citation.contributors != null) {
+        if (citation.contributors) {
           var first_author = "";
           var authors = "";
           var contributors = citation.contributors.contributor;
-          if (contributors == undefined) {
-            contributors = citation.contributors;
-            for (var b = 0; b < contributors.length; b++) {
-              if (contributors[b].first_author === true) {
-                first_author = contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
+
+          for (var i = 0; i < contributors.length; i++) {
+            individualContributor = contributors[i];
+              if ( individualContributor.first_author === 'true') {
+                first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
               } else {
-                authors = authors + ", " + contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
+                authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
               }
             }
             authors = first_author + authors;
-          } else {
-            if (contributors instanceof Array) {
-              for (var b = 0; b < contributors.length; b++) {
-                if (contributors[b].first_author === "true") {
-                  first_author = contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
-                } else {
-                  authors = authors + ", " + contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
-                }
-              }
-              authors = first_author + authors;
-            } else {
-              authors = contributors.surname + " " + contributors.given_name.substr(0, 1);
-            }
-          }
+
           html = html + "<span class='authors'>" + authors + "</span>";
         }
+
         html = html + "<span class='articleinfo'>";
-        if (citation.journal_title != null && citation.journal_title.length > 0) {
+        if (citation.journal_title != null) {
           html = html + citation.journal_title;
         }
-        if (citation.year != null && citation.year.length > 0) {
+        if (citation.year != null) {
           html = html + " " + citation.year;
         }
-        if (citation.volume != null && citation.volume.length > 0) {
+        if (citation.volume != null) {
           html = html + " " + citation.volume;
         }
-        if (citation.issue != null && citation.issue.length > 0) {
+        if (citation.issue != null) {
           html = html + "(" + citation.issue + ")";
         }
-        if (citation.first_page != null && citation.first_page.length > 0) {
+        if (citation.first_page) {
           html = html + ": " + citation.first_page;
         }
         html = html + ". doi:" + citation.doi + "</span></li>";
@@ -624,9 +612,9 @@ $.fn.alm = function () {
 
       html = numCitations + " citation" + pluralization
           + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
-          + $.datepicker.formatDate("M dd, yy", new Date(response.article.published))
+          + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.publication_date))
           + ". Citations updated on "
-          + $.datepicker.formatDate("M dd, yy", new Date(response.article.source[0].updated_at))
+          + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.update_date))
           + "."
           + " <ol>" + html + "</ol>";
     }
