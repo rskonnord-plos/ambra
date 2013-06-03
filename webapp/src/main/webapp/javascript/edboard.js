@@ -537,8 +537,18 @@ $.fn.edBoard = function () {
                 $.each(names, function (index, name0) {
                   if (index < names_count) {
                     var people = name0.ae_name;
-                    var parts = people.split(" ");
-                    var last_first = parts.pop() + ", " + parts.join(" ");
+                    var last_first = null;
+                    if (!name0.ae_last_name) {
+                      var parts = people.split(" ");
+                      var last_first = parts.pop() + ", " + parts.join(" ");
+                    }
+                    else {
+                      // example: people = "Mamta Singh" (11)
+                      // ae_last_name = "Singh" (5)
+                      // index1 = 6, last_first = "Singh" + ", " + "Mamta"
+                      var index1 = people.length - name0.ae_last_name.length;
+                      last_first = people.substr(index1) + ", " + people.substr(0, index1-1);
+                    }
 
                     //Only push terms that haven't been selected.
                     if($.inArray('"' + people + '"', terms) == -1) {
@@ -619,7 +629,7 @@ $.fn.edBoard = function () {
               var data = [
                 {name: "wt", value: "json"},
                 {name: "q", value: query_withNewTerm.join(" AND ")},
-                {name: "fl", value: "ae_name"},
+                {name: "fl", value: "ae_name, ae_last_name"},
                 {name: "rows", value: 20},
                 {name: "fq", value: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE"},
                 {name: "sort", value: "ae_last_name asc"},
@@ -672,19 +682,21 @@ $(function () {
         // each item is either name or subject.
         // if it is "quoted" it is only a name, otherwise
         // it is either name or subject.
-
-        $.each(userString.split(","), function(index, term) {
-          var item = $.trim(term);
-          if(item.length > 0) {
-            if (item[0] == '"' && item[item.length-1] == '"') {
-              var name = item.substring(1, item.length-1);
-              query.push("ae_name:\"" + name + "\"");
+        var items = userString.match(/(\".*?\")|[^,]+/g);
+        if (items) {
+          $.each(items, function(index, term) {
+            var item = $.trim(term);
+            if(item.length > 0) {
+              if (item[0] == '"' && item[item.length-1] == '"') {
+                var name = item.substring(1, item.length-1);
+                query.push("ae_name:\"" + name + "\"");
+              }
+              else {
+                query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
+              }
             }
-            else {
-              query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
-            }
-          }
-        });
+          });
+        }
 
         edBoard.getEditors({
           "query": query.join(" AND "),

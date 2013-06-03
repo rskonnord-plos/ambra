@@ -18,8 +18,10 @@ import org.ambraproject.filestore.FSIDMapper;
 import org.ambraproject.filestore.FileStoreService;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.CitedArticle;
+import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.pubget.PubGetLookupService;
 import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.util.TextUtils;
 import org.ambraproject.util.XPathUtil;
@@ -41,6 +43,8 @@ import javax.xml.xpath.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -59,6 +63,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   private XMLService articleTransformService;
   private FileStoreService fileStoreService;
   private Cache articleHtmlCache;
+  private PubGetLookupService pubGetLookupService;
+  private String guestCrossRefUrl;
 
   /**
    * For the articleInfo, get the article HTML
@@ -190,6 +196,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("<list-item>"),
     Pattern.compile("</list-item>"),
     Pattern.compile("</list>"),
+    Pattern.compile("<list(\\s+list-type=\"bullet\")?>"),
+    Pattern.compile("<list\\s+list-type=\"(.*)\">"),
     Pattern.compile("<list(?:.*)*>"),
     Pattern.compile("<title(?:.*)*>"),
     Pattern.compile("<body(?:.*)*>"),
@@ -213,6 +221,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "\n<li>",
     "</li>",
     "</ul>",
+    "<ul class=\"bulletlist\">",
+    "<ol class=\"$1\">",
     "<ul class=\"bulletlist\">",
     "",
     "",
@@ -1079,18 +1089,178 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
         if (citationNode != null && "journal".equals(getCitationType(citationNode))
             && citedArticleIsValid(citedArticle)) {
           Element extraInfo = doc.createElement("extraCitationInfo");
+          setExtraCitationInfo(extraInfo, citedArticle);
           citationNode.appendChild(extraInfo);
-          extraInfo.setAttribute("citedArticleID", Long.toString(citedArticle.getID()));
-          String doi = citedArticle.getDoi();
-          if (doi != null && !doi.isEmpty()) {
-            extraInfo.setAttribute("doi", doi);
-          }
         }
       }
     } catch (XPathExpressionException xpee) {
       throw new ApplicationException(xpee);
     }
+
     return doc;
+  }
+
+  /**
+   * Set the extraInfo element based on the citedArticle.
+   * @param extraInfo
+   * @param citedArticle
+   */
+  private void setExtraCitationInfo(Element extraInfo, CitedArticle citedArticle) {
+    extraInfo.setAttribute("citedArticleID", Long.toString(citedArticle.getID()));
+    String doi = citedArticle.getDoi();
+
+    if (doi != null && !doi.isEmpty()) {
+      extraInfo.setAttribute("doi", doi);
+    }
+
+    String title = citedArticle.getTitle() == null ? "" : citedArticle.getTitle();
+    String author = getAuthorStringForLookup(citedArticle);
+
+    author = author.replaceAll("<[^>]+>", ""); // remove any HTML marker for query
+    title = title.replaceAll("<[^>]+>", ""); // remove any HTML marker for query
+
+    String crossRefUrl = createCrossRefUrl(doi, author, title);
+    String pubGetUrl = createPubGetUrl(doi);
+    String pubMedUrl = createPubMedUrl(author, title);
+    String googleScholarUrl = createGoogleScholarUrl(author, title);
+
+    if (crossRefUrl != null && !crossRefUrl.isEmpty()) {
+      extraInfo.setAttribute("crossRefUrl", crossRefUrl);
+    }
+
+    if (pubGetUrl != null && !pubGetUrl.isEmpty()) {
+      extraInfo.setAttribute("pubGetUrl", pubGetUrl);
+    }
+
+    if (pubMedUrl != null && !pubMedUrl.isEmpty()) {
+      extraInfo.setAttribute("pubMedUrl", pubMedUrl);
+    }
+
+    if (googleScholarUrl != null && !googleScholarUrl.isEmpty()) {
+      extraInfo.setAttribute("googleScholarUrl", googleScholarUrl);
+    }
+  }
+
+  /**
+   * Set the crossRefUrl
+   * @param doi
+   * @param author
+   * @param title
+   * @return crossRefUrl
+   */
+  private String createCrossRefUrl(String doi, String author, String title) {
+    String crossRefUrl;
+
+    if (doi != null && !doi.isEmpty()) {
+      crossRefUrl = "http://dx.doi.org/" + doi;
+    } else {
+      crossRefUrl = guestCrossRefUrl;
+      try {
+        crossRefUrl += "?auth2=" + URLEncoder.encode(author, "ISO-8859-1")
+            + "&atitle2=" + URLEncoder.encode(title, "ISO-8859-1")
+            + "&auth=" + URLEncoder.encode(author, "ISO-8859-1")
+            + "&atitle=" + URLEncoder.encode(title, "ISO-8859-1");
+      }
+      catch (UnsupportedEncodingException ex) {
+        log.info("ignoring exception in URLEncoder", ex);
+      }
+    }
+
+    return crossRefUrl;
+  }
+
+  /**
+   * set the pubGetUrl
+   * @param doi
+   * @return pubGetUrl
+   */
+  private String createPubGetUrl(String doi) {
+    String pubGetUrl = null;
+
+    if (doi != null && !doi.isEmpty()) {
+      try {
+        // We never cache or store these PDF links, because they change frequently.
+        pubGetUrl = pubGetLookupService.getPDFLink(doi);
+      } catch(Exception ex) {
+        log.info("ignoring exception in pubGetLookupService", ex);
+      }
+    }
+
+    return pubGetUrl;
+  }
+
+  /**
+   * set the pubMedUrl
+   * @param author
+   * @param title
+   * @return pubMedUrl
+   */
+  private  String createPubMedUrl(String author, String title) {
+    String pubMedUrl = null, pubMedAuthorQuery = "";
+
+    if (author != null && !author.isEmpty()) {
+      pubMedAuthorQuery = author + "[author] AND ";
+    }
+    try {
+      pubMedUrl = "http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&cmd=Search&doptcmdl=Citation&defaultField=Title+Word&term="
+          + URLEncoder.encode(pubMedAuthorQuery, "UTF-8")
+          + URLEncoder.encode(title, "UTF-8");
+    } catch (UnsupportedEncodingException ex) {
+      log.info("ignoring exception in URLEncoder", ex);
+    }
+
+    return pubMedUrl;
+  }
+
+  /**
+   * set the googleScholarUrl
+   * @param author
+   * @param title
+   * @return googleScholarUrl
+   */
+  private String createGoogleScholarUrl(String author, String title) {
+    String googleScholarUrl = null, googleAuthorQuery = "";
+
+    if (author != null && !author.isEmpty()) {
+      googleAuthorQuery = "author:" + author + " ";
+    }
+    try {
+      googleScholarUrl = "http://scholar.google.com/scholar?hl=en&safe=off&q="
+          + URLEncoder.encode(googleAuthorQuery, "UTF-8")
+          + "%22" + URLEncoder.encode(title, "UTF-8") + "%22";
+    } catch (UnsupportedEncodingException ex) {
+      log.info("ignoring exception in URLEncoder", ex);
+    }
+
+    return googleScholarUrl;
+  }
+
+  /**
+   * Formats a citation's authors for searching in CrossRef.
+   *
+   * @param citedArticle persistent class representing the citation
+   * @return String with author information formatted for a CrossRef query
+   */
+  private String getAuthorStringForLookup(CitedArticle citedArticle) {
+    List<CitedArticleAuthor> authors = citedArticle.getAuthors();
+    return authors.size() > 0 ? authors.get(0).getSurnames() : "";
+  }
+
+  /**
+   * @param pubGetLookupService The pubGetLookupService to use
+   */
+  @Required
+  public void setPubGetLookupService(PubGetLookupService pubGetLookupService) {
+    this.pubGetLookupService = pubGetLookupService;
+  }
+
+  /**
+   *
+   * @param guestCrossRefUrl The guestCrossRefUrl to use
+   */
+  @Required
+  public void setGuestCrossRefUrl(String guestCrossRefUrl) {
+    this.guestCrossRefUrl = guestCrossRefUrl;
   }
 
   /**

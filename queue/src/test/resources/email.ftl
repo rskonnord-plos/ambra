@@ -16,7 +16,7 @@
       <td>
         <div style="border: 1px solid rgb(204, 204, 204); margin: 3px 0px; padding: 3px; font-size: 9px; text-align: center; color: rgb(153, 153, 153); background-color: rgb(238, 238, 238);">
           <strong>PLEASE DO NOT REPLY DIRECTLY TO THIS E-MAIL</strong><br/>
-          <a href="http://www.plosone.org/user/secure/editProfile?tabId=savedSearchAlerts" title="Change/Discontinue E-mail Alerts">Click here to change or discontinue your alerts.</a>
+          <a href="http://www.plosone.org/user/secure/profile/alerts/search" title="Change/Discontinue E-mail Alerts">Click here to change or discontinue your alerts.</a>
         </div>
         <div style="border: 1px solid rgb(204, 204, 204); margin: 3px 0px; padding: 3px; font-size: 9px; text-align: center; color: rgb(153, 153, 153);
           background-color: rgb(238, 238, 238);">Add <a href="mailto:news@lists.plos.org">news@lists.plos.org</a> to your safe senders list in your e-mail address book. Doing so ensures that our e-mails reach your Inbox. Thank you.
@@ -145,7 +145,7 @@
 
                   <p>This NEW ARTICLES WEEKLY alert includes articles published in the past week. It will be sent no more often than once per week. If you would like less frequent alerts, please subscribe to the NEW ARTICLES MONTHLY alert only.</p>
 
-                  <p>You can <a title="Change/Discontinue E-mail Alerts" href="http://www.plosone.org/user/secure/editProfile?tabId=savedSearchAlerts">change or discontinue your alerts</a>  at any time by modifying your profile.</p>
+                  <p>You can <a title="Change/Discontinue E-mail Alerts" href="http://www.plosone.org/user/secure/profile/alerts/search">change or discontinue your alerts</a>  at any time by modifying your profile.</p>
 
                   <p>For further assistance with this alert, <a href="mailto:webmaster@plos.org">e-mail the webmaster</a>.</p>
 
