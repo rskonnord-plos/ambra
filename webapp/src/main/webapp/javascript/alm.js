@@ -123,16 +123,15 @@ $.fn.alm = function () {
    * */
 
   this.getSummaryForArticles = function (dois, callBack, errorCallback) {
-    idString = "";
-    for (a = 0; a < dois.length; a++) {
-      if (idString != "") {
-        idString = idString + ",";
-      }
 
-      idString = idString + this.validateDOI("info:doi/" + dois[a]);
+    idString = "";
+    idString += this.validateDOI(dois[0]);
+
+    for (a = 1; a < dois.length; a++) {
+      idString += "," + this.validateDOI(dois[a]);
     }
 
-    var request = "group/articles.json?id=" + idString + "&group=statistics";
+    var request = idString;
     this.getData(request, callBack, errorCallback);
   }
 
@@ -1397,72 +1396,80 @@ function onReadyALM() {
     };
 
     var almSuccess = function (response) {
-      if(response && response.length > 0 ) {
-        if (response[0].groups.length > 0) {
-          var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
+      if (response && response.length > 0) {
+        responseObject = response[0];
 
-          li = almService.makeSignPostLI("VIEWS", viewdata.total,
-            "Sum of PLOS and PubMed Central page views and downloads",
-            "/static/almInfo#usageInfo");
+        //distinguish sources
+        var counter, pubmed, scopus, facebook, twitter, mendeley, citeulike;
+        sources = responseObject.sources;
 
-          $("#almSignPost").append(li);
-        }
-
-        var scopus = 0;
-        var bookmarks = 0;
-        var shares = 0;
-
-        for (var curGroup = 0; curGroup < response[0].groupcounts.length; curGroup++) {
-          for (var curSource = 0; curSource < response[0].groupcounts[curGroup].sources.length; curSource++) {
-            var name = response[0].groupcounts[curGroup].sources[curSource].source;
-            var count = response[0].groupcounts[curGroup].sources[curSource].count;
-
-            if (name == "Scopus") {
-              scopus = count;
-            }
-
-            if (name == "Mendeley" || name == "CiteULike") {
-              bookmarks += count;
-            }
-
-            if (name == "Facebook" || name == "Twitter") {
-              shares += count;
-            }
+        for(var i = 0; i < sources.length; i += 1){
+          source = sources[i];
+          if(source.name === 'counter'){
+            counter = source;
+          }
+          else if(source.name === 'pubmend'){
+            pubmed = source;
+          }
+          else if(source.name === 'scopus'){
+            scopus = source;
+          }
+          else if(source.name === 'facebook'){
+            facebook = source;
+          }
+          else if(source.name === 'twitter'){
+            twitter = source;
+          }
+          else if(source.name === 'mendeley'){
+            mendeley = source;
+          }
+          else if(source.name === 'citeulike'){
+            citeulike = source;
           }
         }
 
+
+        li = almService.makeSignPostLI("VIEWS", counter.metrics.total + scopus.metrics.total,
+          "Sum of PLOS and PubMed Central page views and downloads",
+          "/static/almInfo#usageInfo");
+
+        $("#almSignPost").append(li);
+
         var text, li;
-        if (scopus > 0) {
+        //citations
+        if (scopus.metrics.total > 0) {
           text = "CITATIONS";
-          if (scopus == 1) {
+          if (responseObject.citations == 1) {
             text = "CITATION";
           }
 
-          li = almService.makeSignPostLI(text, scopus, "Paper's citation count computed by Scopus",
+          li = almService.makeSignPostLI(text, scopus.metrics.total, "Paper's citation count computed by Scopus",
             "/static/almInfo#citationInfo");
 
           $("#almSignPost").append(li);
         }
 
-        if (bookmarks > 0) {
+        //bookmarks
+        if (mendeley.metrics.total + citeulike.metrics.total > 0) {
           text = "ACADEMIC BOOKMARKS";
-          if (bookmarks == 1) {
+          if (responseObject.bookmarks == 1) {
             text = "ACADEMIC BOOKMARK";
           }
 
-          li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike " +
+          li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
             "bookmarks", "/static/almInfo#socialBookmarks");
 
           $("#almSignPost").append(li);
         }
 
-        if (shares > 0) {
+        //shares
+        if (facebook.metrics.total + twitter.metrics.total > 0) {
           text = "SOCIAL SHARES";
-          if (shares == 1) {
+          if (responseObject.shares == 1) {
             text = "SOCIAL SHARE";
           }
 
-          li = almService.makeSignPostLI(text, shares, "Sum of Facebook and Twitter activity",
+          li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
             "/static/almInfo#socialBookmarks");
 
           $("#almSignPost").append(li);
