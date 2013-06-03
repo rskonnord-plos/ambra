@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
@@ -170,7 +169,7 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
         }
 
         if(resultObj.getAsJsonPrimitive("score") != null) {
-          res.score = resultObj.getAsJsonPrimitive("score").getAsLong();
+          res.score = resultObj.getAsJsonPrimitive("score").getAsString();
         }
 
         //Some results aren't actually valid
@@ -238,7 +237,7 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     public String text;
     public Boolean match;
     public String doi;
-    public Long score;
+    public String score;
   }
 
   /* utility class for internally tracking data */

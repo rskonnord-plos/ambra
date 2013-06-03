@@ -19,6 +19,7 @@ import org.ambraproject.filestore.FileStoreService;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.CitedArticle;
+import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.article.ArticleInfo;
@@ -27,6 +28,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,8 +42,8 @@ import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 public class FetchArticleServiceTest extends BaseTest {
 
@@ -727,6 +729,10 @@ public class FetchArticleServiceTest extends BaseTest {
 
     article2.setCitedArticles(new ArrayList<CitedArticle>());
 
+    CitedArticleAuthor citedArticleAuthor = new CitedArticleAuthor();
+    citedArticleAuthor.setGivenNames("W");
+    citedArticleAuthor.setSurnames("Balch");
+
     CitedArticle citedArticle2 = new CitedArticle();
     citedArticle2.setKey("1");
     citedArticle2.setYear(2003);
@@ -740,6 +746,7 @@ public class FetchArticleServiceTest extends BaseTest {
     citedArticle2.setCitationType("http://purl.org/net/nknouf/ns/bibtex#Article");
 
     article2.getCitedArticles().add(citedArticle2);
+    citedArticle2.getAuthors().add(citedArticleAuthor);
 
     dummyDataStore.store(article2);
 
@@ -966,7 +973,7 @@ public class FetchArticleServiceTest extends BaseTest {
         "      <p>As a result, the <italic>PLOS ONE</italic> editors have undertaken a thorough re-examination of " +
         "this study, involving both external and internal advisers. This assessment has revealed the following " +
         "concerns regarding the study:</p>\n" +
-        "      <ul class=\"bulletlist\">\n" +
+        "      <ol class=\"alpha-lower\">\n" +
         "        \n" +
         "<li>\n" +
         "          <p>The description of the alleles in the article is inadequate.</p>\n" +
@@ -1010,7 +1017,7 @@ public class FetchArticleServiceTest extends BaseTest {
      org.w3c.dom.Document dom = xmlService.createDocBuilder().parse(fs);
 
     String eoc = fetchArticleService.getEocBody(dom);
-    assertEquals(eocTest.trim(),eoc.trim(),"Expression of concerns didn't match");
+    assertEquals(eocTest.trim(), eoc.trim(), "Expression of concerns didn't match");
 
   }
 
