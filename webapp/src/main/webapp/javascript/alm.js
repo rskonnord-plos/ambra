@@ -570,13 +570,13 @@ $.fn.alm = function () {
 
           for (var i = 0; i < contributors.length; i++) {
             individualContributor = contributors[i];
-              if ( individualContributor.first_author === 'true') {
-                first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
-              } else {
-                authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
-              }
+            if (individualContributor.first_author === 'true') {
+              first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+            } else {
+              authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
             }
-            authors = first_author + authors;
+          }
+          authors = first_author + authors;
 
           html = html + "<span class='authors'>" + authors + "</span>";
         }
@@ -1400,7 +1400,7 @@ function onReadyALM() {
         responseObject = response[0];
 
         //distinguish sources
-        var counter, pubmed, scopus, facebook, twitter, mendeley, citeulike;
+        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike;
         sources = responseObject.sources;
 
         for(var i = 0; i < sources.length; i += 1){
@@ -1408,8 +1408,8 @@ function onReadyALM() {
           if(source.name === 'counter'){
             counter = source;
           }
-          else if(source.name === 'pubmend'){
-            pubmed = source;
+          else if(source.name === 'pmc'){
+            pmc = source;
           }
           else if(source.name === 'scopus'){
             scopus = source;
@@ -1429,7 +1429,7 @@ function onReadyALM() {
         }
 
 
-        li = almService.makeSignPostLI("VIEWS", counter.metrics.total + scopus.metrics.total,
+        li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
           "Sum of PLOS and PubMed Central page views and downloads",
           "/static/almInfo#usageInfo");
 
