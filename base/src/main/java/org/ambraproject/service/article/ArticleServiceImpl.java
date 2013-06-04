@@ -866,6 +866,9 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       doi = crossRefLookupService.findDoi(sb.toString());
 
       if (doi != null && !doi.isEmpty()) {
+        //A fix for FEND-1077. crossref seems to append a URL to the DOI.  WTF
+        doi = doi.replace("http://dx.doi.org/","");
+
         log.debug("refreshArticleCitation doi found: {}", doi);
         setCitationDoi(citedArticle, doi);
       } else {
