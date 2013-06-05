@@ -4,7 +4,6 @@
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-base</artifactId>
   <version>2.6.7</version>
->>>>>>> origin/dev/FEND-901
   <packaging>jar</packaging>
   <name>Ambra Base Web Application</name>
 

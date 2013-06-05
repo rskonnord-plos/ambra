@@ -3,22 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>journals</artifactId>
-<<<<<<< HEAD
-  <version>2.6.6-SE-241</version>
-=======
-  <version>2.6.6-FEND-901</version>  
->>>>>>> origin/dev/FEND-901
+  <version>2.6.7</version>
   <packaging>pom</packaging>
   <name>Sample Journals</name>
 
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-<<<<<<< HEAD
-    <version>2.6.6-SE-241</version>
-=======
-    <version>2.6.6-FEND-901</version>
->>>>>>> origin/dev/FEND-901
+    <version>2.6.7</version>
   </parent>
 
   <build>
