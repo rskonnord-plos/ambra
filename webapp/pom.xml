@@ -16,14 +16,22 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-webapp</artifactId>
+<<<<<<< HEAD
   <version>2.6.6-SE-241</version>
+=======
+  <version>2.6.6-FEND-901</version>
+>>>>>>> origin/dev/FEND-901
   <packaging>war</packaging>
   <name>Ambra Web Application</name>
 
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
+<<<<<<< HEAD
     <version>2.6.6-SE-241</version>
+=======
+    <version>2.6.6-FEND-901</version>
+>>>>>>> origin/dev/FEND-901
   </parent>
 
   <repositories>

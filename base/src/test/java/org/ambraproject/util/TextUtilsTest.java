@@ -19,8 +19,16 @@
  */
 package org.ambraproject.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertTrue;
@@ -28,6 +36,7 @@ import static org.testng.Assert.assertEquals;
 
 
 public class TextUtilsTest {
+  private static Logger log = LoggerFactory.getLogger(TextUtilsTest.class);
 
   @DataProvider(name = "brokenUrls")
   public String[][] createBrokenData() {
@@ -198,5 +207,4 @@ public class TextUtilsTest {
   public void testSimpleStripAllTags(String before, String after) {
     assertEquals(TextUtils.simpleStripAllTags(before), after);
   }
-
 }
