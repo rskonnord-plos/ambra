@@ -320,7 +320,7 @@
                     <ul>
                       <#list articleTypes?sort_by("name") as articleType>
                         <#if (articleType_index + 1) lte colSize>
-                          <#assign articleTypeId = articleType.name?replace(" ","_","r")>
+                          <#assign articleTypeId = articleType.name?replace(" ","_","r")?replace("/", "_", "r")>
                           <li>
                             <span class="checkboxWrapper">
                               <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"

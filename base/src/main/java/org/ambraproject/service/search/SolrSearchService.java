@@ -672,9 +672,9 @@ public class SolrSearchService implements SearchService {
     Arrays.sort(articleTypes); // Consistent order so that each filter will only be cached once.
     StringBuilder fq = new StringBuilder();
     for (String articleType : articleTypes) {
-      fq.append("article_type:\"").append(articleType).append("\" AND ");
+      fq.append("article_type:\"").append(articleType).append("\" OR ");
     }
-    return fq.replace(fq.length() - 5, fq.length(), "").toString(); // Remove last " AND".
+    return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
   /**
