@@ -3,10 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-base</artifactId>
-<<<<<<< HEAD
-  <version>2.6.6-SE-241</version>
-=======
-  <version>2.6.6-FEND-901</version>
+  <version>2.6.7</version>
 >>>>>>> origin/dev/FEND-901
   <packaging>jar</packaging>
   <name>Ambra Base Web Application</name>
@@ -14,11 +11,7 @@
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-<<<<<<< HEAD
-    <version>2.6.6-SE-241</version>
-=======
-    <version>2.6.6-FEND-901</version>
->>>>>>> origin/dev/FEND-901
+    <version>2.6.7</version>
   </parent>
 
   <dependencies>
