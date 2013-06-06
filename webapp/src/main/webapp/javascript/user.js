@@ -486,7 +486,7 @@ $(function () {
     resetInitialSubjectList();
   });
 
-  if($('#subjectAreaSelector')) {
+  if($('#subjectAreaSelector').length) {
     resetInitialSubjectList();
 
     //Don't bubble up the event
