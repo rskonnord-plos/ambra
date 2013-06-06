@@ -946,6 +946,20 @@ $.fn.alm = function () {
     $("#" + errorID).show("blind", 500);
   };
 
+  this.setCitesSuccess = function(response, citesID, loadingID){
+    $("#" + loadingID).fadeOut('slow');
+    $("#" + citesID).css("display", "none");
+
+    this.setCites(response, citesID);
+    $("#" + citesID).show("blind", 500);
+  }
+
+  this.setCitesFail = function(message, citesID, loadingID){
+    $("#" + loadingID).fadeOut('slow');
+    $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
+    $("#" + citesID).show("blind", 500);
+  }
+
   this.setCitesText = function (doi, citesID, loadingID) {
     var almError = function (message) {
       $("#" + loadingID).fadeOut('slow');
@@ -966,11 +980,11 @@ $.fn.alm = function () {
 
   // Sort into ascending order by the "source" variable of each element.  ALWAYS put Scopus first.
   this.sortCitesBySource = function (a, b) {
-    if (b.source.toLowerCase() == 'scopus') {
+    if (b.name.toLowerCase() == 'scopus') {
       return 1;
-    } else if (a.source.toLowerCase() == 'scopus' || a.source.toLowerCase() < b.source.toLowerCase()) {
+    } else if (a.name.toLowerCase() == 'scopus' || a.name.toLowerCase() < b.name.toLowerCase()) {
       return -1;
-    } else if (a.source.toLowerCase() > b.source.toLowerCase()) {
+    } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
       return 1;
     }
     return 0;
@@ -978,42 +992,84 @@ $.fn.alm = function () {
 
   this.setCites = function (response, citesID) {
     var numCitesRendered = 0;
-    var doi = escape($('meta[name=citation_doi]').attr("content"));
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
     var html = "";
 
-    if (response.article.source.length > 0) {
-      // Citation Sources should always start with Scopus (if an entry for Scopus exists)
-      // followed by the rest of the sources in alphabetical order.
-      response.article.source = response.article.source.sort(this.sortCitesBySource);
 
-      for (var a = 0; a < response.article.source.length; a++) {
-        var url = response.article.source[a].public_url;
+    //citation source filter
+    sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos"]);
+
+    // Citation Sources should always start with Scopus (if an entry for Scopus exists)
+    // followed by the rest of the sources in alphabetical order.
+    sources = sources.sort(this.sortCitesBySource);
+
+
+    for (var a = 0; a < sources.length; a++) {
+
+      if (source.metrics.total > 0) {
+        source = sources[a];
+        var url = source.events_url;
         // find all spaces
         var patternForSpace = /\s/g;
-        var tileName = response.article.source[a].source.toLowerCase().replace(patternForSpace, "-");
+        var tileName = source.display_name.toLowerCase().replace(patternForSpace, "-");
         // removing registered trademark symbol from web of science
         tileName = tileName.replace("\u00ae", "");
 
         //  If CrossRef, then compose a URL to our own CrossRef Citations page.
-        if (response.article.source[a].source == 'CrossRef' && response.article.source[a].count > 0) {
+        if (source.name.toLowerCase() == 'crossref') {
+          alert('holla');
           html = html + this.createMetricsTile(tileName,
-              "/article/crossref/info:doi/" + doi,
-              "/images/logo-" + tileName + ".png",
-              response.article.source[a].count)
-              + '\n';
+            "/article/crossref/info:doi/" + doi,
+            "/images/logo-" + tileName + ".png",
+            source.metrics.total)
+            + '\n';
           numCitesRendered++;
         }
         //  Only list links that HAVE DEFINED URLS
-        else if (url && response.article.source[a].count > 0) {
+        else if (source.events_url) {
           html = html + this.createMetricsTile(tileName,
-              url,
-              "/images/logo-" + tileName + ".png",
-              response.article.source[a].count)
-              + '\n';
+            url,
+            "/images/logo-" + tileName + ".png",
+            source.metrics.total)
+            + '\n';
           numCitesRendered++;
         }
       }
     }
+
+//    if (response.article.source.length > 0) {
+//      // Citation Sources should always start with Scopus (if an entry for Scopus exists)
+//      // followed by the rest of the sources in alphabetical order.
+//      response.article.source = response.article.source.sort(this.sortCitesBySource);
+//
+//      for (var a = 0; a < response.article.source.length; a++) {
+//        var url = response.article.source[a].public_url;
+//        // find all spaces
+//        var patternForSpace = /\s/g;
+//        var tileName = response.article.source[a].source.toLowerCase().replace(patternForSpace, "-");
+//        // removing registered trademark symbol from web of science
+//        tileName = tileName.replace("\u00ae", "");
+//
+//        //  If CrossRef, then compose a URL to our own CrossRef Citations page.
+//        if (response.article.source[a].source == 'CrossRef' && response.article.source[a].count > 0) {
+//          html = html + this.createMetricsTile(tileName,
+//              "/article/crossref/info:doi/" + doi,
+//              "/images/logo-" + tileName + ".png",
+//              response.article.source[a].count)
+//              + '\n';
+//          numCitesRendered++;
+//        }
+//        //  Only list links that HAVE DEFINED URLS
+//        else if (url && response.article.source[a].count > 0) {
+//          html = html + this.createMetricsTile(tileName,
+//              url,
+//              "/images/logo-" + tileName + ".png",
+//              response.article.source[a].count)
+//              + '\n';
+//          numCitesRendered++;
+//        }
+//      }
+//    }
 
     // A link for searching Google Scholar should ALWAYS show up, but the display of that link
     //   depends on whether there are other citation Metrics Tiles displayed.
@@ -1368,6 +1424,39 @@ $.fn.alm = function () {
 
     return li;
   }
+
+  this.setMetricsTab = function (doi){
+
+    doi = this.validateDOI(doi);
+    //this.setCitesText(doi, "relatedCites", "relatedCitesSpinner");
+
+    //succeed!
+    var success = function(response){
+      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
+    }
+
+    //fail!
+    var fail = function(message){
+      this.setCitesTextFail(message, "relatedCites", "relatedCitesSpinner");
+    }
+
+    //get the data
+    this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
+}
+  this.filterSources = function(sources, validNames){
+
+    validSources = [];
+
+    for (var i = 0; i < sources.length; i++) {
+      if ($.inArray(sources[i].name, validNames) > -1) {
+        validSources.push(sources[i]);
+      }
+    }
+
+    return validSources;
+
+  };
+
 }
 
 function onReadyALM() {
@@ -1488,9 +1577,13 @@ $(document).ready(onReadyALM);
 function onLoadALM() {
   var almService = new $.fn.alm();
   var doi = $('meta[name=citation_doi]').attr("content");
+
+  almService.setMetricsTab(doi);
+
   almService.setBookmarksText(doi, "relatedBookmarks", "relatedBookmarksSpinner");
   almService.setRelatedBlogsText(doi, "relatedBlogPosts", "relatedBlogPostsError", "relatedBlogPostsSpinner");
-  almService.setCitesText(doi, "relatedCites", "relatedCitesSpinner");
   almService.setChartData(doi, "usage", "chartSpinner");
+
+
 }
 
