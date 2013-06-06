@@ -41,12 +41,6 @@ public class TaxonomyAction extends BaseActionSupport {
 
   @Override
   public String execute() throws Exception {
-
-    // Currently we only allow this from PLOS ONE.
-    if (!"PLoSONE".equals(getCurrentJournal())) {
-      return ERROR;
-    }
-
     //topAndSecondLevelCategories defaults to current journal
     topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
 
