@@ -42,7 +42,7 @@
 		 <li>Restricted launch of eToCs</li>
 		 <li>CrossRef API change support</li>
 		 <li>Enhanced CrossRef support</li>
-		 <li>PLOS-flavored Relevance Sort Option</li>
+		 <li>PLOS-flavored Relevance sort option</li>
  </ul>
 
  <h2>Ambra 2.6.6</h2>
