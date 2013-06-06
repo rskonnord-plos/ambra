@@ -35,6 +35,16 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.7</h2>
+ <p>Released June 11th, 2013</p>
+
+ <ul>
+		 <li>Restricted launch of eToCs</li>
+		 <li>CrossRef API change support</li>
+		 <li>Enhanced CrossRef support</li>
+		 <li>PLOS-flavored Relevance Sort Option</li>
+ </ul>
+
  <h2>Ambra 2.6.6</h2>
  <p>Released June 4th, 2013</p>
  <ul>
