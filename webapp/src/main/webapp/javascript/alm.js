@@ -1017,7 +1017,6 @@ $.fn.alm = function () {
 
         //  If CrossRef, then compose a URL to our own CrossRef Citations page.
         if (source.name.toLowerCase() == 'crossref') {
-          alert('holla');
           html = html + this.createMetricsTile(tileName,
             "/article/crossref/info:doi/" + doi,
             "/images/logo-" + tileName + ".png",
@@ -1448,7 +1447,7 @@ $.fn.alm = function () {
     validSources = [];
 
     for (var i = 0; i < sources.length; i++) {
-      if ($.inArray(sources[i].name, validNames) > -1) {
+      if ($.inArray(sources[i].name.toLowerCase(), validNames) > -1) {
         validSources.push(sources[i]);
       }
     }
