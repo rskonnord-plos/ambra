@@ -789,11 +789,46 @@ $.fn.alm = function () {
     $("#" + bookMarksID).css("display", "none");
 
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+
+    //filter and sort
+    var sources = this.filterSources(response[0].sources, ["citeulike","connotea","facebook","twitter","mendeley"]);
+    sources = this.enforceOrder(sources, ['citeulike','facebook','mendeley','twitter','connotea']);
+
+    //create tiles
+    var noTilesCreated = true;
+    var html = "";
+    for(var w = 0; w < sources.length; w++){
+      source = sources[w];
+
+      switch (source.name){
+        case 'facebook':
+          if(source.metrics.total > 0){
+            //create tile & toggle noTilesCreated
+            html += this.createMetricsTileNoLink(source.name,
+              "/images/logo-" + source.display_name + ".png",
+              source.metrics.total)
+              + '\n';
+            noTilesCreated = false;
+          }
+          break;
+        case 'twitter':
+          break;
+        case 'mendeley':
+          break;
+        default:
+          var whatever;
+      }
+
+
+    }
+
+    //if no tiles created, hide header and section
+    if(noTilesCreated){
+
+    }
+
     var mendeleyData = null;
     var facebookData = null;
-
-    //filter out irrelevent data
-    var sources = this.filterSources(response[0].sources,["citeulike","connotea","facebook","twitter","mendeley"]);
 
     if (sources.length > 0) {
       var html = "";
@@ -1529,6 +1564,7 @@ $.fn.alm = function () {
     //get the data
     this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
 }
+
   this.filterSources = function(sources, validNames){
 
     validSources = [];
@@ -1542,6 +1578,24 @@ $.fn.alm = function () {
     return validSources;
 
   };
+
+  this.enforceOrder = function(sources, orderArray){
+
+    var sourceNames = [];
+    for (var n = 0; n < sources.length; n++) {
+      sourceNames.push(sources[n].name);
+    }
+
+    var orderedSources = [];
+    for (var d = 0; d < orderArray.length; d++) {
+      var index = $.inArray(orderArray[d], sourceNames);
+      if (index > -1) {
+        orderedSources.push(sources[index]);
+      }
+    }
+    return orderedSources;
+
+  }
 
 }
 
