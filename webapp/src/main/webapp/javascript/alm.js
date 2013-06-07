@@ -788,36 +788,49 @@ $.fn.alm = function () {
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).css("display", "none");
 
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+
     //filter and sort
     var sources = this.filterSources(response[0].sources, ['citeulike','connotea','facebook','twitter','mendeley']);
     sources = this.enforceOrder(sources, ['citeulike','facebook','mendeley','twitter','connotea']);
 
     //create tiles
     var noTilesCreated = true;
-    var html = "";
+    var html = '';
     for(var w = 0; w < sources.length; w++){
-      source = sources[w];
+      var source = sources[w];
 
-      switch (source.name){
-        case 'facebook':
-          if(source.metrics.total > 0){
+      if (source.metrics.total > 0) {
+        noTilesCreated = false;
+
+        switch (source.name) {
+          case 'facebook':
             //create tile & toggle noTilesCreated
             html += this.createMetricsTileNoLink(source.display_name,
-              '/images/logo-' + source.name+ '.png',
+              '/images/logo-' + source.name + '.png',
               source.metrics.total)
               + '\n';
-            noTilesCreated = false;
-          }
-          break;
-        case 'twitter':
-          break;
-        case 'mendeley':
-          break;
-        default:
-          var whatever;
+            break;
+
+          case 'twitter':
+            //use link to our own twitter landing page
+            html += this.createMetricsTile(source.display_name,
+              '/article/twitter/info:doi/' + doi,
+              '/images/logo-' + source.name + '.png',
+              source.metrics.total)
+              + '\n';
+            break;
+
+          default:
+            html += this.createMetricsTile(source.display_name,
+              source.public_url,
+              '/images/logo-' + source.name + '.png',
+              source.metrics.total)
+              + '\n';
+            break;
+        }
+
       }
-
-
     }
 
     //if no tiles created, hide header and section
@@ -920,14 +933,14 @@ $.fn.alm = function () {
 //    } else {
 //      $('#socialNetworksOnArticleMetricsPage').css("display", "none");
 //    }
-
+//
     //Here we wire up the tool tips.  We have to do this after the html is appended to
     //the dom because of the way javascript wires events.  In the future, we should create
     //dom nodes and append the nodes with associated events, instead of building up an html
     //string and then inserting the string into the dom
 //    var fbTile = $("#facebookOnArticleMetricsTab");
 //    var menTile = $("#mendeleyOnArticleMetricsTab");
-
+//
 //    if (fbTile) {
 //      //Wire up events for display of details box
 //      fbTile.tooltip({
