@@ -801,7 +801,7 @@ $.fn.alm = function () {
 
       for (var a = 0; a < sources.length; a++) {
         source = sources[a];
-        if(source.metrics.total > 0){
+        if (source.metrics.total > 0) {
           var url = source.events_url;
           var tileName = source.display_name.toLowerCase().replace(" ", "-");
           var countToShowOnTile = 0;
@@ -829,7 +829,9 @@ $.fn.alm = function () {
               }
             }
 
-          } else if (tileName == 'twitter') {  //  Twitter, compose a URL to our own twitter landing page
+          }
+
+          else if (tileName == 'twitter') {  //  Twitter, compose a URL to our own twitter landing page
             countToShowOnTile = response.article.source[a].count;
             url = "/article/twitter/info:doi/" + doi;
           } else if (tileName == 'mendeley') {
@@ -847,7 +849,9 @@ $.fn.alm = function () {
               }
             }
 
-          } else if (url && tileName) { // Only list links that have DEFINED URLS and NAMES.
+          }
+
+          else if (url && tileName) { // Only list links that have DEFINED URLS and NAMES.
             countToShowOnTile = response.article.source[a].count;
           }
 
@@ -866,8 +870,10 @@ $.fn.alm = function () {
             }
             countTilesCreated++;
           }
+
         }
-    }
+      }
+
     }
 
     //  If ZERO tiles were created, then hide the header, too.
