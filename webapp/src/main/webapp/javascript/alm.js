@@ -67,13 +67,6 @@ $.fn.alm = function () {
     this.getData(request, callBack, errorCallback);
   }
 
-  this.getCites = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=CrossRef,PubMed,Scopus,Wos";
-    this.getData(request, callBack, errorCallback);
-  }
-
   this.getChartData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
@@ -950,62 +943,16 @@ $.fn.alm = function () {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).css("display", "none");
 
-    this.setCites(response, citesID);
-    $("#" + citesID).show("blind", 500);
-  }
-
-  this.setCitesFail = function(message, citesID, loadingID){
-    $("#" + loadingID).fadeOut('slow');
-    $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + citesID).show("blind", 500);
-  }
-
-  this.setCitesText = function (doi, citesID, loadingID) {
-    var almError = function (message) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-      $("#" + citesID).show("blind", 500);
-    };
-
-    var success = function (response) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + citesID).css("display", "none");
-
-      this.setCites(response, citesID);
-      $("#" + citesID).show("blind", 500);
-    };
-
-    this.getCites(doi, jQuery.proxy(success, this), almError);
-  };
-
-  // Sort into ascending order by the "source" variable of each element.  ALWAYS put Scopus first.
-  this.sortCitesBySource = function (a, b) {
-    if (b.name.toLowerCase() == 'scopus') {
-      return 1;
-    } else if (a.name.toLowerCase() == 'scopus' || a.name.toLowerCase() < b.name.toLowerCase()) {
-      return -1;
-    } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
-      return 1;
-    }
-    return 0;
-  };
-
-  this.setCites = function (response, citesID) {
     var numCitesRendered = 0;
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
     var html = "";
 
-
-    //citation source filter
-    sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos"]);
-
     // Citation Sources should always start with Scopus (if an entry for Scopus exists)
     // followed by the rest of the sources in alphabetical order.
+    sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos"]);
     sources = sources.sort(this.sortCitesBySource);
 
-
     for (var a = 0; a < sources.length; a++) {
-
       if (source.metrics.total > 0) {
         source = sources[a];
         var url = source.events_url;
@@ -1036,40 +983,6 @@ $.fn.alm = function () {
       }
     }
 
-//    if (response.article.source.length > 0) {
-//      // Citation Sources should always start with Scopus (if an entry for Scopus exists)
-//      // followed by the rest of the sources in alphabetical order.
-//      response.article.source = response.article.source.sort(this.sortCitesBySource);
-//
-//      for (var a = 0; a < response.article.source.length; a++) {
-//        var url = response.article.source[a].public_url;
-//        // find all spaces
-//        var patternForSpace = /\s/g;
-//        var tileName = response.article.source[a].source.toLowerCase().replace(patternForSpace, "-");
-//        // removing registered trademark symbol from web of science
-//        tileName = tileName.replace("\u00ae", "");
-//
-//        //  If CrossRef, then compose a URL to our own CrossRef Citations page.
-//        if (response.article.source[a].source == 'CrossRef' && response.article.source[a].count > 0) {
-//          html = html + this.createMetricsTile(tileName,
-//              "/article/crossref/info:doi/" + doi,
-//              "/images/logo-" + tileName + ".png",
-//              response.article.source[a].count)
-//              + '\n';
-//          numCitesRendered++;
-//        }
-//        //  Only list links that HAVE DEFINED URLS
-//        else if (url && response.article.source[a].count > 0) {
-//          html = html + this.createMetricsTile(tileName,
-//              url,
-//              "/images/logo-" + tileName + ".png",
-//              response.article.source[a].count)
-//              + '\n';
-//          numCitesRendered++;
-//        }
-//      }
-//    }
-
     // A link for searching Google Scholar should ALWAYS show up, but the display of that link
     //   depends on whether there are other citation Metrics Tiles displayed.
     var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
@@ -1077,12 +990,32 @@ $.fn.alm = function () {
       html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
     } else {
       html = html + this.createMetricsTile("googleScholar",
-          "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
-          "/images/logo-google-scholar.png",
-          "Search");
+        "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
+        "/images/logo-google-scholar.png",
+        "Search");
     }
 
     $("#" + citesID).html(html);
+    $("#" + citesID).show("blind", 500);
+
+  }
+
+  this.setCitesFail = function(message, citesID, loadingID){
+    $("#" + loadingID).fadeOut('slow');
+    $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
+    $("#" + citesID).show("blind", 500);
+  }
+
+  // Sort into ascending order by the "source" variable of each element.  ALWAYS put Scopus first.
+  this.sortCitesBySource = function (a, b) {
+    if (b.name.toLowerCase() == 'scopus') {
+      return 1;
+    } else if (a.name.toLowerCase() == 'scopus' || a.name.toLowerCase() < b.name.toLowerCase()) {
+      return -1;
+    } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
+      return 1;
+    }
+    return 0;
   };
 
   this.setChartData = function (doi, usageID, loadingID) {
@@ -1427,16 +1360,19 @@ $.fn.alm = function () {
   this.setMetricsTab = function (doi){
 
     doi = this.validateDOI(doi);
-    //this.setCitesText(doi, "relatedCites", "relatedCitesSpinner");
+
+//    almService.setBookmarksText(doi, "relatedBookmarks", "relatedBookmarksSpinner");
 
     //succeed!
     var success = function(response){
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
+      this.setBookMarksSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
     }
 
     //fail!
     var fail = function(message){
       this.setCitesTextFail(message, "relatedCites", "relatedCitesSpinner");
+      this.setBookMarksFail(message, "relatedBookmarks", "relatedBookmarksSpinner");
     }
 
     //get the data
@@ -1579,7 +1515,6 @@ function onLoadALM() {
 
   almService.setMetricsTab(doi);
 
-  almService.setBookmarksText(doi, "relatedBookmarks", "relatedBookmarksSpinner");
   almService.setRelatedBlogsText(doi, "relatedBlogPosts", "relatedBlogPostsError", "relatedBlogPostsSpinner");
   almService.setChartData(doi, "usage", "chartSpinner");
 
