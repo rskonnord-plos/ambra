@@ -785,8 +785,9 @@ $.fn.alm = function () {
   };
 
   this.setBookMarkSuccess = function(response, bookMarksID, loadingID){
+    var bookMarksNode = $('#' + bookMarksID);
+    bookMarksNode.css("display", "none");
     $("#" + loadingID).fadeOut('slow');
-    $("#" + bookMarksID).css("display", "none");
 
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
 
@@ -796,7 +797,6 @@ $.fn.alm = function () {
 
     //create tiles
     var noTilesCreated = true;
-    var html = '';
     for(var w = 0; w < sources.length; w++){
       var source = sources[w];
 
@@ -806,27 +806,73 @@ $.fn.alm = function () {
         switch (source.name) {
           case 'facebook':
             //create tile & toggle noTilesCreated
-            html += this.createMetricsTileNoLink(source.display_name,
+            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
-              + '\n';
+              + '\n');
+            var l = 0;
+
+            //using these vars because source goes out of scope when tooltip handler is called
+            var likes = source.metrics.likes;
+            var  shares = source.metrics.shares;
+            var  comments = source.metrics.comments;
+            $("#FacebookOnArticleMetricsTab").tooltip({
+              delay: 250,
+              fade: 250,
+              track: true,
+              showURL: false,
+              bodyHandler: function () {
+                return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+                  "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
+                  "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
+                  "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
+                  comments.format(0, '.', ',') + "</td></tr>" +
+                  "</tbody></table></div>");
+              }
+            });
             break;
 
           case 'twitter':
             //use link to our own twitter landing page
-            html += this.createMetricsTile(source.display_name,
+            bookMarksNode.append(this.createMetricsTile(source.display_name,
               '/article/twitter/info:doi/' + doi,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
-              + '\n';
+              + '\n');
             break;
 
-          default:
-            html += this.createMetricsTile(source.display_name,
+          case 'mendeley':
+            bookMarksNode.append(this.createMetricsTile(source.display_name,
               source.public_url,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
-              + '\n';
+              + '\n')
+
+            var individuals = source.metrics.shares;
+            var groups = source.metrics.groups;
+            $('#MendeleyImageOnArticleMetricsTab').tooltip({
+              backgroundColor: "rgba(255, 255, 255, 0.0)",
+              delay: 250,
+              fade: 250,
+              track: true,
+              shadow: false,
+              showURL: false,
+              bodyHandler: function () {
+                return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+                  "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
+                  "</thead><tbody><tr><td class=\"data1\">" + individuals.format(0, '.', ',') + "</td>" +
+                  "<td class=\"data2\">" + groups.format(0, '.', ',') + "</td></tr>" +
+                  "</tbody></table></div>");
+              }
+            });
+            break;
+
+          default:
+            bookMarksNode.append(this.createMetricsTile(source.display_name,
+              source.public_url,
+              '/images/logo-' + source.name + '.png',
+              source.metrics.total)
+              + '\n')
             break;
         }
 
@@ -838,8 +884,7 @@ $.fn.alm = function () {
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
     else{
-      $("#" + bookMarksID).html(html);
-      $("#" + bookMarksID).show("blind", 500);
+      bookMarksNode.show("blind", 500);
     }
 
 //    var mendeleyData = null;
