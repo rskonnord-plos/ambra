@@ -766,7 +766,7 @@ $.fn.alm = function () {
   this.setRelatedBlogsText = function (doi, relatedBlogPostsID, errorID, loadingID) {
     var almError = function (message) {
       $("#" + loadingID).fadeOut('slow');
-      this.setRelatedBlogError(message, relatedBlogPostsID, errorID);
+//      this.setRelatedBlogError(message, relatedBlogPostsID, errorID);
     };
 
     var success = function (response) {
@@ -778,7 +778,6 @@ $.fn.alm = function () {
 
     this.getRelatedBlogs(doi, jQuery.proxy(success, this), jQuery.proxy(almError, this));
   };
-
   this.setRelatedBlogs = function (response, relatedBlogPostsID) {
     //tileHtml used to enforce order
     var html = "", tileHtmlList = [];
@@ -885,16 +884,52 @@ $.fn.alm = function () {
     $("#" + relatedBlogPostsID).show("blind", 500);
   };
 
-  this.setRelatedBlogFail = function (message, errorID) {
+  this.setRelatedBlogsSuccess = function(response, successID, loadingID){
+
+    var articleTitle = $('meta[name=citation_title]').attr("content");
+    var relatedBlogPosts = $('#' + successID);
+    var html = '';
+
+    //filter and sort
+    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia'])
+    sources = this.enforceOrder(sources,['researchblogging','nature','wikipedia','scienceseeker']);
+
+    for (var u = 0; u < sources.length; u++) {
+      source = sources[u];
+      //it may be the case that (total == 0) == (events_url == null)
+      if( source.metrics.total > 0 && source.events_url ){
+        switch (source.name) {
+          default:
+            html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+            break;
+        }
+      }
+
+    }
+    //add google
+    html += this.createMetricsTile("google-blogs",
+      "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
+      "/images/logo-googleblogs.png",
+      "Search")
+    + '\n';
+
+    //append in order to preserve trackbacks
+    $("#" + loadingID).fadeOut('slow');
+    relatedBlogPosts.append(html);
+    relatedBlogPosts.show('blind', 500);
+  }
+
+  this.setRelatedBlogsFail = function (message, errorID, loadingID) {
+
     var relatedBlogs = $('#' + errorID);
     relatedBlogs.css('display', 'none');
 
     var articleTitle = $('meta[name=citation_title]').attr('content');
     var html = 'Search for related blog posts on <a href=\'http://blogsearch.google.com/blogsearch?as_q=%22'
-        + articleTitle + '%22\'>Google Blogs</a><br/><div id=\'relatedBlogPostsError\'></div>';
-
+        + articleTitle + '%22\'>Google Blogs</a><br/><img src=\'/images/icon_error.png\'/>&nbsp;' + message;
     relatedBlogs.html(html);
-    relatedBlogs.append('<img src=\'/images/icon_error.png\'/>&nbsp;' + message);
+
+    $("#" + loadingID).fadeOut('slow');
     relatedBlogs.show('blind', 500);
 
   };
@@ -1321,21 +1356,19 @@ $.fn.alm = function () {
 
     doi = this.validateDOI(doi);
 
-//    almService.setBookmarksText(doi, "relatedBookmarks", "relatedBookmarksSpinner");
-
     //succeed!
     var success = function(response){
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
       this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
-      almService.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsError", "relatedBlogPostsSpinner");
+      this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
 
     }
 
     //fail!
     var fail = function(message){
-      this.setCitesTextFail(message, "relatedCites", "relatedCitesSpinner");
+      this.setCitesFail(message, "relatedCites", "relatedCitesSpinner");
       this.setBookMarksFail(message, "relatedBookmarks", "relatedBookmarksSpinner");
-      almService.setRelatedBlogsFail(message, "relatedBlogPosts", "relatedBlogPostsError", "relatedBlogPostsSpinner");
+      this.setRelatedBlogsFail(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
     }
 
     //get the data
