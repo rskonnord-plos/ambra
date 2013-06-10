@@ -22,7 +22,7 @@
 
 $(function () {
 
-  var solrHost = $('meta[name=solrHost]').attr("content"), relatedAuthorQuery, doi,
+  var solrHost = $('meta[name=searchHost]').attr("content"), relatedAuthorQuery, doi,
     docs, i, views, citations, title, meta, info, li;
 
   relatedAuthorQuery = $('input[id="related_author_query"]').val();

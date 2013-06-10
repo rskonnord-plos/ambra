@@ -1243,7 +1243,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
    */
   private String getAuthorStringForLookup(CitedArticle citedArticle) {
     List<CitedArticleAuthor> authors = citedArticle.getAuthors();
-    return authors.size() > 0 ? authors.get(0).getSurnames() : "";
+    return (authors != null && authors.size() > 0) ? authors.get(0).getSurnames() : "";
   }
 
   /**

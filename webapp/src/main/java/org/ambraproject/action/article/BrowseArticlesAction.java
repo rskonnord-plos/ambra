@@ -62,7 +62,6 @@ public class BrowseArticlesAction extends BaseActionSupport {
   private BrowseService browseService;
 
   private SortedMap<String, Long> subjects;
-  private Map<String, Long> subjectFacet;
   private String[] selectedSubjects = new String[0];
 
   private Years articleDates;
@@ -121,7 +120,6 @@ public class BrowseArticlesAction extends BaseActionSupport {
       this.articleList = browseResult.getArticles();
       this.totalArticles = browseResult.getTotal();
       this.subjects = browseService.getSubjectsForJournal(this.getCurrentJournal());
-      this.subjectFacet = browseResult.getSubjectFacet();
     } else {
       this.subjects = browseService.getSubjectsForJournal(this.getCurrentJournal());
 
@@ -142,10 +140,8 @@ public class BrowseArticlesAction extends BaseActionSupport {
 
         this.articleList = browseResult.getArticles();
         this.totalArticles = browseResult.getTotal();
-        this.subjectFacet = browseResult.getSubjectFacet();
       } else {
         this.articleList = Collections.emptyList();
-        this.subjectFacet = Collections.emptyMap();
         this.totalArticles = 0;
       }
     }
@@ -239,7 +235,6 @@ public class BrowseArticlesAction extends BaseActionSupport {
     this.articleList = result.getArticles();
     this.totalArticles = result.getTotal();
     this.articleDates = browseService.getArticleDatesForJournal(this.getCurrentJournal());
-    this.subjectFacet = null;
     //When filtering by date, select all the subjects
     this.subjects = browseService.getSubjectsForJournal(this.getCurrentJournal());
 
@@ -349,14 +344,6 @@ public class BrowseArticlesAction extends BaseActionSupport {
     return this.subjects;
   }
 
-  /**
-   * @return Returns a facetedList of subjects.
-   * That is subject areas that are included in the current result set
-   */
-  public Map<String, Long> getFacetedSubjects() {
-    return this.subjectFacet;
-  }
-  
   /**
    * @return Returns the article list for this page.
    */
