@@ -67,7 +67,7 @@ $(function () {
       }});
     }
 
-    var newNode = $("<li style=\"display:none;\"><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
+    var newNode = $("<li class=\"taxonomyNode\" style=\"display:none;\"><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
 
     newNode.find("img").click(function(event) {
       removeSubject($(event.target).parent().text().trim());
@@ -176,12 +176,13 @@ $(function () {
   };
 
   var getTaxonomyTreeText = function(node) {
-    parent = $(node).parent().parent()[0];
-    if(parent.tagName == 'LI') {
-      return(getTaxonomyTreeText($(parent)) + '/' + $(node).attr('key'));
+    var parent = node.parents(".taxonomyNode");
+
+    if(parent.length > 0) {
+      return(getTaxonomyTreeText($(parent[0])) + '/' + node.attr('key'));
     }
 
-    return $(node).attr('key');
+    return node.attr('key');
   };
 
   /* Find matching subjects in the tree and mark them selected */
@@ -214,7 +215,7 @@ $(function () {
         img = "<image src=\"/images/transparent.gif\"/>";
       }
 
-      var node = $("<li key=\"" + key + "\">" + img + "<span>" + key + "</span><ol></ol></li>")
+      var node = $("<li class=\"taxonomyNode\" key=\"" + key + "\">" + img + "<span>" + key + "</span><ol></ol></li>")
         .attr("value", key);
 
       $(rootNode).append(node);
@@ -271,7 +272,7 @@ $(function () {
       console.log(key);
       var hasChildren = !$.isEmptyObject(val.children);
       var img = "<image " + (hasChildren?"class=\"expanded-nopointer\" ":"") + "src=\"/images/transparent.gif\"/>";
-      var node = $("<li key=\"" + key + "\">" + img + "<span>" +
+      var node = $("<li class=\"taxonomyNode\" key=\"" + key + "\">" + img + "<span>" +
         key.replace(new RegExp("(" + filter + ")", "gi"), "<b>$1</b>")
          + "</span><ol></ol></li>")
         .attr("value", key);
