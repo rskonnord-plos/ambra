@@ -187,8 +187,8 @@ public class SolrSearchService implements SearchService {
   /**
    * Populate facets of the search object.
    * <p/>
-   * If no search results and hence facets are found remove defined filters and try the search again.  Journals and
-   * ArticleType facets will always be the complete list.
+   * If no search results and hence facets are found remove defined filters and try the search again.  Journals will
+   * always be the complete list.
    *
    * @param searchParameters The search parameters
    * @return a populared SearchResultSinglePage object
@@ -257,21 +257,21 @@ public class SolrSearchService implements SearchService {
 
       results = search(query);
 
-      //If results are STILL empty.  We must return something for subjects.
+      //If results are STILL empty.  We must return something for subjects and article type.
       //So let's use the global list
       if (results.getTotalNoOfResults() == 0) {
         results.setSubjectFacet(preFilterResults.getSubjectFacet());
+        results.setArticleTypeFacet(preFilterResults.getArticleTypeFacet());
       }
 
       results.setFiltersReset(true);
     }
 
-    //Lets always return ALL values for journals and article types
+    //Lets always return ALL values for journals
     //These lists will not be dependant on the user's other
     //selections other then the query
-    //However, subjects will be!
+    //However, subjects and article type will be!
     results.setJournalFacet(preFilterResults.getJournalFacet());
-    results.setArticleTypeFacet(preFilterResults.getArticleTypeFacet());
 
     return results;
   }
