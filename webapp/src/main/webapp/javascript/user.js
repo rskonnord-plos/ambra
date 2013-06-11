@@ -179,10 +179,10 @@ $(function () {
     var parent = node.parents(".taxonomyNode");
 
     if(parent.length > 0) {
-      return(getTaxonomyTreeText($(parent[0])) + '/' + node.attr('key'));
+      return(getTaxonomyTreeText($(parent[0])) + '/' + node.attr('data-key'));
     }
 
-    return node.attr('key');
+    return node.attr('data-key');
   };
 
   /* Find matching subjects in the tree and mark them selected */
@@ -215,8 +215,8 @@ $(function () {
         img = "<image src=\"/images/transparent.gif\"/>";
       }
 
-      var node = $("<li class=\"taxonomyNode\" key=\"" + key + "\">" + img + "<span>" + key + "</span><ol></ol></li>")
-        .attr("value", key);
+      var node = $("<li class=\"taxonomyNode\" data-key=\"" + key + "\">" + img + "<span>" + key + "</span><ol></ol></li>")
+        .attr("data-value", key);
 
       $(rootNode).append(node);
 
@@ -234,7 +234,7 @@ $(function () {
           $(this).addClass("checked");
         } else {
           $(this).click(function(event) {
-            selectSubject($(event.target).parents("li").attr("key"));
+            selectSubject($(event.target).parents("li").attr("data-key"));
           });
         }
       });
@@ -272,10 +272,10 @@ $(function () {
       console.log(key);
       var hasChildren = !$.isEmptyObject(val.children);
       var img = "<image " + (hasChildren?"class=\"expanded-nopointer\" ":"") + "src=\"/images/transparent.gif\"/>";
-      var node = $("<li class=\"taxonomyNode\" key=\"" + key + "\">" + img + "<span>" +
+      var node = $("<li class=\"taxonomyNode\" data-key=\"" + key + "\">" + img + "<span>" +
         key.replace(new RegExp("(" + filter + ")", "gi"), "<b>$1</b>")
          + "</span><ol></ol></li>")
-        .attr("value", key);
+        .attr("data-value", key);
 
       $(rootNode).append(node);
 
@@ -295,7 +295,7 @@ $(function () {
           $(this).addClass("checked");
         } else {
           $(this).click(function(event) {
-            selectSubject($(event.target).parents("li").attr("key"));
+            selectSubject($(event.target).parents("li").attr("data-key"));
           });
         }
 
