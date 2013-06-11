@@ -283,10 +283,6 @@
         <xsl>crossref.xsl</xsl>
       </crossref>
 
-      <pubget>
-        <url>http://pubget.com/widgetizer/links_hash</url>
-      </pubget>
-
       <!-- FIXME: failover:tcp://address:port of ActiveMQ broker -->
       <activemq>tcp://${ambra.network.hosts.default}:61616</activemq>
 
