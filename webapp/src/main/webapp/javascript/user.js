@@ -70,7 +70,7 @@ $(function () {
     var newNode = $("<li class=\"taxonomyNode\" style=\"display:none;\"><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
 
     newNode.find("img").click(function(event) {
-      removeSubject($(event.target).parent().text().trim());
+      removeSubject($.trim($(event.target).parent().text()));
     });
 
     list.append(newNode);
@@ -95,13 +95,13 @@ $(function () {
 
     //console.log("Subject List: " + selectedSubjects);
 
-    selectedSubjects = selectedSubjects.filter(function(value) {
-      return (subject.trim() != value.trim());
+    selectedSubjects = $(selectedSubjects).filter(function(value) {
+      return ($.trim(subject) != $.trim(value));
     });
 
     //console.log("Subject List: " + selectedSubjects);
     list.find("div").filter(function() {
-      return ($(this).text().trim() == subject);
+      return ($.trim($(this).text()) == subject);
     }).parent().slideUp({ complete: function() {
       $(this).remove();
     }});
@@ -409,7 +409,7 @@ $(function () {
 
   //Bind to UI events
   $("li div.filter-item img").click(function(event) {
-    removeSubject($(event.target).parent().text().trim());
+    removeSubject($.trim($(event.target).parent().text()));
   });
 
   $("#subjectAll_" + journal).click(function(eventObj) {
