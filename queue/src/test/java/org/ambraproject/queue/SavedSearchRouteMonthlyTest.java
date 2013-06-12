@@ -71,8 +71,7 @@ public class SavedSearchRouteMonthlyTest extends SavedSearchRouteBaseTest {
   @Test(dataProvider = "expectedMonthlyEmails")
   @DirtiesContext
   public void expectedMonthlyEmails(String email, int expectedEmails, Map emailContents) throws Exception {
-    //TODO: Fix me
-    //checkEmail(email, expectedEmails, emailContents);
+    checkEmail(email, expectedEmails, emailContents);
   }
 
   @AfterClass

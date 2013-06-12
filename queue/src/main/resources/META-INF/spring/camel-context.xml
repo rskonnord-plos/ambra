@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ $HeadURL$
-  ~ $Id$
-  ~ Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+  ~ Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
   ~ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -78,7 +76,8 @@
   </bean>
 
   <bean id="savedSearchRunner" class="org.ambraproject.search.SavedSearchRunnerImpl">
-    <property name="searchService"   ref="searchService" />
+    <property name="searchService" ref="searchService" />
+    <property name="resultLimit" value="${ambra.queue.sendmail.search.limit}" />
   </bean>
 
   <bean id="rolesEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
@@ -99,26 +98,6 @@
     <!-- time out after 30 sec -->
     <property name="soTimeout" value="30000"/>
     <property name="connectionTimeout" value="30000"/>
-  </bean>
-
-  <bean id="multiThreadedHttpConnectionManager"
-        class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager">
-    <property name="params" ref="httpConnectionManagerParams"/>
-  </bean>
-
-  <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
-    <constructor-arg index="0" ref="multiThreadedHttpConnectionManager"/>
-  </bean>
-
-  <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
-    <property name="httpClient" ref="httpClient"/>
-    <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
-  </bean>
-
-  <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
-    <property name="sessionFactory" ref="hibernateSessionFactory"/>
-    <property name="permissionsService" ref="permissionsService"/>
-    <property name="crossRefLookupService" ref="crossRefLookupService"/>
   </bean>
 
   <bean id="mailer" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -152,6 +131,7 @@
     <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
     <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
     <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
+    <property name="resultLimit" value="${ambra.queue.sendmail.search.limit}" />
   </bean>
 
   <bean id="multiThreadedHttpConnectionManager"

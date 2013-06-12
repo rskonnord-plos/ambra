@@ -20,25 +20,19 @@
  */
 package org.ambraproject.struts2;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.ActionInvocation;
+import org.ambraproject.web.HttpResourceServer;
+import org.apache.struts2.dispatcher.StreamResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.struts2.dispatcher.StreamResult;
-
-import org.ambraproject.web.HttpResourceServer;
-
-import com.opensymphony.xwork2.ActionInvocation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * Custom webwork result class to stream back objects from OTM blobs. Takes appropriate http
@@ -127,7 +121,7 @@ public class AmbraStreamResult extends StreamResult {
       + propertyName.substring(1);
     final Method method        = action.getClass().getMethod(methodName);
     final Object o             = method.invoke(action);
-    final String propertyValue = o.toString();
+    final String propertyValue = (o != null ? o.toString() : null);
 
     if (null == propertyValue) {
       return conditionalParse(param, invocation);

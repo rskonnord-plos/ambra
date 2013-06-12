@@ -1,5 +1,6 @@
-<!--This is the journal-agnostic header file included in generic.ftl-->
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#--This is the journal-agnostic header file included in generic.ftl-->
 <html lang="en">
 <head>
 <#include "/includes/global_variables.ftl">

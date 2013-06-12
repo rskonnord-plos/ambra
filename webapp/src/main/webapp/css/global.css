@@ -81,7 +81,7 @@ button, select, textarea, input:not([type="radio"]):not([type="checkbox"]) {
   margin: 0;
 }
 
-input[type="button"], input[type="submit"], input[type="reset"], button {
+input[type="button"], input[type="submit"], input[type="radio"], input[type="checkbox"], input[type="reset"], select, button {
   cursor: pointer;
 }
 
@@ -301,7 +301,10 @@ th {
 }
 
 .btn,
-a.btn {
+a.btn,
+/* active an inactive buttons in search results */
+#search-view span.figs,
+#search-view span.list  {
   background: #444;
   font-size: 15px;
   line-height: 35px;
@@ -330,6 +333,17 @@ a.btn {
   color: #fff;
   text-decoration: none;
 }
+
+/* inactive button */
+/* clear all filters button */
+.clear-filter .btn.primary,
+/* search results buttons */
+#fig-search-block span.list,
+#search-results-block span.figs{
+     background-color: #646464;
+     color: #FFF;
+}
+
 
 input.btn {
   line-height: normal;
@@ -2150,6 +2164,15 @@ div.table-wrap .expand {
   background-position: 0 -25px;
 }
 
+div.table-wrap .table-footnote {
+  font-size: 10px;
+}
+
+div.table-wrap .table-footnote .fn-label {
+  vertical-align: super;
+  font-size: 10px;
+}
+
 .article .abstract,
 .article .articleinfo,
 .article .editorsAbstract,
@@ -3200,7 +3223,12 @@ dl.authors dt {
   margin: 0 5px 6px 10px;
 }
 
-#hdr-search-results .options .btn {
+#hdr-search-results .options .btn,
+/* search results buttons */
+#search-results-block span.list,
+#search-results-block span.figs,
+#fig-search-block span.list,
+#fig-search-block span.figs {
   line-height: 28px;
   font-size: 13px;
 }
@@ -3609,13 +3637,19 @@ img.clear-filter {
   min-height: 35px;
 }
 
+/*search results header*/
 .hdr-results h2 {
   float: left;
-  font-size: 0.923em;
+  font: 16px 'Arial';
   font-weight: normal;
   padding: 0 21px 0 10px;
   width: 296px;
   margin: 4px 0 15px;
+}
+
+.hdr-results span.text{
+  font:16px 'Arial';
+  margin-right: 9px;
 }
 
 .hdr-results h2 span {
@@ -3652,45 +3686,21 @@ img.clear-filter {
 }
 
 #search-view {
-  font-size: 0.923em;
   line-height: 25px;
 }
 
-#search-view span.figs, span.list {
-  color: #444;
-  font-weight: bold;
-  padding-left: 7px;
-  padding-right: 7px;
-}
+/* search results figure/list button size and font */
+/*#search-results-block span.list,*/
+/*#search-results-block span.figs,*/
+/*#fig-search-block span.list,*/
+/*#fig-search-block span.figs {*/
+  /*line-height: 28px;*/
+/*}*/
 
-#search-view span.search-view-icon {
-  background: url(../images/icon.sprite.results.png) no-repeat;
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  padding-right: 5px;
-}
-
-#search-view span.figs .search-view-icon {
-  background-position: 0px 0px;
-}
-
-#search-view span.list .search-view-icon {
-  background-position: 0px -19px;
-}
-
-#search-view span.figs {
-  border-right: 1px solid #b3b3b3;
-}
-
-#fig-search-block #search-view span.list:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-#search-results-block #search-view span.figs:hover {
-  text-decoration: underline;
-  cursor: pointer;
+/* margin to right of figure button */
+#search-results-block span.figs,
+#fig-search-block span.figs {
+  margin-right: 1px;
 }
 
 #search-results-block .hdr-results {
@@ -4027,6 +4037,10 @@ form.advSearch ol {
 #unformattedSearchFormId .options fieldset {
   font-size: 0.923em;
   padding: 6px 0 0 20px;
+}
+
+#unformattedSearchFormId label {
+  cursor: pointer;
 }
 
 #unformattedSearchFormId .options fieldset p {
@@ -5229,13 +5243,17 @@ table.tile_mini td.data2 {
 #filter_container #clearFilter {
   position: absolute;
   top: 2px;
-  left: 268px;
+  left: 267px;
   width: 18px;
-  height: 18px;
+  height: 17px;
   cursor: default;
   background: #606060 url('/images/btn.close.png') no-repeat 3px 3px;
-  border-radius: 9px;
+  border-radius: 3px;
   background-size: 12px 12px;
+}
+
+#filter_container #clearFilter:hover {
+  background: #808080 url("/images/btn.close.png") no-repeat scroll 3px 3px;
 }
 
 /********** Find article *********************/
@@ -5263,6 +5281,7 @@ div.findArticle h4 {
 /***************************** Adv search checkboxes *****************/
 .checkboxWrapper {
   position: relative;
+  cursor: pointer;
 }
 
 .checkboxOverlay {

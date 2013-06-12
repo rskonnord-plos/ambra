@@ -66,6 +66,7 @@
     <property name="alertTextEmail" value="${ambra.queue.sendmail.alert.text}"/>
     <property name="savedSearchHtmlEmail" value="${ambra.queue.sendmail.savedSearch.html}"/>
     <property name="savedSearchTextEmail" value="${ambra.queue.sendmail.savedSearch.text}"/>
+    <property name="resultLimit" value="${ambra.queue.sendmail.search.limit}" />
   </bean>
 
   <bean id="solrServerFactory" class="org.ambraproject.testutils.EmbeddedSolrServerFactory" destroy-method="tearDown"/>
@@ -77,6 +78,7 @@
 
   <bean id="savedSearchRunner" class="org.ambraproject.search.SavedSearchRunnerImpl">
     <property name="searchService" ref="searchService" />
+    <property name="resultLimit" value="${ambra.queue.sendmail.search.limit}" />
   </bean>
 
   <bean id="savedSearchRetriever" class="org.ambraproject.search.SavedSearchRetrieverImpl">

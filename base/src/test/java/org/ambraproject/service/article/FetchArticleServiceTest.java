@@ -746,7 +746,10 @@ public class FetchArticleServiceTest extends BaseTest {
     citedArticle2.setCitationType("http://purl.org/net/nknouf/ns/bibtex#Article");
 
     article2.getCitedArticles().add(citedArticle2);
-    citedArticle2.getAuthors().add(citedArticleAuthor);
+
+    List<CitedArticleAuthor> authors = new ArrayList<CitedArticleAuthor>();
+    authors.add(citedArticleAuthor);
+    citedArticle2.setAuthors(authors);
 
     dummyDataStore.store(article2);
 
@@ -973,7 +976,7 @@ public class FetchArticleServiceTest extends BaseTest {
         "      <p>As a result, the <italic>PLOS ONE</italic> editors have undertaken a thorough re-examination of " +
         "this study, involving both external and internal advisers. This assessment has revealed the following " +
         "concerns regarding the study:</p>\n" +
-        "      <ul class=\"bulletlist\">\n" +
+        "      <ol class=\"alpha-lower\">\n" +
         "        \n" +
         "<li>\n" +
         "          <p>The description of the alleles in the article is inadequate.</p>\n" +

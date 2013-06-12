@@ -92,7 +92,7 @@
 
   <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
     <property name="httpClient" ref="httpClient"/>
-    <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
+    <property name="crossRefUrl" value="http://search.crossref.org/links"/>
   </bean>
 
   <bean id="pubGetLookupService" class="org.ambraproject.service.pubget.PubGetLookupServiceImpl">
@@ -277,6 +277,7 @@
   </bean>
 
   <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">
+    <property name="searchService" ref="searchService"/>
   </bean>
 
 </beans>

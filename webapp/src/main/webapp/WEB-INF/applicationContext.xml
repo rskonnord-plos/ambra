@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  $HeadURL$
-  $Id$
+  Copyright (c) 2006-2013 by Public Library of Science
 
-  Copyright (c) 2006-2010 by Public Library of Science
   http://plos.org
   http://ambraproject.org
 
@@ -434,6 +432,7 @@
 
   <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">
     <property name="cache" ref="taxonomyCache" />
+    <property name="searchService" ref="searchService" />
   </bean>
 
 </beans>

@@ -196,6 +196,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     Pattern.compile("<list-item>"),
     Pattern.compile("</list-item>"),
     Pattern.compile("</list>"),
+    Pattern.compile("<list(\\s+list-type=\"bullet\")?>"),
+    Pattern.compile("<list\\s+list-type=\"(.*)\">"),
     Pattern.compile("<list(?:.*)*>"),
     Pattern.compile("<title(?:.*)*>"),
     Pattern.compile("<body(?:.*)*>"),
@@ -219,6 +221,8 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     "\n<li>",
     "</li>",
     "</ul>",
+    "<ul class=\"bulletlist\">",
+    "<ol class=\"$1\">",
     "<ul class=\"bulletlist\">",
     "",
     "",
@@ -1239,7 +1243,7 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
    */
   private String getAuthorStringForLookup(CitedArticle citedArticle) {
     List<CitedArticleAuthor> authors = citedArticle.getAuthors();
-    return authors.size() > 0 ? authors.get(0).getSurnames() : "";
+    return (authors != null && authors.size() > 0) ? authors.get(0).getSurnames() : "";
   }
 
   /**

@@ -72,6 +72,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   private static final String ALERTS_CATEGORIES_CATEGORY = "ambra.userAlerts.categories.category";
   private static final String ALERTS_WEEKLY = "ambra.userAlerts.weekly";
   private static final String ALERTS_MONTHLY = "ambra.userAlerts.monthly";
+  private static final String SUBJECT_FILTER = "ambra.userAlerts.subjectFilter";
 
   private PermissionsService permissionsService;
   private Configuration configuration;
@@ -175,6 +176,77 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     return user;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public UserProfile setFilteredWeeklySearchAlert(Long userProfileId, String[] subjects, String journal)
+  {
+    SearchParameters searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("*:*");
+    searchParameters.setFilterJournals(new String[] { journal });
+    searchParameters.setFilterSubjectsDisjunction(subjects);
+
+    //We store the saved search here as JSON instead of serializing the object cuz JSON rocks
+    SavedSearchQuery query = saveSearchQuery(searchParameters);
+
+    UserProfile user = getUser(userProfileId);
+    SavedSearch newSearch = null;
+
+    //See if a record exists already, we only allow one weekly alert of type JOURNAL_ALERT per journal
+    //We key off of the title as it is not user facing
+    for(SavedSearch savedSearch : user.getSavedSearches()) {
+      if(savedSearch.getSearchType() == SavedSearchType.JOURNAL_ALERT
+        && savedSearch.getWeekly()
+        && savedSearch.getSearchName().equals(journal)) {
+        newSearch = savedSearch;
+      }
+    }
+
+    if(newSearch == null) {
+      newSearch = new SavedSearch(journal, query);
+      newSearch.setSearchType(SavedSearchType.JOURNAL_ALERT);
+      newSearch.setWeekly(true);
+      newSearch.setMonthly(false);
+      user.getSavedSearches().add(newSearch);
+    } else {
+      newSearch.setSearchQuery(query);
+    }
+
+    hibernateTemplate.save(user);
+
+    return user;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Transactional(rollbackFor = {Throwable.class})
+  public UserProfile removedFilteredWeeklySearchAlert(Long userProfileId, String journal) {
+    UserProfile user = getUser(userProfileId);
+
+    SavedSearch oldSearch = null;
+
+    //We key off of the title as it is not user facing
+    for(SavedSearch savedSearch : user.getSavedSearches()) {
+      if(savedSearch.getSearchType() == SavedSearchType.JOURNAL_ALERT
+        && savedSearch.getWeekly()
+        && savedSearch.getSearchName().equals(journal)) {
+
+        oldSearch = savedSearch;
+      }
+    }
+
+    if(oldSearch != null) {
+      user.getSavedSearches().remove(oldSearch);
+    }
+
+    hibernateTemplate.save(user);
+
+    return user;
+  }
+
 
   /**
    * {@inheritDoc}
@@ -187,15 +259,34 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
                          boolean weekly,
                          boolean monthly) {
 
-    Gson gson = new Gson();
-
-    //We store the saved search here as JSON instead of serializing the object.
-    //Because you may ask?  Because this way, when we add new parameters to the
-    //search parameters object, we'll still be able to de-serialize it properly
-    String searchParametersString = gson.toJson(searchParameters);
 
     UserProfile user = hibernateTemplate.get(UserProfile.class, userProfileId);
 
+    SavedSearchQuery query = saveSearchQuery(searchParameters);
+
+    SavedSearch savedSearch = new SavedSearch(name, query);
+    savedSearch.setSearchType(SavedSearchType.USER_DEFINED);
+    savedSearch.setWeekly(weekly);
+    savedSearch.setMonthly(monthly);
+
+    user.getSavedSearches().add(savedSearch);
+
+    hibernateTemplate.save(user);
+  }
+
+  /**
+   * Check to see if a matching savedSearch exists already with the passed in parameters
+   * if so, reuses that record
+   *
+   * @param searchParameters
+   *
+   * @return the savedQuery object
+   */
+  private SavedSearchQuery saveSearchQuery(SearchParameters searchParameters) {
+    Gson gson = new Gson();
+
+    //We store the saved search here as JSON instead of serializing the object.
+    String searchParametersString = gson.toJson(searchParameters);
     String queryHash = TextUtils.createHash(searchParametersString);
     SavedSearchQuery query;
 
@@ -213,14 +304,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
       query = queryList.get(0);
     }
 
-    SavedSearch savedSearch = new SavedSearch(name, query);
-    savedSearch.setSearchType(SavedSearchType.USER_DEFINED);
-    savedSearch.setWeekly(weekly);
-    savedSearch.setMonthly(monthly);
-
-    user.getSavedSearches().add(savedSearch);
-
-    hibernateTemplate.save(user);
+    return query;
   }
 
   /**
@@ -229,12 +313,12 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   @Transactional(rollbackFor = {Throwable.class})
   public List<SavedSearchView> getSavedSearches(Long userProfileId) {
     UserProfile userProfile = (UserProfile) DataAccessUtils.uniqueResult(
-        hibernateTemplate.findByCriteria(
+      hibernateTemplate.findByCriteria(
         DetachedCriteria.forClass(UserProfile.class)
-        .add(Restrictions.eq("ID", userProfileId))
-        .setFetchMode("savedSearches", FetchMode.JOIN)
-        .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-    ));
+          .add(Restrictions.eq("ID", userProfileId))
+          .setFetchMode("savedSearches", FetchMode.JOIN)
+          .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+      ));
 
     List<SavedSearch> searches = userProfile.getSavedSearches();
     List<SavedSearchView> searchViews = new ArrayList<SavedSearchView>(searches.size());
@@ -354,6 +438,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
     final String[] weeklyCategories = hc.getStringArray(ALERTS_WEEKLY);
     final String[] monthlyCategories = hc.getStringArray(ALERTS_MONTHLY);
+    final String[] subjectFilters = hc.getStringArray(SUBJECT_FILTER);
 
     final Set<Map.Entry<String, String>> categoryNamesSet = categoryNames.entrySet();
 
@@ -361,13 +446,17 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
       final String key = category.getKey();
       boolean weeklyCategoryKey = false;
       boolean monthlyCategoryKey = false;
+      boolean subjectFilter = false;
       if (ArrayUtils.contains(weeklyCategories, key)) {
         weeklyCategoryKey = true;
       }
       if (ArrayUtils.contains(monthlyCategories, key)) {
         monthlyCategoryKey = true;
       }
-      alerts.add(new UserAlert(key, category.getValue(), weeklyCategoryKey, monthlyCategoryKey));
+      if (ArrayUtils.contains(subjectFilters, key)) {
+        subjectFilter = true;
+      }
+      alerts.add(new UserAlert(key, category.getValue(), weeklyCategoryKey, monthlyCategoryKey, subjectFilter));
     }
     return alerts;
   }

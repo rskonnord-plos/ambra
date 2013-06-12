@@ -801,6 +801,11 @@
                       </xsl:if>
                     </xsl:element>
                   </xsl:if>
+                  <xsl:if test="element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link">
+                    <xsl:element name="ul">
+                      <xsl:attribute name="class">find-nolinks</xsl:attribute>
+                    </xsl:element>
+                  </xsl:if>
                 </xsl:if>
                 <xsl:if test="not($cit/extraCitationInfo)">
                   <xsl:element name="ul">
@@ -1181,6 +1186,18 @@
               </xsl:if>
             </p>
             <xsl:apply-templates select="caption/node()[not(self::title)]"/>
+            <xsl:if test="table-wrap-foot">
+              <xsl:for-each select="table-wrap-foot//fn">
+                <div class="table-footnote">
+                  <span class="fn-label">
+                    <xsl:value-of select="label"/>
+                  </span>
+                  <span class="fn-text">
+                    <xsl:apply-templates select="p"/>
+                  </span>
+                </div>
+              </xsl:for-each>
+            </xsl:if>
             <div class="table-download">
               <div class="icon">
                 <xsl:attribute name="onclick">
@@ -1432,7 +1449,7 @@
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
       <xsl:apply-templates/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1464,7 +1481,7 @@
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1480,7 +1497,7 @@
       <xsl:apply-templates select="collab" mode="book"/>
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link)">
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1880,7 +1897,7 @@
       <xsl:if test="not(self::node()='.')">
         <xsl:text> </xsl:text>
         <xsl:apply-templates/>
-        <xsl:if test="substring(.,string-length(.)) != '.'">
+        <xsl:if test="substring(.,string-length(.)) != '.' and not(ends-with(..,'.'))">
           <xsl:text>. </xsl:text>
         </xsl:if>
       </xsl:if>
