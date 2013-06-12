@@ -195,11 +195,11 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
     return getSearchParameters().getFilterSubjects();
   }
 
-  public void setFilterArticleType(String type) {
-    getSearchParameters().setFilterArticleType(type);
+  public void setFilterArticleType(String[] type) {
+    getSearchParameters().setFilterArticleType(rectify(type));
   }
 
-  public String getFilterArticleType() {
+  public String[] getFilterArticleType() {
     return getSearchParameters().getFilterArticleType();
   }
 

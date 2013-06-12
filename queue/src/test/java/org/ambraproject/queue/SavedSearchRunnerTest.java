@@ -163,28 +163,28 @@ public class SavedSearchRunnerTest extends BaseTest {
   public Object[][] savedSearchViewData(){
     SavedSearchJob savedSearchJob = new SavedSearchJob(
       new Long(1),
-      "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
+      "{\"query\":\"test\",\"unformattedQuery\":\"\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":[],\"filterJournals\":[\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash",
       SavedSearchType.USER_DEFINED,
       "WEEKLY");
 
     SavedSearchJob savedSearchJob2 = new SavedSearchJob(
       new Long(2),
-      "{\"query\":\"\",\"unformattedQuery\":\"everything:testjournal\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
+      "{\"query\":\"\",\"unformattedQuery\":\"everything:testjournal\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":[],\"filterJournals\":[\"PLoSMedicine\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash1",
       SavedSearchType.USER_DEFINED,
       "WEEKLY");
 
     SavedSearchJob savedSearchJob3 = new SavedSearchJob(
       new Long(3),
-      "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\",\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
+      "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":[],\"filterJournals\":[\"PLoSMedicine\",\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash3",
       SavedSearchType.USER_DEFINED,
       "WEEKLY");
 
     SavedSearchJob savedSearchJob4 = new SavedSearchJob(
       new Long(4),
-      "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":\"\",\"filterJournals\":[\"PLoSMedicine\",\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
+      "{\"query\":\"\",\"unformattedQuery\":\"everything:testing\",\"volume\":\"\",\"eLocationId\":\"\",\"id\":\"\",\"filterSubjects\":[],\"filterKeyword\":\"\",\"filterArticleType\":[],\"filterJournals\":[\"PLoSMedicine\",\"PLoSONE\"],\"sort\":\"Relevance\",\"startPage\":0,\"pageSize\":10}",
       "hash3",
       SavedSearchType.USER_DEFINED,
       "MONTHLY");

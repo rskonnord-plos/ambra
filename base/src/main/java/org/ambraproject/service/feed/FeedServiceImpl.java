@@ -213,7 +213,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
     }
 
     // Form field description: "Article Types".  Query Filter.
-    if (sParams.getFilterArticleType() != null && sParams.getFilterArticleType().length() > 0) {
+    if (sParams.getFilterArticleType() != null && sParams.getFilterArticleType().length > 0) {
       query.addFilterQuery(createFilterLimitForArticleType(sParams.getFilterArticleType()));
     }
 
@@ -307,12 +307,13 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
     return fq.replace(fq.length() - 5, fq.length(), "").toString(); // Remove last " OR".
   }
 
-  private String createFilterLimitForArticleType(String artycleType) {
+  private String createFilterLimitForArticleType(String[] articleTypes) {
+    Arrays.sort(articleTypes); // Consistent order so that each filter will only be cached once.
     StringBuilder fq = new StringBuilder();
-
-    fq.append("article_type:\"").append(artycleType).append("\"");
-
-    return fq.toString();
+    for (String articleType : articleTypes) {
+      fq.append("article_type:\"").append(articleType).append("\" OR ");
+    }
+    return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
 
