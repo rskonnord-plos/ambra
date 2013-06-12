@@ -188,7 +188,7 @@ $.fn.alm = function () {
         }
       }
 
-      if (sources[a].source.toLowerCase() == "relative metric") {
+      if (sources[a].name.toLowerCase() == "relativemetric") {
         if (sources[a].events != null) {
           result.relativeMetricData = sources[a].events;
         }
@@ -1036,7 +1036,7 @@ $.fn.alm = function () {
           $("#" + loadingID).fadeOut('slow');
           $usage.css("display", "none");
 
-          var data = this.massageChartData(response.sources, publishDatems);
+          var data = this.massageChartData(response[0].sources, publishDatems);
 
           var summaryTable = $('<div id="pageViewsSummary"><div id="left"><div class="header">Total Article Views</div>' +
               '<div class="totalCount">' + data.total.format(0, '.', ',') + '</div>' +
@@ -1215,7 +1215,7 @@ $.fn.alm = function () {
             // check to see if there is any data
             if (data.relativeMetricData != null) {
               var subjectAreas = data.relativeMetricData.subject_areas;
-              if (subjectAreas != null && subjectAreas.length > 0) {
+              if (subjectAreas && subjectAreas.length > 0) {
                 var subjectAreaList = new Array();
 
                 // loop through each subject area and add the data to the chart
