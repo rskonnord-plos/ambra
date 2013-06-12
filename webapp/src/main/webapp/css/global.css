@@ -2148,6 +2148,15 @@ div.table-wrap .expand {
   background-position: 0 -25px;
 }
 
+div.table-wrap .table-footnote {
+  font-size: 10px;
+}
+
+div.table-wrap .table-footnote .fn-label {
+  vertical-align: super;
+  font-size: 10px;
+}
+
 .article .abstract,
 .article .articleinfo,
 .article .editorsAbstract,
