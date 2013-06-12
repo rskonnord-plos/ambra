@@ -67,13 +67,6 @@ $.fn.alm = function () {
     this.getData(request, callBack, errorCallback);
   }
 
-  this.getChartData = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Counter,PMC,RelativeMetric";
-    this.getData(request, callBack, errorCallback);
-  }
-
   this.getBiodData = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
@@ -181,14 +174,14 @@ $.fn.alm = function () {
     var result = {};
 
     for (var a = 0; a < sources.length; a++) {
-      if (sources[a].source == "Counter") {
+      if (sources[a].name == "counter") {
         counterViews = sources[a].events;
         //Make sure everything is in the right order
         counterViews = counterViews.sort(this.sortByYearMonth);
       }
 
-      if (sources[a].source == "PubMed Central Usage Stats") {
-        if (sources[a].events != null && sources[a].events.length > 0) {
+      if (sources[a].name == "pmc") {
+        if (sources[a].events && sources[a].events.length > 0) {
           pmcViews = sources[a].events;
           //Make sure everything is in the right order
           pmcViews = pmcViews.sort(this.sortByYearMonth);
@@ -224,25 +217,26 @@ $.fn.alm = function () {
     //Two loops here, the first one assumes there is no data structure
     //I also assume (for the cumulative counts) that results are in order date descending
     for (var a = 0; a < counterViews.length; a++) {
-      var totalViews = this.parseIntSafe(counterViews[a].html_views) + this.parseIntSafe(counterViews[a].xml_views) +
-          this.parseIntSafe(counterViews[a].pdf_views);
-      var yearMonth = this.getYearMonth(counterViews[a].year, counterViews[a].month);
+      var event = counterViews[a];
+      var totalViews = this.parseIntSafe(event.html_views) + this.parseIntSafe(event.xml_views) +
+          this.parseIntSafe(event.pdf_views);
+      var yearMonth = this.getYearMonth(event.year, event.month);
 
       result.history[yearMonth] = {};
       result.history[yearMonth].source = {};
-      result.history[yearMonth].year = counterViews[a].year;
-      result.history[yearMonth].month = counterViews[a].month;
+      result.history[yearMonth].year = event.year;
+      result.history[yearMonth].month = event.month;
       result.history[yearMonth].source["counterViews"] = {};
-      result.history[yearMonth].source["counterViews"].month = counterViews[a].month;
-      result.history[yearMonth].source["counterViews"].year = counterViews[a].year;
-      result.history[yearMonth].source["counterViews"].totalPDF = this.parseIntSafe(counterViews[a].pdf_views);
-      result.history[yearMonth].source["counterViews"].totalXML = this.parseIntSafe(counterViews[a].xml_views);
-      result.history[yearMonth].source["counterViews"].totalHTML = this.parseIntSafe(counterViews[a].html_views);
+      result.history[yearMonth].source["counterViews"].month = event.month;
+      result.history[yearMonth].source["counterViews"].year = event.year;
+      result.history[yearMonth].source["counterViews"].totalPDF = this.parseIntSafe(event.pdf_views);
+      result.history[yearMonth].source["counterViews"].totalXML = this.parseIntSafe(event.xml_views);
+      result.history[yearMonth].source["counterViews"].totalHTML = this.parseIntSafe(event.html_views);
       result.history[yearMonth].source["counterViews"].total = totalViews;
 
-      cumulativeCounterPDF += this.parseIntSafe(counterViews[a].pdf_views);
-      cumulativeCounterXML += this.parseIntSafe(counterViews[a].xml_views);
-      cumulativeCounterHTML += this.parseIntSafe(counterViews[a].html_views);
+      cumulativeCounterPDF += this.parseIntSafe(event.pdf_views);
+      cumulativeCounterXML += this.parseIntSafe(event.xml_views);
+      cumulativeCounterHTML += this.parseIntSafe(event.html_views);
       cumulativeCounterTotal += totalViews;
 
       //Total views so far (for counter)
@@ -253,15 +247,15 @@ $.fn.alm = function () {
 
       //Total views so far (for all sources)
       result.history[yearMonth].cumulativeTotal = this.parseIntSafe(result.total) + totalViews;
-      result.history[yearMonth].cumulativePDF = result.totalPDF + this.parseIntSafe(counterViews[a].pdf_views);
-      result.history[yearMonth].cumulativeXML = result.totalXML + this.parseIntSafe(counterViews[a].xml_views);
-      result.history[yearMonth].cumulativeHTML = result.totalHTML + this.parseIntSafe(counterViews[a].html_views);
+      result.history[yearMonth].cumulativePDF = result.totalPDF + this.parseIntSafe(event.pdf_views);
+      result.history[yearMonth].cumulativeXML = result.totalXML + this.parseIntSafe(event.xml_views);
+      result.history[yearMonth].cumulativeHTML = result.totalHTML + this.parseIntSafe(event.html_views);
       result.history[yearMonth].total = totalViews;
 
       //The grand totals
-      result.totalPDF += this.parseIntSafe(counterViews[a].pdf_views);
-      result.totalXML += this.parseIntSafe(counterViews[a].xml_views);
-      result.totalHTML += this.parseIntSafe(counterViews[a].html_views);
+      result.totalPDF += this.parseIntSafe(event.pdf_views);
+      result.totalXML += this.parseIntSafe(event.xml_views);
+      result.totalHTML += this.parseIntSafe(event.html_views);
       result.total += totalViews;
     }
 
@@ -276,15 +270,16 @@ $.fn.alm = function () {
 
     if (pmcViews != null) {
       for (var a = 0; a < pmcViews.length; a++) {
-        var totalViews = this.parseIntSafe(pmcViews[a]["full-text"]) + this.parseIntSafe(pmcViews[a].pdf);
+        var event = pmcViews[a];
+        var totalViews = this.parseIntSafe(event["full-text"]) + this.parseIntSafe(event.pdf);
 
         // even if we don't display all the pmc data, the running total we display should be correct
-        cumulativePMCPDF += this.parseIntSafe(pmcViews[a].pdf);
-        cumulativePMCHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
+        cumulativePMCPDF += this.parseIntSafe(event.pdf);
+        cumulativePMCHTML += this.parseIntSafe(event["full-text"]);
         cumulativePMCTotal += totalViews;
 
         //Total views for the current period
-        var yearMonth = this.getYearMonth(pmcViews[a].year, pmcViews[a].month);
+        var yearMonth = this.getYearMonth(event.year, event.month);
 
         // if counter doesn't have data for this given month, we are going to ignore it.
         // we assume that counter data doesn't have any gaps
@@ -300,26 +295,26 @@ $.fn.alm = function () {
         result.history[yearMonth].source["pmcViews"] = {};
 
         //Total views so far (for PMC)
-        result.history[yearMonth].source["pmcViews"].month = pmcViews[a].month;
-        result.history[yearMonth].source["pmcViews"].year = pmcViews[a].year;
+        result.history[yearMonth].source["pmcViews"].month = event.month;
+        result.history[yearMonth].source["pmcViews"].year = event.year;
         result.history[yearMonth].source["pmcViews"].cumulativePDF = cumulativePMCPDF;
         result.history[yearMonth].source["pmcViews"].cumulativeHTML = cumulativePMCHTML;
         result.history[yearMonth].source["pmcViews"].cumulativeTotal = cumulativePMCTotal;
 
-        result.history[yearMonth].source["pmcViews"].totalPDF = this.parseIntSafe(pmcViews[a].pdf);
+        result.history[yearMonth].source["pmcViews"].totalPDF = this.parseIntSafe(event.pdf);
         result.history[yearMonth].source["pmcViews"].totalXML = "n.a.";
-        result.history[yearMonth].source["pmcViews"].totalHTML = this.parseIntSafe(pmcViews[a]["full-text"]);
+        result.history[yearMonth].source["pmcViews"].totalHTML = this.parseIntSafe(event["full-text"]);
         result.history[yearMonth].source["pmcViews"].total = totalViews;
 
         //Total views so far
         result.history[yearMonth].total += totalViews;
         result.history[yearMonth].cumulativeTotal += totalViews;
-        result.history[yearMonth].cumulativePDF += this.parseIntSafe(pmcViews[a].pdf);
-        result.history[yearMonth].cumulativeHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
+        result.history[yearMonth].cumulativePDF += this.parseIntSafe(event.pdf);
+        result.history[yearMonth].cumulativeHTML += this.parseIntSafe(event["full-text"]);
 
         //The grand totals
-        result.totalPDF += this.parseIntSafe(pmcViews[a].pdf);
-        result.totalHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
+        result.totalPDF += this.parseIntSafe(event.pdf);
+        result.totalHTML += this.parseIntSafe(event["full-text"]);
         result.total += totalViews;
       }
     }
@@ -1041,7 +1036,7 @@ $.fn.alm = function () {
           $("#" + loadingID).fadeOut('slow');
           $usage.css("display", "none");
 
-          var data = this.massageChartData(response.article.source, publishDatems);
+          var data = this.massageChartData(response.sources, publishDatems);
 
           var summaryTable = $('<div id="pageViewsSummary"><div id="left"><div class="header">Total Article Views</div>' +
               '<div class="totalCount">' + data.total.format(0, '.', ',') + '</div>' +
@@ -1334,7 +1329,9 @@ $.fn.alm = function () {
           $usage.show("blind", 500);
         };
 
-        this.getChartData(doi, jQuery.proxy(success, this), almError);
+        doi = this.validateDOI(doi);
+        var request = doi + '&source=pmc,counter,relativemetric&info=event';
+        this.getData(request, jQuery.proxy(success, this), almError);
       }
     }
   };
