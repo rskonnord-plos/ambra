@@ -182,8 +182,7 @@ $(document).ready(
 
       almService.getArticleSummaries(ids, setALMSearchWidgets, setALMSearchWidgetsError);
 
-      function setALMSearchWidgets(response) {
-        var articles = response[0];
+      function setALMSearchWidgets(articles) {
         for (a = 0; a < articles.length; a++) {
           var article = articles[a];
           var doi = article.doi;
@@ -193,9 +192,9 @@ $(document).ready(
 
 
           //get references to specific sources
-          var sourceNames
+          var sourceNames = [];
           for (var s = 0; s < sources.length; s++) {
-            sourceNames.push(source.name);
+            sourceNames.push(sources[s].name);
           }
           scopus = sources[sourceNames.indexOf('scopus')];
           citeulike = sources[sourceNames.indexOf('citeulike')];
@@ -244,10 +243,10 @@ $(document).ready(
           //bookmarked? - citeulike count > 0
           //seen? - pmc total + counter total > 0
           //socialised? - mendeley total > 0
-          if (scopus.total > 0 ||
-              citeulike.total > 0 ||
-              pmc.total + counter.total > 0 ||
-              mendeley.total > 0) {
+          if (scopus.metrics.total > 0 ||
+              citeulike.metrics.total > 0 ||
+              pmc.metrics.total + counter.metrics.total > 0 ||
+              mendeley.metrics.total > 0) {
               hasData = true;
           }
 
