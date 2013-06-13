@@ -187,8 +187,8 @@ $(document).ready(
           var article = articles[a];
           var doi = article.doi;
           var sources = article.sources;
-          var scopus, citeulike, pmc, counter, mendeley, crossref;
-          scopus = citeulike = pmc = counter = mendeley = crossref = null;
+          var scopus, citeulike, pmc, counter, mendeley, crossref, wos, pmc, pubmed;
+          scopus = citeulike = pmc = counter = mendeley = crossref, wos, pmc, pubmed = null;
 
 
           //get references to specific sources
@@ -198,10 +198,12 @@ $(document).ready(
           }
           scopus = sources[sourceNames.indexOf('scopus')];
           citeulike = sources[sourceNames.indexOf('citeulike')];
-          pmc = sources[sourceNames.indexOf('pmc')];
+          pubmed = sources[sourceNames.indexOf('pubmed')];
           counter = sources[sourceNames.indexOf('counter')];
           mendeley = sources[sourceNames.indexOf('mendeley')];
           crossref = sources[sourceNames.indexOf('crossref')];
+          wos = sources[sourceNames.indexOf('wos')];
+          pmc = sources[sourceNames.indexOf('pmc')];
 
           //          for (b = 0; b < article.groupcounts.length; b++) {
 //            if (article.groupcounts[b].name.toLowerCase() === "citations" &&
@@ -254,13 +256,13 @@ $(document).ready(
           //show widgets only when you have data
           if (hasData) {
             confirmed_ids[confirmed_ids.length] = doi;
-            makeALMSearchWidget(doi, scopus, citeulike, pmc, counter, mendeley, crossref);
+            makeALMSearchWidget(doi, scopus, citeulike, pubmed, counter, mendeley, crossref, wos, pmc);
           }
         }
         confirmALMDataDisplayed();
       }
 
-      function makeALMSearchWidget(doi, cites, bookmarks, data, socialData, mendeley, crossref) {
+      function makeALMSearchWidget(doi, cites, bookmarks, data, socialData, mendeley, crossref, wos, pmc) {
         var nodeList = getSearchWidgetByDOI(doi);
         var metricsURL = getMetricsURL(doi);
 
@@ -268,7 +270,7 @@ $(document).ready(
           var searchWidget = $("<span></span>");
           searchWidget.addClass("almSearchWidget");
 
-          buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref);
+          buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref, wos, pmc);
 
           $(nodeList).html("");
           $(nodeList).append(searchWidget);
@@ -277,23 +279,23 @@ $(document).ready(
       }
 
       //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a>
-      function buildWidgetText(node, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref) {
+      function buildWidgetText(node, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref, wos, pmc) {
         var newNode = null;
-
         var scopus = cites;
         var citeulike = bookmarks;
         var pubmed = data;
         var counter = socialData;
 
-        var total = pubmed.metrics.total + counter.metrics.total;
-        var totalPDF = pubmed.metrics.pdf + counter.metrics.pdf;
+        var total = pmc.metrics.total + counter.metrics.total;
+        var totalHTML = pmc.metrics.html + counter.metrics.html;
+        var totalPDF = pmc.metrics.pdf + counter.metrics.pdf;
         //alm response json has no metric for xml, but xml = total - pdf - html
-        var totalXML = total - totalPDF - pubmed.metrics.html - counter.metrics.html;
+        var totalXML = total - totalPDF - pmc.metrics.html - counter.metrics.html;
         if (total > 0) {
           newNode = $("<a></a>")
-              .attr("href",metricsURL + "#usage")
-              .html("Views: " + total.format(0,'.',','))
-              .addClass("data");
+            .attr("href", metricsURL + "#usage")
+            .html("Views: " + total.format(0, '.', ','))
+            .addClass("data");
 
           newNode.tooltip({
             delay: 250,
@@ -302,27 +304,27 @@ $(document).ready(
             left: 20,
             track: true,
             showURL: false,
-            bodyHandler: function() {
-              return "<span class=\"searchResultsTip\">HTML: <b>" + data.totalHTML + "</b>"
-                  + ", PDF: <b>" + totalPDF + "</b>"
-                  + ", XML: <b>" + totalXML + "</b>"
-                  + ", Grand Total: <b>" + total + "</b></span>";
+            bodyHandler: function () {
+              return "<span class=\"searchResultsTip\">HTML: <b>" + totalHTML.format(0, '.', ',') + "</b>"
+                + ", PDF: <b>" + totalPDF.format(0, '.', ',') + "</b>"
+                + ", XML: <b>" + totalXML.format(0, '.', ',') + "</b>"
+                + ", Grand Total: <b>" + total.format(0, '.', ',') + "</b></span>";
             }
           });
 
           node.append(newNode);
         } else {
           node.appendChild($("<span></span>")
-              .addClass("no-data")
-              .html("Views: Not available"));
+            .addClass("no-data")
+            .html("Views: Not available"));
         }
 
         //using scopus for display
         if (scopus.metrics.total > 0) {
           newNode = $("<a></a>")
-              .attr("href", metricsURL + "#citations")
-              .html("Citations: " + scopus.metrics.total)
-              .addClass("data");
+            .attr("href", metricsURL + "#citations")
+            .html("Citations: " + scopus.metrics.total.format(0, '.', ','))
+            .addClass("data");
 
           newNode.tooltip({
             delay: 250,
@@ -332,13 +334,15 @@ $(document).ready(
             track: true,
             showURL: false,
 
-            bodyHandler: function() {
+            bodyHandler: function () {
 
               //adding citation sources manually and IN ALPHABETIC ORDER
               //if this is generified, be sure to implement a sort function and remember the comma when concatenating
               var tipText = scopus.display_name + ": <b>" + scopus.metrics.total.format(0, '.', ',') + "</b>";
-              tipText += ',' +  crossref.display_name + ": <b>" + crossref.metrics.total.format(0, '.', ',') + "</b>";
-              tipText += ',' +  pubmed.display_name + ": <b>" + pubmed.metrics.total.format(0, '.', ',') + "</b>";
+              tipText += ', ' + crossref.display_name + ": <b>" + crossref.metrics.total.format(0, '.', ',') + "</b>";
+              tipText += ', ' + pubmed.display_name + ": <b>" + pubmed.metrics.total.format(0, '.', ',') + "</b>";
+              tipText += ', ' + wos.display_name + ": <b>" + wos.metrics.total.format(0, '.', ',') + "</b>";
+
 
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
             }
@@ -350,55 +354,16 @@ $(document).ready(
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
-              .html("Citations: None")
-              .addClass("no-data"));
+            .html("Citations: None")
+            .addClass("no-data"));
         }
 
         var markCount = mendeley.metrics.total + citeulike.metrics.total;
-        if( markCount > 0) {
-
+        if (markCount > 0) {
           newNode = $("<a></a>")
-              .attr("href", metricsURL + "#other")
-              .html("Bookmarks: " + markCount)
-              .addClass("data");
-
-          appendBullIfNeeded(node);
-
-          newNode.tooltip({
-            delay: 250,
-            fade: 250,
-            top: -40,
-            left: 20,
-            track: true,
-            showURL: false,
-            bodyHandler: function() {
-              var tipText = "";
-
-              if (mendeley) {
-                tipText += mendeley.source + ": <b>" + mendeley.count.format(0, '.', ',') + "</b>";
-              }
-
-              for(a = 0; a < bookmarks.length; a++) {
-                if (bookmarks[a].source != "Connotea") {
-
-                  if (tipText != "") {
-                    tipText += ", "
-                  }
-                  tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0, '.', ',') + "</b>";
-                }
-              }
-
-              return "<span class=\"searchResultsTip\">" + tipText + "</span>";
-            }
-          });
-
-          node.append(newNode);
-        } else if (!bookmarks && mendeley) {
-
-          newNode = $("<a></a>")
-              .attr("href", metricsURL + "#other")
-              .html("Bookmarks: " + mendeley.count)
-              .addClass("data");
+            .attr("href", metricsURL + "#other")
+            .html("Bookmarks: " + markCount)
+            .addClass("data");
 
           appendBullIfNeeded(node);
 
@@ -410,20 +375,30 @@ $(document).ready(
             track: true,
             showURL: false,
             bodyHandler: function () {
+              var tipText = "";
 
-              var tipText = mendeley.source + ": <b>" + mendeley.count.format(0, '.', ',') + "</b>";
+              if (mendeley.metrics.total > 0) {
+                tipText += mendeley.display_name + ": <b>" + mendeley.metrics.total.format(0, '.', ',') + "</b>";
+              }
+
+              if (citeulike.metrics.total > 0) {
+                if (tipText != "") {
+                  tipText += ", "
+                }
+                tipText += citeulike.display_name + ": <b>" + citeulike.metrics.total.format(0, '.', ',') + "</b>";
+              }
+
+
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
-
             }
           });
 
           node.append(newNode);
-
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
-              .html("Bookmarks: None")
-              .addClass("no-data"));
+            .html("Bookmarks: None")
+            .addClass("no-data"));
         }
       }
 
