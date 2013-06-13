@@ -187,8 +187,8 @@ $(document).ready(
           var article = articles[a];
           var doi = article.doi;
           var sources = article.sources;
-          var scopus, citeulike, pmc, counter, mendeley, crossref, wos, pmc, pubmed;
-          scopus = citeulike = pmc = counter = mendeley = crossref, wos, pmc, pubmed = null;
+          var scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed;
+          scopus = citeulike = counter = mendeley = crossref, wos, pmc, pubmed = null;
 
 
           //get references to specific sources
@@ -204,41 +204,6 @@ $(document).ready(
           crossref = sources[sourceNames.indexOf('crossref')];
           wos = sources[sourceNames.indexOf('wos')];
           pmc = sources[sourceNames.indexOf('pmc')];
-
-          //          for (b = 0; b < article.groupcounts.length; b++) {
-//            if (article.groupcounts[b].name.toLowerCase() === "citations" &&
-//                article.groupcounts[b].count > 0) {
-//              cites = article.groupcounts[b].sources;
-//            }
-//
-//            if (article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
-//                article.groupcounts[b].count > 0) {
-//              bookmarks = article.groupcounts[b].sources;
-//            }
-//
-//            /* will "testing" need to be name-changed in the future? */
-//            if (article.groupcounts[b].name.toLowerCase() === "testing" &&
-//                article.groupcounts[b].count > 0) {
-//              socialData = article.groupcounts[b].sources;
-//            }
-//          }
-
-          //meowp - this *mayyyy* not be needed?
-//          for(b = 0; b < article.groups.length; b++) {
-//            if(article.groups[b].name.toLowerCase() === "statistics") {
-//              //Attempt to find the pub date
-//              var nodeList = $("li[doi='" + doi + "']");
-//              var pubDateNode = nodeList[0];
-//              var pubDate = $(pubDateNode).attr("pdate");
-//
-//              if(pubDate == null) {
-//                throw new Error('Can not find publish date attribute for doi:' + article.article.article.doi);
-//              } else {
-//                //Total and perform business logic
-//                viewsData = almService.massageChartData(article.groups[b].sources, pubDate);
-//              }
-//            }
-//          }
 
           //determine if article cited, bookmarked, or socialised, or even seen
           var hasData = false;
@@ -256,13 +221,13 @@ $(document).ready(
           //show widgets only when you have data
           if (hasData) {
             confirmed_ids[confirmed_ids.length] = doi;
-            makeALMSearchWidget(doi, scopus, citeulike, pubmed, counter, mendeley, crossref, wos, pmc);
+            makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed);
           }
         }
         confirmALMDataDisplayed();
       }
 
-      function makeALMSearchWidget(doi, cites, bookmarks, data, socialData, mendeley, crossref, wos, pmc) {
+      function makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed) {
         var nodeList = getSearchWidgetByDOI(doi);
         var metricsURL = getMetricsURL(doi);
 
@@ -270,7 +235,7 @@ $(document).ready(
           var searchWidget = $("<span></span>");
           searchWidget.addClass("almSearchWidget");
 
-          buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref, wos, pmc);
+          buildWidgetText(searchWidget, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed);
 
           $(nodeList).html("");
           $(nodeList).append(searchWidget);
@@ -279,12 +244,8 @@ $(document).ready(
       }
 
       //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a>
-      function buildWidgetText(node, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref, wos, pmc) {
+      function buildWidgetText(node, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed) {
         var newNode = null;
-        var scopus = cites;
-        var citeulike = bookmarks;
-        var pubmed = data;
-        var counter = socialData;
 
         var total = pmc.metrics.total + counter.metrics.total;
         var totalHTML = pmc.metrics.html + counter.metrics.html;
