@@ -187,8 +187,8 @@ $(document).ready(
           var article = articles[a];
           var doi = article.doi;
           var sources = article.sources;
-          var scopus, citeulike, pmc, counter, mendeley;
-          scopus = citeulike = pmc = counter = mendeley = null;
+          var scopus, citeulike, pmc, counter, mendeley, crossref;
+          scopus = citeulike = pmc = counter = mendeley = crossref = null;
 
 
           //get references to specific sources
@@ -201,6 +201,7 @@ $(document).ready(
           pmc = sources[sourceNames.indexOf('pmc')];
           counter = sources[sourceNames.indexOf('counter')];
           mendeley = sources[sourceNames.indexOf('mendeley')];
+          crossref = sources[sourceNames.indexOf('crossref')];
 
           //          for (b = 0; b < article.groupcounts.length; b++) {
 //            if (article.groupcounts[b].name.toLowerCase() === "citations" &&
@@ -253,13 +254,13 @@ $(document).ready(
           //show widgets only when you have data
           if (hasData) {
             confirmed_ids[confirmed_ids.length] = doi;
-            makeALMSearchWidget(doi, scopus, citeulike, pmc, counter, mendeley);
+            makeALMSearchWidget(doi, scopus, citeulike, pmc, counter, mendeley, crossref);
           }
         }
         confirmALMDataDisplayed();
       }
 
-      function makeALMSearchWidget(doi, cites, bookmarks, data, socialData) {
+      function makeALMSearchWidget(doi, cites, bookmarks, data, socialData, mendeley, crossref) {
         var nodeList = getSearchWidgetByDOI(doi);
         var metricsURL = getMetricsURL(doi);
 
@@ -267,7 +268,7 @@ $(document).ready(
           var searchWidget = $("<span></span>");
           searchWidget.addClass("almSearchWidget");
 
-          buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data, socialData);
+          buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref);
 
           $(nodeList).html("");
           $(nodeList).append(searchWidget);
@@ -276,13 +277,22 @@ $(document).ready(
       }
 
       //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a>
-      function buildWidgetText(node, metricsURL, cites, bookmarks, data, socialData) {
+      function buildWidgetText(node, metricsURL, cites, bookmarks, data, socialData, mendeley, crossref) {
         var newNode = null;
 
-        if(data != null) {
+        var scopus = cites;
+        var citeulike = bookmarks;
+        var pubmed = data;
+        var counter = socialData;
+
+        var total = pubmed.metrics.total + counter.metrics.total;
+        var totalPDF = pubmed.metrics.pdf + counter.metrics.pdf;
+        //alm response json has no metric for xml, but xml = total - pdf - html
+        var totalXML = total - totalPDF - pubmed.metrics.html - counter.metrics.html;
+        if (total > 0) {
           newNode = $("<a></a>")
               .attr("href",metricsURL + "#usage")
-              .html("Views: " + data.total.format(0,'.',','))
+              .html("Views: " + total.format(0,'.',','))
               .addClass("data");
 
           newNode.tooltip({
@@ -294,9 +304,9 @@ $(document).ready(
             showURL: false,
             bodyHandler: function() {
               return "<span class=\"searchResultsTip\">HTML: <b>" + data.totalHTML + "</b>"
-                  + ", PDF: <b>" + data.totalPDF + "</b>"
-                  + ", XML: <b>" + data.totalXML + "</b>"
-                  + ", Grand Total: <b>" + data.total + "</b></span>";
+                  + ", PDF: <b>" + totalPDF + "</b>"
+                  + ", XML: <b>" + totalXML + "</b>"
+                  + ", Grand Total: <b>" + total + "</b></span>";
             }
           });
 
@@ -307,23 +317,11 @@ $(document).ready(
               .html("Views: Not available"));
         }
 
-        //only using scopus so get a reference if possible and use information contained therein
-        var scopus = null;
-        if (cites != null) {
-          //citations should always be sorted with Scopus first
-          cites = cites.sort(sortCitesByName);
-
-          //see if a reference to scopus exists
-          for(a = 0; a < cites.length; a++) {
-            if (cites[a].source.toLowerCase() == 'scopus' && cites[a].count > 0) {
-              scopus = cites[a];
-            }
-          }
-        }
-        if (scopus) {
+        //using scopus for display
+        if (scopus.metrics.total > 0) {
           newNode = $("<a></a>")
               .attr("href", metricsURL + "#citations")
-              .html("Citations: " + scopus.count)
+              .html("Citations: " + scopus.metrics.total)
               .addClass("data");
 
           newNode.tooltip({
@@ -335,14 +333,12 @@ $(document).ready(
             showURL: false,
 
             bodyHandler: function() {
-              var tipText = "";
 
-              for(a = 0; a < cites.length; a++) {
-                if(tipText != "") {
-                  tipText += ", "
-                }
-                tipText += cites[a].source + ": <b>" + cites[a].count.format(0,'.',',') + "</b>";
-              }
+              //adding citation sources manually and IN ALPHABETIC ORDER
+              //if this is generified, be sure to implement a sort function and remember the comma when concatenating
+              var tipText = scopus.display_name + ": <b>" + scopus.metrics.total.format(0, '.', ',') + "</b>";
+              tipText += ',' +  crossref.display_name + ": <b>" + crossref.metrics.total.format(0, '.', ',') + "</b>";
+              tipText += ',' +  pubmed.display_name + ": <b>" + pubmed.metrics.total.format(0, '.', ',') + "</b>";
 
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
             }
@@ -358,27 +354,8 @@ $(document).ready(
               .addClass("no-data"));
         }
 
-        var mendeley = null;
-        if(socialData){
-          for(var s = 0; s < socialData.length; s++){
-            if (socialData[s].source == "Mendeley"){
-              mendeley = socialData[s];
-            }
-          }
-        }
-
-        if(bookmarks) {
-
-          var markCount = 0;
-          if(mendeley){
-            markCount += mendeley.count;
-          }
-
-          for(var book = 0; book < bookmarks.length; book++){
-            if(bookmarks[book].source != "Connotea"){
-              markCount+= bookmarks[book].count;
-            }
-          }
+        var markCount = mendeley.metrics.total + citeulike.metrics.total;
+        if( markCount > 0) {
 
           newNode = $("<a></a>")
               .attr("href", metricsURL + "#other")
@@ -515,17 +492,6 @@ $(document).ready(
                 "<img src=\"../images/icon_error.png\"/>&nbsp;Metrics unavailable. Please check back later.");
           }
         }
-      }
-
-      function sortCitesByName(a,b) {
-        if (b.source.toLowerCase() === 'scopus') {
-          return 1;
-        } else if (a.source.toLowerCase() === 'scopus' || a.source.toLowerCase() < b.source.toLowerCase()) {
-          return -1;
-        } else if (a.source.toLowerCase() > b.source.toLowerCase()) {
-          return 1;
-        }
-        return 0;
       }
 
       function showFigSearchView() {
