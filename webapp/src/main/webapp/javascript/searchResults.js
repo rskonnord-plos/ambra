@@ -180,55 +180,81 @@ $(document).ready(
         ids[ids.length] = $(element).attr("doi");
       });
 
-      almService.getSummaryForArticles(ids, setALMSearchWidgets, setALMSearchWidgetsError);
+      almService.getArticleSummaries(ids, setALMSearchWidgets, setALMSearchWidgetsError);
 
-      function setALMSearchWidgets(articles) {
+      function setALMSearchWidgets(response) {
+        var articles = response[0];
         for (a = 0; a < articles.length; a++) {
           var article = articles[a];
-          var doi = article.article.article.doi;
-          var bookmarks = null;
-          var cites = null;
-          var viewsData = null;
-          var socialData = null;
+          var doi = article.doi;
+          var sources = article.sources;
+          var scopus, citeulike, pmc, counter, mendeley;
+          scopus = citeulike = pmc = counter = mendeley = null;
 
-          for (b = 0; b < article.groupcounts.length; b++) {
-            if (article.groupcounts[b].name.toLowerCase() === "citations" &&
-                article.groupcounts[b].count > 0) {
-              cites = article.groupcounts[b].sources;
-            }
 
-            if (article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
-                article.groupcounts[b].count > 0) {
-              bookmarks = article.groupcounts[b].sources;
-            }
-
-            /* will "testing" need to be name-changed in the future? */
-            if (article.groupcounts[b].name.toLowerCase() === "testing" &&
-                article.groupcounts[b].count > 0) {
-              socialData = article.groupcounts[b].sources;
-            }
+          //get references to specific sources
+          var sourceNames
+          for (var s = 0; s < sources.length; s++) {
+            sourceNames.push(source.name);
           }
+          scopus = sources[sourceNames.indexOf('scopus')];
+          citeulike = sources[sourceNames.indexOf('citeulike')];
+          pmc = sources[sourceNames.indexOf('pmc')];
+          counter = sources[sourceNames.indexOf('counter')];
+          mendeley = sources[sourceNames.indexOf('mendeley')];
 
-          for(b = 0; b < article.groups.length; b++) {
-            if(article.groups[b].name.toLowerCase() === "statistics") {
-              //Attempt to find the pub date
-              var nodeList = $("li[doi='" + doi + "']");
-              var pubDateNode = nodeList[0];
-              var pubDate = $(pubDateNode).attr("pdate");
+          //          for (b = 0; b < article.groupcounts.length; b++) {
+//            if (article.groupcounts[b].name.toLowerCase() === "citations" &&
+//                article.groupcounts[b].count > 0) {
+//              cites = article.groupcounts[b].sources;
+//            }
+//
+//            if (article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
+//                article.groupcounts[b].count > 0) {
+//              bookmarks = article.groupcounts[b].sources;
+//            }
+//
+//            /* will "testing" need to be name-changed in the future? */
+//            if (article.groupcounts[b].name.toLowerCase() === "testing" &&
+//                article.groupcounts[b].count > 0) {
+//              socialData = article.groupcounts[b].sources;
+//            }
+//          }
 
-              if(pubDate == null) {
-                throw new Error('Can not find publish date attribute for doi:' + article.article.article.doi);
-              } else {
-                //Total and perform business logic
-                viewsData = almService.massageChartData(article.groups[b].sources, pubDate);
-              }
-            }
+          //meowp - this *mayyyy* not be needed?
+//          for(b = 0; b < article.groups.length; b++) {
+//            if(article.groups[b].name.toLowerCase() === "statistics") {
+//              //Attempt to find the pub date
+//              var nodeList = $("li[doi='" + doi + "']");
+//              var pubDateNode = nodeList[0];
+//              var pubDate = $(pubDateNode).attr("pdate");
+//
+//              if(pubDate == null) {
+//                throw new Error('Can not find publish date attribute for doi:' + article.article.article.doi);
+//              } else {
+//                //Total and perform business logic
+//                viewsData = almService.massageChartData(article.groups[b].sources, pubDate);
+//              }
+//            }
+//          }
+
+          //determine if article cited, bookmarked, or socialised, or even seen
+          var hasData = false;
+          //cited? - scopus total > 0
+          //bookmarked? - citeulike count > 0
+          //seen? - pmc total + counter total > 0
+          //socialised? - mendeley total > 0
+          if (scopus.total > 0 ||
+              citeulike.total > 0 ||
+              pmc.total + counter.total > 0 ||
+              mendeley.total > 0) {
+              hasData = true;
           }
 
           //show widgets only when you have data
-          if(cites != null ||  bookmarks != null || viewsData != null || socialData != null) {
+          if (hasData) {
             confirmed_ids[confirmed_ids.length] = doi;
-            makeALMSearchWidget(doi, cites, bookmarks, viewsData, socialData);
+            makeALMSearchWidget(doi, scopus, citeulike, pmc, counter, mendeley);
           }
         }
         confirmALMDataDisplayed();
@@ -431,13 +457,11 @@ $(document).ready(
         }
       }
 
-
       function getSearchWidgetByDOI(doi) {
         return $("li[doi='" + doi  + "'] span.metrics");
       }
 
-      function getMetricsURL(doi)
-      {
+      function getMetricsURL(doi){
         return $($("li[doi='" + doi  + "']")[0]).attr("metricsURL");
       }
 

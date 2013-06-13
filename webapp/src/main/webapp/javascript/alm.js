@@ -108,7 +108,7 @@ $.fn.alm = function () {
    * The data will be missing in the resultset.
    * */
 
-  this.getSummaryForArticles = function (dois, callBack, errorCallback) {
+  this.getArticleSummaries = function (dois, callBack, errorCallback) {
 
     idString = "";
     idString += this.validateDOI(dois[0]);
@@ -1515,7 +1515,7 @@ function onReadyALM() {
       }
     };
 
-    almService.getSummaryForArticles([ doi ], almSuccess, almError);
+    almService.getArticleSummaries([ doi ], almSuccess, almError);
   }
 }
 
