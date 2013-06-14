@@ -60,7 +60,7 @@ import java.util.Map;
  *
  * @author Alex Kudlick Date: 5/2/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 public class DummyHibernateDataStore implements DummyDataStore {
 
@@ -219,6 +219,14 @@ public class DummyHibernateDataStore implements DummyDataStore {
         return object;
       }
     });
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List findByCriteria(DetachedCriteria criteria) {
+    return hibernateTemplate.findByCriteria(criteria);
   }
 
   @Override

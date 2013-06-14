@@ -1,5 +1,6 @@
-<!--This is the journal-agnostic header file included in generic.ftl-->
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#--This is the journal-agnostic header file included in generic.ftl-->
 <html lang="en">
 <head>
 <#include "/includes/global_variables.ftl">
@@ -33,7 +34,7 @@
         <ul>
           <li><a href="/">Ambra</a></li>
         <#if Session["AMBRA_USER"]?exists>
-          <@s.url id="editProfileURL" includeParams="none" namespace="/user/secure" action="editProfile" tabId="preferences"/>
+          <@s.url id="editProfileURL" includeParams="none" namespace="/user/secure" action="editProfile"/>
           <li><a href="${editProfileURL}" title="Edit your account profile and alert settings">preferences</a></li>
           <@s.url id="logoutURL" includeParams="none" namespace="/user/secure" action="secureRedirect" goTo="${freemarker_config.casLogoutURL}?service=${Request[freemarker_config.journalContextAttributeKey].baseUrl}/logout.action"/>
           <li class="btn-style"><a href="${logoutURL}">sign out</a></li>

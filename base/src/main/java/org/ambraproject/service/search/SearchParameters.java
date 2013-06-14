@@ -1,7 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
- *
  * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
@@ -24,6 +21,7 @@ package org.ambraproject.service.search;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,22 +51,26 @@ public class SearchParameters implements Serializable {
   private static final long serialVersionUID = -7837640277704487950L;
 
   // Used only by Simple Search
-  private String        query                 = "";
+  private String        query                     = "";
 
   // Used only by Query Builder search
-  private String        unformattedQuery      = "";
+  private String        unformattedQuery          = "";
 
   // Used by Find An Article search
-  private String        volume                = "";
-  private String        eLocationId           = "";
-  private String        id                    = ""; // One DOI.  These are indexed as "ID" in Solr
+  private String        volume                    = "";
+  private String        eLocationId               = "";
+  private String        id                        = ""; // One DOI.  These are indexed as "ID" in Solr
 
   // Used to create query filters on any search
-  private String[]      filterSubjects      = {}; // Only search in these subjects
-  private String[]      filterAuthors      = {}; // Only search in these subjects
-  private String        filterKeyword         = ""; // Only search in this document part
-  private String        filterArticleType     = ""; // Only search for this article type
-  private String[]      filterJournals        = {}; // Only search these Journals. If no elements, then default to the current journal
+  private String[]      filterSubjects            = {}; // Only search in these subjects
+  private String[]      filterSubjectsDisjunction = {}; // Only search in these subjects inclusively (or instead of and)
+  private String[]      filterAuthors             = {}; // Only search in these authors
+  private String        filterKeyword             = ""; // Only search in this document part
+  private String        filterArticleType         = ""; // Only search for this article type
+  private String[]      filterJournals            = {}; // Only search these Journals. If no elements, then default to the current journal
+
+  private Date          filterStartDate           = null; //Only search for articles published in this date range
+  private Date          filterEndDate             = null;
 
   // Controls results order
   private String        sort                  = "";
@@ -83,6 +85,7 @@ public class SearchParameters implements Serializable {
   public String getQuery() {
     return query;
   }
+
   public void setQuery(String query) {
     if (query == null || query.trim().length() < 1)
       this.query = "";
@@ -209,6 +212,24 @@ public class SearchParameters implements Serializable {
     }
   }
 
+  public String[] getFilterSubjectsDisjunction() {
+    return filterSubjectsDisjunction;
+  }
+
+  public void setFilterSubjectsDisjunction(String[] subjects) {
+    if (subjects == null || subjects.length < 1) {
+      this.filterSubjectsDisjunction = new String[]{};
+    } else {
+      List<String> filterSubjectsDisjunctionList = new ArrayList<String>();
+      for (String subject : subjects) {
+        if (subject != null && subject.trim().length() > 0)
+          filterSubjectsDisjunctionList.add(subject.trim());
+      }
+      this.filterSubjectsDisjunction = new String[filterSubjectsDisjunctionList.size()];
+      filterSubjectsDisjunctionList.toArray(this.filterSubjectsDisjunction);
+    }
+  }
+
   public String[] getFilterJournals() {
     return filterJournals;
   }
@@ -262,6 +283,22 @@ public class SearchParameters implements Serializable {
     this.resultView = resultView;
   }
 
+  public Date getFilterStartDate() {
+    return filterStartDate;
+  }
+
+  public void setFilterStartDate(Date filterStartDate) {
+    this.filterStartDate = filterStartDate;
+  }
+
+  public Date getFilterEndDate() {
+    return filterEndDate;
+  }
+
+  public void setFilterEndDate(Date filterEndDate) {
+    this.filterEndDate = filterEndDate;
+  }
+
   /**
    * Creates a deep copy of this SearchParameters object.
    *
@@ -277,12 +314,15 @@ public class SearchParameters implements Serializable {
     sp.setFilterArticleType(this.getFilterArticleType());
     sp.setFilterKeyword(this.getFilterKeyword());
     sp.setFilterSubjects(this.getFilterSubjects());
+    sp.setFilterSubjectsDisjunction(this.getFilterSubjectsDisjunction());
     sp.setFilterAuthors(this.getFilterAuthors());
     sp.setFilterJournals(this.getFilterJournals().clone());
     sp.setSort(this.getSort());
     sp.setStartPage(this.getStartPage());
     sp.setPageSize(this.getPageSize());
     sp.setResultView(this.getResultView());
+    sp.setFilterStartDate(this.getFilterStartDate());
+    sp.setFilterEndDate(this.getFilterEndDate());
     return sp;
   }
 
@@ -295,10 +335,13 @@ public class SearchParameters implements Serializable {
         ", eLocationId='" + eLocationId + "'" +
         ", id='" + id + "'" +
         ", filterSubjects=" + (filterSubjects == null ? null : Arrays.asList(filterSubjects)) +
+        ", filterSubjectsDisjunction=" + (filterSubjectsDisjunction == null ? null : Arrays.asList(filterSubjectsDisjunction)) +
         ", filterAuthors=" + (filterAuthors == null ? null : Arrays.asList(filterAuthors)) +
         ", filterKeyword='" + filterKeyword + "'" +
         ", filterArticleType='" + filterArticleType + "'" +
         ", filterJournals=" + (filterJournals == null ? null : Arrays.asList(filterJournals)) +
+        ", filterStartDate=" + filterStartDate +
+        ", filterEndDate=" + filterEndDate +
         ", sort='" + sort + "'" +
         ", startPage=" + startPage +
         ", pageSize=" + pageSize +

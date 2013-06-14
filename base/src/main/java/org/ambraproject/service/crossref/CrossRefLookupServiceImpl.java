@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -21,26 +18,26 @@
 
 package org.ambraproject.service.crossref;
 
-import org.apache.commons.beanutils.BeanUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * See <a href="http://www.crossref.org/help/Content/05_Interfacing_with_the_CrossRef_system/Using_HTTP.htm">Interfacing With CrossRef System/Using HTTP</a>
+ * Query crossref for article details
  *
- * @author Dragisa Krsmanovic
+ * @author Joe Osowski
  */
 public class CrossRefLookupServiceImpl implements CrossRefLookupService {
 
@@ -48,40 +45,6 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
 
   private String crossRefUrl;
   private HttpClient httpClient;
-
-  /**
-   * ISSN|TITLE/ABBREV|FIRST AUTHOR|VOLUME|ISSUE|START PAGE|YEAR|RESOURCE TYPE|KEY|DOI
-   */
-  private static final String[] TEN_FIELD_ORDER = {
-      "isbn",
-      "title",
-      "firstAuthor",
-      "volume",
-      "editionNumber",
-      "page",
-      "year",
-      "resourceType",
-      "key",
-      "doi"
-  };
-
-  /**
-   * ISBN/ISSN|SER_TITLE|VOL_TITLE|AUTHOR/EDITOR|VOLUME|EDITION_NUMBER|PAGE|YEAR|COMPONENT_NUMBER|RESOURCE_TYPE|KEY|DOI
-   */
-  private static final String[] TWELVE_FIELD_ORDER = {
-      "isbn",
-      "serTitle",
-      "volTitle",
-      "firstAuthor",
-      "volume",
-      "editionNumber",
-      "page",
-      "year",
-      "componentNumber",
-      "resourceType",
-      "key",
-      "doi"
-  };
 
   @Required
   public void setHttpClient(HttpClient httpClient) {
@@ -93,100 +56,146 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     this.crossRefUrl = crossRefUrl;
   }
 
-  /**
-   * Do the author query as described in: <a href="http://www.crossref.org/help/Content/04_Queries_and_retrieving/author_title_query.htm">Author / article-title query</a>
-   *
-   * @param title  Article title
-   * @param author Author name
-   * @return List of articles that match the criteria
-   * @see CrossRefArticle
-   */
-  public List<CrossRefArticle> findArticles(String title, String author) throws Exception {
-    List<CrossRefArticle> articles = new ArrayList<CrossRefArticle>();
-      String crossReefQueryURL = crossRefUrl + createPipedQuery(title, author);
-
-      log.debug("Executing query " + crossReefQueryURL);
-
-      GetMethod getter = new GetMethod(crossReefQueryURL);
-
-      try {
-        long timestamp = System.currentTimeMillis();
-
-        int response = httpClient.executeMethod(getter);
-        
-        if (log.isDebugEnabled()) {
-          log.debug("Http call finished in " + (System.currentTimeMillis() - timestamp) + " ms");
-        }
-
-        if (response == 200) {
-          BufferedReader reader = new BufferedReader(new InputStreamReader(getter.getResponseBodyAsStream()));
-          String line;
-
-          while (StringUtils.isNotBlank(line = reader.readLine())) {
-            CrossRefArticle article = createArticleFromPipedString(line);
-            if (StringUtils.isNotBlank(article.getDoi())) {
-              if (log.isDebugEnabled()) {
-                log.debug("Found " + article);
-              }
-              articles.add(article);
-            }
-          }
-        } else {
-          log.error("Received response code " + response + " when executing query " + crossRefUrl);
-        }
-      } finally {
-        // be sure the connection is released back to the connection manager
-        getter.releaseConnection();
-      }
-
-
-    return articles;
-  }
-
   @Override
   @Transactional(readOnly = true)
-  public String findDoi(String title, String author) throws Exception {
-    List<CrossRefArticle> doiResults = findArticles(title, author);
-    if (!doiResults.isEmpty()) {
-      if (doiResults.size() > 1) {
-        log.warn("CrossRef returned more than 1 result; just using the first");
+  public String findDoi(String searchString) throws Exception {
+    CrossRefResponse response = queryCrossRef(searchString);
+
+    if(response != null && response.results.length > 0) {
+      return response.results[0].doi;
+    } else {
+      return null;
+    }
+  }
+
+  private CrossRefResponse queryCrossRef(String searchString)
+  {
+    PostMethod post = createCrossRefPost(searchString);
+
+    try {
+      long timestamp = System.currentTimeMillis();
+      int response = httpClient.executeMethod(post);
+
+      log.debug("Http post finished in {} ms", System.currentTimeMillis() - timestamp);
+
+      if (response == 200) {
+        String result = post.getResponseBodyAsString();
+        if(result != null) {
+          log.trace("JSON response received: {}", result);
+          return parseJSON(result);
+        }
+        log.error("Received empty response, response code {}, when executing query  {}", response, crossRefUrl);
+      } else {
+        log.error("Received response code {} when executing query {}", response, crossRefUrl);
       }
-      return doiResults.get(0).getDoi();
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+    } finally {
+      // be sure the connection is released back to the connection manager
+      post.releaseConnection();
     }
     return null;
   }
 
-  private String createPipedQuery(String title, String author) throws UnsupportedEncodingException {
-    return escapeString(URLEncoder.encode(title + "|" + author + "|||", "UTF-8"));
+  /**
+   * Parse the JSON into native types
+   *
+   * @param json the JSON string to convert to a java native type
+   *
+   * @return a CrossRefResponse object
+   */
+  private CrossRefResponse parseJSON(final String json) {
+    return new CrossRefResponse() {{
+      JsonParser parser = new JsonParser();
+      JsonObject responseObject = parser.parse(json).getAsJsonObject();
+
+      queryOK = (responseObject.getAsJsonPrimitive("query_ok")).getAsBoolean();
+
+      List<CrossRefResult> resultTemp = new ArrayList<CrossRefResult>();
+
+      for(final JsonElement resultElement : responseObject.getAsJsonArray("results")) {
+        JsonObject resultObj = resultElement.getAsJsonObject();
+        CrossRefResult res = new CrossRefResult();
+
+        if(resultObj.getAsJsonPrimitive("text") != null) {
+          res.text = resultObj.getAsJsonPrimitive("text").getAsString();
+        }
+
+        if(resultObj.getAsJsonPrimitive("match") != null) {
+          res.match = resultObj.getAsJsonPrimitive("match").getAsBoolean();
+        }
+
+        if(resultObj.getAsJsonPrimitive("doi") != null) {
+          res.doi = resultObj.getAsJsonPrimitive("doi").getAsString();
+        }
+
+        if(resultObj.getAsJsonPrimitive("score") != null) {
+          res.score = resultObj.getAsJsonPrimitive("score").getAsString();
+        }
+
+        //Some results aren't actually valid
+        if(res.doi != null) {
+          resultTemp.add(res);
+        }
+      }
+
+      this.results = resultTemp.toArray(new CrossRefResult[resultTemp.size()]);
+    }};
   }
 
-  private CrossRefArticle createArticleFromPipedString(String result) throws Exception {
+  private PostMethod createCrossRefPost(String searchString)
+  {
+    StringBuilder builder = new StringBuilder();
 
-    log.debug("Creating article from piped string:" + result);
+    //Example query to post:
+    //["Young GC,Analytical methods in palaeobiogeography, and the role of early vertebrate studies;Palaeoworld;19;160-173"]
 
-    String[] fields = result.split("\\|");
+    //Use toJSON to encode strings with proper escaping
+    final String json = "[" + (new Gson()).toJson(searchString) + "]";
 
-    CrossRefArticle article = new CrossRefArticle();
-
-    for (int i = 0; i < fields.length; i++) {
-      if (StringUtils.isNotBlank(fields[i])) {
-        BeanUtils.setProperty(article, TEN_FIELD_ORDER[i], fields[i]);
-      }
+    if(this.crossRefUrl == null) {
+      throw new RuntimeException("ambra.services.crossref.query.url value not found in configuration.");
     }
 
-    return article;
+    return new PostMethod(this.crossRefUrl) {{
+      addRequestHeader("Content-Type","application/json");
+      setRequestEntity(new RequestEntity() {
+        @Override
+        public boolean isRepeatable() {
+          return false;
+        }
+
+        @Override
+        public void writeRequest(OutputStream outputStream) throws IOException {
+          outputStream.write(json.getBytes());
+        }
+
+        @Override
+        public long getContentLength() {
+          return json.getBytes().length;
+        }
+
+        @Override
+        public String getContentType() {
+          return "application/json";
+        }
+      });
+    }};
   }
 
-  private String escapeString(String text) {
-    if (text == null) return null;
+  /* utility class for internally tracking data */
+  private class CrossRefResult {
+    public String text;
+    public Boolean match;
+    public String doi;
+    public String score;
+  }
 
-    return text.replaceAll(";", "%3B")
-        .replaceAll("/", "%2F")
-        .replaceAll("\\?", "%3F")
-        .replaceAll(":", "%3A")
-        .replaceAll("@", "%40")
-        .replaceAll("=", "%3D")
-        .replaceAll("&", "%26")
-        .replaceAll("\n", "%0A");
+  /* utility class for internally tracking data */
+  private class CrossRefResponse {
+    public CrossRefResult[] results;
+    public Boolean queryOK;
   }
 }
+
+

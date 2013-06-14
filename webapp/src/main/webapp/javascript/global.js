@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +17,20 @@ if (!window.console) {
 var $win = $(window);
 var $pagebdy = $('#pagebdy');
 
-// on document ready
-$(document).ready(function () {
+//For analytics tracking
+var close_time;
 
-  // detect touch screen
+$(document).ready(function () {
+  onReadyDocument();
+  onReadyMainContainer();
+});
+
+// on document ready.
+// this should include global initialization that runs once.
+// For each tab content initialization use onReadyMainContainer.
+
+function onReadyDocument() {
+// detect touch screen
   $.support.touchEvents = (function () {
     return (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
   })();
@@ -56,21 +64,13 @@ $(document).ready(function () {
     this.tabs();
   });
 
-  $article = $('#article-block').find('div.article').eq(0);
-
-  $('#nav-article-page').doOnce(function () {
-    this.buildNav({
-      content:$article
-    });
-  });
-
   $('#nav-toc').doOnce(function () {
     this.buildNav({
       content:$('#toc-block').find('div.col-2')
     });
   });
 
-  // enable the floating nav for non-touch-enabled devices due to issue with 
+  // enable the floating nav for non-touch-enabled devices due to issue with
   // zoom and position:fixed.
   // FIXME: temp patch; needs more refinement.
   if (!$.support.touchEvents) {
@@ -80,15 +80,44 @@ $(document).ready(function () {
         sections:$('#toc-block').find('div.section')
       });
     });
+  }
 
+  $('.authors').doOnce(function () {
+    this.authorsMeta();
+  })
+
+  $('.article-kicker').doOnce(function () {
+    this.articleType();
+  })
+
+  var collapsible = $('.collapsibleContainer');
+  if (collapsible) {
+    collapsible.collapsiblePanel();
+  }
+}
+
+// This is tab content initialization that is run once on page load,
+// and then everytime on tab navigation when the tab content loads.
+
+function onReadyMainContainer() {
+  $article = $('#article-block').find('div.article').eq(0);
+
+  $('#nav-article-page').doOnce(function () {
+    this.buildNav({
+      content:$article
+    });
+  });
+
+  // enable the floating nav for non-touch-enabled devices due to issue with
+  // zoom and position:fixed.
+  // FIXME: temp patch; needs more refinement.
+  if (!$.support.touchEvents) {
     $('#nav-article-page').doOnce(function () {
       this.floatingNav({
         sections:$article.find('a[toc]').closest('div')
       });
     });
-
   }
-
 
   $('#figure-thmbs').doOnce(function () {
     this.carousel({
@@ -106,20 +135,17 @@ $(document).ready(function () {
     e.preventDefault();
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
+
+    //window.history.pushState is not on all browsers
+    if(window.history.pushState) {
+      window.history.pushState({}, document.title, $(this).attr('href'));
+    }
+
     $('html,body').animate({scrollTop:b.offset().top - 100}, 500, 'linear', function () {
       // see spec
       // window.location.hash = '#' + href;
     });
   });
-
-
-  $('.authors').doOnce(function () {
-    this.authorsMeta();
-  })
-
-  $('.article-kicker').doOnce(function () {
-    this.articleType();
-  })
 
   if (!$.support.touchEvents) {
     $article.doOnce(function () {
@@ -127,14 +153,169 @@ $(document).ready(function () {
     });
   }
 
-});
-
-var $nav_article = $('#nav-article');
-if ($nav_article.length) {
-  items_l = $nav_article.find('li').length
-  $nav_article.addClass('items-' + items_l);
+  if (typeof selected_tab != "undefined") {
+    $("#print-article").css("display", selected_tab == "article" ? "list-item" : "none");
+  }
 }
 
+
+// Initialization code include blocks that run once on page load
+// and then everytime when the tab content loads via Pjax.
+
+function initMainContainer() {
+  var $nav_article = $('#nav-article');
+  if ($nav_article.length) {
+    items_l = $nav_article.find('li').length
+    $nav_article.addClass('items-' + items_l);
+  }
+
+  var $figure_thmbs = $('#figure-thmbs');
+  if ($figure_thmbs.length) {
+    $lnks = $figure_thmbs.find('.item a');
+    $wrap = $figure_thmbs.find('div.wrapper');
+    if ($lnks.length) {
+      $lnks.on('click', function (e) {
+        e.preventDefault();
+        doi = $(this).data('doi');
+        ref = $(this).data('uri');
+        launchModal(doi, ref, 'fig');
+      });
+      $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
+          $wrap.hide();
+          $figure_thmbs.find('div.buttons').hide();
+          $figure_thmbs.find('div.controls').hide();
+          $fig_tog.html('Show Figures')
+            .toggleClass('hide');
+        },function () {
+          $wrap.show();
+          $figure_thmbs.find('div.buttons').show();
+          $figure_thmbs.find('div.controls').show();
+          $fig_tog.html('Hide Figures')
+            .toggleClass('hide');
+        }
+      ).insertAfter($figure_thmbs)
+        .wrap('<div id="fig-toggle" class="cf" />');
+    } else {
+      $figure_thmbs.addClass('collapse');
+    }
+  }
+
+  // inline figures
+  var $fig_inline = $('#article-block').find('div.figure');
+  if ($fig_inline.length) {
+    $lnks = $fig_inline.find('.img a');
+    $lnks.on('click', function (e) {
+      e.preventDefault();
+      ref = $(this).data('uri');
+      doi = $(this).data('doi');
+      launchModal(doi, ref, 'fig');
+    });
+    $lnks.append('<div class="expand" />');
+  }
+
+  // figure search results
+  var $fig_results = $('#fig-search-results');
+  if ($fig_results.length) {
+    $fig_results.find('a.figures').on('click', function () {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'fig', true);
+    });
+    $fig_results.find('a.abstract').on('click', function () {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'abstract', true);
+    });
+  }
+
+  // figure link in article floating nav
+  var $nav_figs = $('#nav-figures a');
+  if ($nav_figs.length) {
+    $nav_figs.on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'fig');
+    });
+  }
+
+  // figure link in the toc
+  var $toc_block_links = $('#toc-block div.links');
+  if ($toc_block_links.length) {
+    $toc_block_links.find('a.figures').on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'fig', true);
+    });
+
+    $toc_block_links.find('a.abstract').on('click', function () {
+      var doi = $(this).data('doi');
+      launchModal(doi, null, 'abstract', true);
+    });
+  }
+
+  //load article asset sizes for inline figure download links
+  $('.assetSize').each(function (index, assetInput) {
+    var span = $('span[id="' + assetInput.getAttribute('name') + '"]');
+    if (span) {
+      val = assetInput.getAttribute('value');
+      if (val >= 1000000) {
+        val /= 1000000;
+        val = Math.round(val * 100) / 100;
+        val = String(val).concat("MB");
+      }
+      else if (val < 1000000 && val >= 1000) {
+        val /= 1000;
+        val = Math.round(val);
+        val = String(val).concat("KB");
+      }
+      else {
+        val = String(val).concat("Bytes");
+      }
+      span.html(val);
+    }
+  });
+
+  $("#nav-article li a").on("click", function(event) {
+    console.log("pjax click " + this.name);
+    // for metrics and related content that have dynamic javascript to populate
+    // the content, cache the content here when the user navigates away from that
+    // page. So that this cache can be reused when the user navigates back to
+    // this page later.
+    if(selected_tab == "related") {
+      if($.pjax.contentCache[window.location.href] !== undefined) {
+        $.pjax.contentCache[window.location.href].data = $("#pjax-container").outerHTML();
+        $.pjax.contentCache[window.location.href].loaded = true;
+      }
+    }
+    pjax_selected_tab = this.name;
+    selected_tab = this.name;
+    return true;
+  });
+
+}
+
+/*GA Event Tracking Hooks: Menu Tab Clicks
+ *
+*/
+var tab_menu_category, tab_menu_action, tab_menu_label;
+tab_menu_category = "tab menu actions";
+tab_menu_action = "tab menu click";
+$(document).ajaxComplete(function(){
+    if(pjax_selected_tab != null){ tab_menu_label = pjax_selected_tab;};
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',tab_menu_category,tab_menu_action,tab_menu_label]);
+    }
+});
+
+/*GA Event Tracking Hook #2: PLOS Taxonomy 2nd interaction
+ *  Tracks the number of clicks on a Related Article link
+ *  note: the 1st interaction happens when a user clicks the 'related content' tab
+*/
+var taxonomy_related_category;
+$(document).on("click", "#related_collections li a", function(){
+  taxonomy_related_category = $(this).parent('div').children('h3').html();
+	_gaq.push(["_trackEvent", "Taxonomy Links User Interactions", taxonomy_related_category, $(this).html()]);
+}); 
+
+
+
+// Begin $ function definitions
 
 (function ($) {
   $.fn.authorsMeta = function (options) {
@@ -148,6 +329,12 @@ if ($nav_article.length) {
       var $this = $(this); // $this = <li> <span class="author"></span> <div class="author_meta"></div> </li>
       var $author_meta = $this.find('.author_meta');
       $authors.removeClass('on');
+
+      //A fix for FEND-776, sometimes author names are very long and take up two lines
+      //Push the box down a bit in this case
+      if ($this.height() > 25) {
+        $author_meta.css("top", "43px")
+      }
 
       if ($this.position().left > ($(window).outerWidth() / 2)) {
         $author_meta.css({
@@ -184,18 +371,22 @@ if ($nav_article.length) {
 
 (function ($) {
   $.fn.lwSetup = function () {
-    $($this.gParse("cpez!ejw;dpoubjot)(hjo{v(*")).each(function() {
-      $(this).html($(this).html().replace(new RegExp($this.gParse("]thjo{v"),'gi'), $this.gParse("!=tqbo!dmbtt>(hjo{v(?hjo{v=0tqbo?")));
+    $($this.gParse("cpez!ejw;dpoubjot)(Hjo{v(*")).each(function () {
+      $(this).html($(this).html().replace(new RegExp($this.gParse("]tHjo{v"), 'gi'), $this.gParse("!=tqbo!dmbtt>(Hjo{v(?Hjo{v=0tqbo?")));
     });
 
-    $($this.gParse("tqbo/hjo{v")).each(function() {
-      var f1 = function() { $(this).animate({ color: "#FF0000" }, 10000, f2); };
-      var f2 = function() { $(this).animate({ color: "#FFFFFF" }, 10000, f1); };
+    $($this.gParse("tqbo/Hjo{v")).each(function () {
+      var f1 = function () {
+        $(this).animate({ color:"#FF0000" }, 10000, f2);
+      };
+      var f2 = function () {
+        $(this).animate({ color:"#FFFFFF" }, 10000, f1);
+      };
 
       f1.call(this);
 
-      $(this).css("cursor","pointer");
-      $(this).click(function() {
+      $(this).css("cursor", "pointer");
+      $(this).click(function () {
         $(this).lw(this);
         return false;
       });
@@ -204,8 +395,8 @@ if ($nav_article.length) {
 })(jQuery);
 
 (function ($) {
-  $.fn.lw = function(obj) {
-    var text = $($this.gParse("=q?$hjo{v`ufnq=0q?")),
+  $.fn.lw = function (obj) {
+    var text = $($this.gParse("=q?$Hjo{v`ufnq=0q?")),
       startTop = $(obj).offset().top,
       startLeft = $(obj).offset().left;
 
@@ -217,7 +408,9 @@ if ($nav_article.length) {
 
     $this.gGo(text, startLeft, startTop, 360 * Math.random(), 1);
 
-    setTimeout(function() { $(this).lw(obj) }, Math.random() * 1000);
+    setTimeout(function () {
+      $(this).lw(obj)
+    }, Math.random() * 1000);
   }
 })(jQuery);
 
@@ -412,6 +605,12 @@ if ($nav_article.length) {
         $new_ul.prependTo($this);
         $this.on("click", "a.scroll", function (event) {
           var link = $(this);
+
+          //window.history.pushState is not on all browsers
+          if(window.history.pushState) {
+            window.history.pushState({}, document.title, event.target.href);
+          }
+
           event.preventDefault();
           $('html,body').animate({scrollTop:$('[name="' + this.hash.substring(1) + '"]').offset().top - options.margin}, 500, function () {
             // see spec
@@ -438,7 +637,7 @@ if ($nav_article.length) {
       var ftr_view = false;
       var speed = 'slow';
       var $btn = $('<div class="btn-g"><img src="/images/logo.plos.95.png" alt="PLOS logo" class="btn-logo"/><a href="#close" class="btn-close">close</a></div>').on('click', function (e) {
-        if ($($this.gParse("+;dpoubjot)(hjo{v(*")).size() > 0 && e.shiftKey && e.altKey) {
+        if ($($this.gParse("+;dpoubjot)(Hjo{v(*")).size() > 0 && e.shiftKey && e.altKey) {
           $this.lwSetup();
           return false;
         }
@@ -493,8 +692,8 @@ if ($nav_article.length) {
           //scroll the window down by the height of the banner in the event we are jumping to an image
           //second clause covers edge-case wherein user has jumped to image, scrolled the header into view
           //and back down again
-          if(window.location.hash && win_top > $titleHeight + el_top + el_h ){
-            window.scrollBy(0,-($titleHeight));
+          if (window.location.hash && win_top > $titleHeight + el_top + el_h) {
+            window.scrollBy(0, -($titleHeight));
           }
         }
         if (hdr_view && top_open) {
@@ -574,6 +773,12 @@ if ($nav_article.length) {
         e.preventDefault();
         var this_lnk = $(this);
         var this_href = this_lnk.attr('href');
+
+        //window.history.pushState is not on all browsers
+        if(this_lnk.is("[url]") && window.history.pushState) {
+          window.history.pushState({}, document.title, this_lnk.attr('url'));
+        }
+
         $panes.hide();
         if (this_lnk.is('[data-loadurl]')) {
           $(this_href).load(this_lnk.data('loadurl'));
@@ -754,7 +959,56 @@ if ($nav_article.length) {
   };
 })(jQuery);
 
-// BEGIN Figure Viewer
+(function ($) {
+  $.fn.journalArchive = function (options) {
+    defaults = {
+      navID:'',
+      slidesContainer:'',
+      initialTab:0
+    };
+    var options = $.extend(defaults, options);
+    var $navContainer = $(options.navID);
+    var $slidesContainer = $(options.slidesContainer);
+    init = function () {
+      $navContainer.find('li').eq(options.initialTab).addClass('selected');
+      var initial_slide = $slidesContainer.find('li.slide').eq(options.initialTab);
+      var aheight = initial_slide.height();
+      $slidesContainer.css('height', aheight);
+      initial_slide.addClass('selected').fadeIn();
+    };
+    $navContainer.find('li a').on('click', function (e) {
+      e.preventDefault();
+      $this = $(this);
+      var target = $this.attr('href');
+      $navContainer.find('li.selected').removeClass('selected');
+      $slidesContainer.find('li.slide.selected').removeClass('selected').fadeOut();
+      $this.parent('li').addClass('selected');
+      var targetElement = $slidesContainer.find('li' + target);
+      targetElement.addClass('selected').fadeIn();
+      $slidesContainer.animate({'height':targetElement.height()});
+    });
+    init();
+  };
+})(jQuery);
+
+
+//http://css-tricks.com/snippets/jquery/outerhtml-jquery-plugin/
+$.fn.outerHTML = function(){
+  // IE, Chrome & Safari will comply with the non-standard outerHTML, all others (FF) will have a fall-back for cloning
+  return (!this.length) ? this : (this[0].outerHTML || (
+    function(el){
+      var div = document.createElement('div');
+      div.appendChild(el.cloneNode(true));
+      var contents = div.innerHTML;
+      div = null;
+      return contents;
+    })(this[0]));
+}
+
+// End of $ function definitions
+
+// Begin Figure Viewer
+
 var launchModal = function (doi, ref, state, imgNotOnPage) {
   var path = '/article/fetchObject.action?uri='
   //var path = 'article/';
@@ -811,9 +1065,12 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       url:'/article/lightbox.action?uri=' + doi,
       // url: 'article/' + doi,
       dataFilter:function (data, type) {
-        return data.replace(/(\/\*|\*\/)/g, '');
+        return data.replace(/(^\/\*|\*\/$)/g, '');
       },
       dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
       success:function (data) {
         page_url = data.URL;
         $.each(data.secondaryObjects, function () {
@@ -837,7 +1094,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
           if (imgNotOnPage) { // the image is on another page
             context_hash = '/article/' + page_url + context_hash;
           }
-          var desc = '<div class="desc">' + this.transformedDescription + '</div>';
+          var desc = '<div class="desc">' + this.transformedDescription + '<p>' + this.doi.replace('info:doi/','doi:') + '</p></div>';
           var img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + image_title + '"></div>'
           var lnks_txt = '<ul class="download">'
             + '<li class="label">Download: </li>'
@@ -884,7 +1141,17 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
         } else {
           $thmb_1.trigger('click');
         }
-        buildAbs(data.articleType, data.articleTitle, data.authors, data.uri, imgNotOnPage);
+        buildAbs(data, imgNotOnPage);
+
+        // rerun mathjax
+        try {
+          var domelem = $modal[0];
+          if (domelem && typeof MathJax != "undefined") {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,domelem]);
+          }
+        } catch (e) {
+          // ignore
+        }
       }
     });
   };
@@ -908,71 +1175,32 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     return '<a ' + aClass + ' href="' + href + '" onclick="killModal();">';
   };
 
-  var buildAbs = function (articleType, title, authors, articleDoi, linkTitle) {
-    var solrHost = $('meta[name=solrHost]').attr("content");
-    var solrApiKey = $('meta[name=solrApiKey]').attr("content");
-
-    var populateAbstract = function (data) {
-      var docs = data.response.docs;
-      if (docs.length != 1) {
-        return failAbstract(null, 'expected docs.length == 1; got docs.length == ' + docs.length);
-      }
-      var abstractText = docs[0]["abstract_primary_display"];
-      if (!abstractText) {
-        abstractText = docs[0]["abstract"];
-      }
-
-      abstract_html = '<div id="fig-viewer-abst">'
-        + '<div class="txt"><p>' + abstractText + '</p></div>'
-        + '<div class="lnks">'
-        + '<ul class="download">'
-        + '<li class="label">Download: </li>'
+  var buildAbs = function (data, linkTitle) {
+    var abstractText = data.abstractText;
+    var abstractHtml = '<div id="fig-viewer-abst">'
+      + '<div class="txt"><p>' + abstractText + '</p></div>'
+      + '<div class="lnks">'
+      + '<ul class="download">'
+      + '<li class="label">Download: </li>'
 //   + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-        + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
-        + '</ul>'
-        + '<ul class="figure_navigation">'
-        + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
-        + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-        + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
-        + '</ul>'
-        + '</div>'
-        + '</div>';
+      + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
+      + '</ul>'
+      + '<ul class="figure_navigation">'
+      + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
+      + '<li><span class="btn active viewAbstract">view abstract</span></li>'
+      + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
+      + '</ul>'
+      + '</div>'
+      + '</div>';
 
-      $modal.append(abstract_html);
+    $modal.append(abstractHtml);
 
-      if (!abstractText || /^\s*$/.test(abstractText)) {
-        // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
-        $modal.find('.viewAbstract').hide();
-      }
-
-      displayModal(articleType, title, authors, articleDoi, linkTitle);
-    };
-
-    var failAbstract = function (xOptions, textStatus) {
-      console.log('Error: ' + textStatus);
-      var msg = 'Abstract preview temporarily unavailable. Please try again later, or '
-        + getFullTextElement(false) + 'read the abstract in context</a>.';
-
-      // Fill in the error message, and the final displayModal call will build the rest of the lightbox
-      populateAbstract({'response':{'docs':[
-        {'abstract':msg}
-      ]}});
-    };
-
-    if (solrHost && solrApiKey) {
-      var url = solrHost + '?q=doc_type:full%20and%20id:%22' + doi.replace("info:doi/", "") + '%22&fl=abstract,abstract_primary_display&facet=false&hl=false&wt=json&api_key=' + solrApiKey;
-      $.jsonp({
-        url:url,
-        dataType:'json',
-        context:document.body,
-        timeout:10000,
-        callbackParameter:"json.wrf",
-        success:populateAbstract,
-        error:failAbstract
-      });
-    } else {
-      failAbstract(null, 'config properties "solrHost" and "solrApiKey" required');
+    if (!abstractText || /^\s*$/.test(abstractText)) {
+      // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
+      $modal.find('.viewAbstract').hide();
     }
+
+    displayModal(data.articleType, data.articleTitle, data.authors, data.uri, linkTitle);
   };
 
 
@@ -1123,16 +1351,16 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
   $(this).bind('keydown', function (e) {
-    if(e.which == 37 || e.which == 38) {
-      if(active_thmb.prev().length) {
+    if (e.which == 37 || e.which == 38) {
+      if (active_thmb.prev().length) {
         t = active_thmb.prev()
         changeSlide(t);
       }
       return false;
     }
 
-    if(e.which == 39 || e.which == 40) {
-      if(active_thmb.next().length) {
+    if (e.which == 39 || e.which == 40) {
+      if (active_thmb.next().length) {
         t = active_thmb.next()
         changeSlide(t);
       }
@@ -1143,110 +1371,6 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   buildFigs();
 };
 
-
-var $figure_thmbs = $('#figure-thmbs');
-if ($figure_thmbs.length) {
-  $lnks = $figure_thmbs.find('.item a');
-  $wrap = $figure_thmbs.find('div.wrapper');
-  if ($lnks.length) {
-    $lnks.on('click', function (e) {
-      e.preventDefault();
-      doi = $(this).data('doi');
-      ref = $(this).data('uri');
-      launchModal(doi, ref, 'fig');
-    });
-    $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
-        $wrap.hide();
-        $figure_thmbs.find('div.buttons').hide();
-        $figure_thmbs.find('div.controls').hide();
-        $fig_tog.html('Show Figures')
-          .toggleClass('hide');
-      },function () {
-        $wrap.show();
-        $figure_thmbs.find('div.buttons').show();
-        $figure_thmbs.find('div.controls').show();
-        $fig_tog.html('Hide Figures')
-          .toggleClass('hide');
-      }
-    ).insertAfter($figure_thmbs)
-      .wrap('<div id="fig-toggle" class="cf" />');
-  } else {
-    $figure_thmbs.addClass('collapse');
-  }
-}
-
-
-// inline figures
-var $fig_inline = $('#article-block').find('div.figure');
-if ($fig_inline.length) {
-  $lnks = $fig_inline.find('.img a');
-  $lnks.on('click', function (e) {
-    e.preventDefault();
-    ref = $(this).data('uri');
-    doi = $(this).data('doi');
-    launchModal(doi, ref, 'fig');
-  });
-  $lnks.append('<div class="expand" />');
-}
-
-
-// figure search results
-var $fig_results = $('#fig-search-results');
-if ($fig_results.length) {
-  $fig_results.find('a.figures').on('click', function () {
-    doi = $(this).data('doi');
-    launchModal(doi, null, 'fig', true);
-  });
-  $fig_results.find('a.abstract').on('click', function () {
-    doi = $(this).data('doi');
-    launchModal(doi, null, 'abstract', true);
-  });
-}
-
-//if search box is empty, don't submit the form
-//This is a little weird, but there are multiple forms on multiple pages
-//The home/global and advanced search pages
-$('form[name="searchForm"], form[name="searchStripForm"]').each(function(index, item) {
-  $(item).submit(function() {
-    //Form fields are sometimes name differently pending on where the search came from
-    //namely simple or advanced
-    if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
-      return false;
-    }
-  });
-});
-
-// figure link in article floating nav
-var $nav_figs = $('#nav-figures a');
-if ($nav_figs.length) {
-  $nav_figs.on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'fig');
-  });
-}
-
-// figure link in the toc
-var $toc_block_links = $('#toc-block div.links');
-if ($toc_block_links.length) {
-  $toc_block_links.find('a.figures').on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'fig', true);
-  });
-
-  $toc_block_links.find('a.abstract').on('click', function () {
-    var doi = $(this).data('doi');
-    launchModal(doi, null, 'abstract', true);
-  });
-}
-
-var $toc_block_cover = $('#toc-block .cover img');
-if ($toc_block_cover.length) {
-  var doi = $toc_block_cover.data('doi');
-  $toc_block_cover.click(function () {
-    launchModal(doi, null, 'fig', true);
-  });
-}
-
 var killModal = function () {
   $('div.modal').remove();
   $('#modal-mask').remove();
@@ -1255,11 +1379,13 @@ var killModal = function () {
   $('body').removeClass('modal-active');
 
   $win.unbind('resize.modal');
+  //will record the timeStamp for when the modal is closed
+  close_time = event.timeStamp;
 };
 
-var toggleModalState = function () {
-  $('#fig-viewer').toggleClass('abstract');
-};
+// End Figure Viewer
+
+// Begin other global functions
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -1271,16 +1397,6 @@ function getParameterByName(name) {
   else
     return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-
-var imageURI = getParameterByName("imageURI");
-if (imageURI) {
-  var index = imageURI.lastIndexOf(".");
-  if (index > 0) {
-    var doi = imageURI.substr(0, index);
-    launchModal(doi, imageURI, 'fig');
-  }
-}
-delete imageURI;
 
 //Stolen from:
 //http://stackoverflow.com/questions/149055/how-can-i-format-numbers-as-money-in-javascript
@@ -1299,9 +1415,91 @@ Array.prototype.remove = function (from, to) {
 };
 
 
-//******************************
+// Begin collapsible
+
+// Collapsible div used on the 500 page (error.ftl) to hold the exception stacktrace.
+// Based on code from http://www.darreningram.net/pages/examples/jQuery/CollapsiblePanelPlugin.aspx
+// (No copyright statements there, but including for attribution.)
+
+(function($) {
+  $.fn.extend({
+    collapsiblePanel: function() {
+      return $(this).each(ConfigureCollapsiblePanel);
+    }
+  });
+})(jQuery);
+
+function ConfigureCollapsiblePanel() {
+  $(this).addClass("ui-widget");
+
+  // Check if there are any child elements, if not then wrap the inner text within a new div.
+  if ($(this).children().length == 0) {
+    $(this).wrapInner("<div></div>");
+  }
+
+  // Wrap the contents of the container within a new div.
+  $(this).children().wrapAll("<div class='collapsibleContainerContent ui-widget-content'></div>");
+
+  // Create a new div as the first item within the container.  Put the title of the panel in here.
+  $("<div class='collapsibleContainerTitle ui-widget-header'><div>" + $(this).attr("title") + "</div></div>").prependTo($(this));
+
+  // Assign a call to CollapsibleContainerTitleOnClick for the click event of the new title div.
+  $(".collapsibleContainerTitle", this).click(CollapsibleContainerTitleOnClick);
+
+  // Keep the widget closed initially.
+  $(".collapsibleContainerContent", $(this).parent()).toggle();
+}
+
+function CollapsibleContainerTitleOnClick() {
+
+  // The item clicked is the title div... get this parent (the overall container) and toggle the content within it.
+  $(".collapsibleContainerContent", $(this).parent()).slideToggle();
+}
+
+// End collapsible
+
+// Begin global blocks
+
+//if search box is empty, don't submit the form
+//This is a little weird, but there are multiple forms on multiple pages
+//The home/global and advanced search pages
+$('form[name="searchForm"], form[name="searchStripForm"]').each(function (index, item) {
+  $(item).submit(function () {
+    //Form fields are sometimes name differently pending on where the search came from
+    //namely simple or advanced
+    if (!$(this).find('input[name="query"], input[name="unformattedQuery"]').val()) {
+      return false;
+    }
+    else {
+      $('#db input[name="startPage"]').val('0');
+    }
+  });
+});
+
+var $toc_block_cover = $('#toc-block .cover img');
+if ($toc_block_cover.length) {
+  var doi = $toc_block_cover.data('doi');
+  $toc_block_cover.click(function () {
+    launchModal(doi, null, 'fig', true);
+  });
+}
+
+var toggleModalState = function () {
+  $('#fig-viewer').toggleClass('abstract');
+};
+
+var imageURI = getParameterByName("imageURI");
+if (imageURI) {
+  var index = imageURI.lastIndexOf(".");
+  if (index > 0) {
+    var doi = imageURI.substr(0, index);
+    launchModal(doi, imageURI, 'fig');
+  }
+}
+delete imageURI;
+
+
 //Browse / issue page functions
-//******************************
 // on window load
 $(window).load(function () {
   $('.journal_issues').doOnce(function () {
@@ -1313,37 +1511,6 @@ $(window).load(function () {
   });
 });
 
-(function ($) {
-  $.fn.journalArchive = function (options) {
-    defaults = {
-      navID:'',
-      slidesContainer:'',
-      initialTab:0
-    };
-    var options = $.extend(defaults, options);
-    var $navContainer = $(options.navID);
-    var $slidesContainer = $(options.slidesContainer);
-    init = function () {
-      $navContainer.find('li').eq(options.initialTab).addClass('selected');
-      var initial_slide = $slidesContainer.find('li.slide').eq(options.initialTab);
-      var aheight = initial_slide.height();
-      $slidesContainer.css('height', aheight);
-      initial_slide.addClass('selected').fadeIn();
-    };
-    $navContainer.find('li a').on('click', function (e) {
-      e.preventDefault();
-      $this = $(this);
-      var target = $this.attr('href');
-      $navContainer.find('li.selected').removeClass('selected');
-      $slidesContainer.find('li.slide.selected').removeClass('selected').fadeOut();
-      $this.parent('li').addClass('selected');
-      var targetElement = $slidesContainer.find('li' + target);
-      targetElement.addClass('selected').fadeIn();
-      $slidesContainer.animate({'height':targetElement.height()});
-    });
-    init();
-  };
-})(jQuery);
 
 $(document).bind('keydown', function (e) {
   if (e.which == 27) {
@@ -1351,24 +1518,223 @@ $(document).bind('keydown', function (e) {
   }
 });
 
-//load article asset sizes for inline figure download links
-$('.assetSize').each(function (index, assetInput) {
-  var span = $('span[id="' + assetInput.getAttribute('name') + '"]');
-  if (span) {
-    val = assetInput.getAttribute('value');
-    if (val >= 1000000) {
-      val /= 1000000;
-      val = Math.round(val * 100) / 100;
-      val = String(val).concat("MB");
+// End global block
+
+// call the initialization function
+
+initMainContainer();
+
+
+// Begin PJAX related code
+
+var pjax_selected_tab = null; // last clicked pjax content
+
+if ($(document).pjax) {
+  $(document).pjax("#nav-article ul li a", "#pjax-container",
+      {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
+
+  $("#pjax-container").on("pjax:complete", function(event) {
+    // invoke document ready and window initialization code
+    onReadyMainContainer();
+    initMainContainer();
+
+    // when metrics tab is selected, load highcharts.js only
+    // if it was not already loaded. If the tab content was loaded from
+    // pjax (and not from cache) then also initialize ALM.
+
+    if (pjax_selected_tab == "metrics") {
+      if (typeof Highcharts == "undefined") {
+        $.getScript("/javascript/highcharts.js", function(data, textStatus, jqxhr) {
+          onLoadALM();
+        });
+      }
+      else {
+        onLoadALM();
+      }
     }
-    else if (val < 1000000 && val >= 1000) {
-      val /= 1000;
-      val = Math.round(val);
-      val = String(val).concat("KB");
+
+    else if (pjax_selected_tab == "article"){
+      // figshare_widget_load variable is defined if figshare was loaded before.
+      // but plos_widget.js must be loaded again to show the figshare when
+      // switching to article tab
+      // if switching from another tab to article tab
+      // then add figshare css and js files.
+      // e.g. metrics --> article
+      // do not add css if article tab was already opened before.
+      // e.g: article --> metrics --> article
+      // if landing page is article then p_widget.js is included from article.ftl
+      if (typeof figshare_widget_load == "undefined") {
+        function add_widget_css() {
+          var headtg = document.getElementsByTagName('head')[0];
+          if (!headtg) {
+            return;
+          }
+          var linktg = document.createElement('link');
+          linktg.type = 'text/css';
+          linktg.rel = 'stylesheet';
+          linktg.href = 'http://wl.figshare.com/static/css/p_widget.css?v=8';
+          headtg.appendChild(linktg);
+        }
+        add_widget_css();
+      }
+      $.getScript("http://wl.figshare.com/static/plos_widget.js?v=10");
+      $.getScript("http://wl.figshare.com/static/jmvc/main_app/resources/jwplayer/jwplayer.js");
+      figshare_widget_load = true;
     }
-    else {
-      val = String(val).concat("Bytes");
+
+    // For related pages, if no item exists under more_by_authors and
+    // the page is not yet cached, reload the javascript to populate the
+    // related content.
+    else if (pjax_selected_tab == "related"){
+      if($('div[id="more_by_authors"] > ul > li').length == 0) {
+        if($.pjax.contentCache[window.location.href] === undefined ||
+            !$.pjax.contentCache[window.location.href].loaded) {
+          $.getScript("/javascript/related_content.js");
+        }
+      }
     }
-    span.html(val);
+
+  });
+}
+
+// End Pjax related code
+
+$(function() {
+  //Stolen from:
+  //http://www.vancelucas.com/blog/fixing-ie7-z-index-issues-with-jquery/
+  if($.browser.msie && jQuery.browser.version < 10) {
+    var zIndexNumber = 1000;
+    $('div.sidebar').find('div').each(function() {
+      $(this).css('zIndex', zIndexNumber);
+      zIndexNumber -= 10;
+    });
   }
 });
+
+/*
+ * jQuery UI Autocomplete HTML Extension
+ *
+ * Copyright 2010, Scott González (http://scottgonzalez.com)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * http://github.com/scottgonzalez/jquery-ui-extensions
+ */
+
+// HTML extension to autocomplete borrowed from
+// https://github.com/scottgonzalez/jquery-ui-extensions/blob/master/autocomplete/jquery.ui.autocomplete.html.js
+
+(function( $ ) {
+
+  var proto = $.ui.autocomplete.prototype,
+    initSource = proto._initSource;
+
+  function filter( array, term ) {
+    var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
+    return $.grep( array, function(value) {
+      return matcher.test( $( "<div>" ).html( value.label || value.value || value ).text() );
+    });
+  }
+
+  $.extend( proto, {
+    _initSource: function() {
+      if ($.isArray(this.options.source) ) {
+        this.source = function( request, response ) {
+          response( filter( this.options.source, request.term ) );
+        };
+      } else {
+        initSource.call( this );
+      }
+    },
+
+    _renderItem: function( ul, item) {
+      return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( $( "<a style=\"line-height: "
+          + (item.value ? 0.9 : 2)
+          + "; font-size: 12px;\"></a>" )
+          [item.type == "html" ? "html" : "text"]( item.label ) )
+        .appendTo( ul );
+    }
+  });
+
+})( jQuery );
+
+// table popup and download as CSV
+function tableOpen(tableId, type) {
+  try {
+    var table = $('div.table-wrap[name="' + tableId + '"]')
+    if (type == "HTML") {
+      var w = window.open();
+      w.document.open();
+      w.document.writeln('<html><head><link rel="stylesheet" type="text/css" href="/css/global.css"></head>');
+      w.document.writeln('<body style="background-color: #ffffff;">');
+      w.document.writeln('<div class="table-wrap">' + table.html() + '</div>');
+      w.document.writeln('</body></html>')
+      w.document.close();
+    }
+    else if (type == "CSV") {
+      //http://stackoverflow.com/questions/7161113/how-do-i-export-html-table-data-as-csv-file
+      function row2CSV(tmpRow) {
+        var tmp = tmpRow.join('') // to remove any blank rows
+        if (tmpRow.length > 0 && tmp != '') {
+          var mystr = tmpRow.join(',');
+          csvData[csvData.length] = mystr;
+        }
+      }
+      function formatData(input) {
+        // replace " with “
+        var regexp = new RegExp(/["]/g);
+        var output = input.replace(regexp, "“");
+        //HTML
+        var regexp = new RegExp(/\<[^\<]+\>/g);
+        var output = output.replace(regexp, "");
+        if (output == "") return '';
+        return '"' + output + '"';
+      }
+      var csvData = [];
+      var headerArr = [];
+      var tmpRow = [];
+      $(table).find('thead td').each(function() {
+        tmpRow[tmpRow.length] = formatData($(this).html());
+      });
+      row2CSV(tmpRow);
+      $(table).find('tbody tr').each(function() {
+        var tmpRow = [];
+        $(this).find('td').each(function() {
+          tmpRow[tmpRow.length] = formatData($(this).html());
+        });
+        row2CSV(tmpRow);
+      });
+      var mydata = csvData.join('\n');
+      var dataurl = 'data:text/csv;base64,' + $.base64.encode($.base64.utf8_encode(mydata));
+      if ($.browser && ($.browser.chrome)) {
+        // you can specify a file name in <a ...> tag on chrome.
+        // http://stackoverflow.com/questions/283956/is-there-any-way-to-specify-a-suggested-filename-when-using-data-uri
+        function downloadWithName(uri, name) {
+          function eventFire(el, etype){
+            if (el.fireEvent) {
+              (el.fireEvent('on' + etype));
+            } else {
+              var evObj = document.createEvent('Events');
+              evObj.initEvent(etype, true, false);
+              el.dispatchEvent(evObj);
+            }
+          }
+          var link = document.createElement("a");
+          link.download = name;
+          link.href = uri;
+          eventFire(link, "click");
+        }
+        downloadWithName(dataurl, tableId + ".csv");
+      }
+      else {
+        window.location = dataurl;
+      }
+    }
+  }
+  catch (e) {
+    console.log(e);
+  }
+  return false;
+}
+

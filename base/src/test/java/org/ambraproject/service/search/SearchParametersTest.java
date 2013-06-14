@@ -1,7 +1,7 @@
 /*
  * $HeadURL$
  * $Id$
- *  
+ *
  * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
@@ -24,6 +24,7 @@ package org.ambraproject.service.search;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.SimpleTimeZone;
 
 import static org.testng.Assert.assertEquals;
@@ -47,6 +48,7 @@ public class SearchParametersTest {
       {null, trimTestPrefix + "element Two", null, null, null,
           "element Six with some special characters: !@#$%^&*()[]{}", "", "", null, "",
           trimTestPrefix + "element Eleven" + trimTestSuffix, "element Twelve" + trimTestSuffix};
+  private static final String[] inputStringArray2  = { "element Two" };
   private static final String[] outputStringArray =
       {"element Two", "element Six with some special characters: !@#$%^&*()[]{}", "element Eleven", "element Twelve"};
   private static final String[] whitespaceAndNullElementsStringArray  =
@@ -241,6 +243,7 @@ public class SearchParametersTest {
     sp.setELocationId("eLocationIdString");
     sp.setId("idString");
     sp.setFilterSubjects(inputStringArray);
+    sp.setFilterSubjectsDisjunction(inputStringArray2);
     sp.setFilterJournals(inputStringArray);
     sp.setFilterAuthors(inputStringArray);
     sp.setFilterKeyword("keyword");
@@ -256,10 +259,13 @@ public class SearchParametersTest {
         " eLocationId='eLocationIdString'," +
         " id='idString'," +
         " filterSubjects=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
+        " filterSubjectsDisjunction=[element Two]," +
         " filterAuthors=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
         " filterKeyword='keyword'," +
         " filterArticleType='articleType'," + 
         " filterJournals=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
+        " filterStartDate=null," +
+        " filterEndDate=null," +
         " sort='sortString'," +
         " startPage=473," +
         " pageSize=216," +

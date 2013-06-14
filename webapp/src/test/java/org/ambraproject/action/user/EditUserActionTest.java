@@ -14,11 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertEqualsNoOrder;
 import static org.testng.Assert.assertNotNull;
@@ -57,16 +55,17 @@ public class EditUserActionTest extends AmbraWebTest {
     user.setCountry("my country");
     user.setAuthId("auth-id-for-MemberUserActionTest");
     user.setPassword("pass");
-    user.setAlertsJournals("journal_weekly,journal_monthly");
+    user.setAlertsJournals("journal_weekly,journal_monthly,journal1_monthly");
+
     dummyDataStore.store(user);
 
-    String[] expectedWeeklyAlerts = new String[]{"journal"};
-    String[] expectedMonthlyAlerts = new String[]{"journal"};
+    String[] expectedWeeklyAlerts = new String[] { "journal" };
+    String[] expectedMonthlyAlerts = new String[] { "journal", "journal1" };
 
     //these come from the config
     List<UserAlert> alerts = new ArrayList<UserAlert>(2);
-    alerts.add(new UserAlert("journal", "Journal", true, true));
-    alerts.add(new UserAlert("journal1", "Journal 1", false, true));
+    alerts.add(new UserAlert("journal", "Journal", true, true, false));
+    alerts.add(new UserAlert("journal1", "Journal 1", false, true, false));
 
     return new Object[][]{
         {user, alerts, expectedWeeklyAlerts, expectedMonthlyAlerts}
@@ -163,9 +162,11 @@ public class EditUserActionTest extends AmbraWebTest {
       assertEquals(alert.isWeeklyAvailable(), matchingAlert.isWeeklyAvailable(), "alert had incorrect weekly availability");
       assertEquals(alert.getName(), matchingAlert.getName(), "alert had incorrect name");
     }
-    assertEqualsNoOrder(action.getWeeklyAlerts(), expectedWeeklyAlerts, "Action had incorrect weekly alerts for user");
-    assertEqualsNoOrder(action.getMonthlyAlerts(), expectedMonthlyAlerts, "Action had incorrect monthly alerts for user");
 
+    assertEqualsNoOrder(action.getWeeklyAlerts().toArray(), expectedWeeklyAlerts,
+      "Action had incorrect weekly alerts for user");
+    assertEqualsNoOrder(action.getMonthlyAlerts().toArray(), expectedMonthlyAlerts,
+      "Action had incorrect monthly alerts for user");
   }
 
   @Test(dataProvider = "user", dependsOnMethods = {"testExecuteWithExistingUser"})

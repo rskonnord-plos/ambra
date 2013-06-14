@@ -21,6 +21,8 @@
 
 package org.ambraproject.testutils;
 
+import org.hibernate.criterion.DetachedCriteria;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -31,7 +33,7 @@ import java.util.List;
  *
  * @author Alex Kudlick Date: 5/2/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 public interface DummyDataStore {
 
@@ -76,6 +78,14 @@ public interface DummyDataStore {
    * @return all the stored instances of the given class
    */
   public <T> List<T> getAll(Class<T> clazz);
+
+  /**
+   * Method to run an arbitrary hibernate query against the datastore.
+   *
+   * @param criteria DetachedCriteria
+   * @return hibernate objects matching the criteria, if any
+   */
+  public List findByCriteria(DetachedCriteria criteria);
 
   /**
    *  Delete an object from the store

@@ -14,15 +14,21 @@ plosGApropId["ntds-demo.plosjournals.org"] = "UA-36675610-6";
 plosGApropId["pathogens-demo.plosjournals.org"] = "UA-36675610-7";
 plosGApropId["one-demo.plosjournals.org"] = "UA-36675610-1";
 
-//production sites
+//Flashlight test server
+plosGApropId["one-taurus.plosjournals.org"] = "UA-36675108-8";
 
-plosGApropId["plosbiology.org"] = "UA-36675108-2";
-plosGApropId["ploscompbiol.org"] = "UA-36675108-3";
-plosGApropId["plosgenetics.org"] = "UA-36675108-4";
-plosGApropId["plosmedicine.org"] = "UA-36675108-5";
-plosGApropId["plosntds.org"] = "UA-36675108-6";
-plosGApropId["plospathogens.org"] = "UA-36675108-7";
-plosGApropId["plosone.org"] = "UA-36675108-1";
+//production sites
+plosGApropId["www.plosbiology.org"] = "UA-36675108-2";
+plosGApropId["www.ploscompbiol.org"] = "UA-36675108-3";
+plosGApropId["www.plosgenetics.org"] = "UA-36675108-4";
+plosGApropId["www.plosmedicine.org"] = "UA-36675108-5";
+plosGApropId["www.plosntds.org"] = "UA-36675108-6";
+plosGApropId["www.plospathogens.org"] = "UA-36675108-7";
+plosGApropId["www.plosone.org"] = "UA-36675108-1";
+plosGApropId["www.ploscollections.org"] = "UA-36675108-8";
+
+
+
 
 //No matter which journal or demo site is served, the identifier for the correct site will be used
 var bamGAID = plosGApropId[window.location.hostname];
@@ -30,14 +36,15 @@ var bamGAID = plosGApropId[window.location.hostname];
 // Deprecated GoogleAnalytics Prop ID.  Used for all of PLOS.org 'UA-338393-1'
 var bamGAVPV = location.pathname + location.search + location.hash;
 // cross domain list
-var bamGAcrossDomains = ["plosone-josowski.plos.org", "plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
-var bamGAIgnoredRefs = ["plosone.org", "plosbiology.org", "plosmedicine.org", "plosgenetics.org", "ploscompbiol.org", "plospathogens.org", "plosntds.org", "ploscollections.org", "plosreports.org", "ploshubs.org", "plos.org"];
+var bamGAcrossDomains = ["www.plosone.org", "www.plosbiology.org", "www.plosmedicine.org", "www.plosgenetics.org", "www.ploscompbiol.org", "www.plospathogens.org", "www.plosntds.org", "www.ploscollections.org", "www.plosreports.org", "www.ploshubs.org", "www.plos.org"];
+var bamGAIgnoredRefs = ["www.plosone.org", "www.plosbiology.org", "www.plosmedicine.org", "www.plosgenetics.org", "www.ploscompbiol.org", "www.plospathogens.org", "www.plosntds.org", "www.ploscollections.org", "www.plosreports.org", "www.ploshubs.org", "www.plos.org"];
 
 var _bamGA;
 if (typeof(bamGAID) != 'undefined') {
   _bamGA = [];
 
 // required Functions for basic tracking
+//Makes sure to always get only 2nd-level and TLDs; no subdomain
   _bamGA.getDomain = function (url) {
     return url.replace(/^https?\:\/\//i, "").split('.').reverse()[1] + '.' + url.split('.').reverse()[0];
   }

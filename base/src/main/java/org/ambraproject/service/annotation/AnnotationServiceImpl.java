@@ -21,18 +21,15 @@
 
 package org.ambraproject.service.annotation;
 
-import org.ambraproject.ApplicationException;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.Flag;
 import org.ambraproject.models.FlagReasonCode;
 import org.ambraproject.models.UserProfile;
-import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.util.URIGenerator;
 import org.ambraproject.views.AnnotationView;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
@@ -43,10 +40,8 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Nullable;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -69,17 +64,6 @@ import java.util.Set;
 public class AnnotationServiceImpl extends HibernateServiceImpl implements AnnotationService {
   private static final Logger log = LoggerFactory.getLogger(AnnotationServiceImpl.class);
   private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-
-  private Cache articleHtmlCache;
-
-
-  /**
-   * @param articleHtmlCache The Article(transformed) cache to use
-   */
-  @Required
-  public void setArticleHtmlCache(org.ambraproject.service.cache.Cache articleHtmlCache) {
-    this.articleHtmlCache = articleHtmlCache;
-  }
 
   /**
    * Get a list of all annotations satisfying the given criteria.
@@ -323,7 +307,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
 
   @Override
   @Transactional
-  public Long createComment(UserProfile user, String articleDoi, String title, String body, String ciStatement, Context context, boolean flagAsCorrection) {
+  public Long createComment(UserProfile user, String articleDoi, String title, String body, String ciStatement, boolean flagAsCorrection) {
     if (articleDoi == null) {
       throw new IllegalArgumentException("Attempted to create comment with null article id");
     } else if (user == null || user.getID() == null) {
@@ -331,15 +315,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
     } else if (body == null || body.isEmpty()) {
       throw new IllegalArgumentException("Attempted to create comment with no body");
     }
-    String xpath = null;
-    if (context != null) {
-      try {
-        //ContextFormatter.asXPointer() can return null or empty if the context doesn't indicate a path
-        xpath = ContextFormatter.asXPointer(context);
-      } catch (ApplicationException e) {
-        throw new IllegalArgumentException("Invalid context", e);
-      }
-    }
+
     log.debug("Creating comment on article: {}; title: {}; body: {}", new Object[]{articleDoi, title, body});
     Long articleID;
     try {
@@ -351,23 +327,14 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
     } catch (IndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Invalid doi: " + articleDoi);
     }
-    //If the xpointer was valid, it's an inline note. Else it's a general comment
-    AnnotationType type;
-    if (!StringUtils.isEmpty(xpath)) {
-      type = AnnotationType.NOTE;
-      //kick the article out of cache
-      articleHtmlCache.remove(articleDoi);
-    } else {
-      type = AnnotationType.COMMENT;
-    }
 
     //generate an annotation uri
-    Annotation comment = new Annotation(user, type, articleID);
+    Annotation comment = new Annotation(user, AnnotationType.COMMENT, articleID);
     comment.setAnnotationUri(URIGenerator.generate(comment));
     comment.setTitle(title);
     comment.setBody(body);
     comment.setCompetingInterestBody(ciStatement);
-    comment.setXpath(xpath);
+
     Long id = (Long) hibernateTemplate.save(comment);
     if (flagAsCorrection) {
       Flag flag = new Flag(user, FlagReasonCode.CORRECTION, comment);

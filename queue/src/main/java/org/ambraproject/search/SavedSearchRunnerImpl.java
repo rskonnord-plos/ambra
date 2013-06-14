@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -16,50 +14,77 @@ package org.ambraproject.search;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.service.search.SolrSearchService;
 import org.ambraproject.views.SavedSearchHit;
-import org.ambraproject.views.SavedSearchView;
 import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA. User: stumu Date: 9/26/12 Time: 2:00 PM To change this template use File | Settings |
- * File Templates.
+ * @inheritDoc
  */
 public class SavedSearchRunnerImpl implements SavedSearchRunner {
 
   private SolrSearchService searchService;
+  private int resultLimit;
+
   private static final Logger log = LoggerFactory.getLogger(SavedSearchRunnerImpl.class);
 
+  /**
+   * @inheritDoc
+   */
   @Override
-  public SavedSearchView runSavedSearch(SavedSearchView savedSearchView) throws ApplicationException {
+  @SuppressWarnings("unchecked")
+  public SavedSearchJob runSavedSearch(SavedSearchJob searchJob) throws ApplicationException {
+    log.debug("Received thread Name: {}", Thread.currentThread().getName());
+    log.debug("Running Saved Search for the search query ID : {}, {}" ,
+      searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
 
-     List<SearchHit> results = null;
-     Date currentTime = Calendar.getInstance().getTime();
-     log.debug("Running Saved Search for the search name :  {}" , savedSearchView.getSearchName());
-     results = searchService.savedSearchAlerts(savedSearchView.getSearchParameters(), savedSearchView.getLastSearchTime(), currentTime);
-
-     SavedSearchHit finalHit;
-     List<SavedSearchHit> finalHitList = new ArrayList<SavedSearchHit>();
-     if(results.size()>0){
-      for(SearchHit hit :results){
-        finalHit = new SavedSearchHit(hit.getUri(), hit.getTitle(),hit.getCreator());
-        finalHitList.add(finalHit);
+    if(searchJob.getStartDate() == null) {
+      if(searchJob.getFrequency().equals("WEEKLY")) {
+        //7 days into the past
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DAY_OF_MONTH, -7);
+        searchJob.setStartDate(date.getTime());
+      } else {
+        //30 days into the past
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.MONTH, -1);
+        searchJob.setStartDate(date.getTime());
       }
-     }
+    }
 
-     savedSearchView.setSearchHitList(finalHitList.size()==0?null:finalHitList);
-     savedSearchView.setCurrentTime(currentTime);
+    if(searchJob.getEndDate() == null) {
+      searchJob.setEndDate(Calendar.getInstance().getTime());
+    }
 
-     return savedSearchView;
+    List<SearchHit> results = searchService.savedSearchAlerts(searchJob.getSearchParams(),
+      searchJob.getStartDate(), searchJob.getEndDate(), resultLimit);
+    List<SavedSearchHit> finalHitList = new ArrayList<SavedSearchHit>();
+
+    log.debug("Search hits : {}", results.size());
+
+    if(results.size() > 0) {
+      for(SearchHit hit :results){
+        finalHitList.add(new SavedSearchHit(hit.getUri(), hit.getTitle(), hit.getCreator(), hit.getSubjects()));
+      }
+    }
+
+    searchJob.setSearchHitList(finalHitList);
+
+    return searchJob;
   }
 
+  @Required
   public void setSearchService(SolrSearchService searchService) {
     this.searchService = searchService;
   }
 
+  @Required
+  public void setResultLimit(int resultLimit) {
+    this.resultLimit = resultLimit;
+  }
 }

@@ -20,8 +20,10 @@
  */
 package org.ambraproject.service.migration;
 
+import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.Version;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.util.TextUtils;
 import org.apache.commons.configuration.Configuration;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -33,7 +35,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +57,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
 
   private double dbVersion;
   private double binaryVersion;
-  private boolean isSnapshot;
 
   /**
    * Apply all migrations.
@@ -67,15 +68,12 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
 
     setVersionData();
 
-    //If this is a snapshot, we're developing and we don't need to do this check
-    if (isSnapshot == false) {
-      //Throws an exception if the database version is further into
-      //the future then this version of the ambra war
-      if (binaryVersion < dbVersion) {
-        log.error("Binary version: " + binaryVersion + ", DB version: " + dbVersion);
-        throw new Exception("The ambra war is out of date with the database, " +
-            "update this war file to the latest version.");
-      }
+    //Throws an exception if the database version is further into
+    //the future then this version of the ambra war
+    if (binaryVersion < dbVersion) {
+      log.error("Binary version: " + binaryVersion + ", DB version: " + dbVersion);
+      throw new Exception("The ambra war is out of date with the database, " +
+          "update this war file to the latest version.");
     }
 
     waitForOtherMigrations();
@@ -119,7 +117,100 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     if (dbVersion < 249) {
       migrate248();
     }
+
+    if (dbVersion < 250) {
+      migrate249();
+    }
+
+    if (dbVersion < 255) {
+      migrate250();
+    }
+
   }
+
+  /**
+   * The pattern to match method name is to match earlier db version.
+   * For example, if earlier db version is 237,
+   * next migration method name should be migrate237()
+   */
+  private void migrate250() {
+    log.info("Migration from 250 starting");
+
+    final Long versionID = (Long)hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        //this should match the ambra version we will be going to deploy
+        v.setName("Ambra 2.55");
+        v.setVersion(255);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        execSQLScript(session, "migrate_ambra_2_5_5_part1.sql");
+
+        return v.getID();
+      }
+    });
+
+    //Now we have to populate a hash used to identify unique searchParameters
+    List<SavedSearchQuery> queries = hibernateTemplate.loadAll(SavedSearchQuery.class);
+
+    for(SavedSearchQuery query : queries) {
+      String hash = TextUtils.createHash(query.getSearchParams());
+      query.setHash(hash);
+
+      hibernateTemplate.update(query);
+    }
+
+    hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = (Version) session.load(Version.class, versionID);
+
+        //Now that hash is populated, add a null constraint, unique constraint and created index
+        execSQLScript(session, "migrate_ambra_2_5_5_part2.sql");
+
+        v.setUpdateInProcess(false);
+
+        session.update(v);
+
+        return null;
+      }
+    });
+
+
+    log.info("Migration from 250 complete");
+  }
+
+  /**
+   * The pattern to match method name is to match earlier db version.
+   * For example, if earlier db version is 237,
+   * next migration method name should be migrate237()
+   */
+  private void migrate249() {
+    log.info("Migration from 249 starting");
+
+    hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        //this should match the ambra version we will be going to deploy
+        v.setName("Ambra 2.50");
+        v.setVersion(250);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        execSQLScript(session, "migrate_ambra_2_5_0.sql");
+
+        v.setUpdateInProcess(false);
+        session.update(v);
+
+        return null;
+      }
+    });
+    log.info("Migration from 249 complete");
+  }
+
 
   /**
    * The pattern to match method name is to match earlier db version.
@@ -405,8 +496,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     log.info("Migration from 210 starting");
     //First create version table and add one row
 
-    final boolean isSnapshot = this.isSnapshot;
-
     hibernateTemplate.execute(new HibernateCallback() {
       @Override
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
@@ -553,10 +642,6 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
     prop.load(is);
 
     String sVersion = (String) prop.get("version");
-
-    if (sVersion.indexOf("-SNAPSHOT") > 0) {
-      this.isSnapshot = true;
-    }
 
     //Collapse pom version into an integer
     //Assume it is always three digits

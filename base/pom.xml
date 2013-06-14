@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra-base</artifactId>
-  <version>2.5.2-SNAPSHOT</version>
+  <version>2.6.7</version>
   <packaging>jar</packaging>
   <name>Ambra Base Web Application</name>
 
   <parent>
     <groupId>org.ambraproject</groupId>
     <artifactId>ambra</artifactId>
-    <version>2.5.2-SNAPSHOT</version>
+    <version>2.6.7</version>
   </parent>
 
   <dependencies>
@@ -54,6 +54,12 @@
       <groupId>net.tanesha.recaptcha4j</groupId>
       <artifactId>recaptcha4j</artifactId>
       <version>0.0.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.jcsv</groupId>
+      <artifactId>jcsv</artifactId>
+      <version>1.4.0</version>
     </dependency>
 
     <dependency>
@@ -134,8 +140,15 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+      <version>1.4</version>
     </dependency>
 
     <dependency>
@@ -235,7 +248,7 @@
     <dependency>
       <artifactId>solr-core</artifactId>
       <groupId>org.apache.solr</groupId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
       <type>jar</type>
       <scope>test</scope>
     </dependency>
@@ -249,8 +262,36 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-test-framework</artifactId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
       <scope>test</scope>
+
+      <!--
+      Unfortunately, the version of jetty used internally by this solr
+      testing library conflicts with a version that we depend on (camel-jetty).
+      The symptom is a mysterious IncompatibleClassChangeError when running
+      a test that depends on both of these dependencies.  We fix this by
+      excluding the following.  Luckily, solr-test-framework, in the way we
+      use it, either doesn't need these or can get by with the conflicting
+      version.
+      -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-server</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-security</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-servlet</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-util</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -315,7 +356,7 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>3.6.0</version>
+      <version>${solr.version}</version>
     </dependency>
 
     <dependency>
@@ -414,21 +455,21 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
-      <version>2.6.0</version>
+      <version>2.10.3</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring</artifactId>
-      <version>2.6.0</version>
+      <version>2.10.3</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jetty</artifactId>
-      <version>2.6.0</version>
+      <version>2.10.3</version>
       <scope>test</scope>
     </dependency>
 
@@ -490,6 +531,14 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/main/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
     <plugins>
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
@@ -521,6 +570,24 @@
           </execution>
         </executions>
       </plugin>
+
+<!--  Rule to build a standalone .jar with the "taxonomy command-line tool" used
+      by Rachel and Jonas.  To invoke, use "mvn assembly:single".  I'm leaving
+      this commented-out for now on the off chance it might break some other build.
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>org.ambraproject.service.article.AIArticleClassifier</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+-->
     </plugins>
   </build>
 </project>

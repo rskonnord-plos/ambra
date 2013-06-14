@@ -27,7 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
 /**
- * Static utility class to validate uris.  Copied from <a href="http://topazproject.org/svn/head/topaz/core/src/main/java/org/topazproject/otm/RdfUtil.java">Topaz</a>
+ * Static utility class to validate uris.
  *
  * @author Alex Kudlick Date: 5/26/11
  *         <p/>

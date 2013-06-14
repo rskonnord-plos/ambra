@@ -186,7 +186,7 @@
     <!-- begin : stay-connected block -->
     <div id="connect" class="nav">
       <ul class="lnk-social cf">
-        <li class="lnk-email ir"><a href="http://www.plosone.org/user/secure/editPrefsAlerts.action?tabId=alerts" title="E-mail Alerts">E-mail Alerts</a></li>
+        <li class="lnk-email ir"><a href="/user/secure/profile/alerts/journal" title="E-mail Alerts">E-mail Alerts</a></li>
         <li class="lnk-rss ir"><a href="http://www.plosone.org/article/feed" title="RSS">RSS</a></li>
         <li class="lnk-twtr ir"><a href="http://twitter.com/plosone" title="PLOS ONE on Twitter" target=_blank>PLOS ONE on Twitter</a></li>
         <li class="lnk-fb ir"><a href="http://www.facebook.com/plos.org" title="PLOS on Facebook" target=_blank>PLOS on Facebook</a></li>

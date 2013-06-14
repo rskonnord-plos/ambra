@@ -40,6 +40,8 @@
 
   <bean class="org.ambraproject.service.search.SolrHttpServiceImpl" id="solrHttpService">
     <property name="solrUrl" ref="httpEndpointUrl"/>
+    <property name="httpClient" ref="httpClient"/>
+    <property name="config" ref="ambraConfiguration"/>
   </bean>
 
   <bean class="org.ambraproject.service.search.SolrMostViewedArticleService" id="mostViewedArticleService">

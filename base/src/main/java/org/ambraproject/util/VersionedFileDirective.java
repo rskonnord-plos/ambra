@@ -25,20 +25,18 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 import sun.misc.BASE64Encoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -90,19 +88,6 @@ public abstract class VersionedFileDirective implements TemplateDirectiveModel {
   }
 
   /**
-   * Produces a String value suitable for rendering in HTML for the given binary data.
-   */
-  private String encodeText(byte[] data) {
-    BASE64Encoder encoder = new BASE64Encoder();
-    String base64 = encoder.encodeBuffer(data);
-
-    // Make the returned value a little prettier by replacing slashes with underscores, and removing the trailing
-    // "=".
-    base64 = base64.replace('/', '_').trim();
-    return base64.substring(0, base64.length() - 1);
-  }
-
-  /**
    * Returns a base64-encoded fingerprint of the contents of a file.
    *
    * @param filepath the real filesystem path of the file being served
@@ -117,15 +102,11 @@ public abstract class VersionedFileDirective implements TemplateDirectiveModel {
     }
 
     byte[] buffer = IOUtils.toByteArray(new FileInputStream(filepath));
-    MessageDigest messageDigest;
-    try {
-      messageDigest = MessageDigest.getInstance("SHA-1");
-    } catch (NoSuchAlgorithmException nsae) {
-      throw new TemplateModelException(nsae);
-    }
-    messageDigest.update(buffer);
-    String fingerprint = encodeText(messageDigest.digest());
+
+    String fingerprint = TextUtils.createHash(buffer);
+
     fingerprintCache.put(filepath, fingerprint);
+
     return fingerprint;
   }
 

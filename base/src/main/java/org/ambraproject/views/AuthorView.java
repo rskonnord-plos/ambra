@@ -17,42 +17,53 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Immutable view wrapper around an author + a bunch of extra meta data about the author
- *
- * @author Alex Kudlick
- * @author Joe Osowski
- */
 public class AuthorView {
+
   private final String givenNames;
   private final String surnames;
   private final String suffix;
-  private final String currentAddress;
   private final String onBehalfOf;
   private final boolean equalContrib;
   private final boolean deceased;
+  private final boolean relatedFootnote;
   private final String corresponding;
+  private final List<String> currentAddresses;
   private final List<String> affiliations;
   private final List<String> customFootnotes;
 
-  public AuthorView(String givenNames, String surnames, String suffix,
-                    String currentAddress, String onBehalfOf, boolean equalContrib,
-                    boolean deceased, String corresponding, List<String>affiliations,
-                    List<String> customFootnotes) {
-
+  private AuthorView(String givenNames,
+                     String surnames,
+                     String suffix,
+                     String onBehalfOf,
+                     boolean equalContrib,
+                     boolean deceased,
+                     boolean relatedFootnote,
+                     String corresponding,
+                     List<String> currentAddresses,
+                     List<String> affiliations,
+                     List<String> customFootnotes) {
+    super();
     this.givenNames = givenNames;
     this.surnames = surnames;
     this.suffix = suffix;
-    this.currentAddress = currentAddress;
     this.onBehalfOf = onBehalfOf;
     this.equalContrib = equalContrib;
     this.deceased = deceased;
+    this.relatedFootnote = relatedFootnote;
     this.corresponding = corresponding;
-    this.affiliations = affiliations;
-    this.customFootnotes = customFootnotes;
+    this.currentAddresses = (currentAddresses == null)
+      ? Collections.<String>emptyList()
+      : Collections.unmodifiableList(currentAddresses);
+    this.affiliations = (affiliations == null)
+      ? Collections.<String>emptyList()
+      : Collections.unmodifiableList(affiliations);
+    this.customFootnotes = (customFootnotes == null)
+      ? Collections.<String>emptyList()
+      : Collections.unmodifiableList(customFootnotes);
   }
 
   public String getGivenNames() {
@@ -67,34 +78,36 @@ public class AuthorView {
     return suffix;
   }
 
-  public List<String> getAffiliations() {
-    return this.affiliations;
-  }
-
-  public boolean getEqualContrib() {
-    return this.equalContrib;
-  }
-
-  public String getCurrentAddress() {
-    return this.currentAddress;
-  }
-
   public String getOnBehalfOf() {
     return onBehalfOf;
   }
 
+  public boolean getEqualContrib() {
+    return equalContrib;
+  }
+
   public boolean getDeceased() {
-    return this.deceased;
+    return deceased;
   }
 
-  public String getCorresponding()
-  {
-    return this.corresponding;
+  public boolean getRelatedFootnote() {
+    return relatedFootnote;
   }
 
-  public List<String> getCustomFootnotes()
-  {
-    return this.customFootnotes;
+  public String getCorresponding() {
+    return corresponding;
+  }
+
+  public List<String> getCurrentAddresses() {
+    return currentAddresses;
+  }
+
+  public List<String> getAffiliations() {
+    return affiliations;
+  }
+
+  public List<String> getCustomFootnotes() {
+    return customFootnotes;
   }
 
   public String getFullName() {
@@ -172,39 +185,155 @@ public class AuthorView {
     return false;
   }
 
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /**
+   * Create a builder set to create a copy of the passed in view
+   * @param av
+   * @return
+   */
+  public static Builder builder(AuthorView av) {
+    Builder builder = new Builder();
+
+    builder.setGivenNames(av.getGivenNames());
+    builder.setSurnames(av.getSurnames());
+    builder.setSuffix(av.getSuffix());
+    builder.setOnBehalfOf(av.getOnBehalfOf());
+    builder.setEqualContrib(av.getEqualContrib());
+    builder.setDeceased(av.getDeceased());
+    builder.setCorresponding(av.getCorresponding());
+    builder.setCurrentAddresses(av.getCurrentAddresses());
+    builder.setAffiliations(av.getAffiliations());
+    builder.setCustomFootnotes(av.getCustomFootnotes());
+
+    return builder;
+  }
+
+  public static class Builder {
+    private Builder() {
+      super();
+    }
+
+    private String givenNames;
+    private String surnames;
+    private String suffix;
+    private String onBehalfOf;
+    private boolean equalContrib;
+    private boolean deceased;
+    private boolean relatedFootnote;
+    private String corresponding;
+    private List<String> currentAddresses;
+    private List<String> affiliations;
+    private List<String> customFootnotes;
+
+    public Builder setGivenNames(String givenNames) {
+      this.givenNames = givenNames;
+      return this;
+    }
+
+    public Builder setSurnames(String surnames) {
+      this.surnames = surnames;
+      return this;
+    }
+
+    public Builder setSuffix(String suffix) {
+      this.suffix = suffix;
+      return this;
+    }
+
+    public Builder setOnBehalfOf(String onBehalfOf) {
+      this.onBehalfOf = onBehalfOf;
+      return this;
+    }
+
+    public Builder setEqualContrib(boolean equalContrib) {
+      this.equalContrib = equalContrib;
+      return this;
+    }
+
+    public Builder setDeceased(boolean deceased) {
+      this.deceased = deceased;
+      return this;
+    }
+
+    public Builder setRelatedFootnote(boolean relatedFootnote) {
+      this.relatedFootnote = relatedFootnote;
+      return this;
+    }
+
+    public Builder setCorresponding(String corresponding) {
+      this.corresponding = corresponding;
+      return this;
+    }
+
+    public Builder setCurrentAddresses(List<String> currentAddresses) {
+      this.currentAddresses = currentAddresses;
+      return this;
+    }
+
+    public Builder setAffiliations(List<String> affiliations) {
+      this.affiliations = affiliations;
+      return this;
+    }
+
+    public Builder setCustomFootnotes(List<String> customFootnotes) {
+      this.customFootnotes = customFootnotes;
+      return this;
+    }
+
+    public AuthorView build() {
+      return new AuthorView(
+        givenNames,
+        surnames,
+        suffix,
+        onBehalfOf,
+        equalContrib,
+        deceased,
+        relatedFootnote,
+        corresponding,
+        currentAddresses,
+        affiliations,
+        customFootnotes);
+    }
+  }
+
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (obj == null) return false;
+    if (obj.getClass() != getClass()) return false;
 
-    AuthorView that = (AuthorView) o;
-
-    if (deceased != that.deceased) return false;
-    if (affiliations != null ? !affiliations.equals(that.affiliations) : that.affiliations != null) return false;
-    if (corresponding != null ? !corresponding.equals(that.corresponding) : that.corresponding != null) return false;
-    if (currentAddress != null ? !currentAddress.equals(that.currentAddress) : that.currentAddress != null) return false;
-    if (onBehalfOf != null ? !onBehalfOf.equals(that.onBehalfOf) : that.onBehalfOf != null) return false;
-    if (customFootnotes != null ? !customFootnotes.equals(that.customFootnotes) : that.customFootnotes != null) return false;
-    if (equalContrib != that.equalContrib) return false;
-    if (givenNames != null ? !givenNames.equals(that.givenNames) : that.givenNames != null) return false;
-    if (suffix != null ? !suffix.equals(that.suffix) : that.suffix != null) return false;
-    if (surnames != null ? !surnames.equals(that.surnames) : that.surnames != null) return false;
-
-    return true;
+    AuthorView that = (AuthorView) obj;
+    return (this.givenNames == null ? that.givenNames == null : this.givenNames.equals(that.givenNames))
+      && (this.surnames == null ? that.surnames == null : this.surnames.equals(that.surnames))
+      && (this.suffix == null ? that.suffix == null : this.suffix.equals(that.suffix))
+      && (this.onBehalfOf == null ? that.onBehalfOf == null : this.onBehalfOf.equals(that.onBehalfOf))
+      && (this.equalContrib == that.equalContrib)
+      && (this.deceased == that.deceased)
+      && (this.relatedFootnote == that.relatedFootnote)
+      && (this.corresponding == null ? that.corresponding == null : this.corresponding.equals(that.corresponding))
+      && (this.currentAddresses == null ? that.currentAddresses == null : this.currentAddresses.equals(that.currentAddresses))
+      && (this.affiliations == null ? that.affiliations == null : this.affiliations.equals(that.affiliations))
+      && (this.customFootnotes == null ? that.customFootnotes == null : this.customFootnotes.equals(that.customFootnotes));
   }
 
   @Override
   public int hashCode() {
-    int result = givenNames != null ? givenNames.hashCode() : 0;
-    result = 31 * result + (surnames != null ? surnames.hashCode() : 0);
-    result = 31 * result + (suffix != null ? suffix.hashCode() : 0);
-    result = 31 * result + (equalContrib ? 1 : 0);
-    result = 31 * result + (affiliations != null ? affiliations.hashCode() : 0);
-    result = 31 * result + (currentAddress != null ? currentAddress.hashCode() : 0);
-    result = 31 * result + (onBehalfOf != null ? onBehalfOf.hashCode() : 0);
-    result = 31 * result + (deceased ? 1 : 0);
-    result = 31 * result + (corresponding != null ? corresponding.hashCode() : 0);
-    result = 31 * result + (customFootnotes != null ? customFootnotes.hashCode() : 0);
-    return result;
+    final int prime = 31;
+    int hash = 1;
+    hash = prime * hash + (givenNames == null ? 0 : givenNames.hashCode());
+    hash = prime * hash + (surnames == null ? 0 : surnames.hashCode());
+    hash = prime * hash + (suffix == null ? 0 : suffix.hashCode());
+    hash = prime * hash + (onBehalfOf == null ? 0 : onBehalfOf.hashCode());
+    hash = prime * hash + Boolean.valueOf(equalContrib).hashCode();
+    hash = prime * hash + Boolean.valueOf(deceased).hashCode();
+    hash = prime * hash + Boolean.valueOf(relatedFootnote).hashCode();
+    hash = prime * hash + (corresponding == null ? 0 : corresponding.hashCode());
+    hash = prime * hash + (currentAddresses == null ? 0 : currentAddresses.hashCode());
+    hash = prime * hash + (affiliations == null ? 0 : affiliations.hashCode());
+    hash = prime * hash + (customFootnotes == null ? 0 : customFootnotes.hashCode());
+    return hash;
   }
 }

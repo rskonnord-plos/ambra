@@ -22,6 +22,9 @@ package org.ambraproject.service.user;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleView;
+import org.ambraproject.models.SavedSearch;
+import org.ambraproject.models.SavedSearchQuery;
+import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
@@ -49,6 +52,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfile")
   private Object[][] getUserProfile() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("nameForTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
@@ -63,6 +68,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfileSave")
   private Object[][] getUserProfileForSave() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("saveTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
@@ -77,6 +84,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfileUpdate")
   private Object[][] getUserProfileForUpdate() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("updateTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
@@ -91,6 +100,8 @@ public class UserServiceTest extends BaseTest {
 
   @DataProvider(name = "userProfileDelete")
   private Object[][] getUserProfileForDelete() {
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("deleteTestLogin");
     userProfile.setEmail("emailForTest@Login.org");
@@ -176,7 +187,7 @@ public class UserServiceTest extends BaseTest {
     List<SavedSearchView> savedSearch = userService.getSavedSearches(id);
 
     assertEquals(savedSearch.size(), 1);
-    assertEquals(savedSearch.get(0).getSearchName(), "test");
+    assertEquals(savedSearch.get(0).getSearchName(), "testSave");
     assertEquals(savedSearch.get(0).getMonthly(), false);
     assertEquals(savedSearch.get(0).getWeekly(), true);
 
@@ -186,6 +197,45 @@ public class UserServiceTest extends BaseTest {
     assertEquals(params.getStartPage(), 5, "Search params not parsed correctly");
     assertEquals(params.getVolume(), "volumne", "Search params not parsed correctly");
   }
+
+  @Test
+  public void testSaveSearchHashing() {
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("nameForHashingTest");
+    userProfile.setEmail("nameForHashingTest@Login.org");
+    userProfile.setAuthId("authIDnameForHashingTest");
+    userProfile.setPassword("pass");
+
+    Long id1 = Long.valueOf(dummyDataStore.store(userProfile));
+
+    SearchParameters searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("test query");
+    searchParameters.setStartPage(5);
+    searchParameters.setVolume("volumne");
+
+    userService.saveSearch(id1, searchParameters, "testSave", true, false);
+
+    userProfile = new UserProfile();
+    userProfile.setDisplayName("nameForHashingTest1");
+    userProfile.setEmail("nameForHashingTest1@Login.org");
+    userProfile.setAuthId("authIdnameForHashingTest1");
+    userProfile.setPassword("pass");
+
+    Long id2 = Long.valueOf(dummyDataStore.store(userProfile));
+
+    searchParameters = new SearchParameters();
+
+    searchParameters.setQuery("test query");
+    searchParameters.setStartPage(5);
+    searchParameters.setVolume("volumne");
+
+    userService.saveSearch(id2, searchParameters, "testSave", true, false);
+
+    List<SavedSearchQuery> params = dummyDataStore.getAll(SavedSearchQuery.class);
+    assertEquals(1, params.size(), "More then one searchparams created!");
+  }
+
 
   @Test(dataProvider = "userProfileDelete")
   public void testDeleteSearch(Long id, UserProfile userProfile) {
@@ -221,6 +271,8 @@ public class UserServiceTest extends BaseTest {
     assertEquals(savedSearches.size(), 1, "Saved search not saved");
 
     SavedSearchView ss = savedSearches.get(0);
+
+    assertEquals(ss.getSearchType(), SavedSearchType.USER_DEFINED, "Search type is not user defined.");
     assertEquals(ss.getMonthly(), true, "Saved search not saved correctly");
     assertEquals(ss.getWeekly(), true, "Saved search not saved correctly");
 
@@ -308,8 +360,8 @@ public class UserServiceTest extends BaseTest {
   public void testGetAvailableAlerts() {
     //these come from the config
     List<UserAlert> alerts = new ArrayList<UserAlert>(2);
-    alerts.add(new UserAlert("journal", "Journal", true, true));
-    alerts.add(new UserAlert("journal1", "Journal 1", false, true));
+    alerts.add(new UserAlert("journal", "Journal", true, true, false));
+    alerts.add(new UserAlert("journal1", "Journal 1", false, true, false));
 
     for (UserAlert alert : userService.getAvailableAlerts()) {
       UserAlert matchingAlert = null;
@@ -393,6 +445,64 @@ public class UserServiceTest extends BaseTest {
         "user service didn't show organization type with showPrivateFields set to true");
     assertEquals(display.getPostalAddress(), userProfile.getPostalAddress(),
         "user service didn't show organization address with showPrivateFields set to true");
+  }
+
+  @Test()
+  public void testSavedFilteredWeeklySearchAlert() {
+    dummyDataStore.deleteAll(SavedSearch.class);
+    dummyDataStore.deleteAll(SavedSearchQuery.class);
+    dummyDataStore.deleteAll(UserProfile.class);
+
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("foo_mcFoo");
+    userProfile.setGivenNames("Foo");
+    userProfile.setOrganizationName("foo");
+    userProfile.setOrganizationType("university");
+    userProfile.setPostalAddress("123 fake st");
+    userProfile.setPositionType("a position type");
+    userProfile.setPassword("bleh");
+
+    Long userProfileID = Long.valueOf(dummyDataStore.store(userProfile));
+
+    String[] subjects = new String[] { "subject1,", "subject2" };
+    String journal = "PLOSOne";
+
+    userService.setFilteredWeeklySearchAlert(userProfileID, subjects, journal);
+
+    List<SavedSearch> savedSearches = dummyDataStore.getAll(SavedSearch.class);
+    List<SavedSearchQuery> savedSearchQueries = dummyDataStore.getAll(SavedSearchQuery.class);
+
+    assertEquals(savedSearches.size(), 1);
+    assertEquals(savedSearchQueries.size(), 1);
+
+    List<SavedSearchView> searchViews = userService.getSavedSearches(userProfile.getID());
+
+    assertEquals(searchViews.size(), 1);
+
+    SavedSearchView ssv = searchViews.get(0);
+    SearchParameters ssp = ssv.getSearchParameters();
+
+    assertEquals(ssv.getSearchType(), SavedSearchType.JOURNAL_ALERT);
+    assertEquals(ssp.getFilterSubjectsDisjunction(), subjects);
+    assertEquals(ssp.getFilterJournals(), new String[] { journal });
+
+    userProfile = new UserProfile();
+    userProfile.setDisplayName("foo_mcFoo1");
+    userProfile.setGivenNames("Foo1");
+    userProfile.setOrganizationName("foo1");
+    userProfile.setOrganizationType("university1");
+    userProfile.setPostalAddress("123 fake st1");
+    userProfile.setPositionType("a position type one");
+    userProfile.setPassword("bleh");
+
+    userProfileID = Long.valueOf(dummyDataStore.store(userProfile));
+
+    userService.setFilteredWeeklySearchAlert(userProfileID, subjects, journal);
+
+    savedSearchQueries = dummyDataStore.getAll(SavedSearchQuery.class);
+
+    //assert there is still only one query
+    assertEquals(savedSearchQueries.size(), 1);
   }
 
   private List<UserLogin> getUserLogins(Long userId) {

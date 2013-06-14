@@ -172,35 +172,6 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
     this.rights = rights;
   }
 
-  /**
-   * Return a list of all categories and sub categories collapsed into one list.
-   *
-   * @return
-   */
-  public List<String> getTransposedCategories()
-  {
-    //set categories
-    List<String> subjects = null;
-
-    if (categories != null) {
-      subjects = new ArrayList<String>(categories.size());
-
-      for (ArticleCategory category : categories) {
-        if (category.getMainCategory() != null
-            && ! subjects.contains(category.getMainCategory())) {
-          subjects.add(category.getMainCategory());
-        }
-        if (category.getSubCategory() != null
-            && ! subjects.contains(category.getSubCategory())) {
-          subjects.add(category.getSubCategory());
-        }
-      }
-      Collections.sort(subjects);
-    }
-
-    return subjects;
-  }
-
   public Long getId() {
     return id;
   }

@@ -1,7 +1,7 @@
 /*
- * $HeadURL: http://ambraproject.org/svn/plos/templates/head/journals/PLoSDefault/webapp/css/global.css $
- * $Id: global.css 13022 2012-12-06 20:04:08Z msingh $
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * $HeadURL$
+ * $Id$
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -81,7 +81,7 @@ button, select, textarea, input:not([type="radio"]):not([type="checkbox"]) {
   margin: 0;
 }
 
-input[type="button"], input[type="submit"], input[type="reset"], button {
+input[type="button"], input[type="submit"], input[type="radio"], input[type="checkbox"], input[type="reset"], select, button {
   cursor: pointer;
 }
 
@@ -301,7 +301,10 @@ th {
 }
 
 .btn,
-a.btn {
+a.btn,
+/* active an inactive buttons in search results */
+#search-view span.figs,
+#search-view span.list  {
   background: #333;
   font-size: 15px;
   line-height: 35px;
@@ -330,6 +333,17 @@ a.btn {
   color: #fff;
   text-decoration: none;
 }
+
+/* inactive button */
+/* clear all filters button */
+.clear-filter .btn.primary,
+/* search results buttons */
+#fig-search-block span.list,
+#search-results-block span.figs{
+     background-color: #646464;
+     color: #FFF;
+}
+
 
 input.btn {
   line-height: normal;
@@ -667,8 +681,8 @@ input#search:-moz-placeholder:focus, input#searchOnResult:-moz-placeholder:focus
   z-index: 10;
   font-size: 14px;
   padding: 20px 0 30px;
-  width: 600px;
-  margin-left: -300px;
+  width: 240px;
+  margin-left: -13px;
   border-radius: 4px;
   box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.15), 3px 3px 3px rgba(0, 0, 0, 0.15);
 }
@@ -692,7 +706,7 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 #nav-main .submenu .menu {
   display: table-cell;
   vertical-align: top;
-  width: 300px;
+  width: 240px;
   font-family: arial;
 }
 
@@ -736,6 +750,23 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   margin-bottom: 6px;
 }
 
+/*supporting information*/
+.siTitle {
+  margin-bottom: 0;
+}
+
+.siDoi {
+  margin-bottom: 0;
+}
+
+.preSiDOI {
+  margin-bottom: 0;
+}
+
+.postSiDOI {
+  margin-top: 0;
+}
+
 /*pageftr*/
 #pageftr {
   color: #fff;
@@ -762,7 +793,7 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 
 #pageftr .nav-aux {
   word-spacing: 7px;
-  margin-top: 30px;
+  margin-top: 45px;
 }
 
 #pageftr .nav-aux a {
@@ -906,10 +937,12 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 
 .lnk-alert a {
   background-position: -306px 0;
+  width: 128px;
 }
 
 .lnk-alert a:hover {
   background-position: -306px -50px;
+  width: 128px;
 }
 
 /*article page*/
@@ -940,7 +973,7 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   height: 80px;
 }
 
-.article-meta ul {
+.article-meta ul#almSignPost {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -948,25 +981,85 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   border-left: 1px solid #d1d1d1;
 }
 
-.article-meta li {
+.article-meta ul#almSignPost li {
   display: table-cell;
-  vertical-align: bottom;
   border-right: 1px solid #d1d1d1;
-  text-align: center;
-  font-size: 10px;
-  font-weight: bold;
-  text-transform: uppercase;
   padding: 15px 7px 0;
-  width: 7em;
+  width: 75px;
+  height: 65px;
   line-height: 1.1;
+  position: relative;
 }
 
-.article-meta .num {
+.article-meta ul#almSignPost li .top {
+  text-align: center;
   font-size: 25px;
   font-weight: normal;
   line-height: 1;
+  height: 30px;
+}
+
+.article-meta ul#almSignPost li div.bottom {
   display: block;
-  margin-bottom: 18px;
+  height: 35px;
+  position: relative;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+ul#almSignPost li div.bottom div.center {
+  width: 100%;
+  display: block;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+}
+
+.article-meta ul#almSignPost li div.text {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 10px;
+  text-transform: uppercase;
+  position: relative;
+  padding: 5px;
+}
+
+.article-meta ul#almSignPost li.reveal div.text {
+  background: #3c63af;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.article-meta ul#almSignPost li div.content {
+  position: absolute;
+  right: 0;
+  display: none;
+  width: 350px;
+  height: 100px;
+}
+
+.article-meta ul#almSignPost li div.description {
+  color: #fff;
+  font-weight: normal;
+  font-size: 12px;
+  text-transform: none;
+  text-align: left;
+  line-height: 1.2;
+  margin-top: 12px;
+  background: #3c63af;
+  border-radius: 4px;
+  position: absolute;
+  padding: 5px;
+  width: 340px;
+}
+
+.article-meta ul#almSignPost li div.description a {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.article-meta ul#almSignPost li.reveal div.content {
+  display: block;
 }
 
 .article-meta .pick {
@@ -1151,12 +1244,6 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   text-decoration: none;
 }
 
-#hdr-article .authors .author,
-#hdr-article .authors .action,
-#hdr-article .authors .ellipsis {
-  white-space: nowrap;
-}
-
 #hdr-article .authors a {
   cursor: pointer;
 }
@@ -1167,6 +1254,16 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   display: inline-block;
   text-indent: -9999px;
   background: url(../images/icon.co-auth.gif) no-repeat;
+  position: relative;
+  top: 2px;
+}
+
+.authors .equal-group-contrib {
+  height: 13px;
+  width: 15px;
+  display: inline-block;
+  text-indent: -9999px;
+  background: url(../images/icon.grp-auth.png) no-repeat;
   position: relative;
   top: 2px;
 }
@@ -1229,9 +1326,39 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   color: #FFF;
 }
 
+.author_inner span.email {
+  height: 13px;
+  width: 15px;
+  display: inline-block;
+  margin-right: 3px;
+  text-indent: -9999px;
+  background: url(../images/icon.email_author.png) no-repeat;
+  position: relative;
+  top: 2px;
+}
+
+.authors span.rel-footnote {
+  height: 13px;
+  width: 15px;
+  display: inline-block;
+  margin-right: 3px;
+  text-indent: -9999px;
+  background: url(../images/icon.grp-auth.png) no-repeat;
+  position: relative;
+  top: 2px;
+}
+
+span.author span.rel-footnote {
+  margin-right: 0px;
+}
+
 .author_inner p {
   padding-bottom: 12px;
   border-bottom: 2px solid #666;
+}
+
+.author_inner p sup {
+  margin-right: 5px;
 }
 
 .author_inner p:last-of-type {
@@ -1419,7 +1546,6 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
 .nav-page .active {
   background: url(../images/bul.pt.blu.gif) no-repeat 0 3px;
 }
-
 
 #nav-figures {
   display: none;
@@ -1766,6 +1892,11 @@ html:not(.js) .btn-reveal:hover .content {
   color: #000;
 }
 
+.figure-inline-download div.icon a, span.icon a {
+  color: #fff;
+  text-decoration: none;
+}
+
 .carousel .wrapper {
   overflow: auto;
 }
@@ -1917,6 +2048,115 @@ html:not(.js) #figure-thmbs {
   background-position: -25px -50px;
 }
 
+/* table */
+div.table-wrap {
+  position: relative;
+}
+
+.article div.table-wrap {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+div.table-wrap div.table {
+  overflow: auto;
+  border: solid 1px #efefef;
+}
+
+.article div.table-wrap div.table {
+  max-height: 550px;
+}
+
+div.table-wrap table {
+  margin: 0px;
+  width: 100%;
+}
+
+div.table-wrap table td {
+  padding: 2px;
+}
+
+div.table-wrap table thead tr:first-child {
+  background-color: #a0a0a0;
+  font-weight: bold;
+}
+
+div.table-wrap table thead tr:first-child td {
+  color: #ffffff;
+}
+
+div.table-wrap table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+div.table-wrap table tbody tr:nth-child(even) {
+  background-color: #efefef;
+}
+
+div.table-wrap p.caption {
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+div.table-wrap div.table-download {
+  display: none;
+  vertical-align: middle;
+}
+
+.article div.table-wrap div.table-download {
+  display: block;
+}
+
+div.table-wrap div.table-download .icon {
+  background-color: #f8af2d;
+  color: #333;
+  position: relative;
+  width: 30px;
+  height: 15px;
+  text-align: center;
+  font-size: 9px;
+  border-radius: 2px;
+  padding-top: 3px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+div.table-wrap div.table-download .label {
+ cursor: pointer;
+}
+
+div.table-wrap .expand {
+  display: none;
+}
+
+.article .table-wrap .expand {
+  display: block;
+  height: 25px;
+  width: 25px;
+  background: url(../images/icon.sprite.expand.png) no-repeat;
+  position: absolute;
+  top: -30px;
+  right: 0px;
+  cursor: pointer;
+}
+
+.article .table-wrap .expand:hover {
+  background-position: 0 -25px;
+}
+
+div.table-wrap .table-footnote {
+  font-size: 10px;
+}
+
+div.table-wrap .table-footnote .fn-label {
+  vertical-align: super;
+  font-size: 10px;
+}
+
 .article .abstract,
 .article .articleinfo,
 .article .editorsAbstract,
@@ -2065,7 +2305,6 @@ ul.bulletlist li {
   padding-left: 12px;
 }
 
-
 /* comments */
 #thread h2 {
   margin: 30px 10px;
@@ -2142,6 +2381,7 @@ ul.bulletlist li {
   padding: 35px 50px;
   background: #efefef;
   float: right;
+  word-wrap: break-word;
 }
 
 #thread ul#threads li div.title span {
@@ -2183,6 +2423,11 @@ ul.bulletlist li {
 
 #responses .response .response_content {
   padding: 20px 15px;
+  word-wrap: break-word;
+}
+
+#responses .response .response_title {
+  word-wrap: break-word;
 }
 
 #responses .response .toolbar {
@@ -2236,6 +2481,18 @@ ul.bulletlist li {
   float: left;
 }
 
+/* spacing between competing interest radio buttons */
+.reply form fieldset div.cf {
+  margin-bottom: 10px;
+}
+
+/* competing interest text area margins */
+.reply form fieldset div.competing_text,
+.reply form fieldset #flag_text {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
 .reply.review form fieldset {
   float: none;
   width: 100%;
@@ -2250,22 +2507,22 @@ ul.bulletlist li {
 .reply form fieldset textarea {
   display: block;
   padding: 3px;
-  width: 94%;
+  width: 687px;
   border: 1px solid #f2f2f2;
   margin: 0 0 10px 0 !important;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .reply form fieldset textarea {
   height: 106px;
   resize: none;
-  margin: 0 0 20px 0 !important;
 }
 
 .reply form fieldset textarea.competing_interests {
   min-height: auto;
   height: 88px;
   resize: none;
+  margin-bottom: 12px !important;
 }
 
 .reply form fieldset div {
@@ -2274,15 +2531,18 @@ ul.bulletlist li {
 
 .reply form input[type=radio], .reply form input[type=checkbox] {
   float: left;
-  width: auto;
-  margin: 3px 5px 8px 0 !important;
   border: none;
+}
+
+.reply form input[type=radio] {
+  width: auto;
+  margin: 0px 5px 0px 0 !important;
 }
 
 .reply form input[type=checkbox] {
   width: 18px;
-  height: 18px;
-  margin: 0 5px 8px 0 !important;
+  height: 14px;
+  margin: 0 5px 10px 0 !important;
 }
 
 .reply form span.btn {
@@ -2306,7 +2566,6 @@ ul.bulletlist li {
 .reply form fieldset label {
   font-size: 0.813em;
   position: relative;
-
 }
 
 .reply .help {
@@ -2341,10 +2600,10 @@ ul.bulletlist li {
 .reply .error {
   margin-bottom: 5px;
   padding: 5px;
-  border: 1px solid #c00;
-  background-color: #fff;
+  background-color: #333;
   font-style: normal;
-  color: #000
+  font-weight: bold;
+  color: #FF3C5C;
 }
 
 #reply_loading.loading_overlay img {
@@ -2598,6 +2857,7 @@ ul.bulletlist li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 6px;
 }
 
 /* sidebar linked from */
@@ -2674,6 +2934,10 @@ ul.bulletlist li {
   text-transform: uppercase;
   margin-bottom: -2px;
   display: block;
+}
+
+.journal_current .issue_container {
+  overflow: auto;
 }
 
 .journal_issues {
@@ -2943,7 +3207,12 @@ dl.authors dt {
   margin: 0 5px 6px 10px;
 }
 
-#hdr-search-results .options .btn {
+#hdr-search-results .options .btn,
+/* search results buttons */
+#search-results-block span.list,
+#search-results-block span.figs,
+#fig-search-block span.list,
+#fig-search-block span.figs {
   line-height: 28px;
   font-size: 13px;
 }
@@ -3352,13 +3621,19 @@ img.clear-filter {
   min-height: 35px;
 }
 
+/*search results header*/
 .hdr-results h2 {
   float: left;
-  font-size: 0.923em;
+  font: 16px 'Arial';
   font-weight: normal;
   padding: 0 21px 0 10px;
   width: 296px;
   margin: 4px 0 15px;
+}
+
+.hdr-results span.text{
+  font:16px 'Arial';
+  margin-right: 9px;
 }
 
 .hdr-results h2 span {
@@ -3395,45 +3670,21 @@ img.clear-filter {
 }
 
 #search-view {
-  font-size: 0.923em;
   line-height: 25px;
 }
 
-#search-view span.figs, span.list {
-  color: #333;
-  font-weight: bold;
-  padding-left: 7px;
-  padding-right: 7px;
-}
+/* search results figure/list button size and font */
+/*#search-results-block span.list,*/
+/*#search-results-block span.figs,*/
+/*#fig-search-block span.list,*/
+/*#fig-search-block span.figs {*/
+  /*line-height: 28px;*/
+/*}*/
 
-#search-view span.search-view-icon {
-  background: url(../images/icon.sprite.results.png) no-repeat;
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  padding-right: 5px;
-}
-
-#search-view span.figs .search-view-icon {
-  background-position: 0px 0px;
-}
-
-#search-view span.list .search-view-icon {
-  background-position: 0px -19px;
-}
-
-#search-view span.figs {
-  border-right: 1px solid #b3b3b3;
-}
-
-#fig-search-block #search-view span.list:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-#search-results-block #search-view span.figs:hover {
-  text-decoration: underline;
-  cursor: pointer;
+/* margin to right of figure button */
+#search-results-block span.figs,
+#fig-search-block span.figs {
+  margin-right: 1px;
 }
 
 #search-results-block .hdr-results {
@@ -3772,6 +4023,10 @@ form.advSearch ol {
   padding: 6px 0 0 20px;
 }
 
+#unformattedSearchFormId label {
+  cursor: pointer;
+}
+
 #unformattedSearchFormId .options fieldset p {
   margin: 2px 0 7px 3px;
 }
@@ -3895,7 +4150,7 @@ legend.conjunction span {
   width: 870px;
   overflow: hidden;
   position: fixed;
-  z-index: 600;
+  z-index: 150;
 }
 
 #fig-viewer .header {
@@ -4165,7 +4420,7 @@ legend.conjunction span {
 #fig-viewer-slides .txt .titleexpand {
   width: 605px !important;
   white-space: normal !important;
-  float:none !important;
+  float: none !important;
 }
 
 #fig-viewer-slides .txt .hidden {
@@ -4197,10 +4452,10 @@ legend.conjunction span {
   text-decoration: underline;
   cursor: pointer;
   margin-left: 5px;
-  float:right;
+  float: right;
 }
 
-#fig-viewer-slides .txt .toggle.less{
+#fig-viewer-slides .txt .toggle.less {
   margin-bottom: 5px;
 }
 
@@ -4257,7 +4512,7 @@ legend.conjunction span {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 500;
+  z-index: 110;
   opacity: 0.6;
   filter: alpha(opacity = 60);
 }
@@ -4588,6 +4843,52 @@ table#pageViewsTable tr.percent td {
   color: black;
 }
 
+/* styling for average usage stat information */
+#averageViewsSummary {
+  width: 600px;
+  border: 1px solid #cccccc;
+  background-color: #e5e4e4;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+#averageViewsSummary div {
+  padding: 8px 8px 0px 8px;
+}
+
+#averageViewsSummary .colorbox {
+  border: 1px solid #cccccc;
+  background-color: #01DF01;
+  width: 9px;
+  height: 9px;
+  display: block;
+  float: left;
+  margin-top: 4px;
+}
+
+#averageViewsSummary .ir {
+  float: right;
+  border-radius: 8.5px;
+  -webkit-border-radius: 8.5px;
+  -moz-border-radius: 8.5px;
+}
+
+#averageViewsSummary select {
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+
+#averageViewsSummary select option {
+  background-color: #ffffff;
+}
+
+#beta {
+  font: italic bold 10px Arial;
+  color: #00be00;
+}
+
+/* END styling for average usage stat information */
+
 a.ir {
   display: inline-block;
   text-indent: -9999px;
@@ -4686,18 +4987,26 @@ a.irs {
 }
 
 .formlabel {
-    margin-bottom: 6px;
-    display: block;
-    font-size: 12px;
-    color: #333;
-    font-weight: bold;}
+  margin-bottom: 6px;
+  display: block;
+  font-size: 12px;
+  color: #333;
+  font-weight: bold;
+}
 
-.form ol .form-error { color: #f03; }
+.form ol .form-error {
+  color: #f03;
+}
 
-.emailrequired {color:#A61200 }
+.emailrequired {
+  color: #A61200
+}
 
-.required {color: #f03; font-size:13px;  font-weight: bold;}
-
+.required {
+  color: #f03;
+  font-size: 13px;
+  font-weight: bold;
+}
 
 /************* Article Metrics page: Metrics Tiles and Rating Tile *****************/
 
@@ -4762,7 +5071,6 @@ div.metrics_tile_footer_no_link {
   font-size: 1.30em;
   text-decoration: none;
   font-weight: bold;
-  padding-top: 1px;
 }
 
 div.metrics_tile:hover .metrics_tile_rating_footer {
@@ -4863,7 +5171,6 @@ table.tile_mini td.data2 {
 
 /* styles for static page content */
 
-
 #static-wrap, #static-content-wrap {
   padding: 30px 30px 30px 10px;
 }
@@ -4886,7 +5193,7 @@ table.tile_mini td.data2 {
   margin-top: 0px
 }
 
-#static-content-wrap  ul, ol{
+#static-content-wrap  ul, ol {
   padding-left: 45px;
 }
 
@@ -4895,7 +5202,7 @@ table.tile_mini td.data2 {
 }
 
 #static-content-wrap p.intro {
-    font-style: italic
+  font-style: italic
 }
 
 /************* edboard pages *****************/
@@ -4909,13 +5216,95 @@ table.tile_mini td.data2 {
   padding-top: 5px;
 }
 
-.figure-inline-download div.icon a, span.icon a {
-  color: #fff;
-  text-decoration: none;
+#filter_container #searchBox {
+  width: 188px;
+  padding-right: 22px;
+}
+
+#filter_container #clearFilter {
+  position: absolute;
+  top: 2px;
+  left: 267px;
+  width: 18px;
+  height: 17px;
+  cursor: default;
+  background: #606060 url('/images/btn.close.png') no-repeat 3px 3px;
+  border-radius: 3px;
+  background-size: 12px 12px;
+}
+
+#filter_container #clearFilter:hover {
+  background: #808080 url("/images/btn.close.png") no-repeat scroll 3px 3px;
 }
 
 /********** Find article *********************/
 
 div.findArticle h4 {
   margin-bottom: 27px;
+}
+
+.collapsibleContainer {
+}
+
+.collapsibleContainerTitle {
+  cursor: pointer;
+}
+
+.collapsibleContainerTitle div {
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+.collapsibleContainerContent {
+  padding: 10px;
+}
+
+/***************************** Adv search checkboxes *****************/
+.checkboxWrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.checkboxOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: url(../images/transparent.gif) repeat; /*to get this work on IE*/
+}
+
+ol.references ul.find {
+  margin: 0;
+  padding: 0;
+  height: 25px;
+}
+
+ol.references ul.find li {
+  float: left;
+  margin-right: 4px;
+  margin-left: 20px;
+  list-style-type: disc;
+}
+
+ol.references ul.find li:first-child {
+  margin-left: 0px;
+  list-style-type: none;
+}
+
+ol.references li {
+  list-style-type: none;
+}
+
+ol.references li span.label {
+  margin-left: -26px;
+  float: left;
+  width: 20px;
+  text-align: right;
+}
+
+ol.references ul.find-nolinks {
+  margin: 0;
+  padding: 0;
+  height: 8px;
 }

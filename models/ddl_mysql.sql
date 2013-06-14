@@ -10,7 +10,6 @@
         parentID bigint,
         title longtext,
         body longtext,
-        xpath longtext,
         highlightedText longtext,
         competingInterestBody longtext,
         annotationCitationID bigint unique,
@@ -161,10 +160,8 @@
         categoryID bigint not null auto_increment,
         lastModified datetime not null,
         created datetime not null,
-        mainCategory varchar(100),
-        subCategory varchar(100),
-        primary key (categoryID),
-        unique (mainCategory, subCategory)
+        path varchar(255) unique,
+        primary key (categoryID)
     );
 
     create table citedArticle (
@@ -262,44 +259,28 @@
         unique (articleID, url)
     );
 
-    create table rating (
-        annotationID bigint not null,
-        insight integer not null,
-        reliability integer not null,
-        style integer not null,
-        singleRating integer not null,
-        primary key (annotationID)
-    );
-
-    create table ratingSummary (
-        ratingSummaryID bigint not null auto_increment,
-        lastModified datetime not null,
-        created datetime not null,
-        articleID bigint not null unique,
-        insightNumRatings integer not null,
-        insightTotal integer not null,
-        reliabilityNumRatings integer not null,
-        reliabilityTotal integer not null,
-        styleNumRatings integer not null,
-        styleTotal integer not null,
-        singleRatingNumRatings integer not null,
-        singleRatingTotal integer not null,
-        usersThatRated integer not null,
-        primary key (ratingSummaryID)
-    );
-
     create table savedSearch (
         savedSearchID bigint not null auto_increment,
         lastModified datetime not null,
         created datetime not null,
-        searchParams varchar(255) not null,
         lastWeeklySearchTime datetime not null,
         lastMonthlySearchTime datetime not null,
         searchName varchar(255),
+        searchType varchar(255) not null,
         weekly bit,
         monthly bit,
+        savedSearchQueryID bigint not null,
         userProfileID bigint not null,
         primary key (savedSearchID)
+    );
+
+    create table savedSearchQuery (
+        savedSearchQueryID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        hash varchar(50) not null unique,
+        searchParams longtext,
+        primary key (savedSearchQueryID)
     );
 
     create table syndication (
@@ -560,17 +541,17 @@
         foreign key (currentIssueID) 
         references issue (issueID);
 
-    alter table rating 
-        add index FKC815B19DB123DFCD (annotationID), 
-        add constraint FKC815B19DB123DFCD 
-        foreign key (annotationID) 
-        references annotation (annotationID);
-
     alter table savedSearch 
         add index FK3407F0F78B0DAE3 (userProfileID), 
         add constraint FK3407F0F78B0DAE3 
         foreign key (userProfileID) 
         references userProfile (userProfileID);
+
+    alter table savedSearch 
+        add index FK3407F0F78328E21 (savedSearchQueryID), 
+        add constraint FK3407F0F78328E21 
+        foreign key (savedSearchQueryID) 
+        references savedSearchQuery (savedSearchQueryID);
 
     alter table userProfileRoleJoinTable 
         add index FK57F48A3078B0DAE3 (userProfileID), 

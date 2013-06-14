@@ -20,6 +20,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.SolrParams;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
@@ -39,15 +40,10 @@ import static org.testng.Assert.*;
  */
 public class EmbeddedSolrServerFactoryTest {
 
-  private static EmbeddedSolrServerFactory solrServerFactory;
-
+  private EmbeddedSolrServerFactory solrServerFactory;
 
   @Test(priority = -1)
   public void testConstructor() throws Exception {
-    String schemaFile = this.getClass().getClassLoader().getResource("solr/conf/test-solr-schema.xml").getFile();
-    String configFile = this.getClass().getClassLoader().getResource("solr/conf/test-solr-config.xml").getFile();
-
-    solrServerFactory = new EmbeddedSolrServerFactory(schemaFile, configFile);
     solrServerFactory = new EmbeddedSolrServerFactory();
   }
 

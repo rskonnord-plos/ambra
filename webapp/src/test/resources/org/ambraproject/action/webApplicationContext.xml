@@ -31,6 +31,7 @@
   <bean id="displayUserAction" class="org.ambraproject.action.user.DisplayUserAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="userService" ref="userService"/>
+      <property name="journalService" ref="journalService"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
   </bean>
@@ -47,6 +48,7 @@
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="articleService" ref="articleService"/>
+    <property name="searchService" ref="searchService"/>
   </bean>
 
   <bean id="homePageAction" class="org.ambraproject.action.HomePageAction">
@@ -55,6 +57,7 @@
     <property name="browseService" ref="browseService"/>
     <property name="articleService" ref="articleService"/>
     <property name="journalService" ref="journalService"/>
+    <property name="searchService" ref="searchService"/>
   </bean>
 
   <bean id="fetchArticleAction" class="org.ambraproject.action.article.FetchArticleAction">
@@ -64,7 +67,6 @@
   </bean>
 
   <bean id="fetchArticleTabAction" class="org.ambraproject.action.article.FetchArticleTabsAction">
-    <property name="ratingsService" ref="ratingsService"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="userService" ref="userService"/>
     <property name="trackBackService" ref="trackbackService"/>
@@ -116,6 +118,7 @@
 
   <bean id="feedbackAction" class="org.ambraproject.action.FeedbackAction">
     <property name="userService" ref="userService"/>
+    <property name="journalService" ref="journalService"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="ambraMailer" ref="ambraMailer"/>
@@ -125,6 +128,7 @@
 
   <bean id="emailArticleAction" class="org.ambraproject.action.article.EmailArticleAction">
     <property name="userService" ref="userService"/>
+    <property name="journalService" ref="journalService"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="ambraMailer" ref="ambraMailer"/>
@@ -132,13 +136,6 @@
     <property name="secondaryObjectService" ref="secondaryObjectService"/>
     <property name="captchaService" ref="captchaService"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
-  </bean>
-
-  <bean id="getArticleRatingsAction" class="org.ambraproject.action.rating.GetArticleRatingsAction">
-    <property name="ratingsService" ref="ratingsService"/>
-    <property name="permissionsService" ref="permissionsService"/>
-    <property name="ambraConfiguration" ref="ambraConfiguration"/>
-    <property name="articleService" ref="articleService"/>
   </bean>
 
   <bean id="fetchPowerPointAction" class="org.ambraproject.action.article.FetchPowerPointAction">
@@ -177,6 +174,7 @@
 
   <bean id="editUserAction" class="org.ambraproject.action.user.EditUserAction">
     <property name="permissionsService" ref="permissionsService"/>
+    <property name="journalService" ref="journalService"/>
     <property name="userService" ref="userService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>

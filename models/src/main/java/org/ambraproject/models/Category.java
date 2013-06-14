@@ -21,23 +21,45 @@ package org.ambraproject.models;
  */
 public class Category extends AmbraEntity {
 
-  private String mainCategory;
-  private String subCategory;
+  private String path;
 
+  /**
+   * @return the top-level category that this category rolls up to.
+   */
   public String getMainCategory() {
-    return mainCategory;
+    String[] fields = path.split("\\/");
+    return fields[1];
   }
 
-  public void setMainCategory(String mainCategory) {
-    this.mainCategory = mainCategory;
-  }
-
+  /**
+   * @return the most-specific (deepest in the taxonomic hierarchy) category.
+   */
   public String getSubCategory() {
-    return subCategory;
+    String[] fields = path.split("\\/");
+    return fields[fields.length - 1];
   }
 
-  public void setSubCategory(String subCategory) {
-    this.subCategory = subCategory;
+  /**
+   * @return the full path, starting at the top-level of the taxonomic hierarchy,
+   *     to this category.  Levels are delimited by slash characters.
+   *     Example: "/Biology and life sciences/Cell biology/Cellular types/Animal cells/Blood cells/White blood cells/T cells"
+   */
+  public String getPath() {
+    return path;
+  }
+
+  /**
+   * Sets the full path from the beginning of the taxonomic hierarchy.
+   * Levels should be delimited by forward slashes, as in a Unix file path.
+   *
+   * @param path full path to the category
+   */
+  public void setPath(String path) {
+    if (path == null || path.isEmpty() || path.charAt(0) != '/') {
+      path = path == null ? "null" : path;
+      throw new IllegalArgumentException("Invalid category path: " + path);
+    }
+    this.path = path;
   }
 
   @Override
@@ -45,27 +67,22 @@ public class Category extends AmbraEntity {
     if (this == o) return true;
     if (!(o instanceof Category)) return false;
 
-    Category category = (Category) o;
-
-    if (mainCategory != null ? !mainCategory.equals(category.mainCategory) : category.mainCategory != null)
-      return false;
-    if (subCategory != null ? !subCategory.equals(category.subCategory) : category.subCategory != null) return false;
-
-    return true;
+    Category other = (Category) o;
+    if (path == null) {
+      return other.path == null;
+    } else {
+      return path.equals(other.path);
+    }
   }
 
   @Override
   public int hashCode() {
-    int result = mainCategory != null ? mainCategory.hashCode() : 0;
-    result = 31 * result + (subCategory != null ? subCategory.hashCode() : 0);
+    int result = path != null ? path.hashCode() : 0;
     return result;
   }
 
   @Override
   public String toString() {
-    return "Category{" +
-        "mainCategory='" + mainCategory + '\'' +
-        ", subCategory='" + subCategory + '\'' +
-        '}';
+    return path;
   }
 }

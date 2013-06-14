@@ -12,8 +12,6 @@ import java.util.List;
  * An action to create an article discussion entity (either a top-level response to an article, or a reply to another
  * annotation).
  * <p/>
- * TODO: Remove redundancy in {@link org.ambraproject.action.rating.RateAction}
- * <p/>
  * TODO: Pull {@link org.ambraproject.action.BaseActionSupport#addProfaneMessages} down
  */
 public abstract class DiscussionAction extends BaseSessionAwareActionSupport {

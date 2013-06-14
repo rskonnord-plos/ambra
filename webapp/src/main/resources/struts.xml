@@ -62,6 +62,12 @@
         <param name="noCache">true</param>
         <param name="wrapWithComments">true</param>
       </result-type>
+      <result-type name="json_nocomments" class="org.ambraproject.struts2.JsonResult">
+        <param name="excludeProperties">advisors, callbacks, permissions</param>
+        <param name="ignoreHierarchy">false</param>
+        <param name="noCache">true</param>
+        <param name="wrapWithComments">false</param>
+      </result-type>
       <result-type name="feed" class="org.ambraproject.struts2.AmbraFeedResult"/>
       <result-type name="citation" class="org.ambraproject.struts2.CitationResult"/>
     </result-types>
@@ -70,6 +76,7 @@
       <interceptor name="ensureUserAccount" class="org.ambraproject.struts2.EnsureUserAccountInterceptor"/>
       <interceptor name="ensureAdmin" class="org.ambraproject.struts2.EnsureRoleInterceptor"/>
       <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
+      <interceptor name="internalIp" class="org.ambraproject.struts2.InternalIpInterceptor"/>
 
       <interceptor-stack name="strutsBaseStack">
         <interceptor-ref name="exception">
@@ -101,6 +108,7 @@
 
       <interceptor-stack name="ambraBaseStack">
         <interceptor-ref name="strutsBaseStack"/>
+        <interceptor-ref name="internalIp"/>
       </interceptor-stack>
 
       <interceptor-stack name="ambraUserStack">
@@ -202,6 +210,54 @@
 
     <action name="selectList" class="org.ambraproject.action.ListingAction"/>
 
+    <action name="taxonomy" class="org.ambraproject.action.TaxonomyAction">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/taxonomy.ftl</param>
+      </result>
+
+      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+           in that case just return a 404.                              -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="taxonomyJSON" class="org.ambraproject.action.TaxonomyAction">
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
+          locale, numFieldErrors, rssName, rssPath, texts</param>
+      </result>
+
+      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+           in that case just return a 404.                              -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+  </package>
+
+  <package name="debug" extends="default" namespace="/debug">
+    <default-action-ref name="debug"/>
+
+    <action name="debug" class="org.ambraproject.action.debug.DebugInfoAction">
+      <result name="success" type="naked">
+        <param name="templateFile">/debugInfo.ftl</param>
+      </result>
+
+      <!-- Since this is an internal-only action, return a 404 instead of 500 on ERROR
+           to prevent the super-top-secret URL from leaking out.                  -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="threadDump" class="org.ambraproject.action.debug.ThreadDumpAction" />
+
+    <action name="processDump" class="org.ambraproject.action.debug.ProcessDumpAction" />
   </package>
 
   <package name="feedback" extends="default" namespace="/feedback">
@@ -303,69 +359,14 @@
     </action>
   </package>
 
-  <package name="rate" extends="default" namespace="/rate">
-
-    <default-action-ref name="pageNotFound"/>
-
-    <!--action name="getAverageRatings" class="org.ambraproject.rating.action.GetAverageRatingsAction">
-      <result name="success">/WEB-INF/pages/article/articleRatings.ftl</result>
-      <result name="error">/WEB-INF/pages/article/articleRatings.ftl</result>
-    </action-->
-    <action name="getUpdatedRatings" class="org.ambraproject.action.rating.GetAverageRatingsAction">
-      <result name="success" type="default_freemarker">
-        <param name="location">/article/article_rhc_rating.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-    </action>
-    <action name="getUpdatedRatingsOnArticleMetricsTab" class="org.ambraproject.action.rating.GetAverageRatingsAction">
-      <result name="success" type="default_freemarker">
-        <param name="location">/article/article_metrics_rating.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-    </action>
-
-    <action name="getArticleRatings" class="org.ambraproject.action.rating.GetArticleRatingsAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/rating/index.ftl</param>
-      </result>
-      <result name="none" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
-      </result>
-    </action>
-  </package>
-
-  <package name="rate-secure" extends="default" namespace="/rate/secure">
-
-    <default-action-ref name="pageNotFound"/>
-
-    <action name="rateArticle" class="org.ambraproject.action.rating.RateAction" method="rateArticle">
-      <result name="input" type="json"/>
-      <result name="success" type="json"/>
-      <result name="error" type="json"/>
-    </action>
-
-    <action name="createRatingFlagSubmit" class="org.ambraproject.action.annotation.CreateFlagAction">
-      <result name="input" type="json"/>
-      <result name="error" type="json"/>
-      <result name="success" type="json"/>
-    </action>
-
-    <action name="getRatingsForUser" class="org.ambraproject.action.rating.RateAction" method="retrieveRatingsForUser">
-      <result name="input" type="json"/>
-      <result name="success" type="json"/>
-      <result name="error" type="json"/>
-    </action>
-  </package>
-
   <package name="browse" extends="default" namespace="/article/browse">
-    <action name="browse" class="org.ambraproject.action.article.BrowseArticlesAction">
+    <action name="subject" class="org.ambraproject.action.article.BrowseArticlesAction">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/browse.ftl</param>
+        <param name="templateFile">/article/browseSubject.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
         <param name="status">500</param>
-        <param name="templateFile">/static/browseError.ftl</param>
+        <param name="templateFile">error.ftl</param>
       </result>
     </action>
 
@@ -377,10 +378,9 @@
         <param name="status">404</param>
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
-      <!-- TODO: Make a real error page -->
       <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
+        <param name="status">500</param>
+        <param name="templateFile">error.ftl</param>
       </result>
     </action>
 
@@ -389,8 +389,8 @@
         <param name="templateFile">/article/browseVolume.ftl</param>
       </result>
       <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
+        <param name="status">500</param>
+        <param name="templateFile">error.ftl</param>
       </result>
     </action>
   </package>
@@ -409,12 +409,6 @@
       </result>
     </action>
 
-    <action name="findArticle" class="org.ambraproject.action.article.FindArticleAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/findArticle.ftl</param>
-      </result>
-    </action>
-
     <action name="emailThisArticleSubmit" class="org.ambraproject.action.article.EmailArticleAction" method="executeSend">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/emailSuccess.ftl</param>
@@ -428,7 +422,7 @@
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article.ftl</param>
       </result>
-      <result name="error" type="default_freemarker">
+      <result name="articleNotFound" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/article/article_not_found.ftl</param>
       </result>
@@ -456,17 +450,6 @@
       </result>
     </action>
 
-    <action name="fetchArticleCorrections" class="org.ambraproject.action.article.FetchArticleTabsAction"
-            method="fetchArticleCorrections">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/article_comments.ftl</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/article/article_not_found.ftl</param>
-      </result>
-    </action>
-
     <action name="fetchArticleMetrics" class="org.ambraproject.action.article.FetchArticleTabsAction"
             method="fetchArticleMetrics">
       <result name="success" type="default_freemarker">
@@ -478,7 +461,7 @@
       </result>
     </action>
 
-    <action name="fetchRelatedArticle" class="org.ambraproject.action.article.FetchArticleTabsAction"
+    <action name="fetchArticleRelated" class="org.ambraproject.action.article.FetchArticleTabsAction"
             method="fetchArticleRelated">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_related.ftl</param>
@@ -489,8 +472,57 @@
       </result>
     </action>
 
-    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction"
-            method="fetchArticleInfo">
+    <action name="fetchArticleContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_content.ftl</param>
+      </result>
+      <result name="articleNotFound" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleAuthorsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleAuthorsContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_authors_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCommentsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleCommentsContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_comments_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleMetricsContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleMetricsContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_metrics_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleRelatedContent" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticleRelatedContent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/article_related_content.ftl</param>
+      </result>
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/article/article_not_found.ftl</param>
+      </result>
+    </action>
+
+    <action name="fetchArticleCrossRef" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_crossref.ftl</param>
       </result>
@@ -606,17 +638,6 @@
       </result>
     </action>
 
-    <action name="fetchBody" class="org.ambraproject.action.article.FetchArticleTabsAction" method="fetchArticle">
-      <result name="success" type="default_freemarker">
-        <param name="location">/article/article_content.ftl</param>
-        <param name="noCache">true</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/article/article_not_found.ftl</param>
-      </result>
-    </action>
-
     <action name="citationList" class="org.ambraproject.action.article.CreateCitation">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/citationList.ftl</param>
@@ -722,6 +743,26 @@
 
   </package>
 
+  <!--
+  Obsolete feeds based on old, retired taxonomy.  This exists merely to notify users
+  that these feeds have been discontinued.
+
+  This is in a separate namespace from /article/feed because there are a tangled mess
+  of URL rewrite rules (both apache and ambra) related to /article/feed that I don't
+  want to break.
+  -->
+  <package name="article-obsolete-feed" extends="default" namespace="/article/obsoleteFeed">
+    <action name="getFeed" class="org.ambraproject.action.feed.ObsoleteFeedAction">
+      <result name="success">
+        <param name="location">/obsoleteFeed/success.ftl</param>
+        <param name="contentType">application/xml</param>
+      </result>
+      <result name="error" type="httpheader">
+        <param name="status">400</param>
+      </result>
+    </action>
+  </package>
+
   <package name="annotation" extends="default" namespace="/annotation">
 
     <default-action-ref name="pageNotFound"/>
@@ -817,12 +858,6 @@
       </result>
     </action>
 
-    <action name="createAnnotationSubmit" class="org.ambraproject.action.annotation.CreateAnnotationAction">
-      <result name="input" type="json"/>
-      <result name="error" type="json"/>
-      <result name="success" type="json"/>
-    </action>
-
     <action name="createDiscussionSubmit" class="org.ambraproject.action.annotation.CreateAnnotationAction">
       <result name="input" type="json"/>
       <result name="error" type="json"/>
@@ -883,6 +918,20 @@
       </result>
     </action>
 
+    <action name="saveProfileJSON" class="org.ambraproject.action.user.EditUserAction" method="saveUser">
+      <result name="success" type="json_nocomments"/>
+      <result name="input" type="json_nocomments"/>
+    </action>
+
+    <action name="editUserAlerts" class="org.ambraproject.action.user.EditUserAction" method="retrieveAlerts">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
+      </result>
+      <result name="input" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
+      </result>
+    </action>
+
     <action name="saveUserAlerts" class="org.ambraproject.action.user.EditUserAction" method="saveAlerts">
       <result name="success" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>
@@ -890,6 +939,11 @@
       <result name="input" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>
       </result>
+    </action>
+
+    <action name="saveUserAlertsJSON" class="org.ambraproject.action.user.EditUserAction" method="saveAlerts">
+      <result name="success" type="json_nocomments"/>
+      <result name="input" type="json_nocomments"/>
     </action>
 
     <action name="editSearchAlerts" class="org.ambraproject.action.user.EditUserAction" method="retrieveSearchAlerts">
@@ -908,6 +962,11 @@
       <result name="input" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>
       </result>
+    </action>
+
+    <action name="saveSearchAlertsJSON" class="org.ambraproject.action.user.EditUserAction" method="saveSearchAlerts">
+      <result name="success" type="json_nocomments"/>
+      <result name="input" type="json_nocomments"/>
     </action>
 
   </package>

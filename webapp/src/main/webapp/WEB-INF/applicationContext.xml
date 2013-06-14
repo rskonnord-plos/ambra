@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  $HeadURL$
-  $Id$
+  Copyright (c) 2006-2013 by Public Library of Science
 
-  Copyright (c) 2006-2010 by Public Library of Science
   http://plos.org
   http://ambraproject.org
 
@@ -33,7 +31,7 @@
         factory-method="createFactory"/>
 
   <!--Ambra developer beans here -->
-  <bean id="configurationStore" class="org.topazproject.ambra.configuration.ConfigurationStore"
+  <bean id="configurationStore" class="org.ambraproject.configuration.ConfigurationStore"
         factory-method="getInstance"/>
   <bean id="ambraConfiguration" factory-bean="configurationStore" factory-method="getConfiguration"/>
 
@@ -42,6 +40,8 @@
     <property name="articleTransformService" ref="articleTransformService" />
     <property name="fileStoreService" ref="fileStoreService" />
     <property name="articleHtmlCache" ref="articleHtmlCache" />
+    <property name="pubGetLookupService" ref="pubGetLookupService"/>
+    <property name="guestCrossRefUrl" value="${ambra.services.crossref.guestquery.url}"/>
   </bean>
 
   <bean id="articleAssetService" class="org.ambraproject.service.article.ArticleAssetServiceImpl">
@@ -69,8 +69,6 @@
   <util:map id="xslArticleTransformStyleSheetMap">
     <entry key="default"
            value="${ambra.services.articletransform.default}"/>
-    <entry key="2.0"
-           value="${ambra.services.articletransform.dtd_2_3}"/>
     <entry key="3.0"
            value="${ambra.services.articletransform.dtd_3_0}"/>
   </util:map>
@@ -87,8 +85,6 @@
   <util:map id="xslFullDoiStyleSheetMap">
     <entry key="default"
            value="${ambra.services.fulldoitransform.default}"/>
-    <entry key="2.0"
-           value="${ambra.services.fulldoitransform.dtd_2_3}"/>
     <entry key="3.0"
            value="${ambra.services.fulldoitransform.dtd_3_0}"/>
   </util:map>
@@ -105,8 +101,6 @@
   <util:map id="xslObjInfoStyleSheetMap">
     <entry key="default"
            value="${ambra.services.objinfotransform.default}"/>
-    <entry key="2.0"
-           value="${ambra.services.objinfotransform.dtd_2_3}"/>
     <entry key="3.0"
            value="${ambra.services.objinfotransform.dtd_3_0}"/>
   </util:map>
@@ -129,6 +123,7 @@
   <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
+    <property name="crossRefLookupService" ref="crossRefLookupService"/>
   </bean>
 
   <bean id="feedService" class="org.ambraproject.service.feed.FeedServiceImpl">
@@ -171,11 +166,6 @@
     <property name="pubGetUrl" value="${ambra.services.pubget.url}"/>
   </bean>
 
-  <bean id="findArticleService" class="org.ambraproject.service.article.FindArticleServiceImpl">
-    <property name="crossRefLookupService" ref="crossRefLookupService"/>
-    <property name="pubGetLookupService" ref="pubGetLookupService"/>
-  </bean>
-
   <!-- Warning. Spring does not autowire 'simple' properties like primitives, Strings and Classes -->
   <bean id="defaultEncodingCharset" class="java.lang.String">
     <constructor-arg value="UTF-8"/>
@@ -192,13 +182,6 @@
 
   <bean id="annotationService" class="org.ambraproject.service.annotation.AnnotationServiceImpl">
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
-    <property name="articleHtmlCache" ref="articleHtmlCache"/>
-  </bean>
-
-  <bean id="ratingsService" class="org.ambraproject.service.rating.RatingsServiceImpl">
-    <property name="sessionFactory" ref="hibernateSessionFactory"/>
-    <property name="applicationId" ref="applicationId"/>
-    <property name="permissionsService" ref="permissionsService"/>
   </bean>
 
   <bean id="userService" class="org.ambraproject.service.user.UserServiceImpl">
@@ -236,6 +219,7 @@
   <bean id="searchService" class="org.ambraproject.service.search.SolrSearchService">
     <property name="configuration" ref="ambraConfiguration"/>
     <property name="serverFactory" ref="solrServerFactory"/>
+    <property name="cache" ref="solrCache" />
   </bean>
 
   <bean id="journalCreator" class="org.ambraproject.service.journal.JournalCreatorImpl"
@@ -305,6 +289,14 @@
     <constructor-arg index="0" ref="rolesEhCache"/>
   </bean>
 
+  <bean id="taxonomyCache" class="org.ambraproject.service.cache.EhcacheProvider">
+    <constructor-arg index="0" ref="taxonomyEhCache"/>
+  </bean>
+
+  <bean id="solrCache" class="org.ambraproject.service.cache.EhcacheProvider">
+    <constructor-arg index="0" ref="solrEhCache"/>
+  </bean>
+
   <!-- freemarker configs -->
   <bean id="ambraFreemarkerConfig" class="org.ambraproject.freemarker.AmbraFreemarkerConfig">
     <constructor-arg index="0" ref="ambraConfiguration"/>
@@ -331,6 +323,14 @@
 
   <bean id="rolesEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
     <property name="cacheName" value="RolesCache"/>
+  </bean>
+
+  <bean id="taxonomyEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="TaxonomyCache"/>
+  </bean>
+
+  <bean id="solrEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheName" value="SOLRCache"/>
   </bean>
 
   <!-- JMX exporting -->
@@ -412,6 +412,7 @@
 
   <bean id="solrHttpService" class="org.ambraproject.service.search.SolrHttpServiceImpl">
     <property name="config" ref="ambraConfiguration"/>
+    <property name="httpClient" ref="httpClient"/>
   </bean>
 
   <bean id="mostViewedArticleService" class="org.ambraproject.service.search.SolrMostViewedArticleService">
@@ -428,4 +429,10 @@
       </map>
     </property>
   </bean>
+
+  <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">
+    <property name="cache" ref="taxonomyCache" />
+    <property name="searchService" ref="searchService" />
+  </bean>
+
 </beans>

@@ -1,5 +1,6 @@
-<!--This is the header file included in main.ftl-->
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#--This is the header file included in main.ftl-->
 <html lang="en">
   <head>
     <#include "/includes/global_variables.ftl">
@@ -16,7 +17,8 @@
     <meta name="description" content="${freemarker_config.getMetaDescription(journalContext)}" />
     <meta name="keywords" content="${freemarker_config.getMetaKeywords(journalContext)}" />
     <meta name="almHost" content="${freemarker_config.get("almHost")}" />
-    <meta name="solrHost" content="${freemarker_config.get("solrHost")}" />
+    <meta name="searchHost" content="${freemarker_config.get("searchHost")}" />
+    <meta name="termsHost" content="${freemarker_config.get("termsHost")}" />
     <meta name="solrApiKey" content="${freemarker_config.get("solrApiKey")}" />
     <meta name="pubGetHost" content="${freemarker_config.pubGetURL}" />
 

@@ -1,7 +1,6 @@
-/* $HeadURL::                                                                            $
- * $Id$
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  *
- * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -23,24 +22,21 @@ package org.ambraproject.action;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.service.journal.JournalService;
+import org.ambraproject.ApplicationException;
+import org.ambraproject.service.search.SearchService;
 import org.ambraproject.views.SearchHit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Required;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-
-
 
 /**
  * @author stevec
@@ -52,11 +48,64 @@ public class HomePageAction extends BaseActionSupport {
   private ArticleService articleService;
   private JournalService journalService;
   private BrowseService browseService;
+  private SearchService searchService;
   private SortedMap<String, Long> categoryInfos;
 
   private ArrayList<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
+
+  /**
+   * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
+   * on the home page.  If there is no list of acceptable Article Type URIs,
+   * then an empty List is returned.
+   * This method should never return null.
+   * <p/>
+   * As an example, this XML is used to create a List of two Strings for the PLoS One Journal:
+   * <pre>
+   *   &lt;PLoSONE&gt;
+   *     &lt;recentArticles&gt;
+   *       &lt;numDaysInPast&gt;7&lt;/numDaysInPast&gt;
+   *       &lt;numArticlesToShow&gt;5&lt;/numArticlesToShow&gt;
+   *       &lt;typeUriArticlesToShow&gt;
+   *         &lt;articleTypeUri&gt;http://rdf.plos.org/RDF/articleType/Research%20Article&lt;/articleTypeUri&gt;
+   *         &lt;articleTypeUri&gt;http://rdf.plos.org/RDF/articleType/History/Profile&lt;/articleTypeUri&gt;
+   *       &lt;/typeUriArticlesToShow&gt;
+   *     &lt;/recentArticles&gt;
+   *   &lt;/PLoSONE&gt;
+   * </pre>
+   * The logic in this method was adapted from the ArticleType.configureArticleTypes(Configuration)
+   * method.
+   *
+   * @param basePath The location (including Journal Name) of the properties which will be used to
+   *   populate the returned Set.  An example is <i>ambra.virtualJournals.PLoSONE.recentArticles</i>
+   * @return The URIs for the Article Types which will be displayed on the "Recent Articles" tab on
+   *   the home page
+   */
+  private List<URI> getArticleTypesToShow(String basePath) {
+    String baseString = basePath + ".typeUriArticlesToShow";
+    List<URI> typeUriArticlesToShow;
+
+    /*
+     * Iterate through the defined article types.  This is ugly since the index needs to be given
+     * in xpath format to access the element, so we calculate a base string like:
+     *   ambra.virtualJournals.PLoSONE.recentArticles.typeUriArticlesToShow.articleTypeUri(x)
+     * and check if that element is non-null.
+     */
+    typeUriArticlesToShow = new LinkedList<URI>();
+    int count = 0;
+    String articleTypeUri;
+    while (true) {
+      articleTypeUri = configuration.getString(baseString + ".articleTypeUri(" + count + ")");
+      if (articleTypeUri != null && articleTypeUri.trim().length() > 0) {
+        typeUriArticlesToShow.add(URI.create(articleTypeUri));
+      } else {
+        break;
+      }
+      count++;
+    }
+    return typeUriArticlesToShow;
+  }
 
     /**
      * Populate the <b>recentArticles</b> (global) variable with random recent articles of
@@ -147,36 +196,22 @@ public class HomePageAction extends BaseActionSupport {
    */
   @Override
   public String execute() {
-    String journal = getCurrentJournal();
-
-    // HACK: the PLOS ONE homepage displays all top-level categories.  With the
-    // old taxonomy, we got these results from solr.  However, the new taxonomy
-    // has many fewer top-level categories, so it's a lot simpler just to
-    // hard code them here.  Still, this should probably be moved somewhere else
-    // and/or be done more elegantly.
-    if ("PLoSONE".equals(journal)) {
-      Map<String, Long> topLevelCategories = new HashMap<String, Long>(10);
-      topLevelCategories.put("Physical sciences", 1L);
-      topLevelCategories.put("Earth sciences", 1L);
-      topLevelCategories.put("Computer and information sciences", 1L);
-      topLevelCategories.put("Environmental sciences and ecology", 1L);
-      topLevelCategories.put("Social sciences", 1L);
-      topLevelCategories.put("Science policy", 1L);
-      topLevelCategories.put("Research and analysis methods", 1L);
-      topLevelCategories.put("Medicine and health sciences", 1L);
-      topLevelCategories.put("Engineering and technology", 1L);
-      topLevelCategories.put("Biology and life sciences", 1L);
-      categoryInfos = new TreeMap<String, Long>(topLevelCategories);
-    } else {
-      categoryInfos = browseService.getSubjectsForJournal(journal);
+    try {
+      categoryInfos = searchService.getTopSubjects();
+    } catch(ApplicationException ex) {
+      log.error("Failed to query search service", ex);
+      categoryInfos = new TreeMap<String, Long>();
     }
+
     initRecentArticles();
+
     return SUCCESS;
   }
 
   /**
    * @return Returns category and number of articles for each category.
-   * Categories are sorted by name.
+   *
+   * Categories are listed for all journals and sorted by name
    */
   public SortedMap<String,Long> getCategoryInfos() {
     return categoryInfos;
@@ -212,6 +247,14 @@ public class HomePageAction extends BaseActionSupport {
   @Required
   public void setBrowseService(BrowseService browseService) {
     this.browseService = browseService;
+  }
+
+  /**
+   * @param searchService The searchService to set.
+   */
+  @Required
+  public void setSearchService(SearchService searchService) {
+    this.searchService = searchService;
   }
 
   public int getNumDaysInPast() {

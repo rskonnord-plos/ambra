@@ -29,7 +29,6 @@ import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.models.Flag;
 import org.ambraproject.models.FlagReasonCode;
-import org.ambraproject.models.Rating;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.views.AnnotationView;
 import org.apache.commons.lang.ArrayUtils;
@@ -69,10 +68,6 @@ public class AnnotationServiceTest extends BaseTest {
 
   @Autowired
   protected AnnotationService annotationService;
-
-  @Autowired
-  @Qualifier("articleHtmlCache")
-  protected Cache articleHtmlCache; //just used to check that articles get kicked out of the cache when notes are created
 
   @DataProvider(name = "articleAnnotations")
   public Object[][] getArticleAnnotations() {
@@ -390,8 +385,7 @@ public class AnnotationServiceTest extends BaseTest {
     String body = "Test body";
     String title = "test title";
     String ciStatement = "ciStatement";
-    Context context = new Context(null, 0, null, 0, article.getDoi());
-    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, context, false);
+    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, false);
     assertNotNull(id, "Returned null annotation id");
 
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
@@ -402,7 +396,6 @@ public class AnnotationServiceTest extends BaseTest {
     assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
     assertEquals(storedAnnotation.getCompetingInterestBody(), ciStatement, "stored annotation had incorrect ci statement");
     assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Stored annotation had incorrect type");
-    assertNull(storedAnnotation.getXpath(), "Stored annotation had an xpath associated with it");
     assertNotNull(storedAnnotation.getAnnotationUri(), "Service didn't generate an annotation uri");
   }
 
@@ -436,44 +429,18 @@ public class AnnotationServiceTest extends BaseTest {
     article2.seteIssn(defaultJournal.geteIssn());
     dummyDataStore.store(article2);
 
-    List<AnnotationView> results1 = new ArrayList<AnnotationView>(4);
+    List<AnnotationView> results = new ArrayList<AnnotationView>(4);
     for (int i = 1; i <= 3; i++) {
       Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, article1.getID());
       annotation.setTitle("comment on " + article1.getDoi() + i);
       annotation.setBody("comment on " + article1.getDoi() + i);
       annotation.setCreated(twoMonthsAgo.getTime());
       dummyDataStore.store(annotation);
-      results1.add(new AnnotationView(annotation, article1.getDoi(), article1.getTitle(), null));
-    }
-
-    List<AnnotationView> results2 = new ArrayList<AnnotationView>(7);
-    results2.addAll(results1);
-    for (int i = 1; i <= 3; i++) {
-      Annotation annotation = new Annotation(creator, AnnotationType.NOTE, article2.getID());
-      annotation.setTitle("note on " + article2.getDoi() + i);
-      annotation.setBody("note on " + article2.getDoi() + i);
-      annotation.setXpath("xpath" + article2.getDoi() + i);
-      annotation.setCreated(twoMonthsAgo.getTime());
-      dummyDataStore.store(annotation);
-      results2.add(new AnnotationView(annotation, article2.getDoi(), article2.getTitle(), null));
-    }
-
-    List<AnnotationView> results3 = new ArrayList<AnnotationView>(7);
-    results3.addAll(results2);
-    for (int i = 1; i <= 3; i++) {
-      Annotation annotation = new Annotation(creator, AnnotationType.NOTE, article2.getID());
-      annotation.setTitle("more recent note on " + article2.getDoi() + i);
-      annotation.setBody("more recent note on " + article2.getDoi() + i);
-      annotation.setXpath("xpath2" + article2.getDoi() + i);
-      annotation.setCreated(oneMonthAgo.getTime());
-      dummyDataStore.store(annotation);
-      results3.add(new AnnotationView(annotation, article2.getDoi(), article2.getTitle(), null));
+      results.add(new AnnotationView(annotation, article1.getDoi(), article1.getTitle(), null));
     }
 
     return new Object[][]{
-        {lastYear.getTime(), oneMonthAgo.getTime(), Arrays.asList("Comment"), 100, defaultJournal.getJournalKey(), results1},
-        {lastYear.getTime(), oneMonthAgo.getTime(), Arrays.asList("Comment", "Note"), 100, defaultJournal.getJournalKey(), results2},
-        {lastYear.getTime(), yesterday.getTime(), Arrays.asList("Comment", "Note"), 100, defaultJournal.getJournalKey(), results3}
+        {lastYear.getTime(), oneMonthAgo.getTime(), Arrays.asList("Comment"), 100, defaultJournal.getJournalKey(), results},
     };
   }
 
@@ -495,15 +462,11 @@ public class AnnotationServiceTest extends BaseTest {
     dummyDataStore.store(article);
     dummyDataStore.store(user);
 
-    //put the article in the cache to see that it gets kicked out
-    articleHtmlCache.put(article.getDoi(), new Cache.Item(article));
-
     String body = "Test body";
     String title = "test title";
     String ciStatement = "ciStatement";
-    Context context = new Context("/article[1]/body[1]/sec[1]/p[3]", 107, "/article[1]/body[1]/sec[1]/p[3]", 640, article.getDoi());
     String expectedXpath = article.getDoi() + "#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
-    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, context, false);
+    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, false);
     assertNotNull(id, "Returned null annotation id");
 
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
@@ -513,11 +476,9 @@ public class AnnotationServiceTest extends BaseTest {
     assertEquals(storedAnnotation.getBody(), body, "stored annotation had incorrect body");
     assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
     assertEquals(storedAnnotation.getCompetingInterestBody(), ciStatement, "stored annotation had incorrect ci statement");
-    assertEquals(storedAnnotation.getType(), AnnotationType.NOTE, "Stored annotation had incorrect type");
-    assertEquals(storedAnnotation.getXpath(), expectedXpath, "stored annotation had incorrect xpath associated with it");
-    assertNotNull(storedAnnotation.getAnnotationUri(), "Service didn't generate an annotation uri");
+    assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Stored annotation had incorrect type");
 
-    assertNull(articleHtmlCache.get(article.getDoi()), "Article didn't get kicked out of cache");
+    assertNotNull(storedAnnotation.getAnnotationUri(), "Service didn't generate an annotation uri");
   }
 
   @Test(expectedExceptions = {IllegalArgumentException.class})
@@ -529,7 +490,7 @@ public class AnnotationServiceTest extends BaseTest {
     dummyDataStore.store(article);
     dummyDataStore.store(user);
 
-    annotationService.createComment(user, article.getDoi(), "foo", null, "foo", null, false);
+    annotationService.createComment(user, article.getDoi(), "foo", null, "foo", false);
   }
 
   @Test(expectedExceptions = {IllegalArgumentException.class})
@@ -537,7 +498,7 @@ public class AnnotationServiceTest extends BaseTest {
     Article article = new Article("id:doiForCreateWithNullUser");
     dummyDataStore.store(article);
 
-    annotationService.createComment(null, article.getDoi(), "foo", "foo", "foo", null, false);
+    annotationService.createComment(null, article.getDoi(), "foo", "foo", "foo", false);
   }
 
   @Test(expectedExceptions = {IllegalArgumentException.class})
@@ -548,7 +509,7 @@ public class AnnotationServiceTest extends BaseTest {
         "displayNAmeForCreateWithBadDoi", "pass");
     dummyDataStore.store(user);
 
-    annotationService.createComment(user, article.getDoi(), "foo", "foo", "foo", null, false);
+    annotationService.createComment(user, article.getDoi(), "foo", "foo", "foo", false);
   }
 
   @Test
@@ -563,10 +524,10 @@ public class AnnotationServiceTest extends BaseTest {
     String body = "Test body";
     String title = "test title";
     String ciStatement = "ciStatement";
-    Context context = new Context("/article[1]/body[1]/sec[1]/p[3]", 107, "/article[1]/body[1]/sec[1]/p[3]", 640, article.getDoi());
+
     String expectedXpath = article.getDoi() + "#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
 
-    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, context, true);
+    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, true);
     assertNotNull(id, "Returned null annotation id");
 
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
@@ -576,8 +537,7 @@ public class AnnotationServiceTest extends BaseTest {
     assertEquals(storedAnnotation.getBody(), body, "stored annotation had incorrect body");
     assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
     assertEquals(storedAnnotation.getCompetingInterestBody(), ciStatement, "stored annotation had incorrect ci statement");
-    assertEquals(storedAnnotation.getType(), AnnotationType.NOTE, "Stored annotation had incorrect type");
-    assertEquals(storedAnnotation.getXpath(), expectedXpath, "stored annotation had incorrect xpath associated with it");
+    assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Stored annotation had incorrect type");
     assertNotNull(storedAnnotation.getAnnotationUri(), "Service didn't generate an annotation uri");
 
     List<Flag> allFlags = dummyDataStore.getAll(Flag.class);
@@ -611,7 +571,6 @@ public class AnnotationServiceTest extends BaseTest {
     Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, article.getID());
     annotation.setTitle("test title for annotation service test");
     annotation.setBody("test body for annotation service test");
-    annotation.setXpath("test xpath");
     annotation.setAnnotationUri("id:annotationWithReplies");
     annotation.setAnnotationCitation(new AnnotationCitation(article));
     annotation.getAnnotationCitation().setSummary("Citation summary");
@@ -894,20 +853,18 @@ public class AnnotationServiceTest extends BaseTest {
     dummyDataStore.store(new Annotation(user, AnnotationType.FORMAL_CORRECTION, article.getID()));
     dummyDataStore.store(new Annotation(user, AnnotationType.MINOR_CORRECTION, article.getID()));
     dummyDataStore.store(new Annotation(user, AnnotationType.RETRACTION, article.getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.NOTE, article.getID()));
-    dummyDataStore.store(new Rating(user, article.getID()));
 
     Annotation reply = new Annotation(user, AnnotationType.REPLY, article.getID());
     reply.setParentID(commentId);
     dummyDataStore.store(reply);
 
     assertEquals(annotationService.countAnnotations(article.getID(),
-        EnumSet.of(AnnotationType.NOTE, AnnotationType.COMMENT)),
-        2, "annotation service returned incorrect count of comments and notes");
+        EnumSet.of(AnnotationType.COMMENT)),
+        1, "annotation service returned incorrect count of comments and notes");
     assertEquals(annotationService.countAnnotations(article.getID(),
         EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION)),
         3, "annotation service returned incorrect count of corrections");
     assertEquals(annotationService.countAnnotations(article.getID(), EnumSet.allOf(AnnotationType.class)),
-        7, "annotation service returned incorrect count of comments and notes");
+        5, "annotation service returned incorrect count of comments and notes");
   }
 }

@@ -118,26 +118,22 @@
     <services>
 
       <ingest>
-        <default>org/ambraproject/article/service/pmc2obj.xslt</default>
-        <dtd_2_3>org/ambraproject/article/service/pmc2obj.xslt</dtd_2_3>
+        <default>org/ambraproject/article/service/pmc2obj-v3.xslt</default>
         <dtd_3_0>org/ambraproject/article/service/pmc2obj-v3.xslt</dtd_3_0>
       </ingest>
 
       <articletransform>
-        <default>articleTransform.xsl</default>
-        <dtd_2_3>articleTransform.xsl</dtd_2_3>
+        <default>articleTransform-v3.xsl</default>
         <dtd_3_0>articleTransform-v3.xsl</dtd_3_0>
       </articletransform>
 
       <fulldoitransform>
-        <default>fullDOI.xsl</default>
-        <dtd_2_3>fullDOI.xsl</dtd_2_3>
-        <dtd_3_0>fullDOI.xsl</dtd_3_0>
+        <default>fullDOI-v3.xsl</default>
+        <dtd_3_0>fullDOI-v3.xsl</dtd_3_0>
       </fulldoitransform>
 
       <objinfotransform>
-        <default>objInfo.xsl</default>
-        <dtd_2_3>objInfo.xsl</dtd_2_3>
+        <default>objInfo-v3.xsl</default>
         <dtd_3_0>objInfo-v3.xsl</dtd_3_0>
       </objinfotransform>
 
@@ -150,6 +146,7 @@
           <option displayName="Most cited\, all time">alm_scopusCiteCount desc\, id desc</option>
         </sortOptions>
       </browse>
+
       <search>
         <!-- Settings for Solr search
         <articleIndexingQueue>activemq:plos.solr.article.index?transacted=false</articleIndexingQueue>
@@ -191,10 +188,14 @@
         <!-- Escape commas as the configuration will attempt to turn the string into a collection otherwise -->
         <sortOptions>
           <option displayName="Relevance">score desc\, publication_date desc\, id desc</option>
-          <option displayName="Date\, newest first">publication_date desc\, score desc\, id desc</option>
-          <option displayName="Date\, oldest first">publication_date asc\, score desc\, id desc</option>
+          <option displayName="Date\, newest first">publication_date desc\, id desc</option>
+          <option displayName="Date\, oldest first">publication_date asc\, id desc</option>
+          <option displayName="Most views\, last 30 days">counter_total_month desc\, id desc</option>
+          <option displayName="Most views\, all time">counter_total_all desc\, id desc</option>
           <option displayName="Most cited\, all time">alm_scopusCiteCount desc\, id desc</option>
-        </sortOptions>
+          <option displayName="Most bookmarked">sum(alm_citeulikeCount\, alm_mendeleyCount) desc\, id desc</option>
+          <option displayName="Most shared in social media">sum(alm_twitterCount\, alm_facebookCount) desc\, id desc</option>
+	      </sortOptions>
 
         <!-- Fields that are supported for keyword counts -->
         <keywordFields>
@@ -273,7 +274,7 @@
         </post>
         <query>
           <url>
-            http://doi.crossref.org/servlet/query?usr=${ambra.services.crossref.login}&amp;pwd=${ambra.services.crossref.password}&amp;format=piped&amp;type=a&amp;qdata=
+            http://search.crossref.org/links
           </url>
         </query>
         <guestquery>

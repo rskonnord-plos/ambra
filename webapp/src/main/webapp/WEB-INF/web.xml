@@ -253,7 +253,7 @@ If so, wrap request with virtual journal override values in FilterChain.</descri
 
   <!-- The configuration WebAppListener to pull in the configuration stuff automatically. -->
   <listener>
-    <listener-class>org.topazproject.ambra.configuration.WebAppListener</listener-class>
+    <listener-class>org.ambraproject.configuration.WebAppListener</listener-class>
   </listener>
   <!-- to hook in the spring container -->
   <listener>
@@ -262,6 +262,11 @@ If so, wrap request with virtual journal override values in FilterChain.</descri
   <!-- to hook in the scope management system that provides scopes like session, request for Servlet 2.4 and Spring 2.0 above  -->
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+
+  <!-- Count the number of active sessions and make it available.   -->
+  <listener>
+    <listener-class>org.ambraproject.web.SessionCounter</listener-class>
   </listener>
 
   <welcome-file-list>

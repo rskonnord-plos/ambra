@@ -21,8 +21,6 @@
 
 package org.ambraproject.action;
 
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.views.article.RelatedArticleInfo;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.Article;
@@ -40,6 +38,8 @@ import org.ambraproject.testutils.DummyDataStore;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
+import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.RelatedArticleInfo;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,14 +53,8 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertEqualsNoOrder;
-import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.*;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Base class for tests of Ambra Service Beans.  This is provided just so they can all use the same applicationContext
@@ -69,7 +63,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Alex Kudlick Date: 4/29/11
  *         <p/>
- *         org.topazproject.ambra
+ *         org.ambraproject
  */
 @ContextConfiguration(locations = "nonWebApplicationContext.xml")
 @Test(singleThreaded = true)
@@ -98,7 +92,7 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
    * rounding can occur when storing to an hsql db
    *
    * @param actual   - the date from mysql to compare
-   * @param expected - the date from topaz to compare
+   * @param expected - the date from Ambra to compare
    */
   protected static void assertMatchingDates(Date actual, Date expected) {
     if (actual == null || expected == null) {
@@ -338,8 +332,6 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
 
         assertTrue(foundCategory, "Didn't return category: " + category.getMainCategory());
       }
-
-      assertEqualsNoOrder(collapsedCategories.toArray(), actual.getTransposedCategories().toArray());
     }
 
     //check authors
@@ -361,9 +353,20 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
           "returned incorrect number of related articles");
       for (Article otherArticle : expectedRelatedArticles) {
         boolean foundMatch = false;
+
         for (RelatedArticleInfo actualRelatedArticle : actual.getRelatedArticles()) {
+
+          assertNotNull(otherArticle.getTitle(), "Title value of other article is null");
+          assertNotNull(otherArticle.getDoi(), "DOI value of other article is null");
+          assertNotNull(otherArticle.getTypes(), "Types value of other article is null");
+
+          assertNotNull(actualRelatedArticle.getTitle(), "Title value of actual article is null");
+          assertNotNull(actualRelatedArticle.getUri(), "URI value of actual article is null");
+          assertNotNull(actualRelatedArticle.getTypes(), "Types value of actual article is null");
+
           if (otherArticle.getTitle().equals(actualRelatedArticle.getTitle()) &&
-              otherArticle.getDoi().equals(actualRelatedArticle.getUri().toString())) {
+              otherArticle.getDoi().equals(actualRelatedArticle.getUri().toString())&&
+              otherArticle.getTypes().equals(actualRelatedArticle.getTypes())) {
             foundMatch = true;
             break;
           }
@@ -388,7 +391,6 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
         expected.getCompetingInterestBody() == null ? "" : expected.getCompetingInterestBody(),
         "Annotation view had incorrect ci statement");
     assertEquals(result.getAnnotationUri(), expected.getAnnotationUri(), "Annotation view had incorrect annotation uri");
-    assertEquals(result.getXpath(), expected.getXpath(), "Annotation view had incorrect xpath");
     assertEquals(result.getCreatorID(), expected.getCreator().getID(), "Annotation view had incorrect creator id");
     assertEquals(result.getCreatorDisplayName(), expected.getCreator().getDisplayName(), "Annotation view had incorrect creator name");
 

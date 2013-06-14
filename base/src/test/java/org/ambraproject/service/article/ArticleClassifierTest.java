@@ -31,16 +31,13 @@ import static org.testng.Assert.assertTrue;
  *         Date: 7/3/12
  */
 public class ArticleClassifierTest extends BaseTest {
-
-  private static final String DATA_DIR = "src/test/data/";
-
   @Autowired
   protected AIArticleClassifier articleClassifier;
 
   @Test
   public void testAppendElementIfExists() throws Exception {
     Document article = DocumentBuilderFactoryCreator.createFactory()
-        .newDocumentBuilder().parse(new File(DATA_DIR + "pone.0048915.xml"));
+        .newDocumentBuilder().parse(new File(ClassLoader.getSystemResource("articles/pone.0048915.xml").toURI()));
     StringBuilder sb = new StringBuilder();
     assertFalse(articleClassifier.appendElementIfExists(sb, article, "elementThatShouldntExist"));
     assertTrue(sb.toString().isEmpty());
@@ -59,7 +56,7 @@ public class ArticleClassifierTest extends BaseTest {
   @Test
   public void testAppendSectionIfExists() throws Exception {
     Document article = DocumentBuilderFactoryCreator.createFactory()
-        .newDocumentBuilder().parse(new File(DATA_DIR + "pone.0048915.xml"));
+        .newDocumentBuilder().parse(new File(ClassLoader.getSystemResource("articles/pone.0048915.xml").toURI()));
     StringBuilder sb = new StringBuilder();
     assertFalse(articleClassifier.appendSectionIfExists(sb, article, "sectionThatShouldntExist"));
     assertTrue(sb.toString().isEmpty());
@@ -79,15 +76,31 @@ public class ArticleClassifierTest extends BaseTest {
 
     // Arbitrary minimum number of characters that we should be sending for categorization.
     // This should be longer than the article title.
-    int threshold = 200;
+    int threshold = 500;
     Document article = DocumentBuilderFactoryCreator.createFactory()
-        .newDocumentBuilder().parse(new File(DATA_DIR + "pone.0048915.xml"));
+        .newDocumentBuilder().parse(new File(ClassLoader.getSystemResource("articles/pone.0048915.xml").toURI()));
     String content = articleClassifier.getCategorizationContent(article);
     assertTrue(content.length() > threshold);
 
     // Editorial without an abstract, materials/methods, or results section.
     article = DocumentBuilderFactoryCreator.createFactory()
-        .newDocumentBuilder().parse(new File(DATA_DIR + "pntd.0001008.xml"));
+        .newDocumentBuilder().parse(new File(ClassLoader.getSystemResource("articles/pntd.0001008.xml").toURI()));
+    content = articleClassifier.getCategorizationContent(article);
+    assertTrue(content.length() > threshold);
+
+    // Research article with non-standard section titles.
+    article = DocumentBuilderFactoryCreator.createFactory()
+        .newDocumentBuilder().parse(new File(ClassLoader.getSystemResource("articles/pone.0040598.xml").toURI()));
+    content = articleClassifier.getCategorizationContent(article);
+
+    // Call it good if we have material that's at least twice as long as the abstract.
+    assertTrue(content.length()
+        > article.getElementsByTagName("abstract").item(0).getTextContent().length() * 2);
+
+    // Article with a very short, one-sentence "TOC" abstract that we don't even
+    // display in ambra.
+    article = DocumentBuilderFactoryCreator.createFactory()
+        .newDocumentBuilder().parse(new File(ClassLoader.getSystemResource("articles/pbio.0020302.xml").toURI()));
     content = articleClassifier.getCategorizationContent(article);
     assertTrue(content.length() > threshold);
   }

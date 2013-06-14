@@ -14,7 +14,7 @@
 package org.ambraproject.util;
 
 import org.ambraproject.models.AnnotationType;
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 import org.ambraproject.models.Annotation;
 import java.net.URI;
 import java.util.UUID;
@@ -53,9 +53,7 @@ public class URIGenerator {
       throw new RuntimeException(ConfigurationStore.SYSTEM_OBJECT_ID_PREFIX + " is not defined as a system property.");
     }
     
-    if(className.equals("Rating")) {
-      objectPrefix = "annotation";
-    } else if(className.equals("Annotation")) {
+    if(className.equals("Annotation")) {
       AnnotationType annotationType = ((Annotation)object).getType();
       switch(annotationType) {
         case REPLY:

@@ -34,7 +34,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.FilterDispatcher;
 
 
-import org.topazproject.ambra.configuration.ConfigurationStore;
+import org.ambraproject.configuration.ConfigurationStore;
 
 /**
  * Override the Struts Constants configurations from our Commons config files. This adds one

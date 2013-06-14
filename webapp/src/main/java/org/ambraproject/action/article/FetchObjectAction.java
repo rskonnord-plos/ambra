@@ -204,7 +204,12 @@ public class FetchObjectAction extends BaseSessionAwareActionSupport {
     if (lastModified == null)
       log.warn("Missing modification date for " + uri);
 
-    contentDisposition = getContentDisposition(getFileExtension(contentType));
+    if ("PDF".equalsIgnoreCase(representation)) {
+      contentType = "application/pdf";
+      contentDisposition = getContentDisposition("pdf");
+    } else {
+      contentDisposition = getContentDisposition(getFileExtension(contentType));
+    }
   }
 
   private String getContentDisposition(final String fileExt) {

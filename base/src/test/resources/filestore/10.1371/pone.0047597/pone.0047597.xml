@@ -1,0 +1,2746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="3.0" xml:lang="en">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">PLoS ONE</journal-id>
+      <journal-id journal-id-type="publisher-id">plos</journal-id>
+      <journal-id journal-id-type="pmc">plosone</journal-id>
+      <journal-title-group>
+        <journal-title>PLoS ONE</journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">1932-6203</issn>
+      <publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, USA</publisher-loc>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="publisher-id">PONE-D-12-06486</article-id>
+      <article-id pub-id-type="doi">10.1371/journal.pone.0047597</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Biology</subject>
+          <subj-group>
+            <subject>Computational biology</subject>
+            <subj-group>
+              <subject>Population genetics</subject>
+              <subj-group>
+                <subject>Haplotypes</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Evolutionary biology</subject>
+            <subj-group>
+              <subject>Population genetics</subject>
+              <subj-group>
+                <subject>Haplotypes</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Genetics</subject>
+            <subj-group>
+              <subject>Population genetics</subject>
+              <subj-group>
+                <subject>Genetic polymorphism</subject>
+                <subject>Haplotypes</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Genetics of disease</subject>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Immunology</subject>
+            <subj-group>
+              <subject>Immunity</subject>
+              <subj-group>
+                <subject>Innate immunity</subject>
+              </subj-group>
+            </subj-group>
+            <subj-group>
+              <subject>Genetics of the immune system</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v2">
+          <subject>Medicine</subject>
+          <subj-group>
+            <subject>Epidemiology</subject>
+            <subj-group>
+              <subject>Genetic epidemiology</subject>
+              <subject>Infectious disease epidemiology</subject>
+            </subj-group>
+          </subj-group>
+          <subj-group>
+            <subject>Global health</subject>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline">
+          <subject>Genetics and Genomics</subject>
+          <subject>Immunology</subject>
+          <subject>Public Health and Epidemiology</subject>
+          <subject>Computational Biology</subject>
+          <subject>Evolutionary Biology</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>Genetic Variation in TLR Genes in Ugandan and South African Populations and Comparison with HapMap Data</article-title>
+        <alt-title alt-title-type="running-head">TLR Genetic Variation in African Populations</alt-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author" equal-contrib="yes" xlink:type="simple">
+          <name name-style="western">
+            <surname>Baker</surname>
+            <given-names>Allison R.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn1">
+            <sup>¤a</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" equal-contrib="yes" xlink:type="simple">
+          <name name-style="western">
+            <surname>Qiu</surname>
+            <given-names>Feiyou</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Randhawa</surname>
+            <given-names>April Kaur</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff5">
+            <sup>5</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Horne</surname>
+            <given-names>David J.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff5">
+            <sup>5</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Adams</surname>
+            <given-names>Mark D.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff2">
+            <sup>2</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn2">
+            <sup>¤b</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Shey</surname>
+            <given-names>Muki</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff8">
+            <sup>8</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Barnholtz-Sloan</surname>
+            <given-names>Jill</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="aff" rid="aff3">
+            <sup>3</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Mayanja-Kizza</surname>
+            <given-names>Harriet</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff6">
+            <sup>6</sup>
+          </xref>
+          <xref ref-type="aff" rid="aff7">
+            <sup>7</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Kaplan</surname>
+            <given-names>Gilla</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff9">
+            <sup>9</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Hanekom</surname>
+            <given-names>Willem A.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff8">
+            <sup>8</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Boom</surname>
+            <given-names>W. Henry</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff4">
+            <sup>4</sup>
+          </xref>
+          <xref ref-type="aff" rid="aff6">
+            <sup>6</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Hawn</surname>
+            <given-names>Thomas R.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff5">
+            <sup>5</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn3">
+            <sup>¶</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Stein</surname>
+            <given-names>Catherine M.</given-names>
+          </name>
+          <xref ref-type="aff" rid="aff1">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="aff" rid="aff6">
+            <sup>6</sup>
+          </xref>
+          <xref ref-type="corresp" rid="cor1">
+            <sup>*</sup>
+          </xref>
+          <xref ref-type="fn" rid="fn3">
+            <sup>¶</sup>
+          </xref>
+          <on-behalf-of>for the Tuberculosis Research Unit (TBRU) and South African Tuberculosis Vaccine Initiative Team (SATVI)</on-behalf-of>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <collab xlink:type="simple">Tuberculosis Research Unit (TBRU) and South African Tuberculosis Vaccine Initiative Team (SATVI)</collab>
+        </contrib>
+      </contrib-group>
+      <aff id="aff1">
+        <label>1</label>
+        <addr-line>Department of Epidemiology and Biostatistics, Case Western Reserve University, Cleveland, Ohio, United States of America</addr-line>
+      </aff>
+      <aff id="aff2">
+        <label>2</label>
+        <addr-line>Department of Genetics and Center for Proteomics and Bioinformatics, Case Western Reserve University, Cleveland, Ohio, United States of America</addr-line>
+      </aff>
+      <aff id="aff3">
+        <label>3</label>
+        <addr-line>Case Comprehensive Cancer Center, Case Western Reserve University, Cleveland, Ohio, United States of America</addr-line>
+      </aff>
+      <aff id="aff4">
+        <label>4</label>
+        <addr-line>Department of Medicine, Case Western Reserve University, Cleveland, Ohio, United States of America</addr-line>
+      </aff>
+      <aff id="aff5">
+        <label>5</label>
+        <addr-line>Department of Medicine, University of Washington School of Medicine, Seattle, Washington, United States of America</addr-line>
+      </aff>
+      <aff id="aff6">
+        <label>6</label>
+        <addr-line>Uganda – Case Western Reserve University Research Collaboration, Cleveland, Ohio, United States of America, and Kampala, Uganda</addr-line>
+      </aff>
+      <aff id="aff7">
+        <label>7</label>
+        <addr-line>Makerere University School of Medicine and Mulago Hospital, Kampala, Uganda</addr-line>
+      </aff>
+      <aff id="aff8">
+        <label>8</label>
+        <addr-line>South African Tuberculosis Vaccine Initiative, Institute of Infectious Diseases and Molecular Medicine and School of Child and Adolescent Health, University of Cape Town, South Africa</addr-line>
+      </aff>
+      <aff id="aff9">
+        <label>9</label>
+        <addr-line>Public Health Research Institute, University of Medicine and Dentistry of New Jersey, Newark, New Jersey, United States of America</addr-line>
+      </aff>
+      <contrib-group>
+        <contrib contrib-type="editor" xlink:type="simple">
+          <name name-style="western">
+            <surname>Moormann</surname>
+            <given-names>Ann M.</given-names>
+          </name>
+          <role>Editor</role>
+          <xref ref-type="aff" rid="edit1"/>
+        </contrib>
+      </contrib-group>
+      <aff id="edit1">
+        <addr-line>University of Massachusetts Medical School, United States of America</addr-line>
+      </aff>
+      <author-notes>
+        <corresp id="cor1">* E-mail: <email xlink:type="simple">catherine.stein@case.edu</email></corresp>
+        <fn fn-type="conflict">
+          <p>The authors have declared that no competing interests exist.</p>
+        </fn>
+        <fn fn-type="con">
+          <p>Conceived and designed the experiments: ARB TRH CMS WHB HM-K MDA AKR JSB-S DJH. Performed the experiments: MS AKR. Analyzed the data: ARB FQ AKR CMS JSB-S TRH DJH. Contributed reagents/materials/analysis tools: WHB HM-K WAH GK. Wrote the paper: ARB FQ TRH CMS AKR HM-K WHB JSB-S DJH.</p>
+        </fn>
+        <fn id="fn1" fn-type="current-aff">
+          <label>¤a </label>
+          <p>Current address: Clinical Services Group, Hospital Corporations of America, Nashville, Tennessee, United States of America</p>
+        </fn>
+        <fn id="fn2" fn-type="current-aff">
+          <label>¤b </label>
+          <p>Current address: J. Craig Venter Institute, San Diego, California, United States of America</p>
+        </fn>
+        <fn id="fn3" fn-type="other">
+          <label>¶ </label>
+          <p>These authors are joint senior authors on this work.</p>
+        </fn>
+      </author-notes>
+      <pub-date pub-type="collection">
+        <year>2012</year>
+      </pub-date>
+      <pub-date pub-type="epub">
+        <day>24</day>
+        <month>10</month>
+        <year>2012</year>
+      </pub-date>
+      <volume>7</volume>
+      <issue>10</issue>
+      <elocation-id>e47597</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>28</day>
+          <month>2</month>
+          <year>2012</year>
+        </date>
+        <date date-type="accepted">
+          <day>18</day>
+          <month>9</month>
+          <year>2012</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-year>2012</copyright-year>
+        <copyright-holder>Baker et al</copyright-holder>
+        <license xlink:type="simple">
+          <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p>
+        </license>
+      </permissions>
+      <abstract>
+        <p>Genetic epidemiological studies of complex diseases often rely on data from the International HapMap Consortium for identification of single nucleotide polymorphisms (SNPs), particularly those that tag haplotypes. However, little is known about the relevance of the African populations used to collect HapMap data for study populations conducted elsewhere in Africa. Toll-like receptor (TLR) genes play a key role in susceptibility to various infectious diseases, including tuberculosis. We conducted full-exon sequencing in samples obtained from Uganda (n = 48) and South Africa (n = 48), in four genes in the TLR pathway: TLR2, TLR4, TLR6, and TIRAP. We identified one novel TIRAP SNP (with minor allele frequency [MAF] 3.2%) and a novel TLR6 SNP (MAF 8%) in the Ugandan population, and a TLR6 SNP that is unique to the South African population (MAF 14%). These SNPs were also not present in the 1000 Genomes data. Genotype and haplotype frequencies and linkage disequilibrium patterns in Uganda and South Africa were similar to African populations in the HapMap datasets. Multidimensional scaling analysis of polymorphisms in all four genes suggested broad overlap of all of the examined African populations. Based on these data, we propose that there is enough similarity among African populations represented in the HapMap database to justify initial SNP selection for genetic epidemiological studies in Uganda and South Africa. We also discovered three novel polymorphisms that appear to be population-specific and would only be detected by sequencing efforts.</p>
+      </abstract>
+      <funding-group>
+        <funding-statement>This work was supported by the Dana Foundation, National Institutes of Health NO1-AI-70022 (Tuberculosis Research Unit), the Burroughs Wellcome Foundation, R01HL096811 from the National Heart, Lung and Blood Institutes (NHLBI),and NHLBI grant T32-HL0756. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.</funding-statement>
+      </funding-group>
+      <counts>
+        <page-count count="9"/>
+      </counts>
+    </article-meta>
+  </front>
+  <body>
+    <sec id="s1">
+      <title>Introduction</title>
+      <p>Human genetic studies of diseases with complex inheritance involve analysis of single nucleotide polymorphisms (SNPs) which are present at a range of population-specific frequencies. The proper selection of SNPs for genetic studies requires either discovering the SNPs in the population of interest with <italic>de novo</italic> sequencing efforts or relying on information from similar populations in public databases. The International HapMap Consortium <xref ref-type="bibr" rid="pone.0047597-InternationalHapMap1">[1]</xref>, <xref ref-type="bibr" rid="pone.0047597-InternationalHapMap2">[2]</xref> has provided a database of common SNPs in a number of diverse global populations including three from Africa: the Yoruba from Nigeria (YRI), and the Luhya (LWK) and Maasai (MKK) from Kenya. The HapMap project has been instrumental for selection of SNPs for study in a variety of complex diseases in diverse populations. However, the applicability of the data from the African populations described in HapMap to studies in other parts of Africa is less obvious because of the immense genetic diversity on the African continent. Haplotype blocks are shorter in Africans <xref ref-type="bibr" rid="pone.0047597-Campbell1">[3]</xref>, and haplotype and linkage disequilibrium (LD) diversity is abundant <xref ref-type="bibr" rid="pone.0047597-Campbell1">[3]</xref>–<xref ref-type="bibr" rid="pone.0047597-Barreiro1">[5]</xref>. Thus, studies of genetic variation in other African populations are valuable in understanding how to plan genetic epidemiologic studies in these diverse populations.</p>
+      <p>Toll-like receptors (TLRs) play a key role in the innate immune response to a variety of pathogens. Mutations and polymorphisms in TLR genes have been associated with susceptibility to various infectious diseases, including Mendelian disorders with mutations in IRAK4, MyD88, TLR3, and Unc93b <xref ref-type="bibr" rid="pone.0047597-Casanova1">[6]</xref>. In studies of diseases with complex inheritance patterns, TLR polymorphisms have been associated with susceptibility to several infections, including tuberculosis (TB) <xref ref-type="bibr" rid="pone.0047597-Berrington1">[7]</xref> and leprosy <xref ref-type="bibr" rid="pone.0047597-Wong1">[8]</xref>. In addition, previous studies have shown that the TLR1/6/10 region is under natural selection <xref ref-type="bibr" rid="pone.0047597-Coop1">[9]</xref>–<xref ref-type="bibr" rid="pone.0047597-Enard1">[11]</xref> and that TLR1 has a high degree of population differentiation <xref ref-type="bibr" rid="pone.0047597-Wong1">[8]</xref>. Though most studies have focused on common variation in TLR genes, a sequencing study conducted in Houston identified a number of rare variants in TLR genes that were associated with TB <xref ref-type="bibr" rid="pone.0047597-Ma1">[12]</xref>. Because of their central role in TB immunity and potential importance for vaccine development, it is of interest to study variants in TLR genes and their association with TB and other infectious diseases in Africa, where they are especially prevalent.</p>
+      <p>In this study, we conducted full exon sequencing of TLR2, TLR4, TLR6, and TIRAP in samples obtained as part of ongoing studies in Kampala, Uganda, and Cape Town, South Africa. Our objective in this study was first to examine whether there were any novel TLR gene polymorphisms in these study populations, and second, to compare the genotype and haplotype frequencies between these populations and the African HapMap populations.</p>
+    </sec>
+    <sec id="s2">
+      <title>Results</title>
+      <p>To understand haplotype structure and population polymorphism diversity, we sequenced the coding region of four candidate genes in two populations and compared it to four populations of African ancestry in the HapMap database. Specifically, we sequenced gene regions from the Kampala Ugandans (UG, n = 48) and Cape Town South Africans (SA, n = 48) and compared findings to four populations composed of unrelated individuals from the HapMap database: the Maasai in Kinyawa, Kenya (MKK, n = 143), the Luhya in Webuye, Kenya (LWK, n = 90), the African Ancestry in Southwest USA (ASW, n = 53), and Yoruba in Ibadan, Nigeria (YRI, n = 114). Four candidate genes were considered in our analysis: TLR2 (chromosome 4q32), TLR4 (9q32– q33), TLR6 (4p14), and TIRAP (11q23– q24). Genotype frequencies for these populations are provided in <xref ref-type="table" rid="pone-0047597-t001">Table 1</xref>. Only those SNPs genotyped across all six populations were considered in the statistical comparisons. There were two novel polymorphisms discovered in the Ugandan population: one TIRAP SNP (G222A (A74A)) and one TLR6 SNP (A1696G (P564P)). In the South Africans, one novel polymorphism was found in TLR6 (T34A (F12I)), which we previously reported <xref ref-type="bibr" rid="pone.0047597-Shey1">[13]</xref>. None of these SNPs were present in the 1000 Genomes database <xref ref-type="bibr" rid="pone.0047597-Genomes1">[14]</xref>. Of note, TLR2 rs5743709, present in the Ugandan population (MAF 5%) but not in the South African or African HapMap populations, was observed in the 1000 Genomes database in the Asian populations (MAF = 8.8%) and in the Hispanic populations from Puerto Rico and South America (minor allele frequency = 0.2%). We observed departures from Hardy-Weinberg proportions in the Ugandan population in one TLR6 SNP (rs3775073; p = 0.001).</p>
+      <table-wrap id="pone-0047597-t001" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0047597.t001</object-id>
+        <label>Table 1</label>
+        <caption>
+          <title>Genotype frequencies for polymorphisms in TIRAP, TLR2, TLR4, and TLR6 for HapMap populations and South African (SA) and Ugandan (UG) populations, and tests of significance comparing populations.</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0047597-t001-1" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0047597.t001" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td colspan="4" align="left" rowspan="1">HapMap population frequencies</td>
+                <td colspan="2" align="left" rowspan="1">Study pop frequency</td>
+                <td align="left" rowspan="1" colspan="1">p-value comparing all populations</td>
+                <td align="left" rowspan="1" colspan="1">UG vs HapMap p&lt;0.05</td>
+                <td align="left" rowspan="1" colspan="1">SA vs HapMap p&lt;0.05</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">Gene</td>
+                <td align="left" rowspan="1" colspan="1">rs# bp (aa)</td>
+                <td align="left" rowspan="1" colspan="1">genotype</td>
+                <td align="left" rowspan="1" colspan="1">YRI N = 114</td>
+                <td align="left" rowspan="1" colspan="1">ASW N = 53</td>
+                <td align="left" rowspan="1" colspan="1">LWK N = 90</td>
+                <td align="left" rowspan="1" colspan="1">MKK N = 143</td>
+                <td align="left" rowspan="1" colspan="1">S. AfricaN = 48</td>
+                <td align="left" rowspan="1" colspan="1">UgandaN = 48</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>TIRAP</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">rs8177369</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.974</td>
+                <td align="left" rowspan="1" colspan="1">0.933</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C25G</td>
+                <td align="left" rowspan="1" colspan="1">CG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.026</td>
+                <td align="left" rowspan="1" colspan="1">0.067</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(A9P)</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs8177399</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.957</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.947</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C37T</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.043</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.054</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(R13W)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs3802813</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.921</td>
+                <td align="left" rowspan="1" colspan="1">0.943</td>
+                <td align="left" rowspan="1" colspan="1">0.811</td>
+                <td align="left" rowspan="1" colspan="1">0.930</td>
+                <td align="left" rowspan="1" colspan="1">0.923</td>
+                <td align="left" rowspan="1" colspan="1">0.851</td>
+                <td align="left" rowspan="1" colspan="1">0.031</td>
+                <td align="left" rowspan="1" colspan="1">None</td>
+                <td align="left" rowspan="1" colspan="1">none</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G164A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.079</td>
+                <td align="left" rowspan="1" colspan="1">0.057</td>
+                <td align="left" rowspan="1" colspan="1">0.167</td>
+                <td align="left" rowspan="1" colspan="1">0.070</td>
+                <td align="left" rowspan="1" colspan="1">0.077</td>
+                <td align="left" rowspan="1" colspan="1">0.149</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(S55N)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.022</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>New</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.938</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G222A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.063</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(A74A)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs8177400</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.974</td>
+                <td align="left" rowspan="1" colspan="1">0.957</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G286A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.026</td>
+                <td align="left" rowspan="1" colspan="1">0.043</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(D96N)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs3802814</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.872</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.897</td>
+                <td align="left" rowspan="1" colspan="1">0.978</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G303A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.128</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.103</td>
+                <td align="left" rowspan="1" colspan="1">0.022</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(Q101Q)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs74937157</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.988</td>
+                <td align="left" rowspan="1" colspan="1">0.979</td>
+                <td align="left" rowspan="1" colspan="1">0.989</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.958</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">T400C</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.012</td>
+                <td align="left" rowspan="1" colspan="1">0.021</td>
+                <td align="left" rowspan="1" colspan="1">0.011</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.042</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(C134A)</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs8177374</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.906</td>
+                <td align="left" rowspan="1" colspan="1">0.989</td>
+                <td align="left" rowspan="1" colspan="1">0.977</td>
+                <td align="left" rowspan="1" colspan="1">0.897</td>
+                <td align="left" rowspan="1" colspan="1">0.978</td>
+                <td align="left" rowspan="1" colspan="1">&lt;0.0001</td>
+                <td align="left" rowspan="1" colspan="1">YRI, LWK, MKK</td>
+                <td align="left" rowspan="1" colspan="1">none</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C539T</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.094</td>
+                <td align="left" rowspan="1" colspan="1">0.011</td>
+                <td align="left" rowspan="1" colspan="1">0.022</td>
+                <td align="left" rowspan="1" colspan="1">0.103</td>
+                <td align="left" rowspan="1" colspan="1">0.022</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(S180L)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs7932766</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.746</td>
+                <td align="left" rowspan="1" colspan="1">0.585</td>
+                <td align="left" rowspan="1" colspan="1">0.764</td>
+                <td align="left" rowspan="1" colspan="1">0.594</td>
+                <td align="left" rowspan="1" colspan="1">0.872</td>
+                <td align="left" rowspan="1" colspan="1">0.911</td>
+                <td align="left" rowspan="1" colspan="1">&lt;0.0001</td>
+                <td align="left" rowspan="1" colspan="1">YRI,MKK,ASW</td>
+                <td align="left" rowspan="1" colspan="1">YRI,ASW,MKK</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C558T</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.254</td>
+                <td align="left" rowspan="1" colspan="1">0.396</td>
+                <td align="left" rowspan="1" colspan="1">0.236</td>
+                <td align="left" rowspan="1" colspan="1">0.343</td>
+                <td align="left" rowspan="1" colspan="1">0.103</td>
+                <td align="left" rowspan="1" colspan="1">0.089</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(A186A)</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.019</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.063</td>
+                <td align="left" rowspan="1" colspan="1">0.026</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs7932976</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.920</td>
+                <td align="left" rowspan="1" colspan="1">0.962</td>
+                <td align="left" rowspan="1" colspan="1">0.933</td>
+                <td align="left" rowspan="1" colspan="1">0.979</td>
+                <td align="left" rowspan="1" colspan="1">0.974</td>
+                <td align="left" rowspan="1" colspan="1">0.978</td>
+                <td align="left" rowspan="1" colspan="1">0.12</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G589A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.080</td>
+                <td align="left" rowspan="1" colspan="1">0.038</td>
+                <td align="left" rowspan="1" colspan="1">0.067</td>
+                <td align="left" rowspan="1" colspan="1">0.021</td>
+                <td align="left" rowspan="1" colspan="1">0.026</td>
+                <td align="left" rowspan="1" colspan="1">0.022</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(V197I)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>TLR2</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">rs5743697</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C114A</td>
+                <td align="left" rowspan="1" colspan="1">AC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(G38G)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs3804099</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.412</td>
+                <td align="left" rowspan="1" colspan="1">0.385</td>
+                <td align="left" rowspan="1" colspan="1">0.511</td>
+                <td align="left" rowspan="1" colspan="1">0.385</td>
+                <td align="left" rowspan="1" colspan="1">0.521</td>
+                <td align="left" rowspan="1" colspan="1">0.583</td>
+                <td align="left" rowspan="1" colspan="1">0.03</td>
+                <td align="left" rowspan="1" colspan="1">YRI,ASW, MKK</td>
+                <td align="left" rowspan="1" colspan="1">YRI, ASW,</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C597T</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.430</td>
+                <td align="left" rowspan="1" colspan="1">0.462</td>
+                <td align="left" rowspan="1" colspan="1">0.378</td>
+                <td align="left" rowspan="1" colspan="1">0.503</td>
+                <td align="left" rowspan="1" colspan="1">0.479</td>
+                <td align="left" rowspan="1" colspan="1">0.396</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">LWK, MKK</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(N199N)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.158</td>
+                <td align="left" rowspan="1" colspan="1">0.154</td>
+                <td align="left" rowspan="1" colspan="1">0.111</td>
+                <td align="left" rowspan="1" colspan="1">0.112</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.021</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743698</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G639C</td>
+                <td align="left" rowspan="1" colspan="1">CG</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(L213L)</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743699</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C1232T</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(T411I)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs3804100</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.877</td>
+                <td align="left" rowspan="1" colspan="1">0.887</td>
+                <td align="left" rowspan="1" colspan="1">0.876</td>
+                <td align="left" rowspan="1" colspan="1">0.951</td>
+                <td align="left" rowspan="1" colspan="1">0.938</td>
+                <td align="left" rowspan="1" colspan="1">0.917</td>
+                <td align="left" rowspan="1" colspan="1">0.07</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">T1350C</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.123</td>
+                <td align="left" rowspan="1" colspan="1">0.113</td>
+                <td align="left" rowspan="1" colspan="1">0.124</td>
+                <td align="left" rowspan="1" colspan="1">0.049</td>
+                <td align="left" rowspan="1" colspan="1">0.042</td>
+                <td align="left" rowspan="1" colspan="1">0.062</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(S450S)</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.00</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.020</td>
+                <td align="left" rowspan="1" colspan="1">0.021</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743701</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.917</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C1626G</td>
+                <td align="left" rowspan="1" colspan="1">CG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.083</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(L542L)</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743703</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.991</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.958</td>
+                <td align="left" rowspan="1" colspan="1">0.917</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G1736A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.009</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.042</td>
+                <td align="left" rowspan="1" colspan="1">0.083</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(R579H)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743704</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C1892A</td>
+                <td align="left" rowspan="1" colspan="1">AC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(P631H)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743708</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G2259A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(R753Q)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743709</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.895</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G2343A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.105</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(A781A)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>TLR4</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">rs2770150</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.789</td>
+                <td align="left" rowspan="1" colspan="1">0.792</td>
+                <td align="left" rowspan="1" colspan="1">0.756</td>
+                <td align="left" rowspan="1" colspan="1">0.720</td>
+                <td align="left" rowspan="1" colspan="1">0.737</td>
+                <td align="left" rowspan="1" colspan="1">0.711</td>
+                <td align="left" rowspan="1" colspan="1">0.46</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.211</td>
+                <td align="left" rowspan="1" colspan="1">0.208</td>
+                <td align="left" rowspan="1" colspan="1">0.222</td>
+                <td align="left" rowspan="1" colspan="1">0.231</td>
+                <td align="left" rowspan="1" colspan="1">0.263</td>
+                <td align="left" rowspan="1" colspan="1">0.263</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.022</td>
+                <td align="left" rowspan="1" colspan="1">0.049</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.026</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs10759931</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.921</td>
+                <td align="left" rowspan="1" colspan="1">0.816</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.079</td>
+                <td align="left" rowspan="1" colspan="1">0.184</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs4986790</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.920</td>
+                <td align="left" rowspan="1" colspan="1">0.906</td>
+                <td align="left" rowspan="1" colspan="1">0.807</td>
+                <td align="left" rowspan="1" colspan="1">0.838</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.921</td>
+                <td align="left" rowspan="1" colspan="1">0.009</td>
+                <td align="left" rowspan="1" colspan="1">None</td>
+                <td align="left" rowspan="1" colspan="1">LWK, MKK</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">A896G</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.080</td>
+                <td align="left" rowspan="1" colspan="1">0.075</td>
+                <td align="left" rowspan="1" colspan="1">0.193</td>
+                <td align="left" rowspan="1" colspan="1">0.155</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.079</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(D299G)</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.019</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.007</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs4986791</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C1196T</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(T399I)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5030719</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.938</td>
+                <td align="left" rowspan="1" colspan="1">0.943</td>
+                <td align="left" rowspan="1" colspan="1">0.833</td>
+                <td align="left" rowspan="1" colspan="1">0.923</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">0.021</td>
+                <td align="left" rowspan="1" colspan="1">LWK</td>
+                <td align="left" rowspan="1" colspan="1">LWK</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G1530T</td>
+                <td align="left" rowspan="1" colspan="1">GT</td>
+                <td align="left" rowspan="1" colspan="1">0.062</td>
+                <td align="left" rowspan="1" colspan="1">0.057</td>
+                <td align="left" rowspan="1" colspan="1">0.156</td>
+                <td align="left" rowspan="1" colspan="1">0.070</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(Q510H)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.011</td>
+                <td align="left" rowspan="1" colspan="1">0.007</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs11536889</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">GC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs7873784</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.527</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.737</td>
+                <td align="left" rowspan="1" colspan="1">0.711</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">GC</td>
+                <td align="left" rowspan="1" colspan="1">0.382</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.263</td>
+                <td align="left" rowspan="1" colspan="1">0.237</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.091</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.052</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>TLR6</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>new</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">0.590</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">T34A</td>
+                <td align="left" rowspan="1" colspan="1">AT</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">0.360</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(F12I)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">0.050</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743808</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.851</td>
+                <td align="left" rowspan="1" colspan="1">0.660</td>
+                <td align="left" rowspan="1" colspan="1">0.656</td>
+                <td align="left" rowspan="1" colspan="1">0.888</td>
+                <td align="left" rowspan="1" colspan="1">0.854</td>
+                <td align="left" rowspan="1" colspan="1">0.958</td>
+                <td align="left" rowspan="1" colspan="1">&lt;0.001</td>
+                <td align="left" rowspan="1" colspan="1">ASW, LWK,</td>
+                <td align="left" rowspan="1" colspan="1">ASW, LWK</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">A359G</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.131</td>
+                <td align="left" rowspan="1" colspan="1">0.321</td>
+                <td align="left" rowspan="1" colspan="1">0.311</td>
+                <td align="left" rowspan="1" colspan="1">0.112</td>
+                <td align="left" rowspan="1" colspan="1">0.146</td>
+                <td align="left" rowspan="1" colspan="1">0.021</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">MKK</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(I120T)</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.018</td>
+                <td align="left" rowspan="1" colspan="1">0.019</td>
+                <td align="left" rowspan="1" colspan="1">0.033</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.021</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743809</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.927</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.920</td>
+                <td align="left" rowspan="1" colspan="1">0.980</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">T581C</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.073</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.080</td>
+                <td align="left" rowspan="1" colspan="1">0.020</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(L194P)</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs35220466</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.950</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.940</td>
+                <td align="left" rowspan="1" colspan="1">0.770</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G740A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.050</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.060</td>
+                <td align="left" rowspan="1" colspan="1">0.030</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(R247K)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.200</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743810</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.766</td>
+                <td align="left" rowspan="1" colspan="1">0.875</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">T745C</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.020</td>
+                <td align="left" rowspan="1" colspan="1">0.125</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(S249P)</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.030</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs3796508</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.965</td>
+                <td align="left" rowspan="1" colspan="1">0.830</td>
+                <td align="left" rowspan="1" colspan="1">0.944</td>
+                <td align="left" rowspan="1" colspan="1">0.951</td>
+                <td align="left" rowspan="1" colspan="1">0.958</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">.012</td>
+                <td align="left" rowspan="1" colspan="1">ASW</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C979T</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.035</td>
+                <td align="left" rowspan="1" colspan="1">0.170</td>
+                <td align="left" rowspan="1" colspan="1">0.056</td>
+                <td align="left" rowspan="1" colspan="1">0.049</td>
+                <td align="left" rowspan="1" colspan="1">0.042</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(V327M)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs3821985</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.463</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.210</td>
+                <td align="left" rowspan="1" colspan="1">0.960</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C1083G</td>
+                <td align="left" rowspan="1" colspan="1">CG</td>
+                <td align="left" rowspan="1" colspan="1">0.444</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.340</td>
+                <td align="left" rowspan="1" colspan="1">0.040</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(T361T)</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.093</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.450</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs3775073</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.579</td>
+                <td align="left" rowspan="1" colspan="1">0.434</td>
+                <td align="left" rowspan="1" colspan="1">0.708</td>
+                <td align="left" rowspan="1" colspan="1">0.448</td>
+                <td align="left" rowspan="1" colspan="1">0.479</td>
+                <td align="left" rowspan="1" colspan="1">0.730</td>
+                <td align="left" rowspan="1" colspan="1">&lt;0.001</td>
+                <td align="left" rowspan="1" colspan="1">YRI, MKK,</td>
+                <td align="left" rowspan="1" colspan="1">LWK</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C1263TT</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.351</td>
+                <td align="left" rowspan="1" colspan="1">0.491</td>
+                <td align="left" rowspan="1" colspan="1">0.270</td>
+                <td align="left" rowspan="1" colspan="1">0.455</td>
+                <td align="left" rowspan="1" colspan="1">0.333</td>
+                <td align="left" rowspan="1" colspan="1">0.104</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">LWK, ASW</td>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(K421K)</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">0.070</td>
+                <td align="left" rowspan="1" colspan="1">0.075</td>
+                <td align="left" rowspan="1" colspan="1">0.022</td>
+                <td align="left" rowspan="1" colspan="1">0.098</td>
+                <td align="left" rowspan="1" colspan="1">0.188</td>
+                <td align="left" rowspan="1" colspan="1">0.167</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743815</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.990</td>
+                <td align="left" rowspan="1" colspan="1">1.000</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">T1280C</td>
+                <td align="left" rowspan="1" colspan="1">CT</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.010</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(V427A)</td>
+                <td align="left" rowspan="1" colspan="1">CC</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743816</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">0.982</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.900</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">G1393A</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">0.018</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.100</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(V465I)</td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>new</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">AA</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.920</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">A1696G</td>
+                <td align="left" rowspan="1" colspan="1">AG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.080</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(P564P)</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">rs5743818</td>
+                <td align="left" rowspan="1" colspan="1">TT</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.980</td>
+                <td align="left" rowspan="1" colspan="1">ND</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">T1932G</td>
+                <td align="left" rowspan="1" colspan="1">GT</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.020</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">(A644A)</td>
+                <td align="left" rowspan="1" colspan="1">GG</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.000</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+        <table-wrap-foot>
+          <fn id="nt101">
+            <label/>
+            <p>ASW = African ancestry in Southwest USA; YRI = Yoruba in Ibadan, Nigeria; LWK = Luhya in Webuye, Kenya; MKK = Maasai in Kinyawa, Kenya; UG = Ugandan from Kampala; SA = South Africans from Cape Town.</p>
+          </fn>
+          <fn id="nt102">
+            <label/>
+            <p>SNPs not included in the HapMap are denoted by “-“ and were not included in statistical comparisons, as denoted by “ND” in the table.</p>
+          </fn>
+          <fn id="nt103">
+            <label/>
+            <p>Novel polymorphisms denoted by “new”. Beneath rs number is the base pair numbering for coding region polymorphisms based on a system when the start codon ATG = 1. Amino acid numbering is listed below the base pair in parentheses.</p>
+          </fn>
+          <fn id="nt104">
+            <label/>
+            <p>SNPs where common homozygote was at 100% frequency in all populations have been excluded from this table.</p>
+          </fn>
+        </table-wrap-foot>
+      </table-wrap>
+      <p>Comparison of genotype frequencies across these six populations suggested that there were a range of frequencies that were often different among the groups (p&lt;0.05 by chi-square test) (<xref ref-type="table" rid="pone-0047597-t001">Table 1</xref>). When comparing our sequencing results to the HapMap populations, the most significant differences were seen when comparing UG to the HapMap population, especially within the TLR6 gene. SA, as a whole, showed fewer significant differences from the HapMap populations. P-values for all pair-wise comparisons are given in <xref ref-type="table" rid="pone-0047597-t001">Table 1</xref>. Heterozygosity values for each SNP in each population are provided in <xref ref-type="supplementary-material" rid="pone.0047597.s001">Table S1</xref>. The ratio of observed to expected heterozygosity was generally similar across populations. The notable exception to this was TLR6 in the Ugandan population, where the ratio of observed to expected heterozygosity was very low (0.216), which reflects decreased genetic diversity. Also, TLR4 shows reduced genetic diversity in both SA and UG, reflecting the presence of monomorphic SNPs in these populations.</p>
+      <table-wrap id="pone-0047597-t002" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0047597.t002</object-id>
+        <label>Table 2</label>
+        <caption>
+          <title>TLR2 Haplotype Comparison Among Populations.</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0047597-t002-2" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0047597.t002" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td colspan="4" align="left" rowspan="1">HAPLOTYPE</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C-C</td>
+                <td align="left" rowspan="1" colspan="1">C-T</td>
+                <td align="left" rowspan="1" colspan="1">T-T</td>
+                <td align="left" rowspan="1" colspan="1">T-C</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>Population</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>LWK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.06110</td>
+                <td align="left" rowspan="1" colspan="1">0.6389</td>
+                <td align="left" rowspan="1" colspan="1">0.3000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>MKK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.02045</td>
+                <td align="left" rowspan="1" colspan="1">0.6170</td>
+                <td align="left" rowspan="1" colspan="1">0.3626</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>YRI</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.06023</td>
+                <td align="left" rowspan="1" colspan="1">0.5663</td>
+                <td align="left" rowspan="1" colspan="1">0.3735</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>UG</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.2857</td>
+                <td align="left" rowspan="1" colspan="1">0.5000</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.2143</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>SA Mixed</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.5039</td>
+                <td align="left" rowspan="1" colspan="1">0.2688</td>
+                <td align="left" rowspan="1" colspan="1">0.2273</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+        <table-wrap-foot>
+          <fn id="nt105">
+            <label/>
+            <p>SNPs in haplotype: rs3804099–rs3804100.</p>
+          </fn>
+        </table-wrap-foot>
+      </table-wrap>
+      <p>We next examined LD patterns and haplotype structure between the different groups (<xref ref-type="supplementary-material" rid="pone.0047597.s002">Table S2</xref>). In these and subsequent analyses, the SA population was stratified into its component ethnic groups: Black, Caucasian, and South African Mixed Ethnicity. Both the UG and SA Mixed Ethnicity population, as well as the HapMap populations, showed low amounts of LD (absolute value of r<sup>2</sup>&lt;0.2 for 76.9% of comparisons). Haplotypes were constructed for the SNPs that were common between our sequencing study and HapMap, and haplotype frequencies were compared between the populations (<xref ref-type="table" rid="pone-0047597-t002">Tables 2</xref>, <xref ref-type="table" rid="pone-0047597-t003">3</xref>, <xref ref-type="table" rid="pone-0047597-t004">4</xref>, <xref ref-type="table" rid="pone-0047597-t005">5</xref>). For this analysis, we considered only the African populations, UG, SA Mixed, MKK, LWK, and YRI, choosing not to include the American individuals with African ancestry (ASW) as our goal was to identify which African populations are “similar” to the UG and SA Mixed individuals. Also excluded from the haplotype analyses were the Black and Caucasian South Africans due to limited sample size. When comparing across all five populations, there were significant differences in haplotype frequencies for all genes (p&lt;0.0001). The most unique result from these analyses was that haplotypes in TLR2 and TLR6 in the UG individuals were absent from the other five populations. Also, some rarer haplotypes (less than 10% frequency) were unique to some HapMap populations. Analyses of TLR6 haplotype frequencies were not feasible as the UG haplotypes did not exist in the other populations (<xref ref-type="table" rid="pone-0047597-t002">Tables 2</xref>, <xref ref-type="table" rid="pone-0047597-t003">3</xref>, <xref ref-type="table" rid="pone-0047597-t004">4</xref>, <xref ref-type="table" rid="pone-0047597-t005">5</xref>).</p>
+      <table-wrap id="pone-0047597-t003" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0047597.t003</object-id>
+        <label>Table 3</label>
+        <caption>
+          <title>TLR4 Haplotype Comparison Among Populations.</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0047597-t003-3" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0047597.t003" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td colspan="7" align="left" rowspan="1">HAPLOTYPE</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">A-A-G</td>
+                <td align="left" rowspan="1" colspan="1">A-A-T</td>
+                <td align="left" rowspan="1" colspan="1">A-G-G</td>
+                <td align="left" rowspan="1" colspan="1">A-G-T</td>
+                <td align="left" rowspan="1" colspan="1">G-A-G</td>
+                <td align="left" rowspan="1" colspan="1">G-G-G</td>
+                <td align="left" rowspan="1" colspan="1">G-A-T</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>Population</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>LWK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.7555</td>
+                <td align="left" rowspan="1" colspan="1">0.01725</td>
+                <td align="left" rowspan="1" colspan="1">0.02782</td>
+                <td align="left" rowspan="1" colspan="1">0.06609</td>
+                <td align="left" rowspan="1" colspan="1">0.1266</td>
+                <td align="left" rowspan="1" colspan="1">0.001183</td>
+                <td align="left" rowspan="1" colspan="1">0.005556</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>MKK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.7714</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.03292</td>
+                <td align="left" rowspan="1" colspan="1">0.03193</td>
+                <td align="left" rowspan="1" colspan="1">0.1464</td>
+                <td align="left" rowspan="1" colspan="1">0.01422</td>
+                <td align="left" rowspan="1" colspan="1">0.003045</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>YRI</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.8510</td>
+                <td align="left" rowspan="1" colspan="1">0.01058</td>
+                <td align="left" rowspan="1" colspan="1">0.03032</td>
+                <td align="left" rowspan="1" colspan="1">0.02071</td>
+                <td align="left" rowspan="1" colspan="1">0.08205</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.005004</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>UG</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.8026</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.03947</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.1579</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>SA Mixed</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.8462</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.1538</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+        <table-wrap-foot>
+          <fn id="nt106">
+            <label/>
+            <p>SNPs in haplotype: rs2770150–rs4986790–rs5030719.</p>
+          </fn>
+        </table-wrap-foot>
+      </table-wrap>
+      <table-wrap id="pone-0047597-t004" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0047597.t004</object-id>
+        <label>Table 4</label>
+        <caption>
+          <title>TLR6 Haplotype Comparison Among Populations.</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0047597-t004-4" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0047597.t004" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td colspan="9" align="left" rowspan="1">HAPLOTYPE</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">C-C-A</td>
+                <td align="left" rowspan="1" colspan="1">C-C-G</td>
+                <td align="left" rowspan="1" colspan="1">T-C-A</td>
+                <td align="left" rowspan="1" colspan="1">C-T-G</td>
+                <td align="left" rowspan="1" colspan="1">T-C-G</td>
+                <td align="left" rowspan="1" colspan="1">T-G-A</td>
+                <td align="left" rowspan="1" colspan="1">C-G-A</td>
+                <td align="left" rowspan="1" colspan="1">T-G-G</td>
+                <td align="left" rowspan="1" colspan="1">C-G-G</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>Population</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>LWK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.6545</td>
+                <td align="left" rowspan="1" colspan="1">0.1611</td>
+                <td align="left" rowspan="1" colspan="1">0.1566</td>
+                <td align="left" rowspan="1" colspan="1">0.0278</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>MKK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.6184</td>
+                <td align="left" rowspan="1" colspan="1">0.0249</td>
+                <td align="left" rowspan="1" colspan="1">0.3290</td>
+                <td align="left" rowspan="1" colspan="1">0.0234</td>
+                <td align="left" rowspan="1" colspan="1">0.0043</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>YRI</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.6898</td>
+                <td align="left" rowspan="1" colspan="1">0.0572</td>
+                <td align="left" rowspan="1" colspan="1">0.2379</td>
+                <td align="left" rowspan="1" colspan="1">0.0151</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>UG</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.6771</td>
+                <td align="left" rowspan="1" colspan="1">0.2917</td>
+                <td align="left" rowspan="1" colspan="1">0.0208</td>
+                <td align="left" rowspan="1" colspan="1">0.0104</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>SA Mixed</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.5978</td>
+                <td align="left" rowspan="1" colspan="1">0.0581</td>
+                <td align="left" rowspan="1" colspan="1">0.3113</td>
+                <td align="left" rowspan="1" colspan="1">0.0326</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+        <table-wrap-foot>
+          <fn id="nt107">
+            <label/>
+            <p>SNPs in haplotype: rs3775073–rs3796508–rs574–3808.</p>
+          </fn>
+        </table-wrap-foot>
+      </table-wrap>
+      <p>Multidimensional scaling (MDS) analysis, which combined the TLR2, TLR4, TLR6, and TIRAP data, was used to illustrate how UG and SA Mixed Ethnicity populations clustered with the HapMap populations. We plotted the first two dimensions from MDS (<xref ref-type="fig" rid="pone-0047597-g001">Figure 1</xref>). Visual examination of this plot shows a great deal of overlap among these African populations as well as with the ASW, with a few outlying points. The SA Mixed Ethnicity population tended to cluster more with the ASW population, as well as with the MKK, LWK, and YRI. The UG population primarily clustered with the MKK, LWK, and YRI. Analysis of Euclidean distances between individuals within different population clusters showed that distances between individuals were not significantly different (all pairwise p-values &gt;0.27); this suggests that there is overlap among all the population clusters.</p>
+      <table-wrap id="pone-0047597-t005" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0047597.t005</object-id>
+        <label>Table 5</label>
+        <caption>
+          <title>TIRAP Haplotype Comparison Among Populations.</title>
+        </caption>
+        <alternatives>
+          <graphic id="pone-0047597-t005-5" position="float" mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0047597.t005" xlink:type="simple"/>
+          <table>
+            <colgroup span="1">
+              <col align="left" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+              <col align="center" span="1"/>
+            </colgroup>
+            <thead>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td colspan="5" align="left" rowspan="1">HAPLOTYPE</td>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">A-C-G-C</td>
+                <td align="left" rowspan="1" colspan="1">G-C-A-C</td>
+                <td align="left" rowspan="1" colspan="1">G-C-G-C</td>
+                <td align="left" rowspan="1" colspan="1">G-T-G-C</td>
+                <td align="left" rowspan="1" colspan="1">G-C-G-T</td>
+                <td align="left" rowspan="1" colspan="1">G-T-A-C</td>
+                <td align="left" rowspan="1" colspan="1">A-C-A-C</td>
+                <td align="left" rowspan="1" colspan="1">A-T-G-C</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>Population</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>LWK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.1042</td>
+                <td align="left" rowspan="1" colspan="1">0.0299</td>
+                <td align="left" rowspan="1" colspan="1">0.7411</td>
+                <td align="left" rowspan="1" colspan="1">0.1157</td>
+                <td align="left" rowspan="1" colspan="1">0.0057</td>
+                <td align="left" rowspan="1" colspan="1">0.0021</td>
+                <td align="left" rowspan="1" colspan="1">0.0014</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>MKK</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.0347</td>
+                <td align="left" rowspan="1" colspan="1">0.0087</td>
+                <td align="left" rowspan="1" colspan="1">0.6810</td>
+                <td align="left" rowspan="1" colspan="1">0.2216</td>
+                <td align="left" rowspan="1" colspan="1">0.0505</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.0034</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>YRI</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.0362</td>
+                <td align="left" rowspan="1" colspan="1">0.0361</td>
+                <td align="left" rowspan="1" colspan="1">0.7908</td>
+                <td align="left" rowspan="1" colspan="1">0.1334</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">0.0029</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>UG</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.0778</td>
+                <td align="left" rowspan="1" colspan="1">0.0111</td>
+                <td align="left" rowspan="1" colspan="1">0.8556</td>
+                <td align="left" rowspan="1" colspan="1">0.0444</td>
+                <td align="left" rowspan="1" colspan="1">0.0111</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+              <tr>
+                <td align="left" rowspan="1" colspan="1"/>
+                <td align="left" rowspan="1" colspan="1">
+                  <bold>SA Mixed</bold>
+                </td>
+                <td align="left" rowspan="1" colspan="1">0.0313</td>
+                <td align="left" rowspan="1" colspan="1">0.0156</td>
+                <td align="left" rowspan="1" colspan="1">0.8281</td>
+                <td align="left" rowspan="1" colspan="1">0.0625</td>
+                <td align="left" rowspan="1" colspan="1">0.0625</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+                <td align="left" rowspan="1" colspan="1">–</td>
+              </tr>
+            </tbody>
+          </table>
+        </alternatives>
+        <table-wrap-foot>
+          <fn id="nt108">
+            <label/>
+            <p>SNPs in haplotype: rs3802813–rs7932766–rs7932976–rs8177374.</p>
+          </fn>
+        </table-wrap-foot>
+      </table-wrap>
+      <fig id="pone-0047597-g001" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0047597.g001</object-id>
+        <label>Figure 1</label>
+        <caption>
+          <title>Plot of first two dimensions from MDS analysis.</title>
+        </caption>
+        <graphic mimetype="image" xlink:href="info:doi/10.1371/journal.pone.0047597.g001" position="float" xlink:type="simple"/>
+      </fig>
+    </sec>
+    <sec id="s3">
+      <title>Discussion</title>
+      <p>The primary finding of our study was that the genotype frequency and haplotype structure of Ugandans and South Africans of Mixed ethnicity are similar to those in the HapMap database among the Kenyan and Yoruba Nigerian reference populations. A practical issue for genetic association studies is to determine whether tag SNPs identified using HapMap data adequately capture patterns of variation in other populations <xref ref-type="bibr" rid="pone.0047597-Conrad1">[15]</xref>. Thus, it is of interest to examine both genotype frequencies and haplotype frequencies between HapMap populations and other global populations. Genetic diversity, measured by the ratio of observed to expected heterozygosity, was also generally similar across these populations. Examination of haplotype frequencies and LD patterns is also informative for identification of the appropriate population(s) for tag SNP selection <xref ref-type="bibr" rid="pone.0047597-Gabriel1">[16]</xref>. Generally, our data showed the most common haplotype in each of the four genes was the same across all the populations, though the less common haplotypes differed and there were some unique haplotypes in the Ugandan population. We observed notable haplotype frequency differences between the Ugandan population and the HapMap populations in TLR6 (discussed in depth below) and TLR2, showing that differences between African populations do exist and tag SNPs should be selected judiciously. Though there were differences in haplotype frequencies across populations, we also observed overlap among populations in our cluster analysis. This latter analysis is only exploratory, since it is based on polymorphisms common to exons and HapMap in four genes. When the African data are examined as a whole, there is notable similarity, though there are slight differences between pairs of populations.</p>
+      <p>Many studies <xref ref-type="bibr" rid="pone.0047597-Coop1">[9]</xref>, <xref ref-type="bibr" rid="pone.0047597-Conrad1">[15]</xref> have suggested that genetic similarity between populations is generally predictable based on geographic location. Conrad et al. <xref ref-type="bibr" rid="pone.0047597-Conrad1">[15]</xref> concluded that HapMap is indeed a valuable resource, and geography could be used to identify the most appropriate HapMap population because haplotype similarity is greatest in nearby populations. However, that study was conducted prior to the release of HapMap Release 3 data, which included many new reference populations, including the Kenyan groups (MKK and LWK). If we examine our haplotype data, geographic and genetic similarity were less evident when comparing the Ugandan population with the three African populations in the HapMap database. For example, for TLR2, some of the Ugandan haplotype frequencies were intermediate between the Kenyan LWK/MKK and the Nigerian YRI, while other haplotype frequencies were similar with LWK/MKK or YRI. TIRAP is interesting in that MKK and YRI were more similar to each other than MKK is to LWK. Since MKK and LWK are geographically near each other, this may seem surprising, but the Luhya and Maasai tribal histories are quite different. The Ugandan haplotypes showed similarity to all three populations. Together our data suggests that geographic proximity is only a partial predictor of the haplotype structure of a gene in different populations.</p>
+      <p>Another noteworthy finding of our study was that a small number of novel polymorphisms were detected in TLR6 and TIRAP. The relevance of rare variants in complex trait susceptibility is gaining attention <xref ref-type="bibr" rid="pone.0047597-Bodmer1">[17]</xref>. Ma et al. <xref ref-type="bibr" rid="pone.0047597-Ma1">[12]</xref> also conducted sequencing of TLR genes and observed there were more rare non-synonymous polymorphisms in African-American and Caucasian TB cases than in controls. In addition, they found that rare variants were overrepresented in the TLR1/6/10 region. Our findings support a conclusion of Ma et al. that resequencing strategies are valuable in the search for rare and population-specific variants that may be associated with disease, particularly in populations of African descent.</p>
+      <p>The occurrence of novel polymorphisms, such as in the Ugandan population on TLR6, results in unique haplotypes not seen in other populations, which is consistent with a potential effect of selection <xref ref-type="bibr" rid="pone.0047597-Bigham1">[18]</xref>. There is additional evidence of positive selective pressure on TLR6 in the Ugandan population. One TLR6 SNP in the Ugandan population is in significant deviation from Hardy-Weinberg proportions. The existence of a unique, common polymorphism (A1696G) and significant shift in genotype frequencies (rs3775073 and rs3821985) are additional indicators <xref ref-type="bibr" rid="pone.0047597-Barreiro1">[5]</xref>. There is also significantly reduced heterozygosity in TLR6 in the Ugandan population, further reflecting selective pressure <xref ref-type="bibr" rid="pone.0047597-Fumagalli1">[19]</xref>. The novel TLR6 SNP in the South African population (T34A) is also quite common. Previous studies have shown that the TLR1/6/10 region is under natural selection <xref ref-type="bibr" rid="pone.0047597-Coop1">[9]</xref>–<xref ref-type="bibr" rid="pone.0047597-Enard1">[11]</xref>. There is also a unique, common TLR2 haplotype in the Ugandan population, suggesting selective effects on TLR2. As suggested by Barreiro and Quintana-Murci <xref ref-type="bibr" rid="pone.0047597-Barreiro1">[5]</xref>, complex traits like TB are likely polygenic, so the effects of selection on individual loci are likely weaker. Actual population genetic tests examining effects of selection require full sequence data, so are beyond the scope of this paper.</p>
+      <p>There are a few limitations with this analysis. We restricted our analysis to TLR pathway genes, because of their key role in the innate immune response. Generalizations to the rest of the genome cannot be made based on only four genes, and selective pressure on immunity genes may result in different population genetic parameters than the rest of the genome. Second, our haplotype and LD analyses were restricted to SNPs that were common to both our exomic sequencing efforts and the HapMap. Furthermore, some SNPs were represented in Phase I and II of the HapMap, but not Phase III, and vice versa. Because of the differences seen in haplotype frequencies and LD, some information may have been lost by virtue of this aspect of study design. Finally, our sample size was underpowered to detect small differences between populations. We had 70–80% power to detect a difference of 0.2 of allele frequencies, but only had 20–30% power to detect differences of 0.1.</p>
+      <p>In conclusion, we found that there is more similarity across African populations than there is dissimilarity, though patterns of similarity do not necessarily reflect geographic proximity. Thus, HapMap provides a good starting point for genetic association studies. However, one must be mindful of possible LD differences between specific populations and those represented on the HapMap. Selective pressure by TB and other infectious diseases may have influenced differential LD structure across Africa. For this reason, we suggest using all three African HapMap populations as the reference for tag SNP selection, as has been advocated by other studies <xref ref-type="bibr" rid="pone.0047597-Tishkoff2">[20]</xref>. Since it is well-known that African populations show such high genetic diversity, unique polymorphisms may exist in those populations that may not be represented in the HapMap panels. Thus, follow-up sequencing of certain genes may be warranted in specific populations. Our findings also have utility for admixture mapping studies, which require data on ancestral populations <xref ref-type="bibr" rid="pone.0047597-deWit1">[21]</xref>.</p>
+    </sec>
+    <sec id="s4" sec-type="materials|methods">
+      <title>Materials and Methods</title>
+      <sec id="s4a">
+        <title>Study population</title>
+        <p>Samples were obtained as part of two ongoing studies in Uganda and South Africa. Ugandan samples were initially collected as part of the Household Contact Study <xref ref-type="bibr" rid="pone.0047597-Guwattude1">[22]</xref> and Kawempe Community Health Study <xref ref-type="bibr" rid="pone.0047597-Stein1">[23]</xref>, both of which enrolled individuals from urban Kampala, Uganda. For this sequencing study, we selected 48 unrelated healthy individuals who were part of a whole genome scan study <xref ref-type="bibr" rid="pone.0047597-Stein2">[24]</xref>. Most of these individuals (87.5%) self-identified their tribe as Baganda; the remaining identified themselves as Rwandese (2 individuals), Zairean, Nubian, Langi, and Acholi. An analysis of substructure using STRUCTURE in our genome scan data showed that there was no substructure within the larger dataset <xref ref-type="bibr" rid="pone.0047597-Stein2">[24]</xref>, so we analyzed all of the Ugandan individuals together.</p>
+        <p>The South African samples were collected from healthy adults enrolled at the South African Tuberculosis Vaccine Initiative clinical site near Cape Town in South Africa <xref ref-type="bibr" rid="pone.0047597-Shey1">[13]</xref>. Exclusion criteria included HIV or other chronic infections, pregnancy or active tuberculosis. The study population included individuals from different backgrounds, including Black African (n = 8), Caucasian (n = 7) and South African Mixed Ethnicity (n = 33). The latter is a distinct group that emerged more than 300 years ago and received genetic influences from Malaysia, Indonesia, European Caucasoid and Black Africans <xref ref-type="bibr" rid="pone.0047597-deWit1">[21]</xref>, <xref ref-type="bibr" rid="pone.0047597-Lombard1">[25]</xref>.</p>
+      </sec>
+      <sec id="s4b">
+        <title>Ethics statement</title>
+        <p>The institutional review boards at University Hospitals of Cleveland and the Uganda Council for Science and Technology approved the Ugandan study. All individuals in the Ugandan study provided written informed consent. For the South African study, all protocols for this study were approved by the Research Ethics Committee of the University of Cape Town and the Institutional Review Boards at the University of Washington and University of Medicine and Dentistry of New Jersey. Ethical guidelines of the US Department of Health and Human Services and the South African Medical Research Council were adhered to, including written informed consent from parents of study participants.</p>
+      </sec>
+      <sec id="s4c">
+        <title>Genomic methods</title>
+        <p>Genomic DNA was purified from peripheral blood by QIAamp DNA blood kit (Qiagen). We sequenced the coding region to look for polymorphisms and obtained high quality sequence of the entire coding region in 96 subjects for TLR2 (HapMap Genome Browser Release #28, genomic region coordinates Chromosome 4q32∶154,824,891 to 154,846,690), 76 for TLR4 (Chromosome 9q32–q33∶119,506,431 to 119,519,585), 96 for TLR6 (Chromosome 4p14∶38,504,803 to 38,507,555), and 87 for TIRAP (Chromosome 11q23–q24∶125,658,192 to 125,668,281). The coding region was amplified by PCR, sequenced with Big Dye Terminator v3.0, and analyzed on an ABI PRISM 3730 capillary sequencer (Applied Biosystems). Sequence was aligned and analyzed with the programs PHRED/PHRAP and CONSED <xref ref-type="bibr" rid="pone.0047597-Gordon1">[26]</xref>, <xref ref-type="bibr" rid="pone.0047597-Ewing1">[27]</xref>. Only individuals with high quality sequence throughout the entire coding region were included in the analysis. An initial PHRED quality value (q) of 30 was used to automatically screen for potential polymorphisms (corresponds to an error rate of 1/1000). All potential polymorphisms were assessed with manual inspection of the chromatogram and then confirmed with sequence obtained in forward and reverse directions. The coding region length, number of coding region exons, and PCR primers for each gene were: TLR2∶2354 base pairs, one exon, 2 amplification products with primers TH20/24 and TH28/31; TLR4∶2520 base pairs, three exons, 3 amplification products T4-11/T4-41 (Exon I), T4-2/T4-12 (Exon III), T4-3/T4-15 (Exon IV); TLR6∶2390 base pairs, one exon, 2 amplification products with primers T6-2/T6-18 and T6-3/T6-16; TIRAP 707 base pairs, 2 exons, 2 amplification products with primers TIRAP-4/21 (Exon I) and TIRAP-3/23 (Exon II). The PCR primer sequences were: TH20 5′TCCATTTTTCAGAACTATCCACTGG3’; TH24 5′TCCTCAAATGACGGTACATCCACG3’; TH28 5′CATAACCTGAAACAAACTTTCATCGG3’, TH31 5′GGTCCCAAAGCATGCTACTCCTGG3’, T4-2 5′GGAAGGATGGACAGATGGATGAAAGG3’, T4-3 5′CCCATCACATCTGTATGAAGAGCTGG3’, T4-11 5′CAGGGCACACAGTGAGAAGTTCTGGGC3’, T4-12 5′GGAGAATAGAGGTAGCTTGCTCAAGG3’, T4-15 5′GCAGCCCTGCATATCTAGTGCACCATGG-3′, T4-41 5′CTTTAGCCACTGGTCTGCAGGCG3’, T6-2 5′GTGGAGGTTTGAGAGTAACCATCCG3’,T6-3 5′CACATGCTGTGTCCTCATGCACCAAGC3’, T6-16 5′GGCTAACCTCACCGCCTAGCTCAGTTCCCC3’, T6-18 5′GGCATATCCTTCGTCATGAGACC-3′, TIRAP-3 5′GTGGAGCAACAGGTCTCTGAGAATAAGATG3’, TIRAP-4 5′GAATGAGAGCAGGGTAAGTGCAGCCTTTGTG3’, TIRAP-21 5′GCGTCTCTCTGAGTTTGGACC3’, TIRAP-23 5′CCAAGGCACAGAGCGGGTGAGTAACTTGG3’.</p>
+      </sec>
+      <sec id="s4d">
+        <title>Data analysis</title>
+        <p>Hardy-Weinberg proportions were tested within healthy populations for each SNP using HWSIM (<ext-link ext-link-type="uri" xlink:href="http://krunch.med.yale.edu/hwsim/" xlink:type="simple">http://krunch.med.yale.edu/hwsim/</ext-link>) with 10,000 iterations. Genotype frequencies were compared across groups using a chi-squared test (or Fisher’s exact test when appropriate) in SAS PROC FREQ. LD was assessed using Haploview software, calculating both r<sup>2</sup> and D’. Haplotypes were estimated using DECIPHER (S.A.G.E. version 6.0), using the most likely phase for each individual. Differences in haplotype frequencies across populations were evaluated using chi-square or Fisher’s exact tests, as well as for the genotype comparison tests.</p>
+        <p>To examine how our populations clustered with the HapMap populations, we conducted multidimensional scaling (MDS) using PLINK (<ext-link ext-link-type="uri" xlink:href="http://pngu.mgh.harvard.edu/purcell/plink/" xlink:type="simple">http://pngu.mgh.harvard.edu/purcell/plink/</ext-link>). MDS is similar to principal components analysis in that it utilizes SNP genotype data to estimate a matrix of allele sharing identical by state (IBS) and constructs a similarity matrix, then represents each subject by a vector of coordinates <xref ref-type="bibr" rid="pone.0047597-Li1">[28]</xref>. We plotted the first two dimensions to assess how the Ugandan (UG) and South African Mixed (SA Mixed) individuals clustered with the other populations, using MDS in the same way that it is used for identifying population stratification. In order to quantitatively assess the overlap between these populations, we estimated the Euclidean distance between each individual. These distances were used to construct a distribution, which was approximately normal. Then, we estimated the average distance between members of two populations (UG, SA Mixed, etc.) and assessed if the difference was statistically significant using the normal distribution.</p>
+      </sec>
+    </sec>
+    <sec id="s5">
+      <title>Supporting Information</title>
+      <supplementary-material id="pone.0047597.s001" mimetype="application/msword" xlink:href="info:doi/10.1371/journal.pone.0047597.s001" position="float" xlink:type="simple">
+        <label>Table S1</label>
+        <caption>
+          <p>
+            <bold>Heterozygosity values for each SNP, gene, and averaged over all SNPs, by population.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+      <supplementary-material id="pone.0047597.s002" mimetype="application/msword" xlink:href="info:doi/10.1371/journal.pone.0047597.s002" position="float" xlink:type="simple">
+        <label>Table S2</label>
+        <caption>
+          <p>
+            <bold>Pairwise linkage disequilibrium (D’ and r<sup>2</sup>) for each gene (TLR2, TLR4, TLR6, and TIRAP) for the Ugandan, South African, and HapMap populations.</bold>
+          </p>
+          <p>(DOC)</p>
+        </caption>
+      </supplementary-material>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <sec>
+        <title>Contributors</title>
+        <p>The Ugandan data was collected as part of the Household Contact Study and Kawempe Community Health study, which is fully funded by the Tuberculosis Research Unit. We would like to acknowledge the key individuals involved in the collection and management of this data: Dr. Christopher Whalen, Dr. Lorna Nshuti, Dr. Sarah Zalwango, and LaShaunda Malone. This study would not be possible without the generous participation of the Ugandan patients and families. In South Africa, we would like to thank the infants and their families who participated in the study and also the immunology team at the SATVI research site in Worcester for obtaining informed consent and collecting blood from the participants. We also thank Richard Wells and Glenna Peterson for excellent technical assistance.</p>
+      </sec>
+    </ack>
+    <ref-list>
+      <title>References</title>
+      <ref id="pone.0047597-InternationalHapMap1">
+        <label>1</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>International HapMap</surname><given-names>Consortium</given-names></name> (<year>2003</year>) <article-title>The International HapMap Project</article-title>. <source>Nature</source> <volume>426</volume>: <fpage>789</fpage>–<lpage>796</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-InternationalHapMap2">
+        <label>2</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>International HapMap</surname><given-names>Consortium</given-names></name> (<year>2005</year>) <article-title>A haplotype map of the human genome</article-title>. <source>Nature</source> <volume>437</volume>: <fpage>1299</fpage>–<lpage>1320</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Campbell1">
+        <label>3</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Campbell</surname><given-names>MC</given-names></name>, <name name-style="western"><surname>Tishkoff</surname><given-names>SA</given-names></name> (<year>2008</year>) <article-title>African genetic diversity: implications for human demographic history, modern human origins, and complex disease mapping</article-title>. <source>Annu Rev Genomics Hum Genet 9</source> <volume>403–33</volume> <fpage>403</fpage>–<lpage>433</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Tishkoff1">
+        <label>4</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Tishkoff</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Dietzsch</surname><given-names>E</given-names></name>, <name name-style="western"><surname>Speed</surname><given-names>W</given-names></name>, <name name-style="western"><surname>Pakstis</surname><given-names>AJ</given-names></name>, <name name-style="western"><surname>Kidd</surname><given-names>JR</given-names></name>, <etal>et al</etal>. (<year>1996</year>) <article-title>Global patterns of linkage disequilibrium at the CD4 locus and modern human origins</article-title>. <source>Science</source> <volume>271</volume>: <fpage>1380</fpage>–<lpage>1387</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Barreiro1">
+        <label>5</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Barreiro</surname><given-names>LB</given-names></name>, <name name-style="western"><surname>Quintana-Murci</surname><given-names>L</given-names></name> (<year>2010</year>) <article-title>From evolutionary genetics to human immunology: how selection shapes host defence genes</article-title>. <source>Nat Rev Genet</source> <volume>11</volume>: <fpage>17</fpage>–<lpage>30</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Casanova1">
+        <label>6</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Casanova</surname><given-names>JL</given-names></name>, <name name-style="western"><surname>Abel</surname><given-names>L</given-names></name>, <name name-style="western"><surname>Quintana-Murci</surname><given-names>L</given-names></name> (<year>2011</year>) <article-title>Human TLRs and IL-1Rs in host defense: natural insights from evolutionary, epidemiological, and clinical genetics</article-title>. <source>Annu Rev Immunol</source> <volume>29</volume>: <fpage>447</fpage>–<lpage>491</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Berrington1">
+        <label>7</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Berrington</surname><given-names>WR</given-names></name>, <name name-style="western"><surname>Hawn</surname><given-names>TR</given-names></name> (<year>2007</year>) <article-title>Mycobacterium tuberculosis, macrophages, and the innate immune response: does common variation matter?</article-title> <source>Immunol Rev</source> <volume>219</volume>: <fpage>167</fpage>–<lpage>186</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Wong1">
+        <label>8</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wong</surname><given-names>SH</given-names></name>, <name name-style="western"><surname>Gochhait</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Malhotra</surname><given-names>D</given-names></name>, <name name-style="western"><surname>Pettersson</surname><given-names>FH</given-names></name>, <name name-style="western"><surname>Teo</surname><given-names>YY</given-names></name>, <etal>et al</etal>. (<year>2010</year>) <article-title>Leprosy and the adaptation of human toll-like receptor 1</article-title>. <source>PLoS Pathog 6</source> <volume>e1000979</volume> <fpage>e1000979</fpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Coop1">
+        <label>9</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Coop</surname><given-names>G</given-names></name>, <name name-style="western"><surname>Pickrell</surname><given-names>JK</given-names></name>, <name name-style="western"><surname>Novembre</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Kudaravalli</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Li</surname><given-names>J</given-names></name>, <etal>et al</etal>. (<year>2009</year>) <article-title>The role of geography in human adaptation</article-title>. <source>PLoS Genet</source> <volume>5</volume>: <fpage>e1000500</fpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Pickrell1">
+        <label>10</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Pickrell</surname><given-names>JK</given-names></name>, <name name-style="western"><surname>Coop</surname><given-names>G</given-names></name>, <name name-style="western"><surname>Novembre</surname><given-names>J</given-names></name>, <name name-style="western"><surname>Kudaravalli</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Li</surname><given-names>JZ</given-names></name>, <etal>et al</etal>. (<year>2009</year>) <article-title>Signals of recent positive selection in a worldwide sample of human populations</article-title>. <source>Genome Res</source> <volume>19</volume>: <fpage>826</fpage>–<lpage>837</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Enard1">
+        <label>11</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Enard</surname><given-names>D</given-names></name>, <name name-style="western"><surname>Depaulis</surname><given-names>F</given-names></name>, <name name-style="western"><surname>Roest</surname><given-names>CH</given-names></name> (<year>2010</year>) <article-title>Human and non-human primate genomes share hotspots of positive selection</article-title>. <source>PLoS Genet</source> <volume>6</volume>: <fpage>e1000840</fpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Ma1">
+        <label>12</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Ma</surname><given-names>X</given-names></name>, <name name-style="western"><surname>Liu</surname><given-names>Y</given-names></name>, <name name-style="western"><surname>Gowen</surname><given-names>BB</given-names></name>, <name name-style="western"><surname>Graviss</surname><given-names>EA</given-names></name>, <name name-style="western"><surname>Clark</surname><given-names>AG</given-names></name>, <name name-style="western"><surname>Musser</surname><given-names>JM</given-names></name> (<year>2007</year>) <article-title>Full-exon resequencing reveals toll-like receptor variants contribute to human susceptibility to tuberculosis disease</article-title>. <source>PLoS ONE</source> <volume>2</volume>: <fpage>e1318</fpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Shey1">
+        <label>13</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Shey MS, Randhawa AK, Bowmaker M, Smith E, Scriba TJ, <etal>et al</etal>.. (2010) Single nucleotide polymorphisms in toll-like receptor 6 are associated with altered lipopeptide- and mycobacteria-induced interleukin-6 secretion. Genes Immun</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Genomes1">
+        <label>14</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><collab xlink:type="simple">Genomes Project Consortium</collab> (<year>2010</year>) <article-title>A map of human genome variation from population-scale sequencing</article-title>. <source>Nature</source> <volume>467</volume>: <fpage>1061</fpage>–<lpage>1073</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Conrad1">
+        <label>15</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Conrad</surname><given-names>DF</given-names></name>, <name name-style="western"><surname>Jakobsson</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Coop</surname><given-names>G</given-names></name>, <name name-style="western"><surname>Wen</surname><given-names>X</given-names></name>, <name name-style="western"><surname>Wall</surname><given-names>JD</given-names></name>, <etal>et al</etal>. (<year>2006</year>) <article-title>A worldwide survey of haplotype variation and linkage disequilibrium in the human genome</article-title>. <source>Nat Genet</source> <volume>38</volume>: <fpage>1251</fpage>–<lpage>1260</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Gabriel1">
+        <label>16</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Gabriel</surname><given-names>SB</given-names></name>, <name name-style="western"><surname>Schaffner</surname><given-names>SF</given-names></name>, <name name-style="western"><surname>Nguyen</surname><given-names>H</given-names></name>, <name name-style="western"><surname>Moore</surname><given-names>JM</given-names></name>, <name name-style="western"><surname>Roy</surname><given-names>J</given-names></name>, <etal>et al</etal>. (<year>2002</year>) <article-title>The structure of haplotype blocks in the human genome</article-title>. <source>Science</source> <volume>296</volume>: <fpage>2225</fpage>–<lpage>2229</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Bodmer1">
+        <label>17</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Bodmer</surname><given-names>W</given-names></name>, <name name-style="western"><surname>Bonilla</surname><given-names>C</given-names></name> (<year>2008</year>) <article-title>Common and rare variants in multifactorial susceptibility to common diseases</article-title>. <source>Nat Genet</source> <volume>40</volume>: <fpage>695</fpage>–<lpage>701</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Bigham1">
+        <label>18</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Bigham</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Bauchet</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Pinto</surname><given-names>D</given-names></name>, <name name-style="western"><surname>Mao</surname><given-names>X</given-names></name>, <name name-style="western"><surname>Akey</surname><given-names>JM</given-names></name>, <etal>et al</etal>. (<year>2010</year>) <article-title>Identifying signatures of natural selection in tibetan and andean populations using dense genome scan data</article-title>. <source>PLoS Genet</source> <volume>6</volume>: <fpage>e1001116</fpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Fumagalli1">
+        <label>19</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Fumagalli</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Cagliani</surname><given-names>R</given-names></name>, <name name-style="western"><surname>Pozzoli</surname><given-names>U</given-names></name>, <name name-style="western"><surname>Riva</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Comi</surname><given-names>GP</given-names></name>, <etal>et al</etal>. (<year>2009</year>) <article-title>A population genetics study of the familial Mediterranean fever gene: evidence of balancing selection under an overdominance regime</article-title>. <source>Genes Immun</source> <volume>10</volume>: <fpage>678</fpage>–<lpage>686</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Tishkoff2">
+        <label>20</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Tishkoff</surname><given-names>SA</given-names></name>, <name name-style="western"><surname>Reed</surname><given-names>FA</given-names></name>, <name name-style="western"><surname>Friedlaender</surname><given-names>FR</given-names></name>, <name name-style="western"><surname>Ehret</surname><given-names>C</given-names></name>, <name name-style="western"><surname>Ranciaro</surname><given-names>A</given-names></name>, <etal>et al</etal>. (<year>2009</year>) <article-title>The genetic structure and history of Africans and African Americans</article-title>. <source>Science</source> <volume>324</volume>: <fpage>1035</fpage>–<lpage>1044</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-deWit1">
+        <label>21</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>de Wit</surname><given-names>E</given-names></name>, <name name-style="western"><surname>Delport</surname><given-names>W</given-names></name>, <name name-style="western"><surname>Rugamika</surname><given-names>CE</given-names></name>, <name name-style="western"><surname>Meintjes</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Moller</surname><given-names>M</given-names></name>, <etal>et al</etal>. (<year>2010</year>) <article-title>Genome-wide analysis of the structure of the South African Coloured Population in the Western Cape</article-title>. <source>Hum Genet</source> <volume>128</volume>: <fpage>145</fpage>–<lpage>153</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Guwattude1">
+        <label>22</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Guwattude</surname><given-names>D</given-names></name>, <name name-style="western"><surname>Nakakeeto</surname><given-names>M</given-names></name>, <name name-style="western"><surname>Jones-Lopez</surname><given-names>E</given-names></name>, <name name-style="western"><surname>Maganda</surname><given-names>A</given-names></name>, <name name-style="western"><surname>Chiunda</surname><given-names>A</given-names></name>, <etal>et al</etal>. (<year>2003</year>) <article-title>Tuberculosis in household contacts of infectious cases in Kampala, Uganda</article-title>. <source>Am J Epidemiol</source> <volume>158</volume>: <fpage>887</fpage>–<lpage>898</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Stein1">
+        <label>23</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Stein</surname><given-names>CM</given-names></name>, <name name-style="western"><surname>Nshuti</surname><given-names>L</given-names></name>, <name name-style="western"><surname>Chiunda</surname><given-names>AB</given-names></name>, <name name-style="western"><surname>Boom</surname><given-names>WH</given-names></name>, <name name-style="western"><surname>Elston</surname><given-names>RC</given-names></name>, <etal>et al</etal>. (<year>2005</year>) <article-title>Evidence for a major gene influence on tumor necrosis factor-alpha expression in tuberculosis: path and segregation analysis</article-title>. <source>Hum Hered</source> <volume>60</volume>: <fpage>109</fpage>–<lpage>118</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Stein2">
+        <label>24</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Stein</surname><given-names>CM</given-names></name>, <name name-style="western"><surname>Zalwango</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Malone</surname><given-names>LL</given-names></name>, <name name-style="western"><surname>Won</surname><given-names>S</given-names></name>, <name name-style="western"><surname>Mayanja-Kizza</surname><given-names>H</given-names></name>, <etal>et al</etal>. (<year>2008</year>) <article-title>Genome scan of M. tuberculosis infection and disease in Ugandans</article-title>. <source>PLoS ONE</source> <volume>3</volume>: <fpage>e4094</fpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Lombard1">
+        <label>25</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Lombard</surname><given-names>Z</given-names></name>, <name name-style="western"><surname>Dalton</surname><given-names>DL</given-names></name>, <name name-style="western"><surname>Venter</surname><given-names>PA</given-names></name>, <name name-style="western"><surname>Williams</surname><given-names>RC</given-names></name>, <name name-style="western"><surname>Bornman</surname><given-names>L</given-names></name> (<year>2006</year>) <article-title>Association of HLA-DR, -DQ, and vitamin D receptor alleles and haplotypes with tuberculosis in the Venda of South Africa</article-title>. <source>Hum Immunol</source> <volume>67</volume>: <fpage>643</fpage>–<lpage>654</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Gordon1">
+        <label>26</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Gordon</surname><given-names>D</given-names></name>, <name name-style="western"><surname>Abajian</surname><given-names>C</given-names></name>, <name name-style="western"><surname>Green</surname><given-names>P</given-names></name> (<year>1998</year>) <article-title>Consed: a graphical tool for sequence finishing</article-title>. <source>Genome Res</source> <volume>8</volume>: <fpage>195</fpage>–<lpage>202</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Ewing1">
+        <label>27</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Ewing</surname><given-names>B</given-names></name>, <name name-style="western"><surname>Hillier</surname><given-names>L</given-names></name>, <name name-style="western"><surname>Wendl</surname><given-names>MC</given-names></name>, <name name-style="western"><surname>Green</surname><given-names>P</given-names></name> (<year>1998</year>) <article-title>Base-calling of automated sequencer traces using phred. I. Accuracy assessment</article-title>. <source>Genome Res</source> <volume>8</volume>: <fpage>175</fpage>–<lpage>185</lpage>.</mixed-citation>
+      </ref>
+      <ref id="pone.0047597-Li1">
+        <label>28</label>
+        <mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Li</surname><given-names>Q</given-names></name>, <name name-style="western"><surname>Yu</surname><given-names>K</given-names></name> (<year>2008</year>) <article-title>Improved correction for population stratification in genome-wide association studies by identifying hidden population structures</article-title>. <source>Genet Epidemiol</source> <volume>32</volume>: <fpage>215</fpage>–<lpage>226</lpage>.</mixed-citation>
+      </ref>
+    </ref-list>
+  </back>
+</article>

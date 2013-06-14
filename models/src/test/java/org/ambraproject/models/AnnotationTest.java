@@ -54,17 +54,6 @@ public class AnnotationTest extends BaseHibernateTest {
     hibernateTemplate.save(new Annotation(creator, AnnotationType.COMMENT, null));
   }
 
-  @Test(expectedExceptions = {IllegalArgumentException.class})
-  public void testDoesNotAllowRatingConstruction() {
-    new Annotation(null, AnnotationType.RATING, null);
-  }
-
-  @Test(expectedExceptions = {IllegalArgumentException.class})
-  public void testDoesNotAllowRatingTypeSet() {
-    Annotation annotation = new Annotation();
-    annotation.setType(AnnotationType.RATING);
-  }
-
   @Test
   public void testSaveBasicAnnotation() {
     long testStart = Calendar.getInstance().getTimeInMillis();

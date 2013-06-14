@@ -1,0 +1,12 @@
+# IntelliJ project metadata #
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Build locations #
+target/
+
+# Temporary files #
+*~
+*.versionsBackup
