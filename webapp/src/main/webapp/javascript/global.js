@@ -955,6 +955,15 @@ $(document).on("click", "#related_collections li a", function(){
         });
       }
 
+      $wrapper.swipe({
+        swipeLeft:function(event, direction, distance, duration, fingerCount) {
+          gotoPage(current_page + 1);
+        },
+        swipeRight:function(event, direction, distance, duration, fingerCount) {
+          gotoPage(current_page - 1);
+        },
+        threshold:25
+      });
     });
   };
 })(jQuery);
