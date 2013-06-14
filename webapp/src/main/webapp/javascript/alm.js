@@ -661,8 +661,8 @@ $.fn.alm = function () {
 
             //using these vars because source goes out of scope when tooltip handler is called
             var likes = source.metrics.likes;
-            var  shares = source.metrics.shares;
-            var  comments = source.metrics.comments;
+            var shares = source.metrics.shares;
+            var comments = source.metrics.comments;
             $("#FacebookOnArticleMetricsTab").tooltip({
               delay: 250,
               fade: 250,
@@ -1527,6 +1527,4 @@ function onLoadALM() {
 
   almService.setMetricsTab(doi);
   almService.setChartData(doi, "usage", "chartSpinner");
-
-
 }
