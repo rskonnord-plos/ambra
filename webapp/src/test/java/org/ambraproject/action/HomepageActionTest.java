@@ -86,7 +86,7 @@ public class HomepageActionTest extends AmbraWebTest {
       Article a = new Article(doi);
       a.setTitle(title);
 
-      //randomize date - we know a prior recent articles should be within last 7 days; 86400000 milliseconds in a day
+      //randomize date - we know a priori recent articles should be within last 7 days; 86400000 milliseconds in a day
       Date d = new Date();
       d.setTime(d.getTime() - d.getTime() % 86400000L);    /* set to midnight */
       d.setTime(d.getTime() - (long) r.nextInt(604800000)); /*some random time within the last 7 days*/

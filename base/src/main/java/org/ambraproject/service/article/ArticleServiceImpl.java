@@ -260,13 +260,12 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       }
     }
 
-    //pare down the actual number of recent articles to match numArticlesToShow
-    while (recentArticles.size() > articleCount) {
-      //Remove one random article from "recentArticles"
-      recentArticles.remove(0);
-    }
-
     Collections.shuffle(recentArticles);
+
+    //pare down the actual number of recent articles to match articleCount
+    if (recentArticles.size() > articleCount) {
+      recentArticles = recentArticles.subList(0, articleCount);
+    }
 
     return recentArticles;
   }
