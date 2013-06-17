@@ -62,9 +62,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -232,26 +234,60 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
-   * Return a list of search hits representing articles within the specified parameters
-   *
-   *
-   *
-   *
-   * @param startDate java.util.Calendar indicating beginning date
-   * @param endDate java.util.Calendar indicating end date
-   * @param journal_eIssn
-   * @return a list of SearchHits wherein URI ~= DOI
+   * @inheritDoc
    */
   @Transactional (readOnly = true)
-  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate, final Date endDate, String journal_eIssn) {
+  public List<SearchHit> getRecentArticles(final Calendar startDate, final Calendar endDate, String journal_eIssn,
+    int articleCount)
+  {
+    List<SearchHit> recentArticles = getNonImageArticlesByDate(startDate, endDate, journal_eIssn);
+
+    // If not enough, then query for articles for up to 30 days to make up the difference.
+    if (recentArticles.size() < articleCount) {
+      //Set both end and start to be the old start date.
+      //The start date gets decremented inside the below loop
+      Calendar newEndDate = (Calendar)startDate.clone();
+      Calendar newStartDate = (Calendar)startDate.clone();
+
+      int dayCount = 0;
+
+      while (recentArticles.size() < articleCount && dayCount < 30) {
+        //Set window back 3 additional days for every loop
+        newStartDate.roll(Calendar.DAY_OF_YEAR, -3);
+
+        recentArticles.addAll(getNonImageArticlesByDate(newStartDate, newEndDate, journal_eIssn));
+        dayCount += 3;
+      }
+    }
+
+    //pare down the actual number of recent articles to match numArticlesToShow
+    while (recentArticles.size() > articleCount) {
+      //Remove one random article from "recentArticles"
+      recentArticles.remove(0);
+    }
+
+    Collections.shuffle(recentArticles);
+
+    return recentArticles;
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<SearchHit> getNonImageArticlesByDate(final Calendar startDate, final Calendar endDate, String journal_eIssn)
+  {
+    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+
+    log.debug("startDate: {}", format1.format(startDate.getTime()));
+    log.debug("endDate: {}", format1.format(endDate.getTime()));
+
     List<Object[]> articleResults = hibernateTemplate.findByCriteria(
-        DetachedCriteria.forClass(Article.class)
-            .add(Restrictions.eq("eIssn", journal_eIssn))
-            .add(Restrictions.ge("date", startDate))
-            .add(Restrictions.le("date", endDate))
-            .setProjection(Projections.projectionList()
-                .add(Projections.property("doi"))
-                .add(Projections.property("title"))));
+      DetachedCriteria.forClass(Article.class)
+        .add(Restrictions.eq("eIssn", journal_eIssn))
+          //Ignore image articles
+        .add(Restrictions.not(Restrictions.like("doi", "%image%")))
+        .add(Restrictions.between("date", startDate.getTime(), endDate.getTime()))
+        .setProjection(Projections.projectionList()
+          .add(Projections.property("doi"))
+          .add(Projections.property("title"))));
 
     List<SearchHit> searchResults = new ArrayList<SearchHit>();
 
@@ -261,12 +297,9 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       String title = (String) res[1];
 
       searchResults.add(new SearchHit(null, doi, title, null, null, null, null, null, null, null, null, null, false));
-
     }
 
     return searchResults;
-
-
   }
 
   /**

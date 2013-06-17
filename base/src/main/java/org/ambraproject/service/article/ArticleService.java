@@ -29,7 +29,7 @@ import org.ambraproject.views.article.BaseArticleInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -112,19 +112,19 @@ public interface ArticleService {
   public List<String> getArticleDOIs(final ArticleServiceSearchParameters params) throws ParseException;
 
   /**
-   * Return a list of search hits representing articles within the specified parameters
+   * Return a list of search hits representing articles within the specified parameters ignoring image articles
+   * The list returned is randomized
    *
+   * @param startDate the beginning date
+   * @param endDate the end date
+   * @param journal_eIssn the journal to filter on
+   * @param articleCount the minimum number of articles to return
    *
-   *
-   *
-   *
-   * @param startDate java.util.Calendar indicating beginning date
-   * @param endDate java.util.Calendar indicating end date
-   * @param journal_eIssn
-   * @return a list of SearchHits
+   * @return a list randomized search results
    */
   @Transactional(readOnly = true)
-  public List<SearchHit> getArticleURIsTitlesByDate(final Date startDate, final Date endDate, String journal_eIssn);
+  public List<SearchHit> getRecentArticles(final Calendar startDate, final Calendar endDate, String journal_eIssn,
+    int articleCount);
 
   /**
    * Get all of the articles satisfying the given criteria.

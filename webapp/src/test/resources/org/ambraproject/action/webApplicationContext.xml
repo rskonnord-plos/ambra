@@ -54,7 +54,6 @@
   <bean id="homePageAction" class="org.ambraproject.action.HomePageAction">
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="permissionsService" ref="permissionsService"/>
-    <property name="browseService" ref="browseService"/>
     <property name="articleService" ref="articleService"/>
     <property name="journalService" ref="journalService"/>
     <property name="searchService" ref="searchService"/>

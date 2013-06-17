@@ -20,7 +20,6 @@
 package org.ambraproject.action;
 
 import org.ambraproject.service.article.ArticleService;
-import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.service.search.SearchService;
@@ -28,11 +27,9 @@ import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.SortedMap;
@@ -47,11 +44,10 @@ public class HomePageAction extends BaseActionSupport {
 
   private ArticleService articleService;
   private JournalService journalService;
-  private BrowseService browseService;
   private SearchService searchService;
   private SortedMap<String, Long> categoryInfos;
 
-  private ArrayList<SearchHit> recentArticles;
+  private List<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
 
@@ -139,56 +135,19 @@ public class HomePageAction extends BaseActionSupport {
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
 
+      Calendar startDate = GregorianCalendar.getInstance();
+      startDate.set(Calendar.HOUR_OF_DAY, 0);
+      startDate.set(Calendar.MINUTE, 0);
+      startDate.set(Calendar.SECOND, 0);
+      startDate.roll(Calendar.DAY_OF_YEAR, -numDaysInPast);
+
       //end date is most recent midnight
-      //milliseconds in a day: 86400000
-      Date endDate = new Date();
-      endDate.setTime(endDate.getTime() - endDate.getTime() % 86400000L);
-      Date startDate = new Date();
-      startDate.setTime(endDate.getTime() - Long.valueOf(numDaysInPast) * 86400000L);
+      Calendar endDate = GregorianCalendar.getInstance();
+      endDate.set(Calendar.HOUR_OF_DAY, 23);
+      endDate.set(Calendar.MINUTE, 59);
+      endDate.set(Calendar.SECOND, 59);
 
-      //  First query.  Just get the articles from "numDaysInPast" ago.
-      recentArticles = (ArrayList<SearchHit>) articleService.getArticleURIsTitlesByDate(startDate, endDate, journal_eIssn);
-
-
-      //did not use for(SearchHit hit : recentArticles){} notation because of ConcurrentModification error
-      for(int x = 0; x < recentArticles.size(); x++){
-        if(recentArticles.get(x).getUri().indexOf("10.1371/image") > -1 ){
-            recentArticles.remove(x);
-        }
-      }
-
-      // If not enough, then query for articles before ${numDaysInPast} to make up the difference.
-      if (recentArticles.size() < numArticlesToShow) {
-        int dayCount = 0;
-
-        while (recentArticles.size() < numArticlesToShow && dayCount < 30) {
-
-          endDate = (Date) startDate.clone();
-          endDate.setTime(endDate.getTime() - 1000L); //avoid overlap here
-          //3 days = 86400000L * 3
-          startDate.setTime(startDate.getTime() - 3 * 86400000L);
-          recentArticles.addAll(articleService.getArticleURIsTitlesByDate(startDate, endDate, journal_eIssn));
-          //discard image articles
-          for (SearchHit hit : recentArticles) {
-            //image type doi: info:doi/10.1371/image.[journal].[other-stuff]
-            if (hit.getUri().indexOf("10.1371/image") > -1) {
-              recentArticles.remove(hit);
-            }
-          }
-          dayCount += 3;
-
-        }
-
-      }
-
-      //pare down the actual number of recent articles to match ${numberArticlesToShow}
-      int howManyIsTooMany = recentArticles.size() - numArticlesToShow;
-      Collections.shuffle(recentArticles);
-      while (howManyIsTooMany > 0) {
-        // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
-        recentArticles.remove(0);
-        howManyIsTooMany--;
-      }
+      recentArticles = articleService.getRecentArticles(startDate, endDate, journal_eIssn, numArticlesToShow);
     }
 
   /**
@@ -239,14 +198,6 @@ public class HomePageAction extends BaseActionSupport {
   */
   public void setJournalService(JournalService journalService) {
     this.journalService = journalService;
-  }
-
-  /**
-   * @param browseService The browseService to set.
-   */
-  @Required
-  public void setBrowseService(BrowseService browseService) {
-    this.browseService = browseService;
   }
 
   /**

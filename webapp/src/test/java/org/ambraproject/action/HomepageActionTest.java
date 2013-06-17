@@ -16,8 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
@@ -88,7 +86,7 @@ public class HomepageActionTest extends AmbraWebTest {
       Article a = new Article(doi);
       a.setTitle(title);
 
-      //randomize date - we know a priori recent articles should be within last 7 days; 86400000 milliseconds in a day
+      //randomize date - we know a prior recent articles should be within last 7 days; 86400000 milliseconds in a day
       Date d = new Date();
       d.setTime(d.getTime() - d.getTime() % 86400000L);    /* set to midnight */
       d.setTime(d.getTime() - (long) r.nextInt(604800000)); /*some random time within the last 7 days*/
@@ -117,7 +115,6 @@ public class HomepageActionTest extends AmbraWebTest {
     Article a = new Article(doi);
     a.setTitle(title);
     Date d = new Date();
-    d.setTime(d.getTime() - d.getTime() % 86400000L);    /* set to midnight */
     d.setTime(d.getTime() - (long)r.nextInt(604800000)); /*some random time within the last 7 days*/
     a.setDate(d);
     a.seteIssn("8675-309");
@@ -167,8 +164,6 @@ public class HomepageActionTest extends AmbraWebTest {
 
     subjectCounts.put("Biology", 5l);
     subjectCounts.put("Chemistry", 1l);
-    subjectCounts.put("Biology", 4l);
-    subjectCounts.put("Chemistry", 2l);
 
     return new Object[][]{
         {journal, recentArticles, subjectCounts}
