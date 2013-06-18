@@ -20,7 +20,9 @@
 
 package org.ambraproject.action.user;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.service.user.UserAlert;
 import org.ambraproject.util.ProfanityCheckingService;
 import org.ambraproject.util.TextUtils;
@@ -32,8 +34,11 @@ import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.service.user.UserService;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Base class for user actions in order to have a userService object accessible
@@ -63,6 +68,7 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   private static final String HTTP_PREFIX = "http://";
 
   protected UserService userService;
+  protected JournalService journalService;
   private String email;
   private String displayName;
   private String givenNames;
@@ -81,10 +87,16 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   private String title;
   private boolean organizationVisibility;
   //users don't actually edit this value, but we need to pass it to the freemarker in a hidden input to get it back on the save action
+  //TODO: Confirm this is needed, I don't think it is
   private String alertsJournals;
-  protected String[] monthlyAlerts = new String[]{};
-  protected String[] weeklyAlerts = new String[]{};
-  protected String[] deleteAlerts = new String[]{};
+  protected List<String> monthlyAlerts = new ArrayList<String>();
+  protected List<String> weeklyAlerts = new ArrayList<String>();
+  protected List<String> deleteAlerts = new ArrayList<String>();
+
+  //Used for setting of filtered journal alerts
+  protected Map<String, String[]> journalSubjectFilters;
+  protected Map<String, String> filterSpecified;
+
   //Need to hide the username text box field on the edit Profile page. Should display the text box only on create profile page.
   protected boolean showDisplayName = true;
   private ProfanityCheckingService profanityCheckingService;
@@ -95,6 +107,14 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   @Required
   public void setUserService(UserService userService) {
     this.userService = userService;
+  }
+
+  /**
+   * @param journalService the journalService to use
+   */
+  @Required
+  public void setJournalService(JournalService journalService) {
+    this.journalService = journalService;
   }
 
   protected boolean validateProfileInput() {
@@ -121,6 +141,33 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
 
     return isValid;
   }
+
+  protected boolean validateAlertInput() {
+    boolean isValid = true;
+
+    if(filterSpecified != null) {
+      for(String journal : filterSpecified.keySet()) {
+        //If the user has selected a filtered search result, check
+        //that they have selected at least one filter and no more then 12
+        if(filterSpecified.get(journal).equals("subjects")) {
+          if(journalSubjectFilters == null || journalSubjectFilters.get(journal) == null ||
+            journalSubjectFilters.get(journal).length == 0) {
+            addActionError("You must selected at least one subject to filter on");
+            isValid = false;
+          } else {
+            if(journalSubjectFilters.get(journal).length > 12) {
+              addActionError("You can not select more then 12 subjects to filter on");
+              isValid = false;
+            }
+          }
+        }
+      }
+    }
+
+    return isValid;
+  }
+
+
 
   private boolean checkProfanity() {
     boolean isValid = true;
@@ -377,7 +424,7 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
   /**
    * @return categories that have monthly alerts
    */
-  public String[] getMonthlyAlerts() {
+  public List<String> getMonthlyAlerts() {
     return monthlyAlerts;
   }
 
@@ -387,13 +434,17 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
    * @param monthlyAlerts monthlyAlerts
    */
   public void setMonthlyAlerts(final String[] monthlyAlerts) {
-    this.monthlyAlerts = monthlyAlerts;
+    if(monthlyAlerts != null) {
+      this.monthlyAlerts = new LinkedList<String>(Arrays.asList(monthlyAlerts));
+    } else {
+      this.monthlyAlerts = null;
+    }
   }
 
   /**
    * @return weekly alert categories
    */
-  public String[] getWeeklyAlerts() {
+  public List<String> getWeeklyAlerts() {
     return weeklyAlerts;
   }
 
@@ -403,14 +454,44 @@ public class UserActionSupport extends BaseSessionAwareActionSupport {
    * @param weeklyAlerts weeklyAlerts
    */
   public void setWeeklyAlerts(String[] weeklyAlerts) {
-    this.weeklyAlerts = weeklyAlerts;
+    //Use LinkedList as it supports removing items
+    if(weeklyAlerts != null) {
+      this.weeklyAlerts = new LinkedList<String>(Arrays.asList(weeklyAlerts));
+    } else {
+      this.weeklyAlerts = null;
+    }
   }
 
-  public String[] getDeleteAlerts() {
+  public List<String> getDeleteAlerts() {
     return deleteAlerts;
   }
 
   public void setDeleteAlerts(String[] deleteAlerts) {
-    this.deleteAlerts = deleteAlerts;
+    //Use LinkedList as it supports removing items
+    if(deleteAlerts != null) {
+      this.deleteAlerts = new LinkedList<String>(Arrays.asList(deleteAlerts));
+    } else {
+      this.deleteAlerts = null;
+    }
+  }
+
+  public Map getJournalSubjectFilters()
+  {
+    return journalSubjectFilters;
+  }
+
+  public void setJournalSubjectFilters(Map<String, String[]> journalSubjectFilters)
+  {
+    this.journalSubjectFilters = journalSubjectFilters;
+  }
+
+  public Map getFilterSpecified()
+  {
+    return this.filterSpecified;
+  }
+
+  public void setFilterSpecified(Map<String, String> filterSpecified)
+  {
+    this.filterSpecified = filterSpecified;
   }
 }

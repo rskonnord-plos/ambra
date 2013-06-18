@@ -146,6 +146,7 @@
           <option displayName="Most cited\, all time">alm_scopusCiteCount desc\, id desc</option>
         </sortOptions>
       </browse>
+
       <search>
         <!-- Settings for Solr search
         <articleIndexingQueue>activemq:plos.solr.article.index?transacted=false</articleIndexingQueue>
@@ -186,14 +187,15 @@
         <!-- Defined sorts -->
         <!-- Escape commas as the configuration will attempt to turn the string into a collection otherwise -->
         <sortOptions>
-           <option displayName="Date\, newest first">publication_date desc\, id desc</option>
-           <option displayName="Date\, oldest first">publication_date asc\, id desc</option>
-           <option displayName="Most views\, last 30 days">counter_total_month desc\, id desc</option>
-           <option displayName="Most views\, all time">counter_total_all desc\, id desc</option>
-           <option displayName="Most cited\, all time">alm_scopusCiteCount desc\, id desc</option>
-           <option displayName="Most bookmarked">sum(alm_citeulikeCount\, alm_mendeleyCount) desc\, id desc</option>    
-           <option displayName="Most shared in social media">sum(alm_twitterCount\, alm_facebookCount) desc\, id desc</option>
-	</sortOptions>
+          <option displayName="Relevance">score desc\, publication_date desc\, id desc</option>
+          <option displayName="Date\, newest first">publication_date desc\, id desc</option>
+          <option displayName="Date\, oldest first">publication_date asc\, id desc</option>
+          <option displayName="Most views\, last 30 days">counter_total_month desc\, id desc</option>
+          <option displayName="Most views\, all time">counter_total_all desc\, id desc</option>
+          <option displayName="Most cited\, all time">alm_scopusCiteCount desc\, id desc</option>
+          <option displayName="Most bookmarked">sum(alm_citeulikeCount\, alm_mendeleyCount) desc\, id desc</option>
+          <option displayName="Most shared in social media">sum(alm_twitterCount\, alm_facebookCount) desc\, id desc</option>
+	      </sortOptions>
 
         <!-- Fields that are supported for keyword counts -->
         <keywordFields>
