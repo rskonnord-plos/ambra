@@ -938,7 +938,7 @@ $.fn.alm = function () {
     // Citation Sources should always start with Scopus (if an entry for Scopus exists)
     // followed by the rest of the sources in alphabetical order.
     var sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos"]);
-    sources = sources.sort(this.sortCitesBySource);
+    sources = this.enforceOrder(sources, ['scopus','crossref','pubmed','wos']);
 
     for (var a = 0; a < sources.length; a++) {
       if (source.metrics.total > 0) {
@@ -993,18 +993,6 @@ $.fn.alm = function () {
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + citesID).show("blind", 500);
   }
-
-  // Sort into ascending order by the "source" variable of each element.  ALWAYS put Scopus first.
-  this.sortCitesBySource = function (a, b) {
-    if (b.name.toLowerCase() == 'scopus') {
-      return 1;
-    } else if (a.name.toLowerCase() == 'scopus' || a.name.toLowerCase() < b.name.toLowerCase()) {
-      return -1;
-    } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
-      return 1;
-    }
-    return 0;
-  };
 
   this.setChartData = function (doi, usageID, loadingID) {
     //citation_date format = 2006/12/20
