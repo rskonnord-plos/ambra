@@ -53,52 +53,10 @@ $.fn.alm = function () {
     return doi.replace(new RegExp('/', 'g'), '%2F').replace(new RegExp(':', 'g'), '%3A');
   }
 
-  this.getIDs = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?history=0";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getRelatedBlogs = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Nature,Researchblogging,Wikipedia,scienceseeker";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getBiodData = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Biod";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getCitesScopusOnly = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Scopus";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getCitesCrossRefOnly = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = doi + "&source=crossref&info=event";
-    this.getData(request, callBack, errorCallback);
-  }
-
   this.getCitesTwitterOnly = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
     var request = doi + "&source=twitter&info=event";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getSocialData = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Connotea,Facebook,Twitter,Mendeley";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -107,7 +65,6 @@ $.fn.alm = function () {
    * passed in.  If an article is not found, or a source data is not found
    * The data will be missing in the resultset.
    * */
-
   this.getArticleSummaries = function (dois, callBack, errorCallback) {
 
     idString = "";
@@ -119,24 +76,6 @@ $.fn.alm = function () {
 
     var request = idString;
     this.getData(request, callBack, errorCallback);
-  }
-
-  this.containsUsageStats = function (response) {
-    var foundStats = false;
-
-    //Check to see if there is counter data, don't bother with the PMC data if there is no data for counter
-    for (var a = 0; a < response.article.source.length; a++) {
-      var sourceData = response.article.source[a];
-
-      if (sourceData.source == "Counter"
-          && sourceData.events != null
-          && sourceData.events.length > 0
-          ) {
-        foundStats = true;
-      }
-    }
-
-    return foundStats;
   }
 
   /* Sort the chart data */
@@ -442,188 +381,6 @@ $.fn.alm = function () {
     console.log(url);
   }
 
-/**
-   * Set cross ref text by DIO
-   * @param doi the doi
-   * @param crossRefID the ID of the document element to place the result
-   * @param pubGetErrorID the ID of the document element to place any pub get errors
-   * @param almErrorID the ID of the document element to place the alm error
-   * @parem loadingID the ID of the "loading" element to fade out after completion
-   */
-  this.setCrossRefText = function (doi, crossRefID, pubGetErrorID, almErrorID, loadingID) {
-
-    var pubGetError = function (response) {
-      var errorDiv = $("#" + pubGetErrorID);
-      errorDiv.html("Links to PDF files of open access articles " +
-          "on Pubget are currently not available, please check back later.");
-      errorDiv.show("blind", 500);
-      $("#" + loadingID).fadeOut('slow');
-    };
-
-    var almError = function (response) {
-      var errorDiv = $("#" + almErrorID);
-      errorDiv.html("Citations are currently not available, please check back later.");
-      errorDiv.show("blind", 500);
-      $("#" + loadingID).fadeOut('slow');
-    };
-
-    var success = function (response) {
-      this.setCrossRefLinks(response, crossRefID, pubGetError);
-      $("#" + loadingID).fadeOut('slow');
-    };
-
-    //The proxy function forces the success method to be run in "this" context.
-    this.getCitesCrossRefOnly(doi, jQuery.proxy(success, this), almError);
-  }
-
-  this.getPubGetPDF = function (dois, pubGetError) {
-    var doiList = dois[0];
-
-    for (var a = 1; a < dois.length; a++) {
-      doiList = doiList + "|" + dois[a];
-    }
-
-    var getArgs = {
-      url: this.pubGetHost,
-      callbackParameter: "callback",
-      content: {
-        oa_only: "true",
-        dois: doiList
-      },
-
-      success: function (response) {
-        for (var a = 0; a < response.length; a++) {
-          var doi = this.fixDoiForID(response[a].doi);
-          var url = response[a].values.link;
-          var image_src = appContext + "/images/icon_pubgetpdf.gif";
-          var image_title = "Get the full text PDF from Pubget";
-
-          var html = "<a href=\"" + url + "\"><img title=\"" +
-              image_title + "\" src=\"" + image_src + "\"></a>";
-
-          var domElement = $("#citation_" + doi);
-
-          if (domElement == null) {
-            console.warn("Citation not found on page: citation_" + doi);
-          } else {
-            domElement.innerHTML = html;
-          }
-        }
-
-        return response;
-      },
-
-      error: pubGetError,
-
-      timeout: 3000
-    };
-
-    $.jsonp(getArgs);
-  }
-
-  /**
-   * HTML IDs can not have a "/" character in them.
-   * @param doi
-   */
-  this.fixDoiForID = function (doi) {
-    return doi.replace(/\//g, ":");
-  }
-
-  this.setCrossRefLinks = function (response, crossRefID, pubGetError) {
-    var doi = encodeURIComponent(response[0].doi);
-    var crossRefResponse = response[0].sources[0];
-    var citationDOIs = new Array();
-    var numCitations = 0;
-
-    if (crossRefResponse && crossRefResponse.metrics.total > 0) {
-      numCitations = crossRefResponse.metrics.total;
-      var html = "";
-
-      for (var eventIndex = 0; eventIndex < crossRefResponse.events.length; eventIndex++) {
-        var citation = crossRefResponse.events[eventIndex].event;
-        var citation_url = crossRefResponse.events[eventIndex].event_url;
-        //Build up list of citation DOIs to pass to pubget
-        citationDOIs.push(citation.doi);
-
-        //  Assume there exists: URI, Title, and DOI.  Anything else may be missing.
-        html = html + "<li><span class='article'><a href=\"" + citation_url + "\">"
-            + citation.article_title + "</a> <span class=\"pubGetPDFLink\" "
-            + "id=\"citation_" + this.fixDoiForID(citation.doi) + "\"></span></span>";
-
-        if (citation.contributors) {
-          var first_author = "";
-          var authors = "";
-          var contributors = citation.contributors.contributor;
-
-          for (var i = 0; i < contributors.length; i++) {
-            individualContributor = contributors[i];
-            if (individualContributor.first_author === 'true') {
-              first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
-            } else {
-              authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
-            }
-          }
-          authors = first_author + authors;
-
-          html = html + "<span class='authors'>" + authors + "</span>";
-        }
-
-        html = html + "<span class='articleinfo'>";
-        if (citation.journal_title != null) {
-          html = html + citation.journal_title;
-        }
-        if (citation.year != null) {
-          html = html + " " + citation.year;
-        }
-        if (citation.volume != null) {
-          html = html + " " + citation.volume;
-        }
-        if (citation.issue != null) {
-          html = html + "(" + citation.issue + ")";
-        }
-        if (citation.first_page) {
-          html = html + ": " + citation.first_page;
-        }
-        html = html + ". doi:" + citation.doi + "</span></li>";
-      }
-    }
-
-    if (numCitations < 1) {
-      html = "<h3>No related citations found</h3>";
-    } else {
-      var pluralization = "";
-      if (numCitations != 1) { // This page should never be displayed if less than 1 citation.
-        pluralization = "s";
-      }
-
-      html = numCitations + " citation" + pluralization
-          + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
-          + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.publication_date))
-          + ". Citations updated on "
-          + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.update_date))
-          + "."
-          + " <ol>" + html + "</ol>";
-    }
-
-    $("#" + crossRefID).html(html);
-    $("#" + crossRefID).show("blind", 500);
-
-    //There is physical limit on the number of DOIS I can put on one get.
-    //AKA, a GET string can only be so long before the Web server borks.
-    //Limit that here
-    var doiLimit = 200;
-    if (citationDOIs.length < doiLimit) {
-      this.getPubGetPDF(citationDOIs, pubGetError);
-    } else {
-      for (var b = 0; b < (citationDOIs.length / doiLimit); b++) {
-        var start = b * doiLimit;
-        var end = (b + 1) * doiLimit;
-
-        this.getPubGetPDF(citationDOIs.slice(start, end), pubGetError);
-      }
-    }
-  }
-
   /**
    * Sets the bookmarks text
    *
@@ -747,7 +504,6 @@ $.fn.alm = function () {
         '</div>' +
         '</div>';
   };
-
   this.createMetricsTileNoLink = function (name, imgSrc, linkText) {
     return '<div id="' + name + 'OnArticleMetricsTab" class="metrics_tile_no_link">' +
         '<img id="' + name + 'ImageOnArticleMetricsTab" src="' + imgSrc + '" alt="' + linkText + ' ' + name + '" class="metrics_tile_image"/>' +
@@ -755,126 +511,6 @@ $.fn.alm = function () {
         linkText +
         '</div>' +
         '</div>';
-  };
-
-  this.setRelatedBlogsText = function (doi, relatedBlogPostsID, errorID, loadingID) {
-    var almError = function (message) {
-      $("#" + loadingID).fadeOut('slow');
-    };
-
-    var success = function (response) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + relatedBlogPostsID).css("display", "none");
-
-      this.setRelatedBlogs(response, relatedBlogPostsID);
-    };
-
-    this.getRelatedBlogs(doi, jQuery.proxy(success, this), jQuery.proxy(almError, this));
-  };
-  this.setRelatedBlogs = function (response, relatedBlogPostsID) {
-    //tileHtml used to enforce order
-    var html = "", tileHtmlList = [];
-    var doi = escape($('meta[name=citation_doi]').attr("content"));
-    var articleTitle = $('meta[name=citation_title]').attr("content");
-    var natureViews = 0;
-    var wikiViews = 0;
-
-    if (response.article.source.length > 0) {
-      html = "";
-      wikiHtml = "";
-      // If there is at least one hit for a blog site, then create a link to those blogs.
-      // else, if there are zero hits for a blog site, then create a "search for title" link instead.
-      for (var a = 0; a < response.article.source.length; a++) {
-        var url = response.article.source[a].public_url;
-        var tileName = response.article.source[a].source.toLowerCase().replace(" ", "-");
-        var count = response.article.source[a].count;
-
-        //Nature is a special case and will always be displayed.
-        if (tileName == "nature") {
-          natureViews = count;
-        } else if (tileName == "wikipedia") {
-          wikiViews = count;
-          wikiHtml = this.createMetricsTile("wikipedia",
-              url,
-              "/images/logo-wikipedia.png",
-              wikiViews)
-              + '\n';
-        } else {
-          if (tileName == "research-blogging") {
-            if (count > 0) {
-              //Research blogging wants the DOI to search on
-              tileHtml = this.createMetricsTile(tileName,
-                url,
-                "/images/logo-" + tileName + ".png",
-                count + '\n');
-
-              tileHtmlList.push({
-                name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
-              });
-            }
-          } else {
-            //Only list links that HAVE DEFINED URLS
-            if (url && count > 0) {
-
-              tileHtmlList.push({
-                name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
-              });
-
-            } else if (response.article.source[a].search_url != null
-                && response.article.source[a].search_url.length > 0) {
-
-              tileHtmlList.push({
-                name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
-              });
-
-            }
-          }
-        }
-      }
-    }
-
-
-    //enforce order by appending all tiles excluding science seeker
-    var sSeekerIndex = null;
-    $.each(tileHtmlList, function (index, tileObject) {
-          if (tileObject.name.toLowerCase() == 'scienceseeker') {
-            sSeekerIndex = index;
-          }
-          else {
-            html += tileObject.html;
-            }
-        }
-    );
-
-    //  If the count for Nature is positive, then show the Nature tile.
-    if (natureViews > 0) {
-      html = html + this.createMetricsTileNoLink("nature",
-          "/images/logo-nature.png",
-          natureViews)
-          + '\n';
-    }
-
-    if (wikiViews > 0) {
-      html = html + wikiHtml;
-    }
-
-    //  Always show the Google Blogs tile.
-    html = html + this.createMetricsTile("google-blogs",
-        "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
-        "/images/logo-googleblogs.png",
-        "Search")
-        + '\n';
-
-    // now add science seeker using previously obtained index
-    if( sSeekerIndex != null ){
-      html += tileHtmlList[sSeekerIndex].html;
-    }
-
-    $("#" + relatedBlogPostsID).html($("#" + relatedBlogPostsID).html() + html);
-    $("#" + relatedBlogPostsID).show("blind", 500);
   };
 
   this.setRelatedBlogsSuccess = function(response, successID, loadingID){
@@ -911,7 +547,6 @@ $.fn.alm = function () {
     relatedBlogPosts.append(html);
     relatedBlogPosts.show('blind', 500);
   }
-
   this.setRelatedBlogsError = function (message, errorID, loadingID) {
 
     var relatedBlogs = $('#' + errorID);
@@ -987,7 +622,6 @@ $.fn.alm = function () {
     $("#" + citesID).show("blind", 500);
 
   }
-
   this.setCitesError = function(message, citesID, loadingID){
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
