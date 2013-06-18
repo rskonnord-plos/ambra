@@ -174,13 +174,13 @@ $.fn.alm = function () {
     var result = {};
 
     for (var a = 0; a < sources.length; a++) {
-      if (sources[a].name == "counter") {
+      if (sources[a].name.toLowerCase() == "counter") {
         counterViews = sources[a].events;
         //Make sure everything is in the right order
         counterViews = counterViews.sort(this.sortByYearMonth);
       }
 
-      if (sources[a].name == "pmc") {
+      if (sources[a].name.toLowerCase() == "pmc") {
         if (sources[a].events && sources[a].events.length > 0) {
           pmcViews = sources[a].events;
           //Make sure everything is in the right order
@@ -188,7 +188,7 @@ $.fn.alm = function () {
         }
       }
 
-      if (sources[a].name.toLowerCase() == "relativemetric") {
+      if (sources[a].name.toLowerCase().toLowerCase() == "relativemetric") {
         if (sources[a].events != null) {
           result.relativeMetricData = sources[a].events;
         }
