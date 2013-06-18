@@ -207,10 +207,6 @@ $(document).ready(
 
           //determine if article cited, bookmarked, or socialised, or even seen
           var hasData = false;
-          //cited? - scopus total > 0
-          //bookmarked? - citeulike count > 0
-          //seen? - pmc total + counter total > 0
-          //socialised? - mendeley total > 0
           if (scopus.metrics.total > 0 ||
               citeulike.metrics.total > 0 ||
               pmc.metrics.total + counter.metrics.total > 0 ||

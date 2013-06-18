@@ -733,7 +733,7 @@ $.fn.alm = function () {
       bookMarksNode.show("blind", 500);
     }
   }
-  this.setBookMarksFail = function(message, bookMarksID, loadingID){
+  this.setBookMarksError = function(message, bookMarksID, loadingID){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + bookMarksID).show("blind", 500);
@@ -912,7 +912,7 @@ $.fn.alm = function () {
     relatedBlogPosts.show('blind', 500);
   }
 
-  this.setRelatedBlogsFail = function (message, errorID, loadingID) {
+  this.setRelatedBlogsError = function (message, errorID, loadingID) {
 
     var relatedBlogs = $('#' + errorID);
     relatedBlogs.css('display', 'none');
@@ -988,7 +988,7 @@ $.fn.alm = function () {
 
   }
 
-  this.setCitesFail = function(message, citesID, loadingID){
+  this.setCitesError = function(message, citesID, loadingID){
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + citesID).show("blind", 500);
@@ -1349,9 +1349,9 @@ $.fn.alm = function () {
 
     //fail!
     var fail = function(message){
-      this.setCitesFail(message, "relatedCites", "relatedCitesSpinner");
-      this.setBookMarksFail(message, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setRelatedBlogsFail(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
+      this.setBookMarksError(message, "relatedBookmarks", "relatedBookmarksSpinner");
+      this.setRelatedBlogsError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
     }
 
     //get the data
