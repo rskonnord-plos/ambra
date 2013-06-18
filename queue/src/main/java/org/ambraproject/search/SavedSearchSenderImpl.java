@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
+ * http://plos.org
+ * http://ambraproject.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.ambraproject.search;
 
 import org.ambraproject.models.SavedSearch;
@@ -40,6 +57,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   private String savedSearchHtmlEmail;
   private String savedSearchTextEmail;
   private String imagePath;
+  private int resultLimit;
 
   /**
    * @inheritDoc
@@ -56,6 +74,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     context.put("startTime", searchJob.getStartDate());
     context.put("endTime", searchJob.getEndDate());
     context.put("imagePath", this.imagePath);
+    context.put("resultLimit", this.resultLimit);
 
     //Create message
     Multipart content = createContent(context, searchJob.getType());
@@ -76,7 +95,10 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
 
         //We might filter the search hitlist based on publish and the last time the search was run for each user 
         //here.  We track the last time a search was run in the user's savedSearch table, seemed like overkill to
-        //to me though.  
+        //to me though.
+
+        //We might group email addresses and send batches of emails to java mail to send.  It's possible we'll
+        //get a performance gain there if needed.  Would take a bit of refactoring to do though... TBD
 
         if(searchJob.getSearchHitList().size() > 0) {
 
@@ -223,5 +245,10 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   @Required
   public void setSendModeQAEMail(String sendModeQAEMail) {
     this.sendModeQAEMail = sendModeQAEMail;
+  }
+
+  @Required
+  public void setResultLimit(int resultLimit) {
+    this.resultLimit = resultLimit;
   }
 }

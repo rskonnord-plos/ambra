@@ -35,6 +35,24 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+ <h2>Ambra 2.6.8</h2>
+ <p>Released June 18th, 2013</p>
+ <ul>
+		 <li>eToCs feature development</li>
+	   <li>Advanced Search page journal specific "Filter by Article Type" search options</li>
+		 <li>Deprecation of PubGet as a datasource</li>
+ </ul>
+
+ <h2>Ambra 2.6.7</h2>
+ <p>Released June 11th, 2013</p>
+
+ <ul>
+		 <li>Restricted launch of eToCs</li>
+		 <li>CrossRef API change support</li>
+		 <li>Enhanced CrossRef support</li>
+		 <li>PLOS-flavored Relevance sort option in search results</li>
+ </ul>
+
  <h2>Ambra 2.6.6</h2>
  <p>Released June 4th, 2013</p>
  <ul>
@@ -125,7 +143,6 @@
      <li>Article page client side tabs navigation instead of full page refresh tabs navigation</li>
      <li>Bug fixes</li>
  </ul>
-
 
   <h2>Ambra 2.5.8</h2>
   <p>Released April 9th, 2013</p>

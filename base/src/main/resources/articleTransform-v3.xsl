@@ -1186,6 +1186,18 @@
               </xsl:if>
             </p>
             <xsl:apply-templates select="caption/node()[not(self::title)]"/>
+            <xsl:if test="table-wrap-foot">
+              <xsl:for-each select="table-wrap-foot//fn">
+                <div class="table-footnote">
+                  <span class="fn-label">
+                    <xsl:value-of select="label"/>
+                  </span>
+                  <span class="fn-text">
+                    <xsl:apply-templates select="p"/>
+                  </span>
+                </div>
+              </xsl:for-each>
+            </xsl:if>
             <div class="table-download">
               <div class="icon">
                 <xsl:attribute name="onclick">
