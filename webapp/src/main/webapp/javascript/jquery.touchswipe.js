@@ -200,7 +200,8 @@
 		triggerOnTouchLeave:false, 
 		allowPageScroll: "auto", 
 		fallbackToMouseEvents: true,	
-		excludedElements:"button, input, select, textarea, a, .noSwipe"
+		//excludedElements:"button, input, select, textarea, a, .noSwipe"
+    excludedElements:".noSwipe"
 	};
 
 
