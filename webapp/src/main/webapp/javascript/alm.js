@@ -657,7 +657,6 @@ $.fn.alm = function () {
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
               + '\n');
-            var l = 0;
 
             //using these vars because source goes out of scope when tooltip handler is called
             var likes = source.metrics.likes;
@@ -726,7 +725,7 @@ $.fn.alm = function () {
       }
     }
 
-    //if no tiles created, hide header and section
+    //if no tiles created, do not display header and section
     if(noTilesCreated){
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
@@ -761,7 +760,6 @@ $.fn.alm = function () {
   this.setRelatedBlogsText = function (doi, relatedBlogPostsID, errorID, loadingID) {
     var almError = function (message) {
       $("#" + loadingID).fadeOut('slow');
-//      this.setRelatedBlogError(message, relatedBlogPostsID, errorID);
     };
 
     var success = function (response) {
