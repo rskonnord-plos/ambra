@@ -34,7 +34,8 @@
  */
 
 $.fn.edBoard = function () {
-  var solrHost = $('meta[name=searchHost]').attr("content");
+  var searchHost = $('meta[name=searchHost]').attr("content");
+  var termsHost = $('meta[name=searchHost]').attr("content");
 
   this.getEditors = function (args) {
     //set the default arguments
@@ -74,7 +75,7 @@ $.fn.edBoard = function () {
 
     //make the request to solr
     $.jsonp({
-      url: solrHost,
+      url: searchHost,
       context: document.body,
       timeout: 10000,
       callbackParameter: "json.wrf",
@@ -562,7 +563,7 @@ $.fn.edBoard = function () {
           $.jsonp({
             //TODO: Refactor this so select is not part of host specification
             //Change host from select to terms
-            url: solrHost.replace("select", "terms"),
+            url: termsHost,
             context: document.body,
             timeout: 10000,
             data: data,
@@ -599,7 +600,7 @@ $.fn.edBoard = function () {
               console.log("Second Query: " + query_withNewTerm.join(" AND "));
 
               $.jsonp({
-                url: solrHost,
+                url: searchHost,
                 context: document.body,
                 timeout: 10000,
                 data: data,
