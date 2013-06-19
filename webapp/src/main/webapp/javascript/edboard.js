@@ -561,8 +561,6 @@ $.fn.edBoard = function () {
           console.log("First Query: terms.regex=" + searchTerm);
 
           $.jsonp({
-            //TODO: Refactor this so select is not part of host specification
-            //Change host from select to terms
             url: termsHost,
             context: document.body,
             timeout: 10000,
