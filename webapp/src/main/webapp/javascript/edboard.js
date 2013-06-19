@@ -35,7 +35,7 @@
 
 $.fn.edBoard = function () {
   var searchHost = $('meta[name=searchHost]').attr("content");
-  var termsHost = $('meta[name=searchHost]').attr("content");
+  var termsHost = $('meta[name=termsHost]').attr("content");
 
   this.getEditors = function (args) {
     //set the default arguments
