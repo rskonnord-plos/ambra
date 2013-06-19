@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -309,15 +307,12 @@ $(document).ajaxComplete(function(){
  *  Tracks the number of clicks on a Related Article link
  *  note: the 1st interaction happens when a user clicks the 'related content' tab
 */
-var taxonomy_interaction ="Taxonomy User Interactions";
-var taxonomy_related_article_click ="Related Article Click";
-$(document).ready(function(){
-  var related_article_element = $(".info h4 a");
-  related_article_element.click(function(){
-    var related_article = this.text();
-    _gaq.push(["_trackEvent", taxonomy_interaction, taxonomy_related_article_click, related_article]);
-  });
-});
+var taxonomy_related_category;
+$(document).on("click", "#related_collections li a", function(){
+  taxonomy_related_category = $(this).parent('div').children('h3').html();
+	_gaq.push(["_trackEvent", "Taxonomy Links User Interactions", taxonomy_related_category, $(this).html()]);
+}); 
+
 
 
 // Begin $ function definitions
@@ -1615,6 +1610,54 @@ $(function() {
     });
   }
 });
+
+/*
+ * jQuery UI Autocomplete HTML Extension
+ *
+ * Copyright 2010, Scott González (http://scottgonzalez.com)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * http://github.com/scottgonzalez/jquery-ui-extensions
+ */
+
+// HTML extension to autocomplete borrowed from
+// https://github.com/scottgonzalez/jquery-ui-extensions/blob/master/autocomplete/jquery.ui.autocomplete.html.js
+
+(function( $ ) {
+
+  var proto = $.ui.autocomplete.prototype,
+    initSource = proto._initSource;
+
+  function filter( array, term ) {
+    var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
+    return $.grep( array, function(value) {
+      return matcher.test( $( "<div>" ).html( value.label || value.value || value ).text() );
+    });
+  }
+
+  $.extend( proto, {
+    _initSource: function() {
+      if ($.isArray(this.options.source) ) {
+        this.source = function( request, response ) {
+          response( filter( this.options.source, request.term ) );
+        };
+      } else {
+        initSource.call( this );
+      }
+    },
+
+    _renderItem: function( ul, item) {
+      return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( $( "<a style=\"line-height: "
+          + (item.value ? 0.9 : 2)
+          + "; font-size: 12px;\"></a>" )
+          [item.type == "html" ? "html" : "text"]( item.label ) )
+        .appendTo( ul );
+    }
+  });
+
+})( jQuery );
 
 // table popup and download as CSV
 function tableOpen(tableId, type) {
