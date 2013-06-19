@@ -31,7 +31,9 @@ import org.ambraproject.models.UserRole;
 import org.ambraproject.models.UserSearch;
 import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.views.SavedSearchView;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -200,6 +202,15 @@ public class UserServiceTest extends BaseTest {
 
   @Test
   public void testSaveSearchHashing() {
+    //Make sure the database is empty, unit test order is arbitrary
+    try {
+      dummyDataStore.deleteAll(SavedSearchQuery.class);
+    } catch (HibernateObjectRetrievalFailureException ex) {}
+
+    try {
+      dummyDataStore.deleteAll(UserProfile.class);
+    } catch (HibernateObjectRetrievalFailureException ex) {}
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("nameForHashingTest");
     userProfile.setEmail("nameForHashingTest@Login.org");
