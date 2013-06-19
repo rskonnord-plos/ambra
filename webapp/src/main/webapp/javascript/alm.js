@@ -1107,9 +1107,9 @@ function onReadyALM() {
 
         //bookmarks
         if (mendeley.metrics.total + citeulike.metrics.total > 0) {
-          text = "ACADEMIC BOOKMARKS";
+          text = "SAVES";
           if (responseObject.bookmarks == 1) {
-            text = "ACADEMIC BOOKMARK";
+            text = "SAVE";
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
@@ -1120,9 +1120,9 @@ function onReadyALM() {
 
         //shares
         if (facebook.metrics.total + twitter.metrics.total > 0) {
-          text = "SOCIAL SHARES";
+          text = "SHARES";
           if (responseObject.shares == 1) {
-            text = "SOCIAL SHARE";
+            text = "SHARE";
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",

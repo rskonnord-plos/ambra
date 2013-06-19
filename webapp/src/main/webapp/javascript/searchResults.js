@@ -239,7 +239,7 @@ $(document).ready(
         });
       }
 
-      //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a>
+      //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: [# of]</a> &bull; <a class="data" href="TEST">Saves: [# of]</a> &bull; <a class="data" href="TEST">Shares: [# of]</a>
       function buildWidgetText(node, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed) {
         var newNode = null;
 
@@ -319,7 +319,7 @@ $(document).ready(
         if (markCount > 0) {
           newNode = $("<a></a>")
             .attr("href", metricsURL + "#other")
-            .html("Bookmarks: " + markCount)
+            .html("Saves: " + markCount)
             .addClass("data");
 
           appendBullIfNeeded(node);
@@ -354,7 +354,7 @@ $(document).ready(
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
-            .html("Bookmarks: None")
+            .html("Saves: None")
             .addClass("no-data"));
         }
       }
