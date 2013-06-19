@@ -630,6 +630,13 @@ $.fn.alm = function () {
     $("#" + citesID).show("blind", 500);
   }
 
+
+  this.setF1000Success = function(response, f1kID, f1kSpinner){
+    //add the goods then show the area which is by default hidden
+  }
+  this.setF1000Error = function(message, f1kID, f1kSpinner){
+    //don't even show f1000 - just hide it.  is this function needed?
+  }
   this.setChartData = function (doi, usageID, loadingID) {
     //citation_date format = 2006/12/20
     //citation_date format = 2006/2/2
@@ -980,6 +987,7 @@ $.fn.alm = function () {
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
       this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Success(response, "f1000","f1000Spinner");
 
     }
 
@@ -988,6 +996,7 @@ $.fn.alm = function () {
       this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
       this.setBookMarksError(message, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Error(message, "f1000","f1000Spinner");
     }
 
     //get the data
