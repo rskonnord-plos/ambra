@@ -544,7 +544,9 @@ $.fn.alm = function () {
 
     //append in order to preserve trackbacks
     $("#" + loadingID).fadeOut('slow');
-    relatedBlogPosts.append(html);
+
+    //using prepend so tiles come before plos comments tile.  plos comments tile is part of freemarker template
+    relatedBlogPosts.prepend(html);
     relatedBlogPosts.show('blind', 500);
   }
   this.setRelatedBlogsError = function (message, errorID, loadingID) {
