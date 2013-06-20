@@ -637,10 +637,8 @@ $.fn.alm = function () {
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
     $('#' + f1kHeaderID).show("blind", 500);
 
-    var f1kContent = $('#' + f1kContentID);
-
     $("#" + f1kSpinnerID).fadeOut('slow');
-    f1kContent.append(this.createMetricsTile(f1k.display_name,
+    $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
       f1k.events_url,
       '/images/logo-' + f1k.name + '.png',
       f1k.metrics.total)
