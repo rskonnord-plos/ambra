@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -62,7 +59,20 @@ public interface SearchService {
    */
   SortedMap<String, Long> getTopSubjects() throws ApplicationException;
 
-  List<SearchHit> savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException;
+  /**
+   * Returns articles list that are published between the last search time and the current search time for saved search
+   * alerts.
+   *
+   * @param sParams The search params
+   * @param lastSearchTime the begin time of the search
+   * @param currentSearchTime the end time of the search
+   * @param resultLimit the maximum number of records to return
+   *
+   * @return a list of search results
+   *
+   * @throws ApplicationException
+   */
+  List<SearchHit> savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime, int resultLimit) throws ApplicationException;
 
   /**
    * The map of sorts that are valid for this provider

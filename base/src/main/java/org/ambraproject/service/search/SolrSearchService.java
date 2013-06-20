@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -70,9 +67,6 @@ public class SolrSearchService implements SearchService {
   private static final int MAX_FACET_SIZE = 100;
   private static final int MIN_FACET_COUNT = 1;
   private static final int MAX_HIGHLIGHT_SNIPPETS = 3;
-
-  //For saved search alerts, just assume we want all records, 750 seems like a reasonable limit
-  private static final int MAX_SAVED_SEARCH_SIZE = 750;
 
   // sort option possible values (sort direction is optional)
   // field desc|asc
@@ -193,8 +187,8 @@ public class SolrSearchService implements SearchService {
   /**
    * Populate facets of the search object.
    * <p/>
-   * If no search results and hence facets are found remove defined filters and try the search again.  Journals and
-   * ArticleType facets will always be the complete list.
+   * If no search results and hence facets are found remove defined filters and try the search again.  Journals will
+   * always be the complete list.
    *
    * @param searchParameters The search parameters
    * @return a populared SearchResultSinglePage object
@@ -263,21 +257,21 @@ public class SolrSearchService implements SearchService {
 
       results = search(query);
 
-      //If results are STILL empty.  We must return something for subjects.
+      //If results are STILL empty.  We must return something for subjects and article type.
       //So let's use the global list
       if (results.getTotalNoOfResults() == 0) {
         results.setSubjectFacet(preFilterResults.getSubjectFacet());
+        results.setArticleTypeFacet(preFilterResults.getArticleTypeFacet());
       }
 
       results.setFiltersReset(true);
     }
 
-    //Lets always return ALL values for journals and article types
+    //Lets always return ALL values for journals
     //These lists will not be dependant on the user's other
     //selections other then the query
-    //However, subjects will be!
+    //However, subjects and article type will be!
     results.setJournalFacet(preFilterResults.getJournalFacet());
-    results.setArticleTypeFacet(preFilterResults.getArticleTypeFacet());
 
     return results;
   }
@@ -303,7 +297,11 @@ public class SolrSearchService implements SearchService {
 
     // Add the one we do want.
     query.addFacetField("subject_hierarchy");
-    query.addFilterQuery("cross_published_journal_key:" + journal);
+
+    if(journal != null && journal.length() > 0) {
+      query.addFilterQuery("cross_published_journal_key:" + journal);
+    }
+
     query.setFacetLimit(-1);  // unlimited
 
     QueryResponse queryResponse = getSOLRResponse(query);
@@ -606,7 +604,7 @@ public class SolrSearchService implements SearchService {
     }
 
     // Form field description: "Article Types".  Query Filter.
-    if (sp.getFilterArticleType() != null && sp.getFilterArticleType().length() > 0) {
+    if (sp.getFilterArticleType() != null && sp.getFilterArticleType().length > 0) {
       query.addFilterQuery(createFilterLimitForArticleType(sp.getFilterArticleType()));
     }
 
@@ -668,12 +666,13 @@ public class SolrSearchService implements SearchService {
     return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
-  private String createFilterLimitForArticleType(String artycleType) {
+  private String createFilterLimitForArticleType(String[] articleTypes) {
+    Arrays.sort(articleTypes); // Consistent order so that each filter will only be cached once.
     StringBuilder fq = new StringBuilder();
-
-    fq.append("article_type:\"").append(artycleType).append("\"");
-
-    return fq.toString();
+    for (String articleType : articleTypes) {
+      fq.append("article_type:\"").append(articleType).append("\" OR ");
+    }
+    return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
   /**
@@ -917,14 +916,21 @@ public class SolrSearchService implements SearchService {
         }
       }
 
-      SearchHit hit = new SearchHit(
-          score, id, title, highlights, authorList, publicationDate, eissn, journal, articleType,
-          abstractResult, flattenedSubjects);
-
-      hit.setStrikingImage(strikingImage);
-      if (figureTableCaptions.size() > 0) {
-        hit.setHasAssets(true);
-      }
+      SearchHit hit = SearchHit.builder()
+        .setHitScore(score)
+        .setUri(id)
+        .setTitle(title)
+        .setHighlight(highlights)
+        .setListOfCreators(authorList)
+        .setDate(publicationDate)
+        .setIssn(eissn)
+        .setJournalTitle(journal)
+        .setArticleTypeForDisplay(articleType)
+        .setAbstractText(abstractResult)
+        .setStrikingImage(strikingImage)
+        .setHasAssets(figureTableCaptions.size() > 0)
+        .setSubjects(flattenedSubjects)
+        .build();
 
       if (log.isDebugEnabled())
         log.debug(hit.toString());
@@ -1031,16 +1037,9 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * Returns articles list that are published between the last search time and the current search time for saved search
-   * alerts.
-   *
-   * @param sParams
-   * @param lastSearchTime
-   * @param currentSearchTime
-   * @return
-   * @throws ApplicationException
+   * @inheritDoc
    */
-  public List savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime) throws ApplicationException {
+  public List savedSearchAlerts(SearchParameters sParams, Date lastSearchTime, Date currentSearchTime, int resultLimit) throws ApplicationException {
     SolrQuery query = null;
     SearchParameters sp = null;
 
@@ -1050,7 +1049,7 @@ public class SolrSearchService implements SearchService {
             + sParams.getQuery().trim());
       }
 
-      query = createQuery(sParams.getQuery(), 0, MAX_SAVED_SEARCH_SIZE, false);
+      query = createQuery(sParams.getQuery(), 0, resultLimit, false);
       query.setQuery(sParams.getQuery());
       //If the keywords parameter is specified, we need to change what field we're querying against
       //aka, body, conclusions, materials and methods ... etc ...
@@ -1074,7 +1073,7 @@ public class SolrSearchService implements SearchService {
       log.debug("Advanced Saved Search performed on the unformattedSearch String: {}",
           sParams.getUnformattedQuery().trim());
       sp = cleanStrings(sParams);
-      query = createQuery(null, 0, MAX_SAVED_SEARCH_SIZE, false);
+      query = createQuery(null, 0, resultLimit, false);
       query.setQuery(sParams.getUnformattedQuery());
       setFilters(query, sp, true);
     }

@@ -28,20 +28,23 @@ public class UserAlert {
   private final String name;
   private final boolean weeklyAvailable;
   private final boolean monthlyAvailable;
+  private final boolean hasSubjectFilter;
 
   /**
    * Constructor
-   * @param key
-   * @param name
-   * @param weeklyAvailable
-   * @param monthlyAvailable
+   * @param key the unique key of the alert
+   * @param name the name of the alert
+   * @param weeklyAvailable is this alert available weekly?
+   * @param monthlyAvailable is this alert available monthly?
+   * @param hasSubjectFilter can the user create subject filters on this alert?
    */
   public UserAlert(final String key, final String name, final boolean weeklyAvailable,
-                   final boolean monthlyAvailable) {
+                   final boolean monthlyAvailable, final boolean hasSubjectFilter) {
     this.key = key;
     this.name = name;
     this.weeklyAvailable = weeklyAvailable;
     this.monthlyAvailable = monthlyAvailable;
+    this.hasSubjectFilter = hasSubjectFilter;
   }
 
   /**
@@ -72,5 +75,14 @@ public class UserAlert {
    */
   public boolean isWeeklyAvailable() {
     return weeklyAvailable;
+  }
+
+  /**
+   * Is this alert filterable?
+   *
+   * @return true/false
+   */
+  public boolean hasSubjectFilter() {
+    return hasSubjectFilter;
   }
 }

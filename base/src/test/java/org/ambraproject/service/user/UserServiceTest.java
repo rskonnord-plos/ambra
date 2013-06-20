@@ -22,6 +22,7 @@ package org.ambraproject.service.user;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleView;
+import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserLogin;
@@ -359,8 +360,8 @@ public class UserServiceTest extends BaseTest {
   public void testGetAvailableAlerts() {
     //these come from the config
     List<UserAlert> alerts = new ArrayList<UserAlert>(2);
-    alerts.add(new UserAlert("journal", "Journal", true, true));
-    alerts.add(new UserAlert("journal1", "Journal 1", false, true));
+    alerts.add(new UserAlert("journal", "Journal", true, true, false));
+    alerts.add(new UserAlert("journal1", "Journal 1", false, true, false));
 
     for (UserAlert alert : userService.getAvailableAlerts()) {
       UserAlert matchingAlert = null;
@@ -444,6 +445,64 @@ public class UserServiceTest extends BaseTest {
         "user service didn't show organization type with showPrivateFields set to true");
     assertEquals(display.getPostalAddress(), userProfile.getPostalAddress(),
         "user service didn't show organization address with showPrivateFields set to true");
+  }
+
+  @Test()
+  public void testSavedFilteredWeeklySearchAlert() {
+    dummyDataStore.deleteAll(SavedSearch.class);
+    dummyDataStore.deleteAll(SavedSearchQuery.class);
+    dummyDataStore.deleteAll(UserProfile.class);
+
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("foo_mcFoo");
+    userProfile.setGivenNames("Foo");
+    userProfile.setOrganizationName("foo");
+    userProfile.setOrganizationType("university");
+    userProfile.setPostalAddress("123 fake st");
+    userProfile.setPositionType("a position type");
+    userProfile.setPassword("bleh");
+
+    Long userProfileID = Long.valueOf(dummyDataStore.store(userProfile));
+
+    String[] subjects = new String[] { "subject1,", "subject2" };
+    String journal = "PLOSOne";
+
+    userService.setFilteredWeeklySearchAlert(userProfileID, subjects, journal);
+
+    List<SavedSearch> savedSearches = dummyDataStore.getAll(SavedSearch.class);
+    List<SavedSearchQuery> savedSearchQueries = dummyDataStore.getAll(SavedSearchQuery.class);
+
+    assertEquals(savedSearches.size(), 1);
+    assertEquals(savedSearchQueries.size(), 1);
+
+    List<SavedSearchView> searchViews = userService.getSavedSearches(userProfile.getID());
+
+    assertEquals(searchViews.size(), 1);
+
+    SavedSearchView ssv = searchViews.get(0);
+    SearchParameters ssp = ssv.getSearchParameters();
+
+    assertEquals(ssv.getSearchType(), SavedSearchType.JOURNAL_ALERT);
+    assertEquals(ssp.getFilterSubjectsDisjunction(), subjects);
+    assertEquals(ssp.getFilterJournals(), new String[] { journal });
+
+    userProfile = new UserProfile();
+    userProfile.setDisplayName("foo_mcFoo1");
+    userProfile.setGivenNames("Foo1");
+    userProfile.setOrganizationName("foo1");
+    userProfile.setOrganizationType("university1");
+    userProfile.setPostalAddress("123 fake st1");
+    userProfile.setPositionType("a position type one");
+    userProfile.setPassword("bleh");
+
+    userProfileID = Long.valueOf(dummyDataStore.store(userProfile));
+
+    userService.setFilteredWeeklySearchAlert(userProfileID, subjects, journal);
+
+    savedSearchQueries = dummyDataStore.getAll(SavedSearchQuery.class);
+
+    //assert there is still only one query
+    assertEquals(savedSearchQueries.size(), 1);
   }
 
   private List<UserLogin> getUserLogins(Long userId) {

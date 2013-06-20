@@ -42,6 +42,7 @@
         <articleIndexingQueue>activemq:plos.solr.article.index?transacted=false</articleIndexingQueue>
         <articleDeleteQueue>activemq:plos.solr.article.delete?transacted=false</articleDeleteQueue>
          <sortOptions>
+          <option displayName="Relevance">score desc\, publication_date desc\, id desc</option>
           <option displayName="Date\, newest first">publication_date desc\, id desc</option>
           <option displayName="Date\, oldest first">publication_date asc\, id desc</option>
           <option displayName="Most views\, last 30 days">counter_total_month desc\, id desc</option>
@@ -74,7 +75,7 @@
         <errors>test@plos.org</errors>
       </email>
       <freemarker>
-        <almHost>http://alm.plos.org/api/v3/articles?ids=</almHost>
+        <almHost>http://alm.plos.org/api/v3/articles</almHost>
       </freemarker>
       <name>PLoS</name>
     </platform>

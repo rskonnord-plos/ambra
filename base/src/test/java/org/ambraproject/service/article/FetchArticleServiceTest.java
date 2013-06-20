@@ -746,7 +746,10 @@ public class FetchArticleServiceTest extends BaseTest {
     citedArticle2.setCitationType("http://purl.org/net/nknouf/ns/bibtex#Article");
 
     article2.getCitedArticles().add(citedArticle2);
-    citedArticle2.getAuthors().add(citedArticleAuthor);
+
+    List<CitedArticleAuthor> authors = new ArrayList<CitedArticleAuthor>();
+    authors.add(citedArticleAuthor);
+    citedArticle2.setAuthors(authors);
 
     dummyDataStore.store(article2);
 
