@@ -1340,6 +1340,7 @@ function onReadyALM() {
         }
 
         var scopus = 0;
+        var crossref = 0;
         var bookmarks = 0;
         var shares = 0;
 
@@ -1350,6 +1351,10 @@ function onReadyALM() {
 
             if (name == "Scopus") {
               scopus = count;
+            }
+
+            if (name == "CrossRef") {
+              crossref = count;
             }
 
             if (name == "Mendeley" || name == "CiteULike") {
@@ -1363,6 +1368,7 @@ function onReadyALM() {
         }
 
         var text, li;
+
         if (scopus > 0) {
           text = "CITATIONS";
           if (scopus == 1) {
@@ -1373,6 +1379,18 @@ function onReadyALM() {
             "/static/almInfo#citationInfo");
 
           $("#almSignPost").append(li);
+        } else {
+          if(crossref > 0) {
+            text = "CITATIONS";
+            if (crossref == 1) {
+              text = "CITATION";
+            }
+
+            li = almService.makeSignPostLI(text, crossref, "Scopus data unavailable. Displaying Crossref citation count",
+              "/static/almInfo#citationInfo");
+
+            $("#almSignPost").append(li);
+          }
         }
 
         if (bookmarks > 0) {
