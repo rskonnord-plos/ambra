@@ -27,9 +27,7 @@ import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.BaseArticleInfo;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -112,19 +110,17 @@ public interface ArticleService {
   public List<String> getArticleDOIs(final ArticleServiceSearchParameters params) throws ParseException;
 
   /**
-   * Return a list of search hits representing articles within the specified parameters ignoring image articles
-   * The list returned is randomized
+   * Return a list of articles representing articles published within the 30 days ignoring image articles
+   * The list returned is randomized.  If there are less then articleCount articles in the results, go back in time
+   * up to 30 days to fill the list
    *
-   * @param startDate the beginning date
-   * @param endDate the end date
    * @param journal_eIssn the journal to filter on
    * @param articleCount the minimum number of articles to return
    *
    * @return a list randomized search results
    */
   @Transactional(readOnly = true)
-  public List<SearchHit> getRecentArticles(final Calendar startDate, final Calendar endDate, String journal_eIssn,
-    int articleCount);
+  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, int numDaysInPast, int articleCount);
 
   /**
    * Get all of the articles satisfying the given criteria.

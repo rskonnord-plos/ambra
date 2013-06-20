@@ -67,6 +67,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -237,37 +239,60 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * @inheritDoc
    */
   @Transactional (readOnly = true)
-  public List<SearchHit> getRecentArticles(final Calendar startDate, final Calendar endDate, String journal_eIssn,
-    int articleCount)
+  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, int numDaysInPast, int articleCount)
   {
+    //end date is most recent midnight
+    Calendar endDate = GregorianCalendar.getInstance();
+    endDate.set(Calendar.HOUR_OF_DAY, 23);
+    endDate.set(Calendar.MINUTE, 59);
+    endDate.set(Calendar.SECOND, 59);
+
+    Calendar startDate = (Calendar)endDate.clone();
+    startDate.roll(Calendar.DAY_OF_YEAR, -30);
+
+    //Get 30 days worth of articles first
     List<SearchHit> recentArticles = getNonImageArticlesByDate(startDate, endDate, journal_eIssn);
+    List<SearchHit> results = new ArrayList<SearchHit>();
 
-    // If not enough, then query for articles for up to 30 days to make up the difference.
-    if (recentArticles.size() < articleCount) {
-      //Set both end and start to be the old start date.
-      //The start date gets decremented inside the below loop
-      Calendar newEndDate = (Calendar)startDate.clone();
-      Calendar newStartDate = (Calendar)startDate.clone();
+    startDate = (Calendar)endDate.clone();
+    startDate.roll(Calendar.DAY_OF_YEAR, -numDaysInPast);
 
-      int dayCount = 0;
-
-      while (recentArticles.size() < articleCount && dayCount < 30) {
-        //Set window back 3 additional days for every loop
-        newStartDate.roll(Calendar.DAY_OF_YEAR, -3);
-
-        recentArticles.addAll(getNonImageArticlesByDate(newStartDate, newEndDate, journal_eIssn));
-        dayCount += 3;
+    //First grab all the articles that fall into the defined window
+    //Regardless of articleCount.  We want to randomize before we limit
+    //So each time the method returns, it returns a different list
+    for(SearchHit searchHit : recentArticles) {
+      if(searchHit.getDate().after(startDate.getTime())) {
+        results.add(searchHit);
       }
     }
 
-    Collections.shuffle(recentArticles);
+    //We assume the list is sorted by date desc (Most recent first)
+    //So we can reduce the list by the count of the results so far for a minor
+    //performance boost
+    recentArticles = recentArticles.subList(results.size(), recentArticles.size());
 
-    //pare down the actual number of recent articles to match articleCount
-    if (recentArticles.size() > articleCount) {
-      recentArticles = recentArticles.subList(0, articleCount);
+    //If we still don't have enough, decrement the start date and try again
+    //But let's not go on forever, only back 30 days.  (in this case 10 loops, each iteration is 3 days)
+    int loop = 0;
+    while(results.size() < articleCount && loop < 10) {
+      startDate.roll(Calendar.DAY_OF_YEAR, -3);
+      for(SearchHit searchHit : recentArticles) {
+        if(searchHit.getDate().after(startDate.getTime())) {
+          results.add(searchHit);
+        }
+      }
+      loop++;
     }
 
-    return recentArticles;
+    //Shuffle results
+    Collections.shuffle(results);
+
+    //pare down the actual number of recent articles to match articleCount
+    if (results.size() > articleCount) {
+      results = results.subList(0, articleCount);
+    }
+
+    return results;
   }
 
   @SuppressWarnings("unchecked")
@@ -286,7 +311,9 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
         .add(Restrictions.between("date", startDate.getTime(), endDate.getTime()))
         .setProjection(Projections.projectionList()
           .add(Projections.property("doi"))
-          .add(Projections.property("title"))));
+          .add(Projections.property("title"))
+          .add(Projections.property("date")))
+        .addOrder(Order.desc("date")));
 
     List<SearchHit> searchResults = new ArrayList<SearchHit>();
 
@@ -294,8 +321,9 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       Object[] res = articleResults.get(i);
       String doi = (String) res[0];
       String title = (String) res[1];
+      Date pubDate = (Date) res[2];
 
-      searchResults.add(new SearchHit(null, doi, title, null, null, null, null, null, null, null, null, null, false));
+      searchResults.add(new SearchHit(null, doi, title, null, null, pubDate, null, null, null, null, null, null, false));
     }
 
     return searchResults;

@@ -28,8 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import java.net.URI;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.SortedMap;
@@ -134,20 +132,7 @@ public class HomePageAction extends BaseActionSupport {
 
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
-
-      Calendar startDate = GregorianCalendar.getInstance();
-      startDate.set(Calendar.HOUR_OF_DAY, 0);
-      startDate.set(Calendar.MINUTE, 0);
-      startDate.set(Calendar.SECOND, 0);
-      startDate.roll(Calendar.DAY_OF_YEAR, -numDaysInPast);
-
-      //end date is most recent midnight
-      Calendar endDate = GregorianCalendar.getInstance();
-      endDate.set(Calendar.HOUR_OF_DAY, 23);
-      endDate.set(Calendar.MINUTE, 59);
-      endDate.set(Calendar.SECOND, 59);
-
-      recentArticles = articleService.getRecentArticles(startDate, endDate, journal_eIssn, numArticlesToShow);
+      recentArticles = articleService.getRandomRecentArticles(journal_eIssn, numDaysInPast, numArticlesToShow);
     }
 
   /**
@@ -206,10 +191,6 @@ public class HomePageAction extends BaseActionSupport {
   @Required
   public void setSearchService(SearchService searchService) {
     this.searchService = searchService;
-  }
-
-  public int getNumDaysInPast() {
-    return numDaysInPast;
   }
 
   public int getNumArticlesToShow() {
