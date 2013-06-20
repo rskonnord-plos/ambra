@@ -42,6 +42,7 @@
                  <li>Distinguish Authors and Editors in Affiliation on the Solr search backend</li>
                  <li>Addition of figure DOIs to Solr search API</li>
                  <li>Fix for article page user flows to Comments without page refresh</li>
+                 <li>Use of CrossRef for citation count if Scopus unavailable in ALM signposts on the article page</li>
                  <li>Addition of LinkedIn share button for article pages</li>
                  <li>Correction of merge mistake from 2.6.8 in which changeset for eToCs and PubGet datasource removal was omitted</li>  
  </ul>
