@@ -446,7 +446,7 @@ $.fn.alm = function () {
 
           case 'mendeley':
             bookMarksNode.append(this.createMetricsTile(source.display_name,
-              source.public_url,
+              source.events_url,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
               + '\n')
@@ -472,7 +472,7 @@ $.fn.alm = function () {
 
           default:
             bookMarksNode.append(this.createMetricsTile(source.display_name,
-              source.public_url,
+              source.events_url,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
               + '\n')
@@ -625,13 +625,31 @@ $.fn.alm = function () {
     $("#" + citesID).show("blind", 500);
   }
 
-
-  this.setF1000Success = function(response, f1kID, f1kSpinner){
+  this.setF1000Success = function(response, f1kHeaderID, f1kSpinnerID, f1kContentID){
     //add the goods then show the area which is by default hidden
+
+    var f1k = this.filterSources(response[0].sources,['citeulike']).pop();
+
+    if (f1k.metrics.total == 0){
+      return;
+    }
+
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    $('#' + f1kHeaderID).show("blind", 500);
+
+    var f1kContent = $('#' + f1kContentID);
+
+    $("#" + f1kSpinnerID).fadeOut('slow');
+    f1kContent.append(this.createMetricsTile(f1k.display_name,
+      f1k.events_url,
+      '/images/logo-' + f1k.name + '.png',
+      f1k.metrics.total)
+      + '\n').show("blind", 500);
   }
-  this.setF1000Error = function(message, f1kID, f1kSpinner){
-    //don't even show f1000 - just hide it.  is this function needed?
+  this.setF1000Error = function(message){
+    //the f1k section is by default hidden, so no need to do a thing
   }
+
   this.setChartData = function (doi, usageID, loadingID) {
     //citation_date format = 2006/12/20
     //citation_date format = 2006/2/2
@@ -982,7 +1000,7 @@ $.fn.alm = function () {
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
       this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
-      this.setF1000Success(response, "f1000","f1000Spinner");
+      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
 
     }
 
