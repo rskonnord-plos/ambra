@@ -525,13 +525,8 @@ $.fn.alm = function () {
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
-      //it may be the case that (total == 0) == (events_url == null)
-      if( source.metrics.total > 0 && source.events_url ){
-        switch (source.name) {
-          default:
-            html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
-            break;
-        }
+      if (source.metrics.total > 0 && source.events_url) {
+        html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
       }
 
     }
@@ -1061,25 +1056,25 @@ function onReadyALM() {
 
         for(var i = 0; i < sources.length; i += 1){
           source = sources[i];
-          if(source.name === 'counter'){
+          if(source.name.toLowerCase() == 'counter'){
             counter = source;
           }
-          else if(source.name === 'pmc'){
+          else if(source.name.toLowerCase() == 'pmc'){
             pmc = source;
           }
-          else if(source.name === 'scopus'){
+          else if(source.name.toLowerCase() == 'scopus'){
             scopus = source;
           }
-          else if(source.name === 'facebook'){
+          else if(source.name.toLowerCase() == 'facebook'){
             facebook = source;
           }
-          else if(source.name === 'twitter'){
+          else if(source.name.toLowerCase() == 'twitter'){
             twitter = source;
           }
-          else if(source.name === 'mendeley'){
+          else if(source.name.toLowerCase() == 'mendeley'){
             mendeley = source;
           }
-          else if(source.name === 'citeulike'){
+          else if(source.name.toLowerCase() == 'citeulike'){
             citeulike = source;
           }
         }
