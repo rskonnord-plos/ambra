@@ -628,7 +628,7 @@ $.fn.alm = function () {
   this.setF1000Success = function(response, f1kHeaderID, f1kSpinnerID, f1kContentID){
     //add the goods then show the area which is by default hidden
 
-    var f1k = this.filterSources(response[0].sources,['citeulike']).pop();
+    var f1k = this.filterSources(response[0].sources,['f1000']).pop();
 
     if (f1k.metrics.total == 0){
       return;
