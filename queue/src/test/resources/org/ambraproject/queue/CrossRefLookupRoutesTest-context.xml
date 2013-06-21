@@ -70,7 +70,7 @@
 
   <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
     <property name="httpClient" ref="mockHttpClient"/>
-    <property name="crossRefUrl" value="${ambra.services.crossref.guestquery.url}"/>
+    <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
   </bean>
 
   <bean id="articleService" class="org.ambraproject.service.article.ArticleServiceImpl">
