@@ -1,7 +1,5 @@
-/* $HeadURL::                                                                            $
- * $Id$
- *
- * Copyright (c) 2006-2011 by Public Library of Science
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -34,12 +32,10 @@ import org.ambraproject.views.SavedSearchView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -56,8 +52,8 @@ public class UserServiceTest extends BaseTest {
 
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("nameForTestLogin");
-    userProfile.setEmail("emailForTest@Login.org");
-    userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setEmail("emailForTest1@Login.org");
+    userProfile.setAuthId("authIdForTestLogin1");
     userProfile.setPassword("pass");
     Long id = Long.valueOf(dummyDataStore.store(userProfile));
 
@@ -72,8 +68,8 @@ public class UserServiceTest extends BaseTest {
 
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("saveTestLogin");
-    userProfile.setEmail("emailForTest@Login.org");
-    userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setEmail("emailForTest2@Login.org");
+    userProfile.setAuthId("authIdForTestLogin2");
     userProfile.setPassword("pass");
     Long id = Long.valueOf(dummyDataStore.store(userProfile));
 
@@ -88,8 +84,8 @@ public class UserServiceTest extends BaseTest {
 
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("updateTestLogin");
-    userProfile.setEmail("emailForTest@Login.org");
-    userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setEmail("emailForTest3@Login.org");
+    userProfile.setAuthId("authIdForTestLogin3");
     userProfile.setPassword("pass");
     Long id = Long.valueOf(dummyDataStore.store(userProfile));
 
@@ -104,8 +100,8 @@ public class UserServiceTest extends BaseTest {
 
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("deleteTestLogin");
-    userProfile.setEmail("emailForTest@Login.org");
-    userProfile.setAuthId("authIdForTestLogin");
+    userProfile.setEmail("emailForTest3@Login.org");
+    userProfile.setAuthId("authIdForTestLogin3");
     userProfile.setPassword("pass");
     Long id = Long.valueOf(dummyDataStore.store(userProfile));
 
@@ -200,6 +196,10 @@ public class UserServiceTest extends BaseTest {
 
   @Test
   public void testSaveSearchHashing() {
+    //Make sure the database is empty, unit test order is arbitrary
+    dummyDataStore.deleteAll(SavedSearchQuery.class);
+    dummyDataStore.deleteAll(UserProfile.class);
+
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("nameForHashingTest");
     userProfile.setEmail("nameForHashingTest@Login.org");
@@ -456,6 +456,7 @@ public class UserServiceTest extends BaseTest {
     UserProfile userProfile = new UserProfile();
     userProfile.setDisplayName("foo_mcFoo");
     userProfile.setGivenNames("Foo");
+    userProfile.setEmail("foo_mcFoo@Login.org");
     userProfile.setOrganizationName("foo");
     userProfile.setOrganizationType("university");
     userProfile.setPostalAddress("123 fake st");
@@ -468,12 +469,13 @@ public class UserServiceTest extends BaseTest {
     String journal = "PLOSOne";
 
     userService.setFilteredWeeklySearchAlert(userProfileID, subjects, journal);
+    userProfile = userService.getUser(userProfileID);
 
-    List<SavedSearch> savedSearches = dummyDataStore.getAll(SavedSearch.class);
-    List<SavedSearchQuery> savedSearchQueries = dummyDataStore.getAll(SavedSearchQuery.class);
+    List<SavedSearch> savedSearches = userProfile.getSavedSearches();
 
     assertEquals(savedSearches.size(), 1);
-    assertEquals(savedSearchQueries.size(), 1);
+    assertNotNull(savedSearches.get(0).getSearchQuery());
+    SavedSearchQuery ssq1 = savedSearches.get(0).getSearchQuery();
 
     List<SavedSearchView> searchViews = userService.getSavedSearches(userProfile.getID());
 
@@ -489,6 +491,7 @@ public class UserServiceTest extends BaseTest {
     userProfile = new UserProfile();
     userProfile.setDisplayName("foo_mcFoo1");
     userProfile.setGivenNames("Foo1");
+    userProfile.setEmail("foo_mcFoo1@Login.org");
     userProfile.setOrganizationName("foo1");
     userProfile.setOrganizationType("university1");
     userProfile.setPostalAddress("123 fake st1");
@@ -499,10 +502,16 @@ public class UserServiceTest extends BaseTest {
 
     userService.setFilteredWeeklySearchAlert(userProfileID, subjects, journal);
 
-    savedSearchQueries = dummyDataStore.getAll(SavedSearchQuery.class);
+    userProfile = userService.getUser(userProfileID);
+    savedSearches = userProfile.getSavedSearches();
 
-    //assert there is still only one query
-    assertEquals(savedSearchQueries.size(), 1);
+    assertEquals(savedSearches.size(), 1);
+    assertNotNull(savedSearches.get(0).getSearchQuery());
+
+    SavedSearchQuery ssq2 = savedSearches.get(0).getSearchQuery();
+
+    //assert queries match
+    assertEquals(ssq1, ssq2);
   }
 
   private List<UserLogin> getUserLogins(Long userId) {
