@@ -21,7 +21,6 @@ import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.ambraproject.service.pubget.PubGetLookupService;
 import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.util.TextUtils;
 import org.ambraproject.util.XPathUtil;
@@ -35,11 +34,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.activation.DataSource;
 import javax.xml.transform.TransformerException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -63,7 +71,6 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   private XMLService articleTransformService;
   private FileStoreService fileStoreService;
   private Cache articleHtmlCache;
-  private PubGetLookupService pubGetLookupService;
   private String guestCrossRefUrl;
 
   /**
@@ -1120,16 +1127,11 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     title = title.replaceAll("<[^>]+>", ""); // remove any HTML marker for query
 
     String crossRefUrl = createCrossRefUrl(doi, author, title);
-    String pubGetUrl = createPubGetUrl(doi);
     String pubMedUrl = createPubMedUrl(author, title);
     String googleScholarUrl = createGoogleScholarUrl(author, title);
 
     if (crossRefUrl != null && !crossRefUrl.isEmpty()) {
       extraInfo.setAttribute("crossRefUrl", crossRefUrl);
-    }
-
-    if (pubGetUrl != null && !pubGetUrl.isEmpty()) {
-      extraInfo.setAttribute("pubGetUrl", pubGetUrl);
     }
 
     if (pubMedUrl != null && !pubMedUrl.isEmpty()) {
@@ -1167,26 +1169,6 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
     }
 
     return crossRefUrl;
-  }
-
-  /**
-   * set the pubGetUrl
-   * @param doi
-   * @return pubGetUrl
-   */
-  private String createPubGetUrl(String doi) {
-    String pubGetUrl = null;
-
-    if (doi != null && !doi.isEmpty()) {
-      try {
-        // We never cache or store these PDF links, because they change frequently.
-        pubGetUrl = pubGetLookupService.getPDFLink(doi);
-      } catch(Exception ex) {
-        log.info("ignoring exception in pubGetLookupService", ex);
-      }
-    }
-
-    return pubGetUrl;
   }
 
   /**
@@ -1244,14 +1226,6 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   private String getAuthorStringForLookup(CitedArticle citedArticle) {
     List<CitedArticleAuthor> authors = citedArticle.getAuthors();
     return (authors != null && authors.size() > 0) ? authors.get(0).getSurnames() : "";
-  }
-
-  /**
-   * @param pubGetLookupService The pubGetLookupService to use
-   */
-  @Required
-  public void setPubGetLookupService(PubGetLookupService pubGetLookupService) {
-    this.pubGetLookupService = pubGetLookupService;
   }
 
   /**

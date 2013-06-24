@@ -1569,7 +1569,7 @@ initMainContainer();
 var pjax_selected_tab = null; // last clicked pjax content
 
 if ($(document).pjax) {
-  $(document).pjax("#nav-article ul li a", "#pjax-container",
+  $(document).pjax("#nav-article ul li a, .nav-col .nav-col-comments a, .sidebar .sidebar-comments p a", "#pjax-container",
       {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
 
   $("#pjax-container").on("pjax:complete", function(event) {
