@@ -70,7 +70,6 @@ public class AmbraFreemarkerConfig {
   private String changePasswordURL;
   private String doiResolverURL;
   private String changeEmailURL;
-  private String pubGetURL;
   private String defaultJournalName;
   private String orgName;
   private String feedbackEmail;
@@ -101,7 +100,6 @@ public class AmbraFreemarkerConfig {
     changePasswordURL = configuration.getString("ambra.services.registration.url.change-password");
     changeEmailURL = configuration.getString("ambra.services.registration.url.change-email");
     doiResolverURL = configuration.getString("ambra.services.crossref.plos.doiurl");
-    pubGetURL = configuration.getString("ambra.services.pubget.url");
     defaultJournalName = configuration.getString(DEFAULT_JOURNAL_NAME_CONFIG_KEY);
     journals = new HashMap<String, JournalConfig>();
     journalsByIssn = new HashMap<String, JournalConfig>();
@@ -178,7 +176,6 @@ public class AmbraFreemarkerConfig {
       log.trace("Registration Change Pass URL: " + changePasswordURL);
       log.trace("Registration Change EMail URL: " + changeEmailURL);
       log.trace("DOI Resolver URL: " + doiResolverURL);
-      log.trace("PubGet URL:" + pubGetURL);
       log.trace("Default Journal Name: " + defaultJournalName);
     }
     if (log.isDebugEnabled()) {
@@ -855,15 +852,6 @@ public class AmbraFreemarkerConfig {
    */
   public void setDoiResolverURL(String doiResolverURL) {
     this.doiResolverURL = doiResolverURL;
-  }
-
-  /**
-   * Get <a href="http://pubget.com">PubGet</a> service URL.
-   *
-   * @return PubGet URL
-   */
-  public String getPubGetURL() {
-    return pubGetURL;
   }
 
   /**

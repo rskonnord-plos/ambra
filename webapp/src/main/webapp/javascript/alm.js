@@ -19,7 +19,6 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
-  this.pubGetHost = $('meta[name=pubGetHost]').attr("content");
 
   if (this.almHost == null) {
     jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
@@ -1098,6 +1097,18 @@ function onReadyALM() {
             "/static/almInfo#citationInfo");
 
           $("#almSignPost").append(li);
+        } else {
+          if(crossref > 0) {
+            text = "CITATIONS";
+            if (crossref == 1) {
+              text = "CITATION";
+            }
+
+            li = almService.makeSignPostLI(text, crossref, "Scopus data unavailable. Displaying Crossref citation count",
+              "/static/almInfo#citationInfo");
+
+            $("#almSignPost").append(li);
+          }
         }
 
         //bookmarks

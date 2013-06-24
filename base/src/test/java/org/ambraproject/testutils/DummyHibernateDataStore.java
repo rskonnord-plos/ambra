@@ -42,6 +42,7 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import java.beans.PropertyDescriptor;
@@ -248,6 +249,9 @@ public class DummyHibernateDataStore implements DummyDataStore {
   @Override
   @SuppressWarnings("unchecked")
   public void deleteAll(Class clazz) {
-    hibernateTemplate.deleteAll(getAll(clazz));
+    //If no rows exist, don't throw an error
+    try {
+      hibernateTemplate.deleteAll(getAll(clazz));
+    } catch(HibernateObjectRetrievalFailureException ex) {}
   }
 }
