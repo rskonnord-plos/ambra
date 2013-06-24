@@ -4,6 +4,9 @@
 
 <xsl:output method="html" indent="no" encoding="UTF-8" omit-xml-declaration="yes"/>
 
+<!-- 6/24/13: plos-specific global param (pub config, passed into stylesheet from elsewhere in the pipeline) -->
+<xsl:param name="pubAppContext"/>
+
 <!-- 1/20/12: updated to 3.0 version (changed to assign-id)-->
 <xsl:template name="assign-id">
   <xsl:if test="@id">
@@ -117,10 +120,13 @@
     <xsl:if test="@xlink:href">
       <xsl:variable name="graphicDOI"><xsl:value-of select="@xlink:href"/></xsl:variable>
         <xsl:attribute name="src">
-          <xsl:value-of select="concat('fetchObject.action?uri=',$graphicDOI,'&amp;representation=PNG')"/>
+          <xsl:value-of select="concat($pubAppContext,'/article/fetchObject.action?uri=',$graphicDOI,'&amp;representation=PNG')"/>
       </xsl:attribute>
       <xsl:attribute name="border">0</xsl:attribute>
     </xsl:if>
+    <xsl:attribute name="class">
+      <xsl:value-of>inline-graphic</xsl:value-of>
+    </xsl:attribute>
   </xsl:element>
 </xsl:template>
 
