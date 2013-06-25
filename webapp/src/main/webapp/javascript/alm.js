@@ -745,6 +745,10 @@ $.fn.alm = function () {
 
     var f1k = this.filterSources(response[0].sources,['f1000']).pop();
 
+    //TODO - delete: this is here to prevent an exception as f1000 is not active and will be null
+    if(!f1k){
+      return;
+    }
     if (f1k.metrics.total == 0){
       return;
     }
@@ -1256,9 +1260,9 @@ function onReadyALM() {
 
         //bookmarks
         if (mendeley.metrics.total + citeulike.metrics.total > 0) {
-          text = "ACADEMIC BOOKMARKS";
+          text = "SAVES";
           if (responseObject.bookmarks == 1) {
-            text = "ACADEMIC BOOKMARK";
+            text = "SAVE";
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
@@ -1269,9 +1273,9 @@ function onReadyALM() {
 
         //shares
         if (facebook.metrics.total + twitter.metrics.total > 0) {
-          text = "SOCIAL SHARES";
+          text = "SHARES";
           if (responseObject.shares == 1) {
-            text = "SOCIAL SHARE";
+            text = "SHARE";
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
