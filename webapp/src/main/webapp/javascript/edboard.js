@@ -102,7 +102,7 @@ $.fn.edBoard = function () {
   this.setEditors = function(json, textStatus, xOptions) {
     window.EditorialResponse = json;
 
-    $("#spinner").fadeOut(1000);
+    $(".spinner").fadeOut(1000);
     $("#all_editors").css("display", "none");
 
     this.loadCallback(0);
