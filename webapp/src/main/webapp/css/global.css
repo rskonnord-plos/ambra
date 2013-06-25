@@ -2201,8 +2201,10 @@ div.table-wrap .table-footnote .fn-label {
 }
 
 .article .equation {
+  width: 50%;
   display: block;
-  margin-top: 1.25em;
+  margin: 0 auto;
+  font-size: 145%;
 }
 
 .article .equation img {
