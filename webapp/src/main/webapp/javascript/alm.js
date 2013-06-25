@@ -351,6 +351,122 @@ $.fn.alm = function () {
   }
 
   /**
+   * Set cross ref text by DOI
+   * @param doi the doi
+   * @param crossRefID the ID of the document element to place the result
+   * @param almErrorID the ID of the document element to place the alm error
+   * @parem loadingID the ID of the "loading" element to fade out after completion
+   */
+  this.setCrossRefText = function (doi, crossRefID, almErrorID, loadingID) {
+
+    var almError = function (response) {
+      var errorDiv = $("#" + almErrorID);
+      errorDiv.html("Citations are currently not available, please check back later.");
+      errorDiv.show("blind", 500);
+      $("#" + loadingID).fadeOut('slow');
+    };
+
+    var success = function (response) {
+      this.setCrossRefLinks(response, crossRefID);
+      $("#" + loadingID).fadeOut('slow');
+    };
+
+    //The proxy function forces the success method to be run in "this" context.
+    this.getCitesCrossRefOnly(doi, jQuery.proxy(success, this), almError);
+  }
+  this.getCitesCrossRefOnly = function (doi, callBack, errorCallback) {
+    doi = this.validateDOI(doi);
+
+    var request = doi + "&source=crossref&info=event";
+    this.getData(request, callBack, errorCallback);
+  }
+  this.setCrossRefLinks = function (response, crossRefID) {
+    var doi = encodeURIComponent(response[0].doi);
+    var crossRefResponse = response[0].sources[0];
+    var numCitations = 0;
+
+    if (crossRefResponse && crossRefResponse.metrics.total > 0) {
+      numCitations = crossRefResponse.metrics.total;
+      var html = "";
+
+      for (var eventIndex = 0; eventIndex < crossRefResponse.events.length; eventIndex++) {
+        var citation = crossRefResponse.events[eventIndex].event;
+        var citation_url = crossRefResponse.events[eventIndex].event_url;
+
+        //  Assume there exists: URI, Title, and DOI.  Anything else may be missing.
+        html = html + "<li><span class='article'><a href=\"" + citation_url + "\">"
+          + citation.article_title + "</a> <span class=\"pubGetPDFLink\" "
+          + "id=\"citation_" + this.fixDoiForID(citation.doi) + "\"></span></span>";
+
+        if (citation.contributors) {
+          var first_author = "";
+          var authors = "";
+          var contributors = citation.contributors.contributor;
+
+          for (var i = 0; i < contributors.length; i++) {
+            individualContributor = contributors[i];
+            if (individualContributor.first_author === 'true') {
+              first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+            } else {
+              authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+            }
+          }
+          authors = first_author + authors;
+
+          html = html + "<span class='authors'>" + authors + "</span>";
+        }
+
+        html = html + "<span class='articleinfo'>";
+        if (citation.journal_title != null) {
+          html = html + citation.journal_title;
+        }
+        if (citation.year != null) {
+          html = html + " " + citation.year;
+        }
+        if (citation.volume != null) {
+          html = html + " " + citation.volume;
+        }
+        if (citation.issue != null) {
+          html = html + "(" + citation.issue + ")";
+        }
+        if (citation.first_page) {
+          html = html + ": " + citation.first_page;
+        }
+        html = html + ". doi:" + citation.doi + "</span></li>";
+      }
+    }
+
+    if (numCitations < 1) {
+      html = "<h3>No related citations found</h3>";
+    } else {
+      var pluralization = "";
+      if (numCitations != 1) { // This page should never be displayed if less than 1 citation.
+        pluralization = "s";
+      }
+
+      html = numCitations + " citation" + pluralization
+        + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
+        + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.publication_date))
+        + ". Citations updated on "
+        + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.update_date))
+        + "."
+        + " <ol>" + html + "</ol>";
+    }
+
+    $("#" + crossRefID).html(html);
+    $("#" + crossRefID).show("blind", 500);
+  }
+
+  /**
+   * HTML IDs can not have a "/" character in them.  Used to replace / w/ :
+   * @param doi
+   */
+  this.fixDoiForID = function (doi) {
+    return doi.replace(/\//g, ":");
+  }
+
+
+  /**
    *  host is the host and to get the JSON response from
    *  chartIndex is the  current index of the charts[] array
    *  callback is the method that populates the chart of  "chartIndex"
