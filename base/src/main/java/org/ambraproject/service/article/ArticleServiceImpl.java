@@ -248,14 +248,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     endDate.set(Calendar.SECOND, 59);
 
     Calendar startDate = (Calendar)endDate.clone();
-    startDate.roll(Calendar.DAY_OF_YEAR, -30);
+    startDate.add(Calendar.DAY_OF_YEAR, -30);
 
     //Get 30 days worth of articles first
     List<SearchHit> recentArticles = getNonImageArticlesByDate(startDate, endDate, journal_eIssn);
     List<SearchHit> results = new ArrayList<SearchHit>();
 
     startDate = (Calendar)endDate.clone();
-    startDate.roll(Calendar.DAY_OF_YEAR, -numDaysInPast);
+    startDate.add(Calendar.DAY_OF_YEAR, -numDaysInPast);
 
     //First grab all the articles that fall into the defined window
     //Regardless of articleCount.  We want to randomize before we limit
@@ -275,7 +275,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     //But let's not go on forever, only back 30 days.  (in this case 10 loops, each iteration is 3 days)
     int loop = 0;
     while(results.size() < articleCount && loop < 10) {
-      startDate.roll(Calendar.DAY_OF_YEAR, -3);
+      startDate.add(Calendar.DAY_OF_YEAR, -3);
       for(SearchHit searchHit : recentArticles) {
         if(searchHit.getDate().after(startDate.getTime())) {
           results.add(searchHit);
