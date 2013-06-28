@@ -65,7 +65,11 @@
                             <@s.checkbox accessKey="${ua.key}" name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
                               Monthly </label>
                       <#else>
-                        &nbsp;&nbsp;
+                        <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
+                          <div class="weekly_description">Expand to customize your email alerts.</div>
+                        <#else>
+                          &nbsp;&nbsp;
+                        </#if>
                       </#if>
                     </li>
                 </ol>

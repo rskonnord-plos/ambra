@@ -420,6 +420,11 @@ div#formError {
   margin-bottom: 10px;
 }
 
+div.weekly_description {
+  font-weight: bold;
+  color: #333;
+}
+
 /** CSS for journal alerts selector **/
 
 .alertToggle {
