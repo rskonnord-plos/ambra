@@ -466,6 +466,7 @@ li.subjectAreaSelector div.selectedSubjectAreas {
   float: left;
   margin: 10px 0 30px 0;
   margin-left: 10px;
+  width: 375px;
 }
 
 li.subjectAreaSelector div.row {
