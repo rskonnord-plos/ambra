@@ -19,7 +19,6 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
-  this.pubGetHost = $('meta[name=pubGetHost]').attr("content");
 
   if (this.almHost == null) {
     jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
@@ -460,20 +459,10 @@ $.fn.alm = function () {
    * Set cross ref text by DIO
    * @param doi the doi
    * @param crossRefID the ID of the document element to place the result
-   * @param pubGetErrorID the ID of the document element to place any pub get errors
    * @param almErrorID the ID of the document element to place the alm error
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setCrossRefText = function (doi, crossRefID, pubGetErrorID, almErrorID, loadingID) {
-    //almService.getCitesCrossRefOnly(doi, setCrossRefLinks, setCrossRefLinksError);
-
-    var pubGetError = function (response) {
-      var errorDiv = $("#" + pubGetErrorID);
-      errorDiv.html("Links to PDF files of open access articles " +
-          "on Pubget are currently not available, please check back later.");
-      errorDiv.show("blind", 500);
-      $("#" + loadingID).fadeOut('slow');
-    };
+  this.setCrossRefText = function (doi, crossRefID, almErrorID, loadingID) {
 
     var almError = function (response) {
       var errorDiv = $("#" + almErrorID);
@@ -483,7 +472,7 @@ $.fn.alm = function () {
     };
 
     var success = function (response) {
-      this.setCrossRefLinks(response, crossRefID, pubGetError);
+      this.setCrossRefLinks(response, crossRefID);
       $("#" + loadingID).fadeOut('slow');
     };
 
@@ -491,62 +480,8 @@ $.fn.alm = function () {
     this.getCitesCrossRefOnly(doi, jQuery.proxy(success, this), almError);
   }
 
-  this.getPubGetPDF = function (dois, pubGetError) {
-    var doiList = dois[0];
-
-    for (var a = 1; a < dois.length; a++) {
-      doiList = doiList + "|" + dois[a];
-    }
-
-    var getArgs = {
-      url: this.pubGetHost,
-      callbackParameter: "callback",
-      content: {
-        oa_only: "true",
-        dois: doiList
-      },
-
-      success: function (response) {
-        for (var a = 0; a < response.length; a++) {
-          var doi = this.fixDoiForID(response[a].doi);
-          var url = response[a].values.link;
-          var image_src = appContext + "/images/icon_pubgetpdf.gif";
-          var image_title = "Get the full text PDF from Pubget";
-
-          var html = "<a href=\"" + url + "\"><img title=\"" +
-              image_title + "\" src=\"" + image_src + "\"></a>";
-
-          var domElement = $("#citation_" + doi);
-
-          if (domElement == null) {
-            console.warn("Citation not found on page: citation_" + doi);
-          } else {
-            domElement.innerHTML = html;
-          }
-        }
-
-        return response;
-      },
-
-      error: pubGetError,
-
-      timeout: 3000
-    };
-
-    $.jsonp(getArgs);
-  }
-
-  /**
-   * HTML IDs can not have a "/" character in them.
-   * @param doi
-   */
-  this.fixDoiForID = function (doi) {
-    return doi.replace(/\//g, ":");
-  }
-
-  this.setCrossRefLinks = function (response, crossRefID, pubGetError) {
+  this.setCrossRefLinks = function (response, crossRefID) {
     var doi = escape(response.article.doi);
-    var citationDOIs = new Array();
     var numCitations = 0;
 
     if (response.article.source != null && response.article.source.length > 0
@@ -557,13 +492,10 @@ $.fn.alm = function () {
       for (var a = 0; a < numCitations; a++) {
         var citation = response.article.source[0].events[a].event;
         var citation_url = response.article.source[0].events[a].event_url;
-        //Build up list of citation DOIs to pass to pubget
-        citationDOIs[a] = citation.doi;
 
         //  Assume there exists: URI, Title, and DOI.  Anything else may be missing.
         html = html + "<li><span class='article'><a href=\"" + citation_url + "\">"
-            + citation.article_title + "</a> <span class=\"pubGetPDFLink\" "
-            + "id=\"citation_" + this.fixDoiForID(citation.doi) + "\"></span></span>";
+            + citation.article_title + "</a></span>";
 
         if (citation.contributors != null) {
           var first_author = "";
@@ -635,20 +567,6 @@ $.fn.alm = function () {
     $("#" + crossRefID).html(html);
     $("#" + crossRefID).show("blind", 500);
 
-    //There is physical limit on the number of DOIS I can put on one get.
-    //AKA, a GET string can only be so long before the Web server borks.
-    //Limit that here
-    var doiLimit = 200;
-    if (citationDOIs.length < doiLimit) {
-      this.getPubGetPDF(citationDOIs, pubGetError);
-    } else {
-      for (var b = 0; b < (citationDOIs.length / doiLimit); b++) {
-        var start = b * doiLimit;
-        var end = (b + 1) * doiLimit;
-
-        this.getPubGetPDF(citationDOIs.slice(start, end), pubGetError);
-      }
-    }
   }
 
   /**
@@ -1422,6 +1340,7 @@ function onReadyALM() {
         }
 
         var scopus = 0;
+        var crossref = 0;
         var bookmarks = 0;
         var shares = 0;
 
@@ -1432,6 +1351,10 @@ function onReadyALM() {
 
             if (name == "Scopus") {
               scopus = count;
+            }
+
+            if (name == "CrossRef") {
+              crossref = count;
             }
 
             if (name == "Mendeley" || name == "CiteULike") {
@@ -1445,6 +1368,7 @@ function onReadyALM() {
         }
 
         var text, li;
+
         if (scopus > 0) {
           text = "CITATIONS";
           if (scopus == 1) {
@@ -1455,6 +1379,18 @@ function onReadyALM() {
             "/static/almInfo#citationInfo");
 
           $("#almSignPost").append(li);
+        } else {
+          if(crossref > 0) {
+            text = "CITATIONS";
+            if (crossref == 1) {
+              text = "CITATION";
+            }
+
+            li = almService.makeSignPostLI(text, crossref, "Scopus data unavailable. Displaying Crossref citation count",
+              "/static/almInfo#citationInfo");
+
+            $("#almSignPost").append(li);
+          }
         }
 
         if (bookmarks > 0) {

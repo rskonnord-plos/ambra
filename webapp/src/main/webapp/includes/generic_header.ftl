@@ -16,7 +16,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9"/>
   <meta name="almHost" content="${freemarker_config.get("almHost")}"/>
   <meta name="solrHost" content="${freemarker_config.get("solrHost")}"/>
-  <meta name="pubGetHost" content="${freemarker_config.pubGetURL}"/>
 
   <link rel="shortcut icon" href="${freemarker_config.context}/images/favicon.ico" type="image/x-icon"/>
   <link rel="home" title="home" href="${homeURL}"/>

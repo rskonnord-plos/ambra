@@ -297,10 +297,10 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
         .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY));
 
     if(queryList.size() == 0) {
-      //It does exist, lets not create a new record
       query = new SavedSearchQuery(searchParametersString, queryHash);
       hibernateTemplate.save(query);
     } else {
+      //It does exist, lets not create a new record
       query = queryList.get(0);
     }
 

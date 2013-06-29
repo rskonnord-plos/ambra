@@ -110,7 +110,7 @@ article_all.change(function() {
   disableFormEls($(this));
 });
 
-$('#articleType_one').change(function() {
+$('#articleType_some').change(function() {
   enableFormEls($(this));
 });
 

@@ -35,6 +35,30 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+
+  <h2>Ambra 2.7.0</h2>
+  <p>Released July 02, 2013</p>
+  <ul>
+      <li>For tablets, enable swiping in figure carousel and lightbox</li>
+  </ul>
+ <h2>Ambra 2.6.9</h2>
+ <p>Released June 25, 2013</p>
+ <ul>
+     <li>Distinguish Authors and Editors in Affiliation on the Solr search backend</li>
+     <li>Addition of figure DOIs to Solr search API</li>
+     <li>Fix for article page user flows to Comments without page refresh</li>
+     <li>Use of CrossRef for citation count if Scopus unavailable in ALM signposts on the article page</li>
+     <li>Addition of LinkedIn share button for article pages</li>
+     <li>Correction of merge mistake from 2.6.8 in which changeset for eToCs and PubGet datasource removal was omitted</li>
+ </ul>
+ <h2>Ambra 2.6.8</h2>
+ <p>Released June 18th, 2013</p>
+ <ul>
+		 <li>eToCs feature development</li>
+	         <li>Advanced Search page journal specific "Filter by Article Type" search options</li>
+		 <li>Deprecation of PubGet as a datasource</li>
+ </ul>
+
  <h2>Ambra 2.6.7</h2>
  <p>Released June 11th, 2013</p>
 

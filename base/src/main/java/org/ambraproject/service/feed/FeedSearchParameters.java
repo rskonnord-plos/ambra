@@ -74,7 +74,7 @@ public class FeedSearchParameters implements Serializable  {
   // Used to create query filters on any search
   private String[]      filterSubjects      = {}; // Only search in these subjects
   private String        filterKeyword         = ""; // Only search in this document part
-  private String        filterArticleType     = ""; // Only search for this article type
+  private String[]        filterArticleType   = {}; // Only search in these article type
   private String[]      filterJournals        = {}; // Only search these Journals. If no elements, then default to the current journal
   // Controls results order
   private String        sort                  = "";
@@ -401,15 +401,23 @@ public class FeedSearchParameters implements Serializable  {
       this.filterKeyword = filterKeyword.trim();
   }
 
-  public String getFilterArticleType() {
+  public String[] getFilterArticleType() {
     return filterArticleType;
   }
 
   public void setFilterArticleType(String filterArticleType) {
-    if (filterArticleType == null || filterArticleType.trim().length() < 1)
-      this.filterArticleType = "";
-    else
-      this.filterArticleType = filterArticleType.trim();
+    String[] articleTypes = filterArticleType.split(",");
+    if (articleTypes == null || articleTypes.length < 1) {
+      this.filterArticleType = new String[]{};
+    } else {
+      List<String> filterArticleTypeList = new ArrayList<String>();
+      for (String articleType : articleTypes) {
+        if (articleType != null && articleType.trim().length() > 0)
+          filterArticleTypeList.add(articleType.trim());
+      }
+      this.filterArticleType = new String[filterArticleTypeList.size()];
+      filterArticleTypeList.toArray(this.filterArticleType);
+    }
   }
 
   public String[] getFilterJournals() {
