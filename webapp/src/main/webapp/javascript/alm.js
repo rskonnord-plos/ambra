@@ -1166,7 +1166,7 @@ function onReadyALM() {
         responseObject = response[0];
 
         //distinguish sources
-        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike;
+        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref;
         sources = responseObject.sources;
 
         for(var i = 0; i < sources.length; i += 1){
@@ -1192,6 +1192,9 @@ function onReadyALM() {
           else if(source.name.toLowerCase() == 'citeulike'){
             citeulike = source;
           }
+          else if(source.name.toLowerCase() == 'crossref'){
+            crossref = source;
+          }
         }
 
 
@@ -1214,13 +1217,13 @@ function onReadyALM() {
 
           $("#almSignPost").append(li);
         } else {
-          if(crossref > 0) {
+          if(crossref.metrics.total > 0) {
             text = "CITATIONS";
             if (crossref == 1) {
               text = "CITATION";
             }
 
-            li = almService.makeSignPostLI(text, crossref, "Scopus data unavailable. Displaying Crossref citation count",
+            li = almService.makeSignPostLI(text, crossref.metrics.total, "Scopus data unavailable. Displaying Crossref citation count",
               "/static/almInfo#citationInfo");
 
             $("#almSignPost").append(li);
