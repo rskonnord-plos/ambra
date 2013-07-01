@@ -686,8 +686,8 @@ $.fn.alm = function () {
     sources = this.enforceOrder(sources, ['scopus','crossref','pubmed','wos']);
 
     for (var a = 0; a < sources.length; a++) {
+      source = sources[a];
       if (source.metrics.total > 0) {
-        source = sources[a];
         var url = source.events_url;
         // find all spaces
         var patternForSpace = /\s/g;
@@ -1088,7 +1088,6 @@ $.fn.alm = function () {
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
       this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
-
     }
 
     //fail!
