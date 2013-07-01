@@ -382,10 +382,10 @@ $.fn.alm = function () {
   }
   this.setCrossRefLinks = function (response, crossRefID) {
     var doi = encodeURIComponent(response[0].doi);
-    var crossRefResponse = response[0].sources[0];
+    var crossRefResponse = this.filterSources(response[0].sources, ['crossref'])[0];
     var numCitations = 0;
 
-    if (crossRefResponse && crossRefResponse.metrics.total > 0) {
+    if (crossRefResponse.metrics.total > 0) {
       numCitations = crossRefResponse.metrics.total;
       var html = "";
 
@@ -446,9 +446,9 @@ $.fn.alm = function () {
 
       html = numCitations + " citation" + pluralization
         + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
-        + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.publication_date))
+        + $.datepicker.formatDate("M dd, yy", new Date(response[0].publication_date))
         + ". Citations updated on "
-        + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.update_date))
+        + $.datepicker.formatDate("M dd, yy", new Date(response[0].update_date))
         + "."
         + " <ol>" + html + "</ol>";
     }
