@@ -1219,7 +1219,7 @@ function onReadyALM() {
         } else {
           if(crossref.metrics.total > 0) {
             text = "CITATIONS";
-            if (crossref == 1) {
+            if (crossref.metrics.total == 1) {
               text = "CITATION";
             }
 
