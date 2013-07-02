@@ -955,6 +955,24 @@ $(document).on("click", "#related_collections li a", function(){
         });
       }
 
+      if ($.support.touchEvents) {
+        $slider.swipe({
+          swipeLeft:function(event, direction, distance, duration, fingerCount) {
+            gotoPage(current_page + 1);
+          },
+          swipeRight:function(event, direction, distance, duration, fingerCount) {
+            gotoPage(current_page - 1);
+          },
+          tap:function(event, target) {
+            // assume the click happened on <img>
+            // trigger <a><span><img/></span></a>
+            if(target.parentNode.parentNode.nodeName == "A") {
+              target.parentNode.parentNode.click();
+            }
+          },
+          threshold:25
+        });
+      }
     });
   };
 })(jQuery);
@@ -1367,6 +1385,27 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       return false;
     }
   });
+
+  if ($.support.touchEvents) {
+    $slides.swipe({
+      swipeLeft:function(event, direction, distance, duration, fingerCount) {
+        if (active_thmb.next().length) {
+          t = active_thmb.next()
+          changeSlide(t);
+        }
+      },
+      swipeRight:function(event, direction, distance, duration, fingerCount) {
+        if (active_thmb.prev().length) {
+          t = active_thmb.prev()
+          changeSlide(t);
+        }
+      },
+      tap:function(event, target) {
+        target.click();
+      },
+      threshold:25
+    });
+  }
 
   buildFigs();
 };
