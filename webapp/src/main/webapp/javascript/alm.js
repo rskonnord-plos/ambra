@@ -1196,7 +1196,7 @@ function onReadyALM() {
         responseObject = response[0];
 
         //distinguish sources
-        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike;
+        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref;
         sources = responseObject.sources;
 
         for(var i = 0; i < sources.length; i += 1){
