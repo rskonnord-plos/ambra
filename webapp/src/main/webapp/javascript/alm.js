@@ -1194,8 +1194,6 @@ function onReadyALM() {
           else if (source.name.toLowerCase() == 'crossref') {
             crossref = source;
           }
-        }
-
       }
 
 
