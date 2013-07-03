@@ -182,7 +182,6 @@ $(document).ready(
 
       almService.getArticleSummaries(ids, setALMSearchWidgets, setALMSearchWidgetsError);
 
-//      TODO! This is not scaling every time a new source is needed - must streamline data flow
       function setALMSearchWidgets(articles) {
         for (a = 0; a < articles.length; a++) {
           var article = articles[a];
@@ -299,11 +298,16 @@ $(document).ready(
             bodyHandler: function () {
 
               //adding citation sources manually and IN ALPHABETIC ORDER
-              //if this is generified, be sure to implement a sort function and remember the comma when concatenating
-              var tipText = scopus.display_name + ": <b>" + scopus.metrics.total.format(0, '.', ',') + "</b>";
-              tipText += ', ' + crossref.display_name + ": <b>" + crossref.metrics.total.format(0, '.', ',') + "</b>";
-              tipText += ', ' + pubmed.display_name + ": <b>" + pubmed.metrics.total.format(0, '.', ',') + "</b>";
-              tipText += ', ' + wos.display_name + ": <b>" + wos.metrics.total.format(0, '.', ',') + "</b>";
+              //if this is generified, remember to sort, and remember the comma
+              var someSources = [crossref, pubmed, wos];
+              var tipText = scopus.display_name + ": <b>" + scopus.metrics.total.format(0, '.', ',') + "</b>"; //scopus.metrics.total always > 0
+
+              for (var s = 0; s < someSources.length; s++) {
+                var source = someSources[s];
+                if (source.metrics.total > 0) {
+                  tipText += ', ' + source.display_name + ": <b>" + source.metrics.total.format(0, '.', ',') + "</b>";
+                }
+              }
 
 
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
