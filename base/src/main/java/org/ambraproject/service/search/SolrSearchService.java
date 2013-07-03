@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -622,6 +623,7 @@ public class SolrSearchService implements SearchService {
     StringBuilder fq = new StringBuilder();
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     String sDate = sdf.format(startDate) + "T00:00:00Z";
     String eDate = sdf.format(endDate) + "T00:00:00Z";
 
