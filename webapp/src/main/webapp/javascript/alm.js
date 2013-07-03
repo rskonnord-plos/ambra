@@ -382,10 +382,10 @@ $.fn.alm = function () {
   }
   this.setCrossRefLinks = function (response, crossRefID) {
     var doi = encodeURIComponent(response[0].doi);
-    var crossRefResponse = response[0].sources[0];
+    var crossRefResponse = this.filterSources(response[0].sources, ['crossref'])[0];
     var numCitations = 0;
 
-    if (crossRefResponse && crossRefResponse.metrics.total > 0) {
+    if (crossRefResponse.metrics.total > 0) {
       numCitations = crossRefResponse.metrics.total;
       var html = "";
 
@@ -490,7 +490,6 @@ $.fn.alm = function () {
       error: function (xOptions, msg) {
         errorCallback("Our system is having a bad day. We are working on it. Please check back later.")
       }
-
     });
 
     console.log(url);
@@ -686,8 +685,8 @@ $.fn.alm = function () {
     sources = this.enforceOrder(sources, ['scopus','crossref','pubmed','wos']);
 
     for (var a = 0; a < sources.length; a++) {
+      source = sources[a];
       if (source.metrics.total > 0) {
-        source = sources[a];
         var url = source.events_url;
         // find all spaces
         var patternForSpace = /\s/g;
@@ -1088,7 +1087,6 @@ $.fn.alm = function () {
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
       this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
-
     }
 
     //fail!
@@ -1166,7 +1164,7 @@ function onReadyALM() {
         responseObject = response[0];
 
         //distinguish sources
-        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike;
+        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref;
         sources = responseObject.sources;
 
         for(var i = 0; i < sources.length; i += 1){
@@ -1192,6 +1190,9 @@ function onReadyALM() {
           else if(source.name.toLowerCase() == 'citeulike'){
             citeulike = source;
           }
+          else if (source.name.toLowerCase() == 'crossref') {
+            crossref = source;
+          }
         }
 
 
@@ -1214,13 +1215,13 @@ function onReadyALM() {
 
           $("#almSignPost").append(li);
         } else {
-          if(crossref > 0) {
+          if(crossref.metrics.total > 0) {
             text = "CITATIONS";
-            if (crossref == 1) {
+            if (crossref.metrics.total == 1) {
               text = "CITATION";
             }
 
-            li = almService.makeSignPostLI(text, crossref, "Scopus data unavailable. Displaying Crossref citation count",
+            li = almService.makeSignPostLI(text, crossref.metrics.total, "Scopus data unavailable. Displaying Crossref citation count",
               "/static/almInfo#citationInfo");
 
             $("#almSignPost").append(li);
