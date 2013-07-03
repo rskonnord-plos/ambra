@@ -490,7 +490,6 @@ $.fn.alm = function () {
       error: function (xOptions, msg) {
         errorCallback("Our system is having a bad day. We are working on it. Please check back later.")
       }
-
     });
 
     console.log(url);
