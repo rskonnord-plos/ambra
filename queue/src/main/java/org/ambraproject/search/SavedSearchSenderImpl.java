@@ -17,10 +17,12 @@
  */
 package org.ambraproject.search;
 
+import org.ambraproject.models.Journal;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.journal.JournalService;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -48,6 +50,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   private static final String PRODUCTION_MODE = "PRODUCTION";
   private static final String QA_MODE = "QA";
 
+  private JournalService journalService;
   private TemplateMailer mailer;
   private String mailFromAddress;
   private String sendMode;
@@ -109,7 +112,15 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
           log.debug("Not sending mail: {}", toAddress);
         }
       } else {
-        subject = "PLOS Journal Alert";
+        String[] journals = searchJob.getSearchParams().getFilterJournals();
+
+        //Each alert can only be for one journal
+        if(journals.length != 1) {
+          throw new RuntimeException("Journal alert defined for multiple journals or journal filter not defined");
+        }
+
+        Journal j = journalService.getJournal(journals[0]);
+        subject = j.getTitle() + " Journal Alert";
 
         log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
         log.debug("Sending mail: {}", toAddress);
@@ -250,5 +261,10 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   @Required
   public void setResultLimit(int resultLimit) {
     this.resultLimit = resultLimit;
+  }
+
+  @Required
+  public void setJournalService(JournalService journalService) {
+    this.journalService = journalService;
   }
 }
