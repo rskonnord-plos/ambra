@@ -90,9 +90,8 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       String toAddress = (String)searchDetails.get(a)[1];
       String subject;
 
-      //TODO: Move subjects to config?
       if(searchJob.getType().equals(SavedSearchType.USER_DEFINED)) {
-        subject = "PLOS Search Alert - " + searchDetails.get(a)[2];
+        subject = "Search Alert - " + searchDetails.get(a)[2];
 
         log.debug("Job result count: {}", searchJob.getSearchHitList().size());
 
