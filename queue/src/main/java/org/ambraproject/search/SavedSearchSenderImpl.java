@@ -136,7 +136,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     log.debug("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
   }
 
-  private void mail(String toAddress, String fromAddress, String subject, Map<String, Object> context,
+  protected void mail(String toAddress, String fromAddress, String subject, Map<String, Object> context,
     Multipart content) {
 
     //If sendMode empty, do nothing
@@ -156,7 +156,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   }
 
   @SuppressWarnings("unchecked")
-  private void markSearchRun(Long savedSearchID, String frequency, Date endDate)
+  protected void markSearchRun(Long savedSearchID, String frequency, Date endDate)
   {
     SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, savedSearchID);
 
@@ -175,7 +175,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     log.debug("Updated Last {} saved Search time for Saved Search ID: {}", frequency, savedSearchID);
   }
 
-  private Multipart createContent(Map<String, Object> context, SavedSearchType type) {
+  protected Multipart createContent(Map<String, Object> context, SavedSearchType type) {
     try {
       if(type.equals(SavedSearchType.JOURNAL_ALERT)) {
         return mailer.createContent(this.alertTextEmail, this.alertHtmlEmail, context);
@@ -190,7 +190,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   }
 
   @SuppressWarnings("unchecked")
-  private List<Object[]> getSavedSearchDetails(Long savedSearchQueryID, String type) {
+  protected List<Object[]> getSavedSearchDetails(Long savedSearchQueryID, String type) {
     SavedSearchRetriever.AlertType alertType = SavedSearchRetriever.AlertType.valueOf(type);
 
     DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class)
