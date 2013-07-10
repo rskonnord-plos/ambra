@@ -46,21 +46,21 @@ import java.util.Map;
 public class SavedSearchSenderImpl extends HibernateServiceImpl implements SavedSearchSender {
   private static final Logger log = LoggerFactory.getLogger(SavedSearchSenderImpl.class);
 
-  private static final String WEEKLY_FREQUENCY = "WEEKLY";
-  private static final String PRODUCTION_MODE = "PRODUCTION";
-  private static final String QA_MODE = "QA";
+  protected static final String WEEKLY_FREQUENCY = "WEEKLY";
+  protected static final String PRODUCTION_MODE = "PRODUCTION";
+  protected static final String QA_MODE = "QA";
 
-  private JournalService journalService;
-  private TemplateMailer mailer;
-  private String mailFromAddress;
-  private String sendMode;
-  private String sendModeQAEMail;
-  private String alertHtmlEmail;
-  private String alertTextEmail;
-  private String savedSearchHtmlEmail;
-  private String savedSearchTextEmail;
-  private String imagePath;
-  private int resultLimit;
+  protected JournalService journalService;
+  protected TemplateMailer mailer;
+  protected String mailFromAddress;
+  protected String sendMode;
+  protected String sendModeQAEMail;
+  protected String alertHtmlEmail;
+  protected String alertTextEmail;
+  protected String savedSearchHtmlEmail;
+  protected String savedSearchTextEmail;
+  protected String imagePath;
+  protected int resultLimit;
 
   /**
    * @inheritDoc
