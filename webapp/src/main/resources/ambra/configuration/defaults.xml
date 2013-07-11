@@ -315,8 +315,8 @@
     <!-- User alerts -->
     <userAlerts>
       <categories>
-        <category key="ambra">Ambra Journal</category>
-        <category key="overlay">Overlay Journal</category>
+        <category key="ambra" displayOrder="5">Ambra Journal</category>
+        <category key="overlay" displayOrder="10">Overlay Journal</category>
       </categories>
       <monthly>ambra, overlay</monthly>
       <weekly>ambra, overlay</weekly>

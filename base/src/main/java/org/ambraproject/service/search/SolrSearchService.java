@@ -932,6 +932,7 @@ public class SolrSearchService implements SearchService {
         .setStrikingImage(strikingImage)
         .setHasAssets(figureTableCaptions.size() > 0)
         .setSubjects(flattenedSubjects)
+        .setSubjectsPolyhierarchy(subjects)
         .build();
 
       if (log.isDebugEnabled())

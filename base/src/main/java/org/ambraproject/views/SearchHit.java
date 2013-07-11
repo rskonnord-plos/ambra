@@ -51,6 +51,7 @@ public class SearchHit implements Serializable {
   private String strikingImage;
   private Boolean hasAssets = Boolean.FALSE;
   private Collection<String> subjects;
+  private Collection<String> subjectsPolyhierarchy;
 
   /**
    * Create a search hit with the values set
@@ -70,7 +71,7 @@ public class SearchHit implements Serializable {
   public SearchHit(Float hitScore, String uri, String title, String highlight,
                    Collection<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
-                   Collection<String> subjects, String strikingImage, boolean hasAssets) {
+                   Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage, boolean hasAssets) {
     if (hitScore == null) {
       this.hitScore = 0f;
     } else {
@@ -87,6 +88,7 @@ public class SearchHit implements Serializable {
     this.articleTypeForDisplay = articleTypeForDisplay;
     this.abstractText = abstractText;
     this.subjects = subjects;
+    this.subjectsPolyhierarchy = subjectsPolyhierarchy;
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
   }
@@ -196,6 +198,15 @@ public class SearchHit implements Serializable {
   }
 
   /**
+   * Get the subjects Polyhierarchy
+   *
+   * @return
+   */
+  public Collection<String> getSubjectsPolyhierarchy() {
+    return subjectsPolyhierarchy;
+  }
+
+  /**
    * Get the creators in a list
    *
    * @return
@@ -229,6 +240,7 @@ public class SearchHit implements Serializable {
     private String creator;
     private Collection<String> listOfCreators;
     private Collection<String> subjects;
+    private Collection<String> subjectsPolyhierarchy;
     private String issn;
     private String journalTitle;
     private String articleTypeForDisplay;
@@ -277,6 +289,11 @@ public class SearchHit implements Serializable {
       return this;
     }
 
+    public Builder setSubjectsPolyhierarchy(Collection<String> subjectsPolyhierarchy) {
+      this.subjectsPolyhierarchy = subjectsPolyhierarchy;
+      return this;
+    }
+
     public Builder setIssn(String issn) {
       this.issn = issn;
       return this;
@@ -315,6 +332,7 @@ public class SearchHit implements Serializable {
         articleTypeForDisplay,
         abstractText,
         subjects,
+        subjectsPolyhierarchy,
         strikingImage,
         hasAssets);
     }
@@ -338,6 +356,7 @@ public class SearchHit implements Serializable {
       ", strikingImage='" + strikingImage + '\'' +
       ", hasAssets=" + hasAssets +
       ", subjects=" + subjects +
+      ", subjectsPolyhierarchy=" + subjectsPolyhierarchy +
       '}';
   }
 

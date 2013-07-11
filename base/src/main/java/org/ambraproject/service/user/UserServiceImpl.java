@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2011 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  *     http://plos.org
  *     http://ambraproject.org
  *
@@ -32,6 +29,7 @@ import org.ambraproject.models.UserSearch;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.search.SearchParameters;
+import org.ambraproject.util.Pair;
 import org.ambraproject.util.TextUtils;
 import org.ambraproject.views.SavedSearchView;
 import org.apache.commons.configuration.Configuration;
@@ -50,15 +48,15 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.ambraproject.configuration.ConfigurationStore;
-
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * Class to roll up web services that a user needs in Ambra. Rest of application should generally
@@ -429,27 +427,31 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   public List<UserAlert> getAvailableAlerts() {
     List<UserAlert> alerts = new ArrayList<UserAlert>();
 
-    final Map<String, String> categoryNames = new HashMap<String, String>();
+    final SortedMap<Integer, Pair> categoryNames = new ConcurrentSkipListMap<Integer, Pair>();
 
     HierarchicalConfiguration hc = (HierarchicalConfiguration) configuration;
     List<HierarchicalConfiguration> categories = hc.configurationsAt(ALERTS_CATEGORIES_CATEGORY);
+
     for (HierarchicalConfiguration c : categories) {
       String key = c.getString("[@key]");
+      int order = c.getInt("[@displayOrder]", categoryNames.size());
       String value = c.getString("");
-      categoryNames.put(key, value);
+
+      categoryNames.put(order, new Pair<String, String>(key, value));
     }
 
     final String[] weeklyCategories = hc.getStringArray(ALERTS_WEEKLY);
     final String[] monthlyCategories = hc.getStringArray(ALERTS_MONTHLY);
     final String[] subjectFilters = hc.getStringArray(SUBJECT_FILTER);
 
-    final Set<Map.Entry<String, String>> categoryNamesSet = categoryNames.entrySet();
+    final Set<Map.Entry<Integer, Pair>> categoryNamesSet = categoryNames.entrySet();
 
-    for (final Map.Entry<String, String> category : categoryNamesSet) {
-      final String key = category.getKey();
+    for (final Map.Entry<Integer, Pair> category : categoryNamesSet) {
+      final String key = (String)category.getValue().getFirst();
       boolean weeklyCategoryKey = false;
       boolean monthlyCategoryKey = false;
       boolean subjectFilter = false;
+
       if (ArrayUtils.contains(weeklyCategories, key)) {
         weeklyCategoryKey = true;
       }
@@ -459,7 +461,8 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
       if (ArrayUtils.contains(subjectFilters, key)) {
         subjectFilter = true;
       }
-      alerts.add(new UserAlert(key, category.getValue(), weeklyCategoryKey, monthlyCategoryKey, subjectFilter));
+
+      alerts.add(new UserAlert((String)category.getValue().getFirst(), (String)category.getValue().getSecond(), weeklyCategoryKey, monthlyCategoryKey, subjectFilter));
     }
     return alerts;
   }
