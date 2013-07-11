@@ -160,16 +160,19 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     Set<String> deleteItems = new HashSet<String>(deleteAlerts);
 
     for (SavedSearchView savedSearch: searches) {
-      String idstr = String.valueOf(savedSearch.getSavedSearchId());
-      boolean delete = deleteItems.contains(idstr);
-      if (delete) {
-        deleteSavedSearch(user.getID(), savedSearch.getSavedSearchId());
-      }
-      else {
-        boolean weekly = weeklyItems.contains(idstr);
-        boolean monthly = monthlyItems.contains(idstr);
-        if (weekly != savedSearch.getWeekly() || monthly != savedSearch.getMonthly()) {
-          updateSavedSearch(savedSearch.getSavedSearchId(), weekly, monthly);
+      //This method should only change user defined search alerts, not journal alerts
+      if(savedSearch.getSearchType() == SavedSearchType.USER_DEFINED) {
+        String idstr = String.valueOf(savedSearch.getSavedSearchId());
+        boolean delete = deleteItems.contains(idstr);
+        if (delete) {
+          deleteSavedSearch(user.getID(), savedSearch.getSavedSearchId());
+        }
+        else {
+          boolean weekly = weeklyItems.contains(idstr);
+          boolean monthly = monthlyItems.contains(idstr);
+          if (weekly != savedSearch.getWeekly() || monthly != savedSearch.getMonthly()) {
+            updateSavedSearch(savedSearch.getSavedSearchId(), weekly, monthly);
+          }
         }
       }
     }
