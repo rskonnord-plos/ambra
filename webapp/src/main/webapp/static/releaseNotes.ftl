@@ -43,7 +43,6 @@
     <li>Fix for date filter in search</li>
     <li>Fix for twitter spinner</li>
     <li>Fix for broken PNGs in lightbox</li>
-    <li></li>
   </ul>
 
   <h2>Ambra 2.7.0</h2>
