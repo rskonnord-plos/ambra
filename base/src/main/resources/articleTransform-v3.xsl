@@ -1234,7 +1234,6 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="disp-formula">
-      <br/>
       <xsl:element name="a">
         <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
         <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
