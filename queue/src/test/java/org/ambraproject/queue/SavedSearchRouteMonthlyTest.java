@@ -51,18 +51,18 @@ public class SavedSearchRouteMonthlyTest extends SavedSearchRouteBaseTest {
     //Build up expected emails.  Using email title for predicting contents
     return new Object[][]{
       { "savedSearch0@unittestexample.org", 2, new HashMap() {{
-        put("PLOS Search Alert - monthly-0", new String[] { DOI_2, DOI_3, DOI_4 });
-        put("PLOS Search Alert - both-0", new String[] { DOI_2, DOI_3, DOI_4 });
+        put("Search Alert - monthly-0", new String[] { DOI_2, DOI_3, DOI_4 });
+        put("Search Alert - both-0", new String[] { DOI_2, DOI_3, DOI_4 });
       }}
       },
       { "savedSearch1@unittestexample.org", 2, new HashMap() {{
-        put("PLOS Search Alert - monthly-1", new String[] { DOI_2, DOI_3, DOI_4 });
-        put("PLOS Search Alert - both-1", new String[] { DOI_2, DOI_3, DOI_4 });
+        put("Search Alert - monthly-1", new String[] { DOI_2, DOI_3, DOI_4 });
+        put("Search Alert - both-1", new String[] { DOI_2, DOI_3, DOI_4 });
       }}
       },
       { "savedSearch2@unittestexample.org", 2, new HashMap() {{
-        put("PLOS Search Alert - monthly-2", new String[] { DOI_2, DOI_3, DOI_4 });
-        put("PLOS Search Alert - both-2", new String[] { DOI_2, DOI_3, DOI_4 });
+        put("Search Alert - monthly-2", new String[] { DOI_2, DOI_3, DOI_4 });
+        put("Search Alert - both-2", new String[] { DOI_2, DOI_3, DOI_4 });
       }}
       }
     };
