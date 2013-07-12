@@ -2217,8 +2217,11 @@ div.table-wrap .table-footnote .fn-label {
 }
 
 .article .equation {
+  width: 100%;
   display: block;
   margin-top: 1.25em;
+  font-size: 145%;
+  text-align:center;
 }
 
 .article .equation img {
@@ -2231,7 +2234,7 @@ div.table-wrap .table-footnote .fn-label {
   margin: 10px 10px 0 0;
   text-align: right;
   font-weight: bold;
-  font-size: 0.846em;
+  font-size: 60%;
 }
 
 .editorsAbstract h3 {

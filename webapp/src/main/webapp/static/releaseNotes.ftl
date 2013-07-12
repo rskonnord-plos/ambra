@@ -35,145 +35,154 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.7.1</h2>
+  <p>Released July 16, 2013</p>
+  <ul>
+    <li>Etocs feature enhancements and bug fixes</li>
+    <li>Mathjax equations font size change and alignment fix</li>
+    <li>Fix for date filter in search</li>
+    <li>Fix for twitter spinner</li>
+    <li>Fix for broken PNGs in lightbox</li>
+  </ul>
 
   <h2>Ambra 2.7.0</h2>
   <p>Released July 02, 2013</p>
   <ul>
-      <li>For tablets, enable swiping in figure carousel and lightbox</li>
+    <li>For tablets, enable swiping in figure carousel and lightbox</li>
   </ul>
+
  <h2>Ambra 2.6.9</h2>
  <p>Released June 25, 2013</p>
  <ul>
-     <li>Distinguish Authors and Editors in Affiliation on the Solr search backend</li>
-     <li>Addition of figure DOIs to Solr search API</li>
-     <li>Fix for article page user flows to Comments without page refresh</li>
-     <li>Use of CrossRef for citation count if Scopus unavailable in ALM signposts on the article page</li>
-     <li>Addition of LinkedIn share button for article pages</li>
-     <li>Correction of merge mistake from 2.6.8 in which changeset for eToCs and PubGet datasource removal was omitted</li>
+   <li>Distinguish Authors and Editors in Affiliation on the Solr search backend</li>
+   <li>Addition of figure DOIs to Solr search API</li>
+   <li>Fix for article page user flows to Comments without page refresh</li>
+   <li>Use of CrossRef for citation count if Scopus unavailable in ALM signposts on the article page</li>
+   <li>Addition of LinkedIn share button for article pages</li>
+   <li>Correction of merge mistake from 2.6.8 in which changeset for eToCs and PubGet datasource removal was omitted</li>
  </ul>
+
  <h2>Ambra 2.6.8</h2>
  <p>Released June 18th, 2013</p>
  <ul>
-		 <li>eToCs feature development</li>
-	         <li>Advanced Search page journal specific "Filter by Article Type" search options</li>
-		 <li>Deprecation of PubGet as a datasource</li>
+   <li>eToCs feature development</li>
+   <li>Advanced Search page journal specific "Filter by Article Type" search options</li>
+   <li>Deprecation of PubGet as a datasource</li>
  </ul>
 
  <h2>Ambra 2.6.7</h2>
  <p>Released June 11th, 2013</p>
-
  <ul>
-		 <li>Restricted launch of eToCs</li>
-		 <li>CrossRef API change support</li>
-		 <li>Enhanced CrossRef support</li>
-		 <li>PLOS-flavored Relevance sort option in search results</li>
+   <li>Restricted launch of eToCs</li>
+   <li>CrossRef API change support</li>
+   <li>Enhanced CrossRef support</li>
+   <li>PLOS-flavored Relevance sort option in search results</li>
  </ul>
 
  <h2>Ambra 2.6.6</h2>
  <p>Released June 4th, 2013</p>
  <ul>
-     <li>PLOS One Edboard search optimizations</li>
-     <li>Taxonomy tracking update</li>
-     <li>Reference DOI backfill</li>
+   <li>PLOS One Edboard search optimizations</li>
+   <li>Taxonomy tracking update</li>
+   <li>Reference DOI backfill</li>
  </ul>
 
  <h2>Ambra 2.6.5</h2>
  <p>Released May 28th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.5</h3>
  <ul>
-     <li>Tablet optimization - ONE header dropdown alignment</li>
-     <li>Fix for DOI formatting issues</li>
-     <li>Fix for PDF download name</li>
-     <li>Fix for eToCs browser specific display bug</li>
+   <li>Tablet optimization - ONE header dropdown alignment</li>
+   <li>Fix for DOI formatting issues</li>
+   <li>Fix for PDF download name</li>
+   <li>Fix for eToCs browser specific display bug</li>
  </ul>
 
  <h2>Ambra 2.6.4</h2>
  <p>Released May 21st, 2013</p>
  <h3>Features Implemented in Ambra 2.6.4</h3>
  <ul>
-     <li>Updated taxonomy rules</li>
-     <li>Citation display for Formal Corrections and Retractions</li>
-     <li>Tablet optimizations - search results page</li>
-     <li>Refactor URL rewrites to remove hardcoded paths</li>
-     <li>Client side article PDF viewing</li>
-     <li>Fix for Find this article online display edge case</li>
-     <li>Minion configuration for datasource dependency skipping</li>
-     <li>Fix for error message in Admin if article publishes when queue is not running</li>
+   <li>Updated taxonomy rules</li>
+   <li>Citation display for Formal Corrections and Retractions</li>
+   <li>Tablet optimizations - search results page</li>
+   <li>Refactor URL rewrites to remove hardcoded paths</li>
+   <li>Client side article PDF viewing</li>
+   <li>Fix for Find this article online display edge case</li>
+   <li>Minion configuration for datasource dependency skipping</li>
+   <li>Fix for error message in Admin if article publishes when queue is not running</li>
  </ul>
 
  <h2>Ambra 2.6.3</h2>
  <p>Released May 14th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.3</h3>
  <ul>
-     <li>Provenance display support on article pages for subset of articles with unconventional XML</li>
-     <li>Fix for table title bolding on article pages</li>
-     <li>Ambra upgrade to Spring 3.2</li>
-     <li>Saved search threading fix</li>
-     <li>Ambra support for recent CrossRef API changes</li>
-     <li>PLOS Queue error handling optimizations</li>
-     <li>Find this article online link display - initial changes</li>
-     <li>XHTML tables follow up fix</li>
-     <li>Tablet optimizations - initial changes</li>
+   <li>Provenance display support on article pages for subset of articles with unconventional XML</li>
+   <li>Fix for table title bolding on article pages</li>
+   <li>Ambra upgrade to Spring 3.2</li>
+   <li>Saved search threading fix</li>
+   <li>Ambra support for recent CrossRef API changes</li>
+   <li>PLOS Queue error handling optimizations</li>
+   <li>Find this article online link display - initial changes</li>
+   <li>XHTML tables follow up fix</li>
+   <li>Tablet optimizations - initial changes</li>
  </ul>
-
 
  <h2>Ambra 2.6.2</h2>
  <p>Released May 7th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.2</h3>
  <ul>
-     <li>Early integration of XHTML table support</li>
-     <li>Solr and PLOS Queue refactoring</li>
-     <li>User preferences tab clean up and enhancement</li>
-     <li>Logic to send PMC usage total, PMIDs and PMCIDs to Solr</li>
-     <li>Fix for margin bug on article page metrics tab</li>
-     <li>Fix for search alerts deletion behavior</li>
+   <li>Early integration of XHTML table support</li>
+   <li>Solr and PLOS Queue refactoring</li>
+   <li>User preferences tab clean up and enhancement</li>
+   <li>Logic to send PMC usage total, PMIDs and PMCIDs to Solr</li>
+   <li>Fix for margin bug on article page metrics tab</li>
+   <li>Fix for search alerts deletion behavior</li>
  </ul>
 
  <h2>Ambra 2.6.1</h2>
  <p>Released April 30th, 2013</p>
  <h3>Features Implemented in Ambra 2.6.1</h3>
  <ul>
-     <li>Early integration of mathjax support</li>
-     <li>Find this article online link mapping fix</li>
+   <li>Early integration of mathjax support</li>
+   <li>Find this article online link mapping fix</li>
  </ul>
 
  <h2>Ambra 2.6.0</h2>
  <p>Released April 23rd, 2013</p>
  <h3>Features Implemented in Ambra 2.6.0</h3>
  <ul>
-     <li>Subject Areas display on Related Content article page tab for all PLOS journals(new to community journals)</li>
-     <li>Subject Area terms for all articles derive from machine aided indexing(MAI) of the full text of the article - excluding Reference lists</li>
-     <li>Support for all paths through the taxonomy polyhierarchy in indexing and search</li>
-     <li>AI thesaurus configurable from Ambra</li>
-     <li>Fix for XLST bug in taxonomy backfiller</li>
-     <li>Fix for "More by these authors" display on Related Content article tab</li>
-     <li>Saved search queue multithreading optimization</li>
-     <li>Refactor of article syndication flow</li>
+   <li>Subject Areas display on Related Content article page tab for all PLOS journals(new to community journals)</li>
+   <li>Subject Area terms for all articles derive from machine aided indexing(MAI) of the full text of the article - excluding Reference lists</li>
+   <li>Support for all paths through the taxonomy polyhierarchy in indexing and search</li>
+   <li>AI thesaurus configurable from Ambra</li>
+   <li>Fix for XLST bug in taxonomy backfiller</li>
+   <li>Fix for "More by these authors" display on Related Content article tab</li>
+   <li>Saved search queue multithreading optimization</li>
+   <li>Refactor of article syndication flow</li>
  </ul>
 
  <h2>Ambra 2.5.9</h2>
  <p>Released April 16th, 2013</p>
  <h3>Features Implemented in Ambra 2.5.9</h3>
  <ul>
-     <li>Relative metric front end support for Metrics tab</li>
-     <li>Article page client side tabs navigation instead of full page refresh tabs navigation</li>
-     <li>Bug fixes</li>
+   <li>Relative metric front end support for Metrics tab</li>
+   <li>Article page client side tabs navigation instead of full page refresh tabs navigation</li>
+   <li>Bug fixes</li>
  </ul>
 
   <h2>Ambra 2.5.8</h2>
   <p>Released April 9th, 2013</p>
   <h3>Features Implemented in Ambra 2.5.8</h3>
   <ul>
-      <li>New Science Seeker tile on article page metrics tab</li>
-      <li>Bug fixes</li>
+    <li>New Science Seeker tile on article page metrics tab</li>
+    <li>Bug fixes</li>
   </ul>
 
   <h2>Ambra 2.5.7</h2>
   <p>Released March 26th, 2013</p>
   <h3>Features Implemented in Ambra 2.5.7</h3>
   <ul>
-      <li>Added figure DOI information in the figure viewer</li>
-      <li>Gather DOI information for article citations</li>
+    <li>Added figure DOI information in the figure viewer</li>
+    <li>Gather DOI information for article citations</li>
   </ul>
 
   <h2>Ambra 2.5.6</h2>

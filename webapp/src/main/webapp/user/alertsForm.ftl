@@ -65,7 +65,11 @@
                             <@s.checkbox accessKey="${ua.key}" name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
                               Monthly </label>
                       <#else>
-                        &nbsp;&nbsp;
+                        <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
+                          <div class="weekly_description">Expand to customize your email alerts.</div>
+                        <#else>
+                          &nbsp;&nbsp;
+                        </#if>
                       </#if>
                     </li>
                 </ol>
@@ -79,11 +83,12 @@
               <li class="subjectAreaSelector" journal="${ua.key}"<#if isFound(weeklyAlerts, ua.key) != "true"> style="display:none"</#if>>
                 <div class="row">
                   <label>
-                    <input id="subjectAll_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="none"<#if !journalSubjectFilters[ua.key]??> checked="true"</#if>/>All subject areas (Sent as an
-                    uncategorized article list, ordered by publication date)
+                    <input id="subjectAll_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="none"<#if !journalSubjectFilters[ua.key]??> checked="true"</#if>/>
+                      Email me <b>all</b> new articles (sent as an uncategorized list, ordered by publication date)
                   </label>
                   <label>
-                    <input id="subjectSome_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="subjects"<#if journalSubjectFilters[ua.key]??> checked="true"</#if>/>Specify Subject areas (12 maximum)
+                    <input id="subjectSome_${ua.key}" type="radio" name="filterSpecified['${ua.key}']" value="subjects"<#if journalSubjectFilters[ua.key]??> checked="true"</#if>/>
+                      Send me a custom email alert (specify up to 12 subject areas below)
                   </label>
                 </div>
                 <div class="row subjectSearchInput">
@@ -112,6 +117,7 @@
                       <h3>No subject areas specified</h3>
                       Select <b>up to 12</b> subject areas from the list on the left.
                     </div>
+                    <b>Note:</b> Email alerts will include articles in the sub-categories of your specified subject areas.
                   </div>
                 </div>
               </li>
