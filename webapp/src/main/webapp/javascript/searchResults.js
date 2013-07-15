@@ -81,6 +81,10 @@ $(document).ready(
         $("#searchStripForm").submit();
       });
 
+      $("#pageSizePicklist").change(function(eventObj) {
+        $("#searchStripForm").submit();
+      });
+
       //***************************************
       //UI control events linking in:
       //***************************************
@@ -167,6 +171,8 @@ $(document).ready(
       ).prependTo($hdr_search.find('div.options'));
 
       $('#sortPicklist').uniform();
+
+      $('#pageSizePicklist').uniform();
 
       //***************************************
       //Wire in ALM Stats
