@@ -360,15 +360,6 @@
   </package>
 
   <package name="browse" extends="default" namespace="/article/browse">
-    <action name="subject" class="org.ambraproject.action.article.BrowseArticlesAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/browseSubject.ftl</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">500</param>
-        <param name="templateFile">error.ftl</param>
-      </result>
-    </action>
 
     <action name="issue" class="org.ambraproject.action.article.BrowseIssueAction">
       <result name="success" type="default_freemarker">
