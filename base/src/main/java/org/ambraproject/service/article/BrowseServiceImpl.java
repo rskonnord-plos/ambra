@@ -39,7 +39,6 @@ import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.Years;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -67,7 +66,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -154,27 +152,6 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
    */
   @Required
   public void setConfiguration(Configuration config) throws ApplicationException {
-    if(config.containsKey("ambra.services.browse.sortOptions.option")) {
-      validSorts = new HashMap();
-      displaySorts = new ArrayList();
-
-      HierarchicalConfiguration hc = (HierarchicalConfiguration)config;
-      List<HierarchicalConfiguration> sorts =
-          hc.configurationsAt("ambra.services.browse.sortOptions.option");
-
-      for (HierarchicalConfiguration s : sorts) {
-        String key = s.getString("[@displayName]");
-        String value = s.getString("");
-        validSorts.put(key, value);
-        displaySorts.add(key);
-      }
-
-      ((HierarchicalConfiguration) config).setExpressionEngine(null);
-    } else {
-      throw new ApplicationException("ambra.services.browse.sortOptions.option not defined " +
-          "in configuration.");
-    }
-
     this.cacheTimeToLive = config.getInt("ambra.services.browse.time", 15) * 60;
     this.useCache = config.getBoolean("ambra.services.browse.cache", true);
   }
