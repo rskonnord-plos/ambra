@@ -69,7 +69,13 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
 
     if(results.size() > 0) {
       for(SearchHit hit :results){
-        finalHitList.add(new SavedSearchHit(hit.getUri(), hit.getTitle(), hit.getCreator(), hit.getSubjects()));
+        finalHitList.add(SavedSearchHit.builder()
+          .setUri(hit.getUri())
+          .setTitle(hit.getTitle())
+          .setCreator(hit.getCreator())
+          .setSubjects(hit.getSubjects())
+          .setSubjectsPolyhierarchy(hit.getSubjectsPolyhierarchy())
+          .build());
       }
     }
 

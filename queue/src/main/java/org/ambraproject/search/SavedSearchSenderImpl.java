@@ -17,10 +17,12 @@
  */
 package org.ambraproject.search;
 
+import org.ambraproject.models.Journal;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.journal.JournalService;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -44,20 +46,21 @@ import java.util.Map;
 public class SavedSearchSenderImpl extends HibernateServiceImpl implements SavedSearchSender {
   private static final Logger log = LoggerFactory.getLogger(SavedSearchSenderImpl.class);
 
-  private static final String WEEKLY_FREQUENCY = "WEEKLY";
-  private static final String PRODUCTION_MODE = "PRODUCTION";
-  private static final String QA_MODE = "QA";
+  protected static final String WEEKLY_FREQUENCY = "WEEKLY";
+  protected static final String PRODUCTION_MODE = "PRODUCTION";
+  protected static final String QA_MODE = "QA";
 
-  private TemplateMailer mailer;
-  private String mailFromAddress;
-  private String sendMode;
-  private String sendModeQAEMail;
-  private String alertHtmlEmail;
-  private String alertTextEmail;
-  private String savedSearchHtmlEmail;
-  private String savedSearchTextEmail;
-  private String imagePath;
-  private int resultLimit;
+  protected JournalService journalService;
+  protected TemplateMailer mailer;
+  protected String mailFromAddress;
+  protected String sendMode;
+  protected String sendModeQAEMail;
+  protected String alertHtmlEmail;
+  protected String alertTextEmail;
+  protected String savedSearchHtmlEmail;
+  protected String savedSearchTextEmail;
+  protected String imagePath;
+  protected int resultLimit;
 
   /**
    * @inheritDoc
@@ -87,9 +90,8 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
       String toAddress = (String)searchDetails.get(a)[1];
       String subject;
 
-      //TODO: Move subjects to config?
       if(searchJob.getType().equals(SavedSearchType.USER_DEFINED)) {
-        subject = "PLOS Search Alert - " + searchDetails.get(a)[2];
+        subject = "Search Alert - " + searchDetails.get(a)[2];
 
         log.debug("Job result count: {}", searchJob.getSearchHitList().size());
 
@@ -109,7 +111,15 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
           log.debug("Not sending mail: {}", toAddress);
         }
       } else {
-        subject = "PLOS Journal Alert";
+        String[] journals = searchJob.getSearchParams().getFilterJournals();
+
+        //Each alert can only be for one journal
+        if(journals.length != 1) {
+          throw new RuntimeException("Journal alert defined for multiple journals or journal filter not defined");
+        }
+
+        Journal j = journalService.getJournal(journals[0]);
+        subject = j.getTitle() + " Journal Alert";
 
         log.debug("Job Result count: {}", searchJob.getSearchHitList().size());
         log.debug("Sending mail: {}", toAddress);
@@ -125,7 +135,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     log.debug("Completed send request for search ID: {}. {}", searchJob.getSavedSearchQueryID(), searchJob.getFrequency());
   }
 
-  private void mail(String toAddress, String fromAddress, String subject, Map<String, Object> context,
+  protected void mail(String toAddress, String fromAddress, String subject, Map<String, Object> context,
     Multipart content) {
 
     //If sendMode empty, do nothing
@@ -145,7 +155,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   }
 
   @SuppressWarnings("unchecked")
-  private void markSearchRun(Long savedSearchID, String frequency, Date endDate)
+  protected void markSearchRun(Long savedSearchID, String frequency, Date endDate)
   {
     SavedSearch savedSearch = hibernateTemplate.get(SavedSearch.class, savedSearchID);
 
@@ -164,7 +174,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
     log.debug("Updated Last {} saved Search time for Saved Search ID: {}", frequency, savedSearchID);
   }
 
-  private Multipart createContent(Map<String, Object> context, SavedSearchType type) {
+  protected Multipart createContent(Map<String, Object> context, SavedSearchType type) {
     try {
       if(type.equals(SavedSearchType.JOURNAL_ALERT)) {
         return mailer.createContent(this.alertTextEmail, this.alertHtmlEmail, context);
@@ -179,7 +189,7 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   }
 
   @SuppressWarnings("unchecked")
-  private List<Object[]> getSavedSearchDetails(Long savedSearchQueryID, String type) {
+  protected List<Object[]> getSavedSearchDetails(Long savedSearchQueryID, String type) {
     SavedSearchRetriever.AlertType alertType = SavedSearchRetriever.AlertType.valueOf(type);
 
     DetachedCriteria criteria = DetachedCriteria.forClass(UserProfile.class)
@@ -250,5 +260,10 @@ public class SavedSearchSenderImpl extends HibernateServiceImpl implements Saved
   @Required
   public void setResultLimit(int resultLimit) {
     this.resultLimit = resultLimit;
+  }
+
+  @Required
+  public void setJournalService(JournalService journalService) {
+    this.journalService = journalService;
   }
 }

@@ -27,6 +27,7 @@ public class SavedSearchHit implements Serializable {
   private final String uri;
   private final String title;
   private final String creator;
+  private final Collection<String> subjectsPolyhierarchy;
   private final Collection<String> subjects;
 
   /**
@@ -37,11 +38,12 @@ public class SavedSearchHit implements Serializable {
    * @param creators Creators
    * @param subjects Subjects
    */
-  public SavedSearchHit(String uri, String title, String creators, Collection<String> subjects) {
-    this.uri        = uri;
-    this.title      = title;
-    this.creator    = creators;
-    this.subjects   = subjects;
+  private SavedSearchHit(String uri, String title, String creators, Collection<String> subjects, Collection<String> subjectsPolyhierarchy) {
+    this.uri  = uri;
+    this.title = title;
+    this.creator = creators;
+    this.subjects = subjects;
+    this.subjectsPolyhierarchy = subjectsPolyhierarchy;
   }
 
   /**
@@ -75,6 +77,14 @@ public class SavedSearchHit implements Serializable {
     return subjects;
   }
 
+  /**
+   * Getter for property 'subjectsPolyhierarchy'.
+   * @return Value for property 'subjectsPolyhierarchy'.
+   */
+  public Collection<String> getSubjectsPolyhierarchy() {
+    return subjectsPolyhierarchy;
+  }
+
   @Override
   public String toString() {
     return "SearchHit{" +
@@ -98,5 +108,56 @@ public class SavedSearchHit implements Serializable {
   @Override
   public int hashCode() {
     return uri.hashCode();
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    private String uri;
+    private String title;
+    private String creator;
+    private Collection<String> subjectsPolyhierarchy;
+    private Collection<String> subjects;
+
+    private Builder() {
+      super();
+    }
+
+    public Builder setUri(String uri) {
+      this.uri = uri;
+      return this;
+    }
+
+    public Builder setTitle(String title) {
+      this.title = title;
+      return this;
+    }
+
+    public Builder setCreator(String creator) {
+      this.creator = creator;
+      return this;
+    }
+
+    public Builder setSubjectsPolyhierarchy(Collection<String> subjectsPolyhierarchy) {
+      this.subjectsPolyhierarchy = subjectsPolyhierarchy;
+      return this;
+    }
+
+    public Builder setSubjects(Collection<String> subjects) {
+      this.subjects = subjects;
+      return this;
+    }
+
+    public SavedSearchHit build() {
+      return new SavedSearchHit(
+        uri,
+        title,
+        creator,
+        subjects,
+        subjectsPolyhierarchy
+      );
+    }
   }
 }
