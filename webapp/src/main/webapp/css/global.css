@@ -3432,9 +3432,14 @@ img.clear-filter {
   margin: 20px 0;
 }
 
-#search-results-block div.pagination, #fig-search-block div.pagination {
+#search-results-block div.pagination {
   display: inline-block;
   width: 340px;
+}
+
+#fig-search-block div.pagination {
+  display: inline-block;
+  width: 600px;
 }
 
 .pagination a,
