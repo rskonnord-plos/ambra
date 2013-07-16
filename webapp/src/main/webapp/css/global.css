@@ -3213,14 +3213,14 @@ dl.authors dt {
   margin: 20px 0;
 }
 
-#uniform-pageSizePicklist {
+#uniform-pageSizePicklist, #uniform-pageSizePicklistFig {
   padding: 0;
   width: auto;
   height: 28px;
   line-height: 28px;
 }
 
-#uniform-pageSizePicklist span {
+#uniform-pageSizePicklist span, #uniform-pageSizePicklistFig span {
   background: #f8af2d url(../images/bul.pt.dn.gif) no-repeat 37px 50%;
   text-shadow: none;
   color: #333;
@@ -3232,7 +3232,7 @@ dl.authors dt {
   border-radius: 4px;
 }
 
-#uniform-pageSizePicklist select {
+#uniform-pageSizePicklist select, #uniform-pageSizePicklistFig select {
   background: #d7d7d7;
   font-weight: bold;
   height: 24px;
@@ -3241,7 +3241,7 @@ dl.authors dt {
   opacity: 0;
 }
 
-#uniform-pageSizePicklist option {
+#uniform-pageSizePicklist option, #uniform-pageSizePicklistFig option {
   padding: 6px 0 6px 10px;
 }
 
@@ -3432,7 +3432,7 @@ img.clear-filter {
   margin: 20px 0;
 }
 
-#search-results-block div.pagination {
+#search-results-block div.pagination, #fig-search-block div.pagination {
   display: inline-block;
   width: 340px;
 }

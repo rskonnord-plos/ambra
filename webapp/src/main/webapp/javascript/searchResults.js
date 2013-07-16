@@ -82,6 +82,12 @@ $(document).ready(
       });
 
       $("#pageSizePicklist").change(function(eventObj) {
+        $('#db input[name="pageSize"]').val($("#pageSizePicklist").val());
+        $("#searchStripForm").submit();
+      });
+
+      $("#pageSizePicklistFig").change(function(eventObj) {
+        $('#db input[name="pageSize"]').val($("#pageSizePicklistFig").val());
         $("#searchStripForm").submit();
       });
 
@@ -173,6 +179,8 @@ $(document).ready(
       $('#sortPicklist').uniform();
 
       $('#pageSizePicklist').uniform();
+
+      $('#pageSizePicklistFig').uniform();
 
       //***************************************
       //Wire in ALM Stats
