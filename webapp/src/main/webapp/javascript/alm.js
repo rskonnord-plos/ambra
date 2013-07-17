@@ -646,10 +646,13 @@ $.fn.alm = function () {
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
-      if (source.metrics.total > 0 && source.events_url) {
-        html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+      if (source.metrics.total > 0) {
+        if (!source.events_url) {
+          html += this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+        } else {
+          html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+        }
       }
-
     }
     //add google
     html += this.createMetricsTile("google-blogs",
