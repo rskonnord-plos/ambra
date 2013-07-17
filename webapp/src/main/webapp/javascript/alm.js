@@ -509,7 +509,7 @@ $.fn.alm = function () {
 
     //filter and sort
     var sources = this.filterSources(response[0].sources, ['citeulike','connotea','facebook','twitter','mendeley']);
-    sources = this.enforceOrder(sources, ['citeulike','facebook','mendeley','twitter','connotea']);
+    sources = this.enforceOrder(sources, ['citeulike','connotea', 'facebook','mendeley','twitter']);
 
     //create tiles
     var noTilesCreated = true;
@@ -522,6 +522,7 @@ $.fn.alm = function () {
         switch (source.name) {
           case 'facebook':
             //create tile & toggle noTilesCreated
+            // facebook does not get a link
             bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
@@ -580,6 +581,14 @@ $.fn.alm = function () {
                   "</tbody></table></div>");
               }
             });
+            break;
+
+          case 'connotea':
+            // connotea does not get a link
+            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
+                '/images/logo-' + source.name + '.png',
+                source.metrics.total)
+                + '\n');
             break;
 
           default:
