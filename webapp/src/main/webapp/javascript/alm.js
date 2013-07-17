@@ -1201,7 +1201,7 @@ function onReadyALM() {
         //citations
         if (scopus.metrics.total > 0) {
           text = "CITATIONS";
-          if (responseObject.citations == 1) {
+          if (scopus.metrics.total == 1) {
             text = "CITATION";
           }
 
@@ -1224,9 +1224,10 @@ function onReadyALM() {
         }
 
         //bookmarks
-        if (mendeley.metrics.total + citeulike.metrics.total > 0) {
+        var bookmarksTotal = mendeley.metrics.total + citeulike.metrics.total;
+        if (bookmarksTotal > 0) {
           text = "ACADEMIC BOOKMARKS";
-          if (responseObject.bookmarks == 1) {
+          if (bookmarksTotal == 1) {
             text = "ACADEMIC BOOKMARK";
           }
 
@@ -1237,9 +1238,10 @@ function onReadyALM() {
         }
 
         //shares
-        if (facebook.metrics.total + twitter.metrics.total > 0) {
+        var sharesTotal = facebook.metrics.total + twitter.metrics.total;
+        if (sharesTotal > 0) {
           text = "SOCIAL SHARES";
-          if (responseObject.shares == 1) {
+          if (sharesTotal == 1) {
             text = "SOCIAL SHARE";
           }
 
