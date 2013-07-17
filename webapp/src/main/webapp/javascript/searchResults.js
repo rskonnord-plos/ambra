@@ -322,7 +322,7 @@ $(document).ready(
         if (markCount > 0) {
           newNode = $("<a></a>")
             .attr("href", metricsURL + "#other")
-            .html("Bookmarks: " + markCount)
+            .html("Bookmarks: " + markCount.format(0, '.', ','))
             .addClass("data");
 
           appendBullIfNeeded(node);
