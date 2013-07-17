@@ -47,6 +47,9 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
       if(searchJob.getFrequency().equals("WEEKLY")) {
         //7 days into the past
         Calendar date = Calendar.getInstance();
+
+        //We really should just start only using Calendar objects
+        //But until that day... remove all time parts to avoid UTC / PST problems
         date.set(Calendar.HOUR_OF_DAY, 0);
         date.set(Calendar.MINUTE, 0);
         date.set(Calendar.SECOND, 0);
@@ -58,6 +61,9 @@ public class SavedSearchRunnerImpl implements SavedSearchRunner {
       } else {
         //30 days into the past
         Calendar date = Calendar.getInstance();
+
+        //We really should just start only using Calendar objects
+        //But until that day... remove all time parts to avoid UTC / PST problems
         date.set(Calendar.HOUR_OF_DAY, 0);
         date.set(Calendar.MINUTE, 0);
         date.set(Calendar.SECOND, 0);
