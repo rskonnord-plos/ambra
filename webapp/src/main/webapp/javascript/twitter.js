@@ -33,7 +33,7 @@ $.fn.twitter = function () {
   this.setTweets = function(json, textStatus, xOptions) {
     window.tweetsResponse = json;
 
-    $("#spinner").fadeOut(1000);
+    $(".spinner").fadeOut(1000);
 
     $("#tweets").css("display", "none");
 

@@ -51,18 +51,18 @@ public class SavedSearchRouteWeeklyTest extends SavedSearchRouteBaseTest {
     //Build up expected emails.  Using email title for predicting contents
     return new Object[][]{
       { "savedSearch0@unittestexample.org", 2, new HashMap() {{
-          put("PLOS Search Alert - weekly-0", new String[] { DOI_1 });
-          put("PLOS Search Alert - both-0", new String[] { DOI_2, DOI_3, DOI_4 });
+          put("Search Alert - weekly-0", new String[] { DOI_1 });
+          put("Search Alert - both-0", new String[] { DOI_2, DOI_3, DOI_4 });
         }}
       },
       { "savedSearch1@unittestexample.org", 2, new HashMap() {{
-          put("PLOS Search Alert - weekly-1", new String[] { DOI_1 });
-          put("PLOS Search Alert - both-1", new String[] { DOI_2, DOI_3, DOI_4 });
+          put("Search Alert - weekly-1", new String[] { DOI_1 });
+          put("Search Alert - both-1", new String[] { DOI_2, DOI_3, DOI_4 });
         }}
       },
       { "savedSearch2@unittestexample.org", 2, new HashMap() {{
-          put("PLOS Search Alert - weekly-2", new String[] { DOI_1 });
-          put("PLOS Search Alert - both-2", new String[] { DOI_2, DOI_3, DOI_4 });
+          put("Search Alert - weekly-2", new String[] { DOI_1 });
+          put("Search Alert - both-2", new String[] { DOI_2, DOI_3, DOI_4 });
         }}
       }
     };
