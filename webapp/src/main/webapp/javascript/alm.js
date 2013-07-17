@@ -558,7 +558,7 @@ $.fn.alm = function () {
 
           case 'mendeley':
             bookMarksNode.append(this.createMetricsTile(source.display_name,
-              source.public_url,
+              source.events_url,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
               + '\n')
@@ -584,7 +584,7 @@ $.fn.alm = function () {
 
           default:
             bookMarksNode.append(this.createMetricsTile(source.display_name,
-              source.public_url,
+              source.events_url,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
               + '\n')
