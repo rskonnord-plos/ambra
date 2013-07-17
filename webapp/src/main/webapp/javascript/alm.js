@@ -729,7 +729,8 @@ $.fn.alm = function () {
     $("#" + citesID).show("blind", 500);
 
   }
-  this.setCitesError = function(message, citesID, loadingID){
+
+  this.setCitesError = function(message, citesID, loadingID) {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + citesID).show("blind", 500);
@@ -938,7 +939,6 @@ $.fn.alm = function () {
 
             var chart = new Highcharts.Chart(options);
 
-
             // check to see if there is any data
             if (data.relativeMetricData != null) {
               var subjectAreas = data.relativeMetricData.subject_areas;
@@ -1076,7 +1076,7 @@ $.fn.alm = function () {
     return li;
   }
 
-  this.setMetricsTab = function (doi){
+  this.setMetricsTab = function (doi) {
 
     doi = this.validateDOI(doi);
 
@@ -1096,9 +1096,9 @@ $.fn.alm = function () {
 
     //get the data
     this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
-}
+  }
 
-  this.filterSources = function(sources, validNames){
+  this.filterSources = function(sources, validNames) {
 
     validSources = [];
 
@@ -1109,10 +1109,9 @@ $.fn.alm = function () {
     }
 
     return validSources;
+  }
 
-  };
-
-  this.enforceOrder = function(sources, orderArray){
+  this.enforceOrder = function(sources, orderArray) {
 
     var sourceNames = [];
     for (var n = 0; n < sources.length; n++) {
@@ -1127,9 +1126,7 @@ $.fn.alm = function () {
       }
     }
     return orderedSources;
-
   }
-
 }
 
 function onReadyALM() {
