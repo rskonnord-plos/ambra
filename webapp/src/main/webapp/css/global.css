@@ -1022,20 +1022,52 @@ ul#almSignPost li div.bottom div.center {
   text-transform: uppercase;
   position: relative;
   padding: 5px;
+  cursor: pointer;
+  -webkit-transition: all .3s linear;
+  -moz-transition: all .3s linear;
+  -ms-transition: all .3s linear;
+  -o-transition: all .3s linear;
+  transition: all .3s linear;
 }
 
 .article-meta ul#almSignPost li.reveal div.text {
   background: #3c63af;
   border-radius: 4px;
   color: #fff;
+  -webkit-transition: all .3s linear;
+  -moz-transition: all .3s linear;
+  -ms-transition: all .3s linear;
+  -o-transition: all .3s linear;
+  transition: all .3s linear;
 }
 
 .article-meta ul#almSignPost li div.content {
   position: absolute;
   right: 0;
-  display: none;
   width: 350px;
   height: 100px;
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  transition: visibility .4s linear, opacity .3s linear;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.article-meta ul#almSignPost li.reveal div.content {
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -webkit-transition-delay: 0s;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition-delay: 0s;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition-delay: 0s;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition-delay: 0s;
+  transition: visibility .4s linear, opacity .3s linear;
+  transition-delay: 0s;
+  visibility: visible;
+  opacity: 1;
 }
 
 .article-meta ul#almSignPost li div.description {
@@ -1056,10 +1088,6 @@ ul#almSignPost li div.bottom div.center {
 .article-meta ul#almSignPost li div.description a {
   text-decoration: underline;
   color: #fff;
-}
-
-.article-meta ul#almSignPost li.reveal div.content {
-  display: block;
 }
 
 .article-meta .pick {
@@ -1102,7 +1130,6 @@ ul#almSignPost li div.bottom div.center {
 
 #article-block .article-kicker {
   position: relative;
-
   display: inline-block;
   margin-bottom: 5px;
   cursor: pointer;
@@ -1116,7 +1143,6 @@ ul#almSignPost li div.bottom div.center {
   padding: 8px;
   border-radius: 5px;
   margin: 0 0 0 -6px;
-  cursor: pointer;
   -webkit-transition: all .3s linear;
   -moz-transition: all .3s linear;
   -ms-transition: all .3s linear;
