@@ -35,8 +35,17 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.7.2</h2>
+  <p>Released July 23, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.2</h3>
+  <ul>
+    <li>Etocs feature enhancements and bug fixes</li>
+    <li>Upgrade Ambra to use ALM API v3</li>
+  </ul>
+
   <h2>Ambra 2.7.1</h2>
   <p>Released July 16, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.1</h3>
   <ul>
     <li>Etocs feature enhancements and bug fixes</li>
     <li>Mathjax equations font size change and alignment fix</li>
@@ -47,12 +56,14 @@
 
   <h2>Ambra 2.7.0</h2>
   <p>Released July 02, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.0</h3>
   <ul>
     <li>For tablets, enable swiping in figure carousel and lightbox</li>
   </ul>
 
  <h2>Ambra 2.6.9</h2>
  <p>Released June 25, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.9</h3>
  <ul>
    <li>Distinguish Authors and Editors in Affiliation on the Solr search backend</li>
    <li>Addition of figure DOIs to Solr search API</li>
@@ -64,6 +75,7 @@
 
  <h2>Ambra 2.6.8</h2>
  <p>Released June 18th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.8</h3>
  <ul>
    <li>eToCs feature development</li>
    <li>Advanced Search page journal specific "Filter by Article Type" search options</li>
@@ -72,6 +84,7 @@
 
  <h2>Ambra 2.6.7</h2>
  <p>Released June 11th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.7</h3>
  <ul>
    <li>Restricted launch of eToCs</li>
    <li>CrossRef API change support</li>
@@ -81,6 +94,7 @@
 
  <h2>Ambra 2.6.6</h2>
  <p>Released June 4th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.6</h3>
  <ul>
    <li>PLOS One Edboard search optimizations</li>
    <li>Taxonomy tracking update</li>
