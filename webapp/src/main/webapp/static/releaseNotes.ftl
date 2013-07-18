@@ -41,6 +41,8 @@
   <ul>
     <li>Etocs feature enhancements and bug fixes</li>
     <li>Upgrade Ambra to use ALM API v3</li>
+    <li>ALM signposts tooltip will have fade in/out feature</li>
+    <li>Users can choose no. of results to see on search result page</li>
   </ul>
 
   <h2>Ambra 2.7.1</h2>
