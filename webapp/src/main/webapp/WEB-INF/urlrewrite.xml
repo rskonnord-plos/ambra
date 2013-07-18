@@ -754,4 +754,22 @@
     <from>^(/.+)?/taxonomy/json(.*)\??(.*)$</from>
     <to>$1/taxonomy/taxonomyJSON.action?root=$2&amp;$3</to>
   </rule>
+
+  <rule>
+    <note>
+      re-write browse article
+      /browse/category -> /browse.action?category=category
+    </note>
+    <from>^(/.+)?/browse/(.*)?</from>
+    <to>$1/browse.action?category=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse article
+      /browse.action?category=category -> /browse/category
+    </note>
+    <from>^(/.+)?/browse.action\?category=(.*)?</from>
+    <to>$1/browse/$2</to>
+  </outbound-rule>
 </urlrewrite>
