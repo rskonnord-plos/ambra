@@ -43,6 +43,8 @@
     <li>Upgrade Ambra to use ALM API v3</li>
     <li>ALM signposts tooltip will have fade in/out feature</li>
     <li>Users can choose no. of results to see on search result page</li>
+    <li>Incorporate security fix from Struts 2.3.15.1</li>
+    <li>Version 4 of taxonomy terms</li>
   </ul>
 
   <h2>Ambra 2.7.1</h2>
