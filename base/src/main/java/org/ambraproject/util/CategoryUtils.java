@@ -11,6 +11,7 @@
 
 package org.ambraproject.util;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +99,33 @@ public class CategoryUtils {
     }
 
     return finalRes;
+  }
+
+  /**
+   * For the passed in category, find the matching CategoryView.  This will come in handy when looking for
+   * getting the correctly formatted case corrected category name
+   *
+   * @param categoryView the categoryView to search from
+   * @param category the string of the category to search for
+   *
+   * @return The first matching category view
+   *
+   * @throws org.ambraproject.ApplicationException
+   */
+  public static CategoryView findCategory(CategoryView categoryView, String category) {
+    if(categoryView.getName().toLowerCase().contains(category.toLowerCase())) {
+      return categoryView;
+    }
+
+    for(String key : categoryView.getChildren().keySet()) {
+      CategoryView res = findCategory(categoryView.getChild(key), category);
+
+      if(res != null) {
+        return res;
+      }
+    }
+
+    return null;
   }
 
   /**

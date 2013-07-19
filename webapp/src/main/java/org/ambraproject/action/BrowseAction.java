@@ -18,8 +18,13 @@
  */
 package org.ambraproject.action;
 
+import org.ambraproject.service.taxonomy.TaxonomyService;
+import org.ambraproject.util.CategoryUtils;
+import org.ambraproject.views.CategoryView;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 /**
  * Handle browse by category requests
@@ -29,13 +34,36 @@ import org.slf4j.LoggerFactory;
 public class BrowseAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(BrowseAction.class);
 
+  private TaxonomyService taxonomyService;
   private String category;
 
   @Override
-  public String execute() {
-    return SUCCESS;
+  public String execute() throws Exception {
+    CategoryView categoryView = taxonomyService.parseCategories(super.getCurrentJournal());
 
-    //return INPUT on no articles found.
+    if(category != null && category.length() > 0) {
+      //Recreate the category name as stored in the DB
+      category = category.replace("_", " ");
+
+      CategoryView view = CategoryUtils.findCategory(categoryView, category);
+
+      //If the value is null, we've got a category that doesn't exist any more.  Try to format the name
+      //And search for it anyway
+      if(view == null) {
+        category = StringUtils.capitalize(category);
+      } else {
+        category = view.getName();
+      }
+    } else {
+      //TODO: Replace with something more meaningful
+      category = "OMG LOLZ EVERY BIT 'O' RESEARCH, BOO YAH";
+    }
+
+    //TODO: Execute search
+    //TBD: How to handle no search results
+
+
+    return SUCCESS;
   }
 
   /**
@@ -43,5 +71,17 @@ public class BrowseAction extends BaseActionSupport {
    */
   public void setCategory(String category) {
     this.category = category;
+  }
+
+  /**
+   * Get the category
+   */
+  public String getCategory() {
+    return this.category;
+  }
+
+  @Required
+  public void setTaxonomyService(TaxonomyService taxonomyService) {
+    this.taxonomyService = taxonomyService;
   }
 }
