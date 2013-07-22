@@ -81,6 +81,16 @@ $(document).ready(
         $("#searchStripForm").submit();
       });
 
+      $("#pageSizePicklist").change(function(eventObj) {
+        $('#db input[name="pageSize"]').val($("#pageSizePicklist").val());
+        $("#searchStripForm").submit();
+      });
+
+      $("#pageSizePicklistFig").change(function(eventObj) {
+        $('#db input[name="pageSize"]').val($("#pageSizePicklistFig").val());
+        $("#searchStripForm").submit();
+      });
+
       //***************************************
       //UI control events linking in:
       //***************************************
@@ -167,6 +177,10 @@ $(document).ready(
       ).prependTo($hdr_search.find('div.options'));
 
       $('#sortPicklist').uniform();
+
+      $('#pageSizePicklist').uniform();
+
+      $('#pageSizePicklistFig').uniform();
 
       //***************************************
       //Wire in ALM Stats
@@ -322,7 +336,7 @@ $(document).ready(
         if (markCount > 0) {
           newNode = $("<a></a>")
             .attr("href", metricsURL + "#other")
-            .html("Bookmarks: " + markCount)
+            .html("Bookmarks: " + markCount.format(0, '.', ','))
             .addClass("data");
 
           appendBullIfNeeded(node);

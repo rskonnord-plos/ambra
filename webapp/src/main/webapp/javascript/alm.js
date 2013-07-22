@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -385,7 +383,7 @@ $.fn.alm = function () {
     var crossRefResponse = this.filterSources(response[0].sources, ['crossref'])[0];
     var numCitations = 0;
 
-    if (crossRefResponse && crossRefResponse.metrics.total > 0) {
+    if (crossRefResponse.metrics.total > 0) {
       numCitations = crossRefResponse.metrics.total;
       var html = "";
 
@@ -446,9 +444,9 @@ $.fn.alm = function () {
 
       html = numCitations + " citation" + pluralization
         + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
-        + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.publication_date))
+        + $.datepicker.formatDate("M dd, yy", new Date(response[0].publication_date))
         + ". Citations updated on "
-        + $.datepicker.formatDate("M dd, yy", new Date(crossRefResponse.update_date))
+        + $.datepicker.formatDate("M dd, yy", new Date(response[0].update_date))
         + "."
         + " <ol>" + html + "</ol>";
     }
@@ -511,7 +509,7 @@ $.fn.alm = function () {
 
     //filter and sort
     var sources = this.filterSources(response[0].sources, ['citeulike','connotea','facebook','twitter','mendeley']);
-    sources = this.enforceOrder(sources, ['citeulike','facebook','mendeley','twitter','connotea']);
+    sources = this.enforceOrder(sources, ['citeulike','connotea', 'facebook','mendeley','twitter']);
 
     //create tiles
     var noTilesCreated = true;
@@ -524,6 +522,7 @@ $.fn.alm = function () {
         switch (source.name) {
           case 'facebook':
             //create tile & toggle noTilesCreated
+            // facebook does not get a link
             bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
               '/images/logo-' + source.name + '.png',
               source.metrics.total)
@@ -584,6 +583,14 @@ $.fn.alm = function () {
             });
             break;
 
+          case 'connotea':
+            // connotea does not get a link
+            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
+                '/images/logo-' + source.name + '.png',
+                source.metrics.total)
+                + '\n');
+            break;
+
           default:
             bookMarksNode.append(this.createMetricsTile(source.display_name,
               source.events_url,
@@ -639,10 +646,13 @@ $.fn.alm = function () {
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
-      if (source.metrics.total > 0 && source.events_url) {
-        html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+      if (source.metrics.total > 0) {
+        if (!source.events_url) {
+          html += this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+        } else {
+          html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+        }
       }
-
     }
     //add google
     html += this.createMetricsTile("google-blogs",
@@ -653,9 +663,7 @@ $.fn.alm = function () {
 
     //append in order to preserve trackbacks
     $("#" + loadingID).fadeOut('slow');
-
-    //using prepend so tiles come before plos comments tile.  plos comments tile is part of freemarker template
-    relatedBlogPosts.prepend(html);
+    relatedBlogPosts.append(html);
     relatedBlogPosts.show('blind', 500);
   }
   this.setRelatedBlogsError = function (message, errorID, loadingID) {
@@ -733,37 +741,11 @@ $.fn.alm = function () {
     $("#" + citesID).show("blind", 500);
 
   }
-  this.setCitesError = function(message, citesID, loadingID){
+
+  this.setCitesError = function(message, citesID, loadingID) {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + citesID).show("blind", 500);
-  }
-
-  this.setF1000Success = function(response, f1kHeaderID, f1kSpinnerID, f1kContentID){
-    //add the goods then show the area which is by default hidden
-
-    var f1k = this.filterSources(response[0].sources,['f1000']).pop();
-
-    //TODO - delete: this is here to prevent an exception as f1000 is not active and will be null
-    if(!f1k){
-      return;
-    }
-    if (f1k.metrics.total == 0){
-      return;
-    }
-
-    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
-    $('#' + f1kHeaderID).show("blind", 500);
-
-    $("#" + f1kSpinnerID).fadeOut('slow');
-    $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
-      f1k.events_url,
-      '/images/logo-' + f1k.name + '.png',
-      f1k.metrics.total)
-      + '\n').show("blind", 500);
-  }
-  this.setF1000Error = function(message){
-    //the f1k section is by default hidden, so no need to do a thing
   }
 
   this.setChartData = function (doi, usageID, loadingID) {
@@ -969,7 +951,6 @@ $.fn.alm = function () {
 
             var chart = new Highcharts.Chart(options);
 
-
             // check to see if there is any data
             if (data.relativeMetricData != null) {
               var subjectAreas = data.relativeMetricData.subject_areas;
@@ -1107,7 +1088,7 @@ $.fn.alm = function () {
     return li;
   }
 
-  this.setMetricsTab = function (doi){
+  this.setMetricsTab = function (doi) {
 
     doi = this.validateDOI(doi);
 
@@ -1116,8 +1097,6 @@ $.fn.alm = function () {
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
       this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
-      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
-
     }
 
     //fail!
@@ -1125,14 +1104,13 @@ $.fn.alm = function () {
       this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
       this.setBookMarksError(message, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
-      this.setF1000Error(message, "f1000","f1000Spinner");
     }
 
     //get the data
     this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
-}
+  }
 
-  this.filterSources = function(sources, validNames){
+  this.filterSources = function(sources, validNames) {
 
     validSources = [];
 
@@ -1143,10 +1121,9 @@ $.fn.alm = function () {
     }
 
     return validSources;
+  }
 
-  };
-
-  this.enforceOrder = function(sources, orderArray){
+  this.enforceOrder = function(sources, orderArray) {
 
     var sourceNames = [];
     for (var n = 0; n < sources.length; n++) {
@@ -1161,9 +1138,7 @@ $.fn.alm = function () {
       }
     }
     return orderedSources;
-
   }
-
 }
 
 function onReadyALM() {
@@ -1222,7 +1197,7 @@ function onReadyALM() {
           else if(source.name.toLowerCase() == 'citeulike'){
             citeulike = source;
           }
-          else if (source.name.toLowerCase() == 'crossref') {
+          else if(source.name.toLowerCase() == 'crossref'){
             crossref = source;
           }
         }
@@ -1238,7 +1213,7 @@ function onReadyALM() {
         //citations
         if (scopus.metrics.total > 0) {
           text = "CITATIONS";
-          if (responseObject.citations == 1) {
+          if (scopus.metrics.total == 1) {
             text = "CITATION";
           }
 
@@ -1261,10 +1236,11 @@ function onReadyALM() {
         }
 
         //bookmarks
-        if (mendeley.metrics.total + citeulike.metrics.total > 0) {
-          text = "SAVES";
-          if (responseObject.bookmarks == 1) {
-            text = "SAVE";
+        var bookmarksTotal = mendeley.metrics.total + citeulike.metrics.total;
+        if (bookmarksTotal > 0) {
+          text = "ACADEMIC BOOKMARKS";
+          if (bookmarksTotal == 1) {
+            text = "ACADEMIC BOOKMARK";
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
@@ -1274,10 +1250,11 @@ function onReadyALM() {
         }
 
         //shares
-        if (facebook.metrics.total + twitter.metrics.total > 0) {
-          text = "SHARES";
-          if (responseObject.shares == 1) {
-            text = "SHARE";
+        var sharesTotal = facebook.metrics.total + twitter.metrics.total;
+        if (sharesTotal > 0) {
+          text = "SOCIAL SHARES";
+          if (sharesTotal == 1) {
+            text = "SOCIAL SHARE";
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
