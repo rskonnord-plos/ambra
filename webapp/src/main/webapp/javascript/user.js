@@ -450,7 +450,11 @@ $(function () {
   $(":input[name='searchSubject_btn']").click(function(eventObj) {
     var filter = $(".subjectSearchInput[type='text']").val();
 
-    searchTaxonomy(filter);
+    if($.trim(filter).length > 0) {
+      searchTaxonomy(filter);
+    } else {
+      resetInitialSubjectList();
+    }
   });
 
   if($(".subjectSearchInput[type='text']").val()) {
