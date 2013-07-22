@@ -661,9 +661,9 @@ $.fn.alm = function () {
       "Search")
     + '\n';
 
-    //append in order to preserve trackbacks
+    //using prepend so tiles come before plos comments tile.  plos comments tile is part of freemarker template
     $("#" + loadingID).fadeOut('slow');
-    relatedBlogPosts.append(html);
+    relatedBlogPosts.prepend(html);
     relatedBlogPosts.show('blind', 500);
   }
   this.setRelatedBlogsError = function (message, errorID, loadingID) {
@@ -746,6 +746,34 @@ $.fn.alm = function () {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + citesID).show("blind", 500);
+  }
+
+  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID) {
+    //add the goods then show the area which is by default hidden
+
+    var f1k = this.filterSources(response[0].sources, ['f1000']).pop();
+
+    //TODO - delete: this is here to prevent an exception as f1000 is not active and will be null
+    if (!f1k) {
+      return;
+    }
+    if (f1k.metrics.total == 0) {
+      return;
+    }
+
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    $('#' + f1kHeaderID).show("blind", 500);
+
+    $("#" + f1kSpinnerID).fadeOut('slow');
+    $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
+      f1k.events_url,
+      '/images/logo-' + f1k.name + '.png',
+      f1k.metrics.total)
+      + '\n').show("blind", 500);
+  }
+
+  this.setF1000Error = function (message) {
+    //the f1k section is by default hidden, so no need to do a thing
   }
 
   this.setChartData = function (doi, usageID, loadingID) {
@@ -1097,6 +1125,7 @@ $.fn.alm = function () {
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
       this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
     }
 
     //fail!
@@ -1104,6 +1133,7 @@ $.fn.alm = function () {
       this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
       this.setBookMarksError(message, "relatedBookmarks", "relatedBookmarksSpinner");
       this.setRelatedBlogsError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Error(message, "f1000","f1000Spinner");
     }
 
     //get the data
@@ -1238,9 +1268,9 @@ function onReadyALM() {
         //bookmarks
         var bookmarksTotal = mendeley.metrics.total + citeulike.metrics.total;
         if (bookmarksTotal > 0) {
-          text = "ACADEMIC BOOKMARKS";
+          text = "SAVES";
           if (bookmarksTotal == 1) {
-            text = "ACADEMIC BOOKMARK";
+            text = "SAVE";
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
@@ -1252,9 +1282,9 @@ function onReadyALM() {
         //shares
         var sharesTotal = facebook.metrics.total + twitter.metrics.total;
         if (sharesTotal > 0) {
-          text = "SOCIAL SHARES";
+          text = "SHARES";
           if (sharesTotal == 1) {
-            text = "SOCIAL SHARE";
+            text = "SHARE";
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
