@@ -474,7 +474,7 @@ $.fn.alm = function () {
    *    --The callback method fails
    **/
   this.getData = function (request, callBack, errorCallback) {
-    var url = this.almHost + '?ids=' + request;
+    var url = this.almHost + '?api_key=3pezRBRXdyzYW6ztfwft&ids=' + request;
 
     //I use a third party plugin here for jsonp requests as jQuery doesn't
     //Handle errors well (with jsonp requests)
