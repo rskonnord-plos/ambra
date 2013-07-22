@@ -1025,20 +1025,52 @@ ul#almSignPost li div.bottom div.center {
   text-transform: uppercase;
   position: relative;
   padding: 5px;
+  cursor: pointer;
+  -webkit-transition: all .3s linear;
+  -moz-transition: all .3s linear;
+  -ms-transition: all .3s linear;
+  -o-transition: all .3s linear;
+  transition: all .3s linear;
 }
 
 .article-meta ul#almSignPost li.reveal div.text {
   background: #b04e0f;
   border-radius: 4px;
   color: #fff;
+  -webkit-transition: all .3s linear;
+  -moz-transition: all .3s linear;
+  -ms-transition: all .3s linear;
+  -o-transition: all .3s linear;
+  transition: all .3s linear;
 }
 
 .article-meta ul#almSignPost li div.content {
   position: absolute;
   right: 0;
-  display: none;
   width: 350px;
   height: 100px;
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  transition: visibility .4s linear, opacity .3s linear;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.article-meta ul#almSignPost li.reveal div.content {
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -webkit-transition-delay: 0s;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition-delay: 0s;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition-delay: 0s;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition-delay: 0s;
+  transition: visibility .4s linear, opacity .3s linear;
+  transition-delay: 0s;
+  visibility: visible;
+  opacity: 1;
 }
 
 .article-meta ul#almSignPost li div.description {
@@ -1059,10 +1091,6 @@ ul#almSignPost li div.bottom div.center {
 .article-meta ul#almSignPost li div.description a {
   text-decoration: underline;
   color: #fff;
-}
-
-.article-meta ul#almSignPost li.reveal div.content {
-  display: block;
 }
 
 .article-meta .pick {
@@ -1105,7 +1133,6 @@ ul#almSignPost li div.bottom div.center {
 
 #article-block .article-kicker {
   position: relative;
-
   display: inline-block;
   margin-bottom: 5px;
   cursor: pointer;
@@ -1119,7 +1146,6 @@ ul#almSignPost li div.bottom div.center {
   padding: 8px;
   border-radius: 5px;
   margin: 0 0 0 -6px;
-  cursor: pointer;
   -webkit-transition: all .3s linear;
   -moz-transition: all .3s linear;
   -ms-transition: all .3s linear;
@@ -3222,6 +3248,45 @@ dl.authors dt {
   padding: 6px 0 6px 10px;
 }
 
+.pageSize {
+  width: 160px;
+  float:right;
+  display: inline-block;
+  margin: 20px 0;
+}
+
+#uniform-pageSizePicklist, #uniform-pageSizePicklistFig {
+  padding: 0;
+  width: auto;
+  height: 28px;
+  line-height: 28px;
+}
+
+#uniform-pageSizePicklist span, #uniform-pageSizePicklistFig span {
+  background: #f8af2d url(../images/bul.pt.dn.gif) no-repeat 37px 50%;
+  text-shadow: none;
+  color: #333;
+  padding: 0 25px 0 10px;
+  width: 20px;
+  font-weight: bold;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 4px;
+}
+
+#uniform-pageSizePicklist select, #uniform-pageSizePicklistFig select {
+  background: #d7d7d7;
+  font-weight: bold;
+  height: 24px;
+  width: 55px;
+  min-width: 50px;
+  opacity: 0;
+}
+
+#uniform-pageSizePicklist option, #uniform-pageSizePicklistFig option {
+  padding: 6px 0 6px 10px;
+}
+
 #hdr-search-results .options {
   margin: 0 5px 6px 10px;
 }
@@ -3407,6 +3472,16 @@ img.clear-filter {
   position: relative;
   padding: 0 30px;
   margin: 20px 0;
+}
+
+#search-results-block div.pagination {
+  display: inline-block;
+  width: 340px;
+}
+
+#fig-search-block div.pagination {
+  display: inline-block;
+  width: 600px;
 }
 
 .pagination a,
