@@ -24,7 +24,6 @@
       <list>
         <value>classpath:senduseralerts.properties</value>
         <value>classpath:dummyCrossRef.properties</value>
-        <value>classpath:dummyPubGet.properties</value>
       </list>
     </property>
     <property name="ignoreResourceNotFound" value="true"/>
@@ -58,6 +57,7 @@
   <bean id="savedSearchSender" class="org.ambraproject.search.SavedSearchSenderImpl">
     <property name="sessionFactory" ref="sessionFactory"/>
     <property name="mailer" ref="freeMarkerMailer"/>
+    <property name="journalService" ref="journalService" />
     <property name="mailFromAddress" value="${ambra.queue.fromEmailAddress}" />
     <property name="imagePath" value="${ambra.queue.image.path}"/>
     <property name="sendMode" value="${ambra.queue.sendmail.sendMode}"/>

@@ -955,6 +955,24 @@ $(document).on("click", "#related_collections li a", function(){
         });
       }
 
+      if ($.support.touchEvents) {
+        $slider.swipe({
+          swipeLeft:function(event, direction, distance, duration, fingerCount) {
+            gotoPage(current_page + 1);
+          },
+          swipeRight:function(event, direction, distance, duration, fingerCount) {
+            gotoPage(current_page - 1);
+          },
+          tap:function(event, target) {
+            // assume the click happened on <img>
+            // trigger <a><span><img/></span></a>
+            if(target.parentNode.parentNode.nodeName == "A") {
+              target.parentNode.parentNode.click();
+            }
+          },
+          threshold:25
+        });
+      }
     });
   };
 })(jQuery);
@@ -1368,6 +1386,27 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
     }
   });
 
+  if ($.support.touchEvents) {
+    $slides.swipe({
+      swipeLeft:function(event, direction, distance, duration, fingerCount) {
+        if (active_thmb.next().length) {
+          t = active_thmb.next()
+          changeSlide(t);
+        }
+      },
+      swipeRight:function(event, direction, distance, duration, fingerCount) {
+        if (active_thmb.prev().length) {
+          t = active_thmb.prev()
+          changeSlide(t);
+        }
+      },
+      tap:function(event, target) {
+        target.click();
+      },
+      threshold:25
+    });
+  }
+
   buildFigs();
 };
 
@@ -1530,7 +1569,7 @@ initMainContainer();
 var pjax_selected_tab = null; // last clicked pjax content
 
 if ($(document).pjax) {
-  $(document).pjax("#nav-article ul li a", "#pjax-container",
+  $(document).pjax("#nav-article ul li a, .nav-col .nav-col-comments a, .sidebar .sidebar-comments p a", "#pjax-container",
       {container: "#pjax-container", fragment: "#pjax-container", timeout: 5000, scrollTo: "do-not"});
 
   $("#pjax-container").on("pjax:complete", function(event) {

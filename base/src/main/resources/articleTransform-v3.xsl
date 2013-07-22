@@ -769,16 +769,6 @@
                           </xsl:element>
                         </xsl:element>
                       </xsl:if>
-                      <xsl:if test="$cit/extraCitationInfo/@pubGetUrl">
-                        <xsl:element name="li">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubGetUrl"/></xsl:attribute>
-                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
-                            <xsl:attribute name="title">Get the full text PDF from PubGet</xsl:attribute>
-                            PubGet/PDF
-                          </xsl:element>
-                        </xsl:element>
-                      </xsl:if>
                       <xsl:if test="$cit/extraCitationInfo/@pubMedUrl">
                         <xsl:element name="li">
                           <xsl:element name="a">
@@ -1244,7 +1234,6 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="disp-formula">
-      <br/>
       <xsl:element name="a">
         <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
         <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>

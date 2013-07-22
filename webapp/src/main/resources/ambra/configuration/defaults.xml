@@ -158,13 +158,14 @@
         </server>
         -->
 
-        <pageSize>10</pageSize><!-- Number of results per page -->
+        <pageSize>15</pageSize><!-- Number of results per page -->
 
 
         <pageSizes>
-          <size>10</size>
-          <size>25</size>
-          <size>50</size>
+          <size>15</size>
+          <size>30</size>
+          <size>60</size>
+          <size>120</size>
         </pageSizes>
 
         <highlightFields>
@@ -283,10 +284,6 @@
         <xsl>crossref.xsl</xsl>
       </crossref>
 
-      <pubget>
-        <url>http://pubget.com/widgetizer/links_hash</url>
-      </pubget>
-
       <!-- FIXME: failover:tcp://address:port of ActiveMQ broker -->
       <activemq>tcp://${ambra.network.hosts.default}:61616</activemq>
 
@@ -319,8 +316,8 @@
     <!-- User alerts -->
     <userAlerts>
       <categories>
-        <category key="ambra">Ambra Journal</category>
-        <category key="overlay">Overlay Journal</category>
+        <category key="ambra" displayOrder="5">Ambra Journal</category>
+        <category key="overlay" displayOrder="10">Overlay Journal</category>
       </categories>
       <monthly>ambra, overlay</monthly>
       <weekly>ambra, overlay</weekly>

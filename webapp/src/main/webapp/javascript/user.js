@@ -67,10 +67,10 @@ $(function () {
       }});
     }
 
-    var newNode = $("<li style=\"display:none;\"><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
+    var newNode = $("<li class=\"taxonomyNode\" style=\"display:none;\"><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
 
     newNode.find("img").click(function(event) {
-      removeSubject($(event.target).parent().text().trim());
+      removeSubject($.trim($(event.target).parent().text()));
     });
 
     list.append(newNode);
@@ -95,13 +95,13 @@ $(function () {
 
     //console.log("Subject List: " + selectedSubjects);
 
-    selectedSubjects = selectedSubjects.filter(function(value) {
-      return (subject.trim() != value.trim());
+    selectedSubjects = $(selectedSubjects).filter(function(value) {
+      return ($.trim(subject) != $.trim(value));
     });
 
     //console.log("Subject List: " + selectedSubjects);
     list.find("div").filter(function() {
-      return ($(this).text().trim() == subject);
+      return ($.trim($(this).text()) == subject);
     }).parent().slideUp({ complete: function() {
       $(this).remove();
     }});
@@ -176,12 +176,13 @@ $(function () {
   };
 
   var getTaxonomyTreeText = function(node) {
-    parent = $(node).parent().parent()[0];
-    if(parent.tagName == 'LI') {
-      return(getTaxonomyTreeText($(parent)) + '/' + $(node).attr('key'));
+    var parent = node.parents(".taxonomyNode");
+
+    if(parent.length > 0) {
+      return(getTaxonomyTreeText($(parent[0])) + '/' + node.attr('data-key'));
     }
 
-    return $(node).attr('key');
+    return node.attr('data-key');
   };
 
   /* Find matching subjects in the tree and mark them selected */
@@ -214,8 +215,8 @@ $(function () {
         img = "<image src=\"/images/transparent.gif\"/>";
       }
 
-      var node = $("<li key=\"" + key + "\">" + img + "<span>" + key + "</span><ol></ol></li>")
-        .attr("value", key);
+      var node = $("<li class=\"taxonomyNode\" data-key=\"" + key + "\">" + img + "<span>" + key + "</span><ol></ol></li>")
+        .attr("data-value", key);
 
       $(rootNode).append(node);
 
@@ -233,7 +234,7 @@ $(function () {
           $(this).addClass("checked");
         } else {
           $(this).click(function(event) {
-            selectSubject($(event.target).parents("li").attr("key"));
+            selectSubject($(event.target).parents("li").attr("data-key"));
           });
         }
       });
@@ -271,10 +272,10 @@ $(function () {
       console.log(key);
       var hasChildren = !$.isEmptyObject(val.children);
       var img = "<image " + (hasChildren?"class=\"expanded-nopointer\" ":"") + "src=\"/images/transparent.gif\"/>";
-      var node = $("<li key=\"" + key + "\">" + img + "<span>" +
+      var node = $("<li class=\"taxonomyNode\" data-key=\"" + key + "\">" + img + "<span>" +
         key.replace(new RegExp("(" + filter + ")", "gi"), "<b>$1</b>")
          + "</span><ol></ol></li>")
-        .attr("value", key);
+        .attr("data-value", key);
 
       $(rootNode).append(node);
 
@@ -294,7 +295,7 @@ $(function () {
           $(this).addClass("checked");
         } else {
           $(this).click(function(event) {
-            selectSubject($(event.target).parents("li").attr("key"));
+            selectSubject($(event.target).parents("li").attr("data-key"));
           });
         }
 
@@ -408,7 +409,7 @@ $(function () {
 
   //Bind to UI events
   $("li div.filter-item img").click(function(event) {
-    removeSubject($(event.target).parent().text().trim());
+    removeSubject($.trim($(event.target).parent().text()));
   });
 
   $("#subjectAll_" + journal).click(function(eventObj) {
@@ -449,7 +450,11 @@ $(function () {
   $(":input[name='searchSubject_btn']").click(function(eventObj) {
     var filter = $(".subjectSearchInput[type='text']").val();
 
-    searchTaxonomy(filter);
+    if($.trim(filter).length > 0) {
+      searchTaxonomy(filter);
+    } else {
+      resetInitialSubjectList();
+    }
   });
 
   if($(".subjectSearchInput[type='text']").val()) {

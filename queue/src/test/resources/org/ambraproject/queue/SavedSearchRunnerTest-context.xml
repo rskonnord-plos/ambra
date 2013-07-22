@@ -22,7 +22,6 @@
       <list>
         <value>classpath:senduseralerts.properties</value>
         <value>classpath:dummyCrossRef.properties</value>
-        <value>classpath:dummyPubGet.properties</value>
       </list>
     </property>
     <property name="ignoreResourceNotFound" value="true"/>

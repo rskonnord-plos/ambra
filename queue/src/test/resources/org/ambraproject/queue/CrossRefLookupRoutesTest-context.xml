@@ -42,7 +42,6 @@
     <property name="locations">
       <list>
         <value>classpath:dummyCrossRef.properties</value>
-        <value>classpath:dummyPubGet.properties</value>
       </list>
     </property>
     <property name="ignoreResourceNotFound" value="true"/>
