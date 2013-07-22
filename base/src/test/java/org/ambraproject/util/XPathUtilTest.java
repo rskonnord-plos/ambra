@@ -99,7 +99,7 @@ public class XPathUtilTest {
         {"//browse/cache/text()", "false"},
         {"//config/ambra/platform/name/text()", "PLoS"},
         {"//config/ambra/platform/copyright/@type", "creativecommons"},
-        {"//config/ambra/platform/freemarker/almHost/text()", "http://alm.plos.org"},
+        {"//config/ambra/platform/freemarker/almHost/text()", "http://alm.plos.org/api/v3/articles"},
         {"count(//config/ambra/platform/freemarker/almHost)", "1"}
     };
   }
@@ -137,7 +137,7 @@ public class XPathUtilTest {
         {xPathUtil.selectSingleNode(testXml, "//config/ambra"), "//cache/text()", "false"},
         {xPathUtil.selectSingleNode(testXml, "//browse"), "//cache/text()", "false"},
         {xPathUtil.selectSingleNode(testXml, "/config/ambra/platform"), "//copyright/@type", "creativecommons"},
-        {xPathUtil.selectSingleNode(testXml, "/config/ambra/platform"), "//freemarker/almHost/text()", "http://alm.plos.org"},
+        {xPathUtil.selectSingleNode(testXml, "/config/ambra/platform"), "//freemarker/almHost/text()", "http://alm.plos.org/api/v3/articles"},
     };
   }
 
