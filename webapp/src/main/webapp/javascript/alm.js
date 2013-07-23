@@ -494,13 +494,13 @@ $.fn.alm = function () {
   }
 
   /**
-   * Sets the bookmarks text
+   * Sets the Saved text
    *
    * @param doi the doi
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setBookMarkSuccess = function(response, bookMarksID, loadingID){
+  this.setSavedSuccess = function(response, bookMarksID, loadingID){
     var bookMarksNode = $('#' + bookMarksID);
     bookMarksNode.css("display", "none");
     $("#" + loadingID).fadeOut('slow');
@@ -508,8 +508,8 @@ $.fn.alm = function () {
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
 
     //filter and sort
-    var sources = this.filterSources(response[0].sources, ['citeulike','connotea','facebook','twitter','mendeley']);
-    sources = this.enforceOrder(sources, ['citeulike','connotea', 'facebook','mendeley','twitter']);
+    var sources = this.filterSources(response[0].sources, ['citeulike','connotea', 'mendeley']);
+    sources = this.enforceOrder(sources, ['citeulike','connotea', 'mendeley']);
 
     //create tiles
     var noTilesCreated = true;
@@ -520,43 +520,6 @@ $.fn.alm = function () {
         noTilesCreated = false;
 
         switch (source.name) {
-          case 'facebook':
-            //create tile & toggle noTilesCreated
-            // facebook does not get a link
-            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
-              '/images/logo-' + source.name + '.png',
-              source.metrics.total)
-              + '\n');
-
-            //using these vars because source goes out of scope when tooltip handler is called
-            var likes = source.metrics.likes;
-            var shares = source.metrics.shares;
-            var comments = source.metrics.comments;
-            $("#FacebookOnArticleMetricsTab").tooltip({
-              delay: 250,
-              fade: 250,
-              track: true,
-              showURL: false,
-              bodyHandler: function () {
-                return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-                  "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
-                  "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
-                  "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
-                  comments.format(0, '.', ',') + "</td></tr>" +
-                  "</tbody></table></div>");
-              }
-            });
-            break;
-
-          case 'twitter':
-            //use link to our own twitter landing page
-            bookMarksNode.append(this.createMetricsTile(source.display_name,
-              '/article/twitter/info:doi/' + doi,
-              '/images/logo-' + source.name + '.png',
-              source.metrics.total)
-              + '\n');
-            break;
-
           case 'mendeley':
             bookMarksNode.append(this.createMetricsTile(source.display_name,
               source.events_url,
@@ -611,7 +574,7 @@ $.fn.alm = function () {
       bookMarksNode.show("blind", 500);
     }
   }
-  this.setBookMarksError = function(message, bookMarksID, loadingID){
+  this.setSavedError = function(message, bookMarksID, loadingID){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + bookMarksID).show("blind", 500);
@@ -634,26 +597,67 @@ $.fn.alm = function () {
         '</div>';
   };
 
-  this.setRelatedBlogsSuccess = function(response, successID, loadingID){
+  this.setDiscussedSuccess = function(response, successID, loadingID){
 
     var articleTitle = $('meta[name=citation_title]').attr("content");
     var relatedBlogPosts = $('#' + successID);
     var html = '';
 
     //filter and sort
-    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia'])
-    sources = this.enforceOrder(sources,['researchblogging','nature','wikipedia','scienceseeker']);
+    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook'])
+    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'twitter', 'facebook']);
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
+
       if (source.metrics.total > 0) {
-        if (!source.events_url) {
-          html += this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+        if (source.name === 'facebook') {
+          //create tile & toggle noTilesCreated
+          // facebook does not get a link
+          html += this.createMetricsTileNoLink(source.display_name,
+              '/images/logo-' + source.name + '.png', source.metrics.total) + '\n';
+
+          //using these vars because source goes out of scope when tooltip handler is called
+          var likes = source.metrics.likes;
+          var shares = source.metrics.shares;
+          var comments = source.metrics.comments;
+
+          $("#FacebookOnArticleMetricsTab").tooltip({
+            delay: 250,
+            fade: 250,
+            track: true,
+            showURL: false,
+            bodyHandler: function () {
+              return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+                  "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
+                  "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
+                  "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
+                  comments.format(0, '.', ',') + "</td></tr>" +
+                  "</tbody></table></div>");
+            }
+          });
+        } else if (source.name === 'twitter') {
+          //use link to our own twitter landing page
+          html += this.createMetricsTile(source.display_name,
+              '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
+              source.metrics.total) + '\n';
         } else {
-          html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+          var logoPath = "";
+          if (source.name === 'researchblogging') {
+            logoPath = '/images/logo-research-blogging.png';
+          } else {
+            logoPath = "/images/logo-" + source.name + '.png';
+          }
+
+          if (!source.events_url) {
+            html += this.createMetricsTileNoLink(source.display_name, logoPath, source.metrics.total) + '\n';
+          } else {
+            html += this.createMetricsTile(source.display_name, source.events_url, logoPath, source.metrics.total) + '\n';
+          }
         }
       }
     }
+
     //add google
     html += this.createMetricsTile("google-blogs",
       "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
@@ -662,11 +666,12 @@ $.fn.alm = function () {
     + '\n';
 
     //using prepend so tiles come before plos comments tile.  plos comments tile is part of freemarker template
+
     $("#" + loadingID).fadeOut('slow');
     relatedBlogPosts.prepend(html);
     relatedBlogPosts.show('blind', 500);
   }
-  this.setRelatedBlogsError = function (message, errorID, loadingID) {
+  this.setDiscussedError = function (message, errorID, loadingID) {
 
     var relatedBlogs = $('#' + errorID);
     relatedBlogs.css('display', 'none');
@@ -1123,16 +1128,16 @@ $.fn.alm = function () {
     //succeed!
     var success = function(response){
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
-      this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
+      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
       this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
     }
 
     //fail!
     var fail = function(message){
       this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
-      this.setBookMarksError(message, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setRelatedBlogsError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner");
+      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
       this.setF1000Error(message, "f1000","f1000Spinner");
     }
 
