@@ -665,17 +665,10 @@ $.fn.alm = function () {
               + '\n';
 
         } else {
-          var logoPath = "";
-          if (source.name === 'researchblogging') {
-            logoPath = '/images/logo-research-blogging.png';
-          } else {
-            logoPath = "/images/logo-" + source.name + '.png';
-          }
-
           if (!source.events_url) {
-            html = this.createMetricsTileNoLink(source.display_name, logoPath, source.metrics.total) + '\n';
+            html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           } else {
-            html = this.createMetricsTile(source.display_name, source.events_url, logoPath, source.metrics.total) + '\n';
+            html = this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           }
         }
 
