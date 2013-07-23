@@ -502,8 +502,8 @@ $.fn.alm = function () {
    */
   this.setSavedSuccess = function(response, bookMarksID, loadingID){
     var bookMarksNode = $('#' + bookMarksID);
-    bookMarksNode.css("display", "none");
     $("#" + loadingID).fadeOut('slow');
+    bookMarksNode.css("display", "none");
 
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
 
