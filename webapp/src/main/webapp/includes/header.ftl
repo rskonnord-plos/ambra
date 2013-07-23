@@ -20,6 +20,7 @@
     <meta name="searchHost" content="${freemarker_config.get("searchHost")}" />
     <meta name="termsHost" content="${freemarker_config.get("termsHost")}" />
     <meta name="solrApiKey" content="${freemarker_config.get("solrApiKey")}" />
+    <meta name="almAPIKey" content="${freemarker_config.get("almAPIKey")}" />
 
     <#include "/includes/article_variables.ftl">
 

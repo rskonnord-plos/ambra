@@ -17,9 +17,14 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
+  this.almAPIKey = $('meta[name=almAPIKey]').attr('content');
 
   if (this.almHost == null) {
     jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
+  }
+
+  if (!this.almAPIKey){
+    jQuery.error('The alm key is not defined.  Make sure to define it in the meta section of the html.')
   }
 
   this.isNewArticle = function (pubDateInMilliseconds) {
@@ -474,7 +479,7 @@ $.fn.alm = function () {
    *    --The callback method fails
    **/
   this.getData = function (request, callBack, errorCallback) {
-    var url = this.almHost + '?api_key=3pezRBRXdyzYW6ztfwft&ids=' + request;
+    var url = this.almHost + '?api_key=' + this.almAPIKey + '&ids=' + request;
 
     //I use a third party plugin here for jsonp requests as jQuery doesn't
     //Handle errors well (with jsonp requests)

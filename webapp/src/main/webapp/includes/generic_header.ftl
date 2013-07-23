@@ -19,6 +19,7 @@
   <meta name="almHost" content="${freemarker_config.get("almHost")}"/>
   <meta name="solrHost" content="${freemarker_config.get("solrHost")}"/>
   <meta name="solrApiKey" content="${freemarker_config.get("solrApiKey")}" />
+  <meta name="almAPIKey" content="${freemarker_config.get("almAPIKey")}" />
 
   <link rel="shortcut icon" href="${freemarker_config.context}/images/favicon.ico" type="image/x-icon"/>
   <link rel="home" title="home" href="${homeURL}"/>
