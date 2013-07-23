@@ -339,7 +339,7 @@ $(document).ready(
         if (markCount > 0) {
           newNode = $("<a></a>")
             .attr("href", metricsURL + "#other")
-            .html("Bookmarks: " + markCount.format(0, '.', ','))
+            .html("Saves: " + markCount.format(0, '.', ','))
             .addClass("data");
 
           appendBullIfNeeded(node);
@@ -417,7 +417,6 @@ $(document).ready(
           appendBullIfNeeded(node);
           node.append($("<span></span>")
             .html("Shares: None")
-            .html("Bookmarks: None")
             .addClass("no-data"));
         }
       }
