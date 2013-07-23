@@ -597,24 +597,32 @@ $.fn.alm = function () {
         '</div>';
   };
 
-  this.setDiscussedSuccess = function(response, successID, loadingID){
+  this.setDiscussedSuccess = function(response, discussedID, loadingID){
+
+    $("#" + loadingID).fadeOut('slow');
+    var discussedElement = $('#' + discussedID);
+    discussedElement.css("display", "none");
 
     var articleTitle = $('meta[name=citation_title]').attr("content");
-    var relatedBlogPosts = $('#' + successID);
     var html = '';
+
+    // the order of tiles
+    // research blogging, science seeker, nature blogs, wikipedia
+    // comments, twitter, facebook, trackbacks, google blogs
 
     //filter and sort
     var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook'])
-    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'twitter', 'facebook']);
+    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'comment', 'twitter', 'facebook', 'trackback', 'googleblog']);
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
+      html = '';
 
       if (source.metrics.total > 0) {
         if (source.name === 'facebook') {
           //create tile & toggle noTilesCreated
           // facebook does not get a link
-          html += this.createMetricsTileNoLink(source.display_name,
+          html = this.createMetricsTileNoLink(source.display_name,
               '/images/logo-' + source.name + '.png', source.metrics.total) + '\n';
 
           //using these vars because source goes out of scope when tooltip handler is called
@@ -636,11 +644,26 @@ $.fn.alm = function () {
                   "</tbody></table></div>");
             }
           });
+
         } else if (source.name === 'twitter') {
           //use link to our own twitter landing page
-          html += this.createMetricsTile(source.display_name,
+          html = this.createMetricsTile(source.display_name,
               '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
               source.metrics.total) + '\n';
+
+        } else if (source.name === 'comment') {
+          $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
+
+        } else if (source.name === 'trackback') {
+          $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
+
+        } else if (source.name === 'googleblog') {
+          html = this.createMetricsTile("google-blogs",
+              "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
+              "/images/logo-googleblogs.png",
+              "Search")
+              + '\n';
+
         } else {
           var logoPath = "";
           if (source.name === 'researchblogging') {
@@ -650,39 +673,32 @@ $.fn.alm = function () {
           }
 
           if (!source.events_url) {
-            html += this.createMetricsTileNoLink(source.display_name, logoPath, source.metrics.total) + '\n';
+            html = this.createMetricsTileNoLink(source.display_name, logoPath, source.metrics.total) + '\n';
           } else {
-            html += this.createMetricsTile(source.display_name, source.events_url, logoPath, source.metrics.total) + '\n';
+            html = this.createMetricsTile(source.display_name, source.events_url, logoPath, source.metrics.total) + '\n';
           }
         }
+
+        if (html.length > 0) {
+          discussedElement.append(html);
+        }
       }
-    }
+    } // end of for loop
 
-    //add google
-    html += this.createMetricsTile("google-blogs",
-      "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
-      "/images/logo-googleblogs.png",
-      "Search")
-    + '\n';
-
-    //using prepend so tiles come before plos comments tile.  plos comments tile is part of freemarker template
-
-    $("#" + loadingID).fadeOut('slow');
-    relatedBlogPosts.prepend(html);
-    relatedBlogPosts.show('blind', 500);
+    discussedElement.show('blind', 500);
   }
-  this.setDiscussedError = function (message, errorID, loadingID) {
+  this.setDiscussedError = function (message, discussedID, loadingID) {
 
-    var relatedBlogs = $('#' + errorID);
-    relatedBlogs.css('display', 'none');
+    var discussedElement = $('#' + discussedID);
+    discussedElement.css('display', 'none');
 
     var articleTitle = $('meta[name=citation_title]').attr('content');
     var html = 'Search for related blog posts on <a href=\'http://blogsearch.google.com/blogsearch?as_q=%22'
         + articleTitle + '%22\'>Google Blogs</a><br/><img src=\'/images/icon_error.png\'/>&nbsp;' + message;
-    relatedBlogs.html(html);
+    discussedElement.html(html);
 
     $("#" + loadingID).fadeOut('slow');
-    relatedBlogs.show('blind', 500);
+    discussedElement.show('blind', 500);
 
   };
 
@@ -1170,6 +1186,16 @@ $.fn.alm = function () {
       var index = $.inArray(orderArray[d], sourceNames);
       if (index > -1) {
         orderedSources.push(sources[index]);
+      } else {
+        // this logic handles fake sources like comments
+        orderedSources.push(
+            {
+              "name": orderArray[d],
+              "metrics": {
+                "total": 1
+              }
+            }
+        );
       }
     }
     return orderedSources;
