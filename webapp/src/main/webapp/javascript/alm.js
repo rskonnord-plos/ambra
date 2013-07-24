@@ -505,8 +505,6 @@ $.fn.alm = function () {
     $("#" + loadingID).fadeOut('slow');
     bookMarksNode.css("display", "none");
 
-    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
-
     //filter and sort
     var sources = this.filterSources(response[0].sources, ['citeulike','connotea', 'mendeley']);
     sources = this.enforceOrder(sources, ['citeulike','connotea', 'mendeley']);
@@ -604,14 +602,15 @@ $.fn.alm = function () {
     discussedElement.css("display", "none");
 
     var articleTitle = $('meta[name=citation_title]').attr("content");
-    var html = '';
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    var html = '', source = null, tooltip = "";
 
     // the order of tiles
     // research blogging, science seeker, nature blogs, wikipedia
     // comments, twitter, facebook, trackbacks, google blogs
 
     //filter and sort
-    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook'])
+    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook']);
     sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'comment', 'twitter', 'facebook', 'trackback', 'googleblog']);
 
     for (var u = 0; u < sources.length; u++) {
@@ -629,21 +628,12 @@ $.fn.alm = function () {
           var likes = source.metrics.likes;
           var shares = source.metrics.shares;
           var comments = source.metrics.comments;
-
-          $("#FacebookOnArticleMetricsTab").tooltip({
-            delay: 250,
-            fade: 250,
-            track: true,
-            showURL: false,
-            bodyHandler: function () {
-              return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-                  "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
-                  "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
-                  "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
-                  comments.format(0, '.', ',') + "</td></tr>" +
-                  "</tbody></table></div>");
-            }
-          });
+          tooltip = "<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+              "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
+              "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
+              "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
+              comments.format(0, '.', ',') + "</td></tr>" +
+              "</tbody></table></div>";
 
         } else if (source.name === 'twitter') {
           //use link to our own twitter landing page
@@ -677,6 +667,16 @@ $.fn.alm = function () {
         }
       }
     } // end of for loop
+
+    $("#FacebookOnArticleMetricsTab").tooltip({
+      delay: 250,
+      fade: 250,
+      track: true,
+      showURL: false,
+      bodyHandler: function () {
+        return $(tooltip);
+      }
+    });
 
     discussedElement.show('blind', 500);
   }
