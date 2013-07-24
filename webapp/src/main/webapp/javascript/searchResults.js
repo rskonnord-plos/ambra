@@ -286,7 +286,8 @@ $(document).ready(
             }
           });
 
-          node.append(newNode);
+
+          node.append($("<span></span>").append(newNode));
         } else {
           node.appendChild($("<span></span>")
             .addClass("no-data")
@@ -327,7 +328,7 @@ $(document).ready(
 
           //new dijit.Tooltip({ connectId: newNode, label: tipText });
           appendBullIfNeeded(node);
-          node.append(newNode);
+          node.append($("<span></span>").append(newNode));
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
@@ -370,7 +371,7 @@ $(document).ready(
             }
           });
 
-          node.append(newNode);
+          node.append($("<span></span>").append(newNode));
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
@@ -412,7 +413,7 @@ $(document).ready(
             }
           });
 
-          node.append(newNode);
+          node.append($("<span></span>").append(newNode));
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
