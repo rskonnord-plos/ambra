@@ -39,16 +39,18 @@ $.fn.edBoard = function () {
   this.getEditors = function (args) {
     //set the default arguments
     args = $.extend({
-      query:"*:*",
-      formatSectionEds:true,
-      subjectsOnLine:5,
-      highlight:false
+      query: "*:*",
+      formatSectionEds: true,
+      subjectsOnLine: 5,
+      highlight: false
     }, args);
 
     //clear out the existing editors
-    $("div.editor").each(function (index, obj) { $(this).remove(); });
-    $("#all_editors").css("display","none");
-    $("#loading").css("display","block");
+    $("div.editor").each(function (index, obj) {
+      $(this).remove();
+    });
+    $("#all_editors").css("display", "none");
+    $("#loading").css("display", "block");
 
     //asking solr to do the highlighting is too slow
     //(qtime goes from ~4ms to ~90ms,
@@ -58,10 +60,10 @@ $.fn.edBoard = function () {
     if (args.highlight) {
       $.each(args.query.split(" AND "), function (index, item) {
         var term = item
-          .replace(/.*:/, "")
-          .replace(/[^a-zA-Z\- ()]/g, "")//filter out characters that break regex
-          .replace(/\(/, "\\(")
-          .replace(/\)/, "\\)");
+            .replace(/.*:/, "")
+            .replace(/[^a-zA-Z\- ()]/g, "")//filter out characters that break regex
+            .replace(/\(/, "\\(")
+            .replace(/\)/, "\\)");
         args.queryTerms.push(new RegExp("(" + term + ")", "ig"));
       });
     }
@@ -78,7 +80,7 @@ $.fn.edBoard = function () {
       context: document.body,
       timeout: 10000,
       callbackParameter: "json.wrf",
-      data:{
+      data: {
         q: args.query,
         wt: "json",
         fq: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE",
@@ -99,7 +101,7 @@ $.fn.edBoard = function () {
 
 
   //Setting the Editor results and making a call to load first page
-  this.setEditors = function(json, textStatus, xOptions) {
+  this.setEditors = function (json, textStatus, xOptions) {
     window.EditorialResponse = json;
 
     $(".spinner").fadeOut(1000);
@@ -126,17 +128,17 @@ $.fn.edBoard = function () {
     // example: if currentPage is 2 and numOfEditors is 420
     // totalPages is 9 == ceil of 420/50
     // startIndex is 100, endIndex is 149.
-    var totalPages = Math.ceil(numOfEditors/pageSize);
+    var totalPages = Math.ceil(numOfEditors / pageSize);
     var startIndex = currentPage * pageSize;
 
     // if last page has less than 50 Editors, use remaining Editors.
     var endIndex = Math.min(numOfEditors, startIndex + pageSize);
 
-    if(numOfEditors>0){
-      editorsDiv.append("Displaying  "+ parseInt(startIndex+1) +"-" + endIndex +
-        " of " + parseInt(numOfEditors) + " Editors.");
+    if (numOfEditors > 0) {
+      editorsDiv.append("Displaying  " + parseInt(startIndex + 1) + "-" + endIndex +
+          " of " + parseInt(numOfEditors) + " Editors.");
     }
-    editorsDiv.append("</br>") ;
+    editorsDiv.append("</br>");
 
     var singlePage = $("<div></div>");
     for (var i = startIndex; i < endIndex; i++) {
@@ -155,12 +157,12 @@ $.fn.edBoard = function () {
       }
 
       entry.append($("<div></div>")
-        .addClass("organization")
-        .html(editor.ae_institute.join(", ")));
+          .addClass("organization")
+          .html(editor.ae_institute.join(", ")));
 
       entry.append($("<div></div>")
-        .addClass("location")
-        .html(editor.ae_country.join(", ")));
+          .addClass("location")
+          .html(editor.ae_country.join(", ")));
 
       if (editor.ae_subject) {
         //highlight the subjects
@@ -174,7 +176,7 @@ $.fn.edBoard = function () {
         }
 
         entry.append($("<div></div>").addClass("expertise")
-          .html("Expertise: " + editor.ae_subject.join(", ")));
+            .html("Expertise: " + editor.ae_subject.join(", ")));
 
       }
 
@@ -185,7 +187,7 @@ $.fn.edBoard = function () {
     // Adding pagination component to div
     var paginationTop = this.paging(totalPages, currentPage);
     var paginationBottom = this.paging(totalPages, currentPage);
-    editorsDiv.append(paginationTop,singlePage,paginationBottom);
+    editorsDiv.append(paginationTop, singlePage, paginationBottom);
 
     //unhide the editor sections that were
     //hidden on previous searches
@@ -204,11 +206,11 @@ $.fn.edBoard = function () {
 
     //show the loaded data
     $("#loading").fadeOut();
-    $(editorsDiv).show( "blind", 500 );
+    $(editorsDiv).show("blind", 500);
   }; //end loadCallback
 
 
-  this.paging = function(totalPages, currentPage) {
+  this.paging = function (totalPages, currentPage) {
     var pagination = $("<div></div>");
 
     // no pagination if only one page
@@ -257,7 +259,7 @@ $.fn.edBoard = function () {
 
         // put page number for all pages
         // do not put link for current page.
-        for (var pageNumber=0; pageNumber<totalPages; ++pageNumber) {
+        for (var pageNumber = 0; pageNumber < totalPages; ++pageNumber) {
           if (pageNumber == currentPage) {
             pagination.append("<strong>" + (currentPage + 1) + "</strong>");
           }
@@ -289,9 +291,9 @@ $.fn.edBoard = function () {
           pagination.append(ellipsis);
         }
         // put the three page numbers -- one before, current and one after
-        for (var pageNumber=Math.min(currentPage, 0); pageNumber<=Math.max(3, currentPage+2); ++pageNumber) {
+        for (var pageNumber = Math.min(currentPage, 0); pageNumber <= Math.max(3, currentPage + 2); ++pageNumber) {
           if ((pageNumber > 1 && pageNumber < totalPages && pageNumber > (currentPage - 1)
-            || ((pageNumber == (totalPages - 2)) && (pageNumber > (currentPage - 2))))) {
+              || ((pageNumber == (totalPages - 2)) && (pageNumber > (currentPage - 2))))) {
             if ((currentPage + 1) == pageNumber) {
               pagination.append("<strong>" + pageNumber + "</strong>");
             }
@@ -319,14 +321,14 @@ $.fn.edBoard = function () {
     return pagination;
   };
 
-  this.pagingAnchor = function(pageNumber, pagingText, className) {
+  this.pagingAnchor = function (pageNumber, pagingText, className) {
     var edBoard = new $.fn.edBoard();
     var anchor = $('<a></a>').attr({
       href: "#",
-      title: "(" + (pageNumber + 1)  + ")"
-    }).html(pagingText).bind("click",function(e){
-        edBoard.loadCallback(pageNumber);
-      })
+      title: "(" + (pageNumber + 1) + ")"
+    }).html(pagingText).bind("click", function (e) {
+          edBoard.loadCallback(pageNumber);
+        })
 
     if (className) {
       anchor.attr("class", className);
@@ -368,12 +370,12 @@ $.fn.edBoard = function () {
     });
 
     textbox.keyup(function (eventObj) {
-      if(eventObj.keyCode == 13) {
+      if (eventObj.keyCode == 13) {
         //Enter pressed
         //Select first element (if any) as value
         //Simulate filter click
         console.log($(this).data("autocomplete").menu.options);
-        if($(this).data("autocomplete").menu.options) {
+        if ($(this).data("autocomplete").menu.options) {
           console.log($(this).data("autocomplete").menu.options[0]);
         }
       }
@@ -390,13 +392,13 @@ $.fn.edBoard = function () {
     });
 
     $("#" + args.textBox).autocomplete({
-      select: function(event, ul) {
+      select: function (event, ul) {
         var terms = event.target.value.split(",");
 
         //Pop last value
         terms.pop();
 
-        if(terms.length > 0) {
+        if (terms.length > 0) {
           event.target.value = terms.join(", ") + ", " + ul.item.value;
         } else {
           event.target.value = ul.item.value;
@@ -405,26 +407,26 @@ $.fn.edBoard = function () {
         return false;
       },
 
-      focus: function(event, ul) {
+      focus: function (event, ul) {
         //Don't update the text of the box until a selection is made
         return false;
       },
 
-      source: function(entry, response) {
+      source: function (entry, response) {
         var actual_query = [];
         var terms = entry.term.split(",");
 
-        if(terms.length > 0) {
+        if (terms.length > 0) {
           var prefix = $.trim(terms.pop());
 
           // once the subject facet and name facet queries complete,
           // invoke the response handler with the list of options.
-          var success_handler = function(json_subjects, json_names) {
+          var success_handler = function (json_subjects, json_names) {
             var options = [];
 
             // areas and names total is at most 20
             var areas_count = json_subjects ? json_subjects.facet_counts.facet_fields.ae_subject_facet.length / 2 : 0;
-            var names_count =  json_names ? json_names.response.docs.length : 0;
+            var names_count = json_names ? json_names.response.docs.length : 0;
             if (areas_count >= 10 && names_count >= 10) {
               areas_count = 10;
               names_count = 10;
@@ -446,17 +448,18 @@ $.fn.edBoard = function () {
                 // ["biology",2411, "biophysics",344]
 
                 //Only push terms that haven't been selected.
-                if($.inArray(subject, terms) == -1) {
+                if ($.inArray(subject, terms) == -1) {
                   if ((index / 2) < areas_count && index % 2 == 0 && subjects[index + 1] > 0) {
                     if (!subject_title) {
                       subject_title = true;
                       options.push({ label: "<b>Areas of Expertise</b>", type: "html", value: ""});
                     }
-                    var label = subject + " (" + subjects[index+1] + ")";;
+                    var label = subject + " (" + subjects[index + 1] + ")";
+                    ;
                     if (prefix.length > 0) {
                       label = "<b>" + label.substr(0, prefix.length) + "</b>" + label.substr(prefix.length);
                     }
-                    options.push({ label:label, value:subject, type: "html" });
+                    options.push({ label: label, value: subject, type: "html" });
                   }
                 }
               });
@@ -482,25 +485,25 @@ $.fn.edBoard = function () {
                       // ae_last_name = "Singh" (5)
                       // index1 = 6, last_first = "Singh" + ", " + "Mamta"
                       var index1 = people.length - name0.ae_last_name.length;
-                      last_first = people.substr(index1) + ", " + people.substr(0, index1-1);
+                      last_first = people.substr(index1) + ", " + people.substr(0, index1 - 1);
                     }
 
                     //Only push terms that haven't been selected.
-                    if($.inArray('"' + people + '"', terms) == -1) {
+                    if ($.inArray('"' + people + '"', terms) == -1) {
                       if (!name_title) {
                         name_title = true;
                         options.push({ label: "<b>People</b>", type: "html", value: ""});
                       }
                       var label = last_first;
                       if (prefix.length > 0) {
-                        for (var j=0; j<prefix_parts.length; ++j) {
+                        for (var j = 0; j < prefix_parts.length; ++j) {
                           if (prefix_parts[j]) {
                             var re = RegExp("\\b(" + prefix_parts[j] + ")", "ig");
                             label = label.replace(re, "<b>$1</b>");
                           }
                         }
                       }
-                      options.push({ label:label, value:'"' + people + '"', type: "html"});
+                      options.push({ label: label, value: '"' + people + '"', type: "html"});
                     }
                   }
                 });
@@ -513,10 +516,10 @@ $.fn.edBoard = function () {
           };
 
           // all except the last item is queried exactly via name or subject
-          $.each(terms, function(index, term) {
+          $.each(terms, function (index, term) {
             var item = $.trim(term);
-            if(item.length > 0) {
-              if (item[0] == '"' && item[item.length-1] == '"') {
+            if (item.length > 0) {
+              if (item[0] == '"' && item[item.length - 1] == '"') {
                 actual_query.push("ae_name:" + item);
               }
               else {
@@ -531,7 +534,7 @@ $.fn.edBoard = function () {
           // then use a wild-card *:* query (q).
           var query = actual_query.slice(0);
 
-          if(query.length == 0) {
+          if (query.length == 0) {
             query.push("*:*")
           }
 
@@ -556,7 +559,7 @@ $.fn.edBoard = function () {
             timeout: 10000,
             data: data,
             callbackParameter: "json.wrf",
-            success: function(json_subjects, textStatus, xOptions) {
+            success: function (json_subjects, textStatus, xOptions) {
               if (prefix.length < 3) {
                 success_handler(json_subjects);
                 return;
@@ -568,7 +571,7 @@ $.fn.edBoard = function () {
               var query = actual_query.slice(0);
               var prefix_parts = prefix.split(" ");
               var last_part = prefix_parts.pop();
-              for (var i=0; i<prefix_parts.length; ++i) {
+              for (var i = 0; i < prefix_parts.length; ++i) {
                 if (prefix_parts[i]) {
                   query.push("ae_name_facet:" + prefix_parts[i].toLowerCase());
                 }
@@ -592,16 +595,16 @@ $.fn.edBoard = function () {
                 timeout: 10000,
                 data: data,
                 callbackParameter: "json.wrf",
-                success: function(json_names, textStatus, xOptions) {
+                success: function (json_names, textStatus, xOptions) {
                   success_handler(json_subjects, json_names);
                 },
-                error: function(xOptions, error) {
+                error: function (xOptions, error) {
                   console.log(error);
                   success_handler(json_subjects);
                 }
               });
             },
-            error: function(xOptions, error) {
+            error: function (xOptions, error) {
               console.log(error);
               success_handler();
             }
@@ -619,43 +622,43 @@ $(function () {
   edBoard.getEditors();
 
   edBoard.initializeAutoSuggest(
-    {
-      textBox: "searchBox",
-      searchButton: "searchButton",
-      resetButton: "clearFilter",
+      {
+        textBox: "searchBox",
+        searchButton: "searchButton",
+        resetButton: "clearFilter",
 
-      searchFunction: function(userString) {
-        var query = [];
+        searchFunction: function (userString) {
+          var query = [];
 
-        // each item is either name or subject.
-        // if it is "quoted" it is only a name, otherwise
-        // it is either name or subject.
-        var items = userString.match(/(\".*?\")|[^,]+/g);
-        if (items) {
-          $.each(items, function(index, term) {
-            var item = $.trim(term);
-            if(item.length > 0) {
-              if (item[0] == '"' && item[item.length-1] == '"') {
-                var name = item.substring(1, item.length-1);
-                query.push("ae_name:\"" + name + "\"");
+          // each item is either name or subject.
+          // if it is "quoted" it is only a name, otherwise
+          // it is either name or subject.
+          var items = userString.match(/(\".*?\")|[^,]+/g);
+          if (items) {
+            $.each(items, function (index, term) {
+              var item = $.trim(term);
+              if (item.length > 0) {
+                if (item[0] == '"' && item[item.length - 1] == '"') {
+                  var name = item.substring(1, item.length - 1);
+                  query.push("ae_name:\"" + name + "\"");
+                }
+                else {
+                  query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
+                }
               }
-              else {
-                query.push("(ae_subject:\"" + item + "\" OR ae_name:\"" + item + "\")");
-              }
-            }
+            });
+          }
+
+          edBoard.getEditors({
+            "query": query.join(" AND "),
+            highlight: true
           });
         }
-
-        edBoard.getEditors({
-          "query": query.join(" AND "),
-          highlight: true
-        });
       }
-    }
   );
 
-  $("#searchBox").keyup(function(eventObj) {
-    setTimeout(function() {
+  $("#searchBox").keyup(function (eventObj) {
+    setTimeout(function () {
       console.log($("#searchBox").val() + ", " + $("#clearFilter").css("display"));
       if ($("#searchBox").val() && $("#clearFilter").css("display") != "block") {
         $("#clearFilter").css("display", "block");
@@ -667,7 +670,7 @@ $(function () {
     return true;
   });
 
-  $("#clearFilter").click(function(eventObj) {
+  $("#clearFilter").click(function (eventObj) {
     $("#searchBox").val("");
     $("#clearFilter").css("display", "none");
     edBoard.getEditors();
