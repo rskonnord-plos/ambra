@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.7.3</h2>
+  <p>Released July 29, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.3</h3>
+  <ul>
+    <li>Etocs feature live</li>
+    <li>Revise ALM classification for search, signpost and metrics tab</li>
+    <li>Bug fix for email this article</li>
+  </ul>
+
   <h2>Ambra 2.7.2</h2>
   <p>Released July 23, 2013</p>
   <h3>Features Implemented in Ambra 2.7.2</h3>
