@@ -21,9 +21,10 @@
 
 package org.ambraproject.service.search;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.ambraproject.models.Article;
+import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.service.article.MostViewedArticleService;
-import org.ambraproject.util.Pair;
+import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
@@ -50,12 +51,13 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
    * are 10 journals
    */
   private ConcurrentMap<String, MostViewedCache> cachedMostViewedResults = new ConcurrentHashMap<String, MostViewedCache>();
-  private static final String NAME_ATTR = "name";
   private static final String DOI_ATTR = "id";
   private static final String TITLE_ATTR = "title_display";
+  private static final String STRIKING_ATTR = "striking_image";
+  private static final String AUTHORS_ATTR = "author_display";
 
   @Override
-  public List<Pair<String, String>> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException {
+  public List<Article> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException {
     //check if we still have valid results in the cache
     MostViewedCache cache = cachedMostViewedResults.get(journal);
     if (cache != null && cache.isValid()) {
@@ -63,7 +65,7 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
     }
 
     Map<String, String> params = new HashMap<String, String>();
-    params.put("fl", DOI_ATTR + "," + TITLE_ATTR);
+    params.put("fl", DOI_ATTR + "," + TITLE_ATTR + "," + STRIKING_ATTR + "," + AUTHORS_ATTR);
     params.put("fq", "doc_type:full AND !article_type_facet:\"Issue Image\" AND cross_published_journal_key:" + journal);
     params.put("start", "0");
     params.put("rows", String.valueOf(limit));
@@ -74,7 +76,7 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
 
     Document doc = solrHttpService.makeSolrRequest(params);
 
-    List<Pair<String, String>> articles = new ArrayList<Pair<String, String>>(limit);
+    List<Article> articles = new ArrayList<Article>(limit);
 
     //get the children of the "result" node
     XPath xPath = XPathFactory.newInstance().newXPath();
@@ -83,7 +85,24 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
       for (int i = 1; i <= count; i++) {
         String doi = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + DOI_ATTR + "']/text()", doc);
         String title = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + TITLE_ATTR + "']/text()", doc);
-        articles.add(new Pair<String, String>(doi, title));
+        String strkImg = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + STRIKING_ATTR + "']/text()", doc);
+
+        Integer authors_count = Integer.valueOf(xPath.evaluate("count(//result/doc[" + i + "]/arr[@name = '" + AUTHORS_ATTR + "']/str)", doc));
+        List<ArticleAuthor> authors = new ArrayList<ArticleAuthor>();
+
+        for(int j = 1; j <= authors_count; ++j) {
+          String authorName = xPath.evaluate("//result/doc[" + i + "]/arr[@name = '" + AUTHORS_ATTR + "']/str[" + j + "]/text()", doc);
+          ArticleAuthor author = new ArticleAuthor(authorName, null, null);
+
+          authors.add(author);
+        }
+        Article article = new Article();
+        article.setDoi(doi);
+        article.setTitle(title);
+        article.setStrkImgURI(strkImg);
+        article.setAuthors(authors);
+
+        articles.add(article);
       }
     } catch (XPathExpressionException e) {
       throw new SolrException("Error parsing solr xml response", e);

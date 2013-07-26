@@ -214,7 +214,7 @@ function initMainContainer() {
   }
 
   // figure search results
-  var $fig_results = $('#fig-search-results');
+  var $fig_results = $('#fig-search-results, .article-block .actions');
   if ($fig_results.length) {
     $fig_results.find('a.figures').on('click', function () {
       doi = $(this).data('doi');

@@ -21,9 +21,12 @@
 package org.ambraproject.action;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.models.Article;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
+import org.ambraproject.service.article.MostViewedArticleService;
 import org.ambraproject.service.search.SearchService;
+import org.ambraproject.service.search.SolrException;
 import org.ambraproject.views.BrowseResult;
 import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
@@ -52,11 +55,15 @@ public class HomePageAction extends BaseActionSupport {
 
   private BrowseService browseService;
   private SearchService searchService;
+  private MostViewedArticleService mostViewedArticleService;
   private SortedMap<String, Long> categoryInfos;
 
   private ArrayList<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
+
+  private List<Article> mostViewedArticles;
+  private String mostViewedComment;
 
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
@@ -213,7 +220,55 @@ public class HomePageAction extends BaseActionSupport {
 
     initRecentArticles();
 
+    if (mostViewedEnabled()) {
+      initMostViewed();
+    } else {
+      mostViewedArticles = new ArrayList<Article>();
+    }
+
     return SUCCESS;
+  }
+
+  private boolean mostViewedEnabled() {
+    return configuration.containsKey("ambra.virtualJournals." + getCurrentJournal() + ".mostViewedArticles.limit") && mostViewedArticleService != null;
+  }
+
+  /**
+   * Populate the <b>mostViewedArticles</b> (global) variable with articles
+   *
+   */
+  private void initMostViewed() {
+    String mostViewedKey = "ambra.virtualJournals." + getCurrentJournal() + ".mostViewedArticles";
+    if (configuration.containsKey(mostViewedKey + ".message")) {
+      mostViewedComment = configuration.getString(mostViewedKey + ".message");
+    }
+    try {
+      int limit = configuration.getInt(mostViewedKey + ".limit");
+      Integer days;
+      try {
+        days = configuration.getInt(mostViewedKey + ".timeFrame");
+      } catch (Exception e) {
+        days = null;
+      }
+
+      mostViewedArticles = mostViewedArticleService.getMostViewedArticles(getCurrentJournal(), limit, days);
+    } catch (SolrException e) {
+      log.error("Error querying solr for most viewed articles; returning empty list", e);
+      mostViewedArticles = new LinkedList<Article>();
+    }
+
+  }
+
+  public void setMostViewedArticleService(MostViewedArticleService mostViewedArticleService) {
+    this.mostViewedArticleService = mostViewedArticleService;
+  }
+
+  public List<Article> getMostViewedArticles() {
+    return mostViewedArticles;
+  }
+
+  public String getMostViewedComment() {
+    return mostViewedComment;
   }
 
   /**
