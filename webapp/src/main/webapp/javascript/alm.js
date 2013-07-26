@@ -494,22 +494,20 @@ $.fn.alm = function () {
   }
 
   /**
-   * Sets the bookmarks text
+   * Sets the Saved text
    *
    * @param doi the doi
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setBookMarkSuccess = function(response, bookMarksID, loadingID){
+  this.setSavedSuccess = function(response, bookMarksID, loadingID){
     var bookMarksNode = $('#' + bookMarksID);
-    bookMarksNode.css("display", "none");
     $("#" + loadingID).fadeOut('slow');
-
-    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    bookMarksNode.css("display", "none");
 
     //filter and sort
-    var sources = this.filterSources(response[0].sources, ['citeulike','connotea','facebook','twitter','mendeley']);
-    sources = this.enforceOrder(sources, ['citeulike','connotea', 'facebook','mendeley','twitter']);
+    var sources = this.filterSources(response[0].sources, ['citeulike','connotea', 'mendeley']);
+    sources = this.enforceOrder(sources, ['citeulike','connotea', 'mendeley']);
 
     //create tiles
     var noTilesCreated = true;
@@ -520,43 +518,6 @@ $.fn.alm = function () {
         noTilesCreated = false;
 
         switch (source.name) {
-          case 'facebook':
-            //create tile & toggle noTilesCreated
-            // facebook does not get a link
-            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
-              '/images/logo-' + source.name + '.png',
-              source.metrics.total)
-              + '\n');
-
-            //using these vars because source goes out of scope when tooltip handler is called
-            var likes = source.metrics.likes;
-            var shares = source.metrics.shares;
-            var comments = source.metrics.comments;
-            $("#FacebookOnArticleMetricsTab").tooltip({
-              delay: 250,
-              fade: 250,
-              track: true,
-              showURL: false,
-              bodyHandler: function () {
-                return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-                  "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
-                  "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
-                  "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
-                  comments.format(0, '.', ',') + "</td></tr>" +
-                  "</tbody></table></div>");
-              }
-            });
-            break;
-
-          case 'twitter':
-            //use link to our own twitter landing page
-            bookMarksNode.append(this.createMetricsTile(source.display_name,
-              '/article/twitter/info:doi/' + doi,
-              '/images/logo-' + source.name + '.png',
-              source.metrics.total)
-              + '\n');
-            break;
-
           case 'mendeley':
             bookMarksNode.append(this.createMetricsTile(source.display_name,
               source.events_url,
@@ -611,7 +572,7 @@ $.fn.alm = function () {
       bookMarksNode.show("blind", 500);
     }
   }
-  this.setBookMarksError = function(message, bookMarksID, loadingID){
+  this.setSavedError = function(message, bookMarksID, loadingID){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + bookMarksID).show("blind", 500);
@@ -634,50 +595,103 @@ $.fn.alm = function () {
         '</div>';
   };
 
-  this.setRelatedBlogsSuccess = function(response, successID, loadingID){
+  this.setDiscussedSuccess = function(response, discussedID, loadingID){
+
+    $("#" + loadingID).fadeOut('slow');
+    var discussedElement = $('#' + discussedID);
+    discussedElement.css("display", "none");
 
     var articleTitle = $('meta[name=citation_title]').attr("content");
-    var relatedBlogPosts = $('#' + successID);
-    var html = '';
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    var html = '', source = null, tooltip = "";
+
+    // the order of tiles
+    // research blogging, science seeker, nature blogs, wikipedia
+    // comments, twitter, facebook, trackbacks, google blogs
 
     //filter and sort
-    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia'])
-    sources = this.enforceOrder(sources,['researchblogging','nature','wikipedia','scienceseeker']);
+    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook']);
+    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'comment', 'twitter', 'facebook', 'trackback', 'googleblog']);
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
+      html = '';
+
       if (source.metrics.total > 0) {
-        if (!source.events_url) {
-          html += this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+        if (source.name === 'facebook') {
+          //create tile & toggle noTilesCreated
+          // facebook does not get a link
+          html = this.createMetricsTileNoLink(source.display_name,
+              '/images/logo-' + source.name + '.png', source.metrics.total) + '\n';
+
+          //using these vars because source goes out of scope when tooltip handler is called
+          var likes = source.metrics.likes;
+          var shares = source.metrics.shares;
+          var comments = source.metrics.comments;
+          tooltip = "<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+              "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
+              "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
+              "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
+              comments.format(0, '.', ',') + "</td></tr>" +
+              "</tbody></table></div>";
+
+        } else if (source.name === 'twitter') {
+          //use link to our own twitter landing page
+          html = this.createMetricsTile(source.display_name,
+              '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
+              source.metrics.total) + '\n';
+
+        } else if (source.name === 'comment') {
+          $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
+
+        } else if (source.name === 'trackback') {
+          $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
+
+        } else if (source.name === 'googleblog') {
+          html = this.createMetricsTile("google-blogs",
+              "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
+              "/images/logo-googleblogs.png",
+              "Search")
+              + '\n';
+
         } else {
-          html += this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+          if (!source.events_url) {
+            html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+          } else {
+            html = this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+          }
+        }
+
+        if (html.length > 0) {
+          discussedElement.append(html);
         }
       }
-    }
-    //add google
-    html += this.createMetricsTile("google-blogs",
-      "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
-      "/images/logo-googleblogs.png",
-      "Search")
-    + '\n';
+    } // end of for loop
 
-    //append in order to preserve trackbacks
-    $("#" + loadingID).fadeOut('slow');
-    relatedBlogPosts.append(html);
-    relatedBlogPosts.show('blind', 500);
+    $("#FacebookOnArticleMetricsTab").tooltip({
+      delay: 250,
+      fade: 250,
+      track: true,
+      showURL: false,
+      bodyHandler: function () {
+        return $(tooltip);
+      }
+    });
+
+    discussedElement.show('blind', 500);
   }
-  this.setRelatedBlogsError = function (message, errorID, loadingID) {
+  this.setDiscussedError = function (message, discussedID, loadingID) {
 
-    var relatedBlogs = $('#' + errorID);
-    relatedBlogs.css('display', 'none');
+    var discussedElement = $('#' + discussedID);
+    discussedElement.css('display', 'none');
 
     var articleTitle = $('meta[name=citation_title]').attr('content');
     var html = 'Search for related blog posts on <a href=\'http://blogsearch.google.com/blogsearch?as_q=%22'
         + articleTitle + '%22\'>Google Blogs</a><br/><img src=\'/images/icon_error.png\'/>&nbsp;' + message;
-    relatedBlogs.html(html);
+    discussedElement.html(html);
 
     $("#" + loadingID).fadeOut('slow');
-    relatedBlogs.show('blind', 500);
+    discussedElement.show('blind', 500);
 
   };
 
@@ -746,6 +760,34 @@ $.fn.alm = function () {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     $("#" + citesID).show("blind", 500);
+  }
+
+  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID) {
+    //add the goods then show the area which is by default hidden
+
+    var f1k = this.filterSources(response[0].sources, ['f1000']).pop();
+
+    //TODO - delete: this is here to prevent an exception as f1000 is not active and will be null
+    if (!f1k) {
+      return;
+    }
+    if (f1k.metrics.total == 0) {
+      return;
+    }
+
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    $('#' + f1kHeaderID).show("blind", 500);
+
+    $("#" + f1kSpinnerID).fadeOut('slow');
+    $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
+      f1k.events_url,
+      '/images/logo-' + f1k.name + '.png',
+      f1k.metrics.total)
+      + '\n').show("blind", 500);
+  }
+
+  this.setF1000Error = function (message) {
+    //the f1k section is by default hidden, so no need to do a thing
   }
 
   this.setChartData = function (doi, usageID, loadingID) {
@@ -1095,15 +1137,17 @@ $.fn.alm = function () {
     //succeed!
     var success = function(response){
       this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
-      this.setBookMarkSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setRelatedBlogsSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
+      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
     }
 
     //fail!
     var fail = function(message){
       this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
-      this.setBookMarksError(message, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setRelatedBlogsError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner");
+      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Error(message, "f1000","f1000Spinner");
     }
 
     //get the data
@@ -1135,6 +1179,16 @@ $.fn.alm = function () {
       var index = $.inArray(orderArray[d], sourceNames);
       if (index > -1) {
         orderedSources.push(sources[index]);
+      } else {
+        // this logic handles fake sources like comments
+        orderedSources.push(
+            {
+              "name": orderArray[d],
+              "metrics": {
+                "total": 1
+              }
+            }
+        );
       }
     }
     return orderedSources;
@@ -1238,9 +1292,9 @@ function onReadyALM() {
         //bookmarks
         var bookmarksTotal = mendeley.metrics.total + citeulike.metrics.total;
         if (bookmarksTotal > 0) {
-          text = "ACADEMIC BOOKMARKS";
+          text = "SAVES";
           if (bookmarksTotal == 1) {
-            text = "ACADEMIC BOOKMARK";
+            text = "SAVE";
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
@@ -1252,9 +1306,9 @@ function onReadyALM() {
         //shares
         var sharesTotal = facebook.metrics.total + twitter.metrics.total;
         if (sharesTotal > 0) {
-          text = "SOCIAL SHARES";
+          text = "SHARES";
           if (sharesTotal == 1) {
-            text = "SOCIAL SHARE";
+            text = "SHARE";
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
