@@ -16,7 +16,7 @@
 
 package org.ambraproject.action;
 
-import org.ambraproject.util.Pair;
+import org.ambraproject.models.Article;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.commons.io.IOUtils;
@@ -64,7 +64,7 @@ public abstract class BaseHttpTest extends BaseTest {
    */
   protected static final String testSolrXml;
 
-  protected static final List<Pair<String, String>> articlesFromSolrXml;
+  protected static final List<Article> articlesFromSolrXml;
 
   static {
     InputStream inputStream = null;
@@ -82,17 +82,58 @@ public abstract class BaseHttpTest extends BaseTest {
       IOUtils.closeQuietly(writer);
     }
 
-    List<Pair<String, String>> tempList = new ArrayList<Pair<String, String>>(11);
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010001", "Ab Initio Prediction of Transcription Factor Targets Using Structural Knowledge"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010002", "What Makes Ribosome-Mediated Transcriptional Attenuation Sensitive to Amino Acid Limitation?"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010003", "Predicting Functional Gene Links from Phylogenetic-Statistical Analyses of Whole Genomes"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010004", "<i>PLoS Computational Biology:</i> A New Community Journal"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010005", "An Open Forum for Computational Biology"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010006", "“Antedisciplinary” Science"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010007", "Susceptibility to Superhelically Driven DNA Duplex Destabilization: A Highly Conserved Property of Yeast Replication Origins"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010008", "Combinatorial Pattern Discovery Approach for the Folding Trajectory Analysis of a <i>β</i>-Hairpin"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010009", "Improving the Precision of the Structure–Function Relationship by Considering Phylogenetic Context"));
-    tempList.add(new Pair<String, String>("10.1371/journal.pcbi.0010010", "Extraction of Transcript Diversity from Scientific Literature"));
+    List<Article> tempList = new ArrayList<Article>(11);
+
+    Article article1 = new Article();
+    article1.setDoi("10.1371/journal.pcbi.0010001");
+    article1.setTitle("Ab Initio Prediction of Transcription Factor Targets Using Structural Knowledge");
+    tempList.add(article1);
+
+    Article article2 = new Article();
+    article2.setDoi("10.1371/journal.pcbi.0010002");
+    article2.setTitle("What Makes Ribosome-Mediated Transcriptional Attenuation Sensitive to Amino Acid Limitation?");
+    tempList.add(article2);
+
+    Article article3 = new Article();
+    article3.setDoi("10.1371/journal.pcbi.0010003");
+    article3.setTitle("Predicting Functional Gene Links from Phylogenetic-Statistical Analyses of Whole Genomes");
+    tempList.add(article3);
+
+    Article article4 = new Article();
+    article4.setDoi("10.1371/journal.pcbi.0010004");
+    article4.setTitle("<i>PLoS Computational Biology:</i> A New Community Journal");
+    tempList.add(article4);
+
+    Article article5 = new Article();
+    article5.setDoi("10.1371/journal.pcbi.0010005");
+    article5.setTitle("An Open Forum for Computational Biology");
+    tempList.add(article5);
+
+    Article article6 = new Article();
+    article6.setDoi("10.1371/journal.pcbi.0010006");
+    article6.setTitle("“Antedisciplinary” Science");
+    tempList.add(article6);
+
+    Article article7 = new Article();
+    article7.setDoi("10.1371/journal.pcbi.0010007");
+    article7.setTitle("Susceptibility to Superhelically Driven DNA Duplex Destabilization: A Highly Conserved Property of Yeast Replication Origins");
+    tempList.add(article7);
+
+    Article article8 = new Article();
+    article8.setDoi("10.1371/journal.pcbi.0010008");
+    article8.setTitle("Combinatorial Pattern Discovery Approach for the Folding Trajectory Analysis of a <i>β</i>-Hairpin");
+    tempList.add(article8);
+
+    Article article9 = new Article();
+    article9.setDoi("10.1371/journal.pcbi.0010009");
+    article9.setTitle("Improving the Precision of the Structure–Function Relationship by Considering Phylogenetic Context");
+    tempList.add(article9);
+
+    Article article10 = new Article();
+    article10.setDoi("10.1371/journal.pcbi.0010010");
+    article10.setTitle("Extraction of Transcript Diversity from Scientific Literature");
+    tempList.add(article10);
+
     articlesFromSolrXml = Collections.unmodifiableList(tempList);
   }
 
