@@ -808,6 +808,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
     query.addField("id");
     query.addField("abstract_primary_display");
     query.addField("eissn");
+    query.addField("striking_image");
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String sDate = sdf.format(params.getStartDate().getTime());
@@ -904,6 +905,7 @@ public class BrowseServiceImpl extends HibernateServiceImpl implements BrowseSer
       .setIssn(eissn)
       .setArticleTypeForDisplay(articleType)
       .setArticleTypeForDisplay(StringUtils.join(abstractDisplayList, ", "))
+      .setAbstractText(StringUtils.join(abstractDisplayList, ", "))
       .setStrikingImage(strikingImage)
       .build();
 

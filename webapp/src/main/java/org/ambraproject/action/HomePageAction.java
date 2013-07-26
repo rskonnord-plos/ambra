@@ -22,6 +22,7 @@ package org.ambraproject.action;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.models.Article;
+import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.service.article.MostViewedArticleService;
@@ -58,7 +59,8 @@ public class HomePageAction extends BaseActionSupport {
   private MostViewedArticleService mostViewedArticleService;
   private SortedMap<String, Long> categoryInfos;
 
-  private ArrayList<SearchHit> recentArticles;
+  private ArrayList<SearchHit> recentSearchHits;
+  private ArrayList<Article> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
 
@@ -147,7 +149,8 @@ public class HomePageAction extends BaseActionSupport {
 
       List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
 
-      numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
+      //numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
+      numDaysInPast = 1000;
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
 
       //  This is the most recent midnight.  No need to futz about with exact dates.
@@ -172,10 +175,10 @@ public class HomePageAction extends BaseActionSupport {
       BrowseResult results = browseService.getArticlesByDate(params);
 
       //Create a clone here so we're not modifying the object that is actually in the cache
-      recentArticles = (ArrayList<SearchHit>)results.getArticles().clone();
+      recentSearchHits = (ArrayList<SearchHit>)results.getArticles().clone();
 
       //  If not enough, then query for articles before "numDaysInPast" to make up the difference.
-      if (recentArticles.size() < numArticlesToShow) {
+      if (recentSearchHits.size() < numArticlesToShow) {
         endDate = (Calendar) startDate.clone();
         endDate.add(Calendar.SECOND, -1); // So no overlap with the first query.
         startDate.add(Calendar.DATE, -(numDaysInPast) - 1); // One extra day to play it safe.
@@ -185,24 +188,46 @@ public class HomePageAction extends BaseActionSupport {
         params.setEndDate(endDate);
         params.setArticleTypes(typeUriArticlesToShow);
         params.setPageNum(0);
-        params.setPageSize(numArticlesToShow - recentArticles.size());
+        params.setPageSize(numArticlesToShow - recentSearchHits.size());
         params.setJournalKey(this.getCurrentJournal());
 
-        recentArticles.addAll(browseService.getArticlesByDate(params).getArticles());
+        recentSearchHits.addAll(browseService.getArticlesByDate(params).getArticles());
       }
 
       // Now choose a random selection of numArticlesToShow articles from the article pool.
       // Even if we do not have enough articles, this will still randomize their order.
-      if (recentArticles.size() > 0) {
+      if (recentSearchHits.size() > 0) {
         Random randomNumberGenerator = new Random((new Date()).getTime());  // Seed: time = "now".
         ArrayList<SearchHit> recentArticlesTemp = new ArrayList<SearchHit>();
-        while (recentArticlesTemp.size() < numArticlesToShow && recentArticles.size() > 0) {
+        while (recentArticlesTemp.size() < numArticlesToShow && recentSearchHits.size() > 0) {
           // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
-          int randomNumber = randomNumberGenerator.nextInt(recentArticles.size());
-          recentArticlesTemp.add(recentArticles.get(randomNumber));
-          recentArticles.remove(randomNumber);
+          int randomNumber = randomNumberGenerator.nextInt(recentSearchHits.size());
+          recentArticlesTemp.add(recentSearchHits.get(randomNumber));
+          recentSearchHits.remove(randomNumber);
         }
-        recentArticles = recentArticlesTemp;
+        recentSearchHits = recentArticlesTemp;
+      }
+
+      recentArticles = new ArrayList<Article>();
+      for(SearchHit hit: recentSearchHits){
+        Article article = new Article();
+        article.setDoi(hit.getUri());
+        article.setTitle(hit.getTitle());
+        article.setStrkImgURI(hit.getStrikingImage());
+        article.setDescription(hit.getAbstract());
+        List<ArticleAuthor> authors = new ArrayList<ArticleAuthor>();
+        String[] parts = hit.getCreator().split(",");
+
+        for(int j = 0; j < parts.length; ++j){
+          String authorName = parts[j].trim();
+          ArticleAuthor author = new ArticleAuthor(authorName, null, null);
+
+          authors.add(author);
+        }
+
+        article.setAuthors(authors);
+
+        recentArticles.add(article);
       }
   }
 
@@ -285,7 +310,7 @@ public class HomePageAction extends BaseActionSupport {
    *
    * @return array of SearchHit objects
    */
-  public List<SearchHit> getRecentArticles() {
+  public List<Article> getRecentArticles() {
     return recentArticles;
   }
 

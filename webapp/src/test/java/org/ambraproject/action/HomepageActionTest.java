@@ -14,8 +14,8 @@
 package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
+import org.ambraproject.models.Article;
 import org.ambraproject.models.Journal;
-import org.ambraproject.views.SearchHit;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.Pair;
 import org.ambraproject.web.VirtualJournalContext;
@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -140,16 +142,16 @@ public class HomepageActionTest extends AmbraWebTest {
 
     assertEquals(action.getRecentArticles().size(), expectedRecentArticles.size(), "Action returned incorrect number of recent articles");
     for (Pair<String, String> recentArticle : expectedRecentArticles) {
-      SearchHit matchingArticle = null;
-      for (SearchHit searchHit : action.getRecentArticles()) {
-        if (searchHit.getUri().equals(recentArticle.getFirst())) {
-          matchingArticle = searchHit;
+      Article matchingArticle = null;
+      for (Article article : action.getRecentArticles()) {
+        if (article.getDoi().equals(recentArticle.getFirst())) {
+          matchingArticle = article;
           break;
         }
       }
       assertNotNull(matchingArticle, "Didn't return expected recent article " + recentArticle.getFirst());
       assertEquals(matchingArticle.getTitle(), recentArticle.getSecond(),
-          "Article " + matchingArticle.getUri() + " had incorrect title");
+          "Article " + matchingArticle.getDoi() + " had incorrect title");
     }
 
     //category infos are used to put links to the browse by subject pages
