@@ -30,8 +30,8 @@ title="User Information Form" class="ambra-form" enctype="multipart/form-data">
     <legend>Public Information <span class="note">(<span class="required">*</span> are required.)</span></legend>
     <ol>
       <@s.select label="Title" name="title" value="title" list="%{#selectList.allTitles}" tabindex="1" col=true />
-      <@s.textfield name="givenNames" label="First Name" required="true" tabindex="2" col=true />
-      <@s.textfield name="surnames" label="Last Name" required="true" tabindex="3" col=true />
+      <@s.textfield name="givenNames" label="First Name" requiredLabel="true" tabindex="2" col=true />
+      <@s.textfield name="surnames" label="Last Name" requiredLabel="true" tabindex="3" col=true />
 
       <@s.textfield name="city" label="City" tabindex="4" row=true col=true />
       <@s.select label="Country" name="country" value="country" list="%{#selectList.get('countries')}" tabindex="5" col=true />

@@ -46,8 +46,8 @@
                 </ol>
             </li>
         <#list userAlerts as ua>
-            <li<#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")> class="filtered<#if isFound(weeklyAlerts, ua.key) == "true"> toggleOn</#if>"</#if>>
-                <span class="alerts-title">${ua.name} <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
+            <li<#if ua.hasSubjectFilter()> class="filtered<#if isFound(weeklyAlerts, ua.key) == "true"> toggleOn</#if>"</#if>>
+                <span class="alerts-title">${ua.name} <#if ua.hasSubjectFilter()>
                   <span class="alertToggle<#if isFound(weeklyAlerts, ua.key) == "true"> alertToggleOn<#else> alertToggleOff</#if>"></span>
                   </#if></span>
                 <ol>
@@ -65,7 +65,7 @@
                             <@s.checkbox accessKey="${ua.key}" name="monthlyAlerts" fieldValue="${ua.key}" value="${isFound(monthlyAlerts, ua.key)}"/>
                               Monthly </label>
                       <#else>
-                        <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
+                        <#if ua.hasSubjectFilter()>
                           <div class="weekly_description">Expand to customize your email alerts.</div>
                         <#else>
                           &nbsp;&nbsp;
@@ -74,7 +74,7 @@
                     </li>
                 </ol>
             </li>
-            <#if ua.hasSubjectFilter() && permissions?seq_contains("BETA_FEATURES")>
+            <#if ua.hasSubjectFilter()>
               <#if journalSubjectFilters[ua.key]??>
                 <#list journalSubjectFilters[ua.key] as subject>
                   <input type="hidden" name="journalSubjectFilters['${ua.key}']" value="${subject}"/>
