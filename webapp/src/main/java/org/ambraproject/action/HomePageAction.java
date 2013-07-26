@@ -149,8 +149,7 @@ public class HomePageAction extends BaseActionSupport {
 
       List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
 
-      //numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
-      numDaysInPast = 1000;
+      numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
 
       //  This is the most recent midnight.  No need to futz about with exact dates.
