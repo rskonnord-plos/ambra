@@ -109,7 +109,7 @@ $.fn.edBoard = function () {
     this.getData(args, jQuery.proxy(success, this));
   };
 
-  this.getData = function(args, callBack, errorCallback) {
+  this.getData = function(args, callBack) {
 
     //make the request to solr
     $.jsonp({
