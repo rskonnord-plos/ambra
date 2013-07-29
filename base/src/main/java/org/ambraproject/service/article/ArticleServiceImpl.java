@@ -323,7 +323,11 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       String title = (String) res[1];
       Date pubDate = (Date) res[2];
 
-      searchResults.add(new SearchHit(null, doi, title, null, null, pubDate, null, null, null, null, null, null, false));
+      searchResults.add(SearchHit.builder()
+        .setUri(doi)
+        .setTitle(title)
+        .setDate(pubDate)
+        .build());
     }
 
     return searchResults;
