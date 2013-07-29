@@ -21,8 +21,8 @@
 
 package org.ambraproject.service.article;
 
-import org.ambraproject.models.Article;
 import org.ambraproject.service.search.SolrException;
+import org.ambraproject.views.article.HomePageArticleInfo;
 
 import java.util.List;
 
@@ -40,6 +40,8 @@ public interface MostViewedArticleService {
    * @param numDays - the number of days over which to count the views. If null; the default is over all time
    * @return - a list of dois and titles of the most viewed articles, in order
    */
-  public List<Article> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException;
+  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException;
+
+  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int offset, int limit, Integer numDays) throws SolrException;
 
 }

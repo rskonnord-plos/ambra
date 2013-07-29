@@ -21,9 +21,9 @@
 
 package org.ambraproject.service.search;
 
-import org.ambraproject.models.Article;
-import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.service.article.MostViewedArticleService;
+import org.ambraproject.views.article.HomePageArticleInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 import javax.xml.xpath.XPath;
@@ -55,17 +55,24 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
   private static final String TITLE_ATTR = "title_display";
   private static final String STRIKING_ATTR = "striking_image";
   private static final String AUTHORS_ATTR = "author_display";
+  private static final String ABSTRACT_ATTR = "abstract_primary_display";
 
   @Override
-  public List<Article> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException {
+  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException {
+    return getMostViewedArticles(journal, 0, limit, numDays);
+  }
+
+  @Override
+  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int offset, int limit, Integer numDays) throws SolrException {
     //check if we still have valid results in the cache
-    MostViewedCache cache = cachedMostViewedResults.get(journal);
+    String cacheIndex = journal + ":" + String.valueOf(offset) + ":" + String.valueOf(limit);
+    MostViewedCache cache = cachedMostViewedResults.get(cacheIndex);
     if (cache != null && cache.isValid()) {
       return cache.getArticles();
     }
 
     Map<String, String> params = new HashMap<String, String>();
-    params.put("fl", DOI_ATTR + "," + TITLE_ATTR + "," + STRIKING_ATTR + "," + AUTHORS_ATTR);
+    params.put("fl", DOI_ATTR + "," + TITLE_ATTR + "," + STRIKING_ATTR + "," + AUTHORS_ATTR + "," + ABSTRACT_ATTR);
     params.put("fq", "doc_type:full AND !article_type_facet:\"Issue Image\" AND cross_published_journal_key:" + journal);
     params.put("start", "0");
     params.put("rows", String.valueOf(limit));
@@ -76,7 +83,7 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
 
     Document doc = solrHttpService.makeSolrRequest(params);
 
-    List<Article> articles = new ArrayList<Article>(limit);
+    List<HomePageArticleInfo> articles = new ArrayList<HomePageArticleInfo>(limit);
 
     //get the children of the "result" node
     XPath xPath = XPathFactory.newInstance().newXPath();
@@ -86,21 +93,25 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
         String doi = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + DOI_ATTR + "']/text()", doc);
         String title = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + TITLE_ATTR + "']/text()", doc);
         String strkImg = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + STRIKING_ATTR + "']/text()", doc);
+        String description = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + ABSTRACT_ATTR + "']/text()", doc);
 
         Integer authors_count = Integer.valueOf(xPath.evaluate("count(//result/doc[" + i + "]/arr[@name = '" + AUTHORS_ATTR + "']/str)", doc));
-        List<ArticleAuthor> authors = new ArrayList<ArticleAuthor>();
+
+        List<String> authors = new ArrayList<String>();
 
         for(int j = 1; j <= authors_count; ++j) {
           String authorName = xPath.evaluate("//result/doc[" + i + "]/arr[@name = '" + AUTHORS_ATTR + "']/str[" + j + "]/text()", doc);
-          ArticleAuthor author = new ArticleAuthor(authorName, null, null);
-
-          authors.add(author);
+          authors.add(authorName);
         }
-        Article article = new Article();
+
+        String author = StringUtils.join(authors, ", ");
+
+        HomePageArticleInfo article = new HomePageArticleInfo();
         article.setDoi(doi);
         article.setTitle(title);
         article.setStrkImgURI(strkImg);
-        article.setAuthors(authors);
+        article.setAuthors(author);
+        article.setDescription(description);
 
         articles.add(article);
       }

@@ -23,6 +23,7 @@ package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
 import org.ambraproject.models.Article;
+import org.ambraproject.views.article.HomePageArticleInfo;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +57,11 @@ public class MostViewedActionTest extends AmbraHttpTest {
 
     String result = action.execute();
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
-    List<Article> mostViewedArticles = action.getMostViewedArticles();
+    List<HomePageArticleInfo> mostViewedArticles = action.getMostViewedArticles();
     assertNotNull(mostViewedArticles,"Action had null list of most viewed articles");
     assertEquals(mostViewedArticles.size(), articlesFromSolrXml.size(), "returned incorrect number of articles");
     for (int i = 0; i < mostViewedArticles.size(); i++) {
-      Article actual = mostViewedArticles.get(i);
+      HomePageArticleInfo actual = mostViewedArticles.get(i);
       Article expected = articlesFromSolrXml.get(i);
       assertEquals(actual.getDoi(), expected.getDoi(), "Didn't have correct doi for entry " + i);
       assertEquals(actual.getTitle(), expected.getTitle(), "Didn't have correct title for entry " + i);
