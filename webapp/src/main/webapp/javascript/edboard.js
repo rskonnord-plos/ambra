@@ -35,8 +35,24 @@
 
 $.fn.edBoard = function () {
   var solrHost = $('meta[name=searchHost]').attr("content");
+  var queryInfo = {};
 
-  this.getEditors = function (args) {
+  this.getEditors = function (args, currentPage) {
+    // clear the query information
+    if (typeof(args) === 'undefined' && typeof(currentPage) === 'undefined') {
+      queryInfo = {};
+    }
+
+    // save the query information so it can be used when user pages through the search results
+    if (typeof(args) != 'undefined' && args != null) {
+      queryInfo = args;
+    }
+
+    // user is paging through the search results, use the query information we saved
+    if (!(typeof(currentPage) === 'undefined')) {
+      args = queryInfo;
+    }
+
     //set the default arguments
     args = $.extend({
       query: "*:*",
@@ -45,12 +61,25 @@ $.fn.edBoard = function () {
       highlight: false
     }, args);
 
-    //clear out the existing editors
-    $("div.editor").each(function (index, obj) {
-      $(this).remove();
-    });
-    $("#all_editors").css("display", "none");
-    $("#loading").css("display", "block");
+
+    if (typeof(currentPage) === 'undefined') {
+      // set the default current page
+      currentPage = 0;
+
+      //clear out the existing editors
+      $("div.editor").each(function (index, obj) {
+        $(this).remove();
+      });
+      $("#all_editors").css("display", "none");
+      $("#loading").css("display", "block");
+
+      args["initialLoad"] = false;
+
+    } else {
+      args["initialLoad"] = true;
+    }
+
+    args["currentPage"] = currentPage;
 
     //asking solr to do the highlighting is too slow
     //(qtime goes from ~4ms to ~90ms,
@@ -72,7 +101,15 @@ $.fn.edBoard = function () {
       args.icon_html = $("#section_editor_icon").html();
     }
 
-    var edBoard = new $.fn.edBoard();
+    var success = function(response) {
+      args["data"] = response;
+      this.setEditors(args);
+    };
+
+    this.getData(args, jQuery.proxy(success, this));
+  };
+
+  this.getData = function(args, callBack, errorCallback) {
 
     //make the request to solr
     $.jsonp({
@@ -86,44 +123,44 @@ $.fn.edBoard = function () {
         fq: "doc_type:(section_editor OR academic_editor) AND cross_published_journal_key:PLoSONE",
         fl: "doc_type,ae_name,ae_institute,ae_country,ae_subject",
         sort: "ae_last_name asc,ae_name asc",
-        rows: 9999
+        rows: 50,
+        start: (args.currentPage * 50)
       },
-      success: function (data) {
-        args["data"] = data;
-        edBoard.setEditors(args);
-      },
+      success: callBack,
       error: function (xOptions, textStatus) {
         console.log(textStatus);
       }
-
     });
   };
 
-
   //Setting the Editor results and making a call to load first page
-  this.setEditors = function (json, textStatus, xOptions) {
-    window.EditorialResponse = json;
+  this.setEditors = function (json) {
 
-    $(".spinner").fadeOut(1000);
-    $("#all_editors").css("display", "none");
+    if (!json.initialLoad) {
+      $(".spinner").fadeOut(1000);
+      $("#all_editors").css("display", "none");
+    }
 
-    this.loadCallback(0);
+    this.loadCallback(json);
 
-    $("#all_editors").show("blind", 1000);
+    if (!json.initialLoad) {
+      $("#all_editors").show("blind", 1000);
+    }
+
   };
 
   //load callback function
   //defining it here allows us to reference the
   //query terms for highlighting
-  this.loadCallback = function (currentPage) {
+  this.loadCallback = function (json) {
 
-    var json = window.EditorialResponse;
     var editorsDiv = $("#all_editors");
     editorsDiv.empty();
     editorsDiv.append("</br>")
 
     var pageSize = 50;
-    var numOfEditors = json.data.response.docs.length;
+    var numOfEditors = json.data.response.numFound;
+    var currentPage = json.currentPage;
 
     // example: if currentPage is 2 and numOfEditors is 420
     // totalPages is 9 == ceil of 420/50
@@ -141,7 +178,7 @@ $.fn.edBoard = function () {
     editorsDiv.append("</br>");
 
     var singlePage = $("<div></div>");
-    for (var i = startIndex; i < endIndex; i++) {
+    for (var i = 0; i < json.data.response.docs.length; i++) {
 
       var editor = json.data.response.docs[i];
       //create a div for the editor
@@ -322,13 +359,24 @@ $.fn.edBoard = function () {
   };
 
   this.pagingAnchor = function (pageNumber, pagingText, className) {
-    var edBoard = new $.fn.edBoard();
+
+    var success = function(event) {
+      var pageNumber = parseInt(event.srcElement.text);
+      if (isNaN(pageNumber)) {
+        pageNumber = parseInt($('.pagination strong:first').text());
+        if (event.srcElement.text === '<') {
+          pageNumber = pageNumber - 1;
+        } else {
+          pageNumber = pageNumber + 1;
+        }
+      }
+      this.getEditors(null, pageNumber - 1);
+    }
+
     var anchor = $('<a></a>').attr({
       href: "#",
       title: "(" + (pageNumber + 1) + ")"
-    }).html(pagingText).bind("click", function (e) {
-          edBoard.loadCallback(pageNumber);
-        })
+    }).html(pagingText).bind("click", jQuery.proxy(success, this))
 
     if (className) {
       anchor.attr("class", className);
