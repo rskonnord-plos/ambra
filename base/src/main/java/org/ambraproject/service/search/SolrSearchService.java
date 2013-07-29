@@ -319,7 +319,6 @@ public class SolrSearchService implements SearchService {
   /**
    * @enheritDoc
    */
-  @Override
   public SortedMap<String, Long> getTopSubjects() throws ApplicationException {
     if (cache == null) {
       return getTopSubjectsFromSOLR();

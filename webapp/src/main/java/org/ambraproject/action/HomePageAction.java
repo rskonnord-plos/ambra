@@ -20,7 +20,6 @@
 
 package org.ambraproject.action;
 
-import org.ambraproject.ApplicationException;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.service.article.BrowseParameters;
@@ -45,7 +44,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * @author stevec
@@ -235,12 +233,6 @@ public class HomePageAction extends BaseActionSupport {
    */
   @Override
   public String execute() {
-    try {
-      categoryInfos = searchService.getTopSubjects();
-    } catch(ApplicationException ex) {
-      log.error("Failed to query search service", ex);
-      categoryInfos = new TreeMap<String, Long>();
-    }
 
     initRecentArticles();
 

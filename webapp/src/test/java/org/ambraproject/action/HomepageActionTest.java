@@ -30,13 +30,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TimeZone;
-import java.util.TreeMap;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick 2/7/12
@@ -84,7 +81,6 @@ public class HomepageActionTest extends AmbraWebTest {
           {"id", "test-id-" + i},
           {"title_display", "title for article " + i},
           {"publication_date", dateFormatter.format(recentDate.getTime())},
-          {"subject_level_1", "Biology"},
           {"article_type_facet", "article"},
           {"doc_type", "full"},
           {"cross_published_journal_key", journal.getJournalKey()}
@@ -95,7 +91,6 @@ public class HomepageActionTest extends AmbraWebTest {
         {"id", "old-article"},
         {"title_display", "This article should not show up in recent articles"},
         {"publication_date", lastYearString},
-        {"subject_level_1", "Chemistry"},
         {"article_type_facet", "article"},
         {"doc_type", "full"},
         {"cross_published_journal_key", journal.getJournalKey()}
@@ -104,23 +99,18 @@ public class HomepageActionTest extends AmbraWebTest {
         {"id", "article-in-other-journal"},
         {"title_display", "This article should not show up in recent articles"},
         {"publication_date", dateFormatter.format(recentDate.getTime())},
-        {"subject_level_1", "Chemistry"},
         {"article_type_facet", "article"},
         {"doc_type", "full"},
         {"cross_published_journal_key", "someOtherKey"}
     });
 
-    SortedMap<String, Long> subjectCounts = new TreeMap<String, Long>();
-    subjectCounts.put("Biology", 4l);
-    subjectCounts.put("Chemistry", 2l);
-
     return new Object[][]{
-        {journal, recentSearchHits, subjectCounts}
+        {journal, recentSearchHits}
     };
   }
 
   @Test(dataProvider = "expectedInfo")
-  public void testExecute(Journal journal, List<Pair<String, String>> expectedRecentArticles, SortedMap<String, Long> expectedCategoryInfos) {
+  public void testExecute(Journal journal, List<Pair<String, String>> expectedRecentArticles) {
     //make sure to use a journal for this test, so we don't get 'recent' articles that were added by other unit tests
     final Map<String, Object> request = getDefaultRequestAttributes();
     request.put(VirtualJournalContext.PUB_VIRTUALJOURNAL_CONTEXT, new VirtualJournalContext(
@@ -154,14 +144,6 @@ public class HomepageActionTest extends AmbraWebTest {
           "Article " + matchingArticle.getDoi() + " had incorrect title");
     }
 
-    //category infos are used to put links to the browse by subject pages
-    assertEquals(action.getCategoryInfos().size(), expectedCategoryInfos.size(),
-        "Action returned incorrect number of category infos");
-    for (String category : expectedCategoryInfos.keySet()) {
-      assertTrue(action.getCategoryInfos().containsKey(category), "Action didn't return category: " + category);
-      assertEquals(action.getCategoryInfos().get(category), expectedCategoryInfos.get(category),
-          "Action returned incorrect value for category: " + category);
-    }
   }
 
 }
