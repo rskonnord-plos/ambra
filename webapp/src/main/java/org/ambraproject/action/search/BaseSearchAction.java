@@ -24,12 +24,14 @@ import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.util.DateParser;
 import org.ambraproject.util.InvalidDateException;
+import org.ambraproject.views.SearchResultSinglePage;
 
 import java.util.Date;
 
 public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   // All of the parameters used to execute any search.
   private SearchParameters searchParameters;
+  protected SearchResultSinglePage resultsSinglePage;
 
   /**
    * Return the object used to store all of the parameters used to create a query.
@@ -271,5 +273,14 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
 
   public Date getFilterStartDate() {
     return getSearchParameters().getFilterStartDate();
+  }
+
+  /**
+   * The total number of search results
+   *
+   * @return Value for property 'totalNoOfResults'.
+   */
+  public int getTotalNoOfResults() {
+    return resultsSinglePage.getTotalNoOfResults();
   }
 }

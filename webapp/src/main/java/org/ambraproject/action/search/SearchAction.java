@@ -56,15 +56,13 @@ public class SearchAction extends BaseSearchAction {
   // Flag telling this action whether or not the search should be executed.
   private String noSearchFlag;
 
-  private SearchResultSinglePage resultsSinglePage;
-
   private SearchService searchService;
   private UserService userService;
   private AmbraFreemarkerConfig ambraFreemarkerConfig;
   
   // Used for display of search results
   private Collection<SearchHit> searchResults;
-  private int totalNoOfResults;
+
   private String queryAsExecuted;
   protected String searchType;
 
@@ -99,14 +97,13 @@ public class SearchAction extends BaseSearchAction {
       SearchParameters params = getSearchParameters();
       resultsSinglePage = searchService.simpleSearch(params);
 
-      //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
-      totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
+      //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
       searchResults = resultsSinglePage.getHits();
       queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
       resultView = params.getResultView();
 
       //If page size is zero, assume totalPages is zero
-      int totPages = (getPageSize() == 0)?0:((totalNoOfResults + getPageSize() - 1) / getPageSize());
+      int totPages = (getPageSize() == 0)?0:((getTotalNoOfResults() + getPageSize() - 1) / getPageSize());
       setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
 
       // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
@@ -158,13 +155,12 @@ public class SearchAction extends BaseSearchAction {
         SearchParameters params = getSearchParameters();
         resultsSinglePage = searchService.advancedSearch(params);
 
-        //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
-        totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
+        //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
         searchResults = resultsSinglePage.getHits();
         queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
         resultView = params.getResultView();
 
-        int totPages = (totalNoOfResults + getPageSize() - 1) / getPageSize();
+        int totPages = (getTotalNoOfResults() + getPageSize() - 1) / getPageSize();
         setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
 
         // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
@@ -247,12 +243,11 @@ public class SearchAction extends BaseSearchAction {
         return "redirectToArticle"; // Tells struts.xml to send the user to fetchArticle.action
       }
 
-      //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
-      totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
+      //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
       searchResults = resultsSinglePage.getHits();
       queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
 
-      int totPages = (totalNoOfResults + getPageSize() - 1) / getPageSize();
+      int totPages = (getTotalNoOfResults() + getPageSize() - 1) / getPageSize();
       setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
       
       // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
@@ -370,15 +365,6 @@ public class SearchAction extends BaseSearchAction {
   public List getPageSizes()
   {
     return searchService.getPageSizes();
-  }
-
-  /**
-   * The total number of search results
-   *
-   * @return Value for property 'totalNoOfResults'.
-   */
-  public int getTotalNoOfResults() {
-    return totalNoOfResults;
   }
 
   /**
