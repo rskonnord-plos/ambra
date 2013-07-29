@@ -4233,7 +4233,7 @@ legend.conjunction span {
   width: 870px;
   overflow: hidden;
   position: fixed;
-  z-index: 150;
+  z-index: 1000;
 }
 
 #fig-viewer .header {
