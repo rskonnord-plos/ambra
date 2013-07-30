@@ -152,6 +152,7 @@
 
   <bean id="saveSearchAction" class="org.ambraproject.action.search.SaveSearchAction">
     <property name="userService" ref="userService"/>
+    <property name="searchService" ref="searchService"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
   </bean>

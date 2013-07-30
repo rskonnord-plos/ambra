@@ -22,17 +22,21 @@ package org.ambraproject.action.search;
 
 import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.service.search.SearchParameters;
+import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.DateParser;
 import org.ambraproject.util.InvalidDateException;
 import org.ambraproject.views.SearchResultSinglePage;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.util.Date;
+import java.util.List;
 
 public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   // All of the parameters used to execute any search.
-  protected static final String SEARCH_PAGE_SIZE = "ambra.services.search.pageSize";
-
   private SearchParameters searchParameters;
+
+  protected static final String SEARCH_PAGE_SIZE = "ambra.services.search.pageSize";
+  protected SearchService searchService;
   protected SearchResultSinglePage resultsSinglePage;
 
   /**
@@ -295,5 +299,20 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
    */
   public int getTotalNoOfResults() {
     return resultsSinglePage.getTotalNoOfResults();
+  }
+
+  public List getPageSizes()
+  {
+    return searchService.getPageSizes();
+  }
+
+  /**
+   * Set the searchService
+   *
+   * @param searchService searchService
+   */
+  @Required
+  public void setSearchService(final SearchService searchService) {
+    this.searchService = searchService;
   }
 }

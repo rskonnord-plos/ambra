@@ -55,7 +55,6 @@ public class SearchAction extends BaseSearchAction {
   // Flag telling this action whether or not the search should be executed.
   private String noSearchFlag;
 
-  private SearchService searchService;
   private UserService userService;
   private AmbraFreemarkerConfig ambraFreemarkerConfig;
   
@@ -351,11 +350,6 @@ public class SearchAction extends BaseSearchAction {
     return searchService.getSorts();
   }
 
-  public List getPageSizes()
-  {
-    return searchService.getPageSizes();
-  }
-
   /**
    * A list of journals that the current search results appear in
    * @return a journals List and frequency count
@@ -390,16 +384,6 @@ public class SearchAction extends BaseSearchAction {
   @Required
   public void setUserService(final UserService userService) {
     this.userService = userService;
-  }
-
-  /**
-   * Set the searchService
-   *
-   * @param searchService searchService
-   */
-  @Required
-  public void setSearchService(final SearchService searchService) {
-    this.searchService = searchService;
   }
 
   /**
@@ -498,5 +482,4 @@ public class SearchAction extends BaseSearchAction {
   public String getResultView() {
     return resultView;
   }
-
 }
