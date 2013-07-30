@@ -48,7 +48,6 @@ import java.util.Map;
 public class SearchAction extends BaseSearchAction {
 
   private static final Logger log = LoggerFactory.getLogger(SearchAction.class);
-  private static final String SEARCH_PAGE_SIZE = "ambra.services.search.pageSize";
   private static final String CONFIG_DOI_RESOLVER_URL = "ambra.services.crossref.plos.doiurl";
   private static final int RECENT_SEARCHES_NUMBER_TO_SHOW = 5;
   private static final int MAX_FILTERS_SHOWN = 50;
@@ -84,7 +83,7 @@ public class SearchAction extends BaseSearchAction {
   public String executeSimpleSearch() throws ApplicationException {
     searchType = "simple";
 
-    setDefaultsCommon();
+    setDefaultSearchParams();
 
     final String queryString = getSearchParameters().getQuery();
 
@@ -125,7 +124,7 @@ public class SearchAction extends BaseSearchAction {
   public String executeUnformattedSearch() {
     searchType = "unformatted";
 
-    setDefaultsCommon();
+    setDefaultSearchParams();
 
     if ( ! doSearch()) {
       try {
@@ -188,7 +187,7 @@ public class SearchAction extends BaseSearchAction {
   public String executeQuickSearch() {
     searchType = "quickSearch";
 
-    setDefaultsCommon();
+    setDefaultSearchParams();
 
     if ( ! doSearch()) {
 
@@ -265,16 +264,6 @@ public class SearchAction extends BaseSearchAction {
       return ERROR;
     }
     return SUCCESS;
-  }
-
-  /**
-   * Set values used for processing and/or display by all searches.
-   */
-  protected void setDefaultsCommon() {
-    // Set default for "pageSize".
-    if (getPageSize() == 0) {
-      setPageSize(configuration.getInt(SEARCH_PAGE_SIZE, 10));
-    }
   }
 
   /**

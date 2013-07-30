@@ -30,6 +30,8 @@ import java.util.Date;
 
 public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   // All of the parameters used to execute any search.
+  protected static final String SEARCH_PAGE_SIZE = "ambra.services.search.pageSize";
+
   private SearchParameters searchParameters;
   protected SearchResultSinglePage resultsSinglePage;
 
@@ -45,6 +47,17 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
     }
     return searchParameters;
   }
+
+  /**
+   * Set values used for processing and/or display by all searches.
+   */
+  protected void setDefaultSearchParams() {
+    // Set default for "pageSize".
+    if (getPageSize() == 0) {
+      setPageSize(configuration.getInt(SEARCH_PAGE_SIZE, 10));
+    }
+  }
+
 
   /**
    * Converts a String array whose first element may be a comma delimited String
