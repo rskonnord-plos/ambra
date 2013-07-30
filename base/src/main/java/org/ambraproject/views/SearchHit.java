@@ -24,9 +24,9 @@ import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Value object that holds the result of a single search item
@@ -43,7 +43,7 @@ public class SearchHit implements Serializable {
   private final String highlight;
   private final Date date;
   private final String creator;
-  private final Collection<String> listOfCreators;
+  private final List<String> listOfCreators;
   private final String issn;
   private final String journalTitle;
   private final String articleTypeForDisplay;
@@ -69,7 +69,7 @@ public class SearchHit implements Serializable {
    * @param hasAssets
    */
   public SearchHit(Float hitScore, String uri, String title, String highlight,
-                   Collection<String> creators, Date date, String issn,
+                   List<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
                    Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage, boolean hasAssets) {
     if (hitScore == null) {
@@ -237,8 +237,7 @@ public class SearchHit implements Serializable {
     private String title;
     private String highlight;
     private Date date;
-    private String creator;
-    private Collection<String> listOfCreators;
+    private List<String> listOfCreators;
     private Collection<String> subjects;
     private Collection<String> subjectsPolyhierarchy;
     private String issn;
@@ -278,9 +277,9 @@ public class SearchHit implements Serializable {
       return this;
     }
 
-    public Builder setListOfCreators(Collection<String> listOfCreators) {
+    public Builder setListOfCreators(List<String> listOfCreators) {
       this.listOfCreators = listOfCreators;
-      this.creator = StringUtils.join(listOfCreators, ", ");
+
       return this;
     }
 
