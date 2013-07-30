@@ -315,4 +315,8 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   public void setSearchService(final SearchService searchService) {
     this.searchService = searchService;
   }
+
+  public SearchResultSinglePage getResultsSinglePage() {
+    return resultsSinglePage;
+  }
 }

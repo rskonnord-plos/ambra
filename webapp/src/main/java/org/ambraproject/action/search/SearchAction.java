@@ -323,11 +323,7 @@ public class SearchAction extends BaseSearchAction {
     return queryAsExecuted;
   }
 
-  public SearchResultSinglePage getResultsSinglePage() {
-    return resultsSinglePage;
-  }
-
-  /**
+ /**
    * @param noSearchFlag the noSearchFlag to set
    */
   public void setNoSearchFlag(String noSearchFlag) {
