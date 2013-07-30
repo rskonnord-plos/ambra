@@ -18,6 +18,7 @@
  */
 package org.ambraproject.action;
 
+import org.ambraproject.action.search.BaseSearchAction;
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;
@@ -31,7 +32,7 @@ import org.springframework.beans.factory.annotation.Required;
  *
  * @author Joe Osowski
  */
-public class BrowseAction extends BaseActionSupport {
+public class BrowseAction extends BaseSearchAction {
   private static final Logger log = LoggerFactory.getLogger(BrowseAction.class);
 
   private TaxonomyService taxonomyService;
@@ -41,6 +42,9 @@ public class BrowseAction extends BaseActionSupport {
   public String execute() throws Exception {
     CategoryView categoryView = taxonomyService.parseCategories(super.getCurrentJournal());
 
+    setDefaultSearchParams();
+    setUnformattedQuery("*:*");
+
     if(category != null && category.length() > 0) {
       //Recreate the category name as stored in the DB
       category = category.replace("_", " ");
@@ -48,20 +52,23 @@ public class BrowseAction extends BaseActionSupport {
       CategoryView view = CategoryUtils.findCategory(categoryView, category);
 
       //If the value is null, we've got a category that doesn't exist any more.  Try to format the name
-      //And search for it anyway
+      //And search for it anyway?
       if(view == null) {
         category = StringUtils.capitalize(category);
+        //TODO: Handle no categories here or when search returns?
       } else {
         category = view.getName();
       }
+
+      setFilterSubjects(new String[] { this.category } );
     } else {
       //TODO: Replace with something more meaningful
       category = "OMG LOLZ EVERY BIT 'O' RESEARCH, BOO YAH";
     }
 
-    //TODO: Execute search
-    //TBD: How to handle no search results
+    resultsSinglePage = this.searchService.advancedSearch(getSearchParameters());
 
+    //TODO: How to handle no search results
 
     return SUCCESS;
   }
