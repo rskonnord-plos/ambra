@@ -25,10 +25,10 @@ import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.service.article.MostViewedArticleService;
-import org.ambraproject.service.search.SearchService;
 import org.ambraproject.service.search.SolrException;
 import org.ambraproject.views.BrowseResult;
 import org.ambraproject.views.SearchHit;
+import org.ambraproject.views.article.HomePageArticleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -43,7 +43,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedMap;
 
 /**
  * @author stevec
@@ -53,17 +52,18 @@ public class HomePageAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(HomePageAction.class);
 
   private BrowseService browseService;
-  private SearchService searchService;
   private MostViewedArticleService mostViewedArticleService;
-  private SortedMap<String, Long> categoryInfos;
 
   private ArrayList<SearchHit> recentSearchHits;
   private ArrayList<Article> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
 
-  private List<Article> mostViewedArticles;
+  private List<HomePageArticleInfo> mostViewedArticles;
   private String mostViewedComment;
+  // the action returns from mostViewedStartIndex, and sets mostViewedNextIndex = mostViewedStartIndex + mostViewedLimit
+  private int mostViewedNextIndex = 0;
+  private int mostViewedStartIndex = 0;
 
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
@@ -238,10 +238,17 @@ public class HomePageAction extends BaseActionSupport {
 
     if (mostViewedEnabled()) {
       initMostViewed();
+      mostViewedStartIndex = 0;
     } else {
-      mostViewedArticles = new ArrayList<Article>();
+      mostViewedArticles = new ArrayList<HomePageArticleInfo>();
+      mostViewedNextIndex = 0;
     }
 
+    return SUCCESS;
+  }
+
+  public String executeMostViewed() {
+    initMostViewed();
     return SUCCESS;
   }
 
@@ -259,7 +266,8 @@ public class HomePageAction extends BaseActionSupport {
       mostViewedComment = configuration.getString(mostViewedKey + ".message");
     }
     try {
-      int limit = configuration.getInt(mostViewedKey + ".limit");
+      String limitKey = (mostViewedStartIndex == 0 ? ".limitFirstPage" :  ".limit");
+      int limit = configuration.getInt(mostViewedKey + limitKey);
       Integer days;
       try {
         days = configuration.getInt(mostViewedKey + ".timeFrame");
@@ -267,10 +275,12 @@ public class HomePageAction extends BaseActionSupport {
         days = null;
       }
 
-      mostViewedArticles = mostViewedArticleService.getMostViewedArticles(getCurrentJournal(), limit, days);
+      mostViewedArticles = mostViewedArticleService.getMostViewedArticles(getCurrentJournal(), mostViewedStartIndex, limit, days);
+      mostViewedNextIndex = mostViewedStartIndex + mostViewedArticles.size();
     } catch (SolrException e) {
       log.error("Error querying solr for most viewed articles; returning empty list", e);
-      mostViewedArticles = new LinkedList<Article>();
+      mostViewedArticles = new LinkedList<HomePageArticleInfo>();
+      mostViewedNextIndex = mostViewedStartIndex;
     }
 
   }
@@ -279,21 +289,12 @@ public class HomePageAction extends BaseActionSupport {
     this.mostViewedArticleService = mostViewedArticleService;
   }
 
-  public List<Article> getMostViewedArticles() {
+  public List<HomePageArticleInfo> getMostViewedArticles() {
     return mostViewedArticles;
   }
 
   public String getMostViewedComment() {
     return mostViewedComment;
-  }
-
-  /**
-   * @return Returns category and number of articles for each category.
-   *
-   * Categories are listed for all journals and sorted by name
-   */
-  public SortedMap<String, Long> getCategoryInfos() {
-    return categoryInfos;
   }
 
   /**
@@ -345,14 +346,6 @@ public class HomePageAction extends BaseActionSupport {
     this.browseService = browseService;
   }
 
-  /**
-   * @param searchService The searchService to set.
-   */
-  @Required
-  public void setSearchService(SearchService searchService) {
-    this.searchService = searchService;
-  }
-
   public int getNumDaysInPast() {
     return numDaysInPast;
   }
@@ -361,4 +354,19 @@ public class HomePageAction extends BaseActionSupport {
     return numArticlesToShow;
   }
 
+  public int getMostViewedNextIndex() {
+    return mostViewedNextIndex;
+  }
+
+  public void setMostViewedNextIndex(int mostViewedNextIndex) {
+    this.mostViewedNextIndex = mostViewedNextIndex;
+  }
+
+  public int getMostViewedStartIndex() {
+    return mostViewedStartIndex;
+  }
+
+  public void setMostViewedStartIndex(int mostViewedStartIndex) {
+    this.mostViewedStartIndex = mostViewedStartIndex;
+  }
 }

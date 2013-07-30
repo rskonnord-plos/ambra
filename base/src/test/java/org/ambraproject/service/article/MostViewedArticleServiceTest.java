@@ -19,6 +19,7 @@ package org.ambraproject.service.article;
 import org.ambraproject.action.BaseHttpTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.service.search.SolrException;
+import org.ambraproject.views.article.HomePageArticleInfo;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
@@ -62,7 +63,7 @@ public class MostViewedArticleServiceTest extends BaseHttpTest {
       }
     });
 
-    List<Article> mostViewedArticles = mostViewedArticleService.getMostViewedArticles(JOURNAL, 10, NUM_DAYS);
+    List<HomePageArticleInfo> mostViewedArticles = mostViewedArticleService.getMostViewedArticles(JOURNAL, 10, NUM_DAYS);
     //check the headers
     assertEquals(headers.get("sort"), VIEW_FIELD + " desc", "solr request didn't have correct sort field");
     assertEquals(headers.get("fq"), EXPECTED_FQ_PARAM, "solr request didn't have correct fq param");
@@ -71,7 +72,7 @@ public class MostViewedArticleServiceTest extends BaseHttpTest {
     assertNotNull(mostViewedArticles, "returned null list of most viewed articles");
     assertEquals(mostViewedArticles.size(), articlesFromSolrXml.size(), "returned incorrect number of articles");
     for (int i = 0; i < mostViewedArticles.size(); i++) {
-      Article actual = mostViewedArticles.get(i);
+      HomePageArticleInfo actual = mostViewedArticles.get(i);
       Article expected = articlesFromSolrXml.get(i);
       assertEquals(actual.getDoi(), expected.getDoi(), "Didn't have correct doi for entry " + i);
       assertEquals(actual.getTitle(), expected.getTitle(), "Didn't have correct title for entry " + i);

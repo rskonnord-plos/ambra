@@ -208,6 +208,12 @@
       </result>
     </action>
 
+    <action name="mostViewedMore" class="org.ambraproject.action.HomePageAction" method="executeMostViewed">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/mostViewed.ftl</param>
+      </result>
+    </action>
+
     <action name="selectList" class="org.ambraproject.action.ListingAction"/>
 
     <action name="browse" class="org.ambraproject.action.BrowseAction">

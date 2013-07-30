@@ -21,7 +21,7 @@
 
 package org.ambraproject.service.search;
 
-import org.ambraproject.models.Article;
+import org.ambraproject.views.article.HomePageArticleInfo;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -38,16 +38,16 @@ import java.util.List;
 public class MostViewedCache {
 
   private GregorianCalendar cacheDate;
-  private List<Article> articles;
+  private List<HomePageArticleInfo> articles;
   public static final int CACHE_TIME = 15;
   public static final int CACHE_TIME_UNITS = Calendar.MINUTE;
 
-  public MostViewedCache(GregorianCalendar cacheDate, List<Article> articles) {
+  public MostViewedCache(GregorianCalendar cacheDate, List<HomePageArticleInfo> articles) {
     this.cacheDate = cacheDate;
     this.articles = articles;
   }
 
-  public MostViewedCache(List<Article> articles) {
+  public MostViewedCache(List<HomePageArticleInfo> articles) {
     this.articles = articles;
     this.cacheDate = new GregorianCalendar();
   }
@@ -64,7 +64,7 @@ public class MostViewedCache {
    * Get the articles stored in this cache object
    * @return - an ordered list of doi's (first entry) and titles (second entry)
    */
-  public List<Article> getArticles() {
+  public List<HomePageArticleInfo> getArticles() {
     return articles;
   }
 
