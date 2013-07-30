@@ -62,8 +62,7 @@ public class BrowseAction extends BaseSearchAction {
 
       setFilterSubjects(new String[] { this.category } );
     } else {
-      //TODO: Replace with something more meaningful
-      category = "OMG LOLZ EVERY BIT 'O' RESEARCH, BOO YAH";
+      category = null;
     }
 
     resultsSinglePage = this.searchService.advancedSearch(getSearchParameters());

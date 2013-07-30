@@ -43,6 +43,7 @@ public class SearchHit implements Serializable {
   private final String highlight;
   private final Date date;
   private final String creator;
+  private final String firstSecondLastCreator;
   private final List<String> listOfCreators;
   private final String issn;
   private final String journalTitle;
@@ -91,6 +92,13 @@ public class SearchHit implements Serializable {
     this.subjectsPolyhierarchy = subjectsPolyhierarchy;
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
+
+    //Make a list of first, second, third creators
+    if(creators.size() < 3) {
+      this.firstSecondLastCreator = StringUtils.join(creators, ", ");
+    } else {
+      this.firstSecondLastCreator = creators.get(0) + ", " + creators.get(1) + ", "  + creators.get(creators.size() - 1);
+    }
   }
   /**
    * @return the hit object's uri
@@ -213,6 +221,10 @@ public class SearchHit implements Serializable {
    */
   public Collection<String> getListOfCreators() {
     return this.listOfCreators;
+  }
+
+  public String getFirstSecondLastCreator() {
+    return firstSecondLastCreator;
   }
 
   public String getStrikingImage() {
