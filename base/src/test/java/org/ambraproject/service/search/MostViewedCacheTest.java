@@ -21,7 +21,7 @@
 
 package org.ambraproject.service.search;
 
-import org.ambraproject.views.article.HomePageArticleInfo;
+import org.ambraproject.util.Pair;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -50,7 +50,7 @@ public class MostViewedCacheTest {
     GregorianCalendar tenMinutesAgo = new GregorianCalendar();
     tenMinutesAgo.add(Calendar.MINUTE,-10);
     GregorianCalendar now = new GregorianCalendar();
-    List<HomePageArticleInfo> dummyArticles = new ArrayList<HomePageArticleInfo>();
+    List<Pair<String, String>> dummyArticles = new ArrayList<Pair<String, String>>();
 
     return new Object[][]{
         {new MostViewedCache(now,dummyArticles),true},

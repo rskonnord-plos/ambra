@@ -14,10 +14,10 @@
 package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
-import org.ambraproject.models.Article;
 import org.ambraproject.models.Journal;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.Pair;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.web.VirtualJournalContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class HomepageActionTest extends AmbraWebTest {
     lastYear.add(Calendar.YEAR, -1);
     String lastYearString = dateFormatter.format(lastYear.getTime());
 
-    List<Pair<String, String>> recentSearchHits = new ArrayList<Pair<String, String>>(5);
+    List<Pair<String, String>> recentArticles = new ArrayList<Pair<String, String>>(5);
 
     for (int i = 1; i <= 4; i++) {
       //Make sure the articles are order by publication date (just for fun, they are sorted randomly by the action)
@@ -85,7 +85,7 @@ public class HomepageActionTest extends AmbraWebTest {
           {"doc_type", "full"},
           {"cross_published_journal_key", journal.getJournalKey()}
       });
-      recentSearchHits.add(new Pair<String, String>("test-id-" + i, "title for article " + i));
+      recentArticles.add(new Pair<String, String>("test-id-" + i, "title for article " + i));
     }
     solr.addDocument(new String[][]{
         {"id", "old-article"},
@@ -105,7 +105,7 @@ public class HomepageActionTest extends AmbraWebTest {
     });
 
     return new Object[][]{
-        {journal, recentSearchHits}
+        {journal, recentArticles}
     };
   }
 
@@ -132,16 +132,16 @@ public class HomepageActionTest extends AmbraWebTest {
 
     assertEquals(action.getRecentArticles().size(), expectedRecentArticles.size(), "Action returned incorrect number of recent articles");
     for (Pair<String, String> recentArticle : expectedRecentArticles) {
-      Article matchingArticle = null;
-      for (Article article : action.getRecentArticles()) {
-        if (article.getDoi().equals(recentArticle.getFirst())) {
-          matchingArticle = article;
+      SearchHit matchingArticle = null;
+      for (SearchHit searchHit : action.getRecentArticles()) {
+        if (searchHit.getUri().equals(recentArticle.getFirst())) {
+          matchingArticle = searchHit;
           break;
         }
       }
       assertNotNull(matchingArticle, "Didn't return expected recent article " + recentArticle.getFirst());
       assertEquals(matchingArticle.getTitle(), recentArticle.getSecond(),
-          "Article " + matchingArticle.getDoi() + " had incorrect title");
+          "Article " + matchingArticle.getUri() + " had incorrect title");
     }
 
   }
