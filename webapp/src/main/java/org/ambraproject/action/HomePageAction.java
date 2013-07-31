@@ -58,7 +58,6 @@ public class HomePageAction extends BaseActionSupport {
   private int numArticlesToShow;
 
   private List<HomePageArticleInfo> mostViewedArticleInfo;
-  private String mostViewedComment;
   // the action returns from mostViewedStartIndex, and sets mostViewedNextIndex = mostViewedStartIndex + mostViewedLimit
   private int mostViewedNextIndex = 0;
   private int mostViewedStartIndex = 0;
@@ -268,9 +267,6 @@ public class HomePageAction extends BaseActionSupport {
    */
   private void initMostViewed() {
     String mostViewedKey = "ambra.virtualJournals." + getCurrentJournal() + ".mostViewedArticles";
-    if (configuration.containsKey(mostViewedKey + ".message")) {
-      mostViewedComment = configuration.getString(mostViewedKey + ".message");
-    }
     try {
       String limitKey = (mostViewedStartIndex == 0 ? ".limitFirstPage" :  ".limit");
       int limit = configuration.getInt(mostViewedKey + limitKey);
@@ -297,10 +293,6 @@ public class HomePageAction extends BaseActionSupport {
 
   public List<HomePageArticleInfo> getMostViewedArticleInfo() {
     return mostViewedArticleInfo;
-  }
-
-  public String getMostViewedComment() {
-    return mostViewedComment;
   }
 
   /**
