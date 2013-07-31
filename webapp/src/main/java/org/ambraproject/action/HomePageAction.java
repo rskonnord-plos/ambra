@@ -20,8 +20,6 @@
 
 package org.ambraproject.action;
 
-import org.ambraproject.models.Article;
-import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.service.article.BrowseParameters;
 import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.service.article.MostViewedArticleService;
@@ -54,16 +52,53 @@ public class HomePageAction extends BaseActionSupport {
   private BrowseService browseService;
   private MostViewedArticleService mostViewedArticleService;
 
-  private ArrayList<SearchHit> recentSearchHits;
-  private ArrayList<Article> recentArticles;
+  private ArrayList<SearchHit> recentArticles;
+  private List<HomePageArticleInfo> recentArticleInfo;
   private int numDaysInPast;
   private int numArticlesToShow;
 
-  private List<HomePageArticleInfo> mostViewedArticles;
+  private List<HomePageArticleInfo> mostViewedArticleInfo;
   private String mostViewedComment;
   // the action returns from mostViewedStartIndex, and sets mostViewedNextIndex = mostViewedStartIndex + mostViewedLimit
   private int mostViewedNextIndex = 0;
   private int mostViewedStartIndex = 0;
+
+  private int recentNextIndex = 0;
+  private int recentStartIndex = 0;
+
+  /**
+   * This execute method always returns SUCCESS
+   */
+  @Override
+  public String execute() {
+    if ("PLoSONE".equals(getCurrentJournal())) {
+      recentStartIndex = 0;
+      executeRecent();
+
+      if (mostViewedEnabled()) {
+        mostViewedStartIndex = 0;
+        executeMostViewed();
+      } else {
+        mostViewedArticleInfo = new ArrayList<HomePageArticleInfo>();
+        mostViewedNextIndex = 0;
+      }
+      executeMostViewed();
+    }
+    else {
+      initRecentArticles();
+    }
+    return SUCCESS;
+  }
+
+  public String executeRecent() {
+    initRecentArticleInfo();
+    return SUCCESS;
+  }
+
+  public String executeMostViewed() {
+    initMostViewed();
+    return SUCCESS;
+  }
 
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
@@ -117,7 +152,7 @@ public class HomePageAction extends BaseActionSupport {
     return typeUriArticlesToShow;
   }
 
-    /**
+  /**
      * Populate the <b>recentArticles</b> (global) variable with random recent articles of
      * appropriate Article Type(s).
      * <ul>
@@ -141,7 +176,7 @@ public class HomePageAction extends BaseActionSupport {
      * </ul>
      * The CURRENT_JOURNAL_NAME is acquired from the {@link BaseActionSupport#getCurrentJournal()}
      */
-    private void initRecentArticles() {
+  private void initRecentArticles() {
       String journalKey = getCurrentJournal();
       String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
 
@@ -172,10 +207,10 @@ public class HomePageAction extends BaseActionSupport {
       BrowseResult results = browseService.getArticlesByDate(params);
 
       //Create a clone here so we're not modifying the object that is actually in the cache
-      recentSearchHits = (ArrayList<SearchHit>)results.getArticles().clone();
+      recentArticles = (ArrayList<SearchHit>)results.getArticles().clone();
 
       //  If not enough, then query for articles before "numDaysInPast" to make up the difference.
-      if (recentSearchHits.size() < numArticlesToShow) {
+      if (recentArticles.size() < numArticlesToShow) {
         endDate = (Calendar) startDate.clone();
         endDate.add(Calendar.SECOND, -1); // So no overlap with the first query.
         startDate.add(Calendar.DATE, -(numDaysInPast) - 1); // One extra day to play it safe.
@@ -185,71 +220,42 @@ public class HomePageAction extends BaseActionSupport {
         params.setEndDate(endDate);
         params.setArticleTypes(typeUriArticlesToShow);
         params.setPageNum(0);
-        params.setPageSize(numArticlesToShow - recentSearchHits.size());
+        params.setPageSize(numArticlesToShow - recentArticles.size());
         params.setJournalKey(this.getCurrentJournal());
 
-        recentSearchHits.addAll(browseService.getArticlesByDate(params).getArticles());
+        recentArticles.addAll(browseService.getArticlesByDate(params).getArticles());
       }
 
       // Now choose a random selection of numArticlesToShow articles from the article pool.
       // Even if we do not have enough articles, this will still randomize their order.
-      if (recentSearchHits.size() > 0) {
+      if (recentArticles.size() > 0) {
         Random randomNumberGenerator = new Random((new Date()).getTime());  // Seed: time = "now".
         ArrayList<SearchHit> recentArticlesTemp = new ArrayList<SearchHit>();
-        while (recentArticlesTemp.size() < numArticlesToShow && recentSearchHits.size() > 0) {
+        while (recentArticlesTemp.size() < numArticlesToShow && recentArticles.size() > 0) {
           // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
-          int randomNumber = randomNumberGenerator.nextInt(recentSearchHits.size());
-          recentArticlesTemp.add(recentSearchHits.get(randomNumber));
-          recentSearchHits.remove(randomNumber);
+          int randomNumber = randomNumberGenerator.nextInt(recentArticles.size());
+          recentArticlesTemp.add(recentArticles.get(randomNumber));
+          recentArticles.remove(randomNumber);
         }
-        recentSearchHits = recentArticlesTemp;
-      }
-
-      recentArticles = new ArrayList<Article>();
-      for(SearchHit hit: recentSearchHits){
-        Article article = new Article();
-        article.setDoi(hit.getUri());
-        article.setTitle(hit.getTitle());
-        article.setStrkImgURI(hit.getStrikingImage());
-        article.setDescription(hit.getAbstract());
-        List<ArticleAuthor> authors = new ArrayList<ArticleAuthor>();
-        String[] parts = hit.getCreator().split(",");
-
-        for(int j = 0; j < parts.length; ++j){
-          String authorName = parts[j].trim();
-          ArticleAuthor author = new ArticleAuthor(authorName, null, null);
-
-          authors.add(author);
-        }
-
-        article.setAuthors(authors);
-
-        recentArticles.add(article);
+        recentArticles = recentArticlesTemp;
       }
   }
 
-  /**
-   * This execute method always returns SUCCESS
-   */
-  @Override
-  public String execute() {
+  private void initRecentArticleInfo() {
+    String recentKey = "ambra.virtualJournals." + getCurrentJournal() + ".recentArticles";
 
-    initRecentArticles();
+    try {
+      String limitKey = (recentStartIndex == 0 ? ".limitFirstPage" :  ".limit");
+      int limit = configuration.getInt(recentKey + limitKey);
+      List<URI> typeUriArticlesToShow = getArticleTypesToShow(recentKey);
 
-    if (mostViewedEnabled()) {
-      initMostViewed();
-      mostViewedStartIndex = 0;
-    } else {
-      mostViewedArticles = new ArrayList<HomePageArticleInfo>();
-      mostViewedNextIndex = 0;
+      recentArticleInfo = mostViewedArticleService.getRecentArticleInfo(getCurrentJournal(), recentStartIndex, limit, typeUriArticlesToShow);
+      recentNextIndex = recentStartIndex + recentArticleInfo.size();
+    } catch (SolrException e) {
+      log.error("Error querying solr for most viewed articles; returning empty list", e);
+      recentArticleInfo = new LinkedList<HomePageArticleInfo>();
+      recentNextIndex = recentStartIndex;
     }
-
-    return SUCCESS;
-  }
-
-  public String executeMostViewed() {
-    initMostViewed();
-    return SUCCESS;
   }
 
   private boolean mostViewedEnabled() {
@@ -257,7 +263,7 @@ public class HomePageAction extends BaseActionSupport {
   }
 
   /**
-   * Populate the <b>mostViewedArticles</b> (global) variable with articles
+   * Populate the <b>mostViewedArticleInfo</b> (global) variable with articles
    *
    */
   private void initMostViewed() {
@@ -275,11 +281,11 @@ public class HomePageAction extends BaseActionSupport {
         days = null;
       }
 
-      mostViewedArticles = mostViewedArticleService.getMostViewedArticles(getCurrentJournal(), mostViewedStartIndex, limit, days);
-      mostViewedNextIndex = mostViewedStartIndex + mostViewedArticles.size();
+      mostViewedArticleInfo = mostViewedArticleService.getMostViewedArticleInfo(getCurrentJournal(), mostViewedStartIndex, limit, days);
+      mostViewedNextIndex = mostViewedStartIndex + mostViewedArticleInfo.size();
     } catch (SolrException e) {
       log.error("Error querying solr for most viewed articles; returning empty list", e);
-      mostViewedArticles = new LinkedList<HomePageArticleInfo>();
+      mostViewedArticleInfo = new LinkedList<HomePageArticleInfo>();
       mostViewedNextIndex = mostViewedStartIndex;
     }
 
@@ -289,8 +295,8 @@ public class HomePageAction extends BaseActionSupport {
     this.mostViewedArticleService = mostViewedArticleService;
   }
 
-  public List<HomePageArticleInfo> getMostViewedArticles() {
-    return mostViewedArticles;
+  public List<HomePageArticleInfo> getMostViewedArticleInfo() {
+    return mostViewedArticleInfo;
   }
 
   public String getMostViewedComment() {
@@ -302,8 +308,17 @@ public class HomePageAction extends BaseActionSupport {
    *
    * @return array of SearchHit objects
    */
-  public List<Article> getRecentArticles() {
+  public List<SearchHit> getRecentArticles() {
     return recentArticles;
+  }
+
+  /**
+   * Retrieves the most recently published articles in the last 7 days
+   *
+   * @return array of SearchHit objects
+   */
+  public List<HomePageArticleInfo> getRecentArticleInfo() {
+    return recentArticleInfo;
   }
 
   /**
@@ -368,5 +383,21 @@ public class HomePageAction extends BaseActionSupport {
 
   public void setMostViewedStartIndex(int mostViewedStartIndex) {
     this.mostViewedStartIndex = mostViewedStartIndex;
+  }
+
+  public int getRecentNextIndex() {
+    return recentNextIndex;
+  }
+
+  public void setRecentNextIndex(int recentNextIndex) {
+    this.recentNextIndex = recentNextIndex;
+  }
+
+  public int getRecentStartIndex() {
+    return recentStartIndex;
+  }
+
+  public void setRecentStartIndex(int recentStartIndex) {
+    this.recentStartIndex = recentStartIndex;
   }
 }

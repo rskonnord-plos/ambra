@@ -22,13 +22,15 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.service.article.MostViewedArticleService;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.article.HomePageArticleInfo;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,21 +60,15 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
   private static final String ABSTRACT_ATTR = "abstract_primary_display";
 
   @Override
-  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException {
-    return getMostViewedArticles(journal, 0, limit, numDays);
-  }
-
-  @Override
-  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int offset, int limit, Integer numDays) throws SolrException {
+  public List<Pair<String, String>> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException {
     //check if we still have valid results in the cache
-    String cacheIndex = journal + ":" + String.valueOf(offset) + ":" + String.valueOf(limit);
-    MostViewedCache cache = cachedMostViewedResults.get(cacheIndex);
+    MostViewedCache cache = cachedMostViewedResults.get(journal);
     if (cache != null && cache.isValid()) {
       return cache.getArticles();
     }
 
     Map<String, String> params = new HashMap<String, String>();
-    params.put("fl", DOI_ATTR + "," + TITLE_ATTR + "," + STRIKING_ATTR + "," + AUTHORS_ATTR + "," + ABSTRACT_ATTR);
+    params.put("fl", DOI_ATTR + "," + TITLE_ATTR);
     params.put("fq", "doc_type:full AND !article_type_facet:\"Issue Image\" AND cross_published_journal_key:" + journal);
     params.put("start", "0");
     params.put("rows", String.valueOf(limit));
@@ -83,7 +79,70 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
 
     Document doc = solrHttpService.makeSolrRequest(params);
 
-    List<HomePageArticleInfo> articles = new ArrayList<HomePageArticleInfo>(limit);
+    List<Pair<String, String>> articles = new ArrayList<Pair<String, String>>(limit);
+
+    //get the children of the "result" node
+    XPath xPath = XPathFactory.newInstance().newXPath();
+    try {
+      Integer count = Integer.valueOf(xPath.evaluate("count(//result/doc)", doc));
+      for (int i = 1; i <= count; i++) {
+        String doi = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + DOI_ATTR + "']/text()", doc);
+        String title = xPath.evaluate("//result/doc[" + i + "]/str[@name = '" + TITLE_ATTR + "']/text()", doc);
+        articles.add(new Pair<String, String>(doi, title));
+      }
+    } catch (XPathExpressionException e) {
+      throw new SolrException("Error parsing solr xml response", e);
+    }
+
+    //cache the results
+    cachedMostViewedResults.put(journal, new MostViewedCache(articles));
+    return articles;
+  }
+
+
+  @Override
+  public List<HomePageArticleInfo> getMostViewedArticleInfo(String journal, int offset, int limit, Integer numDays) throws SolrException {
+    //check if we still have valid results in the cache
+    String cacheIndex = journal + ":" + String.valueOf(offset) + ":" + String.valueOf(limit);
+    MostViewedCache cache = cachedMostViewedResults.get(cacheIndex);
+    if (cache != null && cache.isValid()) {
+      return cache.getArticleInfo();
+    }
+
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("fl", DOI_ATTR + "," + TITLE_ATTR + "," + STRIKING_ATTR + "," + AUTHORS_ATTR + "," + ABSTRACT_ATTR);
+    params.put("fq", "doc_type:full AND !article_type_facet:\"Issue Image\" AND cross_published_journal_key:" + journal);
+    params.put("start", String.valueOf(offset));
+    params.put("rows", String.valueOf(limit));
+    params.put("indent", "off");
+    String sortField = (numDays != null) ? solrFieldConverter.getViewCountingFieldName(numDays)
+        : solrFieldConverter.getAllTimeViewsField();
+    params.put("sort", sortField + " desc");
+
+    Document doc = solrHttpService.makeSolrRequest(params);
+    List<HomePageArticleInfo> articles = getArticleInfoFromSolrResponse(doc);
+    //cache the results
+    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articles, true));
+    return articles;
+  }
+
+  @Override
+  public List<HomePageArticleInfo> getRecentArticleInfo(String journal, int offset, int limit, List<URI> articleTypes) throws SolrException {
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("fl", DOI_ATTR + "," + TITLE_ATTR + "," + STRIKING_ATTR + "," + AUTHORS_ATTR + "," + ABSTRACT_ATTR);
+    params.put("fq", "doc_type:full AND !article_type_facet:\"Issue Image\" AND cross_published_journal_key:" + journal);
+    params.put("start", String.valueOf(offset));
+    params.put("rows", String.valueOf(limit));
+    params.put("indent", "off");
+    params.put("sort", "publication_date desc");
+
+    Document doc = solrHttpService.makeSolrRequest(params);
+    List<HomePageArticleInfo> articles = getArticleInfoFromSolrResponse(doc);
+    return articles;
+  }
+
+  private List<HomePageArticleInfo> getArticleInfoFromSolrResponse(Document doc) throws SolrException {
+    List<HomePageArticleInfo> articles = new ArrayList<HomePageArticleInfo>();
 
     //get the children of the "result" node
     XPath xPath = XPathFactory.newInstance().newXPath();
@@ -118,9 +177,6 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
     } catch (XPathExpressionException e) {
       throw new SolrException("Error parsing solr xml response", e);
     }
-
-    //cache the results
-    cachedMostViewedResults.put(journal, new MostViewedCache(articles));
     return articles;
   }
 

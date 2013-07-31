@@ -22,8 +22,10 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.service.search.SolrException;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.article.HomePageArticleInfo;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -40,8 +42,13 @@ public interface MostViewedArticleService {
    * @param numDays - the number of days over which to count the views. If null; the default is over all time
    * @return - a list of dois and titles of the most viewed articles, in order
    */
-  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException;
+  //TODO: make this a list of articles instead of pairs
+  //This is *bad practice* because it mixes the view (i.e. "we just want to see the title and doi") with
+  //the model (i.e. the "most viewed articles") ... but ArticleService is also bad
+  public List<Pair<String, String>> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException;
 
-  public List<HomePageArticleInfo> getMostViewedArticles(String journal, int offset, int limit, Integer numDays) throws SolrException;
+  public List<HomePageArticleInfo> getMostViewedArticleInfo(String journal, int offset, int limit, Integer numDays) throws SolrException;
+
+  public List<HomePageArticleInfo> getRecentArticleInfo(String journal, int offset, int limit, List<URI> articleTypes) throws SolrException;
 
 }

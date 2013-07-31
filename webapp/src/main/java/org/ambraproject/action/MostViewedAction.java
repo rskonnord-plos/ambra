@@ -23,7 +23,7 @@ package org.ambraproject.action;
 
 import org.ambraproject.service.article.MostViewedArticleService;
 import org.ambraproject.service.search.SolrException;
-import org.ambraproject.views.article.HomePageArticleInfo;
+import org.ambraproject.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class MostViewedAction extends BaseActionSupport {
 
   private MostViewedArticleService mostViewedArticleService;
 
-  private List<HomePageArticleInfo> mostViewedArticles;
+  private List<Pair<String, String>> mostViewedArticles;
   private String mostViewedComment;
 
   /**
@@ -51,7 +51,7 @@ public class MostViewedAction extends BaseActionSupport {
     if (mostViewedEnabled()) {
       initMostViewed();
     } else {
-      mostViewedArticles = new ArrayList<HomePageArticleInfo>();
+      mostViewedArticles = new ArrayList<Pair<String, String>>();
     }
     return SUCCESS;
   }
@@ -77,7 +77,7 @@ public class MostViewedAction extends BaseActionSupport {
       mostViewedArticles = mostViewedArticleService.getMostViewedArticles(getCurrentJournal(), limit, days);
     } catch (SolrException e) {
       log.error("Error querying solr for most viewed articles; returning empty list", e);
-      mostViewedArticles = new LinkedList<HomePageArticleInfo>();
+      mostViewedArticles = new LinkedList<Pair<String, String>>();
     }
 
   }
@@ -86,7 +86,7 @@ public class MostViewedAction extends BaseActionSupport {
     this.mostViewedArticleService = mostViewedArticleService;
   }
 
-  public List<HomePageArticleInfo> getMostViewedArticles() {
+  public List<Pair<String, String>> getMostViewedArticles() {
     return mostViewedArticles;
   }
 

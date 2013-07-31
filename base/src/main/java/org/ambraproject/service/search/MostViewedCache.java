@@ -21,6 +21,7 @@
 
 package org.ambraproject.service.search;
 
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.article.HomePageArticleInfo;
 
 import java.util.Calendar;
@@ -38,17 +39,23 @@ import java.util.List;
 public class MostViewedCache {
 
   private GregorianCalendar cacheDate;
-  private List<HomePageArticleInfo> articles;
+  private List<Pair<String, String>> articles;
+  private List<HomePageArticleInfo> articleInfo;
   public static final int CACHE_TIME = 15;
   public static final int CACHE_TIME_UNITS = Calendar.MINUTE;
 
-  public MostViewedCache(GregorianCalendar cacheDate, List<HomePageArticleInfo> articles) {
+  public MostViewedCache(GregorianCalendar cacheDate, List<Pair<String, String>> articles) {
     this.cacheDate = cacheDate;
     this.articles = articles;
   }
 
-  public MostViewedCache(List<HomePageArticleInfo> articles) {
+  public MostViewedCache(List<Pair<String, String>> articles) {
     this.articles = articles;
+    this.cacheDate = new GregorianCalendar();
+  }
+
+  public MostViewedCache(List<HomePageArticleInfo> articleInfo, boolean ignore) {
+    this.articleInfo = articleInfo;
     this.cacheDate = new GregorianCalendar();
   }
 
@@ -64,8 +71,16 @@ public class MostViewedCache {
    * Get the articles stored in this cache object
    * @return - an ordered list of doi's (first entry) and titles (second entry)
    */
-  public List<HomePageArticleInfo> getArticles() {
+  public List<Pair<String, String>> getArticles() {
     return articles;
+  }
+
+  /**
+   * Get the articles stored in this cache object
+   * @return - an ordered list of doi's (first entry) and titles (second entry)
+   */
+  public List<HomePageArticleInfo> getArticleInfo() {
+    return articleInfo;
   }
 
   /**
@@ -77,7 +92,7 @@ public class MostViewedCache {
   public boolean isValid() {
     GregorianCalendar time = new GregorianCalendar();
     time.add(CACHE_TIME_UNITS, -CACHE_TIME);
-    return time.before(this.cacheDate) && articles != null;
+    return time.before(this.cacheDate) && (articles != null || articleInfo != null);
   }
 
 }

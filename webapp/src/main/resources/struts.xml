@@ -196,6 +196,12 @@
       </result>
     </action>
 
+    <action name="recentArticlesAlt" class="org.ambraproject.action.HomePageAction" method="executeRecent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/recentArticles.ftl</param>
+      </result>
+    </action>
+
     <action name="mostCommented" class="org.ambraproject.action.HomePageAction">
       <result name="success" type="naked">
         <param name="templateFile">/article/mostCommented.ftl</param>
@@ -208,7 +214,7 @@
       </result>
     </action>
 
-    <action name="mostViewedMore" class="org.ambraproject.action.HomePageAction" method="executeMostViewed">
+    <action name="mostViewedAlt" class="org.ambraproject.action.HomePageAction" method="executeMostViewed">
       <result name="success" type="naked">
         <param name="templateFile">/article/mostViewed.ftl</param>
       </result>
