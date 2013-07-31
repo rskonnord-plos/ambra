@@ -38,18 +38,13 @@ $.fn.edBoard = function () {
   var queryInfo = {};
 
   this.getEditors = function (args, currentPage) {
-    // clear the query information
-    if (typeof(args) === 'undefined' && typeof(currentPage) === 'undefined') {
-      queryInfo = {};
-    }
 
-    // save the query information so it can be used when user pages through the search results
-    if (typeof(args) != 'undefined' && args != null) {
+    if (typeof(currentPage) === 'undefined') {
+      // args (query information) can be undefined or null (and it's ok to save undefined or null)
+      // save the query information so it can be used when user pages through the search results
       queryInfo = args;
-    }
-
-    // user is paging through the search results, use the query information we saved
-    if (!(typeof(currentPage) === 'undefined')) {
+    } else {
+      // user is paging through the search results, use the query information we saved
       args = queryInfo;
     }
 
@@ -62,6 +57,10 @@ $.fn.edBoard = function () {
     }, args);
 
 
+    // display the spinner next to the search textbox every time user search and pages through results
+    $("#loading .spinner").css("display", "inline");
+    $("#loading").css("display", "block");
+
     if (typeof(currentPage) === 'undefined') {
       // set the default current page
       currentPage = 0;
@@ -71,12 +70,11 @@ $.fn.edBoard = function () {
         $(this).remove();
       });
       $("#all_editors").css("display", "none");
-      $("#loading").css("display", "block");
 
-      args["initialLoad"] = false;
+      args["initialLoad"] = true;
 
     } else {
-      args["initialLoad"] = true;
+      args["initialLoad"] = false;
     }
 
     args["currentPage"] = currentPage;
@@ -136,14 +134,15 @@ $.fn.edBoard = function () {
   //Setting the Editor results and making a call to load first page
   this.setEditors = function (json) {
 
-    if (!json.initialLoad) {
-      $(".spinner").fadeOut(1000);
+    $(".spinner").fadeOut(1000);
+
+    if (json.initialLoad) {
       $("#all_editors").css("display", "none");
     }
 
     this.loadCallback(json);
 
-    if (!json.initialLoad) {
+    if (json.initialLoad) {
       $("#all_editors").show("blind", 1000);
     }
 
