@@ -103,7 +103,7 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
   @Override
   public List<HomePageArticleInfo> getMostViewedArticleInfo(String journal, int offset, int limit, Integer numDays) throws SolrException {
     //check if we still have valid results in the cache
-    String cacheIndex = journal + ":" + String.valueOf(offset) + ":" + String.valueOf(limit);
+    String cacheIndex = journal + ":mostviewed" + String.valueOf(offset) + ":" + String.valueOf(limit);
     MostViewedCache cache = cachedMostViewedResults.get(cacheIndex);
     if (cache != null && cache.isValid()) {
       return cache.getArticleInfo();
@@ -128,6 +128,12 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
 
   @Override
   public List<HomePageArticleInfo> getRecentArticleInfo(String journal, int offset, int limit, List<URI> articleTypes) throws SolrException {
+    //check if we still have valid results in the cache
+    String cacheIndex = journal + ":recent:" + String.valueOf(offset) + ":" + String.valueOf(limit);
+    MostViewedCache cache = cachedMostViewedResults.get(cacheIndex);
+    if (cache != null && cache.isValid()) {
+      return cache.getArticleInfo();
+    }
     Map<String, String> params = new HashMap<String, String>();
     params.put("fl", DOI_ATTR + "," + TITLE_ATTR + "," + STRIKING_ATTR + "," + AUTHORS_ATTR + "," + ABSTRACT_ATTR);
     params.put("fq", "doc_type:full AND !article_type_facet:\"Issue Image\" AND cross_published_journal_key:" + journal);
@@ -138,6 +144,8 @@ public class SolrMostViewedArticleService implements MostViewedArticleService {
 
     Document doc = solrHttpService.makeSolrRequest(params);
     List<HomePageArticleInfo> articles = getArticleInfoFromSolrResponse(doc);
+    //cache the results
+    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articles, true));
     return articles;
   }
 
