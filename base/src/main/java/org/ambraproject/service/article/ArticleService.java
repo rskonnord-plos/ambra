@@ -23,8 +23,10 @@ import org.ambraproject.models.Article;
 import org.ambraproject.models.Category;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.views.CitedArticleView;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.BaseArticleInfo;
+import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.util.List;
 
@@ -106,6 +108,19 @@ public interface ArticleService {
    * @throws java.text.ParseException if any of the dates could not be parsed
    */
   public List<String> getArticleDOIs(final ArticleServiceSearchParameters params) throws ParseException;
+
+  /**
+   * Return a list of articles representing articles published within the 30 days ignoring image articles
+   * The list returned is randomized.  If there are less then articleCount articles in the results, go back in time
+   * up to 30 days to fill the list
+   *
+   * @param journal_eIssn the journal to filter on
+   * @param articleCount the minimum number of articles to return
+   *
+   * @return a list randomized search results
+   */
+  @Transactional(readOnly = true)
+  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, int numDaysInPast, int articleCount);
 
   /**
    * Get all of the articles satisfying the given criteria.
