@@ -360,10 +360,10 @@ $.fn.edBoard = function () {
   this.pagingAnchor = function (pageNumber, pagingText, className) {
 
     var success = function(event) {
-      var pageNumber = parseInt(event.srcElement.text);
+      var pageNumber = parseInt($(event.target).text());
       if (isNaN(pageNumber)) {
         pageNumber = parseInt($('.pagination strong:first').text());
-        if (event.srcElement.text === '<') {
+        if ($(event.target).text() === '<') {
           pageNumber = pageNumber - 1;
         } else {
           pageNumber = pageNumber + 1;
