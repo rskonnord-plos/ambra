@@ -70,32 +70,29 @@ public class HomePageAction extends BaseActionSupport {
    */
   @Override
   public String execute() {
+    //for PLOSONE
     if ("PLoSONE".equals(getCurrentJournal())) {
       recentStartIndex = 0;
+      mostViewedStartIndex = 0;
       executeRecent();
-
-      if (mostViewedEnabled()) {
-        mostViewedStartIndex = 0;
-        executeMostViewed();
-      } else {
-        mostViewedArticleInfo = new ArrayList<HomePageArticleInfo>();
-        mostViewedNextIndex = 0;
-      }
       executeMostViewed();
     }
+    //for other journals
     else {
       initRecentArticles();
     }
     return SUCCESS;
   }
 
+  //only for PLOSONE
   public String executeRecent() {
     initRecentArticleInfo();
     return SUCCESS;
   }
 
+  //only for PLOSONE
   public String executeMostViewed() {
-    initMostViewed();
+    initMostViewedArticleInfo();
     return SUCCESS;
   }
 
@@ -257,15 +254,11 @@ public class HomePageAction extends BaseActionSupport {
     }
   }
 
-  private boolean mostViewedEnabled() {
-    return configuration.containsKey("ambra.virtualJournals." + getCurrentJournal() + ".mostViewedArticles.limit") && mostViewedArticleService != null;
-  }
-
   /**
    * Populate the <b>mostViewedArticleInfo</b> (global) variable with articles
    *
    */
-  private void initMostViewed() {
+  private void initMostViewedArticleInfo() {
     String mostViewedKey = "ambra.virtualJournals." + getCurrentJournal() + ".mostViewedArticles";
     try {
       String limitKey = (mostViewedStartIndex == 0 ? ".limitFirstPage" :  ".limit");

@@ -1,5 +1,6 @@
 package org.ambraproject.views.article;
 
+import org.ambraproject.util.TextUtils;
 import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +13,14 @@ import java.io.Serializable;
 public class HomePageArticleInfo implements Serializable {
 
   private static final Logger log = LoggerFactory.getLogger(HomePageArticleInfo.class);
+  private static final int TITLE_LENGTH = 120;
 
   private String doi;
   private String title;
   private String authors;
   private String strkImgURI;
   private String description;
+  private String truncatedAuthors;
 
   public HomePageArticleInfo() {
 
@@ -52,7 +55,18 @@ public class HomePageArticleInfo implements Serializable {
   }
 
   public void setAuthors(String authors) {
-    this.authors = authors;
+    this.authors = authors;       //Make a list of first, second, third creators
+
+    if (authors != null) {
+      String[] authorsArray = authors.split(",");
+      if (authorsArray.length <= 3) {
+        this.truncatedAuthors = authors; // same as authors list
+      }
+      else {
+        // use first two and last.
+        this.truncatedAuthors = authorsArray[0].trim() + ", " + authorsArray[1].trim() + ", [...], " + authorsArray[authorsArray.length-1].trim();
+      }
+    }
   }
 
   public String getStrkImgURI() {
@@ -69,6 +83,14 @@ public class HomePageArticleInfo implements Serializable {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public String getTruncatedTitle() {
+    return TextUtils.truncateTextCloseOpenTag(this.title, TITLE_LENGTH);
+  }
+
+  public String getTruncatedAuthors() {
+    return truncatedAuthors;
   }
 
   @Override
