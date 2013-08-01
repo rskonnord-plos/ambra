@@ -399,14 +399,27 @@ $.fn.alm = function () {
         if (citation.contributors) {
           var first_author = "";
           var authors = "";
+          var author = "";
           var contributors = citation.contributors.contributor;
 
           for (var i = 0; i < contributors.length; i++) {
             individualContributor = contributors[i];
             if (individualContributor.first_author === 'true') {
-              first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+              if (individualContributor.surname) {
+                first_author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  first_author = first_author + " " + individualContributor.given_name.substr(0, 1)
+                }
+              }
             } else {
-              authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+              author = "";
+              if (individualContributor.surname) {
+                author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  author = author + " " + individualContributor.given_name.substr(0, 1);
+                }
+                authors = authors + ", " + author;
+              }
             }
           }
           authors = first_author + authors;
