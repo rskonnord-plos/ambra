@@ -306,6 +306,10 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
     return searchService.getPageSizes();
   }
 
+  public SearchResultSinglePage getResultsSinglePage() {
+    return resultsSinglePage;
+  }
+
   /**
    * Set the searchService
    *
@@ -314,9 +318,5 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   @Required
   public void setSearchService(final SearchService searchService) {
     this.searchService = searchService;
-  }
-
-  public SearchResultSinglePage getResultsSinglePage() {
-    return resultsSinglePage;
   }
 }

@@ -74,7 +74,7 @@ public class SearchAction extends BaseSearchAction {
   private String articleURI;
   private String journalURL;
 
-  private String resultView;
+
 
   /**
    * @return return simple search result
@@ -98,7 +98,6 @@ public class SearchAction extends BaseSearchAction {
       //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
       searchResults = resultsSinglePage.getHits();
       queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
-      resultView = params.getResultView();
 
       //If page size is zero, assume totalPages is zero
       int totPages = (getPageSize() == 0)?0:((getTotalNoOfResults() + getPageSize() - 1) / getPageSize());
@@ -156,7 +155,6 @@ public class SearchAction extends BaseSearchAction {
         //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
         searchResults = resultsSinglePage.getHits();
         queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
-        resultView = params.getResultView();
 
         int totPages = (getTotalNoOfResults() + getPageSize() - 1) / getPageSize();
         setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
@@ -475,7 +473,4 @@ public class SearchAction extends BaseSearchAction {
         .getRequest();
   }
 
-  public String getResultView() {
-    return resultView;
-  }
 }
