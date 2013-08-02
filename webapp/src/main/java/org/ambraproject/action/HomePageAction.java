@@ -172,14 +172,15 @@ public class HomePageAction extends BaseActionSupport {
      * </ul>
      * The CURRENT_JOURNAL_NAME is acquired from the {@link BaseActionSupport#getCurrentJournal()}
      */
-  private void initRecentArticles() {
+    private void initRecentArticles() {
       String journalKey = getCurrentJournal();
+      String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
       String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
-
-      List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
 
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
+      recentArticles = articleService.getRandomRecentArticles(journal_eIssn, numDaysInPast, numArticlesToShow);
+    }
 
       //  This is the most recent midnight.  No need to futz about with exact dates.
       Calendar startDate = Calendar.getInstance();
@@ -344,6 +345,14 @@ public class HomePageAction extends BaseActionSupport {
   @Required
   public void setBrowseService(BrowseService browseService) {
     this.browseService = browseService;
+  }
+
+  /**
+   * @param searchService The searchService to set.
+   */
+  @Required
+  public void setSearchService(SearchService searchService) {
+    this.searchService = searchService;
   }
 
   public int getNumDaysInPast() {
