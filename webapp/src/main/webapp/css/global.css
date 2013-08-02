@@ -5458,6 +5458,10 @@ div#save-search-box .big-box {
 
 div#save-search-box div.check-box {
   padding-top: 4px;
+  width: 370px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 div#save-search-box div.grey-text {
