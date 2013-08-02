@@ -20,11 +20,10 @@
 
 package org.ambraproject.action;
 
-import org.ambraproject.service.article.BrowseParameters;
-import org.ambraproject.service.article.BrowseService;
+import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.MostViewedArticleService;
+import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.service.search.SolrException;
-import org.ambraproject.views.BrowseResult;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.article.HomePageArticleInfo;
 import org.slf4j.Logger;
@@ -32,9 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,10 +45,11 @@ import java.util.Set;
 public class HomePageAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(HomePageAction.class);
 
-  private BrowseService browseService;
+  private ArticleService articleService;
+  private JournalService journalService;
   private MostViewedArticleService mostViewedArticleService;
 
-  private ArrayList<SearchHit> recentArticles;
+  private List<SearchHit> recentArticles;
   private List<HomePageArticleInfo> recentArticleInfo;
   private int numDaysInPast;
   private int numArticlesToShow;
@@ -172,72 +169,20 @@ public class HomePageAction extends BaseActionSupport {
      * </ul>
      * The CURRENT_JOURNAL_NAME is acquired from the {@link BaseActionSupport#getCurrentJournal()}
      */
-    private void initRecentArticles() {
-      String journalKey = getCurrentJournal();
-      String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
-      String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
+  private void initRecentArticles() {
+    String journalKey = getCurrentJournal();
+    String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
+    String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
 
-      numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
-      numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
-      recentArticles = articleService.getRandomRecentArticles(journal_eIssn, numDaysInPast, numArticlesToShow);
-    }
-
-      //  This is the most recent midnight.  No need to futz about with exact dates.
-      Calendar startDate = Calendar.getInstance();
-      startDate.set(Calendar.HOUR_OF_DAY, 0);
-      startDate.set(Calendar.MINUTE, 0);
-      startDate.set(Calendar.SECOND, 0);
-      startDate.set(Calendar.MILLISECOND, 0);
-
-      //  First query.  Just get the articles from "numDaysInPast" ago.
-      Calendar endDate = (Calendar) startDate.clone();
-      startDate.add(Calendar.DATE, -(numDaysInPast) + 1);
-
-      BrowseParameters params = new BrowseParameters();
-      params.setStartDate(startDate);
-      params.setEndDate(endDate);
-      params.setArticleTypes(typeUriArticlesToShow);
-      params.setPageNum(0);
-      params.setPageSize(numArticlesToShow * 100);
-      params.setJournalKey(this.getCurrentJournal());
-
-      BrowseResult results = browseService.getArticlesByDate(params);
-
-      //Create a clone here so we're not modifying the object that is actually in the cache
-      recentArticles = (ArrayList<SearchHit>)results.getArticles().clone();
-
-      //  If not enough, then query for articles before "numDaysInPast" to make up the difference.
-      if (recentArticles.size() < numArticlesToShow) {
-        endDate = (Calendar) startDate.clone();
-        endDate.add(Calendar.SECOND, -1); // So no overlap with the first query.
-        startDate.add(Calendar.DATE, -(numDaysInPast) - 1); // One extra day to play it safe.
-
-        params = new BrowseParameters();
-        params.setStartDate(startDate);
-        params.setEndDate(endDate);
-        params.setArticleTypes(typeUriArticlesToShow);
-        params.setPageNum(0);
-        params.setPageSize(numArticlesToShow - recentArticles.size());
-        params.setJournalKey(this.getCurrentJournal());
-
-        recentArticles.addAll(browseService.getArticlesByDate(params).getArticles());
-      }
-
-      // Now choose a random selection of numArticlesToShow articles from the article pool.
-      // Even if we do not have enough articles, this will still randomize their order.
-      if (recentArticles.size() > 0) {
-        Random randomNumberGenerator = new Random((new Date()).getTime());  // Seed: time = "now".
-        ArrayList<SearchHit> recentArticlesTemp = new ArrayList<SearchHit>();
-        while (recentArticlesTemp.size() < numArticlesToShow && recentArticles.size() > 0) {
-          // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
-          int randomNumber = randomNumberGenerator.nextInt(recentArticles.size());
-          recentArticlesTemp.add(recentArticles.get(randomNumber));
-          recentArticles.remove(randomNumber);
-        }
-        recentArticles = recentArticlesTemp;
-      }
+    numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
+    numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
+    recentArticles = articleService.getRandomRecentArticles(journal_eIssn, numDaysInPast, numArticlesToShow);
   }
 
+  /**
+   * Populate the <b>mostViewedArticleInfo</b> (global) variable with articles
+   * for PLOSONE
+   */
   private void initRecentArticleInfo() {
     String recentKey = "ambra.virtualJournals." + getCurrentJournal() + ".recentArticles";
 
@@ -257,6 +202,7 @@ public class HomePageAction extends BaseActionSupport {
 
   /**
    * Populate the <b>mostViewedArticleInfo</b> (global) variable with articles
+   * for PLOSONE
    *
    */
   private void initMostViewedArticleInfo() {
@@ -340,19 +286,18 @@ public class HomePageAction extends BaseActionSupport {
   }
 
   /**
-   * @param browseService The browseService to set.
+   * @param articleService the ArticleService to set
    */
   @Required
-  public void setBrowseService(BrowseService browseService) {
-    this.browseService = browseService;
+  public void setArticleService(ArticleService articleService) {
+    this.articleService = articleService;
   }
 
-  /**
-   * @param searchService The searchService to set.
-   */
-  @Required
-  public void setSearchService(SearchService searchService) {
-    this.searchService = searchService;
+  /*
+  * @param journalService the JournalService to use
+  */
+  public void setJournalService(JournalService journalService) {
+    this.journalService = journalService;
   }
 
   public int getNumDaysInPast() {
