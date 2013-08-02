@@ -5407,7 +5407,7 @@ div#save-search-box {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 570px;
+  width: 400px;
   height: 180px;
   border: solid 1px #C8DFED;
   padding-bottom: 10px;
@@ -5417,6 +5417,11 @@ div#save-search-box {
   box-shadow: 0 0 20px #999;
   -moz-box-shadow: 0 0 20px #999;
   -webkit-box-shadow: 0 0 20px #999;
+}
+
+/* Journal alerts are a little smaller.  Note the footer in browse.ftl */
+div#save-search-box.journalAlert {
+  height: 140px;
 }
 
 div#save-search-box div.top-header {
@@ -5447,7 +5452,7 @@ div#save-search-box div.body-wrapper {
 }
 
 div#save-search-box .big-box {
-  width: 450px;
+  width: 350px;
   border: solid 1px #606060;
 }
 
