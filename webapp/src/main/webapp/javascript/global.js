@@ -1419,7 +1419,9 @@ var killModal = function () {
 
   $win.unbind('resize.modal');
   //will record the timeStamp for when the modal is closed
-  close_time = event.timeStamp;
+  if(typeof event !== 'undefined') {
+    close_time = event.timeStamp;
+  }
 };
 
 // End Figure Viewer
@@ -1551,6 +1553,8 @@ $(window).load(function () {
 });
 
 
+//Why is this bound universally?  That seems strange.
+//-Joe
 $(document).bind('keydown', function (e) {
   if (e.which == 27) {
     killModal();
