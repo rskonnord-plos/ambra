@@ -1,0 +1,11 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.ambraproject.models" default-lazy="false">
+
+  <class name="News" table="news">
+    <id name="sortOrder" column="sortOrder" type="int"></id>
+  </class>
+
+</hibernate-mapping>
