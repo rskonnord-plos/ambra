@@ -1,19 +1,25 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ambraproject.action;
 
 import com.opensymphony.xwork2.Action;
+import org.ambraproject.models.Article;
 import org.ambraproject.models.Journal;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.Pair;
@@ -27,9 +33,10 @@ import org.testng.annotations.Test;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TimeZone;
 
 import static org.testng.Assert.assertEquals;
@@ -59,50 +66,95 @@ public class HomepageActionTest extends AmbraWebTest {
 
   @DataProvider(name = "expectedInfo")
   public Object[][] getExpectedInfo() throws Exception {
+
     //make sure to use a journal for this test, so we don't get 'recent' articles that were added by other unit tests
     Journal journal = new Journal();
     journal.seteIssn("8675-309");
     journal.setJournalKey("HomePageActionTestJournal");
     dummyDataStore.store(journal);
 
-    Calendar recentDate = Calendar.getInstance();
-    recentDate.add(Calendar.DAY_OF_MONTH, -2);
-
-    Calendar lastYear = Calendar.getInstance();
-    lastYear.add(Calendar.YEAR, -1);
-    String lastYearString = dateFormatter.format(lastYear.getTime());
+    //create some recent articles and not recent articles w/ dates
+    //creating 4 so that the algorithm has to look farther back in time to get them all
 
     List<Pair<String, String>> recentArticles = new ArrayList<Pair<String, String>>(5);
 
-    for (int i = 1; i <= 4; i++) {
-      //Make sure the articles are order by publication date (just for fun, they are sorted randomly by the action)
-      recentDate.add(Calendar.HOUR_OF_DAY, -1);
+    Random r = new Random();
+    for (int x = 1; x < 5; x++) {
+      String doi = new StringBuilder("recent-article-doi-THAT-SHOULD-SHOW-doi").append(x).toString();
+      String title = new StringBuilder("recent-article-doi-THAT-SHOULD-SHOW-title").append(x).toString();
+      Article a = new Article(doi);
+      a.setTitle(title);
+
+      //randomize date - we know a priori recent articles should be within last 7 days; 86400000 milliseconds in a day
+      Date d = new Date();
+      d.setTime(d.getTime() - d.getTime() % 86400000L);    /* set to midnight */
+      d.setTime(d.getTime() - (long) r.nextInt(604800000)); /*some random time within the last 7 days*/
+      a.setDate(d);
+      a.seteIssn("8675-309");
+      dummyDataStore.store(a);
+
+      recentArticles.add(new Pair<String, String>(doi, title));
+
+      //solr
       solr.addDocument(new String[][]{
-          {"id", "test-id-" + i},
-          {"title_display", "title for article " + i},
-          {"publication_date", dateFormatter.format(recentDate.getTime())},
+          {"id", doi},
+          {"title_display", title},
+          {"publication_date", dateFormatter.format(a.getDate())},
           {"article_type_facet", "article"},
           {"doc_type", "full"},
           {"cross_published_journal_key", journal.getJournalKey()}
       });
-      recentArticles.add(new Pair<String, String>("test-id-" + i, "title for article " + i));
     }
+
+    //article within date w/ image-type doi that should be discarded on init - in HomePageAction.java:initRecentArticles()
+    //"10.1371/image" is the string being searched on for discarding results
+    String doi = new String("recent-article-that-SHOULD-NOT-SHOW-10.1371/image");
+    String title = new String("recent-article-that-SHOULD-NOT-SHOW title");
+    Article a = new Article(doi);
+    a.setTitle(title);
+    Date d = new Date();
+    d.setTime(d.getTime() - (long)r.nextInt(604800000)); /*some random time within the last 7 days*/
+    a.setDate(d);
+    a.seteIssn("8675-309");
+    dummyDataStore.store(a);
+
     solr.addDocument(new String[][]{
-        {"id", "old-article"},
-        {"title_display", "This article should not show up in recent articles"},
-        {"publication_date", lastYearString},
+        {"id", doi},
+        {"title_display", title},
+        {"publication_date", dateFormatter.format(a.getDate())},
         {"article_type_facet", "article"},
         {"doc_type", "full"},
         {"cross_published_journal_key", journal.getJournalKey()}
     });
+
+
+    //article beyond the date that should show up
+    a = new Article("not-recent-article-doi-THAT-SHOULD-SHOW-doi");
+    a.setTitle("not-recent-article-doi-THAT-SHOULD-SHOW-title");
+    d = new Date();
+    d.setTime(d.getTime() - 691200000L);    /* set to time outside range */
+    a.setDate(d);
+    a.seteIssn("8675-309");
+    dummyDataStore.store(a);
+    recentArticles.add(new Pair<String, String>(a.getDoi(), a.getTitle()));
+
     solr.addDocument(new String[][]{
-        {"id", "article-in-other-journal"},
-        {"title_display", "This article should not show up in recent articles"},
-        {"publication_date", dateFormatter.format(recentDate.getTime())},
+        {"id", "not-recent-article-doi-THAT-SHOULD-SHOW-doi"},
+        {"title_display", "not-recent-article-doi-THAT-SHOULD-SHOW-title"},
+        {"publication_date", dateFormatter.format(a.getDate())},
         {"article_type_facet", "article"},
         {"doc_type", "full"},
-        {"cross_published_journal_key", "someOtherKey"}
+        {"cross_published_journal_key", journal.getJournalKey()}
     });
+
+    //article beyond days to show that should NOT show up
+    a = new Article("not-recent-article-doi-that-SHOULD-NOT-show-doi");
+    a.setTitle("not-recent-article-doi-that-should-NOT-show-title");
+    d = new Date();
+    d.setTime(d.getTime() - 950400000L);    /* set to time outside range + search interval used to go back in time*/
+    a.setDate(d);
+    a.seteIssn("8675-309");
+    dummyDataStore.store(a);
 
     return new Object[][]{
         {journal, recentArticles}

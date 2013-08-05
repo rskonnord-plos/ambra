@@ -17,9 +17,14 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
+  this.almAPIKey = $('meta[name=almAPIKey]').attr('content');
 
   if (this.almHost == null) {
     jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
+  }
+
+  if (!this.almAPIKey){
+    jQuery.error('The alm key is not defined.  Make sure to define it in the meta section of the html.')
   }
 
   this.isNewArticle = function (pubDateInMilliseconds) {
@@ -399,14 +404,27 @@ $.fn.alm = function () {
         if (citation.contributors) {
           var first_author = "";
           var authors = "";
+          var author = "";
           var contributors = citation.contributors.contributor;
 
           for (var i = 0; i < contributors.length; i++) {
             individualContributor = contributors[i];
             if (individualContributor.first_author === 'true') {
-              first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+              if (individualContributor.surname) {
+                first_author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  first_author = first_author + " " + individualContributor.given_name.substr(0, 1)
+                }
+              }
             } else {
-              authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+              author = "";
+              if (individualContributor.surname) {
+                author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  author = author + " " + individualContributor.given_name.substr(0, 1);
+                }
+                authors = authors + ", " + author;
+              }
             }
           }
           authors = first_author + authors;
@@ -474,7 +492,7 @@ $.fn.alm = function () {
    *    --The callback method fails
    **/
   this.getData = function (request, callBack, errorCallback) {
-    var url = this.almHost + '?ids=' + request;
+    var url = this.almHost + '?api_key=' + this.almAPIKey + '&ids=' + request;
 
     //I use a third party plugin here for jsonp requests as jQuery doesn't
     //Handle errors well (with jsonp requests)
