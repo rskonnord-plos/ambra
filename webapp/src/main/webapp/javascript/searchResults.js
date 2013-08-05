@@ -542,8 +542,7 @@ $(document).ready(
         showFigSearchView();
       });
 
-      $('a.save-search').click(function() {
-
+      var showModal = function() {
         //if the request is from author/editor facet for save search, setting the search name with anchor id.
         //else the regular search term is used.
         if($(this).attr('id')) {
@@ -573,17 +572,22 @@ $(document).ready(
         $('body').append('<div id="mask"></div>');
         $('#mask').fadeIn(300);
 
+        $(document).bind('keydown', keyDownEventHandler);
+        $(document).bind('click', clickEventHandler);
+        $('#text_name_savedsearch').focus();
+        //This may seems a bit odd, but this sets the cursor at the end of the string
+        var input = $('#text_name_savedsearch')[0];
+        input.selectionStart = input.selectionEnd = input.value.length;
+
         return false;
+      };
 
-      });
-
-      $('#btn_save_savedsearch').click(function() {
-
+      var saveSearch = function() {
         $('#searchName').val($('#text_name_savedsearch').val());
         $('#weekly').val($('#cb_weekly_savedsearch').is(':checked'));
         $('#monthly').val($('#cb_monthly_savedsearch').is(':checked'));
 
-        var uqry="";
+        var uqry= "";
         var query = $('#searchOnResult').attr('value');
 
         // if saving the author/editor facet search, then set the query to empty and
@@ -627,22 +631,41 @@ $(document).ready(
         //This is required if the user wants to save the original search.
         $('#searchOnResult').attr('value',query);
         $('#saveSearchFacetVal').attr('value',"");
-      });
+      };
 
-      $('#btn_cancel_savedsearch').click(function() {
+      var removeModal = function() {
         $('#mask , #save-search-box').fadeOut(300 , function() {
           $('#mask').remove();
         });
-      });
 
-      $(document).bind('keydown', function(e) {
+        $(document).unbind('keydown', keyDownEventHandler);
+        $(document).unbind('click', clickEventHandler);
+      };
+
+      var keyDownEventHandler = function(e) {
         if (e.which == 27) {
-          $('#mask , #save-search-box').fadeOut(300 , function() {
-            $('#mask').remove();
-          });
+          removeModal();
         }
-      });
+        if (e.which == 13) {
+          saveSearch();
+        }
+      };
 
+      var clickEventHandler = function(e) {
+        //If the click happens outside of the modal, close the modal
+        if(e.target.id == "save-search-box" || $(e.target).parents("#save-search-box").size()) {
+          //Do nothing
+          //console.log("inside box");
+        } else {
+          //Close the modal
+          //console.log("outside box");
+          removeModal();
+        }
+      };
+
+      $('a.save-search').click(showModal);
+      $('#btn_save_savedsearch').bind('click', saveSearch);
+      $('#btn_cancel_savedsearch').bind('click', removeModal);
     });
 
 function setFacetSearchValue(id){
