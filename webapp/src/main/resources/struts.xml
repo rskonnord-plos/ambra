@@ -367,9 +367,27 @@
     </action>
 
     <action name="saveSearch" class="org.ambraproject.action.search.SaveSearchAction" method="saveSearch">
-      <result name="input" type="json"/>
-      <result name="success" type="json"/>
-      <result name="error" type="json"/>
+      <result name="input" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">.*</param>
+      </result>
+      <result name="error" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+    </action>
+
+    <action name="saveJournalAlert" class="org.ambraproject.action.search.SaveJournalAlertAction">
+      <result name="input" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">.*</param>
+      </result>
+      <result name="error" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
     </action>
   </package>
 
