@@ -648,17 +648,19 @@ $(document).ready(
         }
         if (e.which == 13) {
           saveSearch();
+
+          //Prevent default event (Submits the form)
+          e.preventDefault();
+          return false;
         }
       };
 
       var clickEventHandler = function(e) {
         //If the click happens outside of the modal, close the modal
         if(e.target.id == "save-search-box" || $(e.target).parents("#save-search-box").size()) {
-          //Do nothing
-          //console.log("inside box");
+          //Do nothing (clicked inside box)
         } else {
-          //Close the modal
-          //console.log("outside box");
+          //Close the modal (clicked outside box);
           removeModal();
         }
       };
