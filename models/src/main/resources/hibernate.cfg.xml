@@ -67,5 +67,6 @@
     <mapping resource="org/ambraproject/models/Pingback.hbm.xml"/>
     <mapping resource="org/ambraproject/models/SavedSearch.hbm.xml"/>
     <mapping resource="org/ambraproject/models/SavedSearchQuery.hbm.xml"/>
+    <mapping resource="org/ambraproject/models/News.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

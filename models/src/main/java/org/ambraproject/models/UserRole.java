@@ -36,6 +36,7 @@ public class UserRole extends AmbraEntity {
     MANAGE_JOURNALS,
     MANAGE_SEARCH,
     MANAGE_CACHES,
+    MANAGE_NEWS,
     CROSS_PUB_ARTICLES,
     DELETE_ARTICLES,
     VIEW_UNPUBBED_ARTICLES,

@@ -248,6 +248,11 @@
         primary key (journalID)
     );
 
+    create table news (
+        sortOrder integer not null,
+        primary key (sortOrder)
+    );
+
     create table pingback (
         pingbackID bigint not null auto_increment,
         lastModified datetime not null,
