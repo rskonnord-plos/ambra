@@ -478,7 +478,7 @@ ERROR, searchType must be defined.
 
           <ul id="search-results">
             <#list searchResults as hit>
-              <li doi="${hit.uri}" pdate="${hit.date.getTime()?string.computer}">
+              <li data-doi="${hit.uri}" data-pdate="${hit.date.getTime()?string.computer}">
                   <span class="article">
                    <@s.url id="fetchArticleURL" action="fetchArticle" namespace="/article" articleURI="info:doi/${hit.uri}" includeParams="none"/>
                    <@s.a href="${(freemarker_config.getJournalUrlFromIssn(hit.issn))!(freemarker_config.doiResolverURL)}%{fetchArticleURL}" title="Read Open-Access Article"><@articleFormat>${hit.title}</@articleFormat></@s.a>
