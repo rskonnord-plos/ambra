@@ -239,7 +239,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * @inheritDoc
    */
   @Transactional (readOnly = true)
-  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, int numDaysInPast, int articleCount)
+  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, List<URI>articleTypesToShow,
+                                                 int numDaysInPast, int articleCount)
   {
     //end date is most recent midnight
     Calendar endDate = GregorianCalendar.getInstance();
@@ -251,7 +252,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     startDate.add(Calendar.DAY_OF_YEAR, -30);
 
     //Get 30 days worth of articles first
-    List<SearchHit> recentArticles = getNonImageArticlesByDate(startDate, endDate, journal_eIssn);
+    List<SearchHit> recentArticles = getArticles(startDate, endDate, articleTypesToShow, journal_eIssn);
     List<SearchHit> results = new ArrayList<SearchHit>();
 
     startDate = (Calendar)endDate.clone();
@@ -296,6 +297,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   @SuppressWarnings("unchecked")
+  @Deprecated
   private List<SearchHit> getNonImageArticlesByDate(final Calendar startDate, final Calendar endDate, String journal_eIssn)
   {
     SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
@@ -328,6 +330,44 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
         .setTitle(title)
         .setDate(pubDate)
         .build());
+    }
+
+    return searchResults;
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<SearchHit> getArticles(final Calendar startDate, final Calendar endDate,
+                                                    List<URI> articleTypesToShow,
+                                                    String journal_eIssn)
+  {
+    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+
+    log.debug("startDate: {}", format1.format(startDate.getTime()));
+    log.debug("endDate: {}", format1.format(endDate.getTime()));
+
+    List<Article> articleResults = hibernateTemplate.findByCriteria(
+      DetachedCriteria.forClass(Article.class)
+        .add(Restrictions.eq("eIssn", journal_eIssn))
+        .add(Restrictions.between("date", startDate.getTime(), endDate.getTime()))
+        .addOrder(Order.desc("date")));
+
+    List<SearchHit> searchResults = new ArrayList<SearchHit>();
+
+    for (int i = 0; i < articleResults.size(); i++) {
+      Article res = articleResults.get(i);
+
+      //Only add article types that match.  We should be able to do this in the SQL statement
+      //But I couldn't figure out the correct hibernate criteria
+      for(URI articleType : articleTypesToShow) {
+        if(res.getTypes().contains(articleType.toString())) {
+          searchResults.add(SearchHit.builder()
+            .setUri(res.getDoi())
+            .setTitle(res.getTitle())
+            .setDate(res.getDate())
+            .build());
+        }
+      }
+
     }
 
     return searchResults;

@@ -129,10 +129,11 @@ public class HomePageAction extends BaseActionSupport {
       String journalKey = getCurrentJournal();
       String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
       String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
+      List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
 
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
-      recentArticles = articleService.getRandomRecentArticles(journal_eIssn, numDaysInPast, numArticlesToShow);
+      recentArticles = articleService.getRandomRecentArticles(journal_eIssn, typeUriArticlesToShow, numDaysInPast, numArticlesToShow);
     }
 
   /**
