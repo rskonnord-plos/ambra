@@ -119,6 +119,8 @@ public class HomepageActionTest extends AmbraWebTest {
     String title = new String("recent-article-that-SHOULD-NOT-SHOW title");
     Article a = new Article(doi);
     a.setTitle(title);
+    a.setTypes(new HashSet<String>(Arrays.asList("http://rdf.plos.org/RDF/articleType/Issue%20Image")));
+
     Date d = new Date();
     d.setTime(d.getTime() - (long)r.nextInt(604800000)); /*some random time within the last 7 days*/
     a.setDate(d);
@@ -143,6 +145,10 @@ public class HomepageActionTest extends AmbraWebTest {
     d.setTime(d.getTime() - 691200000L);    /* set to time outside range */
     a.setDate(d);
     a.seteIssn("8675-309");
+    a.setTypes(new HashSet<String>(Arrays.asList("http://rdf.plos.org/RDF/articleType/Research%20Article",
+      "http://rdf.plos.org/RDF/articleType/research-article"
+    )));
+
     dummyDataStore.store(a);
     recentArticles.add(new Pair<String, String>(a.getDoi(), a.getTitle()));
 
@@ -163,6 +169,10 @@ public class HomepageActionTest extends AmbraWebTest {
     d.setTime(d.getTime() - 950400000L);    /* set to time outside range + search interval used to go back in time*/
     a.setDate(d);
     a.seteIssn("8675-309");
+    a.setTypes(new HashSet<String>(Arrays.asList("http://rdf.plos.org/RDF/articleType/Research%20Article",
+      "http://rdf.plos.org/RDF/articleType/research-article"
+    )));
+
     dummyDataStore.store(a);
 
     SortedMap<String, Long> subjectCounts = new TreeMap<String, Long>();
@@ -177,47 +187,48 @@ public class HomepageActionTest extends AmbraWebTest {
 
   @Test(dataProvider = "expectedInfo")
   public void testExecute(Journal journal, List<Pair<String, String>> expectedRecentArticles, SortedMap<String, Long> expectedCategoryInfos) {
-//    //make sure to use a journal for this test, so we don't get 'recent' articles that were added by other unit tests
-//    final Map<String, Object> request = getDefaultRequestAttributes();
-//    request.put(VirtualJournalContext.PUB_VIRTUALJOURNAL_CONTEXT, new VirtualJournalContext(
-//        journal.getJournalKey(),
-//        "dfltJournal",
-//        "http",
-//        80,
-//        "localhost",
-//        "ambra-webapp",
-//        new ArrayList<String>()));
-//
-//    action.setRequest(request);
-//    final String result = action.execute();
-//    assertEquals(result, Action.SUCCESS, "Action didn't return success");
-//    assertEquals(action.getActionMessages().size(), 0,
-//        "Action returned messages on default request: " + StringUtils.join(action.getActionMessages(), ";"));
-//    assertEquals(action.getActionErrors().size(), 0,
-//        "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
-//
-//    assertEquals(action.getRecentArticles().size(), expectedRecentArticles.size(), "Action returned incorrect number of recent articles");
-//    for (Pair<String, String> recentArticle : expectedRecentArticles) {
-//      SearchHit matchingArticle = null;
-//      for (SearchHit searchHit : action.getRecentArticles()) {
-//        if (searchHit.getUri().equals(recentArticle.getFirst())) {
-//          matchingArticle = searchHit;
-//          break;
-//        }
-//      }
-//      assertNotNull(matchingArticle, "Didn't return expected recent article " + recentArticle.getFirst());
-//      assertEquals(matchingArticle.getTitle(), recentArticle.getSecond(),
-//          "Article " + matchingArticle.getUri() + " had incorrect title");
-//    }
-//
-//    //category infos are used to put links to the browse by subject pages
-//    assertEquals(action.getCategoryInfos().size(), expectedCategoryInfos.size(),
-//        "Action returned incorrect number of category infos");
-//    for (String category : expectedCategoryInfos.keySet()) {
-//      assertTrue(action.getCategoryInfos().containsKey(category), "Action didn't return category: " + category);
-//      assertEquals(action.getCategoryInfos().get(category), expectedCategoryInfos.get(category),
-//          "Action returned incorrect value for category: " + category);
-//    }
+    //make sure to use a journal for this test, so we don't get 'recent' articles that were added by other unit tests
+    final Map<String, Object> request = getDefaultRequestAttributes();
+    request.put(VirtualJournalContext.PUB_VIRTUALJOURNAL_CONTEXT, new VirtualJournalContext(
+        journal.getJournalKey(),
+        "dfltJournal",
+        "http",
+        80,
+        "localhost",
+        "ambra-webapp",
+        new ArrayList<String>()));
+
+    action.setRequest(request);
+
+    final String result = action.execute();
+    assertEquals(result, Action.SUCCESS, "Action didn't return success");
+    assertEquals(action.getActionMessages().size(), 0,
+        "Action returned messages on default request: " + StringUtils.join(action.getActionMessages(), ";"));
+    assertEquals(action.getActionErrors().size(), 0,
+        "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
+
+    assertEquals(action.getRecentArticles().size(), expectedRecentArticles.size(), "Action returned incorrect number of recent articles");
+    for (Pair<String, String> recentArticle : expectedRecentArticles) {
+      SearchHit matchingArticle = null;
+      for (SearchHit searchHit : action.getRecentArticles()) {
+        if (searchHit.getUri().equals(recentArticle.getFirst())) {
+          matchingArticle = searchHit;
+          break;
+        }
+      }
+      assertNotNull(matchingArticle, "Didn't return expected recent article " + recentArticle.getFirst());
+      assertEquals(matchingArticle.getTitle(), recentArticle.getSecond(),
+          "Article " + matchingArticle.getUri() + " had incorrect title");
+    }
+
+    //category infos are used to put links to the browse by subject pages
+    assertEquals(action.getCategoryInfos().size(), expectedCategoryInfos.size(),
+        "Action returned incorrect number of category infos");
+    for (String category : expectedCategoryInfos.keySet()) {
+      assertTrue(action.getCategoryInfos().containsKey(category), "Action didn't return category: " + category);
+      assertEquals(action.getCategoryInfos().get(category), expectedCategoryInfos.get(category),
+          "Action returned incorrect value for category: " + category);
+    }
   }
 
 }
