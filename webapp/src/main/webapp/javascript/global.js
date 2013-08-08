@@ -214,15 +214,19 @@ function initMainContainer() {
   }
 
   // figure search results
-  var $fig_results = $('#fig-search-results, .article-block .actions');
+  var $fig_results = $('#fig-search-results, .article-block .actions, #subject-list-view .actions');
   if ($fig_results.length) {
-    $fig_results.find('a.figures').on('click', function () {
+    $fig_results.find('a.figures').on('click', function (e) {
       doi = $(this).data('doi');
       launchModal(doi, null, 'fig', true);
+      e.preventDefault();
+      return false;
     });
-    $fig_results.find('a.abstract').on('click', function () {
+    $fig_results.find('a.abstract').on('click', function (e) {
       doi = $(this).data('doi');
       launchModal(doi, null, 'abstract', true);
+      e.preventDefault();
+      return false;
     });
   }
 
