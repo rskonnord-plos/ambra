@@ -15,12 +15,30 @@ package org.ambraproject.models;
 
 import java.util.List;
 
-public class ArticleCategory extends AmbraEntity{
+public class ArticleList extends AmbraEntity{
 
+  private String listCode;
   private String displayName;
-  private List<String> articleDois;
   private Long journalID;
 
+  private List<String> articleDois;
+
+  public ArticleList() {
+    super();
+  }
+
+  public ArticleList(String listCode) {
+    super();
+    this.listCode = listCode;
+  }
+
+  public String getListCode() {
+    return listCode;
+  }
+
+  public void setListCode(String listCode) {
+    this.listCode = listCode;
+  }
 
   public String getDisplayName() {
     return displayName;
@@ -49,12 +67,13 @@ public class ArticleCategory extends AmbraEntity{
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof ArticleCategory)) return false;
+    if (!(o instanceof ArticleList)) return false;
 
-    ArticleCategory articleCategory = (ArticleCategory) o;
+    ArticleList articleList = (ArticleList) o;
 
-    if (getID() != null ? !getID().equals(articleCategory.getID()) : articleCategory.getID() != null) return false;
-    if (articleDois != null ? !articleDois.equals(articleCategory.articleDois) : articleCategory.articleDois != null) return false;
+    if (getID() != null ? !getID().equals(articleList.getID()) : articleList.getID() != null) return false;
+    if (articleDois != null ? !articleDois.equals(articleList.articleDois) : articleList.articleDois != null) return false;
+    if (listCode != null ? !listCode.equals(articleList.listCode) : articleList.listCode != null) return false;
 
     return true;
   }
@@ -62,14 +81,16 @@ public class ArticleCategory extends AmbraEntity{
   @Override
   public int hashCode() {
     int result = getID() != null ? getID().hashCode() : 0;
+    result = 31 * result + (listCode != null ? listCode.hashCode() : 0);
     result = 31 * result + (articleDois != null ? articleDois.hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
-    return "ArticleCategory{" +
+    return "ArticleList{" +
         "id='" + getID() + '\'' +
+        ", listCode='" + listCode + '\'' +
         ", articleDois=" + articleDois +
         '}';
   }

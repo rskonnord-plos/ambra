@@ -33,7 +33,7 @@ public class Journal extends AmbraEntity {
 
   private List<Volume> volumes;
 
-  private List<ArticleCategory> articleCategory;
+  private List<ArticleList> articleList;
 
   public Journal() {
     super();
@@ -100,12 +100,12 @@ public class Journal extends AmbraEntity {
     this.volumes = volumes;
   }
 
-  public List<ArticleCategory> getArticleCategory() {
-    return articleCategory;
+  public List<ArticleList> getArticleList() {
+    return articleList;
   }
 
-  public void setArticleCategory(List<ArticleCategory> articleCategory) {
-    this.articleCategory = articleCategory;
+  public void setArticleList(List<ArticleList> articleList) {
+    this.articleList = articleList;
   }
 
   @Override
