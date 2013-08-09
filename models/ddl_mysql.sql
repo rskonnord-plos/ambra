@@ -124,6 +124,7 @@
         lastModified datetime not null,
         created datetime not null,
         listCode varchar(255) not null unique,
+        displayName varchar(255),
         journalID bigint,
         journalSortOrder integer,
         primary key (articleListID)
@@ -131,7 +132,7 @@
 
     create table articleListJoinTable (
         articleListID bigint not null,
-        articleDois varchar(255),
+        doi varchar(255),
         sortOrder integer not null,
         primary key (articleListID, sortOrder)
     );

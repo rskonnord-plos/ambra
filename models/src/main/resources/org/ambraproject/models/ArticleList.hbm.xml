@@ -34,11 +34,12 @@
     <property name="created" column="created" type="timestamp" not-null="true" update="false"/>
 
     <property name="listCode" column="listCode" type="string" not-null="true" unique="true"/>
+    <property name="displayName" column="displayName" type="string"/>
 
     <list name="articleDois" table="articleListJoinTable" cascade="all-delete-orphan" fetch="join">
       <key column="articleListID"/>
       <list-index column="sortOrder"/>
-      <element column="articleDois" type="string"/>
+      <element column="doi" type="string"/>
     </list>
   </class>
 
