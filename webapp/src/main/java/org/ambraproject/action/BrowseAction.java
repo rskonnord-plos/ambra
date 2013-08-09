@@ -37,6 +37,8 @@ public class BrowseAction extends BaseSearchAction {
 
   private TaxonomyService taxonomyService;
   private String category;
+  private String[] parents;
+  private String[] children;
 
   @Override
   public String execute() throws Exception {
@@ -55,9 +57,20 @@ public class BrowseAction extends BaseSearchAction {
       //And search for it anyway?
       if(view == null) {
         category = StringUtils.capitalize(category);
+        parents = new String[] {};
+        children = new String[] {};
+
         //TODO: Handle no categories here or when search returns?
       } else {
         category = view.getName();
+
+        if(view.getParents().keySet().size() == 1 && view.getParents().keySet().contains("ROOT")) {
+          parents = new String[] {};
+        } else {
+          parents = view.getParents().keySet().toArray(new String[view.getParents().keySet().size()]);
+        }
+
+        children = view.getChildren().keySet().toArray(new String[view.getChildren().keySet().size()]);
       }
 
       setFilterSubjects(new String[] { this.category } );
@@ -85,6 +98,21 @@ public class BrowseAction extends BaseSearchAction {
   public String getCategory() {
     return this.category;
   }
+
+  /**
+   * Get the category's parents
+   */
+  public String[] getParents() {
+    return parents;
+  }
+
+  /**
+   * Get the category's children
+   */
+  public String[] getChildren() {
+    return children;
+  }
+
 
   @Required
   public void setTaxonomyService(TaxonomyService taxonomyService) {

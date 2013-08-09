@@ -1205,7 +1205,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       + '<ul class="download">'
       + '<li class="label">Download: </li>'
 //   + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-      + '<li><span class="icon">PDF</span> <a href="' + "/article/" + doi + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
+      + '<li><span class="icon">PDF</span> <a href="' + "/article/" + doi + "/pdf" + '" class="pdf" target="_blank">Full Article PDF Version</a></li>'
       + '</ul>'
       + '<ul class="figure_navigation">'
       + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
