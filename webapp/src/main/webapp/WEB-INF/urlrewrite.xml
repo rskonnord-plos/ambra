@@ -388,7 +388,7 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=PNG_L -> /article/doi/largerimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=PNG_L$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=PNG_L$</from>
     <to>$1/article/$2/largerimage</to>
   </outbound-rule>
 
@@ -406,8 +406,44 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=TIF -> /article/doi/originalimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=TIF$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=TIF$</from>
     <to>$1/article/$2/originalimage</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming PDF Links.
+      /article/doi/pdf -> /article/fetchObjectAttachment.action?uri=doi&amp;representation=PDF
+    </note>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/pdf</from>
+    <to>$1/article/fetchObjectAttachment.action?uri=$2&amp;representation=PDF</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound PDF links.
+      /article/fetchObjectAttachment.action?uri=doi&amp;representation=PDF -> /article/doi/pdf
+    </note>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=PDF$</from>
+    <to>$1/article/$2/pdf</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
+      re-write incoming XML Links.
+      /article/doi/pdf -> /article/fetchObjectAttachment.action?uri=doi&amp;representation=XML
+    </note>
+    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/xml</from>
+    <to>$1/article/fetchObjectAttachment.action?uri=$2&amp;representation=XML</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound XML links.
+      /article/fetchObjectAttachment.action?uri=doi&amp;representation=XML -> /article/doi/xml
+    </note>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=XML</from>
+    <to>$1/article/$2/xml</to>
   </outbound-rule>
 
   <rule>
