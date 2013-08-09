@@ -7,7 +7,6 @@ create table articleList (
   created datetime not null,
   lastModified datetime not null,
   PRIMARY KEY (articleListID),
-  constraint unique key (journalID, displayName),
   constraint unique key (listCode),
   constraint foreign key (journalID) references journal (journalID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
