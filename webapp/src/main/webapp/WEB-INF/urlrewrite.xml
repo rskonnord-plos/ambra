@@ -388,7 +388,7 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=PNG_L -> /article/doi/largerimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=PNG_L$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;representation=PNG_L$</from>
     <to>$1/article/$2/largerimage</to>
   </outbound-rule>
 
@@ -406,7 +406,7 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=TIF -> /article/doi/originalimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=TIF$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;representation=TIF$</from>
     <to>$1/article/$2/originalimage</to>
   </outbound-rule>
 
