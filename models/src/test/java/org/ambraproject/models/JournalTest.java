@@ -98,6 +98,38 @@ public class JournalTest extends BaseHibernateTest {
   }
 
   @Test
+  public void testSaveWithArticleCategory() {
+    Journal journal = new Journal("journal key with article categories");
+
+    final ArticleCategory articleCategory1 = new ArticleCategory();
+    articleCategory1.setDisplayName("News");
+    articleCategory1.setArticleDois(Arrays.asList("doi1", "doi2", "doi3"));
+
+    final ArticleCategory articleCategory2 = new ArticleCategory();
+    articleCategory2.setDisplayName("SPAM");
+    articleCategory2.setArticleDois(Arrays.asList("doi1", "doi2", "doi3"));
+
+    journal.setArticleCategory(Arrays.asList(articleCategory1, articleCategory2));
+
+    final Serializable journalId1 = hibernateTemplate.save(journal);
+
+    //need to access the article category in a session b/c they're lazy
+    hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Journal savedJournal = (Journal) session.get(Journal.class, journalId1);
+        assertNotNull(savedJournal, "didn't save journal");
+        assertEquals(savedJournal.getArticleCategory().toArray(), new ArticleCategory[]{articleCategory1, articleCategory2},
+            "saved journal had incorrect categories");
+        for (ArticleCategory ar : savedJournal.getArticleCategory()) {
+          assertNotNull(ar.getCreated(), "Article Category didn't get created date set");
+        }
+        return null;
+      }
+    });
+  }
+
+  @Test
   public void testUpdate() {
     final long testStart = Calendar.getInstance().getTimeInMillis();
     final Journal journal = new Journal("old journal key");
