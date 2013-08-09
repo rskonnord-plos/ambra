@@ -35,11 +35,6 @@
 
     <property name="listCode" column="listCode" type="string" not-null="true" unique="true"/>
 
-    <properties name="displayNameJournalID" unique="true">
-      <property name="displayName" column="displayName" type="string"/>
-      <property name="journalID" column="journalID" type="long"/>
-    </properties>
-
     <list name="articleDois" table="articleListJoinTable" cascade="all-delete-orphan" fetch="join">
       <key column="articleListID"/>
       <list-index column="sortOrder"/>
