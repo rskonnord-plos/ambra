@@ -19,7 +19,6 @@ public class ArticleList extends AmbraEntity{
 
   private String listCode;
   private String displayName;
-  private Long journalID;
 
   private List<String> articleDois;
 
@@ -54,14 +53,6 @@ public class ArticleList extends AmbraEntity{
 
   public void setArticleDois(List<String> articleDois) {
     this.articleDois = articleDois;
-  }
-
-  public Long getJournalID() {
-    return journalID;
-  }
-
-  public void setJournalID(Long journalID) {
-    this.journalID = journalID;
   }
 
   @Override
