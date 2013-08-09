@@ -14,9 +14,7 @@
 package org.ambraproject.service.permission;
 
 import org.ambraproject.action.BaseTest;
-import org.ambraproject.models.UserRole;
 import org.ambraproject.models.UserRole.Permission;
-import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
@@ -60,6 +58,7 @@ public class PermissionServiceTest extends BaseTest {
     permissionsService.checkPermission(Permission.MANAGE_JOURNALS, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.MANAGE_SEARCH, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.MANAGE_CACHES, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_CATEGORY, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.CROSS_PUB_ARTICLES, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.DELETE_ARTICLES, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, DEFAULT_ADMIN_AUTHID);

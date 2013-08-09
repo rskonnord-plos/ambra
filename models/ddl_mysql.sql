@@ -106,10 +106,28 @@
         unique (doi, extension)
     );
 
+    create table articleCategory (
+        articleCategoryID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        displayName varchar(255),
+        journalID bigint,
+        journalSortOrder integer,
+        primary key (articleCategoryID),
+        unique (displayName, journalID)
+    );
+
     create table articleCategoryJoinTable (
         articleID bigint not null,
         categoryID bigint not null,
         primary key (articleID, categoryID)
+    );
+
+    create table articleCategoryList (
+        articleCategoryID bigint not null,
+        articleDois varchar(255),
+        sortOrder integer not null,
+        primary key (articleCategoryID, sortOrder)
     );
 
     create table articleCollaborativeAuthors (
@@ -246,11 +264,6 @@
         description longtext,
         currentIssueID bigint,
         primary key (journalID)
-    );
-
-    create table news (
-        sortOrder integer not null,
-        primary key (sortOrder)
     );
 
     create table pingback (
@@ -462,6 +475,12 @@
         foreign key (articleID) 
         references article (articleID);
 
+    alter table articleCategory 
+        add index FK56C9814FA7E0635 (journalID), 
+        add constraint FK56C9814FA7E0635 
+        foreign key (journalID) 
+        references journal (journalID);
+
     alter table articleCategoryJoinTable 
         add index FK5E567710AA9840AB (categoryID), 
         add constraint FK5E567710AA9840AB 
@@ -473,6 +492,12 @@
         add constraint FK5E567710DFD5CDF3 
         foreign key (articleID) 
         references article (articleID);
+
+    alter table articleCategoryList 
+        add index FKCE9E92D2FBF80C8F (articleCategoryID), 
+        add constraint FKCE9E92D2FBF80C8F 
+        foreign key (articleCategoryID) 
+        references articleCategory (articleCategoryID);
 
     alter table articleCollaborativeAuthors 
         add index FK204FE589DFD5CDF3 (articleID), 
