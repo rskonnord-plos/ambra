@@ -45,6 +45,10 @@ public class BrowseAction extends BaseSearchAction {
     CategoryView categoryView = taxonomyService.parseCategories(super.getCurrentJournal());
 
     setDefaultSearchParams();
+
+    //The UI is pinned to this page size
+    setPageSize(13);
+
     setUnformattedQuery("*:*");
 
     if(category != null && category.length() > 0) {
