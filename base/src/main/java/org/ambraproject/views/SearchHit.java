@@ -40,7 +40,6 @@ public class SearchHit implements Serializable {
   private final float hitScore;
   private final String uri;
   private final String title;
-  private final String highlight;
   private final Date date;
   private final String creator;
   private final Collection<String> listOfCreators;
@@ -59,7 +58,6 @@ public class SearchHit implements Serializable {
    * @param hitScore Hit score
    * @param uri Article ID
    * @param title Article title
-   * @param highlight Highlights
    * @param creators Creators
    * @param date Article date
    * @param issn eIssn of the journal
@@ -68,7 +66,7 @@ public class SearchHit implements Serializable {
    * @param strikingImage
    * @param hasAssets
    */
-  public SearchHit(Float hitScore, String uri, String title, String highlight,
+  public SearchHit(Float hitScore, String uri, String title,
                    Collection<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
                    Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage, boolean hasAssets) {
@@ -79,7 +77,6 @@ public class SearchHit implements Serializable {
     }
     this.uri = uri;
     this.title = title;
-    this.highlight = highlight;
     this.creator = StringUtils.join(creators, ", ");
     this.listOfCreators = creators;
     this.date = date;
@@ -124,15 +121,6 @@ public class SearchHit implements Serializable {
    */
   public Date getDate() {
     return date;
-  }
-
-  /**
-   * Getter for property 'highlight'.
-   *
-   * @return Value for property 'highlight'.
-   */
-  public String getHighlight() {
-    return highlight;
   }
 
   /**
@@ -324,7 +312,6 @@ public class SearchHit implements Serializable {
         hitScore,
         uri,
         title,
-        highlight,
         listOfCreators,
         date,
         issn,
@@ -345,7 +332,6 @@ public class SearchHit implements Serializable {
       "hitScore=" + hitScore +
       ", uri='" + uri + '\'' +
       ", title='" + title + '\'' +
-      ", highlight='" + highlight + '\'' +
       ", date=" + date +
       ", creator='" + creator + '\'' +
       ", listOfCreators=" + listOfCreators +
