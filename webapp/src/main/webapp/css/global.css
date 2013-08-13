@@ -5421,7 +5421,7 @@ div#save-search-box {
 
 /* Journal alerts are a little smaller.  Note the footer in browse.ftl */
 div#save-search-box.journalAlert {
-  height: 140px;
+  height: 150px;
 }
 
 div#save-search-box div.top-header {
@@ -5467,6 +5467,7 @@ div#save-search-box div.check-box {
 div#save-search-box div.grey-text {
   color: #606060;
   margin-top: 8px;
+  width: 370px;
 }
 
 div#save-search-box div.button-wrapper {
