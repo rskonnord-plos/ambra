@@ -55,13 +55,13 @@ public class SearchHit implements Serializable {
   /**
    * Create a search hit with the values set
    *
-   * @param hitScore Hit score
-   * @param uri Article ID
-   * @param title Article title
-   * @param creators Creators
-   * @param date Article date
-   * @param issn eIssn of the journal
-   * @param journalTitle Journal title
+   * @param hitScore              Hit score
+   * @param uri                   Article ID
+   * @param title                 Article title
+   * @param creators              Creators
+   * @param date                  Article date
+   * @param issn                  eIssn of the journal
+   * @param journalTitle          Journal title
    * @param articleTypeForDisplay Article type
    * @param strikingImage
    * @param hasAssets
@@ -89,6 +89,7 @@ public class SearchHit implements Serializable {
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
   }
+
   /**
    * @return the hit object's uri
    */
@@ -179,6 +180,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Get the subjects
+   *
    * @return a collection of subjects
    */
   public Collection<String> getSubjects() {
@@ -309,19 +311,19 @@ public class SearchHit implements Serializable {
 
     public SearchHit build() {
       return new SearchHit(
-        hitScore,
-        uri,
-        title,
-        listOfCreators,
-        date,
-        issn,
-        journalTitle,
-        articleTypeForDisplay,
-        abstractText,
-        subjects,
-        subjectsPolyhierarchy,
-        strikingImage,
-        hasAssets);
+          hitScore,
+          uri,
+          title,
+          listOfCreators,
+          date,
+          issn,
+          journalTitle,
+          articleTypeForDisplay,
+          abstractText,
+          subjects,
+          subjectsPolyhierarchy,
+          strikingImage,
+          hasAssets);
     }
 
   }
@@ -329,21 +331,21 @@ public class SearchHit implements Serializable {
   @Override
   public String toString() {
     return "SearchHit{" +
-      "hitScore=" + hitScore +
-      ", uri='" + uri + '\'' +
-      ", title='" + title + '\'' +
-      ", date=" + date +
-      ", creator='" + creator + '\'' +
-      ", listOfCreators=" + listOfCreators +
-      ", issn='" + issn + '\'' +
-      ", journalTitle='" + journalTitle + '\'' +
-      ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
-      ", abstractText='" + abstractText + '\'' +
-      ", strikingImage='" + strikingImage + '\'' +
-      ", hasAssets=" + hasAssets +
-      ", subjects=" + subjects +
-      ", subjectsPolyhierarchy=" + subjectsPolyhierarchy +
-      '}';
+        "hitScore=" + hitScore +
+        ", uri='" + uri + '\'' +
+        ", title='" + title + '\'' +
+        ", date=" + date +
+        ", creator='" + creator + '\'' +
+        ", listOfCreators=" + listOfCreators +
+        ", issn='" + issn + '\'' +
+        ", journalTitle='" + journalTitle + '\'' +
+        ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
+        ", abstractText='" + abstractText + '\'' +
+        ", strikingImage='" + strikingImage + '\'' +
+        ", hasAssets=" + hasAssets +
+        ", subjects=" + subjects +
+        ", subjectsPolyhierarchy=" + subjectsPolyhierarchy +
+        '}';
   }
 
   @Override
