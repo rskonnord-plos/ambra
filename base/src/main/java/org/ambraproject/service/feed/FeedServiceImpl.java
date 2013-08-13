@@ -65,9 +65,6 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   private Configuration configuration;
   private SolrFieldConversion solrFieldConverter;
 
-
-  private static final int MAX_FACET_SIZE         = 100;
-  private static final int MIN_FACET_COUNT        = 1;
   private int queryTimeout = 60000;
   private Map validSorts = null;
   private List displaySorts = null;
