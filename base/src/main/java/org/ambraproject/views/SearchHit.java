@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -24,7 +21,6 @@ import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
