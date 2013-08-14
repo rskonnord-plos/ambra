@@ -629,7 +629,7 @@ $.fn.alm = function () {
 
     //filter and sort
     var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook']);
-    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'comment', 'twitter', 'facebook', 'trackback', 'googleblog']);
+    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'twitter', 'facebook']);
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
@@ -659,19 +659,6 @@ $.fn.alm = function () {
               '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
               source.metrics.total) + '\n';
 
-        } else if (source.name === 'comment') {
-          $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
-
-        } else if (source.name === 'trackback') {
-          $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
-
-        } else if (source.name === 'googleblog') {
-          html = this.createMetricsTile("google-blogs",
-              "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
-              "/images/logo-googleblogs.png",
-              "Search")
-              + '\n';
-
         } else {
           if (!source.events_url) {
             html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
@@ -685,6 +672,15 @@ $.fn.alm = function () {
         }
       }
     } // end of for loop
+
+    $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
+    $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
+    html = this.createMetricsTile("google-blogs",
+        "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
+        "/images/logo-googleblogs.png",
+        "Search")
+        + '\n';
+    discussedElement.append(html);
 
     $("#FacebookOnArticleMetricsTab").tooltip({
       delay: 250,
@@ -1197,17 +1193,7 @@ $.fn.alm = function () {
       var index = $.inArray(orderArray[d], sourceNames);
       if (index > -1) {
         orderedSources.push(sources[index]);
-      } else {
-        // this logic handles fake sources like comments
-        orderedSources.push(
-            {
-              "name": orderArray[d],
-              "metrics": {
-                "total": 1
-              }
-            }
-        );
-      }
+      } 
     }
     return orderedSources;
   }
