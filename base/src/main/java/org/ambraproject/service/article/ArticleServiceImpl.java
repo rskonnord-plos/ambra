@@ -250,7 +250,11 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     endDate.set(Calendar.SECOND, 59);
 
     Calendar startDate = (Calendar)endDate.clone();
-    startDate.add(Calendar.DAY_OF_YEAR, -30);
+    //This may look a bit off, but we want a larger value here without making it too large.
+    //The initial query should return results outside of the defined window.  But not too large a result set
+    //We may need to tune this a bit.
+    int numDaysTemp = -(numDaysInPast * 2) - 30;
+    startDate.add(Calendar.DAY_OF_YEAR, numDaysTemp);
 
     //Get 30 days worth of articles first
     List<SearchHit> recentArticles = getArticles(startDate, endDate, articleTypesToShow, journal_eIssn);
