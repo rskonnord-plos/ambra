@@ -35,8 +35,25 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.7.5</h2>
+  <p>Released August 13, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.5</h3>
+  <ul>
+      <li>Minor bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.7.4</h2>
+  <p>Released August 6, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.4</h3>
+  <ul>
+      <li>Added support for ALM API Key</li>
+      <li>Updated RSS links on the taxonomy page</li>
+      <li>Twitter widget returns to the journal home pages</li>
+      <li>Performance improvement on the PLOS ONE Editorial board page</li>
+  </ul>
+
   <h2>Ambra 2.7.3</h2>
-  <p>Released July 29, 2013</p>
+  <p>Released July 30, 2013</p>
   <h3>Features Implemented in Ambra 2.7.3</h3>
   <ul>
     <li>Etocs feature live</li>
