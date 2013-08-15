@@ -19,20 +19,23 @@
  */
 package org.ambraproject.struts2;
 
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.FilterConfig;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.struts2.dispatcher.ng.ExecuteOperations;
+import org.apache.struts2.dispatcher.ng.InitOperations;
+import org.apache.struts2.dispatcher.ng.PrepareOperations;
+import org.apache.struts2.dispatcher.ng.filter.FilterHostConfig;
+import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.FilterDispatcher;
-
 
 import org.ambraproject.configuration.ConfigurationStore;
 
@@ -46,7 +49,7 @@ import org.ambraproject.configuration.ConfigurationStore;
  *
  * @author Pradeep Krishnan
  */
-public class AmbraStruts2Dispatcher extends FilterDispatcher {
+public class AmbraStruts2Dispatcher extends StrutsPrepareAndExecuteFilter {
   private static final Logger      log          = LoggerFactory.getLogger(AmbraStruts2Dispatcher.class);
   private static final String[] keys         = {
     StrutsConstants.STRUTS_DEVMODE, StrutsConstants.STRUTS_I18N_RELOAD,
@@ -75,27 +78,56 @@ public class AmbraStruts2Dispatcher extends FilterDispatcher {
   };
 
   @Override
-  protected Dispatcher createDispatcher(FilterConfig filterConfig) {
-    Map<String, String> params               = new HashMap<String, String>();
+  public void init (FilterConfig filterConfig) {
+    // Copied the init function of the StrutsPrepareAndExecuteFilter class
+    // and modified how the Dispatcher object is getting created by passing our own configuration values.
 
-    for (Enumeration e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
-      String name  = (String) e.nextElement();
-      String value = filterConfig.getInitParameter(name);
-      params.put(name, value);
-    }
+    // There should be a better way to do this than what we are doing here.
 
-    Configuration conf = ConfigurationStore.getInstance().getConfiguration();
+    InitOperations init = new InitOperations();
+    Dispatcher dispatcher = null;
+    try {
+      FilterHostConfig config = new FilterHostConfig(filterConfig);
+      init.initLogging(config);
 
-    for (String name : keys) {
-      String val = conf.getString(name);
+      // initDispatcher is the function we really want to override
+      // dispatcher = init.initDispatcher(config);
 
-      if (val != null) {
-        log.info("Setting struts constant: " + name + "=" + val);
-        params.put(name, val);
+      Map<String, String> params = new HashMap<String, String>();
+      for ( Iterator e = config.getInitParameterNames(); e.hasNext(); ) {
+        String name = (String) e.next();
+        String value = filterConfig.getInitParameter(name);
+
+        params.put(name, value);
       }
-    }
 
-    return new Dispatcher(filterConfig.getServletContext(), params);
+      // adding our own configuration values
+      Configuration conf = ConfigurationStore.getInstance().getConfiguration();
+      for (String name : keys) {
+        String val = conf.getString(name);
+
+        if (val != null) {
+          log.info("Setting struts constant: " + name + "=" + val);
+          params.put(name, val);
+        }
+      }
+
+      dispatcher = new Dispatcher(config.getServletContext(), params);
+      dispatcher.init();
+
+      init.initStaticContentLoader(config, dispatcher);
+
+      prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
+      execute = new ExecuteOperations(filterConfig.getServletContext(), dispatcher);
+      this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+
+      postInit(dispatcher, filterConfig);
+    } finally {
+      if (dispatcher != null) {
+        dispatcher.cleanUpAfterInit();
+      }
+      init.cleanup();
     }
+  }
 
 }
