@@ -62,6 +62,8 @@ public class HomePageAction extends BaseActionSupport {
   private int recentNextIndex = 0;
   private int recentStartIndex = 0;
 
+  private List<HomePageArticleInfo> newsArticleInfo;
+
   /**
    * This execute method always returns SUCCESS
    */
@@ -71,6 +73,7 @@ public class HomePageAction extends BaseActionSupport {
     if ("PLoSONE".equals(getCurrentJournal())) {
       recentStartIndex = 0;
       mostViewedStartIndex = 0;
+      executeNews();
       executeRecent();
       executeMostViewed();
     }
@@ -78,6 +81,12 @@ public class HomePageAction extends BaseActionSupport {
     else {
       initRecentArticles();
     }
+    return SUCCESS;
+  }
+
+  //only for PLOSONE
+  public String executeNews() {
+    initNewsArticleInfo();
     return SUCCESS;
   }
 
@@ -180,7 +189,16 @@ public class HomePageAction extends BaseActionSupport {
   }
 
   /**
-   * Populate the <b>mostViewedArticleInfo</b> (global) variable with articles
+   * Populate the <b>newsArticleInfo</b> (global) variable with articles
+   * for PLOSONE
+   */
+  private void initNewsArticleInfo() {
+    String listCode = getCurrentJournal().toLowerCase() + "_news";
+    newsArticleInfo = mostViewedArticleService.getNewsArticleInfo(getCurrentJournal(), listCode);
+  }
+
+  /**
+   * Populate the <b>recenetArticleInfo</b> (global) variable with articles
    * for PLOSONE
    */
   private void initRecentArticleInfo() {
@@ -338,5 +356,13 @@ public class HomePageAction extends BaseActionSupport {
 
   public void setRecentStartIndex(int recentStartIndex) {
     this.recentStartIndex = recentStartIndex;
+  }
+
+  public List<HomePageArticleInfo> getNewsArticleInfo() {
+    return newsArticleInfo;
+  }
+
+  public void setNewsArticleInfo(List<HomePageArticleInfo> newsArticleInfo) {
+    this.newsArticleInfo = newsArticleInfo;
   }
 }

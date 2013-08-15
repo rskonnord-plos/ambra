@@ -51,4 +51,6 @@ public interface MostViewedArticleService {
 
   public List<HomePageArticleInfo> getRecentArticleInfo(String journal, int offset, int limit, List<URI> articleTypes) throws SolrException;
 
+  public List<HomePageArticleInfo> getNewsArticleInfo(String journal, String listCode);
+
 }
