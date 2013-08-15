@@ -50,9 +50,9 @@ $(function () {
             var views = $('<div></div>').attr("class", "views").html("<span>" + docs[i].counter_total_all + "</span> Views");
             var citations = $('<div></div>').attr("class", "citations").html("<span>" + docs[i].alm_scopusCiteCount + "</span> Citations");
             var title = $('<h4></h4>').append('<a href="http://dx.plos.org/' + docs[i].id + '">' + docs[i].title_display + "</a>");
-            var authors = $('<div></div>').append(docs[i].author_display.join(", "));
+            var authors = $('<div></div>').append(docs[i].author_display.join(", ")).css('float','none');;
             var meta = $('<div></div>').attr("class", "meta").append(docs[i].article_type + " | " +
-              $.datepicker.formatDate('dd M yy', pubDate) + " | " + docs[i].journal + "<br> doi:" + docs[i].id);
+              $.datepicker.formatDate('dd M yy', pubDate) + " | " + docs[i].journal + "<br> doi:" + docs[i].id).css('float','none');;
             var info = $('<div></div>').attr('class', 'info').append(title, authors, meta);
             var li = $('<li></li>').attr("class", "cf").append(views, citations, info);
             $('div[id="more_by_authors"] > ul').append(li);
