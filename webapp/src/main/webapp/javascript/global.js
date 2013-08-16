@@ -846,11 +846,9 @@ $(document).on("click", "#related_collections li a", function(){
       $this.hoverIntent(
         function () {
           $this.addClass('reveal');
-          console.log('reveal');
         },
         function () {
           $this.removeClass('reveal');
-          console.log('reveal remove');
         }
       );
       if ($.support.touchEvents) {
