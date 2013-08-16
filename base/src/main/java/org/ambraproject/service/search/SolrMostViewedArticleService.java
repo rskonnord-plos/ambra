@@ -241,20 +241,22 @@ public class SolrMostViewedArticleService extends HibernateServiceImpl implement
       List<Article> articles = hibernateTemplate.findByCriteria(
           DetachedCriteria.forClass(Article.class)
               .add(Restrictions.eq("doi", doi)));
-      Article article1 = articles.get(0);
-      HomePageArticleInfo article = new HomePageArticleInfo();
-      article.setDoi(article1.getDoi());
-      article.setTitle(article1.getTitle());
-      article.setStrkImgURI(article1.getStrkImgURI());
-      article.setDescription(article1.getDescription());
-      List<String> authors = new ArrayList<String>();
-      for(ArticleAuthor author: article1.getAuthors()) {
-        String authorName = author.getFullName();
-        authors.add(authorName);
+      if(articles.size() == 1) {
+        Article article1 = articles.get(0);
+        HomePageArticleInfo article = new HomePageArticleInfo();
+        article.setDoi(article1.getDoi());
+        article.setTitle(article1.getTitle());
+        article.setStrkImgURI(article1.getStrkImgURI());
+        article.setDescription(article1.getDescription());
+        List<String> authors = new ArrayList<String>();
+        for(ArticleAuthor author: article1.getAuthors()) {
+          String authorName = author.getFullName();
+          authors.add(authorName);
+        }
+        String author = StringUtils.join(authors, ", ");
+        article.setAuthors(author);
+        articleList.add(article);
       }
-      String author = StringUtils.join(authors, ", ");
-      article.setAuthors(author);
-      articleList.add(article);
     }
 
     return articleList;
