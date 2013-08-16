@@ -49,6 +49,7 @@ import org.ambraproject.views.article.BaseArticleInfo;
 import org.apache.poi.util.ArrayUtil;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -241,7 +242,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * @inheritDoc
    */
   @Transactional (readOnly = true)
-  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, int numDaysInPast, int articleCount)
+  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, List<URI>articleTypesToShow,
+                                                 int numDaysInPast, int articleCount)
   {
     //end date is most recent midnight
     Calendar endDate = GregorianCalendar.getInstance();
@@ -250,10 +252,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     endDate.set(Calendar.SECOND, 59);
 
     Calendar startDate = (Calendar)endDate.clone();
-    startDate.add(Calendar.DAY_OF_YEAR, -30);
+    //This may look a bit off, but we want a larger value here without making it too large.
+    //The initial query should return results outside of the defined window.  But not too large a result set
+    //We may need to tune this a bit.
+    int numDaysTemp = -(numDaysInPast * 2) - 30;
+    startDate.add(Calendar.DAY_OF_YEAR, numDaysTemp);
 
     //Get 30 days worth of articles first
-    List<SearchHit> recentArticles = getNonImageArticlesByDate(startDate, endDate, journal_eIssn);
+    List<SearchHit> recentArticles = getArticles(startDate, endDate, articleTypesToShow, journal_eIssn);
     List<SearchHit> results = new ArrayList<SearchHit>();
 
     startDate = (Calendar)endDate.clone();
@@ -298,41 +304,55 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   @SuppressWarnings("unchecked")
-  private List<SearchHit> getNonImageArticlesByDate(final Calendar startDate, final Calendar endDate, String journal_eIssn)
+  private List<SearchHit> getArticles(final Calendar startDate, final Calendar endDate,
+                                      final List<URI> articleTypesToShow,
+                                      final String journal_eIssn)
   {
-    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-
-    log.debug("startDate: {}", format1.format(startDate.getTime()));
-    log.debug("endDate: {}", format1.format(endDate.getTime()));
-
-    List<Object[]> articleResults = hibernateTemplate.findByCriteria(
-      DetachedCriteria.forClass(Article.class)
-        .add(Restrictions.eq("eIssn", journal_eIssn))
-          //Ignore image articles
-        .add(Restrictions.not(Restrictions.like("doi", "%image%")))
-        .add(Restrictions.between("date", startDate.getTime(), endDate.getTime()))
-        .setProjection(Projections.projectionList()
-          .add(Projections.property("doi"))
-          .add(Projections.property("title"))
-          .add(Projections.property("date")))
-        .addOrder(Order.desc("date")));
-
-    List<SearchHit> searchResults = new ArrayList<SearchHit>();
-
-    for (int i = 0; i < articleResults.size(); i++) {
-      Object[] res = articleResults.get(i);
-      String doi = (String) res[0];
-      String title = (String) res[1];
-      Date pubDate = (Date) res[2];
-
-      searchResults.add(SearchHit.builder()
-        .setUri(doi)
-        .setTitle(title)
-        .setDate(pubDate)
-        .build());
+    if(articleTypesToShow.size() == 0) {
+      throw new RuntimeException("At least one article type must be specified");
     }
 
-    return searchResults;
+    return (List<SearchHit>) hibernateTemplate.execute(new HibernateCallback() {
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        //Expected SQL Query:
+        //select distinct a.doi, a.title, a.date from article a join articleTypes at on a.articleID = at.articleID
+        //where a.eIssn = '%journal_eIssn%' and a.date between '%date%' and '%date%'
+        //at.type in ('%article type%', '%article type%')
+        String[] types = new String[articleTypesToShow.size()];
+
+        for(int a = 0; a < articleTypesToShow.size(); a++) {
+          types[a] = articleTypesToShow.get(a).toString();
+        }
+
+        Query sql = session.createSQLQuery("select distinct a.doi, a.title, a.date " +
+          "from article a join articleType at on a.articleID = at.articleID " +
+          "where a.eIssn = :eIssn and " +
+          "a.date between :startDate and :endDate and " +
+          "at.type in :types order by a.date desc")
+          .setString("eIssn", journal_eIssn)
+          .setCalendar("startDate", startDate)
+          .setCalendar("endDate", endDate)
+          .setParameterList("types", types);
+
+        List<Object[]> articleResults = sql.list();
+        List<SearchHit> searchResults = new ArrayList<SearchHit>();
+
+        for (int i = 0; i < articleResults.size(); i++) {
+          Object[] res = articleResults.get(i);
+          String doi = (String) res[0];
+          String title = (String) res[1];
+          Date pubDate = (Date) res[2];
+
+          searchResults.add(SearchHit.builder()
+            .setUri(doi)
+            .setTitle(title)
+            .setDate(pubDate)
+            .build());
+        }
+
+        return searchResults;
+      }
+    });
   }
 
   /**

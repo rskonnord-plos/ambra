@@ -104,6 +104,15 @@
         <eIssn>5678</eIssn>
         <description>Another test journal</description>
       </journal1>
+      <HomePageActionTestJournal>
+        <!-- Configuration keys for displaying recent articles tab widget on home page -->
+        <recentArticles>
+          <typeUriArticlesToShow>
+            <articleTypeUri>http://rdf.plos.org/RDF/articleType/Research%20Article</articleTypeUri>
+            <articleTypeUri>http://rdf.plos.org/RDF/articleType/Overview</articleTypeUri>
+          </typeUriArticlesToShow>
+        </recentArticles>
+      </HomePageActionTestJournal>
     </virtualJournals>
 
     <freemarker>
