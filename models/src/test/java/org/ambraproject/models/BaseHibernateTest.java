@@ -50,7 +50,8 @@ public abstract class BaseHibernateTest {
     session.doWork(new Work() {
       @Override
       public void execute(Connection connection) throws SQLException {
-        connection.createStatement().execute("SET REFERENTIAL_INTEGRITY FALSE;");
+        // http://stackoverflow.com/questions/5174374/tests-throw-exception-saying-user-lacks-privilege-or-object-not-found-referenti
+        connection.createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
       }
     });
     session.close();

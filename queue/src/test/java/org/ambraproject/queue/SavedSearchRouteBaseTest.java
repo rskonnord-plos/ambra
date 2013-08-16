@@ -51,6 +51,10 @@ public class SavedSearchRouteBaseTest extends BaseTest {
   protected static final String CATEGORY_2    = "Category2";
 
   protected void setupUsers() throws Exception {
+    //Let's make sure the database is clean
+    this.dummyDataStore.deleteAll(SavedSearch.class);
+    this.dummyDataStore.deleteAll(SavedSearchQuery.class);
+
     Calendar searchTime = Calendar.getInstance();
     searchTime.set(Calendar.YEAR, 2007);
     searchTime.set(Calendar.MONTH, 5);
