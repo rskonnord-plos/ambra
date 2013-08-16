@@ -1705,7 +1705,12 @@ html:not(.js) .btn-reveal:hover .content {
   position: relative;
 }
 
-#subject-area-sidebar-block h3 a {
+#subject-area-sidebar-block div.header h3 {
+  float: left;
+}
+
+#subject-area-sidebar-block-help-icon {
+  cursor: pointer;
   float: right;
 }
 
@@ -1726,7 +1731,7 @@ html:not(.js) .btn-reveal:hover .content {
   opacity: 0;
 }
 
-#subject-area-sidebar-block-help.reveal {
+#subject-area-sidebar-block-help-icon.reveal #subject-area-sidebar-block-help {
   -webkit-transition: visibility .4s linear, opacity .3s linear;
   -webkit-transition-delay: 0s;
   -moz-transition: visibility .4s linear, opacity .3s linear;
@@ -1738,6 +1743,7 @@ html:not(.js) .btn-reveal:hover .content {
   transition: visibility .4s linear, opacity .3s linear;
   transition-delay: 0s;
   visibility: visible;
+  cursor: default;
   opacity: 1;
 }
 

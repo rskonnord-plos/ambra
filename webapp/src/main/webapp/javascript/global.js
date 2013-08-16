@@ -125,25 +125,11 @@ function onReadyDocument() {
     });
   }
 
-  var handleSubjectSideBarHelpClick = function(event) {
-    event.stopPropagation();
-
-    $('#subject-area-sidebar-block-help').addClass("reveal");
-    $('#subject-area-sidebar-block-help').hoverIntent({
-      over: function (event) {
-        $(this).addClass('reveal');
-      },
-      timeout: 500,
-      out: function (event) {
-        $(this).removeClass('reveal');
-      }
-    });
-
-    return false;
-  }
-
   $('#subject-area-sidebar-list li').on('click', handleSubjectSideBarClick);
-  $('#subject-area-sidebar-block-help-icon').on('click', handleSubjectSideBarHelpClick);
+
+  (function () {
+    this.hoverEnhanced({});
+  }).apply($('#subject-area-sidebar-block-help-icon'));
 }
 
 
@@ -860,9 +846,11 @@ $(document).on("click", "#related_collections li a", function(){
       $this.hoverIntent(
         function () {
           $this.addClass('reveal');
+          console.log('reveal');
         },
         function () {
           $this.removeClass('reveal');
+          console.log('reveal remove');
         }
       );
       if ($.support.touchEvents) {
