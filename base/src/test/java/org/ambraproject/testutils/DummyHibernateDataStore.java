@@ -24,6 +24,7 @@ package org.ambraproject.testutils;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
+import org.ambraproject.models.ArticleList;
 import org.ambraproject.models.Category;
 import org.ambraproject.models.Issue;
 import org.ambraproject.models.Journal;
@@ -47,7 +48,6 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -171,6 +171,12 @@ public class DummyHibernateDataStore implements DummyDataStore {
         return (Serializable) hibernateTemplate.findByCriteria(
             DetachedCriteria.forClass(Volume.class)
                 .add(Restrictions.eq("volumeUri", ((Volume) object).getVolumeUri()))
+                .setProjection(Projections.id()))
+            .get(0);
+      } else if (object instanceof ArticleList) {
+        return (Serializable) hibernateTemplate.findByCriteria(
+            DetachedCriteria.forClass(ArticleList.class)
+                .add(Restrictions.eq("listCode", ((ArticleList) object).getListCode()))
                 .setProjection(Projections.id()))
             .get(0);
       } else if (object instanceof Issue) {
