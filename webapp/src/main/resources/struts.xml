@@ -232,34 +232,6 @@
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
     </action>
-
-    <action name="taxonomy" class="org.ambraproject.action.TaxonomyAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/taxonomy.ftl</param>
-      </result>
-
-      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
-           in that case just return a 404.                              -->
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
-      </result>
-    </action>
-
-    <action name="taxonomyJSON" class="org.ambraproject.action.TaxonomyAction">
-      <result name="success" type="json_nocomments">
-        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
-          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
-          locale, numFieldErrors, rssName, rssPath, texts</param>
-      </result>
-
-      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
-           in that case just return a 404.                              -->
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
-      </result>
-    </action>
   </package>
 
   <package name="debug" extends="default" namespace="/debug">
@@ -282,6 +254,58 @@
 
     <action name="processDump" class="org.ambraproject.action.debug.ProcessDumpAction" />
   </package>
+
+  <package name="taxonomy" extends="default" namespace="/taxonomy">
+    <default-action-ref name="taxonomy"/>
+
+    <action name="taxonomy" class="org.ambraproject.action.taxonomy.TaxonomyAction">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/taxonomy.ftl</param>
+      </result>
+
+      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+           in that case just return a 404.                              -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="taxonomyJSON" class="org.ambraproject.action.taxonomy.TaxonomyAction">
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
+          locale, numFieldErrors, rssName, rssPath, texts</param>
+      </result>
+
+      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+           in that case just return a 404.                              -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="flagTaxonomyTerm" class="org.ambraproject.action.taxonomy.FlagTaxonomyTerm">
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
+          locale, numFieldErrors, rssName, rssPath, texts</param>
+      </result>
+
+      <result name="input" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errors, locale, numFieldErrors,
+          rssName, rssPath, texts</param>
+      </result>
+
+      <result name="error" type="default_freemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/error.ftl</param>
+      </result>
+    </action>
+  </package>
+
 
   <package name="feedback" extends="default" namespace="/feedback">
     <action name="feedback" class="org.ambraproject.action.FeedbackAction" method="executeRender">

@@ -18,3 +18,16 @@ create table articleListJoinTable (
   PRIMARY KEY (articleListID, sortOrder),
   constraint foreign key (articleListID) references articleList (articleListID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table articleCategoryFlagged (
+  articleID bigint not null,
+  categoryID bigint not null,
+  userProfileID bigint null,
+  created datetime not null,
+  lastModified datetime not null,
+  constraint foreign key (articleID) references article (articleID),
+  constraint foreign key (categoryID) references category (categoryID),
+  constraint foreign key (userProfileID) references userProfile (userProfileID),
+  UNIQUE KEY (articleID, categoryID, userProfileID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

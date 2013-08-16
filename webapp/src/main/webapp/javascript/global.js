@@ -1,8 +1,16 @@
 /*
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -94,7 +102,51 @@ function onReadyDocument() {
   if (collapsible) {
     collapsible.collapsiblePanel();
   }
+
+  var handleSubjectSideBarClick = function(event) {
+    //If the event occurs on a child element, get the parent LI target for the function work
+    var target = ($(event.target).prop("tagName") == "LI")?event.target:$(event.target).parents("li")[0];
+    var categoryID = $(target).data("categoryid");
+    var articleID = $(target).data("articleid");
+
+    $.ajax({
+      type: 'POST',
+      url:'/taxonomy/flag/json',
+      data: 'categoryID=' + categoryID + '&articleID=' + articleID,
+      dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+        //console.log('Flagged');
+        $(target).unbind('click', handleSubjectSideBarClick);
+        $(target).addClass("flagged");
+      }
+    });
+  }
+
+  var handleSubjectSideBarHelpClick = function(event) {
+    event.stopPropagation();
+
+    $('#subject-area-sidebar-block-help').addClass("reveal");
+    $('#subject-area-sidebar-block-help').hoverIntent({
+      over: function (event) {
+        $(this).addClass('reveal');
+      },
+      timeout: 500,
+      out: function (event) {
+        $(this).removeClass('reveal');
+      }
+    });
+
+    return false;
+  }
+
+  $('#subject-area-sidebar-list li').on('click', handleSubjectSideBarClick);
+  $('#subject-area-sidebar-block-help-icon').on('click', handleSubjectSideBarHelpClick);
 }
+
+
 
 // This is tab content initialization that is run once on page load,
 // and then everytime on tab navigation when the tab content loads.

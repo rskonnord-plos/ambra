@@ -784,8 +784,26 @@
 
   <rule>
     <note>
+      re-write for taxonomy / taxonomy namespace
+      /taxonomy -> /taxonomy/
+    </note>
+    <from>^(/.+)?/taxonomy$</from>
+    <to>$1/taxonomy/taxonomy.action</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write for flag taxonomy json
+      /taxonomy/flag/json -> /taxonomy/flagTaxonomyTerm.action
+    </note>
+    <from>^(/.+)?/taxonomy/flag/json(.*)$</from>
+    <to>$1/taxonomy/flagTaxonomyTerm.action?$2</to>
+  </rule>
+
+  <rule>
+    <note>
       re-write find this taxonomy json
-      /taxonomy/json -> /taxonomyJSON.action
+      /taxonomy/json -> /taxonomy/taxonomyJSON.action
     </note>
     <from>^(/.+)?/taxonomy/json(.*)\??(.*)$</from>
     <to>$1/taxonomy/taxonomyJSON.action?root=$2&amp;$3</to>

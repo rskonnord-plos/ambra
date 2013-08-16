@@ -1701,6 +1701,104 @@ html:not(.js) .btn-reveal:hover .content {
   margin-bottom: 8px;
 }
 
+#subject-area-sidebar-block {
+  position: relative;
+}
+
+#subject-area-sidebar-block h3 a {
+  float: right;
+}
+
+#subject-area-sidebar-block-help {
+  width: 375px;
+  height: 100px;
+  background-color: #3c63af;
+  border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: -215px;
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  transition: visibility .4s linear, opacity .3s linear;
+  visibility: hidden;
+  opacity: 0;
+}
+
+#subject-area-sidebar-block-help.reveal {
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -webkit-transition-delay: 0s;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition-delay: 0s;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition-delay: 0s;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition-delay: 0s;
+  transition: visibility .4s linear, opacity .3s linear;
+  transition-delay: 0s;
+  visibility: visible;
+  opacity: 1;
+}
+
+#subject-area-sidebar-block-help p {
+  padding: 10px;
+  color: #fff;
+}
+
+#subject-area-sidebar-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#subject-area-sidebar-list li {
+  margin-bottom: 3px;
+  cursor: pointer;
+  width: 160px;
+  display: inline-block;
+}
+
+#subject-area-sidebar-list li:not(.flagged):hover
+{
+  color: #FFF;
+}
+
+#subject-area-sidebar-list li.flagged {
+  cursor: default;
+}
+
+#subject-area-sidebar-list li.flagged div.flagImage {
+  background-position: 0 0;
+}
+
+#subject-area-sidebar-list li:not(.flagged):hover div.flagImage {
+  background-position: 0 -39px;
+}
+
+#subject-area-sidebar-list li div.flagImage {
+  margin-top: 5px;
+  width: 15px;
+  height: 20px;
+  background-position: 0 -19px;
+  background-repeat: no-repeat;
+  background-image: url('/images/icon.sprite.taxonomy.flags.png');
+  float:right;
+}
+
+#subject-area-sidebar-list li div.flagText {
+  background: #F8AF2D;
+  border-radius: 4px 4px 4px 4px;
+  font-weight: bold;
+  padding: 5px;
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  float:left;
+}
+
 #article-block .sidebar .block h3 {
   font-size: 1.167em;
   line-height: 1.214;

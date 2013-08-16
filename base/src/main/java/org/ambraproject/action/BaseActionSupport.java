@@ -1,7 +1,6 @@
-/* $HeadURL::                                                                            $
- * $Id$
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  *
- * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -31,7 +30,9 @@ import org.apache.struts2.interceptor.RequestAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +53,7 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
   private static final String FEED_DEFAULT_NAME = "ambra.services.feed.defaultName";
   private static final String FEED_BASE_PATH = "ambra.services.feed.basePath";
   private static final String FEED_DEFAULT_FILE = "ambra.services.feed.defaultFile";
+  protected static final String COOKIE_ARTICLE_CATEGORY_FLAGS = "ARTICLE_CATEGORY_FLAGS";
 
   public void setRequest(Map map) {
     requestAttributes = map;
@@ -190,6 +192,45 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
     }
 
     return (String)httpSession.getAttribute(Constants.AUTH_KEY);
+  }
+
+  protected Cookie[] getCookies() {
+    HttpServletRequest request = ServletActionContext.getRequest();
+
+    if(request == null) {
+      throw new RuntimeException("HttpServletRequest is null");
+    }
+
+   return request.getCookies();
+  }
+
+  protected Cookie getCookie(String name) {
+    HttpServletRequest request = ServletActionContext.getRequest();
+
+    if(request == null) {
+      throw new RuntimeException("HttpServletRequest is null");
+    }
+
+    for(Cookie c : request.getCookies()) {
+      if(c.getName().equals(name)) {
+        return c;
+      }
+    }
+
+    return null;
+  }
+
+  public void setCookie(Cookie cookie) {
+    HttpServletResponse response = ServletActionContext.getResponse();
+
+    if(response == null) {
+      throw new RuntimeException("HttpServletResponse is null");
+    }
+
+    //So all cookies from the domain are accessible across all paths.
+    cookie.setPath("/");
+
+    response.addCookie(cookie);
   }
 
   /**
