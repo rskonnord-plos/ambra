@@ -27,6 +27,7 @@ import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.BaseArticleInfo;
 import org.springframework.transaction.annotation.Transactional;
+import java.net.URI;
 import java.text.ParseException;
 import java.util.List;
 
@@ -115,12 +116,14 @@ public interface ArticleService {
    * up to 30 days to fill the list
    *
    * @param journal_eIssn the journal to filter on
+   * @param articleTypesToShow the list of URLS to filter on
+   * @param numDaysInPast the number of days into the past to look back
    * @param articleCount the minimum number of articles to return
    *
    * @return a list randomized search results
    */
   @Transactional(readOnly = true)
-  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, int numDaysInPast, int articleCount);
+  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, List<URI>articleTypesToShow, int numDaysInPast, int articleCount);
 
   /**
    * Get all of the articles satisfying the given criteria.

@@ -19,12 +19,14 @@ $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
   this.almAPIKey = $('meta[name=almAPIKey]').attr('content');
 
-  if (this.almHost == null) {
-    jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
+  if (!this.almHost) {
+    //no alm host?  pick a dummy value to trigger graceful degradation
+    this.almHost = "ALM_HOST_NOT_CONFIGURED"
   }
 
   if (!this.almAPIKey){
-    jQuery.error('The alm key is not defined.  Make sure to define it in the meta section of the html.')
+    //if api key not defined, use a dummy key that will trigger error states
+    this.almAPIKey = 'ALM_KEY_NOT_CONFIGURED'
   }
 
   this.isNewArticle = function (pubDateInMilliseconds) {

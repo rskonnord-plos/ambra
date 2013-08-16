@@ -33,7 +33,9 @@ import org.testng.annotations.Test;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -84,6 +86,9 @@ public class HomepageActionTest extends AmbraWebTest {
       String title = new StringBuilder("recent-article-doi-THAT-SHOULD-SHOW-title").append(x).toString();
       Article a = new Article(doi);
       a.setTitle(title);
+      a.setTypes(new HashSet<String>(Arrays.asList("http://rdf.plos.org/RDF/articleType/Research%20Article",
+        "http://rdf.plos.org/RDF/articleType/research-article"
+      )));
 
       //randomize date - we know a priori recent articles should be within last 7 days; 86400000 milliseconds in a day
       Date d = new Date();
@@ -112,6 +117,8 @@ public class HomepageActionTest extends AmbraWebTest {
     String title = new String("recent-article-that-SHOULD-NOT-SHOW title");
     Article a = new Article(doi);
     a.setTitle(title);
+    a.setTypes(new HashSet<String>(Arrays.asList("http://rdf.plos.org/RDF/articleType/Issue%20Image")));
+
     Date d = new Date();
     d.setTime(d.getTime() - (long)r.nextInt(604800000)); /*some random time within the last 7 days*/
     a.setDate(d);
@@ -135,6 +142,10 @@ public class HomepageActionTest extends AmbraWebTest {
     d.setTime(d.getTime() - 691200000L);    /* set to time outside range */
     a.setDate(d);
     a.seteIssn("8675-309");
+    a.setTypes(new HashSet<String>(Arrays.asList("http://rdf.plos.org/RDF/articleType/Research%20Article",
+      "http://rdf.plos.org/RDF/articleType/research-article"
+    )));
+
     dummyDataStore.store(a);
     recentArticles.add(new Pair<String, String>(a.getDoi(), a.getTitle()));
 
@@ -154,6 +165,10 @@ public class HomepageActionTest extends AmbraWebTest {
     d.setTime(d.getTime() - 950400000L);    /* set to time outside range + search interval used to go back in time*/
     a.setDate(d);
     a.seteIssn("8675-309");
+    a.setTypes(new HashSet<String>(Arrays.asList("http://rdf.plos.org/RDF/articleType/Research%20Article",
+      "http://rdf.plos.org/RDF/articleType/research-article"
+    )));
+
     dummyDataStore.store(a);
 
     return new Object[][]{
@@ -175,6 +190,7 @@ public class HomepageActionTest extends AmbraWebTest {
         new ArrayList<String>()));
 
     action.setRequest(request);
+
     final String result = action.execute();
     assertEquals(result, Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getActionMessages().size(), 0,
