@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.xml.transform.cache.CachedSource;
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -58,11 +59,18 @@ public class XMLServiceImpl implements XMLService {
 
   private static final Logger log = LoggerFactory.getLogger(XMLServiceImpl.class);
 
+  /**
+   * The DTD URL referenced in the article XML.  If validateArticleXml is false, we make sure not to
+   * validate the XML against this DTD for performance reasons.
+   */
+  private static final String NLM_DTD_URL = "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd";
+
   private String xslDefaultTemplate;
   private Map<String, String> xslTemplateMap;
   private DocumentBuilderFactory factory;
   private String articleRep;
   private Map<String, String> xmlFactoryProperty;
+  private boolean validateArticleXml = true;
 
   // designed for Singleton use, set in init(), then Templates are threadsafe for reuse
   private Templates translet;             // initialized from xslTemplate, per bean property
@@ -218,7 +226,8 @@ public class XMLServiceImpl implements XMLService {
   public DocumentBuilder createDocBuilder() throws ParserConfigurationException {
     // Create the builder and parse the file
     final DocumentBuilder builder = factory.newDocumentBuilder();
-    builder.setEntityResolver(CachedSource.getResolver());
+    EntityResolver resolver = validateArticleXml ? CachedSource.getResolver() : CachedSource.getResolver(NLM_DTD_URL);
+    builder.setEntityResolver(resolver);
 
     return builder;
   }
@@ -310,6 +319,15 @@ public class XMLServiceImpl implements XMLService {
   @Required
   public void setXmlFactoryProperty(Map<String, String> xmlFactoryProperty) {
     this.xmlFactoryProperty = xmlFactoryProperty;
+  }
+
+  /**
+   * @param validateArticleXml indicates whether or not to perform DTD-validation of article XML
+   *     during the transform.  Setting this to false improves performance and prevents network
+   *     requests to nlm.nih.gov.
+   */
+  public void setValidateArticleXml(boolean validateArticleXml) {
+    this.validateArticleXml = validateArticleXml;
   }
 
   /**
