@@ -17,9 +17,16 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
+  this.almAPIKey = $('meta[name=almAPIKey]').attr('content');
 
-  if (this.almHost == null) {
-    jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
+  if (!this.almHost) {
+    //no alm host?  pick a dummy value to trigger graceful degradation
+    this.almHost = "ALM_HOST_NOT_CONFIGURED"
+  }
+
+  if (!this.almAPIKey){
+    //if api key not defined, use a dummy key that will trigger error states
+    this.almAPIKey = 'ALM_KEY_NOT_CONFIGURED'
   }
 
   this.isNewArticle = function (pubDateInMilliseconds) {
@@ -399,14 +406,27 @@ $.fn.alm = function () {
         if (citation.contributors) {
           var first_author = "";
           var authors = "";
+          var author = "";
           var contributors = citation.contributors.contributor;
 
           for (var i = 0; i < contributors.length; i++) {
             individualContributor = contributors[i];
             if (individualContributor.first_author === 'true') {
-              first_author = individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+              if (individualContributor.surname) {
+                first_author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  first_author = first_author + " " + individualContributor.given_name.substr(0, 1)
+                }
+              }
             } else {
-              authors = authors + ", " + individualContributor.surname + " " + individualContributor.given_name.substr(0, 1);
+              author = "";
+              if (individualContributor.surname) {
+                author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  author = author + " " + individualContributor.given_name.substr(0, 1);
+                }
+                authors = authors + ", " + author;
+              }
             }
           }
           authors = first_author + authors;
@@ -474,7 +494,7 @@ $.fn.alm = function () {
    *    --The callback method fails
    **/
   this.getData = function (request, callBack, errorCallback) {
-    var url = this.almHost + '?ids=' + request;
+    var url = this.almHost + '?api_key=' + this.almAPIKey + '&ids=' + request;
 
     //I use a third party plugin here for jsonp requests as jQuery doesn't
     //Handle errors well (with jsonp requests)
@@ -611,7 +631,7 @@ $.fn.alm = function () {
 
     //filter and sort
     var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook']);
-    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'comment', 'twitter', 'facebook', 'trackback', 'googleblog']);
+    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'twitter', 'facebook']);
 
     for (var u = 0; u < sources.length; u++) {
       source = sources[u];
@@ -641,19 +661,6 @@ $.fn.alm = function () {
               '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
               source.metrics.total) + '\n';
 
-        } else if (source.name === 'comment') {
-          $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
-
-        } else if (source.name === 'trackback') {
-          $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
-
-        } else if (source.name === 'googleblog') {
-          html = this.createMetricsTile("google-blogs",
-              "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
-              "/images/logo-googleblogs.png",
-              "Search")
-              + '\n';
-
         } else {
           if (!source.events_url) {
             html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
@@ -667,6 +674,15 @@ $.fn.alm = function () {
         }
       }
     } // end of for loop
+
+    $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
+    $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
+    html = this.createMetricsTile("google-blogs",
+        "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
+        "/images/logo-googleblogs.png",
+        "Search")
+        + '\n';
+    discussedElement.append(html);
 
     $("#FacebookOnArticleMetricsTab").tooltip({
       delay: 250,
@@ -1179,17 +1195,7 @@ $.fn.alm = function () {
       var index = $.inArray(orderArray[d], sourceNames);
       if (index > -1) {
         orderedSources.push(sources[index]);
-      } else {
-        // this logic handles fake sources like comments
-        orderedSources.push(
-            {
-              "name": orderArray[d],
-              "metrics": {
-                "total": 1
-              }
-            }
-        );
-      }
+      } 
     }
     return orderedSources;
   }

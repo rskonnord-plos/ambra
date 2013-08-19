@@ -1,7 +1,6 @@
-/* $HeadURL::                                                                            $
- * $Id$
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  *
- * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -21,26 +20,17 @@
 package org.ambraproject.action;
 
 import com.google.common.collect.ImmutableSortedMap;
+import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.ApplicationException;
-import org.ambraproject.service.article.BrowseParameters;
-import org.ambraproject.service.article.BrowseService;
 import org.ambraproject.service.search.SearchService;
-import org.ambraproject.views.BrowseResult;
 import org.ambraproject.views.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -51,11 +41,12 @@ import java.util.TreeMap;
 public class HomePageAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(HomePageAction.class);
 
-  private BrowseService browseService;
+  private ArticleService articleService;
+  private JournalService journalService;
   private SearchService searchService;
   private SortedMap<String, Long> categoryInfos;
 
-  private ArrayList<SearchHit> recentArticles;
+  private List<SearchHit> recentArticles;
   private int numDaysInPast;
   private int numArticlesToShow;
 
@@ -137,68 +128,14 @@ public class HomePageAction extends BaseActionSupport {
      */
     private void initRecentArticles() {
       String journalKey = getCurrentJournal();
+      String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
       String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
-
       List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
 
       numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
       numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
-
-      //  This is the most recent midnight.  No need to futz about with exact dates.
-      Calendar startDate = Calendar.getInstance();
-      startDate.set(Calendar.HOUR_OF_DAY, 0);
-      startDate.set(Calendar.MINUTE, 0);
-      startDate.set(Calendar.SECOND, 0);
-      startDate.set(Calendar.MILLISECOND, 0);
-
-      //  First query.  Just get the articles from "numDaysInPast" ago.
-      Calendar endDate = (Calendar) startDate.clone();
-      startDate.add(Calendar.DATE, -(numDaysInPast) + 1);
-
-      BrowseParameters params = new BrowseParameters();
-      params.setStartDate(startDate);
-      params.setEndDate(endDate);
-      params.setArticleTypes(typeUriArticlesToShow);
-      params.setPageNum(0);
-      params.setPageSize(numArticlesToShow * 100);
-      params.setJournalKey(this.getCurrentJournal());
-
-      BrowseResult results = browseService.getArticlesByDate(params);
-
-      //Create a clone here so we're not modifying the object that is actually in the cache
-      recentArticles = (ArrayList<SearchHit>)results.getArticles().clone();
-
-      //  If not enough, then query for articles before "numDaysInPast" to make up the difference.
-      if (recentArticles.size() < numArticlesToShow) {
-        endDate = (Calendar) startDate.clone();
-        endDate.add(Calendar.SECOND, -1); // So no overlap with the first query.
-        startDate.add(Calendar.DATE, -(numDaysInPast) - 1); // One extra day to play it safe.
-
-        params = new BrowseParameters();
-        params.setStartDate(startDate);
-        params.setEndDate(endDate);
-        params.setArticleTypes(typeUriArticlesToShow);
-        params.setPageNum(0);
-        params.setPageSize(numArticlesToShow - recentArticles.size());
-        params.setJournalKey(this.getCurrentJournal());
-
-        recentArticles.addAll(browseService.getArticlesByDate(params).getArticles());
-      }
-
-      // Now choose a random selection of numArticlesToShow articles from the article pool.
-      // Even if we do not have enough articles, this will still randomize their order.
-      if (recentArticles.size() > 0) {
-        Random randomNumberGenerator = new Random((new Date()).getTime());  // Seed: time = "now".
-        ArrayList<SearchHit> recentArticlesTemp = new ArrayList<SearchHit>();
-        while (recentArticlesTemp.size() < numArticlesToShow && recentArticles.size() > 0) {
-          // Remove one random article from "recentArticles" and add it to "recentArticlesTemp".
-          int randomNumber = randomNumberGenerator.nextInt(recentArticles.size());
-          recentArticlesTemp.add(recentArticles.get(randomNumber));
-          recentArticles.remove(randomNumber);
-        }
-        recentArticles = recentArticlesTemp;
-      }
-  }
+      recentArticles = articleService.getRandomRecentArticles(journal_eIssn, typeUriArticlesToShow, numDaysInPast, numArticlesToShow);
+    }
 
   /**
    * This execute method always returns SUCCESS
@@ -222,7 +159,7 @@ public class HomePageAction extends BaseActionSupport {
    *
    * Categories are listed for all journals and sorted by name
    */
-  public SortedMap<String, Long> getCategoryInfos() {
+  public SortedMap<String,Long> getCategoryInfos() {
     return categoryInfos;
   }
 
@@ -236,43 +173,18 @@ public class HomePageAction extends BaseActionSupport {
   }
 
   /**
-   * Returns an array of numValues ints which are randomly selected between 0 (inclusive) and
-   * maxValue(exclusive). If maxValue is less than numValues, will return maxValue items. Guarantees
-   * uniqueness of values.
-   *
-   * @param numValues Length of the array
-   * @param maxValue Maximum value of each element of the array
-   * @return array of random ints
-   */
-  public int[] randomNumbers(int numValues, int maxValue) {
-    if (numValues > maxValue) {
-      numValues = maxValue;
-    }
-
-    Random rng = new Random(System.currentTimeMillis());
-    Set<Integer> intValues = new HashSet<Integer>();
-    while (intValues.size() < numValues) {
-      Integer oneNum = rng.nextInt(maxValue);
-      if (!intValues.contains(oneNum)) {
-        intValues.add(oneNum);
-      }
-    }
-
-    Iterator<Integer> iter = intValues.iterator();
-    int[] returnArray = new int[intValues.size()];
-    for (int i = 0; iter.hasNext(); i++) {
-      returnArray[i] = iter.next();
-    }
-
-    return returnArray;
-  }
-
-  /**
-   * @param browseService The browseService to set.
+   * @param articleService the ArticleService to set
    */
   @Required
-  public void setBrowseService(BrowseService browseService) {
-    this.browseService = browseService;
+  public void setArticleService(ArticleService articleService) {
+    this.articleService = articleService;
+  }
+
+  /*
+  * @param journalService the JournalService to use
+  */
+  public void setJournalService(JournalService journalService) {
+    this.journalService = journalService;
   }
 
   /**
@@ -281,10 +193,6 @@ public class HomePageAction extends BaseActionSupport {
   @Required
   public void setSearchService(SearchService searchService) {
     this.searchService = searchService;
-  }
-
-  public int getNumDaysInPast() {
-    return numDaysInPast;
   }
 
   public int getNumArticlesToShow() {

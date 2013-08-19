@@ -294,86 +294,13 @@
   float: left;
 }
 
-#homepageTwitterStream {
-  border-top: 1px solid #b3b3b3;
-  margin-bottom: 30px;
+.twitter-timeline-rendered {
+  display:none;
 }
 
-.twtr-hd {
-  padding: 25px 10px !important;
-}
-
-#homepageTwitterStream .twtr-widget h4 {
-  font: 30px/1 Georgia, serif !important;
-  font-size-adjust: 0.48;
-  background: url(../images/icon.twtr.28.png) no-repeat 0 50% !important;
-  padding-left: 37px !important;
-}
-
-.twtr-tweets {
-  overflow: hidden;
-}
-
-.twtr-tweet {
-  width: 239px;
-  float: left;
-  border: 0 !important;
-}
-
-#homepageTwitterStream .twtr-tweet p {
-  line-height: 1.333 !important;
-}
-
-.twtr-avatar {
-  float: none !important;
-  height: 48px !important;
-  width: 48px !important;
-  border: 15px solid #fff;
-  margin-bottom: 18px;
-}
-
-.twtr-img img {
-  height: 48px !important;
-  width: 48px !important;
-}
-
-.twtr-tweet-text {
-  margin: 0 20px 0 0 !important;
-}
-
-.twtr-widget em {
-  font-size: 10px !important;
-  margin-top: 10px !important;
-}
-
-.twtr-ft {
-  position: absolute !important;
-  top: 25px;
-  right: 10px;
-}
-
-.twtr-ft a img {
-  display: none;
-}
-
-.twtr-ft span a {
-  background: #4a0100;
-  font-size: 15px;
-  font-weight: bold;
-  line-height: 35px;
-  text-align: center;
-  width: 220px;
-  border-radius: 4px;
-}
-
-.twtr-ft span a:hover {
-  background: #b04e0f;
-  color: #fff !important;
-  text-decoration: none !important;
-}
-
-.twtr-ft div {
-  padding: 0 !important;
+.twitter-timeline {
+  display:none;
+  margin-bottom: 20px;
 }
 
 /*plos one*/

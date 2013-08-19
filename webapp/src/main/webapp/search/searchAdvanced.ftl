@@ -122,7 +122,7 @@
                 <option value="accepted_date" title="Accepted Date">Accepted Date</option>
                 <option value="id" title="Article DOI">Article DOI (Digital Object Identifier)</option>
                 <option value="article_type" title="Article Type">Article Type</option>
-                <option value="affiliate" title="Author Affiliations">Author Affiliations</option>
+                <option value="author_affiliate" title="Author Affiliations">Author Affiliations</option>
                 <option value="competing_interest" title="Competing Interest Statement">Competing Interest Statement</option>
                 <option value="conclusions" title="Conclusions">Conclusions</option>
                 <option value="editor" title="Editor">Editor</option>
