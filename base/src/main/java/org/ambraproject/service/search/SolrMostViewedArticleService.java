@@ -137,7 +137,7 @@ public class SolrMostViewedArticleService extends HibernateServiceImpl implement
     Document doc = solrHttpService.makeSolrRequest(params);
     List<HomePageArticleInfo> articles = getArticleInfoFromSolrResponse(doc);
     //cache the results
-    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articles, true));
+    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articles));
     return articles;
   }
 
@@ -160,7 +160,7 @@ public class SolrMostViewedArticleService extends HibernateServiceImpl implement
     Document doc = solrHttpService.makeSolrRequest(params);
     List<HomePageArticleInfo> articles = getArticleInfoFromSolrResponse(doc);
     //cache the results
-    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articles, true));
+    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articles));
     return articles;
   }
 
@@ -233,6 +233,13 @@ public class SolrMostViewedArticleService extends HibernateServiceImpl implement
   @Override
   public List<HomePageArticleInfo> getNewsArticleInfo(String journal, String listCode) {
 
+    //check if we still have valid results in the cache
+    String cacheIndex = journal + ":news:" + listCode;
+    MostViewedCache cache = cachedMostViewedResults.get(cacheIndex);
+    if (cache != null && cache.isValid()) {
+      return cache.getArticleInfo();
+    }
+
     List<String> articleDois = getArticleListDoisForJournal(journalService.getJournal(journal));
 
     List<HomePageArticleInfo> articleList = new ArrayList<HomePageArticleInfo>();
@@ -258,6 +265,9 @@ public class SolrMostViewedArticleService extends HibernateServiceImpl implement
         articleList.add(article);
       }
     }
+
+    //cache the results
+    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articleList));
 
     return articleList;
   }

@@ -39,23 +39,17 @@ import java.util.List;
 public class MostViewedCache {
 
   private GregorianCalendar cacheDate;
-  private List<Pair<String, String>> articles;
-  private List<HomePageArticleInfo> articleInfo;
+  private List articles;
   public static final int CACHE_TIME = 15;
   public static final int CACHE_TIME_UNITS = Calendar.MINUTE;
 
-  public MostViewedCache(GregorianCalendar cacheDate, List<Pair<String, String>> articles) {
+  public MostViewedCache(GregorianCalendar cacheDate, List articles) {
     this.cacheDate = cacheDate;
     this.articles = articles;
   }
 
-  public MostViewedCache(List<Pair<String, String>> articles) {
+  public MostViewedCache(List articles) {
     this.articles = articles;
-    this.cacheDate = new GregorianCalendar();
-  }
-
-  public MostViewedCache(List<HomePageArticleInfo> articleInfo, boolean ignore) {
-    this.articleInfo = articleInfo;
     this.cacheDate = new GregorianCalendar();
   }
 
@@ -68,19 +62,27 @@ public class MostViewedCache {
   }
 
   /**
-   * Get the articles stored in this cache object
+   * Get the articles as list of Pair<String, String> stored in this cache object
    * @return - an ordered list of doi's (first entry) and titles (second entry)
    */
   public List<Pair<String, String>> getArticles() {
-    return articles;
+    return (List<Pair<String, String>>) articles;
   }
 
   /**
-   * Get the articles stored in this cache object
-   * @return - an ordered list of doi's (first entry) and titles (second entry)
+   * Get the articles as list of HomePageArticleInfo stored in this cache object
+   * @return - an ordered list of article info
    */
   public List<HomePageArticleInfo> getArticleInfo() {
-    return articleInfo;
+    return (List<HomePageArticleInfo>) articles;
+  }
+
+  /**
+   * Get the articles as generic list stored in this cache object
+   * @return - the list that was set in constructor
+   */
+  public List getArticleList() {
+    return articles;
   }
 
   /**
@@ -92,7 +94,7 @@ public class MostViewedCache {
   public boolean isValid() {
     GregorianCalendar time = new GregorianCalendar();
     time.add(CACHE_TIME_UNITS, -CACHE_TIME);
-    return time.before(this.cacheDate) && (articles != null || articleInfo != null);
+    return time.before(this.cacheDate) && articles != null;
   }
 
 }

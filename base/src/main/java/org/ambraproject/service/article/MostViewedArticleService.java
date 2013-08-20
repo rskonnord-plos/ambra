@@ -47,10 +47,36 @@ public interface MostViewedArticleService {
   //the model (i.e. the "most viewed articles") ... but ArticleService is also bad
   public List<Pair<String, String>> getMostViewedArticles(String journal, int limit, Integer numDays) throws SolrException;
 
+  /**
+   * Get the most viewed Articles with pagination from Solr.
+   *
+   * @param journal - the journal to get articles from
+   * @param offset - the offset index of the first article of the page to fetch
+   * @param limit - the number of articles in the page to fetch
+   * @param numDays - (optional) maximum number of days for the articles.
+   * @return - a list of article info that is used to display on the home page.
+   * @throws SolrException
+   */
   public List<HomePageArticleInfo> getMostViewedArticleInfo(String journal, int offset, int limit, Integer numDays) throws SolrException;
 
+  /**
+   * Get the most recent Articles with pagination from Solr.
+   *
+   * @param journal - the journal to get articles from
+   * @param offset - the offset index of the first article of the page to fetch
+   * @param limit - the number of articles in the page to fetch
+   * @param articleTypes - the list of possible article types to fetch.
+   * @return - a list of article info that is used to display on the home page.
+   * @throws SolrException
+   */
   public List<HomePageArticleInfo> getRecentArticleInfo(String journal, int offset, int limit, List<URI> articleTypes) throws SolrException;
 
+  /**
+   * Get the articles for "In the News" from database.
+   * @param journal - the journal to get articles for.
+   * @param listCode - the list code of the set of articles, e.g., "plosone_news"
+   * @return - a list of article info that is used to display on the home page.
+   */
   public List<HomePageArticleInfo> getNewsArticleInfo(String journal, String listCode);
 
 }
