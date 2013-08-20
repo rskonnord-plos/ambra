@@ -73,10 +73,9 @@ public interface MostViewedArticleService {
 
   /**
    * Get the articles for "In the News" from database.
-   * @param journal - the journal to get articles for.
    * @param listCode - the list code of the set of articles, e.g., "plosone_news"
    * @return - a list of article info that is used to display on the home page.
    */
-  public List<HomePageArticleInfo> getNewsArticleInfo(String journal, String listCode);
+  public List<HomePageArticleInfo> getNewsArticleInfo(String listCode);
 
 }

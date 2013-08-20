@@ -124,7 +124,6 @@
   <bean id="mostViewedArticleService" class="org.ambraproject.service.search.SolrMostViewedArticleService">
     <property name="solrFieldConverter" ref="solrFieldConverter"/>
     <property name="solrHttpService" ref="solrHttpService"/>
-    <property name="journalService" ref="journalService"/>
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
 

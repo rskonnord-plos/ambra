@@ -195,7 +195,7 @@ public class HomePageAction extends BaseActionSupport {
    */
   private void initNewsArticleInfo() {
     String listCode = getCurrentJournal().toLowerCase() + "_news";
-    newsArticleInfo = mostViewedArticleService.getNewsArticleInfo(getCurrentJournal(), listCode);
+    newsArticleInfo = mostViewedArticleService.getNewsArticleInfo(listCode);
   }
 
   /**
@@ -363,7 +363,4 @@ public class HomePageAction extends BaseActionSupport {
     return newsArticleInfo;
   }
 
-  public void setNewsArticleInfo(List<HomePageArticleInfo> newsArticleInfo) {
-    this.newsArticleInfo = newsArticleInfo;
-  }
 }

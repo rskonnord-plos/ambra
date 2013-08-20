@@ -24,19 +24,14 @@ package org.ambraproject.service.search;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.models.ArticleList;
-import org.ambraproject.models.Journal;
 import org.ambraproject.service.article.MostViewedArticleService;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
-import org.ambraproject.service.journal.JournalService;
 import org.ambraproject.util.Pair;
 import org.ambraproject.views.article.HomePageArticleInfo;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 
@@ -44,7 +39,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +54,7 @@ import java.util.concurrent.ConcurrentMap;
 public class SolrMostViewedArticleService extends HibernateServiceImpl implements MostViewedArticleService {
   private SolrFieldConversion solrFieldConverter;
   private SolrHttpService solrHttpService;
-  private JournalService journalService;
+
   /**
    * Cache for the most viewed results. This is a one-off caching implementation, but since this is a spring-injected
    * bean, there will only be one cache per ambra instance. Also, the cache will contain 2 strings per article (doi and
@@ -205,79 +199,50 @@ public class SolrMostViewedArticleService extends HibernateServiceImpl implement
 
   /**
    * Returns a list of dois in a article list for the given Journal.
-   *
-   * @param journal To find articleList for.
    * @return String of articleDois
    */
   @Transactional(readOnly = true)
-  public List<String> getArticleListDoisForJournal(final Journal journal) {
-    //get journal article list in a session since they're lazy
-    return hibernateTemplate.execute(new HibernateCallback<List<String>>() {
-      @Override
-      public List<String> doInHibernate(Session session) throws HibernateException, SQLException {
-        List<ArticleList> articleList = ((Journal) session.get(Journal.class, journal.getID())).getArticleList();
-
-        List<String> articleDois = new ArrayList<String>();
-
-        for(ArticleList list: articleList){
-          for(String doi: list.getArticleDois()) {
-            articleDois.add(doi);
-          }
-        }
-
-        return articleDois;
-      }
-    });
+  public ArticleList getArticleList(final String listCode) {
+    try {
+      return (ArticleList) hibernateTemplate.findByCriteria(
+          DetachedCriteria.forClass(ArticleList.class)
+              .add(Restrictions.eq("listCode", listCode))
+      ).get(0);
+    } catch (IndexOutOfBoundsException e) {
+      return null;
+    }
   }
 
   @Override
-  public List<HomePageArticleInfo> getNewsArticleInfo(String journal, String listCode) {
+  public List<HomePageArticleInfo> getNewsArticleInfo(String listCode) {
 
-    //check if we still have valid results in the cache
-    String cacheIndex = journal + ":news:" + listCode;
-    MostViewedCache cache = cachedMostViewedResults.get(cacheIndex);
-    if (cache != null && cache.isValid()) {
-      return cache.getArticleInfo();
-    }
-
-    List<String> articleDois = getArticleListDoisForJournal(journalService.getJournal(journal));
+    ArticleList al = getArticleList(listCode);
 
     List<HomePageArticleInfo> articleList = new ArrayList<HomePageArticleInfo>();
 
-    for(String doi: articleDois){
+    for(String doi: al.getArticleDois()){
       List<Article> articles = hibernateTemplate.findByCriteria(
           DetachedCriteria.forClass(Article.class)
               .add(Restrictions.eq("doi", doi)));
       if(articles.size() == 1) {
-        Article article1 = articles.get(0);
-        HomePageArticleInfo article = new HomePageArticleInfo();
-        article.setDoi(article1.getDoi());
-        article.setTitle(article1.getTitle());
-        article.setStrkImgURI(article1.getStrkImgURI());
-        article.setDescription(article1.getDescription());
+        Article article = articles.get(0);
+        HomePageArticleInfo articleInfo = new HomePageArticleInfo();
+        articleInfo.setDoi(article.getDoi());
+        articleInfo.setTitle(article.getTitle());
+        articleInfo.setStrkImgURI(article.getStrkImgURI());
+        articleInfo.setDescription(article.getDescription());
         List<String> authors = new ArrayList<String>();
-        for(ArticleAuthor author: article1.getAuthors()) {
+        for(ArticleAuthor author: article.getAuthors()) {
           String authorName = author.getFullName();
           authors.add(authorName);
         }
         String author = StringUtils.join(authors, ", ");
-        article.setAuthors(author);
-        articleList.add(article);
+        articleInfo.setAuthors(author);
+        articleList.add(articleInfo);
       }
     }
 
-    //cache the results
-    cachedMostViewedResults.put(cacheIndex, new MostViewedCache(articleList));
-
     return articleList;
-  }
-
-  /**
-   * @param journalService The journal-service to use.
-   */
-  @Required
-  public void setJournalService(JournalService journalService) {
-    this.journalService = journalService;
   }
 
   @Required
