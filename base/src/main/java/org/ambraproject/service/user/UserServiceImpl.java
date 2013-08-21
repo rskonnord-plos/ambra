@@ -526,6 +526,34 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasJournalAlert(Long userId, String journal, String category) {
+    List<SavedSearchView> savedSearchViews = getSavedSearches(userId);
+
+    //If the user has a journal alert for this journal, return true
+    for(SavedSearchView view : savedSearchViews) {
+      if(view.getSearchType() == SavedSearchType.JOURNAL_ALERT) {
+        if(view.getSearchParameters().getFilterJournals().length != 1) {
+          continue;
+        }
+
+        if(view.getSearchParameters().getFilterJournals()[0].equals(journal)) {
+          String[] storedCategories = view.getSearchParameters().getFilterSubjectsDisjunction();
+
+          for(String storedCategory : storedCategories) {
+            if(storedCategory.equals(category)) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
    * Getter for property 'permissionsService'.
    *
    * @return Value for property 'permissionsService'.

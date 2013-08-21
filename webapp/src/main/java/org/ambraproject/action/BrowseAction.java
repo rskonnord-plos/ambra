@@ -19,7 +19,9 @@
 package org.ambraproject.action;
 
 import org.ambraproject.action.search.BaseSearchAction;
+import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.taxonomy.TaxonomyService;
+import org.ambraproject.service.user.UserService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;
 import org.apache.commons.lang.StringUtils;
@@ -36,9 +38,12 @@ public class BrowseAction extends BaseSearchAction {
   private static final Logger log = LoggerFactory.getLogger(BrowseAction.class);
 
   private TaxonomyService taxonomyService;
+  private UserService userService;
+
   private String category;
   private String[] parents;
   private String[] children;
+  private boolean subscribed = false;
 
   @Override
   public String execute() throws Exception {
@@ -85,6 +90,13 @@ public class BrowseAction extends BaseSearchAction {
     resultsSinglePage = this.searchService.advancedSearch(getSearchParameters());
 
     //TODO: How to handle no search results
+    UserProfile user = getCurrentUser();
+    if (user != null && category != null && !category.isEmpty()) {
+      subscribed = userService.hasJournalAlert(user.getID(), this.getCurrentJournal(), category);
+    }
+    else {
+      subscribed = false;
+    }
 
     return SUCCESS;
   }
@@ -117,6 +129,14 @@ public class BrowseAction extends BaseSearchAction {
     return children;
   }
 
+  public boolean isSubscribed() {
+    return subscribed;
+  }
+
+  @Required
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
   @Required
   public void setTaxonomyService(TaxonomyService taxonomyService) {

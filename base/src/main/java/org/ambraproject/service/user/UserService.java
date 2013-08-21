@@ -198,4 +198,12 @@ public interface UserService {
    */
   public Long recordUserSearch(Long userProfileID, String searchTerms, String searchParams);
 
+  /**
+   * Whether the logged in user has the specified category in her journal alerts.
+   * Return false if user is not logged in.
+   *
+   * @param category - the category string
+   * @return true if the category is saved as a journal alert search for the logged in user.
+   */
+  public boolean hasJournalAlert(Long userId, String journal, String category);
 }
