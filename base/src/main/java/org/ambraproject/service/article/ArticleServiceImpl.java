@@ -321,12 +321,12 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
         }
 
         String sql = "select distinct a.doi, a.title, a.date " +
-            "from article a join articleType at on a.articleID = at.articleID " +
+            "from article a join articleType atype on a.articleID = atype.articleID " +
             "where a.eIssn = :eIssn " +
             "and a.date between :startDate and :endDate ";
 
         if (articleTypesToShow.size() > 0) {
-          sql = sql + "and at.type in :types ";
+          sql = sql + "and atype.type in :types ";
         }
         sql = sql + "order by a.date desc";
 
