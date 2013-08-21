@@ -22,6 +22,7 @@ import org.ambraproject.search.SavedSearchRunner;
 import org.ambraproject.search.SavedSearchSender;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.TextUtils;
+import org.junit.AfterClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -316,5 +317,10 @@ public class SavedSearchSenderTest extends BaseTest {
     //Make sure counts are correct
     assertEquals(totalWeekly, 9);
     assertEquals(totalMonthly, 6);
+  }
+
+  @AfterClass
+  public void restoreUserData() {
+    restoreDefaultUsers();
   }
 }
