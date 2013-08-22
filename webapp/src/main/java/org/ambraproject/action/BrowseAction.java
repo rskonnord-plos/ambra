@@ -23,6 +23,7 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.service.user.UserService;
 import org.ambraproject.util.CategoryUtils;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.CategoryView;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class BrowseAction extends BaseSearchAction {
   private String[] parents;
   private String[] children;
   private boolean subscribed = false;
+  private int subjectCount = 0;
 
   @Override
   public String execute() throws Exception {
@@ -92,13 +94,19 @@ public class BrowseAction extends BaseSearchAction {
     //TODO: How to handle no search results
     UserProfile user = getCurrentUser();
     if (user != null && category != null && !category.isEmpty()) {
-      subscribed = userService.hasJournalAlert(user.getID(), this.getCurrentJournal(), category);
+      Pair<Boolean, Integer> result = userService.getJournalAlertAndSubjectCount(user.getID(), this.getCurrentJournal(), category);
+      subscribed = result != null ? result.getFirst() : false;
+      subjectCount = result != null ? result.getSecond() : 0;
     }
     else {
       subscribed = false;
+      subjectCount = 0;
     }
-
     return SUCCESS;
+  }
+
+  public int getSubjectCount() {
+    return subjectCount;
   }
 
   /**

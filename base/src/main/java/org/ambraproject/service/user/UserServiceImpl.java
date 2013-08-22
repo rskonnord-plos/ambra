@@ -19,6 +19,7 @@
 package org.ambraproject.service.user;
 
 import com.google.gson.Gson;
+import org.ambraproject.configuration.ConfigurationStore;
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
@@ -47,9 +48,10 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.configuration.ConfigurationStore;
+
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -529,8 +531,10 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
    * {@inheritDoc}
    */
   @Override
-  public boolean hasJournalAlert(Long userId, String journal, String category) {
+  public List<String> getJournalAlertSubjects(Long userId, String journal) {
     List<SavedSearchView> savedSearchViews = getSavedSearches(userId);
+
+    List<String> subjects = new ArrayList<String>();
 
     //If the user has a journal alert for this journal, return true
     for(SavedSearchView view : savedSearchViews) {
@@ -541,16 +545,44 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
 
         if(view.getSearchParameters().getFilterJournals()[0].equals(journal)) {
           String[] storedCategories = view.getSearchParameters().getFilterSubjectsDisjunction();
+          subjects.addAll(Arrays.asList(storedCategories));
+        }
+      }
+    }
+
+    return subjects;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Pair<Boolean,Integer> getJournalAlertAndSubjectCount(Long userId, String journal, String category) {
+    List<SavedSearchView> savedSearchViews = getSavedSearches(userId);
+
+    boolean found = false;
+    int subjectCount = 0;
+
+    //If the user has a journal alert for this journal, return true
+    for(SavedSearchView view : savedSearchViews) {
+      if(view.getSearchType() == SavedSearchType.JOURNAL_ALERT) {
+        if(view.getSearchParameters().getFilterJournals().length != 1) {
+          continue;
+        }
+
+        if(view.getSearchParameters().getFilterJournals()[0].equals(journal)) {
+          String[] storedCategories = view.getSearchParameters().getFilterSubjectsDisjunction();
+          subjectCount += storedCategories.length;
 
           for(String storedCategory : storedCategories) {
             if(storedCategory.equals(category)) {
-              return true;
+              found = true;
             }
           }
         }
       }
     }
-    return false;
+    return new Pair<Boolean, Integer>(found, subjectCount);
   }
 
   /**

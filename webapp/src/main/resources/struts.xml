@@ -413,6 +413,18 @@
         <param name="includeProperties">action.*</param>
       </result>
     </action>
+
+    <action name="unsubscribeJournalAlert" class="org.ambraproject.action.search.SaveJournalAlertAction" method="executeUnsubscribe">
+      <result name="input" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">.*</param>
+      </result>
+      <result name="error" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+    </action>
   </package>
 
   <package name="static" extends="default" namespace="/static">

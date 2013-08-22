@@ -17,17 +17,13 @@
  */
 package org.ambraproject.action.search;
 
-import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.user.UserService;
-import org.ambraproject.views.SavedSearchView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -56,41 +52,45 @@ public class SaveJournalAlertAction extends BaseSearchAction {
       return ERROR;
     }
 
-    List<SavedSearchView> savedSearchViews = userService.getSavedSearches(user.getID());
-    List<String> newCategories = new ArrayList<String>();
+    List<String> newCategories = userService.getJournalAlertSubjects(user.getID(), this.getCurrentJournal());
 
-    //If the user has a journal alert for this journal, get the list of categories and add to it
-    for(SavedSearchView view : savedSearchViews) {
-      if(view.getSearchType() == SavedSearchType.JOURNAL_ALERT) {
-        if(view.getSearchParameters().getFilterJournals().length != 1) {
-          throw new RuntimeException("Multiple journals specified for journal filter.");
-        }
-
-        if(view.getSearchParameters().getFilterJournals()[0].equals(this.getCurrentJournal())) {
-          String[] storedCategories = view.getSearchParameters().getFilterSubjectsDisjunction();
-
-          //Check to make sure the user does not have a search alert on this subject already
-          for(String storedCategory : storedCategories) {
-            if(storedCategory.equals(this.category)) {
-              //Have to keep message short to not break the UI
-              addActionError("This journal alert already defined.");
-              return INPUT;
-            }
-          }
-
-          //New input passed verification
-          //Add all the old subjects to the new list
-          newCategories.addAll(Arrays.asList(storedCategories));
-        }
-      }
+    if (newCategories.contains(this.category)) {
+      //Have to keep message short to not break the UI
+      addActionError("This journal alert already defined.");
+      return INPUT;
     }
 
     //Add new category to the list of subjects the user is looking for
     newCategories.add(this.category);
 
     userService.setFilteredWeeklySearchAlert(user.getID(),
-      newCategories.toArray(new String[newCategories.size()]),
-      this.getCurrentJournal());
+        newCategories.toArray(new String[newCategories.size()]),
+        this.getCurrentJournal());
+
+    return SUCCESS;
+  }
+
+  /**
+   * Unsubscribe the user's search
+   * @return
+   */
+  @Transactional(rollbackFor = { Throwable.class })
+  @SuppressWarnings("unchecked")
+  public String executeUnsubscribe() {
+    final UserProfile user = getCurrentUser();
+
+    if (user == null) {
+      log.info("User is null for unsubscribe alert");
+      addActionError("You must be logged in");
+
+      return ERROR;
+    }
+
+    List<String> subjects = userService.getJournalAlertSubjects(user.getID(), this.getCurrentJournal());
+    if (category != null && subjects.contains(category)) {
+      subjects.remove(category);
+      userService.setFilteredWeeklySearchAlert(user.getID(), subjects.toArray(new String[subjects.size()]), this.getCurrentJournal());
+    }
 
     return SUCCESS;
   }
