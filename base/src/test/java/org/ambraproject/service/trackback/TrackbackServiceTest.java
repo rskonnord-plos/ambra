@@ -58,10 +58,7 @@ public class TrackbackServiceTest extends BaseTest {
     String blogName = "My Cool Blog";
     String excerpt = "Tyler tries to embarrass Stefan by throwing a football at him during practice. " +
         "However, Stefan's super-skills of catching a football impresses Mr. Tanner who tries to persuade " +
-        "Stefan to join the school's football team. Meanwhile, Elena continues to ignore the semi-psychic " +
-        "Bonnie's warnings that Stefan is not who he claims to be. So, Elena invites Stefan and Bonnie over " +
-        "for dinner at her house. She hopes that they will get know each other better, but her plan ends up " +
-        "backfiring.";
+        "Stefan to join the school's football team.";
 
     Long trackbackId = trackbackService.createTrackback(
         article.getDoi(),

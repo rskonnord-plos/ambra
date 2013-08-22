@@ -14,9 +14,7 @@
 package org.ambraproject.service.permission;
 
 import org.ambraproject.action.BaseTest;
-import org.ambraproject.models.UserRole;
 import org.ambraproject.models.UserRole.Permission;
-import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
@@ -46,7 +44,7 @@ public class PermissionServiceTest extends BaseTest {
     permissionsService.checkPermission(Permission.ACCESS_ADMIN, DEFAULT_USER_AUTHID);
   }
 
-  @Test()
+  @Test
   public void testCheckAdminPermissions() {
     //ensure that the user auth id is a user
     assertNotNull(userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID),"user auth id was not a user");
@@ -65,7 +63,7 @@ public class PermissionServiceTest extends BaseTest {
     permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, DEFAULT_ADMIN_AUTHID);
   }
 
-  @Test()
+  @Test
   public void testCheckEditorialPermissions() {
     //ensure that the user auth id is a user
     assertNotNull(userService.getUserByAuthId(DEFAULT_EDITORIAL_AUTHID),"user auth id was not a user");

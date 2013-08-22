@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
 import org.slf4j.Logger;
@@ -136,6 +137,17 @@ public class EmbeddedSolrServerFactory extends SolrServerFactory {
     }
     server.add(inputDocument);
     server.commit();
+  }
+
+  /**
+   * Delete all documents in solr
+   */
+  public void deleteAllDocuments() {
+    try {
+      UpdateResponse updateResponse = server.deleteByQuery("*:*");
+    } catch (Exception e) {
+      log.error("Failed to delete all documents in solr.", e);
+    }
   }
 
   /**

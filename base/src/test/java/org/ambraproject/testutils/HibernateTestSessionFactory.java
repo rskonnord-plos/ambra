@@ -123,7 +123,7 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
           session.doWork(new Work() {
             @Override
             public void execute(Connection connection) throws SQLException {
-              connection.createStatement().execute("SET REFERENTIAL_INTEGRITY FALSE;");
+              connection.createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
             }
           });
           return null;
