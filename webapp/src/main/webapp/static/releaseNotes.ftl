@@ -35,6 +35,13 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.7.7</h2>
+  <p>Released August 27, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.7</h3>
+  <ul>
+    <li>Minor bug fixes</li>
+  </ul>
+
   <h2>Ambra 2.7.6</h2>
   <p>Released August 20, 2013</p>
   <h3>Features Implemented in Ambra 2.7.6</h3>

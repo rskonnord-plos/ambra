@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ambraproject</groupId>
   <artifactId>ambra</artifactId>
-  <version>2.7.6</version>
+  <version>2.7.7</version>
   <packaging>pom</packaging>
   <name>Ambra application</name>
 
@@ -39,13 +39,20 @@
     <ehcache.version>1.5.0</ehcache.version>
     <xbean-spring.version>3.5</xbean-spring.version>
     <xerces.version>2.9.1</xerces.version>
-    <easymock.version>2.5.2</easymock.version>
+    <easymock.version>3.2</easymock.version>
     <hibernate-version>3.6.3.Final</hibernate-version>
     <mysql-connector-java.version>5.1.9</mysql-connector-java.version>
     <filestore.version>1.0.4</filestore.version>
     <httpclient.version>4.2.1</httpclient.version>
     <httpmime.version>4.2.1</httpmime.version>
     <solr.version>4.1.0</solr.version>
+    <testng.version>6.8.1</testng.version>
+    <camel.version>2.11.1</camel.version>
+    <junit.version>4.11</junit.version>
+    <cglib.version>3.0</cglib.version>
+    <hsqldb.version>2.3.0</hsqldb.version>
+    <commons-dbcp.version>1.4</commons-dbcp.version>
+    <surefire.version>2.16</surefire.version>
   </properties>
 
 
@@ -80,11 +87,6 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-    </repository>
-    <repository>
-      <id>java.net</id>
-      <url>http://download.java.net/maven/1</url>
-      <layout>legacy</layout>
     </repository>
     <repository>
       <id>java.net2</id>
@@ -335,11 +337,6 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
         <version>${spring.version}</version>
         <scope>test</scope>
@@ -415,15 +412,14 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.10</version>
+        <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
 
       <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>5.7</version>
-        <classifier>jdk15</classifier>
+        <version>${testng.version}</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -432,20 +428,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-
-      <dependency>
-        <groupId>org.testng</groupId>
-        <artifactId>testng</artifactId>
-        <version>5.14.9</version>
-        <scope>test</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
 
       <dependency>
         <groupId>org.easymock</groupId>
@@ -577,7 +559,9 @@
     <plugins>
       <!-- Java Cross-References (very nice!) -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.3</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -669,7 +653,9 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.15</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -682,10 +668,12 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.6</version>
       </plugin>
 
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.7</version>
         <inherited>true</inherited>
         <reportSets>
           <reportSet>
@@ -725,10 +713,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.8</version>
+          <version>${surefire.version}</version>
           <configuration>
             <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
-            <parallel>false</parallel>
             <systemProperties>
               <property>
                 <name>log4j.configuration</name>

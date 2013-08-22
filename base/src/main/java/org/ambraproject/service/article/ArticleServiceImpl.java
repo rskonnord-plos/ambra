@@ -306,9 +306,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
                                       final List<URI> articleTypesToShow,
                                       final String journal_eIssn)
   {
-    if(articleTypesToShow.size() == 0) {
-      throw new RuntimeException("At least one article type must be specified");
-    }
+    // if articleTypesToShow is empty, then all types of articles should be returned
 
     return (List<SearchHit>) hibernateTemplate.execute(new HibernateCallback() {
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
@@ -322,17 +320,26 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           types[a] = articleTypesToShow.get(a).toString();
         }
 
-        Query sql = session.createSQLQuery("select distinct a.doi, a.title, a.date " +
-          "from article a join articleType at on a.articleID = at.articleID " +
-          "where a.eIssn = :eIssn and " +
-          "a.date between :startDate and :endDate and " +
-          "at.type in :types order by a.date desc")
+        String sql = "select distinct a.doi, a.title, a.date " +
+            "from article a join articleType atype on a.articleID = atype.articleID " +
+            "where a.eIssn = :eIssn " +
+            "and a.date between :startDate and :endDate ";
+
+        if (articleTypesToShow.size() > 0) {
+          sql = sql + "and atype.type in :types ";
+        }
+        sql = sql + "order by a.date desc";
+
+        Query query = session.createSQLQuery(sql)
           .setString("eIssn", journal_eIssn)
           .setCalendar("startDate", startDate)
-          .setCalendar("endDate", endDate)
-          .setParameterList("types", types);
+          .setCalendar("endDate", endDate);
 
-        List<Object[]> articleResults = sql.list();
+        if (articleTypesToShow.size() > 0) {
+          query.setParameterList("types", types);
+        }
+
+        List<Object[]> articleResults = query.list();
         List<SearchHit> searchResults = new ArrayList<SearchHit>();
 
         for (int i = 0; i < articleResults.size(); i++) {

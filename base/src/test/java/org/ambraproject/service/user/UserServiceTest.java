@@ -30,6 +30,7 @@ import org.ambraproject.models.UserSearch;
 import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.views.SavedSearchView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import java.util.ArrayList;
@@ -523,5 +524,10 @@ public class UserServiceTest extends BaseTest {
       }
     }
     return userLogins;
+  }
+
+  @AfterClass
+  public void restoreUserData() {
+    restoreDefaultUsers();
   }
 }
