@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2010 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -24,7 +21,6 @@ import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -40,7 +36,6 @@ public class SearchHit implements Serializable {
   private final float hitScore;
   private final String uri;
   private final String title;
-  private final String highlight;
   private final Date date;
   private final String creator;
   private final Collection<String> listOfCreators;
@@ -56,19 +51,18 @@ public class SearchHit implements Serializable {
   /**
    * Create a search hit with the values set
    *
-   * @param hitScore Hit score
-   * @param uri Article ID
-   * @param title Article title
-   * @param highlight Highlights
-   * @param creators Creators
-   * @param date Article date
-   * @param issn eIssn of the journal
-   * @param journalTitle Journal title
+   * @param hitScore              Hit score
+   * @param uri                   Article ID
+   * @param title                 Article title
+   * @param creators              Creators
+   * @param date                  Article date
+   * @param issn                  eIssn of the journal
+   * @param journalTitle          Journal title
    * @param articleTypeForDisplay Article type
    * @param strikingImage
    * @param hasAssets
    */
-  public SearchHit(Float hitScore, String uri, String title, String highlight,
+  public SearchHit(Float hitScore, String uri, String title,
                    Collection<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
                    Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage, boolean hasAssets) {
@@ -79,7 +73,6 @@ public class SearchHit implements Serializable {
     }
     this.uri = uri;
     this.title = title;
-    this.highlight = highlight;
     this.creator = StringUtils.join(creators, ", ");
     this.listOfCreators = creators;
     this.date = date;
@@ -92,6 +85,7 @@ public class SearchHit implements Serializable {
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
   }
+
   /**
    * @return the hit object's uri
    */
@@ -124,15 +118,6 @@ public class SearchHit implements Serializable {
    */
   public Date getDate() {
     return date;
-  }
-
-  /**
-   * Getter for property 'highlight'.
-   *
-   * @return Value for property 'highlight'.
-   */
-  public String getHighlight() {
-    return highlight;
   }
 
   /**
@@ -191,6 +176,7 @@ public class SearchHit implements Serializable {
 
   /**
    * Get the subjects
+   *
    * @return a collection of subjects
    */
   public Collection<String> getSubjects() {
@@ -321,20 +307,19 @@ public class SearchHit implements Serializable {
 
     public SearchHit build() {
       return new SearchHit(
-        hitScore,
-        uri,
-        title,
-        highlight,
-        listOfCreators,
-        date,
-        issn,
-        journalTitle,
-        articleTypeForDisplay,
-        abstractText,
-        subjects,
-        subjectsPolyhierarchy,
-        strikingImage,
-        hasAssets);
+          hitScore,
+          uri,
+          title,
+          listOfCreators,
+          date,
+          issn,
+          journalTitle,
+          articleTypeForDisplay,
+          abstractText,
+          subjects,
+          subjectsPolyhierarchy,
+          strikingImage,
+          hasAssets);
     }
 
   }
@@ -342,22 +327,21 @@ public class SearchHit implements Serializable {
   @Override
   public String toString() {
     return "SearchHit{" +
-      "hitScore=" + hitScore +
-      ", uri='" + uri + '\'' +
-      ", title='" + title + '\'' +
-      ", highlight='" + highlight + '\'' +
-      ", date=" + date +
-      ", creator='" + creator + '\'' +
-      ", listOfCreators=" + listOfCreators +
-      ", issn='" + issn + '\'' +
-      ", journalTitle='" + journalTitle + '\'' +
-      ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
-      ", abstractText='" + abstractText + '\'' +
-      ", strikingImage='" + strikingImage + '\'' +
-      ", hasAssets=" + hasAssets +
-      ", subjects=" + subjects +
-      ", subjectsPolyhierarchy=" + subjectsPolyhierarchy +
-      '}';
+        "hitScore=" + hitScore +
+        ", uri='" + uri + '\'' +
+        ", title='" + title + '\'' +
+        ", date=" + date +
+        ", creator='" + creator + '\'' +
+        ", listOfCreators=" + listOfCreators +
+        ", issn='" + issn + '\'' +
+        ", journalTitle='" + journalTitle + '\'' +
+        ", articleTypeForDisplay='" + articleTypeForDisplay + '\'' +
+        ", abstractText='" + abstractText + '\'' +
+        ", strikingImage='" + strikingImage + '\'' +
+        ", hasAssets=" + hasAssets +
+        ", subjects=" + subjects +
+        ", subjectsPolyhierarchy=" + subjectsPolyhierarchy +
+        '}';
   }
 
   @Override
