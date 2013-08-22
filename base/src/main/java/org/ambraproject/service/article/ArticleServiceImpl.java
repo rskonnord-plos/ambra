@@ -19,6 +19,13 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.views.CitedArticleView;
+import org.ambraproject.views.SearchHit;
+import org.ambraproject.views.UserProfileInfo;
+import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.ArticleType;
+import org.ambraproject.views.article.CitationInfo;
+import org.ambraproject.views.article.RelatedArticleInfo;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
 import org.ambraproject.models.ArticleAuthor;
@@ -37,16 +44,11 @@ import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AssetView;
-import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.JournalView;
-import org.ambraproject.views.UserProfileInfo;
-import org.ambraproject.views.article.ArticleInfo;
-import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.BaseArticleInfo;
-import org.ambraproject.views.article.CitationInfo;
-import org.ambraproject.views.article.RelatedArticleInfo;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -58,12 +60,16 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -228,6 +234,130 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     return articleIds;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Transactional (readOnly = true)
+  public List<SearchHit> getRandomRecentArticles(String journal_eIssn, List<URI>articleTypesToShow,
+                                                 int numDaysInPast, int articleCount)
+  {
+    //end date is most recent midnight
+    Calendar endDate = GregorianCalendar.getInstance();
+    endDate.set(Calendar.HOUR_OF_DAY, 23);
+    endDate.set(Calendar.MINUTE, 59);
+    endDate.set(Calendar.SECOND, 59);
+
+    Calendar startDate = (Calendar)endDate.clone();
+    //This may look a bit off, but we want a larger value here without making it too large.
+    //The initial query should return results outside of the defined window.  But not too large a result set
+    //We may need to tune this a bit.
+    int numDaysTemp = -(numDaysInPast * 2) - 30;
+    startDate.add(Calendar.DAY_OF_YEAR, numDaysTemp);
+
+    //Get 30 days worth of articles first
+    List<SearchHit> recentArticles = getArticles(startDate, endDate, articleTypesToShow, journal_eIssn);
+    List<SearchHit> results = new ArrayList<SearchHit>();
+
+    startDate = (Calendar)endDate.clone();
+    startDate.add(Calendar.DAY_OF_YEAR, -numDaysInPast);
+
+    //First grab all the articles that fall into the defined window
+    //Regardless of articleCount.  We want to randomize before we limit
+    //So each time the method returns, it returns a different list
+    for(SearchHit searchHit : recentArticles) {
+      if(searchHit.getDate().after(startDate.getTime())) {
+        results.add(searchHit);
+      }
+    }
+
+    //We assume the list is sorted by date desc (Most recent first)
+    //So we can reduce the list by the count of the results so far for a minor
+    //performance boost
+    recentArticles = recentArticles.subList(results.size(), recentArticles.size());
+
+    //If we still don't have enough, decrement the start date and try again
+    //But let's not go on forever, only back 30 days.  (in this case 10 loops, each iteration is 3 days)
+    int loop = 0;
+    while(results.size() < articleCount && loop < 10) {
+      startDate.add(Calendar.DAY_OF_YEAR, -3);
+      for(SearchHit searchHit : recentArticles) {
+        if(searchHit.getDate().after(startDate.getTime())) {
+          results.add(searchHit);
+        }
+      }
+      loop++;
+    }
+
+    //Shuffle results
+    Collections.shuffle(results);
+
+    //pare down the actual number of recent articles to match articleCount
+    if (results.size() > articleCount) {
+      results = results.subList(0, articleCount);
+    }
+
+    return results;
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<SearchHit> getArticles(final Calendar startDate, final Calendar endDate,
+                                      final List<URI> articleTypesToShow,
+                                      final String journal_eIssn)
+  {
+    // if articleTypesToShow is empty, then all types of articles should be returned
+
+    return (List<SearchHit>) hibernateTemplate.execute(new HibernateCallback() {
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        //Expected SQL Query:
+        //select distinct a.doi, a.title, a.date from article a join articleTypes at on a.articleID = at.articleID
+        //where a.eIssn = '%journal_eIssn%' and a.date between '%date%' and '%date%'
+        //at.type in ('%article type%', '%article type%')
+        String[] types = new String[articleTypesToShow.size()];
+
+        for(int a = 0; a < articleTypesToShow.size(); a++) {
+          types[a] = articleTypesToShow.get(a).toString();
+        }
+
+        String sql = "select distinct a.doi, a.title, a.date " +
+            "from article a join articleType at on a.articleID = at.articleID " +
+            "where a.eIssn = :eIssn " +
+            "and a.date between :startDate and :endDate ";
+
+        if (articleTypesToShow.size() > 0) {
+          sql = sql + "and at.type in :types ";
+        }
+        sql = sql + "order by a.date desc";
+
+        Query query = session.createSQLQuery(sql)
+          .setString("eIssn", journal_eIssn)
+          .setCalendar("startDate", startDate)
+          .setCalendar("endDate", endDate);
+
+        if (articleTypesToShow.size() > 0) {
+          query.setParameterList("types", types);
+        }
+
+        List<Object[]> articleResults = query.list();
+        List<SearchHit> searchResults = new ArrayList<SearchHit>();
+
+        for (int i = 0; i < articleResults.size(); i++) {
+          Object[] res = articleResults.get(i);
+          String doi = (String) res[0];
+          String title = (String) res[1];
+          Date pubDate = (Date) res[2];
+
+          searchResults.add(SearchHit.builder()
+            .setUri(doi)
+            .setTitle(title)
+            .setDate(pubDate)
+            .build());
+        }
+
+        return searchResults;
+      }
+    });
   }
 
   /**

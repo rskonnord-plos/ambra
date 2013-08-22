@@ -27,6 +27,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.ambraproject.action.BaseActionSupport;
 
+import java.util.Date;
+
 import static org.testng.Assert.assertEquals;
 
 
@@ -44,6 +46,7 @@ public class SlideshowActionTest extends AmbraWebTest {
     String articleUri = "id:test-article-uri";
     Article article = new Article();
     article.setDoi(articleUri);
+    article.setDate(new Date());
 
     dummyDataStore.store(article);
 
