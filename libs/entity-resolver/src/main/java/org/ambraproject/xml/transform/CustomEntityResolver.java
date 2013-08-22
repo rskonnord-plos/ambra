@@ -19,13 +19,17 @@
  */
 package org.ambraproject.xml.transform;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Cache entities for an {@link org.xml.sax.XMLReader}.
@@ -46,6 +50,7 @@ import org.slf4j.LoggerFactory;
 public class CustomEntityResolver implements EntityResolver {
   private static final Logger log = LoggerFactory.getLogger(CustomEntityResolver.class);
   private URLRetriever retriever;
+  private Set<String> entityUrlsToIgnore;
 
   /**
    * Create a new EntityResolver that will use the supplied <code>URLRetriever</code> to
@@ -55,6 +60,21 @@ public class CustomEntityResolver implements EntityResolver {
    */
   public CustomEntityResolver(URLRetriever retriever) {
     this.retriever = retriever;
+    entityUrlsToIgnore = Collections.EMPTY_SET;
+  }
+
+  /**
+   * Sets the URLs of entities that should never attempted to be loaded.
+   * If this method is called more than once, only the last call will take effect.
+   *
+   * @param toIgnore array of entity URLs that should not be loaded
+   */
+  public void setEntityUrlsToIgnore(String... toIgnore) {
+    Set<String> set = new HashSet<String>();
+    for (String s : toIgnore) {
+      set.add(s);
+    }
+    entityUrlsToIgnore = Collections.unmodifiableSet(set);
   }
 
   /**
@@ -72,17 +92,25 @@ public class CustomEntityResolver implements EntityResolver {
     if (log.isDebugEnabled())
       log.debug("Resolving entity '" + systemId + "'");
 
-    byte[] res = retriever.retrieve(systemId, publicId);
-    if (log.isDebugEnabled())
-      log.debug("Entity '" + systemId + "' " + (res != null ? "found" : "not found"));
+    if (entityUrlsToIgnore.contains(systemId)) {
+      log.debug("Intentionally ignoring " + systemId);
 
-    if (res == null)
-      return null;
+      // Returning null will cause the parent EntityLoader to issue an HTTP request, so we
+      // just return the empty string.
+      return new InputSource(new StringReader(""));
+    } else {
+      byte[] res = retriever.retrieve(systemId, publicId);
+      if (log.isDebugEnabled())
+        log.debug("Entity '" + systemId + "' " + (res != null ? "found" : "not found"));
 
-    InputSource is = new InputSource(new ByteArrayInputStream(res));
-    is.setPublicId(publicId);
-    is.setSystemId(systemId);
+      if (res == null)
+        return null;
 
-    return is;
+      InputSource is = new InputSource(new ByteArrayInputStream(res));
+      is.setPublicId(publicId);
+      is.setSystemId(systemId);
+
+      return is;
+    }
   }
 }

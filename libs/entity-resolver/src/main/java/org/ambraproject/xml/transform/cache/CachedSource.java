@@ -55,7 +55,7 @@ import org.ambraproject.xml.transform.CustomEntityResolver;
 public class CachedSource extends EntityResolvingSource implements Source {
   private static final Logger         log = LoggerFactory.getLogger(CachedSource.class);
   private static final String         DEF_MAP  = "url_rsrc_map.properties";
-  private static final EntityResolver resolver;
+  private static final CustomEntityResolver resolver;
 
   static {
     URLRetriever r = new NetworkURLRetriever();
@@ -84,9 +84,14 @@ public class CachedSource extends EntityResolvingSource implements Source {
   }
 
   /**
+   * @param entityUrlsToIgnore URLs that the resolver should not attempt to load; instead
+   *     an empty String will be returned if one of these is encountered
    * @return the EntityResolver.
    */
-  public static EntityResolver getResolver() {
+  public static EntityResolver getResolver(String... entityUrlsToIgnore) {
+    if (entityUrlsToIgnore != null && entityUrlsToIgnore.length > 0) {
+      resolver.setEntityUrlsToIgnore(entityUrlsToIgnore);
+    }
     return resolver;
   }
 }
