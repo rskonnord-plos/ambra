@@ -225,11 +225,11 @@ $(document).ready(
         showFigSearchView();
       });
 
-      var showModal = function() {
-        //if the request is from author/editor facet for save search, setting the search name with anchor id.
+      var showModalForSavedSearch = function() {
+        //if the request is from author/editor facet for save search, setting the search name with anchor name.
         //else the regular search term is used.
-        if($(this).attr('id')) {
-          $('#text_name_savedsearch').val($(this).attr('id'));
+        if($(this).attr('name')) {
+          $('#text_name_savedsearch').val($(this).attr('name'));
         }
         else if ($('#searchOnResult')) {
           $('#text_name_savedsearch').val($('#searchOnResult').val());
@@ -237,7 +237,7 @@ $(document).ready(
         $('#span_error_savedsearch').html('');
 
         //logic to show the pop-up
-        var saveSearchBox = $(this).attr('href');
+        var saveSearchBox = $('#save-search-box');
 
         //Fade in the Popup
         $(saveSearchBox).fadeIn(300);
@@ -316,8 +316,36 @@ $(document).ready(
         $('#saveSearchFacetVal').attr('value',"");
       };
 
+      var showModalForLogin = function(e) {
+        $('#save-journal-alert-error').html('');
+
+        //logic to show the pop-up
+        var loginBox = $('#login-box');
+
+        //Fade in the Popup
+        $(loginBox).fadeIn(300);
+
+        //Set the center alignment padding + border see css style
+        var popMargTop = ($(loginBox).height() + 24) / 2;
+        var popMargLeft = ($(loginBox).width() + 24) / 2;
+
+        $(loginBox).css({
+          'margin-top' : -popMargTop,
+          'margin-left' : -popMargLeft
+        });
+
+        // Add the mask to body
+        $('body').append('<div id="mask"></div>');
+        $('#mask').fadeIn(300);
+
+        $(document).bind('keydown', keyDownEventHandler);
+        $(document).bind('click', clickEventHandler);
+
+        return false;
+      };
+
       var removeModal = function() {
-        $('#mask , #save-search-box').fadeOut(300 , function() {
+        $('#mask , .inlinePopup').fadeOut(300 , function() {
           $('#mask').remove();
         });
 
@@ -340,7 +368,7 @@ $(document).ready(
 
       var clickEventHandler = function(e) {
         //If the click happens outside of the modal, close the modal
-        if(e.target.id == "save-search-box" || $(e.target).parents("#save-search-box").size()) {
+        if($(e.target).is("inlinePopup") || $(e.target).parents(".inlinePopup").size()) {
           //Do nothing (clicked inside box)
         } else {
           //Close the modal (clicked outside box);
@@ -348,9 +376,10 @@ $(document).ready(
         }
       };
 
-      $('a.save-search').click(showModal);
-      $('#btn_save_savedsearch').bind('click', saveSearch);
-      $('#btn_cancel_savedsearch').bind('click', removeModal);
+      $('.save-search-link').bind('click', showModalForSavedSearch);
+      $('.login-link').bind('click', showModalForLogin);
+      $('#btn-save-savedsearch').bind('click', saveSearch);
+      $('.btn-cancel-savedsearch').bind('click', removeModal);
     });
 
 function setFacetSearchValue(id){

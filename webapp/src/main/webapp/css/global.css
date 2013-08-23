@@ -5506,7 +5506,7 @@ ol.references ul.find-nolinks {
   Shadow box and mask for search alerts
 */
 
-div#save-search-box {
+div.inlinePopup {
   display: none;
   position: fixed;
   top: 50%;
@@ -5525,7 +5525,11 @@ div#save-search-box.journalAlert {
   height: 150px;
 }
 
-div#save-search-box div.top-header {
+div#login-box.login {
+  height: 140px;
+}
+
+div.inlinePopup div.top-header {
   position: absolute;
   width: 100%;
   height: 40px;
@@ -5533,7 +5537,7 @@ div#save-search-box div.top-header {
   color: #ffffff;
 }
 
-div#save-search-box span.heading {
+div.inlinePopup span.heading {
   font-weight: bold;
   font-size: 14px;
   position: absolute;
@@ -5541,9 +5545,8 @@ div#save-search-box span.heading {
   top: 10px;
 }
 
-div#save-search-box div.body-wrapper {
+div.inlinePopup div.body-wrapper {
   position: absolute;
-  width: 100%;
   top: 40px;
   bottom: 40px;
   padding-left: 20px;
@@ -5552,12 +5555,12 @@ div#save-search-box div.body-wrapper {
   font-size: 12px;
 }
 
-div#save-search-box .big-box {
+div.inlinePopup .big-box {
   width: 350px;
   border: solid 1px #606060;
 }
 
-div#save-search-box div.check-box {
+div.inlinePopup div.check-box {
   padding-top: 4px;
   width: 370px;
   overflow: hidden;
@@ -5565,22 +5568,22 @@ div#save-search-box div.check-box {
   white-space: nowrap;
 }
 
-div#save-search-box div.grey-text {
+div.inlinePopup div.grey-text {
   color: #606060;
   margin-top: 8px;
   width: 370px;
 }
 
-div#save-search-box div.button-wrapper {
+div.inlinePopup div.button-wrapper {
   margin-top: 10px;
   cursor: pointer;
 }
 
-div#save-search-box span.errortext {
+div.inlinePopup span.errortext {
   color: #ff0000;
 }
 
-div#save-search-box input[type="button"] {
+div.inlinePopup input[type="button"] {
   background: #333;
   color: #fff;
   margin-right: 2px;
@@ -5592,7 +5595,7 @@ div#save-search-box input[type="button"] {
   text-align: center;
 }
 
-div#save-search-box input[type="button"]:hover {
+div.inlinePopup input[type="button"]:hover {
   background: #3c63af !important;
   color: #fff !important;
 }
