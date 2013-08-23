@@ -5521,12 +5521,12 @@ div.inlinePopup {
 }
 
 /* Journal alerts are a little smaller.  Note the footer in browse.ftl */
-div#save-search-box.journalAlert {
+div#journal-alert-box.journalAlert {
   height: 150px;
 }
 
 div#login-box.login {
-  height: 140px;
+  height: 110px;
 }
 
 div.inlinePopup div.top-header {
