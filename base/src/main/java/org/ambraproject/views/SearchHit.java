@@ -24,7 +24,6 @@ import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +40,6 @@ public class SearchHit implements Serializable {
   private final float hitScore;
   private final String uri;
   private final String title;
-  private final String highlight;
   private final Date date;
   private final String creator;
   private String firstSecondLastCreator;
@@ -69,7 +67,7 @@ public class SearchHit implements Serializable {
    * @param strikingImage
    * @param hasAssets
    */
-  public SearchHit(Float hitScore, String uri, String title, String highlight,
+  public SearchHit(Float hitScore, String uri, String title,
                    List<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
                    Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage, boolean hasAssets) {

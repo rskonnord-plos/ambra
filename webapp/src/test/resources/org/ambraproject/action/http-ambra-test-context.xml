@@ -20,36 +20,6 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <import resource="nonWebApplicationContext.xml"/>
-
-  <!--Sets up embedded http server-->
-  <bean class="java.lang.String" id="httpEndpointUrl">
-    <constructor-arg value="http://localhost:1234/select"/>
-  </bean>
-
-  <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-    <template id="producerTemplate"/>
-    <consumerTemplate id="consumerTemplate"/>
-    <route>
-      <from uri="jetty:http://localhost:1234/select"/>
-      <to uri="mock:end"/>
-    </route>
-  </camelContext>
-
-  <!--bean definitions-->
-
-  <bean class="org.ambraproject.service.search.SolrHttpServiceImpl" id="solrHttpService">
-    <property name="solrUrl" ref="httpEndpointUrl"/>
-    <property name="httpClient" ref="httpClient"/>
-    <property name="config" ref="ambraConfiguration"/>
-  </bean>
-
-  <bean class="org.ambraproject.service.search.SolrMostViewedArticleService" id="mostViewedArticleService">
-    <property name="solrHttpService" ref="solrHttpService"/>
-    <property name="solrFieldConverter" ref="solrFieldConverter"/>
-    <property name="sessionFactory" ref="sessionFactory"/>
-  </bean>
-
   <bean id="createTrackbackAction" class="org.ambraproject.action.trackback.CreateTrackbackAction">
     <property name="trackBackService" ref="trackbackService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
