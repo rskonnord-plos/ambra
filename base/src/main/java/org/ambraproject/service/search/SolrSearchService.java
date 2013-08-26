@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 /**
@@ -67,7 +66,6 @@ public class SolrSearchService implements SearchService {
 
   private static final int MAX_FACET_SIZE = 100;
   private static final int MIN_FACET_COUNT = 1;
-  private static final int MAX_HIGHLIGHT_SNIPPETS = 3;
 
   // sort option possible values (sort direction is optional)
   // field desc|asc
@@ -82,7 +80,6 @@ public class SolrSearchService implements SearchService {
   //And we want to keep the sorts in the order in which they are defined
   private List displaySorts = null;
   private Map validSorts = null;
-  private String highlightFields = null;
 
   /**
    * Perform an "all the words" search (across most article fields)
@@ -505,7 +502,6 @@ public class SolrSearchService implements SearchService {
   }
 
   public void setConfiguration(Configuration config) throws ApplicationException {
-    StringBuilder hightlightFieldBuilder = new StringBuilder();
     queryTimeout = config.getInt("ambra.services.search.timeout", 60000); // default to 1 min
 
     List sizes = config.getList("ambra.services.search.pageSizes.size");
@@ -538,20 +534,6 @@ public class SolrSearchService implements SearchService {
           "in configuration.");
     }
 
-    List hFields = config.getList("ambra.services.search.highlightFields.field");
-
-    if (hFields == null) {
-      throw new ApplicationException("ambra.services.search.highlightFields.field not defined " +
-          "in configuration.");
-    }
-
-    for (Object field : hFields) {
-      if (hightlightFieldBuilder.length() > 0) {
-        hightlightFieldBuilder.append(",");
-      }
-      hightlightFieldBuilder.append(field.toString());
-    }
-
     if (config.containsKey("ambra.services.search.keywordFields.field")) {
       validKeywords = new HashMap();
       HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
@@ -563,18 +545,11 @@ public class SolrSearchService implements SearchService {
         String value = s.getString("");
         validKeywords.put(key, value);
 
-        //These fields can be highlighted too!
-        if (hightlightFieldBuilder.length() > 0) {
-          hightlightFieldBuilder.append(",");
-        }
-        hightlightFieldBuilder.append(value);
       }
     } else {
       throw new ApplicationException("ambra.services.search.keywordFields.field not defined " +
           "in configuration.");
     }
-
-    this.highlightFields = hightlightFieldBuilder.toString();
   }
 
   public void setServerFactory(SolrServerFactory serverFactory) {
@@ -750,7 +725,7 @@ public class SolrSearchService implements SearchService {
     SolrQuery query = new SolrQuery(queryString);
     query.setTimeAllowed(queryTimeout);
     query.setIncludeScore(true); // The relevance (of each results element) to the search terms.
-    query.setHighlight(true);
+    query.setHighlight(false);
 
     if (useDismax) {
       query.set("defType", "dismax");
@@ -760,8 +735,6 @@ public class SolrSearchService implements SearchService {
     //This list matches the "options" from the "queryField" picklist on unformattedSearch.ftl,
     //without the "date" fields.
 
-    query.set("hl.fl", this.highlightFields);
-    query.set("hl.requireFieldMatch", true);
     query.setStart(startPage * pageSize); // Which results element to return first in this batch.
     query.setRows(pageSize); // The number of results elements to return.
     // request only fields that we need to display
@@ -870,8 +843,6 @@ public class SolrSearchService implements SearchService {
       }
     }
 
-    Map<String, Map<String, List<String>>> highlightings = queryResponse.getHighlighting();
-
     List<SearchHit> searchResults = new ArrayList<SearchHit>();
     for (SolrDocument document : documentList) {
 
@@ -890,11 +861,6 @@ public class SolrSearchService implements SearchService {
       // TODO create a dedicated field for checking the existence of assets for a given article.
       List<String> figureTableCaptions = SolrServiceUtil.getFieldMultiValue(document, "figure_table_caption", String.class, message);
       List<String> subjects = SolrServiceUtil.getFieldMultiValue(document, "subject", String.class, message);
-
-      String highlights = null;
-      if (query.getHighlight()) {
-        highlights = getHighlights(highlightings.get(id));
-      }
 
       String abstractResult = "";
 
@@ -921,7 +887,6 @@ public class SolrSearchService implements SearchService {
         .setHitScore(score)
         .setUri(id)
         .setTitle(title)
-        .setHighlight(highlights)
         .setListOfCreators(authorList)
         .setDate(publicationDate)
         .setIssn(eissn)
@@ -994,48 +959,6 @@ public class SolrSearchService implements SearchService {
     }
 
     return results;
-  }
-
-  private String getHighlights(Map<String, List<String>> articleHighlights) {
-
-    if (articleHighlights == null || articleHighlights.size() < 1) {
-      return null;
-    }
-
-    Set<String> articleHighlightsKeys = new TreeSet<String>(articleHighlights.keySet());
-
-    // Keep getting snippets, one snippet for each field, up to a max of MAX_HIGHLIGHT_SNIPPETS total.
-    List<String> snippets = new ArrayList<String>();
-    while (snippets.size() < MAX_HIGHLIGHT_SNIPPETS && articleHighlights.keySet().size() > 0) {
-      for (String highlightField : articleHighlightsKeys) {
-        if (articleHighlights.get(highlightField) != null && articleHighlights.get(highlightField).size() > 0) {
-          snippets.add(articleHighlights.get(highlightField).get(0));
-          articleHighlights.get(highlightField).remove(0);
-          if (articleHighlights.get(highlightField).size() < 1) {
-            articleHighlights.remove(highlightField);
-          }
-        } else {
-          articleHighlights.remove(highlightField);
-        }
-        if (snippets.size() >= MAX_HIGHLIGHT_SNIPPETS) {
-          break; // stop the "for" loop to return control to the "while" loop.
-        }
-      }
-    }
-
-    if (snippets.size() > 0) {
-      StringBuilder sb = new StringBuilder();
-      for (String snippet : snippets) {
-        if (sb.length() > 0) {
-          sb.append(" ... ");
-        }
-        sb.append(snippet);
-      }
-
-      return sb.toString();
-    } else {
-      return null;
-    }
   }
 
   /**

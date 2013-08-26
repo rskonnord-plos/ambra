@@ -805,6 +805,19 @@ public class ArticleServiceTest extends BaseTest {
     assertEquals(hits.get(0).getTitle(), article.getTitle());
   }
 
+  @Test(dataProvider = "savedArticlesURI")
+  public void testGetRandomRecentArticlesWithoutArticleTypes(String DOI, Article article) throws Exception {
+    String eIssn = article.geteIssn();
+    List<URI>articleTypes = new ArrayList<URI>();
+    int numDaysInPast = 30;
+    int articleCount = 100;
+
+    //Being the list can be random, I'm just checking that it executes properly
+    List<SearchHit> hits = articleService.getRandomRecentArticles(eIssn, articleTypes, numDaysInPast, articleCount);
+
+    assertEquals(hits.size(), 2);
+  }
+
   @Test
   public void testGetBasicArticleView() throws NoSuchArticleIdException {
     // TODO add check for article type

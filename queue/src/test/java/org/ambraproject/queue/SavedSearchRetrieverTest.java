@@ -140,5 +140,7 @@ public class SavedSearchRetrieverTest extends BaseTest {
     dummyDataStore.deleteAll(SavedSearch.class);
     dummyDataStore.deleteAll(UserProfile.class);
     dummyDataStore.deleteAll(SavedSearchQuery.class);
+
+    restoreDefaultUsers();
   }
 }

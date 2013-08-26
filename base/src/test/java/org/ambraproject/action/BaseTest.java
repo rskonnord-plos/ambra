@@ -34,6 +34,8 @@ import org.ambraproject.models.CitedArticleAuthor;
 import org.ambraproject.models.CitedArticleEditor;
 import org.ambraproject.models.CorrectedAuthor;
 import org.ambraproject.models.Journal;
+import org.ambraproject.models.UserProfile;
+import org.ambraproject.models.UserRole;
 import org.ambraproject.testutils.DummyDataStore;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.ArticleCategory;
@@ -42,6 +44,7 @@ import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.RelatedArticleInfo;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
@@ -467,5 +470,69 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
         new ArticleAuthor("Emma","Swan","M.S.")
     ));
     dummyDataStore.store(article);
+  }
+
+  /**
+   * Some unit tests delete all users.  This is a way to restore them.
+   * This logic is very similar to logic in HibernateTestSessionFactory afterPropertiesSet function
+   */
+  protected void restoreDefaultUsers() {
+
+    try {
+      // Create an admin user to test admin functions
+      UserRole adminRole = new UserRole("admin");
+
+      Set<UserRole.Permission> perms = new HashSet<UserRole.Permission>();
+      perms.add(UserRole.Permission.ACCESS_ADMIN);
+      perms.add(UserRole.Permission.INGEST_ARTICLE);
+      perms.add(UserRole.Permission.MANAGE_FLAGS);
+      perms.add(UserRole.Permission.MANAGE_ANNOTATIONS);
+      perms.add(UserRole.Permission.MANAGE_USERS);
+      perms.add(UserRole.Permission.MANAGE_ROLES);
+      perms.add(UserRole.Permission.MANAGE_JOURNALS);
+      perms.add(UserRole.Permission.MANAGE_SEARCH);
+      perms.add(UserRole.Permission.MANAGE_CACHES);
+      perms.add(UserRole.Permission.CROSS_PUB_ARTICLES);
+      perms.add(UserRole.Permission.DELETE_ARTICLES);
+      perms.add(UserRole.Permission.VIEW_UNPUBBED_ARTICLES);
+
+      adminRole.setPermissions(perms);
+      dummyDataStore.store(adminRole);
+
+      UserProfile admin = new UserProfile();
+      admin.setAuthId(BaseTest.DEFAULT_ADMIN_AUTHID);
+      admin.setEmail("admin@test.org");
+      admin.setDisplayName("testAdmin");
+      admin.setPassword("adminPass");
+      admin.setRoles(new HashSet<UserRole>(1));
+      admin.getRoles().add(adminRole);
+      dummyDataStore.store(admin);
+
+      UserRole editorialRole = new UserRole("editorial");
+      perms = new HashSet<UserRole.Permission>();
+      perms.add(UserRole.Permission.ACCESS_ADMIN);
+      perms.add(UserRole.Permission.VIEW_UNPUBBED_ARTICLES);
+      editorialRole.setPermissions(perms);
+      dummyDataStore.store(editorialRole);
+
+      UserProfile editorial = new UserProfile();
+      editorial.setAuthId(BaseTest.DEFAULT_EDITORIAL_AUTHID);
+      editorial.setEmail("editorial@test.org");
+      editorial.setDisplayName("editorialAdmin");
+      editorial.setPassword("pass");
+      editorial.setRoles(new HashSet<UserRole>(1));
+      editorial.getRoles().add(editorialRole);
+      dummyDataStore.store(editorial);
+
+      UserProfile nonAdmin = new UserProfile();
+      nonAdmin.setAuthId(BaseTest.DEFAULT_USER_AUTHID);
+      nonAdmin.setEmail("nonAdmin@test.org");
+      nonAdmin.setDisplayName("testNonAdmin");
+      nonAdmin.setPassword("nonAdminPass");
+      dummyDataStore.store(nonAdmin);
+
+    } catch (DataAccessException ex) {
+      //must've already inserted the users
+    }
   }
 }

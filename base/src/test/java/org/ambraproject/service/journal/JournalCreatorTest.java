@@ -17,6 +17,8 @@ import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Journal;
 import org.apache.commons.configuration.Configuration;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.AfterClass;
@@ -48,12 +50,21 @@ public class JournalCreatorTest extends BaseTest {
     assertTrue(configuredJournalKeys != null && !configuredJournalKeys.isEmpty(),
         "No Journals configured in the test config");
 
-    //delete any existing journals so we can create them
-    dummyDataStore.deleteAll(Journal.class);
+    //delete existing journals so we can create them
+    List<Journal> storedJournals = dummyDataStore.findByCriteria(
+        DetachedCriteria.forClass(Journal.class)
+            .add(Restrictions.in("journalKey", configuredJournalKeys)));
+    for (Journal journal : storedJournals) {
+      dummyDataStore.delete(journal);
+    }
 
     journalCreator.createJournals();
 
-    List<Journal> storedJournals = dummyDataStore.getAll(Journal.class);
+    // look for the ones that would have been created by reading the configuration
+    storedJournals = dummyDataStore.findByCriteria(
+        DetachedCriteria.forClass(Journal.class)
+            .add(Restrictions.in("journalKey", configuredJournalKeys)));
+
     assertEquals(storedJournals.size(), configuredJournalKeys.size(), "created incorrect number of journals");
 
     for (String journalKey : configuredJournalKeys) {
@@ -77,14 +88,24 @@ public class JournalCreatorTest extends BaseTest {
   public void testUpdateJournals() throws ApplicationException {
     //Journals will have been created now, let's change properties and update them
 
-    List<Journal> storedJournals = dummyDataStore.getAll(Journal.class);
+    // get the journals that would have been created by the testCreateJournals function
+    List<String> configuredJournalKeys = configuration.getList(JournalCreator.JOURNAL_CONFIG_KEY);
+    List<Journal> storedJournals = dummyDataStore.findByCriteria(
+        DetachedCriteria.forClass(Journal.class)
+            .add(Restrictions.in("journalKey", configuredJournalKeys)));
+
+    // update the configuration values
     for (Journal journal : storedJournals) {
       configuration.setProperty("ambra.virtualJournals." + journal.getJournalKey() + ".eIssn", journal.geteIssn() + "-new");
       configuration.setProperty("ambra.virtualJournals." + journal.getJournalKey() + ".description", journal.getTitle() + "-new");
     }
 
     journalCreator.createJournals();
-    storedJournals = dummyDataStore.getAll(Journal.class);
+
+    // get the journals that would have been updated by reading the configuration
+    storedJournals = dummyDataStore.findByCriteria(
+        DetachedCriteria.forClass(Journal.class)
+            .add(Restrictions.in("journalKey", configuredJournalKeys)));
     assertEquals(storedJournals.size(), configuration.getList(JournalCreator.JOURNAL_CONFIG_KEY).size(),
         "added/removed a journal when we should have only updated them");
     for (Journal journal : storedJournals) {
@@ -92,12 +113,20 @@ public class JournalCreatorTest extends BaseTest {
       assertTrue(journal.getTitle().endsWith("-new"), "Didn't update title for journal " + journal.getJournalKey());
     }
   }
+
   @AfterClass
   public void revertJournalChanges() {
     for (Journal journal : dummyDataStore.getAll(Journal.class)) {
-      journal.setTitle(journal.getTitle().replaceAll("-new", ""));
-      journal.seteIssn(journal.geteIssn().replaceAll("-new", ""));
+      if (journal.getTitle() != null) {
+        journal.setTitle(journal.getTitle().replaceAll("-new", ""));
+      }
+
+      if (journal.geteIssn() != null) {
+        journal.seteIssn(journal.geteIssn().replaceAll("-new", ""));
+      }
+
       dummyDataStore.update(journal);
     }
   }
+
 }

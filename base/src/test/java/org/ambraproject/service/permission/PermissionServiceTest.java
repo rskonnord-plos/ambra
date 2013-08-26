@@ -44,7 +44,7 @@ public class PermissionServiceTest extends BaseTest {
     permissionsService.checkPermission(Permission.ACCESS_ADMIN, DEFAULT_USER_AUTHID);
   }
 
-  @Test()
+  @Test
   public void testCheckAdminPermissions() {
     //ensure that the user auth id is a user
     assertNotNull(userService.getUserByAuthId(DEFAULT_ADMIN_AUTHID),"user auth id was not a user");
@@ -64,7 +64,7 @@ public class PermissionServiceTest extends BaseTest {
     permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, DEFAULT_ADMIN_AUTHID);
   }
 
-  @Test()
+  @Test
   public void testCheckEditorialPermissions() {
     //ensure that the user auth id is a user
     assertNotNull(userService.getUserByAuthId(DEFAULT_EDITORIAL_AUTHID),"user auth id was not a user");

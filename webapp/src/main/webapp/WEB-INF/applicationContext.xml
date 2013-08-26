@@ -78,6 +78,7 @@
     <property name="xslTemplateMap" ref="xslArticleTransformStyleSheetMap"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="xmlFactoryProperty" ref="xmlFactoryProperties"/>
+    <property name="validateArticleXml" value="false"/>
   </bean>
 
   <!-- Defined in webapp/src/main/resources/ambra/configuration/defaults.xml -->
