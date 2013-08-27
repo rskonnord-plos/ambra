@@ -112,13 +112,12 @@ function onReadyDocument() {
     $.ajax({
       type: 'POST',
       url:'/taxonomy/flag/json',
-      data: 'categoryID=' + categoryID + '&articleID=' + articleID,
+      data: { 'categoryID': categoryID, 'articleID': articleID },
       dataType:'json',
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(errorThrown);
       },
       success:function (data) {
-        //console.log('Flagged');
         $(target).unbind('click', handleSubjectSideBarClick);
         $(target).addClass("flagged");
       }

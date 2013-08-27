@@ -32,8 +32,8 @@ import java.util.List;
 /**
  * Flag a particular taxonomy term applied to an article
  */
-public class FlagTaxonomyTerm extends BaseActionSupport {
-  private static final Logger log = LoggerFactory.getLogger(FlagTaxonomyTerm.class);
+public class FlagTaxonomyTermAction extends BaseActionSupport {
+  private static final Logger log = LoggerFactory.getLogger(FlagTaxonomyTermAction.class);
 
   private TaxonomyService taxonomyService;
 

@@ -46,7 +46,6 @@ import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AssetView;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.article.BaseArticleInfo;
-import org.apache.poi.util.ArrayUtil;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -60,12 +59,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -836,14 +833,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    * @param articleID an articleID
    * @param authID the user's authorization ID
    *
-   * @return list of categories this user flagged for this article
+   * @return list of category IDs this user flagged for this article
    */
   @SuppressWarnings("unchecked")
   @Transactional(readOnly = true)
   private List<Long> getFlaggedCategories(final long articleID, final String authID) {
     if(authID != null && authID.length() > 0) {
-      return (List<Long>) hibernateTemplate.execute(new HibernateCallback() {
-        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+      return hibernateTemplate.execute(new HibernateCallback<List<Long>>() {
+        public List<Long> doInHibernate(Session session) throws HibernateException, SQLException {
           List<Object[]> categories = session.createSQLQuery(
             "select acf.categoryID from articleCategoryFlagged acf " +
               "join userProfile up on up.userProfileID = acf.userProfileID " +

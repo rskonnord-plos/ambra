@@ -327,13 +327,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
     Collections.sort(this.categories);
 
-    getCookieData();
+    getCookiedCategoryFlags();
   }
 
   /**
    * Get any relevant data out of the cookies
    */
-  private void getCookieData() {
+  private void getCookiedCategoryFlags() {
     for(Cookie c : getCookies()) {
       if(c.getName().equals(COOKIE_ARTICLE_CATEGORY_FLAGS)) {
         String value = c.getValue();
@@ -854,8 +854,15 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * Return a list of this article's categories.  Note, this may be different pending the user's cookies
-   * Then the values stored in the database
+   * Return a list of this article's categories.
+   *
+   * Note: These values may be different pending the user's cookies then the values stored in the database.
+   *
+   * If a user is logged in, a list is built of categories(and if they have been flagged) for the article
+   * from the database
+   *
+   * If a user is not logged in, a list is built of categories for the article.  Then we append (from a cookie)
+   * flagged categories for this article
    *
    * @return Return a list of this article's categories
    */
