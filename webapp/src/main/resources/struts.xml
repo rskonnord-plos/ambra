@@ -286,7 +286,7 @@
       </result>
     </action>
 
-    <action name="flagTaxonomyTerm" class="org.ambraproject.action.taxonomy.FlagTaxonomyTerm">
+    <action name="flagTaxonomyTerm" class="org.ambraproject.action.taxonomy.FlagTaxonomyTermAction">
       <result name="success" type="json_nocomments">
         <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
           actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
