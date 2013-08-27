@@ -201,7 +201,11 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
       throw new RuntimeException("HttpServletRequest is null");
     }
 
-   return request.getCookies();
+    if(request.getCookies() == null) {
+      return new Cookie[] {};
+    } else {
+      return request.getCookies();
+    }
   }
 
   protected Cookie getCookie(String name) {
