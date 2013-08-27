@@ -220,25 +220,27 @@ public class SolrMostViewedArticleService extends HibernateServiceImpl implement
 
     List<HomePageArticleInfo> articleList = new ArrayList<HomePageArticleInfo>();
 
-    for(String doi: al.getArticleDois()){
-      List<Article> articles = hibernateTemplate.findByCriteria(
-          DetachedCriteria.forClass(Article.class)
-              .add(Restrictions.eq("doi", doi)));
-      if(articles.size() == 1) {
-        Article article = articles.get(0);
-        HomePageArticleInfo articleInfo = new HomePageArticleInfo();
-        articleInfo.setDoi(article.getDoi());
-        articleInfo.setTitle(article.getTitle());
-        articleInfo.setStrkImgURI(article.getStrkImgURI());
-        articleInfo.setDescription(article.getDescription());
-        List<String> authors = new ArrayList<String>();
-        for(ArticleAuthor author: article.getAuthors()) {
-          String authorName = author.getFullName();
-          authors.add(authorName);
+    if(al != null) {
+      for(String doi: al.getArticleDois()){
+        List<Article> articles = hibernateTemplate.findByCriteria(
+            DetachedCriteria.forClass(Article.class)
+                .add(Restrictions.eq("doi", doi)));
+        if(articles.size() == 1) {
+          Article article = articles.get(0);
+          HomePageArticleInfo articleInfo = new HomePageArticleInfo();
+          articleInfo.setDoi(article.getDoi());
+          articleInfo.setTitle(article.getTitle());
+          articleInfo.setStrkImgURI(article.getStrkImgURI());
+          articleInfo.setDescription(article.getDescription());
+          List<String> authors = new ArrayList<String>();
+          for(ArticleAuthor author: article.getAuthors()) {
+            String authorName = author.getFullName();
+            authors.add(authorName);
+          }
+          String author = StringUtils.join(authors, ", ");
+          articleInfo.setAuthors(author);
+          articleList.add(articleInfo);
         }
-        String author = StringUtils.join(authors, ", ");
-        articleInfo.setAuthors(author);
-        articleList.add(articleInfo);
       }
     }
 
