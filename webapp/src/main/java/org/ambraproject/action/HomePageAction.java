@@ -70,6 +70,7 @@ public class HomePageAction extends BaseActionSupport {
   @Override
   public String execute() {
     //for PLOSONE
+    log.info("Current journal is " + getCurrentJournal());
     if ("PLoSONE".equals(getCurrentJournal())) {
       recentStartIndex = 0;
       mostViewedStartIndex = 0;
