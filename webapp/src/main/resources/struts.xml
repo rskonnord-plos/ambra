@@ -224,7 +224,7 @@
 
     <action name="browse" class="org.ambraproject.action.BrowseAction">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/browse.ftl</param>
+        <param name="templateFile">/taxonomy/browse.ftl</param>
       </result>
 
       <result name="input" type="default_freemarker">
@@ -260,7 +260,7 @@
 
     <action name="taxonomy" class="org.ambraproject.action.taxonomy.TaxonomyAction">
       <result name="success" type="default_freemarker">
-        <param name="templateFile">/taxonomy.ftl</param>
+        <param name="templateFile">/taxonomy/taxonomy.ftl</param>
       </result>
 
       <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
