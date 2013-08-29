@@ -113,7 +113,7 @@ public class CategoryUtils {
    * @throws org.ambraproject.ApplicationException
    */
   public static CategoryView findCategory(CategoryView categoryView, String category) {
-    if(categoryView.getName().toLowerCase().contains(category.toLowerCase())) {
+    if(categoryView.getName().toLowerCase().equals(category.toLowerCase())) {
       return categoryView;
     }
 
