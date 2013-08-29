@@ -70,8 +70,6 @@ public class BrowseAction extends BaseSearchAction {
         category = StringUtils.capitalize(category);
         parents = new String[] {};
         children = new String[] {};
-
-        //TODO: Handle no categories here or when search returns?
       } else {
         category = view.getName();
 
@@ -92,17 +90,21 @@ public class BrowseAction extends BaseSearchAction {
     resultsSinglePage = this.searchService.advancedSearch(getSearchParameters());
 
     //TODO: How to handle no search results
-    UserProfile user = getCurrentUser();
-    if (user != null && category != null && !category.isEmpty()) {
-      Pair<Boolean, Integer> result = userService.getJournalAlertAndSubjectCount(user.getID(), this.getCurrentJournal(), category);
-      subscribed = result != null ? result.getFirst() : false;
-      subjectCount = result != null ? result.getSecond() : 0;
+    if(resultsSinglePage.getHits().size() == 0) {
+      return INPUT;
+    } else {
+      UserProfile user = getCurrentUser();
+      if (user != null && category != null && !category.isEmpty()) {
+        Pair<Boolean, Integer> result = userService.getJournalAlertAndSubjectCount(user.getID(), this.getCurrentJournal(), category);
+        subscribed = result != null ? result.getFirst() : false;
+        subjectCount = result != null ? result.getSecond() : 0;
+      }
+      else {
+        subscribed = false;
+        subjectCount = 0;
+      }
+      return SUCCESS;
     }
-    else {
-      subscribed = false;
-      subjectCount = 0;
-    }
-    return SUCCESS;
   }
 
   public int getSubjectCount() {
