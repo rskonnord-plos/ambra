@@ -5615,3 +5615,12 @@ div.inlinePopup input[type="button"]:hover {
 /*
   End shadow box and mask for search alerts
 */
+
+.twitter-timeline-rendered {
+  display:none;
+}
+
+.twitter-timeline {
+  display:none;
+  margin-bottom: 20px;
+}
