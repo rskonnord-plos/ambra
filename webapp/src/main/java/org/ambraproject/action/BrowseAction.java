@@ -89,7 +89,6 @@ public class BrowseAction extends BaseSearchAction {
 
     resultsSinglePage = this.searchService.advancedSearch(getSearchParameters());
 
-    //TODO: How to handle no search results
     if(resultsSinglePage.getHits().size() == 0) {
       return INPUT;
     } else {
