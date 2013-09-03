@@ -412,42 +412,6 @@
 
   <rule>
     <note>
-      re-write incoming PDF Links.
-      /article/doi/pdf -> /article/fetchObject.action?uri=doi&amp;representation=PDF
-    </note>
-    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/pdf</from>
-    <to>$1/article/fetchObject.action?uri=$2&amp;representation=PDF</to>
-  </rule>
-
-  <outbound-rule>
-    <note>
-      re-write outbound PDF links.
-      /article/fetchObject.action?uri=doi&amp;representation=PDF -> /article/doi/pdf
-    </note>
-    <from>^(/.+)?/article/fetchObject.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=PDF$</from>
-    <to>$1/article/$2/pdf</to>
-  </outbound-rule>
-
-  <rule>
-    <note>
-      re-write incoming XML Links.
-      /article/doi/pdf -> /article/fetchObjectAttachment.action?uri=doi&amp;representation=XML
-    </note>
-    <from>^(/.+)?/article/(info:doi/\d+\.\d+/.+)/xml</from>
-    <to>$1/article/fetchObjectAttachment.action?uri=$2&amp;representation=XML</to>
-  </rule>
-
-  <outbound-rule>
-    <note>
-      re-write outbound XML links.
-      /article/fetchObjectAttachment.action?uri=doi&amp;representation=XML -> /article/doi/xml
-    </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=XML</from>
-    <to>$1/article/$2/xml</to>
-  </outbound-rule>
-
-  <rule>
-    <note>
       re-write incoming Article URIs.
       /article/doi -> /article/fetchArticle.action?articleURI=doi
     </note>
