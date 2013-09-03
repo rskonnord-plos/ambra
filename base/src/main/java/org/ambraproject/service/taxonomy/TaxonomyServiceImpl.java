@@ -31,6 +31,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,8 +71,8 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
             .setString("authID", authID)
             .setLong("articleID", articleID)
             .setLong("categoryID", categoryID)
-            .setDate("created", new Date())
-            .setDate("lastModified", new Date())
+            .setCalendar("created", Calendar.getInstance())
+            .setCalendar("lastModified", Calendar.getInstance())
           .executeUpdate();
 
           return null;
@@ -86,8 +87,8 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
               ":articleID, :categoryID, null, :created, :lastModified)")
             .setLong("articleID", articleID)
             .setLong("categoryID", categoryID)
-            .setDate("created", new Date())
-            .setDate("lastModified", new Date())
+            .setCalendar("created", Calendar.getInstance())
+            .setCalendar("lastModified", Calendar.getInstance())
             .executeUpdate();
 
           return null;
