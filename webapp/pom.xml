@@ -109,12 +109,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.googlecode.webutilities</groupId>
-      <artifactId>webutilities</artifactId>
-      <version>0.0.6</version>
-    </dependency>
-
-    <dependency>
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
@@ -614,6 +608,27 @@
             WEB-INF/lib/commons-logging-*.jar,
             WEB-INF/lib/log4j-*.jar
           </packagingExcludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <version>1.3.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <nosuffix>false</nosuffix>
+          <linebreakpos>5000</linebreakpos>
+          <force>false</force>
+
+          <excludes>
+            <exclude>template/ambra-theme/*.js</exclude>
+          </excludes>
         </configuration>
       </plugin>
 
