@@ -21,8 +21,9 @@ import org.ambraproject.views.CategoryView;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,16 +37,16 @@ public class CategoryUtilsTest {
     return new Object[][]{
       {
         new ArrayList() {{
-          add(new CategoryCount("/f", 5));
-          add(new CategoryCount("/a/b/c", 6));
-          add(new CategoryCount("/a/b/c/d", 2));
-          add(new CategoryCount("/g", 8));
-          add(new CategoryCount("/a/c/e", 4));
-          add(new CategoryCount("/a/b/c/d/e", 4));
-          add(new CategoryCount("/e", 4));
-          add(new CategoryCount("/z", 17));
-          add(new CategoryCount("/1/2/3", 7));
-          add(new CategoryCount("/x/y", 31));
+          add(new Pair<String, Long>("/f", 5L));
+          add(new Pair<String, Long>("/a/b/c", 6L));
+          add(new Pair<String, Long>("/a/b/c/d", 2L));
+          add(new Pair<String, Long>("/g", 8L));
+          add(new Pair<String, Long>("/a/c/e", 4L));
+          add(new Pair<String, Long>("/a/b/c/d/e", 4L));
+          add(new Pair<String, Long>("/e", 4L));
+          add(new Pair<String, Long>("/z", 17L));
+          add(new Pair<String, Long>("/1/2/3", 7L));
+          add(new Pair<String, Long>("/x/y", 31L));
         }},
         new CategoryView("ROOT", 0) {{
           addChild(new CategoryView("a", 0) {{
@@ -168,9 +169,9 @@ public class CategoryUtilsTest {
   }
 
   @Test(dataProvider = "makeMap")
-  public void testCreateMap(List<CategoryCount> before, CategoryView expected) {
-    for(CategoryCount subject : before) {
-      log.debug(subject.getCategory());
+  public void testCreateMap(List<Pair<String, Long>> before, CategoryView expected) {
+    for(Pair<String, Long> subject : before) {
+      log.debug(subject.getFirst());
     }
 
     CategoryView result = CategoryUtils.createMapFromStringList(before);

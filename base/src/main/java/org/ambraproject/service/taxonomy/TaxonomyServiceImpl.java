@@ -22,8 +22,8 @@ import org.ambraproject.ApplicationException;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.search.SearchService;
-import org.ambraproject.util.CategoryCount;
 import org.ambraproject.util.CategoryUtils;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.CategoryView;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -120,13 +120,13 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
   private SortedMap<String, List<String>> parseTopAndSecondLevelCategoriesWithoutCache(String currentJournal)
     throws ApplicationException {
 
-    List<CategoryCount> fullCategoryPaths = searchService.getAllSubjects(currentJournal);
+    List<Pair<String, Long>> fullCategoryPaths = searchService.getAllSubjects(currentJournal);
 
     // Since there are lots of duplicates, we start by adding the second-level
     // categories to a Set instead of a List.
     Map<String, Set<String >> map = new HashMap<String, Set<String>>();
-    for (CategoryCount subject : fullCategoryPaths) {
-      String category = subject.getCategory();
+    for (Pair<String, Long> subject : fullCategoryPaths) {
+      String category = subject.getFirst();
 
       // If the category doesn't start with a slash, it's one of the old-style
       // categories where we didn't store the full path.  Ignore these.
@@ -177,7 +177,7 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
   private CategoryView parseCategoriesWithoutCache(String currentJournal)
     throws ApplicationException {
 
-    List<CategoryCount> subjects = searchService.getAllSubjects(currentJournal);
+    List<Pair<String, Long>> subjects = searchService.getAllSubjects(currentJournal);
 
     return CategoryUtils.createMapFromStringList(subjects);
   }

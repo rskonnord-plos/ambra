@@ -148,19 +148,19 @@ public class CategoryUtils {
   /**
    * Given a list of "/" delimited strings build a structured map
    *
-   * @param strings
+   * @param categories list of Pairs wrapping the category name and article count
    *
    * @return a new treeMap
    */
-  public static CategoryView createMapFromStringList(List<CategoryCount> categories) {
+  public static CategoryView createMapFromStringList(List<Pair<String, Long>> categories) {
     CategoryView root = new CategoryView("ROOT", 0);
 
-    for (CategoryCount category : categories) {
-      if(category.getCategory().charAt(0) == '/') {
+    for (Pair<String, Long> category : categories) {
+      if(category.getFirst().charAt(0) == '/') {
         //Ignore first "/"
-        root = recurseValues(root, category.getCategory().substring(1).split("\\/"), 0, category.getCount());
+        root = recurseValues(root, category.getFirst().substring(1).split("\\/"), 0, category.getSecond());
       } else {
-        root = recurseValues(root, category.getCategory().split("\\/"), 0, category.getCount());
+        root = recurseValues(root, category.getFirst().split("\\/"), 0, category.getSecond());
       }
     }
 

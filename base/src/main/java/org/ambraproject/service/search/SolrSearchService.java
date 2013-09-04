@@ -18,10 +18,10 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.util.CategoryCount;
+import org.ambraproject.service.cache.Cache;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
-import org.ambraproject.service.cache.Cache;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -279,7 +279,7 @@ public class SolrSearchService implements SearchService {
    * @inheritDoc
    */
   @Override
-  public List<CategoryCount> getAllSubjects(String journal) throws ApplicationException {
+  public List<Pair<String, Long>> getAllSubjects(String journal) throws ApplicationException {
     SolrQuery query = createQuery("*:*", 0, 0, false);
 
     // We don't care about results, just facet counts.
@@ -305,10 +305,10 @@ public class SolrSearchService implements SearchService {
 
     QueryResponse queryResponse = getSOLRResponse(query);
     FacetField facet = queryResponse.getFacetField("subject_hierarchy");
-    List<CategoryCount> results = new ArrayList<CategoryCount>(facet.getValues().size());
+    List<Pair<String, Long>> results = new ArrayList<Pair<String, Long>>(facet.getValues().size());
 
     for (FacetField.Count count : facet.getValues()) {
-      results.add(new CategoryCount(count.getName(), count.getCount()));
+      results.add(new Pair<String, Long>(count.getName(), count.getCount()));
     }
 
     return results;

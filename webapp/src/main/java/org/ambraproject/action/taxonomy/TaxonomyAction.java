@@ -13,12 +13,12 @@ package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.taxonomy.TaxonomyService;
-import org.ambraproject.util.CategoryCount;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
