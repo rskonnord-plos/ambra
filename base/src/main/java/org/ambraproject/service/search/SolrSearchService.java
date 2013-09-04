@@ -18,6 +18,7 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.util.CategoryCount;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
 import org.ambraproject.service.cache.Cache;
@@ -275,10 +276,10 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * @enheritDoc
+   * @inheritDoc
    */
   @Override
-  public List<String> getAllSubjects(String journal) throws ApplicationException {
+  public List<CategoryCount> getAllSubjects(String journal) throws ApplicationException {
     SolrQuery query = createQuery("*:*", 0, 0, false);
 
     // We don't care about results, just facet counts.
@@ -304,10 +305,10 @@ public class SolrSearchService implements SearchService {
 
     QueryResponse queryResponse = getSOLRResponse(query);
     FacetField facet = queryResponse.getFacetField("subject_hierarchy");
-    List<String> results = new ArrayList<String>(facet.getValues().size());
+    List<CategoryCount> results = new ArrayList<CategoryCount>(facet.getValues().size());
 
     for (FacetField.Count count : facet.getValues()) {
-      results.add(count.getName());
+      results.add(new CategoryCount(count.getName(), count.getCount()));
     }
 
     return results;

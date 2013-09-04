@@ -25,8 +25,7 @@ import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
 import static org.testng.Assert.assertEquals;
 
 public class CategoryUtilsTest {
@@ -37,41 +36,41 @@ public class CategoryUtilsTest {
     return new Object[][]{
       {
         new ArrayList() {{
-          add("/f");
-          add("/a/b/c");
-          add("/a/b/c/d");
-          add("/g");
-          add("/a/c/e");
-          add("/a/b/c/d/e");
-          add("/e");
-          add("/z");
-          add("/1/2/3");
-          add("/x/y");
+          add(new CategoryCount("/f", 5));
+          add(new CategoryCount("/a/b/c", 6));
+          add(new CategoryCount("/a/b/c/d", 2));
+          add(new CategoryCount("/g", 8));
+          add(new CategoryCount("/a/c/e", 4));
+          add(new CategoryCount("/a/b/c/d/e", 4));
+          add(new CategoryCount("/e", 4));
+          add(new CategoryCount("/z", 17));
+          add(new CategoryCount("/1/2/3", 7));
+          add(new CategoryCount("/x/y", 31));
         }},
-        new CategoryView("ROOT") {{
-          addChild(new CategoryView("a") {{
-            addChild(new CategoryView("b") {{
-              addChild(new CategoryView("c") {{
-                addChild(new CategoryView("d") {{
-                  addChild(new CategoryView("e"));
+        new CategoryView("ROOT", 0) {{
+          addChild(new CategoryView("a", 0) {{
+            addChild(new CategoryView("b", 0) {{
+              addChild(new CategoryView("c", 6) {{
+                addChild(new CategoryView("d", 2) {{
+                  addChild(new CategoryView("e", 4));
                 }});
               }});
             }});
-            addChild(new CategoryView("c") {{
-              addChild(new CategoryView("e"));
+            addChild(new CategoryView("c", 0) {{
+              addChild(new CategoryView("e", 4));
             }});
           }});
-          addChild(new CategoryView("e"));
-          addChild(new CategoryView("g"));
-          addChild(new CategoryView("f"));
-          addChild(new CategoryView("z"));
-          addChild(new CategoryView("1") {{
-            addChild(new CategoryView("2") {{
-              addChild(new CategoryView("3"));
+          addChild(new CategoryView("e", 4));
+          addChild(new CategoryView("g", 8));
+          addChild(new CategoryView("f", 5));
+          addChild(new CategoryView("z", 17));
+          addChild(new CategoryView("1", 0) {{
+            addChild(new CategoryView("2", 0) {{
+              addChild(new CategoryView("3", 7));
             }});
           }});
-          addChild(new CategoryView("x") {{
-            addChild(new CategoryView("y"));
+          addChild(new CategoryView("x", 0) {{
+            addChild(new CategoryView("y", 31));
           }});
         }}
       }
@@ -169,9 +168,9 @@ public class CategoryUtilsTest {
   }
 
   @Test(dataProvider = "makeMap")
-  public void testCreateMap(List<String> before, CategoryView expected) {
-    for(String string : before) {
-      log.debug(string);
+  public void testCreateMap(List<CategoryCount> before, CategoryView expected) {
+    for(CategoryCount subject : before) {
+      log.debug(subject.getCategory());
     }
 
     CategoryView result = CategoryUtils.createMapFromStringList(before);
@@ -217,6 +216,7 @@ public class CategoryUtilsTest {
 
   private void assertEqualRecursive(CategoryView result, CategoryView expected) {
     assertEquals(result.getName(), expected.getName());
+    assertEquals(result.getCount(), expected.getCount());
 
     for(String key : result.getChildren().keySet()) {
       assertEqualRecursive(result.getChild(key), expected.getChild(key));

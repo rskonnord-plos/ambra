@@ -13,6 +13,7 @@ package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.taxonomy.TaxonomyService;
+import org.ambraproject.util.CategoryCount;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
@@ -34,11 +35,13 @@ public class TaxonomyAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(TaxonomyAction.class);
 
   private Map<String, List<String>> topAndSecondLevelCategories;
-  private CategoryView categories;
+  private CategoryView categoryView;
   private TaxonomyService taxonomyService;
   private String root;
   private String journal;
   private String[] filter;
+  private Map<String, SortedSet<String>> categories;
+  private Map<String, Long> counts;
 
   @Override
   public String execute() throws Exception {
@@ -46,7 +49,8 @@ public class TaxonomyAction extends BaseActionSupport {
     topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
 
     //categories defaults to all journals (the categories journal can be set via parameter)
-    categories = taxonomyService.parseCategories(this.journal);
+    categoryView = taxonomyService.parseCategories(this.journal);
+    buildCategoryMap();
 
     return SUCCESS;
   }
@@ -76,12 +80,13 @@ public class TaxonomyAction extends BaseActionSupport {
    * @return A map of categories
    */
   @SuppressWarnings("unchecked")
-  public Map<String, SortedSet<String>> getCategories() {
+  private void buildCategoryMap() {
     //Should probably implement this in the setter if the getter ever starts to get
     //called more then once
 
     if(this.root == null) {
-      return CategoryUtils.getShortTree(categories);
+      categories = CategoryUtils.getShortTree(categoryView);
+      counts = CategoryUtils.getCounts(categoryView);
     }
 
     //Ignore first slash if it exists
@@ -90,16 +95,18 @@ public class TaxonomyAction extends BaseActionSupport {
     }
 
     if(this.root.trim().length() == 0) {
-      return CategoryUtils.getShortTree(categories);
+      categories = CategoryUtils.getShortTree(categoryView);
+      counts = CategoryUtils.getCounts(categoryView);
     } else {
       String[] levels = this.root.split("/");
-      CategoryView res = categories;
+      CategoryView res = categoryView;
 
       for(String level : levels) {
         res = res.getChild(level);
       }
 
-      return CategoryUtils.getShortTree(res);
+      categories = CategoryUtils.getShortTree(res);
+      counts = CategoryUtils.getCounts(res);
     }
   }
 
@@ -120,7 +127,7 @@ public class TaxonomyAction extends BaseActionSupport {
       }
 
       if(getActionErrors().size() == 0) {
-        CategoryView cv = CategoryUtils.filterMap(categories, this.filter);
+        CategoryView cv = CategoryUtils.filterMap(categoryView, this.filter);
         return cv;
       }
     }
@@ -147,5 +154,13 @@ public class TaxonomyAction extends BaseActionSupport {
    */
   public void setJournal(String journal) {
     this.journal = journal;
+  }
+
+  public Map<String, SortedSet<String>> getCategories() {
+    return categories;
+  }
+
+  public Map<String, Long> getCounts() {
+    return counts;
   }
 }

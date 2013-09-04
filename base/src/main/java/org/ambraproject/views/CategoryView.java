@@ -21,12 +21,19 @@ public class CategoryView {
   private Map<String, CategoryView> parents;
   private Map<String, CategoryView> children;
   private final String name;
+  private long count;
 
   public CategoryView(String name) {
     this.name = name;
+    this.count = -1;
 
     parents = new ConcurrentSkipListMap<String, CategoryView>();
     children = new ConcurrentSkipListMap<String, CategoryView>();
+  }
+
+  public CategoryView(String name, long count) {
+    this(name);
+    this.count = count;
   }
 
   public Map<String, CategoryView> getParents() {
@@ -39,6 +46,14 @@ public class CategoryView {
 
   public String getName() {
     return name;
+  }
+
+  /**
+   * @return the number of articles that fall within this category, or -1 if that info
+   *     is not available
+   */
+  public long getCount() {
+    return count;
   }
 
   @Override

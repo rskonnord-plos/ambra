@@ -11,10 +11,10 @@
 
 package org.ambraproject.util;
 
-import org.ambraproject.ApplicationException;
 import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +67,23 @@ public class CategoryUtils {
       results.put(key, sortedSet);
     }
 
+    return results;
+  }
+
+  /**
+   * Returns information about the number of articles that fall into particular
+   * categories.
+   *
+   * @param categoryView the root category
+   * @return map of category to article count.  Included keys will be the root category
+   *     and all of its first-level children.
+   */
+  public static Map<String, Long> getCounts(CategoryView categoryView) {
+    Map<String, Long> results = new HashMap<String, Long>();
+    results.put(categoryView.getName(), categoryView.getCount());
+    for (CategoryView child : categoryView.getChildren().values()) {
+      results.put(child.getName(), child.getCount());
+    }
     return results;
   }
 
@@ -135,31 +152,32 @@ public class CategoryUtils {
    *
    * @return a new treeMap
    */
-  public static CategoryView createMapFromStringList(List<String> strings) {
-    CategoryView root = new CategoryView("ROOT");
+  public static CategoryView createMapFromStringList(List<CategoryCount> categories) {
+    CategoryView root = new CategoryView("ROOT", 0);
 
-    for (String string : strings) {
-      if(string.charAt(0) == '/') {
+    for (CategoryCount category : categories) {
+      if(category.getCategory().charAt(0) == '/') {
         //Ignore first "/"
-        root = recurseValues(root, string.substring(1).split("\\/"), 0);
+        root = recurseValues(root, category.getCategory().substring(1).split("\\/"), 0, category.getCount());
       } else {
-        root = recurseValues(root, string.split("\\/"), 0);
+        root = recurseValues(root, category.getCategory().split("\\/"), 0, category.getCount());
       }
     }
 
     return root;
   }
 
-  private static CategoryView recurseValues(CategoryView category, String categories[], int index) {
+  private static CategoryView recurseValues(CategoryView category, String categories[], int index, long count) {
     CategoryView rootCategory = category.getChildren().get(categories[index]);
 
     if (rootCategory == null) {
-      rootCategory = new CategoryView(categories[index]);
+      long leafCount = index == categories.length - 1 ? count : 0;
+      rootCategory = new CategoryView(categories[index], leafCount);
       category.addChild(rootCategory);
     }
 
     if ((index + 1) < categories.length) { // path end
-      recurseValues(rootCategory, categories, index + 1);
+      recurseValues(rootCategory, categories, index + 1, count);
     }
 
     return category;

@@ -19,6 +19,7 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.util.CategoryCount;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
 
@@ -45,10 +46,10 @@ public interface SearchService {
    * for the given journal.
    *
    * @param journal name of the journal in question
-   * @return List of category strings, slash-delimited to indicate hierarchy.  Example:
-   *     "/Biology and life sciences/Plant science/Plant anatomy/Flowers"
+   * @return List of CategoryCount objects.  These wrap the category name and the count of
+   *     articles in the particular journal that fall into that category.
    */
-  List<String> getAllSubjects(String journal) throws ApplicationException;
+  List<CategoryCount> getAllSubjects(String journal) throws ApplicationException;
 
   /**
    * Returns articles list that are published between the last search time and the current search time for saved search
