@@ -200,13 +200,8 @@ function onReadyMainContainer() {
 // and then everytime when the tab content loads via Pjax.
 
 function initMainContainer() {
-  var $nav_article = $('#nav-article');
-  if ($nav_article.length) {
-    items_l = $nav_article.find('li').length
-    $nav_article.addClass('items-' + items_l);
-  }
-
   var $figure_thmbs = $('#figure-thmbs');
+
   if ($figure_thmbs.length) {
     $lnks = $figure_thmbs.find('.item a');
     $wrap = $figure_thmbs.find('div.wrapper');
