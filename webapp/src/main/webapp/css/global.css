@@ -1716,7 +1716,7 @@ html:not(.js) .btn-reveal:hover .content {
 
 #subject-area-sidebar-block-help {
   width: 375px;
-  height: 100px;
+  height: 68px;
   background-color: #3c63af;
   border-radius: 5px;
   position: absolute;
@@ -1759,7 +1759,7 @@ html:not(.js) .btn-reveal:hover .content {
 }
 
 #subject-area-sidebar-list li {
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   cursor: pointer;
   width: 160px;
   display: inline-block;
