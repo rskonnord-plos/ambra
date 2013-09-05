@@ -15,9 +15,12 @@ import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -155,31 +158,107 @@ public class CategoryUtils {
   public static CategoryView createMapFromStringList(List<Pair<String, Long>> categories) {
     CategoryView root = new CategoryView("ROOT", 0);
 
+    // Since there can be multiple paths to the same child, we don't want to create the same
+    // child more than once.  Hence the need for this map.
+    Map<String, CategoryView> createdCategories = new HashMap<String, CategoryView>();
     for (Pair<String, Long> category : categories) {
       if(category.getFirst().charAt(0) == '/') {
         //Ignore first "/"
-        root = recurseValues(root, category.getFirst().substring(1).split("\\/"), 0, category.getSecond());
+        root = recurseValues(root, category.getFirst().substring(1).split("\\/"), 0, category.getSecond(),
+            createdCategories);
       } else {
-        root = recurseValues(root, category.getFirst().split("\\/"), 0, category.getSecond());
+        root = recurseValues(root, category.getFirst().split("\\/"), 0, category.getSecond(), createdCategories);
       }
+    }
+
+    incrementAncestorCounts(root);
+    return root;
+  }
+
+  private static CategoryView recurseValues(CategoryView root, String categories[], int index,
+      long lastChildCount, Map<String, CategoryView> created) {
+    CategoryView child = root.getChildren().get(categories[index]);
+
+    if (child == null) {
+      long count = index == categories.length - 1 ? lastChildCount : 0;
+      child = created.get(categories[index]);
+      if (child == null) {
+        child = new CategoryView(categories[index], count);
+        created.put(categories[index], child);
+      }
+      root.addChild(child);
+    }
+
+    if ((index + 1) < categories.length) { // path end
+      recurseValues(child, categories, index + 1, lastChildCount, created);
     }
 
     return root;
   }
 
-  private static CategoryView recurseValues(CategoryView category, String categories[], int index, long count) {
-    CategoryView rootCategory = category.getChildren().get(categories[index]);
+  /**
+   * Updates the article counts for a category tree/DAG.  Before this method is called,
+   * counts for each category will be as they are returned from solr: *only* articles
+   * that are tagged with that exact category will be included.  But in the UI, we want
+   * the article count for a category to also include the counts of all subcategories,
+   * recursively.  That's what this method does.
+   *
+   * @param root the root of the category hierarchy we are interested in
+   */
+  private static void incrementAncestorCounts(CategoryView root) {
+    Map<CategoryView, Set<CategoryView>> nodesToDescendants = new HashMap<CategoryView, Set<CategoryView>>();
+    calculateDescendants(root, nodesToDescendants);
+    sumCountsRecursively(root, nodesToDescendants);
+  }
 
-    if (rootCategory == null) {
-      long leafCount = index == categories.length - 1 ? count : 0;
-      rootCategory = new CategoryView(categories[index], leafCount);
-      category.addChild(rootCategory);
+  /**
+   * Populates a map from each node in the category hierarchy to the set of all descendants
+   * of that node.  In other words, conceptually, we decorate each node with the set of all
+   * of its descendants.
+   *
+   * @param root root of the category hierarchy
+   * @param nodesToDescendants map that will be populated
+   * @return set of descendants calculated for the current root
+   */
+  private static Set<CategoryView> calculateDescendants(CategoryView root,
+      Map<CategoryView, Set<CategoryView>> nodesToDescendants) {
+    Set<CategoryView> descendants = nodesToDescendants.get(root);
+    if (descendants == null) {
+      descendants = new HashSet<CategoryView>();
     }
-
-    if ((index + 1) < categories.length) { // path end
-      recurseValues(rootCategory, categories, index + 1, count);
+    for (CategoryView child : root.getChildren().values()) {
+      if (child.getChildren().isEmpty()) {
+        nodesToDescendants.put(child, Collections.EMPTY_SET);
+      } else {
+        descendants.addAll(calculateDescendants(child, nodesToDescendants));
+      }
+      descendants.add(child);
     }
+    nodesToDescendants.put(root, descendants);
+    return descendants;
+  }
 
-    return category;
+  /**
+   * Increments the article count for each node in a category hierarchy, based on the
+   * set of descendants in nodesToDescendants.
+   *
+   * @param root node we are currently processing
+   * @param nodesToDescendants map, populated by calculateDescendants, that maps a node
+   *     to all of its descendants
+   */
+  private static void sumCountsRecursively(CategoryView root,
+      Map<CategoryView, Set<CategoryView>> nodesToDescendants) {
+
+    // Since there can be multiple paths to a child, we run the risk of processing it
+    // multiple times unless we remove it from nodesToDescendants.
+    Set<CategoryView> descendants = nodesToDescendants.remove(root);
+    if (descendants != null) {
+      for (CategoryView descendant : descendants) {
+        root.incrementCount(descendant.getCount());
+      }
+    }
+    for (CategoryView child : root.getChildren().values()) {
+      sumCountsRecursively(child, nodesToDescendants);
+    }
   }
 }

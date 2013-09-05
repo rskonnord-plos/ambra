@@ -36,6 +36,10 @@ public class CategoryView {
     this.count = count;
   }
 
+  public void incrementCount(long increment) {
+    count += increment;
+  }
+
   public Map<String, CategoryView> getParents() {
     return parents;
   }
@@ -77,5 +81,18 @@ public class CategoryView {
   public void addChild(CategoryView categoryView) {
     children.put(categoryView.getName(), categoryView);
     categoryView.parents.put(this.name, this);
+  }
+
+  @Override
+  public boolean equals(Object that) {
+    if (that == null || !(that instanceof CategoryView)) {
+      return false;
+    }
+    return name.equals(((CategoryView) (that)).name);
+  }
+
+  @Override
+  public int hashCode() {
+    return name.hashCode();
   }
 }

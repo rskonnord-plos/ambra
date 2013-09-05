@@ -32,9 +32,83 @@ import static org.testng.Assert.assertEquals;
 public class CategoryUtilsTest {
   private static Logger log = LoggerFactory.getLogger(CategoryUtilsTest.class);
 
+  private CategoryView buildComplicatedExpectedTree() {
+
+    // If you're having trouble debugging this I strongly suggest you draw out
+    // the tree/DAG on paper!
+
+    CategoryView root = new CategoryView("ROOT", 80);
+    CategoryView a = new CategoryView("a", 12);
+    CategoryView b = new CategoryView("b", 12);
+    CategoryView c = new CategoryView("c", 12);
+    CategoryView d = new CategoryView("d", 6);
+    CategoryView e = new CategoryView("e", 4);
+
+    root.addChild(a);
+    root.addChild(e);
+    root.addChild(new CategoryView("f", 5));
+    root.addChild(new CategoryView("g", 8));
+    root.addChild(new CategoryView("z", 17));
+    a.addChild(b);
+    b.addChild(c);
+    a.addChild(c);
+    c.addChild(d);
+    d.addChild(e);
+    c.addChild(e);
+
+    root.addChild(new CategoryView("1", 7) {{
+      addChild(new CategoryView("2", 7) {{
+        addChild(new CategoryView("3", 7));
+      }});
+    }});
+    root.addChild(new CategoryView("x", 31) {{
+      addChild(new CategoryView("y", 31));
+    }});
+
+    return root;
+  }
+
   @DataProvider(name = "makeMap")
   public Object[][] createMap() {
+    final CategoryView c = new CategoryView("c", 1);
     return new Object[][]{
+
+      // Simple case that's a plain tree (no nodes have multiple parents).
+      {
+        new ArrayList() {{
+          add(new Pair<String, Long>("/a", 1L));
+          add(new Pair<String, Long>("/b", 2L));
+          add(new Pair<String, Long>("/b/d", 4L));
+          add(new Pair<String, Long>("/c", 3L));
+        }},
+        new CategoryView("ROOT", 10) {{
+          addChild(new CategoryView("a", 1));
+          addChild(new CategoryView("b", 6) {{
+            addChild(new CategoryView("d", 4));
+          }});
+          addChild(new CategoryView("c", 3));
+        }}
+      },
+
+      // Simple case where there is one node with two parents.
+      {
+        new ArrayList() {{
+          add(new Pair<String, Long>("/a", 3L));
+          add(new Pair<String, Long>("/a/b", 2L));
+          add(new Pair<String, Long>("/a/b/c", 1L));
+          add(new Pair<String, Long>("/a/c", 1L));
+        }},
+        new CategoryView("ROOT", 6) {{
+          addChild(new CategoryView("a", 6) {{
+            addChild(new CategoryView("b", 3) {{
+              addChild(c);
+            }});
+            addChild(c);
+          }});
+        }}
+      },
+
+      // Complicated case.
       {
         new ArrayList() {{
           add(new Pair<String, Long>("/f", 5L));
@@ -48,32 +122,7 @@ public class CategoryUtilsTest {
           add(new Pair<String, Long>("/1/2/3", 7L));
           add(new Pair<String, Long>("/x/y", 31L));
         }},
-        new CategoryView("ROOT", 0) {{
-          addChild(new CategoryView("a", 0) {{
-            addChild(new CategoryView("b", 0) {{
-              addChild(new CategoryView("c", 6) {{
-                addChild(new CategoryView("d", 2) {{
-                  addChild(new CategoryView("e", 4));
-                }});
-              }});
-            }});
-            addChild(new CategoryView("c", 0) {{
-              addChild(new CategoryView("e", 4));
-            }});
-          }});
-          addChild(new CategoryView("e", 4));
-          addChild(new CategoryView("g", 8));
-          addChild(new CategoryView("f", 5));
-          addChild(new CategoryView("z", 17));
-          addChild(new CategoryView("1", 0) {{
-            addChild(new CategoryView("2", 0) {{
-              addChild(new CategoryView("3", 7));
-            }});
-          }});
-          addChild(new CategoryView("x", 0) {{
-            addChild(new CategoryView("y", 31));
-          }});
-        }}
+        buildComplicatedExpectedTree()
       }
     };
   }
@@ -177,13 +226,13 @@ public class CategoryUtilsTest {
     CategoryView result = CategoryUtils.createMapFromStringList(before);
 
     if(log.isDebugEnabled()) {
-      log.debug("Result Map:");
-      printMap(result, 0);
+      log.debug("Expected Map:");
+      printMap(expected, 0);
     }
 
     if(log.isDebugEnabled()) {
-      log.debug("Expected Map:");
-      printMap(expected, 0);
+      log.debug("\nResult Map:");
+      printMap(result, 0);
     }
 
     //Compare both ways to get around testNG bug
@@ -216,8 +265,9 @@ public class CategoryUtilsTest {
   }
 
   private void assertEqualRecursive(CategoryView result, CategoryView expected) {
+    assertEquals(result, expected);
     assertEquals(result.getName(), expected.getName());
-    assertEquals(result.getCount(), expected.getCount());
+    assertEquals(result.getCount(), expected.getCount(), "Node " + expected.getName());
 
     for(String key : result.getChildren().keySet()) {
       assertEqualRecursive(result.getChild(key), expected.getChild(key));
@@ -226,13 +276,10 @@ public class CategoryUtilsTest {
 
   private void printMap(CategoryView view, int depth) {
     String spacer = StringUtils.repeat("-", depth);
-
-    for(String key : view.getChildren().keySet()) {
-      log.debug("{}Key: {}, Size: {}", new Object[] { spacer, key, view.getChild(key).getChildren().size() });
-
-      if(view.getChild(key).getChildren().size() > 0) {
-        printMap(view.getChild(key), depth + 1);
-      }
+    log.debug("{}Key: {}, Value: {}, Children: {}",
+        new Object[] { spacer, view.getName(), view.getCount(), view.getChildren().size() });
+    for (CategoryView child : view.getChildren().values()) {
+      printMap(child, depth + 1);
     }
   }
 }
