@@ -1765,8 +1765,11 @@ html:not(.js) .btn-reveal:hover .content {
   display: inline-block;
 }
 
-#subject-area-sidebar-list li:not(.flagged):hover
-{
+#subject-area-sidebar-list li a {
+  color: inherit;
+}
+
+#subject-area-sidebar-list li div.flagText:hover {
   color: #FFF;
 }
 
@@ -1778,7 +1781,7 @@ html:not(.js) .btn-reveal:hover .content {
   background-position: 0 0;
 }
 
-#subject-area-sidebar-list li:not(.flagged):hover div.flagImage {
+#subject-area-sidebar-list div.flagImage:hover {
   background-position: 0 -19px;
 }
 
