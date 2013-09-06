@@ -132,36 +132,6 @@ $(function () {
 
 });
 
-
-// TWEETS EXPAND/COLLAPSE
-$(function () {
-
-  function handleExpandCollapseClick(event) {
-    event.preventDefault();
-
-    var expand = $(this).hasClass('expand');
-
-    var config = {
-      'height': ((expand) ? '795px' : '387px'),
-      'remove': ((expand) ? 'expand' : 'collapse'),
-      'add': ((expand) ? 'collapse' : 'expand'),
-      'text': ((expand) ? 'Collapse' : 'Expand')
-    };
-
-    // animate the tweet block
-    $('.tweets').animate({
-      height: config.height
-    }, 500, function () {
-      $('.tweets a.toggle').removeClass(config.remove).addClass(config.add);
-      $('.tweets a.toggle span.text').text(config.text);
-    });
-  }
-
-  $('.tweets a.toggle').on('click', handleExpandCollapseClick);
-
-});
-
-
 // STICKY FOOTER
 $(function () {
 
