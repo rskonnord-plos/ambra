@@ -612,6 +612,17 @@
       </result>
     </action>
 
+    <action name="figureTableList" class="org.ambraproject.action.article.SlideshowAction" method="getFigureTables">
+      <result name="success" type="json">
+        <param name="includeProperties">
+          secondaryObjects\[\d+\]\.doi,
+          secondaryObjects\[\d+\]\.title
+        </param>
+      </result>
+      <result name="input" type="json"/>
+      <result name="error" type="json"/>
+    </action>
+
     <action name="fetchArticleTwitter" class="org.ambraproject.action.article.FetchArticleAction" method="fetchArticleInfo">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/article/article_twitter.ftl</param>

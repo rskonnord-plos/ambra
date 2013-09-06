@@ -1716,7 +1716,7 @@ html:not(.js) .btn-reveal:hover .content {
 
 #subject-area-sidebar-block-help {
   width: 375px;
-  height: 100px;
+  height: 68px;
   background-color: #3c63af;
   border-radius: 5px;
   position: absolute;
@@ -1759,14 +1759,17 @@ html:not(.js) .btn-reveal:hover .content {
 }
 
 #subject-area-sidebar-list li {
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   cursor: pointer;
   width: 160px;
   display: inline-block;
 }
 
-#subject-area-sidebar-list li:not(.flagged):hover
-{
+#subject-area-sidebar-list li a {
+  color: inherit;
+}
+
+#subject-area-sidebar-list li div.flagText:hover {
   color: #FFF;
 }
 
@@ -1778,7 +1781,7 @@ html:not(.js) .btn-reveal:hover .content {
   background-position: 0 0;
 }
 
-#subject-area-sidebar-list li:not(.flagged):hover div.flagImage {
+#subject-area-sidebar-list div.flagImage:hover {
   background-position: 0 -19px;
 }
 
@@ -5268,6 +5271,10 @@ div.metrics_tile_footer_no_link {
 
 div.metrics_tile:hover .metrics_tile_rating_footer {
   border-top: 1px solid #90ABBD;
+}
+
+div#article-metrics div#views {
+  margin-top: 40px;
 }
 
 div.tileTooltip {

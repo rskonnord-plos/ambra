@@ -86,6 +86,8 @@ public class BrowseAction extends BaseSearchAction {
       setFilterSubjects(new String[] { this.category } );
     } else {
       category = null;
+      parents = new String[] {};
+      children = categoryView.getChildren().keySet().toArray(new String[categoryView.getChildren().keySet().size()]);
     }
 
     resultsSinglePage = this.searchService.advancedSearch(getSearchParameters());

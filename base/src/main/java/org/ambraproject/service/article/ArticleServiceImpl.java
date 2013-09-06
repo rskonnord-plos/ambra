@@ -60,6 +60,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
+import java.math.BigInteger;
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -841,7 +842,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     if(authID != null && authID.length() > 0) {
       return hibernateTemplate.execute(new HibernateCallback<List<Long>>() {
         public List<Long> doInHibernate(Session session) throws HibernateException, SQLException {
-          List<Object[]> categories = session.createSQLQuery(
+          List<BigInteger> categories = session.createSQLQuery(
             "select acf.categoryID from articleCategoryFlagged acf " +
               "join userProfile up on up.userProfileID = acf.userProfileID " +
               "where up.authId = :authID and acf.articleID = :articleID")
@@ -851,8 +852,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
 
           List<Long> results = new ArrayList<Long>();
 
-          for(Object[] row : categories) {
-            results.add((Long)row[0]);
+          for(BigInteger row : categories) {
+            results.add(row.longValue());
           }
 
           return results;

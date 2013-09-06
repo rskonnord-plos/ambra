@@ -1123,14 +1123,86 @@ $.fn.alm = function () {
           } // end if (isGraphDisplayed)
 
           $usage.append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
+
+          this.addFigshareTile(response[0]);
+
           $usage.show("blind", 500);
         };
 
         doi = this.validateDOI(doi);
-        var request = doi + '&source=pmc,counter,relativemetric&info=event';
+        var request = doi + '&source=pmc,counter,relativemetric,figshare&info=event';
         this.getData(request, jQuery.proxy(success, this), almError);
       }
     }
+  };
+
+  this.addFigshareTile = function(response) {
+
+    var i = 0, source;
+
+    for (i = 0; i < response.sources.length; i++) {
+      source = response.sources[i];
+      if (source.name.toLowerCase() == "figshare") {
+        if (source.metrics.total > 0) {
+          var tileName = source.name;
+          var tile = this.createMetricsTileNoLink(tileName,
+              "/images/logo-" + tileName + ".png",
+              source.metrics.total);
+
+          $('#views').append(tile);
+        }
+        break;
+      }
+    }
+
+    $.ajax({
+      url: '/article/figureTableList.action?uri=' +  'info:doi/' + response.doi,
+      dataFilter: function (data, type) {
+        return data.replace(/(^\/\*|\*\/$)/g, '');
+      },
+      dataType: 'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+
+        var toolTip = $('<div class=\"tileTooltip\"></div>'), toolTipTable = $('<table class=\"tile_mini\"></table>'),
+            item, totalStat, key, tooltips = {};
+
+        // build tooltip
+        for (i = 0; i < source.events.items.length; i++) {
+          item = source.events.items[i], totalStat = 0, key = "";
+
+          if (item.doi.length == 1) {
+            key = item.doi[0].replace("http://dx.doi.org/", "");
+          } else if (item.doi.length > 1) {
+            key = "SI";
+          }
+
+          totalStat = item.stats.downloads + item.stats.page_views;
+          tooltips[key] = "<td class=\"data1\">" + totalStat + "</td>";
+        }
+
+        for (i = 0; i < data.secondaryObjects.length; i++) {
+          key = data.secondaryObjects[i].doi.replace("info:doi/", "");
+          toolTipTable.append("<tr><td>" + data.secondaryObjects[i].title + "</td>" + tooltips[key] + "</tr>");
+        }
+
+        if (tooltips["SI"]) {
+          toolTipTable.append("<tr><td>Supporting Info files</td>" + tooltips["SI"] + "</tr>");
+        }
+
+        $("#figshareImageOnArticleMetricsTab").tooltip({
+          delay: 250,
+          fade: 250,
+          track: true,
+          showURL: false,
+          bodyHandler: function () {
+            return toolTip.append(toolTipTable);
+          }
+        });
+      }
+    });
   };
 
   this.makeSignPostLI = function (text, value, description, link) {

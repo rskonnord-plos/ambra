@@ -98,7 +98,7 @@
         contextElement varchar(255),
         contentType varchar(255),
         title longtext,
-        description varchar(255),
+        description longtext,
         size bigint,
         articleID bigint,
         sortOrder integer,
