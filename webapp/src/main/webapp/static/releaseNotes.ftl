@@ -35,6 +35,13 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.7.9</h2>
+  <p>Released September 10, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.9</h3>
+  <ul>
+      <li>Added new ALM Source, figshare, to the Article Metrics tab.</li>
+  </ul>
+
   <h2>Ambra 2.7.7</h2>
   <p>Released August 27, 2013</p>
   <h3>Features Implemented in Ambra 2.7.7</h3>
