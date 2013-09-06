@@ -118,13 +118,13 @@ function onReadyDocument() {
         console.log(errorThrown);
       },
       success:function (data) {
-        $(target).unbind('click', handleSubjectSideBarClick);
+        $(event.target).unbind('click', handleSubjectSideBarClick);
         $(target).addClass("flagged");
       }
     });
   }
 
-  $('#subject-area-sidebar-list li').on('click', handleSubjectSideBarClick);
+  $('#subject-area-sidebar-list li div.flagImage').on('click', handleSubjectSideBarClick);
 
   (function () {
     this.hoverEnhanced({});
