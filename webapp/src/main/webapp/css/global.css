@@ -5273,6 +5273,10 @@ div.metrics_tile:hover .metrics_tile_rating_footer {
   border-top: 1px solid #90ABBD;
 }
 
+div#article-metrics div#views {
+  margin-top: 40px;
+}
+
 div.tileTooltip {
   border: 1px solid #ccc;
   background-color: #e5e4e4;

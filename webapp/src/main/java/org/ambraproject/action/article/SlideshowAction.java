@@ -115,6 +115,25 @@ public class SlideshowAction extends BaseActionSupport {
     return SUCCESS;
   }
 
+  /**
+   * Tet a list of figure/table doi and its title
+   * This is used in tooltip for the figshare tile in the article metrics tab.
+   *
+   * @return list of figure/table doi and title
+   * @throws Exception
+   */
+  public String getFigureTables() throws Exception {
+
+    articleAssetWrapper = articleAssetService.listFiguresTables(uri, getAuthId());
+
+    if(articleAssetWrapper.length == 0) {
+      log.debug("There are no objects for URI: {}", uri);
+      return INPUT;
+    }
+
+    return SUCCESS;
+  }
+
   @RequiredStringValidator(message = "Object URI is required.")
   public String getUri() {
     return uri;
