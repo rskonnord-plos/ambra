@@ -171,7 +171,8 @@ public class CategoryUtils {
       }
     }
 
-    incrementAncestorCounts(root);
+    // See comment below.
+//    incrementAncestorCounts(root);
     return root;
   }
 
@@ -195,6 +196,14 @@ public class CategoryUtils {
 
     return root;
   }
+
+  //
+  // Note: the below three methods are not currently called.  The idea with them was to "roll up"
+  // article counts recursively so that each category's count includes the counts of all child
+  // categories.  However, this is not the way solr search works--when you search for a term,
+  // you only get direct children, not all descendants.  I'm leaving this code here because it
+  // was rather a pain to write, and we might use it someday.
+  //
 
   /**
    * Updates the article counts for a category tree/DAG.  Before this method is called,

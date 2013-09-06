@@ -37,11 +37,11 @@ public class CategoryUtilsTest {
     // If you're having trouble debugging this I strongly suggest you draw out
     // the tree/DAG on paper!
 
-    CategoryView root = new CategoryView("ROOT", 80);
-    CategoryView a = new CategoryView("a", 12);
-    CategoryView b = new CategoryView("b", 12);
-    CategoryView c = new CategoryView("c", 12);
-    CategoryView d = new CategoryView("d", 6);
+    CategoryView root = new CategoryView("ROOT", 0);
+    CategoryView a = new CategoryView("a", 0);
+    CategoryView b = new CategoryView("b", 0);
+    CategoryView c = new CategoryView("c", 6);
+    CategoryView d = new CategoryView("d", 2);
     CategoryView e = new CategoryView("e", 4);
 
     root.addChild(a);
@@ -56,12 +56,12 @@ public class CategoryUtilsTest {
     d.addChild(e);
     c.addChild(e);
 
-    root.addChild(new CategoryView("1", 7) {{
-      addChild(new CategoryView("2", 7) {{
+    root.addChild(new CategoryView("1", 0) {{
+      addChild(new CategoryView("2", 0) {{
         addChild(new CategoryView("3", 7));
       }});
     }});
-    root.addChild(new CategoryView("x", 31) {{
+    root.addChild(new CategoryView("x", 0) {{
       addChild(new CategoryView("y", 31));
     }});
 
@@ -81,9 +81,9 @@ public class CategoryUtilsTest {
           add(new Pair<String, Long>("/b/d", 4L));
           add(new Pair<String, Long>("/c", 3L));
         }},
-        new CategoryView("ROOT", 10) {{
+        new CategoryView("ROOT", 0) {{
           addChild(new CategoryView("a", 1));
-          addChild(new CategoryView("b", 6) {{
+          addChild(new CategoryView("b", 2) {{
             addChild(new CategoryView("d", 4));
           }});
           addChild(new CategoryView("c", 3));
@@ -98,9 +98,9 @@ public class CategoryUtilsTest {
           add(new Pair<String, Long>("/a/b/c", 1L));
           add(new Pair<String, Long>("/a/c", 1L));
         }},
-        new CategoryView("ROOT", 6) {{
-          addChild(new CategoryView("a", 6) {{
-            addChild(new CategoryView("b", 3) {{
+        new CategoryView("ROOT", 0) {{
+          addChild(new CategoryView("a", 3) {{
+            addChild(new CategoryView("b", 2) {{
               addChild(c);
             }});
             addChild(c);
