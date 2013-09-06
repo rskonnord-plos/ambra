@@ -614,7 +614,7 @@
     // console.log("after: all_terms = ", all_terms);
 
     // return an encoded version of the URL
-    return API_URL + encodeURIComponent(all_terms.join("/"));
+    return API_URL + encodeURIComponent(all_terms.join("/") + "&journal=" + $('meta[name=currentJournal]').attr("content"));
   }
 
   /**
