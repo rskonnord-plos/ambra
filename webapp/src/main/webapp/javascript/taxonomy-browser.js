@@ -68,6 +68,9 @@
     // "parent term", "child term", "grandchild term", "great-grandchild term"
   ];
 
+  // Maps subject terms to article count for display in the menus
+  var term_counts = {};
+
   // holds the main element of the taxonomy browser, assigned in initialize()
   var $el = null;
 
@@ -182,7 +185,8 @@
         return {
           'name': term,
           'hasChild': (term_cache[term].length > 0),
-          'link': buildSubjectUrl(term)
+          'link': buildSubjectUrl(term),
+          'count': term_counts[term]
         };
       });
 
@@ -191,11 +195,23 @@
       return data;
     }
 
+    // For the root of the category hierarchy, we have to add the child terms together.
+    // In all other levels this is directly available.
+    if (term === '/') {
+      var view_all_total = 0;
+      $.each(child_terms, function(i, child_term) {
+        view_all_total += term_counts[child_term];
+      });
+    } else {
+      var view_all_total = term_counts[term];
+    }
+
     // create the column markup
     var markup = buildColumnMarkup({
       items: createDataObject(child_terms),
       level: term_stack.length, // level is 1-based, array length is 0-based
-      view_all_link: buildSubjectUrl(term)
+      view_all_link: buildSubjectUrl(term),
+      view_all_total: view_all_total
     });
 
     // insert the markup into the doc
@@ -543,7 +559,7 @@
       return [
         '<li>',
         '<a href="' + item.link + '"' + (item.hasChild ? '' : ' class="no-children"') + ' data-level="' + data.level + '">',
-        item.name,
+        item.name + (item.hasChild ? '' : ' (' + item.count + ')'),
         '</a>',
         '</li>'
       ].join("\n");
@@ -553,7 +569,7 @@
       '<div class="level" data-level="' + data.level + '">',
       '<div class="level-scroll">',
       '<ul>',
-      '<li><a href="' + data.view_all_link + '" class="no-children">View All Articles</a></li>',
+      '<li><a href="' + data.view_all_link + '" class="no-children">View All Articles (' + data.view_all_total + ')</a></li>',
       terms.join("\n"),
       '</ul>',
       '</div>',
@@ -662,6 +678,10 @@
           term_cache[term] = [];
         }
         return term;
+      });
+
+      $.each(data.counts, function(k, v) {
+        term_counts[k] = v;
       });
 
       // add the (sorted) child_terms for this parent to the cache
