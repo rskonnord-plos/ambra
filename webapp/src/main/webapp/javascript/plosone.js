@@ -28,7 +28,7 @@ $(function () {
   }
 
   // add the grayscale image
-  $('.article-block img').filterize();
+  $('.article-block > a > img').filterize();
 
   // for each of the tabs, fix the article blocks within them
   $('.articles-list').each(function () {
@@ -63,16 +63,16 @@ $(function () {
     // every 3rd element needs special class to remove right margin for layout purposes
     content.filter('.article-block:nth-child(3n)').addClass('article-block-last');
 
-    // add grayscale image
-    // FIXME: this may need to be called after the content is appended to the 
-    // DOM. need to verify loading image works as expected.
-    content.filter('.article-block img').filterize();
-
     // hide the loading spinner
     $('.articles-list .loader').remove();
 
     // append new items to the articles-list div
     el.closest('.articles-list').append(content);
+
+    // add the grayscale image
+    // use a specific selector so that it targets images that have not been 
+    // processed yet.
+    $('.article-block > a > img').filterize();
 
     // remove the current more button, as the new button should be in the ajax
     // call with the new url
@@ -93,7 +93,7 @@ $(function () {
     // display animation that shows content is loading
     var loader = $('<div/>').attr('class', 'loader')
       .append($('<img/>').attr('src', '../images/loading-spinner.gif'))
-      .insertBefore('.articles-list:not(.offscreen) .pagination');
+      .insertBefore(more_link.closest('.pagination'));
 
     // load data via xhr
     $.ajax({
