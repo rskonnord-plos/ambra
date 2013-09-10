@@ -41,11 +41,11 @@ $(function () {
     // 1) twitter and ads are to the right here
     $blocks.eq(2).addClass('clear');
     $blocks.eq(4).addClass('clear');
-    //
+
     // 2) remove the right margin so they fit into layout 3 across
-    $blocks.eq(6).addClass('article-block-last');
-    $blocks.eq(9).addClass('article-block-last');
-    $blocks.eq(12).addClass('article-block-last');
+    for(var a = 6; a < $blocks.size(); a = a + 3) {
+      $blocks.eq(a).addClass('article-block-last');
+    }
   });
 
 });
