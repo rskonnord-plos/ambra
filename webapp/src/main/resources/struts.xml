@@ -534,17 +534,17 @@
 
     <action name="lightbox" class="org.ambraproject.action.article.SlideshowAction">
       <result name="success" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
+        <param name="excludeProperties">advisors, callbacks, annotations</param>
       </result>
       <result name="error" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
+        <param name="excludeProperties">advisors, callbacks, annotations</param>
       </result>
       <result name="input" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
+        <param name="excludeProperties">advisors, callbacks, annotations</param>
       </result>
     </action>
 
-    <action name="figureTableList" class="org.ambraproject.action.article.SlideshowAction" method="getFigureTables">
+    <action name="figureTableList" class="org.ambraproject.action.article.SlideshowAction" method="fetchFigureTables">
       <result name="success" type="json">
         <param name="includeProperties">
           secondaryObjects\[\d+\]\.doi,
