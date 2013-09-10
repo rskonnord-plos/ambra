@@ -361,19 +361,19 @@
   function handleMousewheel(event, delta, deltaX, deltaY) {
     event.preventDefault();
 
-    // normalize for acceleration, if present. only allow for +/-1 delta, 
+    // normalize for acceleration, if present. only allow for +/-1 delta,
     // forcing a constant scroll speed.
-    // 
-    // the delta is divided by a high-ish number that, usually puts it  
-    // between the bounds of -1 and 1 so we can floor/ceil it to +/- 1. if 
-    // the delta is above the number, that's okay. the user probably wants to 
+    //
+    // the delta is divided by a high-ish number that, usually puts it
+    // between the bounds of -1 and 1 so we can floor/ceil it to +/- 1. if
+    // the delta is above the number, that's okay. the user probably wants to
     // scroll faster, so we'll let them.
-    // 
+    //
     // inspired by v3.0.6 of jquery-mousewheel and issue #36:
     // <https://github.com/brandonaaron/jquery-mousewheel/issues/36>.
-    // 
-    // NOTE: we're using deltaY here as delta and deltaY sometimes differ, 
-    // and deltaY seems to be the better choice. probably has something to do 
+    //
+    // NOTE: we're using deltaY here as delta and deltaY sometimes differ,
+    // and deltaY seems to be the better choice. probably has something to do
     // with trackpads and x/y scrolling.
     var normalized_delta = Math[(deltaY < 0 ? 'floor' : 'ceil')](deltaY/60);
 
@@ -826,11 +826,13 @@
     $el.on('click', '.next', handleCarouselClick);
   }
 
-  /**
-   * Attach event handlers and kick off the rendering by making an API
-   * request for the initial term list
-   */
-  function initialize() {
+  // call us on DOM ready. (if we're included, we must be needed.)
+  $(document).ready(function() {
+    /**
+     * Attach event handlers and kick off the rendering by making an API
+     * request for the initial term list
+     */
+
     // insert the required markup
     insertTaxonomyBrowserSkeleton();
 
@@ -851,10 +853,5 @@
 
     // grab the column width for use later
     column_width = $('.levels-position .level').outerWidth(true);
-  }
-
-
-  // call us on DOM ready. (if we're included, we must be needed.)
-  $(initialize);
-
+  });
 })();
