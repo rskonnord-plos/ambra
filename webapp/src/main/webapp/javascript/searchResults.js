@@ -73,6 +73,14 @@ $(document).ready(
         $("#searchStripForm").submit();
       });
 
+      $("#clearArticleTypeFilter").click(function(eventObj) {
+        $("input[name|='filterArticleType']").each(function (index, element) {
+          $(element).val('');
+        });
+
+        $("#searchStripForm").submit();
+      });
+
       $("input[name|='filterAuthors']").click(function(eventObj) {
         $("#searchStripForm").submit();
       });
