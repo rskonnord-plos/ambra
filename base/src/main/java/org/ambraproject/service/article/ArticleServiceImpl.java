@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2006-2013 by Public Library of Science
+ *
  * http://plos.org
  * http://ambraproject.org
  *
@@ -10,12 +11,11 @@
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- *   limitations under the License.
+ * limitations under the License.
  */
-
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
@@ -60,10 +60,10 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
+import java.math.BigInteger;
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -709,11 +709,22 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     Set<Category> categories = article.getCategories();
     Set<ArticleCategory> catViews = new HashSet<ArticleCategory>(categories.size());
 
-    for(Category cat : categories) {
-      catViews.add(new ArticleCategory(cat.getMainCategory(), cat.getSubCategory()));
-    }
-    articleInfo.setCategories(catViews);
+    //See if the user flagged any of the existing categories
+    List<Long> flaggedCategories = getFlaggedCategories(article.getID(), authId);
 
+    for(Category cat : categories) {
+      catViews.add(
+        ArticleCategory.builder()
+          .setCategoryID(cat.getID())
+          .setMainCategory(cat.getMainCategory())
+          .setSubCategory(cat.getSubCategory())
+          .setPath(cat.getPath())
+          .setFlagged(flaggedCategories.contains(cat.getID()))
+        .build()
+      );
+    }
+
+    articleInfo.setCategories(catViews);
 
     //authors (list of UserProfileInfo)
     //TODO: Refactor ArticleInfo and CitationInfo objects
@@ -815,6 +826,42 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     ArticleInfo articleInfo = getBasicArticleViewArticleInfo(articleDoi);
 
     return articleInfo;
+  }
+
+  /**
+   * Return a list of categories this user flagged for this article
+   *
+   * @param articleID an articleID
+   * @param authID the user's authorization ID
+   *
+   * @return list of category IDs this user flagged for this article
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly = true)
+  private List<Long> getFlaggedCategories(final long articleID, final String authID) {
+    if(authID != null && authID.length() > 0) {
+      return hibernateTemplate.execute(new HibernateCallback<List<Long>>() {
+        public List<Long> doInHibernate(Session session) throws HibernateException, SQLException {
+          List<BigInteger> categories = session.createSQLQuery(
+            "select acf.categoryID from articleCategoryFlagged acf " +
+              "join userProfile up on up.userProfileID = acf.userProfileID " +
+              "where up.authId = :authID and acf.articleID = :articleID")
+            .setString("authID", authID)
+            .setLong("articleID", articleID)
+            .list();
+
+          List<Long> results = new ArrayList<Long>();
+
+          for(BigInteger row : categories) {
+            results.add(row.longValue());
+          }
+
+          return results;
+        }
+      });
+    } else {
+      return new ArrayList<Long>();
+    }
   }
 
   /**

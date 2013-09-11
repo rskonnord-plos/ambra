@@ -21,14 +21,15 @@ package org.ambraproject.action;
 import com.opensymphony.xwork2.Action;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.Journal;
-import org.ambraproject.views.SearchHit;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
 import org.ambraproject.util.Pair;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.web.VirtualJournalContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,12 +39,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.SortedMap;
 import java.util.TimeZone;
-import java.util.TreeMap;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick 2/7/12
@@ -106,7 +105,6 @@ public class HomepageActionTest extends AmbraWebTest {
           {"id", doi},
           {"title_display", title},
           {"publication_date", dateFormatter.format(a.getDate())},
-          {"subject_level_1", "Biology"},
           {"article_type_facet", "article"},
           {"doc_type", "full"},
           {"cross_published_journal_key", journal.getJournalKey()}
@@ -131,7 +129,6 @@ public class HomepageActionTest extends AmbraWebTest {
         {"id", doi},
         {"title_display", title},
         {"publication_date", dateFormatter.format(a.getDate())},
-        {"subject_level_1", "Biology"},
         {"article_type_facet", "article"},
         {"doc_type", "full"},
         {"cross_published_journal_key", journal.getJournalKey()}
@@ -156,7 +153,6 @@ public class HomepageActionTest extends AmbraWebTest {
         {"id", "not-recent-article-doi-THAT-SHOULD-SHOW-doi"},
         {"title_display", "not-recent-article-doi-THAT-SHOULD-SHOW-title"},
         {"publication_date", dateFormatter.format(a.getDate())},
-        {"subject_level_1", "Chemistry"},
         {"article_type_facet", "article"},
         {"doc_type", "full"},
         {"cross_published_journal_key", journal.getJournalKey()}
@@ -175,18 +171,13 @@ public class HomepageActionTest extends AmbraWebTest {
 
     dummyDataStore.store(a);
 
-    SortedMap<String, Long> subjectCounts = new TreeMap<String, Long>();
-
-    subjectCounts.put("Biology", 5l);
-    subjectCounts.put("Chemistry", 1l);
-
     return new Object[][]{
-        {journal, recentArticles, subjectCounts}
+        {journal, recentArticles}
     };
   }
 
   @Test(dataProvider = "expectedInfo")
-  public void testExecute(Journal journal, List<Pair<String, String>> expectedRecentArticles, SortedMap<String, Long> expectedCategoryInfos) {
+  public void testExecute(Journal journal, List<Pair<String, String>> expectedRecentArticles) {
     //make sure to use a journal for this test, so we don't get 'recent' articles that were added by other unit tests
     final Map<String, Object> request = getDefaultRequestAttributes();
     request.put(VirtualJournalContext.PUB_VIRTUALJOURNAL_CONTEXT, new VirtualJournalContext(
@@ -221,14 +212,6 @@ public class HomepageActionTest extends AmbraWebTest {
           "Article " + matchingArticle.getUri() + " had incorrect title");
     }
 
-    //category infos are used to put links to the browse by subject pages
-    assertEquals(action.getCategoryInfos().size(), expectedCategoryInfos.size(),
-        "Action returned incorrect number of category infos");
-    for (String category : expectedCategoryInfos.keySet()) {
-      assertTrue(action.getCategoryInfos().containsKey(category), "Action didn't return category: " + category);
-      assertEquals(action.getCategoryInfos().get(category), expectedCategoryInfos.get(category),
-          "Action returned incorrect value for category: " + category);
-    }
   }
 
 }

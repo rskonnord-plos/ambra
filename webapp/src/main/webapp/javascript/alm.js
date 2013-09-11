@@ -1418,3 +1418,297 @@ function onLoadALM() {
   almService.setMetricsTab(doi);
   almService.setChartData(doi, "usage", "chartSpinner");
 }
+
+/* Some common display functions for the browse and search results pages */
+
+function setALMSearchWidgets(articles) {
+  for (a = 0; a < articles.length; a++) {
+    var article = articles[a];
+    var doi = article.doi;
+    var sources = article.sources;
+    var scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter;
+    scopus = citeulike = counter = mendeley = crossref = wos = pmc = pubmed = facebook = twitter = null;
+
+    //get references to specific sources
+    var sourceNames = [];
+    for (var s = 0; s < sources.length; s++) {
+      sourceNames.push(sources[s].name);
+    }
+    scopus = sources[sourceNames.indexOf('scopus')];
+    citeulike = sources[sourceNames.indexOf('citeulike')];
+    pubmed = sources[sourceNames.indexOf('pubmed')];
+    counter = sources[sourceNames.indexOf('counter')];
+    mendeley = sources[sourceNames.indexOf('mendeley')];
+    crossref = sources[sourceNames.indexOf('crossref')];
+    wos = sources[sourceNames.indexOf('wos')];
+    pmc = sources[sourceNames.indexOf('pmc')];
+    facebook = sources[sourceNames.indexOf('facebook')];
+    twitter = sources[sourceNames.indexOf('twitter')];
+
+    //determine if article cited, bookmarked, or socialised, or even seen
+    var hasData = false;
+    if (scopus.metrics.total > 0 ||
+      citeulike.metrics.total > 0 ||
+      pmc.metrics.total + counter.metrics.total > 0 ||
+      mendeley.metrics.total > 0 ||
+      facebook.metrics.shares + twitter.metrics.total > 0) {
+      hasData = true;
+    }
+
+    //show widgets only when you have data
+    if (hasData) {
+      confirmed_ids[confirmed_ids.length] = doi;
+      makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter);
+    }
+  }
+  confirmALMDataDisplayed();
+}
+
+function makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter) {
+  var nodeList = getSearchWidgetByDOI(doi);
+  var metricsURL = getMetricsURL(doi);
+
+  var anim = $(nodeList).fadeOut(250, function() {
+    var searchWidget = $("<span></span>");
+    searchWidget.addClass("almSearchWidget");
+
+    buildWidgetText(searchWidget, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter);
+
+    $(nodeList).html("");
+    $(nodeList).append(searchWidget);
+    $(nodeList).fadeIn(250);
+  });
+}
+
+//TODO: messy but correct - clean up
+function buildWidgetText(node, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter) {
+  var newNode = null;
+
+  var total = pmc.metrics.total + counter.metrics.total;
+  var totalHTML = pmc.metrics.html + counter.metrics.html;
+  var totalPDF = pmc.metrics.pdf + counter.metrics.pdf;
+  //alm response json has no metric for xml, but xml = total - pdf - html
+  var totalXML = total - totalPDF - pmc.metrics.html - counter.metrics.html;
+  if (total > 0) {
+    newNode = $("<a></a>")
+      .attr("href", metricsURL + "#usage")
+      .html("Views: " + total.format(0, '.', ','))
+      .addClass("data");
+
+    newNode.tooltip({
+      delay: 250,
+      fade: 250,
+      top: -40,
+      left: 20,
+      track: true,
+      showURL: false,
+      bodyHandler: function () {
+        return "<span class=\"searchResultsTip\">HTML: <b>" + totalHTML.format(0, '.', ',') + "</b>"
+          + ", PDF: <b>" + totalPDF.format(0, '.', ',') + "</b>"
+          + ", XML: <b>" + totalXML.format(0, '.', ',') + "</b>"
+          + ", Grand Total: <b>" + total.format(0, '.', ',') + "</b></span>";
+      }
+    });
+
+
+    node.append($("<span></span>").append(newNode));
+  } else {
+    node.appendChild($("<span></span>")
+      .addClass("no-data")
+      .html("Views: Not available"));
+  }
+
+  //using scopus for display
+  if (scopus.metrics.total > 0) {
+    newNode = $("<a></a>")
+      .attr("href", metricsURL + "#citations")
+      .html("Citations: " + scopus.metrics.total.format(0, '.', ','))
+      .addClass("data");
+
+    newNode.tooltip({
+      delay: 250,
+      fade: 250,
+      top: -40,
+      left: 20,
+      track: true,
+      showURL: false,
+
+      bodyHandler: function () {
+        //adding citation sources manually and IN ALPHABETIC ORDER
+        //if this is generified, remember to sort, and remember the comma
+        var someSources = [crossref, pubmed, wos];
+        var tipText = scopus.display_name + ": <b>" + scopus.metrics.total.format(0, '.', ',') + "</b>"; //scopus.metrics.total always > 0
+
+        for (var s = 0; s < someSources.length; s++) {
+          var source = someSources[s];
+          if (source.metrics.total > 0) {
+            tipText += ', ' + source.display_name + ": <b>" + source.metrics.total.format(0, '.', ',') + "</b>";
+          }
+        }
+
+        return "<span class=\"searchResultsTip\">" + tipText + "</span>";
+      }
+    });
+
+    //new dijit.Tooltip({ connectId: newNode, label: tipText });
+    appendBullIfNeeded(node);
+    node.append($("<span></span>").append(newNode));
+  } else {
+    appendBullIfNeeded(node);
+    node.append($("<span></span>")
+      .html("Citations: None")
+      .addClass("no-data"));
+  }
+
+  var markCount = mendeley.metrics.total + citeulike.metrics.total;
+  if (markCount > 0) {
+    newNode = $("<a></a>")
+      .attr("href", metricsURL + "#other")
+      .html("Saves: " + markCount.format(0, '.', ','))
+      .addClass("data");
+
+    appendBullIfNeeded(node);
+
+    newNode.tooltip({
+      delay: 250,
+      fade: 250,
+      top: -40,
+      left: 20,
+      track: true,
+      showURL: false,
+      bodyHandler: function () {
+        var tipText = "";
+
+        if (mendeley.metrics.total > 0) {
+          tipText += mendeley.display_name + ": <b>" + mendeley.metrics.total.format(0, '.', ',') + "</b>";
+        }
+
+        if (citeulike.metrics.total > 0) {
+          if (tipText != "") {
+            tipText += ", "
+          }
+          tipText += citeulike.display_name + ": <b>" + citeulike.metrics.total.format(0, '.', ',') + "</b>";
+        }
+
+
+        return "<span class=\"searchResultsTip\">" + tipText + "</span>";
+      }
+    });
+
+    node.append($("<span></span>").append(newNode));
+  } else {
+    appendBullIfNeeded(node);
+    node.append($("<span></span>")
+      .html("Saves: None")
+      .addClass("no-data"));
+  }
+
+  var shareCount = facebook.metrics.shares + twitter.metrics.total;
+  if (shareCount > 0) {
+    newNode = $("<a></a>")
+      .attr("href", metricsURL + "#other")
+      .html("Shares: " + shareCount)
+      .addClass("data");
+
+    appendBullIfNeeded(node);
+
+    newNode.tooltip({
+      delay: 250,
+      fade: 250,
+      top: -40,
+      left: 20,
+      track: true,
+      showURL: false,
+      bodyHandler: function () {
+        var tipText = "";
+
+        if (facebook.metrics.shares > 0) {
+          tipText += facebook.display_name + ": <b>" + facebook.metrics.shares.format(0, '.', ',') + "</b>";
+        }
+
+        if (twitter.metrics.total > 0) {
+          if (tipText != "") {
+            tipText += ", "
+          }
+          tipText += twitter.display_name + ": <b>" + twitter.metrics.total.format(0, '.', ',') + "</b>";
+        }
+
+        return "<span class=\"searchResultsTip\">" + tipText + "</span>";
+      }
+    });
+
+    node.append($("<span></span>").append(newNode));
+  } else {
+    appendBullIfNeeded(node);
+    node.append($("<span></span>")
+      .html("Shares: None")
+      .addClass("no-data"));
+  }
+}
+
+function appendBullIfNeeded(node) {
+  if(node.size() > 0) {
+    node.append("&nbsp;&bull;&nbsp;");
+  }
+}
+
+function getSearchWidgetByDOI(doi) {
+  return $("li[data-doi='" + doi  + "'] span.metrics");
+}
+
+function getMetricsURL(doi){
+  return $($("li[data-doi='" + doi  + "']")[0]).data("metricsurl");
+}
+
+function setALMSearchWidgetsError() {
+  confirmALMDataDisplayed();
+}
+
+function makeALMSearchWidgetError(doi, message) {
+  var nodeList = getSearchWidgetByDOI(doi);
+  var spanNode = nodeList[0];
+
+  var errorMsg = $("<span></span>");
+  errorMsg.addClass("inlineError");
+  errorMsg.css("display","none");
+  errorMsg.html(message);
+
+  $(spanNode).find("span").fadeOut(250, function() {
+    $(spanNode).append(errorMsg);
+    $(errorMsg).fadeIn(250);
+  });
+}
+
+/*
+ * Walk through the ids and confirmed_ids list.  If
+ * If some ids are not confirmed.  Lets let the
+ * front end know that no data was received.
+ * */
+function confirmALMDataDisplayed() {
+  if(confirmed_ids != null) {
+    for(a = 0; a < confirmed_ids.length; a++) {
+      for(b = 0; b < ids.length; b++) {
+        if(confirmed_ids[a] == ids[b]) {
+          ids.remove(b);
+        }
+      }
+    }
+  }
+
+  //if any ids are left.  We know there is no data
+  //Make note of that now.
+  for(a = 0; a < ids.length; a++) {
+    var nodeList = $("li[data-doi='" + ids[a] + "']");
+    var pubDate = $(nodeList[0]).data("pdate");
+
+    //If the article is less then two days old and there is no data,
+    //it's not really an error, alm is a few days behind
+    if(pubDate > ((new Date().getTime()) -  172800000)) {
+      makeALMSearchWidgetError(ids[a],
+        "Metrics unavailable for recently published articles. Please check back later.");
+    } else {
+      makeALMSearchWidgetError(ids[a],
+        "<img src=\"../images/icon_error.png\"/>&nbsp;Metrics unavailable. Please check back later.");
+    }
+  }
+}

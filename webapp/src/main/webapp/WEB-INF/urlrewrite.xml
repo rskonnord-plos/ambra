@@ -388,7 +388,7 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=PNG_L -> /article/doi/largerimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=PNG_L$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=PNG_L$</from>
     <to>$1/article/$2/largerimage</to>
   </outbound-rule>
 
@@ -406,7 +406,7 @@
       re-write outbound large image URIs.
       /article/fetchObjectAttachment.action?uri=doi&amp;representation=TIF -> /article/doi/originalimage
     </note>
-    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)&amp;representation=TIF$</from>
+    <from>^(/.+)?/article/fetchObjectAttachment.action\?uri=(info%3Adoi%2F\d+\.\d+%2F.+)\&amp;amp;representation=TIF$</from>
     <to>$1/article/$2/originalimage</to>
   </outbound-rule>
 
@@ -703,24 +703,6 @@
 
   <rule>
     <note>
-      re-write browse subject
-      /article/browse/subject/geology -> /article/browse/subject.action?selectedSubjects=geology
-    </note>
-    <from>^(/.+)?/article/browse/subject/(.*)?</from>
-    <to>$1/article/browse/subject.action?selectedSubjects=$2</to>
-  </rule>
-
-  <outbound-rule>
-    <note>
-      re-write outbound browse subject
-      /article/browse/subject.action?selectedSubjects=geology -> /article/browse/subject/geology
-    </note>
-    <from>^(/.+)?/article/browse/subject.action\?selectedSubjects=(.*)?</from>
-    <to>$1/article/browse/subject/$2</to>
-  </outbound-rule>
-
-  <rule>
-    <note>
       re-write email article submit
       /article/email/send -> /article/emailThisArticleSubmit.action
     </note>
@@ -766,10 +748,46 @@
 
   <rule>
     <note>
+      re-write for taxonomy / taxonomy namespace
+      /taxonomy -> /taxonomy/
+    </note>
+    <from>^(/.+)?/taxonomy$</from>
+    <to>$1/taxonomy/taxonomy.action</to>
+  </rule>
+
+  <rule>
+    <note>
+      re-write for flag taxonomy json
+      /taxonomy/flag/json -> /taxonomy/flagTaxonomyTerm.action
+    </note>
+    <from>^(/.+)?/taxonomy/flag/json(.*)$</from>
+    <to>$1/taxonomy/flagTaxonomyTerm.action?$2</to>
+  </rule>
+
+  <rule>
+    <note>
       re-write find this taxonomy json
-      /taxonomy/json -> /taxonomyJSON.action
+      /taxonomy/json -> /taxonomy/taxonomyJSON.action
     </note>
     <from>^(/.+)?/taxonomy/json(.*)\??(.*)$</from>
     <to>$1/taxonomy/taxonomyJSON.action?root=$2&amp;$3</to>
   </rule>
+
+  <rule>
+    <note>
+      re-write browse article
+      /browse/category -> /browse.action?category=category
+    </note>
+    <from>^(/.+)?/browse/(.*)?</from>
+    <to>$1/browse.action?category=$2</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse article
+      /browse.action?category=category -> /browse/category
+    </note>
+    <from>^(/.+)?/browse.action\?category=(.*)?</from>
+    <to>$1/browse/$2</to>
+  </outbound-rule>
 </urlrewrite>

@@ -1,8 +1,16 @@
 /*
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -94,7 +102,36 @@ function onReadyDocument() {
   if (collapsible) {
     collapsible.collapsiblePanel();
   }
+
+  var handleSubjectSideBarClick = function(event) {
+    //If the event occurs on a child element, get the parent LI target for the function work
+    var target = ($(event.target).prop("tagName") == "LI")?event.target:$(event.target).parents("li")[0];
+    var categoryID = $(target).data("categoryid");
+    var articleID = $(target).data("articleid");
+
+    $.ajax({
+      type: 'POST',
+      url:'/taxonomy/flag/json',
+      data: { 'categoryID': categoryID, 'articleID': articleID },
+      dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+        $(event.target).unbind('click', handleSubjectSideBarClick);
+        $(target).addClass("flagged");
+      }
+    });
+  }
+
+  $('#subject-area-sidebar-list li div.flagImage').on('click', handleSubjectSideBarClick);
+
+  (function () {
+    this.hoverEnhanced({});
+  }).apply($('#subject-area-sidebar-block-help-icon'));
 }
+
+
 
 // This is tab content initialization that is run once on page load,
 // and then everytime on tab navigation when the tab content loads.
@@ -163,13 +200,8 @@ function onReadyMainContainer() {
 // and then everytime when the tab content loads via Pjax.
 
 function initMainContainer() {
-  var $nav_article = $('#nav-article');
-  if ($nav_article.length) {
-    items_l = $nav_article.find('li').length
-    $nav_article.addClass('items-' + items_l);
-  }
-
   var $figure_thmbs = $('#figure-thmbs');
+
   if ($figure_thmbs.length) {
     $lnks = $figure_thmbs.find('.item a');
     $wrap = $figure_thmbs.find('div.wrapper');
@@ -214,15 +246,19 @@ function initMainContainer() {
   }
 
   // figure search results
-  var $fig_results = $('#fig-search-results');
+  var $fig_results = $('#fig-search-results, .article-block .actions, #subject-list-view .actions');
   if ($fig_results.length) {
-    $fig_results.find('a.figures').on('click', function () {
+    $fig_results.find('a.figures').on('click', function (e) {
       doi = $(this).data('doi');
       launchModal(doi, null, 'fig', true);
+      e.preventDefault();
+      return false;
     });
-    $fig_results.find('a.abstract').on('click', function () {
+    $fig_results.find('a.abstract').on('click', function (e) {
       doi = $(this).data('doi');
       launchModal(doi, null, 'abstract', true);
+      e.preventDefault();
+      return false;
     });
   }
 
@@ -1201,7 +1237,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       + '<ul class="download">'
       + '<li class="label">Download: </li>'
 //   + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-      + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
+      + '<li><span class="icon">PDF</span> <a href="' + "/article/" + doi + "/pdf" + '" class="pdf" target="_blank">Full Article PDF Version</a></li>'
       + '</ul>'
       + '<ul class="figure_navigation">'
       + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
@@ -1419,7 +1455,9 @@ var killModal = function () {
 
   $win.unbind('resize.modal');
   //will record the timeStamp for when the modal is closed
-  close_time = event.timeStamp;
+  if(typeof event !== 'undefined') {
+    close_time = event.timeStamp;
+  }
 };
 
 // End Figure Viewer
@@ -1551,6 +1589,8 @@ $(window).load(function () {
 });
 
 
+//Why is this bound universally?  That seems strange.
+//-Joe
 $(document).bind('keydown', function (e) {
   if (e.which == 27) {
     killModal();

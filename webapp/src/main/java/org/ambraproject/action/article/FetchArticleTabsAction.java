@@ -1,10 +1,16 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -42,18 +48,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
-
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.ambraproject.service.annotation.AnnotationService.AnnotationOrder;
-
 
 /**
  * This class fetches the information from the service tier for the article Tabs.  Common data is defined in the
@@ -116,14 +119,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private Set<JournalView> journalList;
   private ArticleAssetWrapper[] articleAssetWrapper;
   private AmbraFreemarkerConfig ambraFreemarkerConfig;
-
   private FetchArticleService fetchArticleService;
   private AnnotationService annotationService;
   private ArticleService articleService;
   private TrackbackService trackbackService;
   private UserService userService;
   private ArticleAssetService articleAssetService;
-
+  private List<ArticleCategory> categories;
   /**
    * Fetch the data for Article Tab
    *
@@ -319,7 +321,79 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
         publishedJournal = ambraFreemarkerConfig.getDisplayName(j.getJournalKey());
       }
     }
+
+    this.categories = new ArrayList<ArticleCategory>();
+    this.categories.addAll(articleInfoX.getCategories());
+
+    Collections.sort(this.categories);
+
+    getCookiedCategoryFlags();
   }
+
+  /**
+   * Get any relevant data out of the cookies
+   */
+  private void getCookiedCategoryFlags() {
+    for(Cookie c : getCookies()) {
+      if(c.getName().equals(COOKIE_ARTICLE_CATEGORY_FLAGS)) {
+        String value = c.getValue();
+
+        if(value != null) {
+          setAdditionalFlags(value);
+        }
+      }
+    }
+  }
+
+  /**
+   * A collection of articleID/CategoryIDs that are stored in
+   * a cookie on the user's browser.  Used to track categories they
+   * have flagged
+   */
+  private void setAdditionalFlags(String cookieValue) {
+    //Check to see if the user has flagged any categories anonymously
+    List<List<String>> articleIDCategoryIDFlags = TextUtils.parsePipedCSV(cookieValue);
+    List<ArticleCategory> newCategories = new ArrayList<ArticleCategory>();
+
+    for(ArticleCategory articleCategory : this.getCategories()) {
+      ArticleCategory articleCategoryTemp = null;
+
+      for(List<String> valuePairTemp : articleIDCategoryIDFlags) {
+        //Each value in this set is a name value pair
+        //If somehow the valuePair is not two elements, log a warning, keep going
+        if(valuePairTemp.size() == 2) {
+          try {
+            long articleID = Long.valueOf(valuePairTemp.get(0));
+            long categoryID = Long.valueOf(valuePairTemp.get(1));
+
+            //If we find the user has flagged this pair, let's recreate the view setting the flag
+            if(articleCategory.getCategoryID() == categoryID && this.articleInfoX.getId() == articleID) {
+              articleCategoryTemp = ArticleCategory.builder(articleCategory)
+                .setFlagged(true).build();
+            }
+          } catch (NumberFormatException ex) {
+            log.warn("Strange values stored in: '{}' Cookie: '{}', Specifically: '{}, {}'",
+              new Object[] { COOKIE_ARTICLE_CATEGORY_FLAGS, articleIDCategoryIDFlags, valuePairTemp.get(0),
+                valuePairTemp.get(1)});
+          }
+        } else {
+          log.warn("Strange values stored in: '{}' Cookie: '{}'", COOKIE_ARTICLE_CATEGORY_FLAGS,
+            cookieValue);
+        }
+      }
+
+      if(articleCategoryTemp != null) {
+        newCategories.add(articleCategoryTemp);
+      } else {
+        //No match was found, append the old view to the new set
+        newCategories.add(articleCategory);
+      }
+    }
+
+    this.categories = newCategories;
+    Collections.sort(this.categories);
+  }
+
 
   @Override
   public boolean getHasAboutAuthorContent() {
@@ -780,26 +854,20 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * Return a list of this article's main categories
+   * Return a list of this article's categories.
    *
-   * @return a Set<String> of category names
-   * @throws ApplicationException when the article has not been set
+   * Note: These values may be different pending the user's cookies then the values stored in the database.
+   *
+   * If a user is logged in, a list is built of categories(and if they have been flagged) for the article
+   * from the database
+   *
+   * If a user is not logged in, a list is built of categories for the article.  Then we append (from a cookie)
+   * flagged categories for this article
+   *
+   * @return Return a list of this article's categories
    */
-  public List<String> getMainCategories() throws ApplicationException {
-    Set<String> mainCats = new HashSet<String>();
-
-    if (articleInfoX == null) {
-      throw new ApplicationException("Article not set");
-    }
-
-    for (ArticleCategory curCategory : articleInfoX.getCategories()) {
-      mainCats.add(curCategory.getMainCategory());
-    }
-
-    List<String> mainCatsList = new LinkedList<String>(mainCats);
-    Collections.sort(mainCatsList);
-
-    return mainCatsList;
+  public List<ArticleCategory> getCategories() {
+    return categories;
   }
 
   /**

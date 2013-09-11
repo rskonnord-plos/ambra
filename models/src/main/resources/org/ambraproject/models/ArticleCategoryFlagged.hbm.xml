@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ $HeadURL:
-  ~ $Id:
-  ~
-  ~ Copyright (c) 2006-2011 by Public Library of Science
+  ~ Copyright (c) 2006-2013 by Public Library of Science
   ~
   ~ http://plos.org
   ~ http://ambraproject.org
@@ -21,29 +18,25 @@
   ~ limitations under the License.
   -->
 <!DOCTYPE hibernate-mapping PUBLIC
-        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="org.ambraproject.models">
 
-  <class name="ArticleAsset" table="articleAsset">
-    <id name="ID" column="articleAssetID" type="long">
-      <generator class="native" />
-    </id>
+  <class name="ArticleCategoryFlagged" table="articleCategoryFlagged">
+    <composite-id class="ArticleCategoryFlagged">
+      <key-property name="articleID"/>
+      <key-property name="categoryID"/>
+      <key-property name="userProfileID"/>
+    </composite-id>
+
     <timestamp name="lastModified" column="lastModified"/>
     <property name="created" column="created" type="timestamp" not-null="true" update="false" />
 
-    <properties name="doiAndExtension" unique="true">
-      <property name="doi" column="doi" type="string" not-null="true"/>
-      <property name="extension" column="extension" type="string" not-null="true"/>
-    </properties>
-
-    <property name="contextElement" column="contextElement" type="string" />
-    <property name="contentType" column="contentType" type="string" />
-    <property name="title" column="title" type="string" length="500"/>
-    <property name="description" column="description" type="text" />
-    <property name="size" column="size" type="long" />
-
+    <property name="articleID" type="long" column="articleID" not-null="true" insert="false" update="false"/>
+    <property name="categoryID" type="long" column="categoryID" not-null="true" insert="false" update="false"/>
+    <property name="userProfileID" type="long" column="userProfileID" not-null="false" insert="false" update="false"/>
   </class>
 
 </hibernate-mapping>
+
