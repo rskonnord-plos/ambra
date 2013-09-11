@@ -35,6 +35,16 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.8.0</h2>
+  <p>Released September 17, 2013</p>
+  <p>Features Implemented in Ambra 2.8.0</p>
+  <ul>
+      <li>New PLOS One homepage</li>
+      <li>New taxonomy browser and taxonomy browse pages</li>
+      <li>New article type for service layer</li>
+      <li>Fix for search filter bugs</li>
+  </ul>
+
   <h2>Ambra 2.7.9</h2>
   <p>Released September 10, 2013</p>
   <h3>Features Implemented in Ambra 2.7.9</h3>
