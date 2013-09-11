@@ -742,14 +742,20 @@ $.fn.alm = function () {
             source.metrics.total)
             + '\n';
           numCitesRendered++;
-        }
-        //  Only list links that HAVE DEFINED URLS
-        else if (source.events_url) {
+
+        } else if (source.events_url) {
+          //  Only list links that HAVE DEFINED URLS
           html = html + this.createMetricsTile(tileName,
             url,
             "/images/logo-" + tileName + ".png",
             source.metrics.total)
             + '\n';
+          numCitesRendered++;
+
+        } else {
+          html = html + this.createMetricsTileNoLink(tileName,
+              "/images/logo-" + tileName + ".png",
+              source.metrics.total) + '\n';
           numCitesRendered++;
         }
       }
