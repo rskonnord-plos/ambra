@@ -35,8 +35,68 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.7.9</h2>
+  <p>Released September 10, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.9</h3>
+  <ul>
+      <li>Added new ALM Source, figshare, to the Article Metrics tab.</li>
+  </ul>
+
+  <h2>Ambra 2.7.7</h2>
+  <p>Released August 27, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.7</h3>
+  <ul>
+    <li>Minor bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.7.6</h2>
+  <p>Released August 20, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.6</h3>
+  <ul>
+      <li>Minor bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.7.5</h2>
+  <p>Released August 13, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.5</h3>
+  <ul>
+      <li>Minor bug fixes</li>
+  </ul>
+
+  <h2>Ambra 2.7.4</h2>
+  <p>Released August 6, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.4</h3>
+  <ul>
+      <li>Added support for ALM API Key</li>
+      <li>Updated RSS links on the taxonomy page</li>
+      <li>Twitter widget returns to the journal home pages</li>
+      <li>Performance improvement on the PLOS ONE Editorial board page</li>
+  </ul>
+
+  <h2>Ambra 2.7.3</h2>
+  <p>Released July 30, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.3</h3>
+  <ul>
+    <li>Etocs feature live</li>
+    <li>Revise ALM classification for search, signpost and metrics tab</li>
+    <li>Bug fix for email this article</li>
+  </ul>
+
+  <h2>Ambra 2.7.2</h2>
+  <p>Released July 23, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.2</h3>
+  <ul>
+    <li>Etocs feature enhancements and bug fixes</li>
+    <li>Upgrade Ambra to use ALM API v3</li>
+    <li>ALM signposts tooltip will have fade in/out feature</li>
+    <li>Users can choose no. of results to see on search result page</li>
+    <li>Incorporate security fix from Struts 2.3.15.1</li>
+    <li>Version 4 of taxonomy terms</li>
+  </ul>
+
   <h2>Ambra 2.7.1</h2>
   <p>Released July 16, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.1</h3>
   <ul>
     <li>Etocs feature enhancements and bug fixes</li>
     <li>Mathjax equations font size change and alignment fix</li>
@@ -47,12 +107,14 @@
 
   <h2>Ambra 2.7.0</h2>
   <p>Released July 02, 2013</p>
+  <h3>Features Implemented in Ambra 2.7.0</h3>
   <ul>
     <li>For tablets, enable swiping in figure carousel and lightbox</li>
   </ul>
 
  <h2>Ambra 2.6.9</h2>
  <p>Released June 25, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.9</h3>
  <ul>
    <li>Distinguish Authors and Editors in Affiliation on the Solr search backend</li>
    <li>Addition of figure DOIs to Solr search API</li>
@@ -64,6 +126,7 @@
 
  <h2>Ambra 2.6.8</h2>
  <p>Released June 18th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.8</h3>
  <ul>
    <li>eToCs feature development</li>
    <li>Advanced Search page journal specific "Filter by Article Type" search options</li>
@@ -72,6 +135,7 @@
 
  <h2>Ambra 2.6.7</h2>
  <p>Released June 11th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.7</h3>
  <ul>
    <li>Restricted launch of eToCs</li>
    <li>CrossRef API change support</li>
@@ -81,6 +145,7 @@
 
  <h2>Ambra 2.6.6</h2>
  <p>Released June 4th, 2013</p>
+ <h3>Features Implemented in Ambra 2.6.6</h3>
  <ul>
    <li>PLOS One Edboard search optimizations</li>
    <li>Taxonomy tracking update</li>

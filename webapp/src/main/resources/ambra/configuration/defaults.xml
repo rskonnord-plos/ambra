@@ -158,31 +158,15 @@
         </server>
         -->
 
-        <pageSize>10</pageSize><!-- Number of results per page -->
+        <pageSize>15</pageSize><!-- Number of results per page -->
 
 
         <pageSizes>
-          <size>10</size>
-          <size>25</size>
-          <size>50</size>
+          <size>15</size>
+          <size>30</size>
+          <size>60</size>
+          <size>120</size>
         </pageSizes>
-
-        <highlightFields>
-          <field>everything</field>
-          <field>title</field>
-          <field>author</field>
-          <field>body</field>
-          <field>subject</field>
-          <field>id</field>
-          <field>article_type</field>
-          <field>affiliate</field>
-          <field>competing_interest</field>
-          <field>editor</field>
-          <field>elocation_id</field>
-          <field>financial_disclosure</field>
-          <field>issue</field>
-          <field>volume</field>
-        </highlightFields>
 
         <!-- Defined sorts -->
         <!-- Escape commas as the configuration will attempt to turn the string into a collection otherwise -->

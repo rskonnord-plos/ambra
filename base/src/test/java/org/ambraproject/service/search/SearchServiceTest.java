@@ -12,18 +12,20 @@
 
 package org.ambraproject.service.search;
 
+import org.ambraproject.views.SearchHit;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.testutils.EmbeddedSolrServerFactory;
-import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.views.SearchResultSinglePage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +54,9 @@ public class SearchServiceTest extends BaseTest {
    */
   @BeforeMethod
   public void sendArticlesToSolr() throws Exception {
+
+    // delete all documents in solr  
+    solrServerFactory.deleteAllDocuments();
 
     // 2 occurrences in "everything": "Spleen"
     Map<String, String[]> document1 = new HashMap<String, String[]>();
@@ -107,7 +112,6 @@ public class SearchServiceTest extends BaseTest {
     solrServerFactory.addDocument(document1);
     solrServerFactory.addDocument(document2);
     solrServerFactory.addDocument(document3);
-
   }
 
   @DataProvider(name = "queryAndHitNumberForUnformattedQuery")  //  Use for Advanced Search.

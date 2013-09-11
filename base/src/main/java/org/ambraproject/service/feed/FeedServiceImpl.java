@@ -1,8 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- *
- * Copyright (c) 2006-2011 by Public Library of Science
+ * Copyright (c) 2006-2013 by Public Library of Science
  *     http://plos.org
  *     http://ambraproject.org
  *
@@ -68,12 +65,8 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
   private Configuration configuration;
   private SolrFieldConversion solrFieldConverter;
 
-
-  private static final int MAX_FACET_SIZE         = 100;
-  private static final int MIN_FACET_COUNT        = 1;
   private int queryTimeout = 60000;
   private Map validSorts = null;
-  private String highlightFields = null;
   private List displaySorts = null;
   private Map validKeywords = null;
 
@@ -192,9 +185,7 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
 
     query.setTimeAllowed(queryTimeout);
     query.setIncludeScore(true); // The relevance (of each results element) to the search terms.
-    query.setHighlight(true);
-    query.set("hl.fl", this.highlightFields);
-    query.set("hl.requireFieldMatch", true);
+    query.setHighlight(false);
     // request only fields that we need
     query.setFields("id","title_display","publication_date","author_without_collab_display","author_collab_only_display","author_display","volume","issue","article_type","subject_hierarchy","abstract_primary_display","copyright");
     query.addFilterQuery("doc_type:full");
@@ -316,32 +307,6 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
     return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
-
-  private SolrQuery createQuery(String queryString, boolean useDismax) {
-    SolrQuery query = new SolrQuery(queryString);
-    query.setTimeAllowed(queryTimeout);
-    query.setIncludeScore(true); // The relevance (of each results element) to the search terms.
-    query.setHighlight(true);
-
-    if(useDismax) {
-      query.set("defType", "dismax");
-    }
-
-    //TODO: Put The "options" from the "queryField" picklist into a config file.
-    //This list matches the "options" from the "queryField" picklist on unformattedSearch.ftl,
-    //without the "date" fields.
-    query.set("hl.fl", this.highlightFields);
-    query.set("hl.requireFieldMatch", true);
-
-    // request only fields that we need to display
-    query.setFields("id","title_display","publication_date","author_without_collab_display","author_collab_only_display","author_display","volume","issue","article_type","subject_hierarchy","abstract_primary_display","copyright");
-
-    // Add a filter to ensure that Solr never returns partial documents
-    query.addFilterQuery(createFilterFullDocuments());
-
-    return query;
-  }
-
   private String createFilterFullDocuments() {
     return "doc_type:full";
   }
@@ -395,8 +360,6 @@ public class FeedServiceImpl extends HibernateServiceImpl implements FeedService
       throw new ApplicationException("ambra.services.search.keywordFields.field not defined " +
           "in configuration.");
     }
-
-    this.highlightFields = hightlightFieldBuilder.toString();
   }
 
   /**

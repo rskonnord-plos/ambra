@@ -81,6 +81,16 @@ $(document).ready(
         $("#searchStripForm").submit();
       });
 
+      $("#pageSizePicklist").change(function(eventObj) {
+        $('#db input[name="pageSize"]').val($("#pageSizePicklist").val());
+        $("#searchStripForm").submit();
+      });
+
+      $("#pageSizePicklistFig").change(function(eventObj) {
+        $('#db input[name="pageSize"]').val($("#pageSizePicklistFig").val());
+        $("#searchStripForm").submit();
+      });
+
       //***************************************
       //UI control events linking in:
       //***************************************
@@ -168,6 +178,10 @@ $(document).ready(
 
       $('#sortPicklist').uniform();
 
+      $('#pageSizePicklist').uniform();
+
+      $('#pageSizePicklistFig').uniform();
+
       //***************************************
       //Wire in ALM Stats
       //***************************************
@@ -180,61 +194,53 @@ $(document).ready(
         ids[ids.length] = $(element).attr("doi");
       });
 
-      almService.getSummaryForArticles(ids, setALMSearchWidgets, setALMSearchWidgetsError);
+      almService.getArticleSummaries(ids, setALMSearchWidgets, setALMSearchWidgetsError);
 
       function setALMSearchWidgets(articles) {
         for (a = 0; a < articles.length; a++) {
           var article = articles[a];
-          var doi = article.article.article.doi;
-          var bookmarks = null;
-          var cites = null;
-          var viewsData = null;
-          var socialData = null;
+          var doi = article.doi;
+          var sources = article.sources;
+          var scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter;
+          scopus = citeulike = counter = mendeley = crossref, wos, pmc, pubmed, facebook, twitter = null;
 
-          for (b = 0; b < article.groupcounts.length; b++) {
-            if (article.groupcounts[b].name.toLowerCase() === "citations" &&
-                article.groupcounts[b].count > 0) {
-              cites = article.groupcounts[b].sources;
-            }
 
-            if (article.groupcounts[b].name.toLowerCase() === "social bookmarks" &&
-                article.groupcounts[b].count > 0) {
-              bookmarks = article.groupcounts[b].sources;
-            }
-
-            /* will "testing" need to be name-changed in the future? */
-            if (article.groupcounts[b].name.toLowerCase() === "testing" &&
-                article.groupcounts[b].count > 0) {
-              socialData = article.groupcounts[b].sources;
-            }
+          //get references to specific sources
+          var sourceNames = [];
+          for (var s = 0; s < sources.length; s++) {
+            sourceNames.push(sources[s].name);
           }
+          scopus = sources[sourceNames.indexOf('scopus')];
+          citeulike = sources[sourceNames.indexOf('citeulike')];
+          pubmed = sources[sourceNames.indexOf('pubmed')];
+          counter = sources[sourceNames.indexOf('counter')];
+          mendeley = sources[sourceNames.indexOf('mendeley')];
+          crossref = sources[sourceNames.indexOf('crossref')];
+          wos = sources[sourceNames.indexOf('wos')];
+          pmc = sources[sourceNames.indexOf('pmc')];
+          facebook = sources[sourceNames.indexOf('facebook')];
+          twitter = sources[sourceNames.indexOf('twitter')];
 
-          for(b = 0; b < article.groups.length; b++) {
-            if(article.groups[b].name.toLowerCase() === "statistics") {
-              //Attempt to find the pub date
-              var nodeList = $("li[doi='" + doi + "']");
-              var pubDateNode = nodeList[0];
-              var pubDate = $(pubDateNode).attr("pdate");
-
-              if(pubDate == null) {
-                throw new Error('Can not find publish date attribute for doi:' + article.article.article.doi);
-              } else {
-                //Total and perform business logic
-                viewsData = almService.massageChartData(article.groups[b].sources, pubDate);
-              }
-            }
+          //determine if article cited, bookmarked, or socialised, or even seen
+          var hasData = false;
+          if (scopus.metrics.total > 0 ||
+              citeulike.metrics.total > 0 ||
+              pmc.metrics.total + counter.metrics.total > 0 ||
+            mendeley.metrics.total > 0 ||
+            facebook.metrics.shares + twitter.metrics.total > 0) {
+            hasData = true;
           }
 
           //show widgets only when you have data
-          if(cites != null ||  bookmarks != null || viewsData != null || socialData != null) {
+          if (hasData) {
             confirmed_ids[confirmed_ids.length] = doi;
-            makeALMSearchWidget(doi, cites, bookmarks, viewsData, socialData);
+            makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter);
           }
         }
         confirmALMDataDisplayed();
       }
 
-      function makeALMSearchWidget(doi, cites, bookmarks, data, socialData) {
+      function makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter) {
         var nodeList = getSearchWidgetByDOI(doi);
         var metricsURL = getMetricsURL(doi);
 
@@ -242,7 +248,7 @@ $(document).ready(
           var searchWidget = $("<span></span>");
           searchWidget.addClass("almSearchWidget");
 
-          buildWidgetText(searchWidget, metricsURL, cites, bookmarks, data, socialData);
+          buildWidgetText(searchWidget, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter);
 
           $(nodeList).html("");
           $(nodeList).append(searchWidget);
@@ -250,15 +256,20 @@ $(document).ready(
         });
       }
 
-      //<a class="data" href="TEST">Views: 7611</a> &bull; <a class="data" href="TEST">Citations: Yes</a> &bull; <a class="data" href="TEST">Bookmarks: Yes</a>
-      function buildWidgetText(node, metricsURL, cites, bookmarks, data, socialData) {
+      //TODO: messy but correct - clean up
+      function buildWidgetText(node, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter) {
         var newNode = null;
 
-        if(data != null) {
+        var total = pmc.metrics.total + counter.metrics.total;
+        var totalHTML = pmc.metrics.html + counter.metrics.html;
+        var totalPDF = pmc.metrics.pdf + counter.metrics.pdf;
+        //alm response json has no metric for xml, but xml = total - pdf - html
+        var totalXML = total - totalPDF - pmc.metrics.html - counter.metrics.html;
+        if (total > 0) {
           newNode = $("<a></a>")
-              .attr("href",metricsURL + "#usage")
-              .html("Views: " + data.total.format(0,'.',','))
-              .addClass("data");
+            .attr("href", metricsURL + "#usage")
+            .html("Views: " + total.format(0, '.', ','))
+            .addClass("data");
 
           newNode.tooltip({
             delay: 250,
@@ -267,39 +278,28 @@ $(document).ready(
             left: 20,
             track: true,
             showURL: false,
-            bodyHandler: function() {
-              return "<span class=\"searchResultsTip\">HTML: <b>" + data.totalHTML + "</b>"
-                  + ", PDF: <b>" + data.totalPDF + "</b>"
-                  + ", XML: <b>" + data.totalXML + "</b>"
-                  + ", Grand Total: <b>" + data.total + "</b></span>";
+            bodyHandler: function () {
+              return "<span class=\"searchResultsTip\">HTML: <b>" + totalHTML.format(0, '.', ',') + "</b>"
+                + ", PDF: <b>" + totalPDF.format(0, '.', ',') + "</b>"
+                + ", XML: <b>" + totalXML.format(0, '.', ',') + "</b>"
+                + ", Grand Total: <b>" + total.format(0, '.', ',') + "</b></span>";
             }
           });
 
-          node.append(newNode);
+
+          node.append($("<span></span>").append(newNode));
         } else {
           node.appendChild($("<span></span>")
-              .addClass("no-data")
-              .html("Views: Not available"));
+            .addClass("no-data")
+            .html("Views: Not available"));
         }
 
-        //only using scopus so get a reference if possible and use information contained therein
-        var scopus = null;
-        if (cites != null) {
-          //citations should always be sorted with Scopus first
-          cites = cites.sort(sortCitesByName);
-
-          //see if a reference to scopus exists
-          for(a = 0; a < cites.length; a++) {
-            if (cites[a].source.toLowerCase() == 'scopus' && cites[a].count > 0) {
-              scopus = cites[a];
-            }
-          }
-        }
-        if (scopus) {
+        //using scopus for display
+        if (scopus.metrics.total > 0) {
           newNode = $("<a></a>")
-              .attr("href", metricsURL + "#citations")
-              .html("Citations: " + scopus.count)
-              .addClass("data");
+            .attr("href", metricsURL + "#citations")
+            .html("Citations: " + scopus.metrics.total.format(0, '.', ','))
+            .addClass("data");
 
           newNode.tooltip({
             delay: 250,
@@ -309,14 +309,17 @@ $(document).ready(
             track: true,
             showURL: false,
 
-            bodyHandler: function() {
-              var tipText = "";
+            bodyHandler: function () {
+              //adding citation sources manually and IN ALPHABETIC ORDER
+              //if this is generified, remember to sort, and remember the comma
+              var someSources = [crossref, pubmed, wos];
+              var tipText = scopus.display_name + ": <b>" + scopus.metrics.total.format(0, '.', ',') + "</b>"; //scopus.metrics.total always > 0
 
-              for(a = 0; a < cites.length; a++) {
-                if(tipText != "") {
-                  tipText += ", "
+              for (var s = 0; s < someSources.length; s++) {
+                var source = someSources[s];
+                if (source.metrics.total > 0) {
+                  tipText += ', ' + source.display_name + ": <b>" + source.metrics.total.format(0, '.', ',') + "</b>";
                 }
-                tipText += cites[a].source + ": <b>" + cites[a].count.format(0,'.',',') + "</b>";
               }
 
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
@@ -325,78 +328,20 @@ $(document).ready(
 
           //new dijit.Tooltip({ connectId: newNode, label: tipText });
           appendBullIfNeeded(node);
-          node.append(newNode);
+          node.append($("<span></span>").append(newNode));
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
-              .html("Citations: None")
-              .addClass("no-data"));
+            .html("Citations: None")
+            .addClass("no-data"));
         }
 
-        var mendeley = null;
-        if(socialData){
-          for(var s = 0; s < socialData.length; s++){
-            if (socialData[s].source == "Mendeley"){
-              mendeley = socialData[s];
-            }
-          }
-        }
-
-        if(bookmarks) {
-
-          var markCount = 0;
-          if(mendeley){
-            markCount += mendeley.count;
-          }
-
-          for(var book = 0; book < bookmarks.length; book++){
-            if(bookmarks[book].source != "Connotea"){
-              markCount+= bookmarks[book].count;
-            }
-          }
-
+        var markCount = mendeley.metrics.total + citeulike.metrics.total;
+        if (markCount > 0) {
           newNode = $("<a></a>")
-              .attr("href", metricsURL + "#other")
-              .html("Bookmarks: " + markCount)
-              .addClass("data");
-
-          appendBullIfNeeded(node);
-
-          newNode.tooltip({
-            delay: 250,
-            fade: 250,
-            top: -40,
-            left: 20,
-            track: true,
-            showURL: false,
-            bodyHandler: function() {
-              var tipText = "";
-
-              if (mendeley) {
-                tipText += mendeley.source + ": <b>" + mendeley.count.format(0, '.', ',') + "</b>";
-              }
-
-              for(a = 0; a < bookmarks.length; a++) {
-                if (bookmarks[a].source != "Connotea") {
-
-                  if (tipText != "") {
-                    tipText += ", "
-                  }
-                  tipText += bookmarks[a].source + ": <b>" + bookmarks[a].count.format(0, '.', ',') + "</b>";
-                }
-              }
-
-              return "<span class=\"searchResultsTip\">" + tipText + "</span>";
-            }
-          });
-
-          node.append(newNode);
-        } else if (!bookmarks && mendeley) {
-
-          newNode = $("<a></a>")
-              .attr("href", metricsURL + "#other")
-              .html("Bookmarks: " + mendeley.count)
-              .addClass("data");
+            .attr("href", metricsURL + "#other")
+            .html("Saves: " + markCount.format(0, '.', ','))
+            .addClass("data");
 
           appendBullIfNeeded(node);
 
@@ -408,20 +353,72 @@ $(document).ready(
             track: true,
             showURL: false,
             bodyHandler: function () {
+              var tipText = "";
 
-              var tipText = mendeley.source + ": <b>" + mendeley.count.format(0, '.', ',') + "</b>";
+              if (mendeley.metrics.total > 0) {
+                tipText += mendeley.display_name + ": <b>" + mendeley.metrics.total.format(0, '.', ',') + "</b>";
+              }
+
+              if (citeulike.metrics.total > 0) {
+                if (tipText != "") {
+                  tipText += ", "
+                }
+                tipText += citeulike.display_name + ": <b>" + citeulike.metrics.total.format(0, '.', ',') + "</b>";
+              }
+
+
               return "<span class=\"searchResultsTip\">" + tipText + "</span>";
-
             }
           });
 
-          node.append(newNode);
-
+          node.append($("<span></span>").append(newNode));
         } else {
           appendBullIfNeeded(node);
           node.append($("<span></span>")
-              .html("Bookmarks: None")
-              .addClass("no-data"));
+            .html("Saves: None")
+            .addClass("no-data"));
+        }
+
+        var shareCount = facebook.metrics.shares + twitter.metrics.total;
+        if (shareCount > 0) {
+          newNode = $("<a></a>")
+            .attr("href", metricsURL + "#other")
+            .html("Shares: " + shareCount)
+            .addClass("data");
+
+          appendBullIfNeeded(node);
+
+          newNode.tooltip({
+            delay: 250,
+            fade: 250,
+            top: -40,
+            left: 20,
+            track: true,
+            showURL: false,
+            bodyHandler: function () {
+              var tipText = "";
+
+              if (facebook.metrics.shares > 0) {
+                tipText += facebook.display_name + ": <b>" + facebook.metrics.shares.format(0, '.', ',') + "</b>";
+              }
+
+              if (twitter.metrics.total > 0) {
+                if (tipText != "") {
+                  tipText += ", "
+                }
+                tipText += twitter.display_name + ": <b>" + twitter.metrics.total.format(0, '.', ',') + "</b>";
+              }
+
+              return "<span class=\"searchResultsTip\">" + tipText + "</span>";
+            }
+          });
+
+          node.append($("<span></span>").append(newNode));
+        } else {
+          appendBullIfNeeded(node);
+          node.append($("<span></span>")
+            .html("Shares: None")
+            .addClass("no-data"));
         }
       }
 
@@ -431,13 +428,11 @@ $(document).ready(
         }
       }
 
-
       function getSearchWidgetByDOI(doi) {
         return $("li[doi='" + doi  + "'] span.metrics");
       }
 
-      function getMetricsURL(doi)
-      {
+      function getMetricsURL(doi){
         return $($("li[doi='" + doi  + "']")[0]).attr("metricsURL");
       }
 
@@ -492,17 +487,6 @@ $(document).ready(
                 "<img src=\"../images/icon_error.png\"/>&nbsp;Metrics unavailable. Please check back later.");
           }
         }
-      }
-
-      function sortCitesByName(a,b) {
-        if (b.source.toLowerCase() === 'scopus') {
-          return 1;
-        } else if (a.source.toLowerCase() === 'scopus' || a.source.toLowerCase() < b.source.toLowerCase()) {
-          return -1;
-        } else if (a.source.toLowerCase() > b.source.toLowerCase()) {
-          return 1;
-        }
-        return 0;
       }
 
       function showFigSearchView() {

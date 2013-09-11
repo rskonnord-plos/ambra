@@ -12,6 +12,8 @@ import org.jvnet.mock_javamail.Mailbox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.annotations.AfterClass;
+
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.internet.MimeMultipart;
@@ -51,6 +53,11 @@ public class SavedSearchRouteBaseTest extends BaseTest {
   protected static final String CATEGORY_2    = "Category2";
 
   protected void setupUsers() throws Exception {
+    //Let's make sure the database is clean
+    dummyDataStore.deleteAll(SavedSearch.class);
+    dummyDataStore.deleteAll(SavedSearchQuery.class);
+    dummyDataStore.deleteAll(UserProfile.class);
+
     Calendar searchTime = Calendar.getInstance();
     searchTime.set(Calendar.YEAR, 2007);
     searchTime.set(Calendar.MONTH, 5);
@@ -253,5 +260,10 @@ public class SavedSearchRouteBaseTest extends BaseTest {
     }
 
     throw new Exception("Unknown content type: " + content.getClass());
+  }
+
+  @AfterClass
+  public void restoreUserData() {
+    restoreDefaultUsers();
   }
 }

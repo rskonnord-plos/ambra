@@ -1,8 +1,6 @@
 /*
- * $HeadURL$
- * $Id$
+ * Copyright (c) 2006-2013 by Public Library of Science
  *
- * Copyright (c) 2006-$today.year by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -22,6 +20,7 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.action.BaseTest;
+import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.ArticleAsset;
@@ -41,7 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -240,23 +239,23 @@ public class ArticleServiceTest extends BaseTest {
     relatedArticle1ForArticle1.setOtherArticleDoi("Fake OtherArticleDoi for relatedArticle1ForArticle1");
     relatedArticle1ForArticle1.setOtherArticleID(new Long(1000006l));
     relatedArticle1ForArticle1.setParentArticle(new Article());     //  TODO: Make this a "real" dummy Article object!
-    relatedArticle1ForArticle1.setType("Fake Type for relatedArticle1ForArticle1");
+    relatedArticle1ForArticle1.setType("Fake%20Type%20for%20relatedArticle1ForArticle1");
     relatedArticlesForArticle1.add(relatedArticle1ForArticle1);
     ArticleRelationship relatedArticle2ForArticle1 = new ArticleRelationship();
     relatedArticle2ForArticle1.setOtherArticleDoi("Fake OtherArticleDoi for relatedArticle2ForArticle1");
     relatedArticle2ForArticle1.setOtherArticleID(new Long(1000007l));
     relatedArticle2ForArticle1.setParentArticle(new Article());     //  TODO: Make this a "real" dummy Article object!
-    relatedArticle2ForArticle1.setType("Fake Type for relatedArticle2ForArticle1");
+    relatedArticle2ForArticle1.setType("Fake%20Type%20for%20relatedArticle2ForArticle1");
     relatedArticlesForArticle1.add(relatedArticle2ForArticle1);
 
     //TODO: Can't save related articles because they aren't 'real' yet.
     //article1.setRelatedArticles(relatedArticlesForArticle1);
 
     Set<String> typesForArticle1 = new HashSet<String>();
-    typesForArticle1.add("Fake Type ONE for Article1");
-    typesForArticle1.add("Fake Type TWO for Article1");
-    typesForArticle1.add("Fake Type THREE for Article1");
-    typesForArticle1.add("Fake Type FOUR for Article1");
+    typesForArticle1.add("Fake%20Type%20ONE%20for%20Article1");
+    typesForArticle1.add("Fake%20Type%20TWO%20for%20Article1");
+    typesForArticle1.add("Fake%20Type%20THREE%20for%20Article1");
+    typesForArticle1.add("Fake%20Type%20FOUR%20for%20Article1");
     article1.setTypes(typesForArticle1);
 
     return article1;
@@ -438,23 +437,23 @@ public class ArticleServiceTest extends BaseTest {
     relatedArticle1ForArticle2.setOtherArticleDoi("Fake OtherArticleDoi for relatedArticle2ForArticle2");
     relatedArticle1ForArticle2.setOtherArticleID(new Long(1000106l));
     relatedArticle1ForArticle2.setParentArticle(new Article());     //  TODO: Make this a "real" dummy Article object!
-    relatedArticle1ForArticle2.setType("Fake Type for relatedArticle2ForArticle2");
+    relatedArticle1ForArticle2.setType("Fake%20Type%20for%20relatedArticle2ForArticle2");
     relatedArticlesForArticle2.add(relatedArticle1ForArticle2);
     ArticleRelationship relatedArticle2ForArticle2 = new ArticleRelationship();
     relatedArticle2ForArticle2.setOtherArticleDoi("Fake OtherArticleDoi for relatedArticle2ForArticle2");
     relatedArticle2ForArticle2.setOtherArticleID(new Long(1000107l));
     relatedArticle2ForArticle2.setParentArticle(new Article());     //  TODO: Make this a "real" dummy Article object!
-    relatedArticle2ForArticle2.setType("Fake Type for relatedArticle2ForArticle2");
+    relatedArticle2ForArticle2.setType("Fake%20Type%20for%20relatedArticle2ForArticle2");
     relatedArticlesForArticle2.add(relatedArticle2ForArticle2);
 
     //TODO: Can't save related articles because they aren't 'real' yet.
     //article2.setRelatedArticles(relatedArticlesForArticle2);
 
     Set<String> typesForArticle2 = new HashSet<String>();
-    typesForArticle2.add("Fake Type ONE for Article2");
-    typesForArticle2.add("Fake Type TWO for Article2");
-    typesForArticle2.add("Fake Type THREE for Article2");
-    typesForArticle2.add("Fake Type FOUR for Article2");
+    typesForArticle2.add("Fake%20Type%20ONE%20for%20Article2");
+    typesForArticle2.add("Fake%20Type%20TWO%20for%20Article2");
+    typesForArticle2.add("Fake%20Type%20THREE%20for%20Article2");
+    typesForArticle2.add("Fake%20Type%20FOUR%20for%20Article2");
     article2.setTypes(typesForArticle2);
 
     return article2;
@@ -783,7 +782,40 @@ public class ArticleServiceTest extends BaseTest {
     checkArticleInfo(result,
         expectedArticle,
         expectedRelatedArticles);
+  }
 
+  @Test(dataProvider = "savedArticlesURI")
+  public void testGetRandomRecentArticles(String DOI, Article article) throws Exception {
+    String eIssn = article.geteIssn();
+    List<URI>articleTypes = new ArrayList<URI>();
+    int numDaysInPast = 30;
+    int articleCount = 100;
+
+    for(String type : article.getTypes())
+    {
+      articleTypes.add(new URI(type));
+    }
+
+    //Being the list can be random, I'm just checking that it executes properly
+    List<SearchHit> hits = articleService.getRandomRecentArticles(eIssn, articleTypes, numDaysInPast, articleCount);
+
+    assertEquals(hits.size(), 1);
+    assertMatchingDates(hits.get(0).getDate(), article.getDate());
+    assertEquals(hits.get(0).getUri(), article.getDoi());
+    assertEquals(hits.get(0).getTitle(), article.getTitle());
+  }
+
+  @Test(dataProvider = "savedArticlesURI")
+  public void testGetRandomRecentArticlesWithoutArticleTypes(String DOI, Article article) throws Exception {
+    String eIssn = article.geteIssn();
+    List<URI>articleTypes = new ArrayList<URI>();
+    int numDaysInPast = 30;
+    int articleCount = 100;
+
+    //Being the list can be random, I'm just checking that it executes properly
+    List<SearchHit> hits = articleService.getRandomRecentArticles(eIssn, articleTypes, numDaysInPast, articleCount);
+
+    assertEquals(hits.size(), 2);
   }
 
   @Test

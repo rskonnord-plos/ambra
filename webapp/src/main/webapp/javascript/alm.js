@@ -1,7 +1,5 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
@@ -19,9 +17,16 @@
 
 $.fn.alm = function () {
   this.almHost = $('meta[name=almHost]').attr("content");
+  this.almAPIKey = $('meta[name=almAPIKey]').attr('content');
 
-  if (this.almHost == null) {
-    jQuery.error('The related article metrics server is not defined.  Make sure the almHost is defined in the meta information of the html page.');
+  if (!this.almHost) {
+    //no alm host?  pick a dummy value to trigger graceful degradation
+    this.almHost = "ALM_HOST_NOT_CONFIGURED"
+  }
+
+  if (!this.almAPIKey){
+    //if api key not defined, use a dummy key that will trigger error states
+    this.almAPIKey = 'ALM_KEY_NOT_CONFIGURED'
   }
 
   this.isNewArticle = function (pubDateInMilliseconds) {
@@ -52,66 +57,10 @@ $.fn.alm = function () {
     return doi.replace(new RegExp('/', 'g'), '%2F').replace(new RegExp(':', 'g'), '%3A');
   }
 
-  this.getIDs = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?history=0";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getRelatedBlogs = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Nature,Researchblogging,Wikipedia,scienceseeker";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getCites = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=CrossRef,PubMed,Scopus,Wos";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getChartData = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Counter,PMC,RelativeMetric";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getBiodData = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Biod";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getCitesScopusOnly = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Scopus";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getCitesCrossRefOnly = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=CrossRef";
-    this.getData(request, callBack, errorCallback);
-  }
-
   this.getCitesTwitterOnly = function (doi, callBack, errorCallback) {
     doi = this.validateDOI(doi);
 
-    var request = "articles/" + doi + ".json?events=1&source=Twitter";
-    this.getData(request, callBack, errorCallback);
-  }
-
-  this.getSocialData = function (doi, callBack, errorCallback) {
-    doi = this.validateDOI(doi);
-
-    var request = "articles/" + doi + ".json?events=1&source=Citeulike,Connotea,Facebook,Twitter,Mendeley";
+    var request = doi + "&source=twitter&info=event";
     this.getData(request, callBack, errorCallback);
   }
 
@@ -120,37 +69,17 @@ $.fn.alm = function () {
    * passed in.  If an article is not found, or a source data is not found
    * The data will be missing in the resultset.
    * */
+  this.getArticleSummaries = function (dois, callBack, errorCallback) {
 
-  this.getSummaryForArticles = function (dois, callBack, errorCallback) {
     idString = "";
-    for (a = 0; a < dois.length; a++) {
-      if (idString != "") {
-        idString = idString + ",";
-      }
+    idString += this.validateDOI(dois[0]);
 
-      idString = idString + this.validateDOI("info:doi/" + dois[a]);
+    for (a = 1; a < dois.length; a++) {
+      idString += "," + this.validateDOI(dois[a]);
     }
 
-    var request = "group/articles.json?id=" + idString + "&group=statistics";
+    var request = idString;
     this.getData(request, callBack, errorCallback);
-  }
-
-  this.containsUsageStats = function (response) {
-    var foundStats = false;
-
-    //Check to see if there is counter data, don't bother with the PMC data if there is no data for counter
-    for (var a = 0; a < response.article.source.length; a++) {
-      var sourceData = response.article.source[a];
-
-      if (sourceData.source == "Counter"
-          && sourceData.events != null
-          && sourceData.events.length > 0
-          ) {
-        foundStats = true;
-      }
-    }
-
-    return foundStats;
   }
 
   /* Sort the chart data */
@@ -188,21 +117,21 @@ $.fn.alm = function () {
     var result = {};
 
     for (var a = 0; a < sources.length; a++) {
-      if (sources[a].source == "Counter") {
+      if (sources[a].name.toLowerCase() == "counter") {
         counterViews = sources[a].events;
         //Make sure everything is in the right order
         counterViews = counterViews.sort(this.sortByYearMonth);
       }
 
-      if (sources[a].source == "PubMed Central Usage Stats") {
-        if (sources[a].events != null && sources[a].events.length > 0) {
+      if (sources[a].name.toLowerCase() == "pmc") {
+        if (sources[a].events && sources[a].events.length > 0) {
           pmcViews = sources[a].events;
           //Make sure everything is in the right order
           pmcViews = pmcViews.sort(this.sortByYearMonth);
         }
       }
 
-      if (sources[a].source.toLowerCase() == "relative metric") {
+      if (sources[a].name.toLowerCase().toLowerCase() == "relativemetric") {
         if (sources[a].events != null) {
           result.relativeMetricData = sources[a].events;
         }
@@ -231,25 +160,26 @@ $.fn.alm = function () {
     //Two loops here, the first one assumes there is no data structure
     //I also assume (for the cumulative counts) that results are in order date descending
     for (var a = 0; a < counterViews.length; a++) {
-      var totalViews = this.parseIntSafe(counterViews[a].html_views) + this.parseIntSafe(counterViews[a].xml_views) +
-          this.parseIntSafe(counterViews[a].pdf_views);
-      var yearMonth = this.getYearMonth(counterViews[a].year, counterViews[a].month);
+      var event = counterViews[a];
+      var totalViews = this.parseIntSafe(event.html_views) + this.parseIntSafe(event.xml_views) +
+          this.parseIntSafe(event.pdf_views);
+      var yearMonth = this.getYearMonth(event.year, event.month);
 
       result.history[yearMonth] = {};
       result.history[yearMonth].source = {};
-      result.history[yearMonth].year = counterViews[a].year;
-      result.history[yearMonth].month = counterViews[a].month;
+      result.history[yearMonth].year = event.year;
+      result.history[yearMonth].month = event.month;
       result.history[yearMonth].source["counterViews"] = {};
-      result.history[yearMonth].source["counterViews"].month = counterViews[a].month;
-      result.history[yearMonth].source["counterViews"].year = counterViews[a].year;
-      result.history[yearMonth].source["counterViews"].totalPDF = this.parseIntSafe(counterViews[a].pdf_views);
-      result.history[yearMonth].source["counterViews"].totalXML = this.parseIntSafe(counterViews[a].xml_views);
-      result.history[yearMonth].source["counterViews"].totalHTML = this.parseIntSafe(counterViews[a].html_views);
+      result.history[yearMonth].source["counterViews"].month = event.month;
+      result.history[yearMonth].source["counterViews"].year = event.year;
+      result.history[yearMonth].source["counterViews"].totalPDF = this.parseIntSafe(event.pdf_views);
+      result.history[yearMonth].source["counterViews"].totalXML = this.parseIntSafe(event.xml_views);
+      result.history[yearMonth].source["counterViews"].totalHTML = this.parseIntSafe(event.html_views);
       result.history[yearMonth].source["counterViews"].total = totalViews;
 
-      cumulativeCounterPDF += this.parseIntSafe(counterViews[a].pdf_views);
-      cumulativeCounterXML += this.parseIntSafe(counterViews[a].xml_views);
-      cumulativeCounterHTML += this.parseIntSafe(counterViews[a].html_views);
+      cumulativeCounterPDF += this.parseIntSafe(event.pdf_views);
+      cumulativeCounterXML += this.parseIntSafe(event.xml_views);
+      cumulativeCounterHTML += this.parseIntSafe(event.html_views);
       cumulativeCounterTotal += totalViews;
 
       //Total views so far (for counter)
@@ -260,15 +190,15 @@ $.fn.alm = function () {
 
       //Total views so far (for all sources)
       result.history[yearMonth].cumulativeTotal = this.parseIntSafe(result.total) + totalViews;
-      result.history[yearMonth].cumulativePDF = result.totalPDF + this.parseIntSafe(counterViews[a].pdf_views);
-      result.history[yearMonth].cumulativeXML = result.totalXML + this.parseIntSafe(counterViews[a].xml_views);
-      result.history[yearMonth].cumulativeHTML = result.totalHTML + this.parseIntSafe(counterViews[a].html_views);
+      result.history[yearMonth].cumulativePDF = result.totalPDF + this.parseIntSafe(event.pdf_views);
+      result.history[yearMonth].cumulativeXML = result.totalXML + this.parseIntSafe(event.xml_views);
+      result.history[yearMonth].cumulativeHTML = result.totalHTML + this.parseIntSafe(event.html_views);
       result.history[yearMonth].total = totalViews;
 
       //The grand totals
-      result.totalPDF += this.parseIntSafe(counterViews[a].pdf_views);
-      result.totalXML += this.parseIntSafe(counterViews[a].xml_views);
-      result.totalHTML += this.parseIntSafe(counterViews[a].html_views);
+      result.totalPDF += this.parseIntSafe(event.pdf_views);
+      result.totalXML += this.parseIntSafe(event.xml_views);
+      result.totalHTML += this.parseIntSafe(event.html_views);
       result.total += totalViews;
     }
 
@@ -283,15 +213,16 @@ $.fn.alm = function () {
 
     if (pmcViews != null) {
       for (var a = 0; a < pmcViews.length; a++) {
-        var totalViews = this.parseIntSafe(pmcViews[a]["full-text"]) + this.parseIntSafe(pmcViews[a].pdf);
+        var event = pmcViews[a];
+        var totalViews = this.parseIntSafe(event["full-text"]) + this.parseIntSafe(event.pdf);
 
         // even if we don't display all the pmc data, the running total we display should be correct
-        cumulativePMCPDF += this.parseIntSafe(pmcViews[a].pdf);
-        cumulativePMCHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
+        cumulativePMCPDF += this.parseIntSafe(event.pdf);
+        cumulativePMCHTML += this.parseIntSafe(event["full-text"]);
         cumulativePMCTotal += totalViews;
 
         //Total views for the current period
-        var yearMonth = this.getYearMonth(pmcViews[a].year, pmcViews[a].month);
+        var yearMonth = this.getYearMonth(event.year, event.month);
 
         // if counter doesn't have data for this given month, we are going to ignore it.
         // we assume that counter data doesn't have any gaps
@@ -307,26 +238,26 @@ $.fn.alm = function () {
         result.history[yearMonth].source["pmcViews"] = {};
 
         //Total views so far (for PMC)
-        result.history[yearMonth].source["pmcViews"].month = pmcViews[a].month;
-        result.history[yearMonth].source["pmcViews"].year = pmcViews[a].year;
+        result.history[yearMonth].source["pmcViews"].month = event.month;
+        result.history[yearMonth].source["pmcViews"].year = event.year;
         result.history[yearMonth].source["pmcViews"].cumulativePDF = cumulativePMCPDF;
         result.history[yearMonth].source["pmcViews"].cumulativeHTML = cumulativePMCHTML;
         result.history[yearMonth].source["pmcViews"].cumulativeTotal = cumulativePMCTotal;
 
-        result.history[yearMonth].source["pmcViews"].totalPDF = this.parseIntSafe(pmcViews[a].pdf);
+        result.history[yearMonth].source["pmcViews"].totalPDF = this.parseIntSafe(event.pdf);
         result.history[yearMonth].source["pmcViews"].totalXML = "n.a.";
-        result.history[yearMonth].source["pmcViews"].totalHTML = this.parseIntSafe(pmcViews[a]["full-text"]);
+        result.history[yearMonth].source["pmcViews"].totalHTML = this.parseIntSafe(event["full-text"]);
         result.history[yearMonth].source["pmcViews"].total = totalViews;
 
         //Total views so far
         result.history[yearMonth].total += totalViews;
         result.history[yearMonth].cumulativeTotal += totalViews;
-        result.history[yearMonth].cumulativePDF += this.parseIntSafe(pmcViews[a].pdf);
-        result.history[yearMonth].cumulativeHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
+        result.history[yearMonth].cumulativePDF += this.parseIntSafe(event.pdf);
+        result.history[yearMonth].cumulativeHTML += this.parseIntSafe(event["full-text"]);
 
         //The grand totals
-        result.totalPDF += this.parseIntSafe(pmcViews[a].pdf);
-        result.totalHTML += this.parseIntSafe(pmcViews[a]["full-text"]);
+        result.totalPDF += this.parseIntSafe(event.pdf);
+        result.totalHTML += this.parseIntSafe(event["full-text"]);
         result.total += totalViews;
       }
     }
@@ -425,38 +356,7 @@ $.fn.alm = function () {
   }
 
   /**
-   *  host is the host and to get the JSON response from
-   *  chartIndex is the  current index of the charts[] array
-   *  callback is the method that populates the chart of  "chartIndex"
-   *  errorCallback is the method that gets called when:
-   *    --The request fails (Network error, network timeout)
-   *    --The request is "empty" (Server responds, but with nothing)
-   *    --The callback method fails
-   **/
-  this.getData = function (request, callBack, errorCallback) {
-    var url = this.almHost + "/" + request;
-
-    //I use a third party plugin here for jsonp requests as jQuery doesn't
-    //Handle errors well (with jsonp requests)
-
-    $.jsonp({
-      url: url,
-      context: document.body,
-      timeout: 20000,
-      callbackParameter: "callback",
-      success: callBack,
-      error: function (xOptions, msg) {
-        errorCallback("Our system is having a bad day. We are working on it. Please check back later.")
-      }
-
-    });
-
-    console.log(url);
-  }
-
-
-  /**
-   * Set cross ref text by DIO
+   * Set cross ref text by DOI
    * @param doi the doi
    * @param crossRefID the ID of the document element to place the result
    * @param almErrorID the ID of the document element to place the alm error
@@ -479,68 +379,75 @@ $.fn.alm = function () {
     //The proxy function forces the success method to be run in "this" context.
     this.getCitesCrossRefOnly(doi, jQuery.proxy(success, this), almError);
   }
+  this.getCitesCrossRefOnly = function (doi, callBack, errorCallback) {
+    doi = this.validateDOI(doi);
 
+    var request = doi + "&source=crossref&info=event";
+    this.getData(request, callBack, errorCallback);
+  }
   this.setCrossRefLinks = function (response, crossRefID) {
-    var doi = escape(response.article.doi);
+    var doi = encodeURIComponent(response[0].doi);
+    var crossRefResponse = this.filterSources(response[0].sources, ['crossref'])[0];
     var numCitations = 0;
 
-    if (response.article.source != null && response.article.source.length > 0
-        && response.article.source[0].events != null && response.article.source[0].events.length > 0) {
-      numCitations = response.article.source[0].events.length;
+    if (crossRefResponse.metrics.total > 0) {
+      numCitations = crossRefResponse.metrics.total;
       var html = "";
 
-      for (var a = 0; a < numCitations; a++) {
-        var citation = response.article.source[0].events[a].event;
-        var citation_url = response.article.source[0].events[a].event_url;
+      for (var eventIndex = 0; eventIndex < crossRefResponse.events.length; eventIndex++) {
+        var citation = crossRefResponse.events[eventIndex].event;
+        var citation_url = crossRefResponse.events[eventIndex].event_url;
 
         //  Assume there exists: URI, Title, and DOI.  Anything else may be missing.
         html = html + "<li><span class='article'><a href=\"" + citation_url + "\">"
-            + citation.article_title + "</a></span>";
+          + citation.article_title + "</a> <span class=\"pubGetPDFLink\" "
+          + "id=\"citation_" + this.fixDoiForID(citation.doi) + "\"></span></span>";
 
-        if (citation.contributors != null) {
+        if (citation.contributors) {
           var first_author = "";
           var authors = "";
+          var author = "";
           var contributors = citation.contributors.contributor;
-          if (contributors == undefined) {
-            contributors = citation.contributors;
-            for (var b = 0; b < contributors.length; b++) {
-              if (contributors[b].first_author === true) {
-                first_author = contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
-              } else {
-                authors = authors + ", " + contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
-              }
-            }
-            authors = first_author + authors;
-          } else {
-            if (contributors instanceof Array) {
-              for (var b = 0; b < contributors.length; b++) {
-                if (contributors[b].first_author === "true") {
-                  first_author = contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
-                } else {
-                  authors = authors + ", " + contributors[b].surname + " " + contributors[b].given_name.substr(0, 1);
+
+          for (var i = 0; i < contributors.length; i++) {
+            individualContributor = contributors[i];
+            if (individualContributor.first_author === 'true') {
+              if (individualContributor.surname) {
+                first_author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  first_author = first_author + " " + individualContributor.given_name.substr(0, 1)
                 }
               }
-              authors = first_author + authors;
             } else {
-              authors = contributors.surname + " " + contributors.given_name.substr(0, 1);
+              author = "";
+              if (individualContributor.surname) {
+                author = individualContributor.surname;
+                if (individualContributor.given_name && individualContributor.given_name.length > 0) {
+                  author = author + " " + individualContributor.given_name.substr(0, 1);
+                }
+                authors = authors + ", " + author;
+              }
             }
           }
+          authors = first_author + authors;
+
           html = html + "<span class='authors'>" + authors + "</span>";
         }
+
         html = html + "<span class='articleinfo'>";
-        if (citation.journal_title != null && citation.journal_title.length > 0) {
+        if (citation.journal_title != null) {
           html = html + citation.journal_title;
         }
-        if (citation.year != null && citation.year.length > 0) {
+        if (citation.year != null) {
           html = html + " " + citation.year;
         }
-        if (citation.volume != null && citation.volume.length > 0) {
+        if (citation.volume != null) {
           html = html + " " + citation.volume;
         }
-        if (citation.issue != null && citation.issue.length > 0) {
+        if (citation.issue != null) {
           html = html + "(" + citation.issue + ")";
         }
-        if (citation.first_page != null && citation.first_page.length > 0) {
+        if (citation.first_page) {
           html = html + ": " + citation.first_page;
         }
         html = html + ". doi:" + citation.doi + "</span></li>";
@@ -556,173 +463,140 @@ $.fn.alm = function () {
       }
 
       html = numCitations + " citation" + pluralization
-          + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
-          + $.datepicker.formatDate("M dd, yy", new Date(response.article.published))
-          + ". Citations updated on "
-          + $.datepicker.formatDate("M dd, yy", new Date(response.article.source[0].updated_at))
-          + "."
-          + " <ol>" + html + "</ol>";
+        + " as recorded by <a href=\"http://www.crossref.org\">CrossRef</a>.  Article published "
+        + $.datepicker.formatDate("M dd, yy", new Date(response[0].publication_date))
+        + ". Citations updated on "
+        + $.datepicker.formatDate("M dd, yy", new Date(response[0].update_date))
+        + "."
+        + " <ol>" + html + "</ol>";
     }
 
     $("#" + crossRefID).html(html);
     $("#" + crossRefID).show("blind", 500);
-
   }
 
   /**
-   * Sets the bookmarks text
+   * HTML IDs can not have a "/" character in them.  Used to replace / w/ :
+   * @param doi
+   */
+  this.fixDoiForID = function (doi) {
+    return doi.replace(/\//g, ":");
+  }
+
+
+  /**
+   *  host is the host and to get the JSON response from
+   *  chartIndex is the  current index of the charts[] array
+   *  callback is the method that populates the chart of  "chartIndex"
+   *  errorCallback is the method that gets called when:
+   *    --The request fails (Network error, network timeout)
+   *    --The request is "empty" (Server responds, but with nothing)
+   *    --The callback method fails
+   **/
+  this.getData = function (request, callBack, errorCallback) {
+    var url = this.almHost + '?api_key=' + this.almAPIKey + '&ids=' + request;
+
+    //I use a third party plugin here for jsonp requests as jQuery doesn't
+    //Handle errors well (with jsonp requests)
+
+    $.jsonp({
+      url: url,
+      context: document.body,
+      timeout: 20000,
+      callbackParameter: "callback",
+      success: callBack,
+      error: function (xOptions, msg) {
+        errorCallback("Our system is having a bad day. We are working on it. Please check back later.")
+      }
+    });
+
+    console.log(url);
+  }
+
+  /**
+   * Sets the Saved text
    *
    * @param doi the doi
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setBookmarksText = function (doi, bookMarksID, loadingID) {
+  this.setSavedSuccess = function(response, bookMarksID, loadingID){
+    var bookMarksNode = $('#' + bookMarksID);
+    $("#" + loadingID).fadeOut('slow');
+    bookMarksNode.css("display", "none");
 
-    var almError = function (message) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-      $("#" + bookMarksID).show("blind", 500);
-    };
+    //filter and sort
+    var sources = this.filterSources(response[0].sources, ['citeulike','connotea', 'mendeley']);
+    sources = this.enforceOrder(sources, ['citeulike','connotea', 'mendeley']);
 
-    var success = function (response) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + bookMarksID).css("display", "none");
+    //create tiles
+    var noTilesCreated = true;
+    for(var w = 0; w < sources.length; w++){
+      var source = sources[w];
 
-      this.setBookmarks(response, bookMarksID);
-    };
+      if (source.metrics.total > 0) {
+        noTilesCreated = false;
 
-    this.getSocialData(doi, jQuery.proxy(success, this), jQuery.proxy(almError, this));
-  }
+        switch (source.name) {
+          case 'mendeley':
+            bookMarksNode.append(this.createMetricsTile(source.display_name,
+              source.events_url,
+              '/images/logo-' + source.name + '.png',
+              source.metrics.total)
+              + '\n')
 
-  this.setBookmarks = function (response, bookMarksID) {
-    var doi = escape($('meta[name=citation_doi]').attr("content"));
-    var mendeleyData = null;
-    var facebookData = null;
-
-    if (response.article.source.length > 0) {
-      var html = "";
-      var countTilesCreated = 0;
-
-      for (var a = 0; a < response.article.source.length; a++) {
-        var url = response.article.source[a].public_url;
-        var tileName = response.article.source[a].source.toLowerCase().replace(" ", "-");
-        var countToShowOnTile = 0;
-
-        if (tileName == 'facebook') {  //  Facebook does not need a URL
-          facebookData = {
-            likes: 0,
-            shares: 0,
-            posts: 0
-          }
-
-          if (response.article.source[a].events) {
-            if (response.article.source[a].events instanceof Array) {
-              for (var i = 0; i < response.article.source[a].events.length; i++) {
-                countToShowOnTile = countToShowOnTile + response.article.source[a].events[i].total_count;
-                facebookData.likes += response.article.source[a].events[i].like_count;
-                facebookData.shares += response.article.source[a].events[i].share_count;
-                facebookData.posts += response.article.source[a].events[i].comment_count;
+            var individuals = source.metrics.shares;
+            var groups = source.metrics.groups;
+            $('#MendeleyImageOnArticleMetricsTab').tooltip({
+              backgroundColor: "rgba(255, 255, 255, 0.0)",
+              delay: 250,
+              fade: 250,
+              track: true,
+              shadow: false,
+              showURL: false,
+              bodyHandler: function () {
+                return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+                  "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
+                  "</thead><tbody><tr><td class=\"data1\">" + individuals.format(0, '.', ',') + "</td>" +
+                  "<td class=\"data2\">" + groups.format(0, '.', ',') + "</td></tr>" +
+                  "</tbody></table></div>");
               }
-            } else {
-              countToShowOnTile = countToShowOnTile + response.article.source[a].events.total_count;
-              facebookData.likes = response.article.source[a].events.like_count;
-              facebookData.shares = response.article.source[a].events.share_count;
-              facebookData.posts = response.article.source[a].events.comment_count;
-            }
-          }
+            });
+            break;
 
-        } else if (tileName == 'twitter') {  //  Twitter, compose a URL to our own twitter landing page
-          countToShowOnTile = response.article.source[a].count;
-          url = "/article/twitter/info:doi/" + doi;
-        } else if (tileName == 'mendeley') {
-          if (response.article.source[a].events != null) {
-            countToShowOnTile = response.article.source[a].count;
+          case 'connotea':
+            // connotea does not get a link
+            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
+                '/images/logo-' + source.name + '.png',
+                source.metrics.total)
+                + '\n');
+            break;
 
-            var groupData = 0;
-            if (response.article.source[a].events.groups != null) {
-              groupData = response.article.source[a].events.groups.length;
-            }
-
-            mendeleyData = {
-              individuals: countToShowOnTile,
-              groups: groupData
-            }
-          }
-
-        } else if (url && tileName) { // Only list links that have DEFINED URLS and NAMES.
-          countToShowOnTile = response.article.source[a].count;
+          default:
+            bookMarksNode.append(this.createMetricsTile(source.display_name,
+              source.events_url,
+              '/images/logo-' + source.name + '.png',
+              source.metrics.total)
+              + '\n')
+            break;
         }
 
-        if (countToShowOnTile > 0) {
-          if (tileName == 'facebook' || tileName == 'connotea') {  //  Facebook and Connotea does NOT get links
-            html = html + this.createMetricsTileNoLink(tileName,
-                "/images/logo-" + tileName + ".png",
-                countToShowOnTile)
-                + '\n';
-          } else {
-            html = html + this.createMetricsTile(tileName,
-                url,
-                "/images/logo-" + tileName + ".png",
-                countToShowOnTile)
-                + '\n';
-          }
-          countTilesCreated++;
-        }
       }
     }
 
-    //  If ZERO tiles were created, then hide the header, too.
-    if (countTilesCreated > 0) {
-      $("#" + bookMarksID).html(html);
-      $("#" + bookMarksID).show("blind", 500);
-    } else {
+    //if no tiles created, do not display header and section
+    if(noTilesCreated){
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
-
-    //Here we wire up the tool tips.  We have to do this after the html is appended to
-    //the dom because of the way javascript wires events.  In the future, we should create
-    //dom nodes and append the nodes with associated events, instead of building up an html
-    //string and then inserting the string into the dom
-    var fbTile = $("#facebookOnArticleMetricsTab");
-    var menTile = $("#mendeleyOnArticleMetricsTab");
-
-    if (fbTile) {
-      //Wire up events for display of details box
-      fbTile.tooltip({
-        delay: 250,
-        fade: 250,
-        track: true,
-        showURL: false,
-        bodyHandler: function () {
-          return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-              "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
-              "</thead><tbody><tr><td class=\"data1\">" + facebookData.likes.format(0, '.', ',') + "</td>" +
-              "<td class=\"data2\">" + facebookData.shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
-              facebookData.posts.format(0, '.', ',') + "</td></tr>" +
-              "</tbody></table></div>");
-        }
-      });
+    else{
+      bookMarksNode.show("blind", 500);
     }
-
-    if (menTile) {
-      //Wire up events for display of details box
-      menTile.tooltip({
-        backgroundColor: "rgba(255, 255, 255, 0.0)",
-        delay: 250,
-        fade: 250,
-        track: true,
-        shadow: false,
-        showURL: false,
-        bodyHandler: function () {
-          return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-              "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
-              "</thead><tbody><tr><td class=\"data1\">" + mendeleyData.individuals.format(0, '.', ',') + "</td>" +
-              "<td class=\"data2\">" + mendeleyData.groups.format(0, '.', ',') + "</td></tr>" +
-              "</tbody></table></div>");
-        }
-      });
-    }
-  };
+  }
+  this.setSavedError = function(message, bookMarksID, loadingID){
+    $("#" + loadingID).fadeOut('slow');
+    $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
+    $("#" + bookMarksID).show("blind", 500);
+  }
 
   this.createMetricsTile = function (name, url, imgSrc, linkText) {
     return '<div id="' + name + 'OnArticleMetricsTab" class="metrics_tile">' +
@@ -732,7 +606,6 @@ $.fn.alm = function () {
         '</div>' +
         '</div>';
   };
-
   this.createMetricsTileNoLink = function (name, imgSrc, linkText) {
     return '<div id="' + name + 'OnArticleMetricsTab" class="metrics_tile_no_link">' +
         '<img id="' + name + 'ImageOnArticleMetricsTab" src="' + imgSrc + '" alt="' + linkText + ' ' + name + '" class="metrics_tile_image"/>' +
@@ -742,206 +615,141 @@ $.fn.alm = function () {
         '</div>';
   };
 
-  this.setRelatedBlogsText = function (doi, relatedBlogPostsID, errorID, loadingID) {
-    var almError = function (message) {
-      $("#" + loadingID).fadeOut('slow');
-      this.setRelatedBlogError(message, relatedBlogPostsID, errorID);
-    };
+  this.setDiscussedSuccess = function(response, discussedID, loadingID){
 
-    var success = function (response) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + relatedBlogPostsID).css("display", "none");
+    $("#" + loadingID).fadeOut('slow');
+    var discussedElement = $('#' + discussedID);
+    discussedElement.css("display", "none");
 
-      this.setRelatedBlogs(response, relatedBlogPostsID);
-    };
-
-    this.getRelatedBlogs(doi, jQuery.proxy(success, this), jQuery.proxy(almError, this));
-  };
-
-  this.setRelatedBlogs = function (response, relatedBlogPostsID) {
-    //tileHtml used to enforce order
-    var html = "", tileHtmlList = [];
-    var doi = escape($('meta[name=citation_doi]').attr("content"));
     var articleTitle = $('meta[name=citation_title]').attr("content");
-    var natureViews = 0;
-    var wikiViews = 0;
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    var html = '', source = null, tooltip = "";
 
-    if (response.article.source.length > 0) {
-      html = "";
-      wikiHtml = "";
-      // If there is at least one hit for a blog site, then create a link to those blogs.
-      // else, if there are zero hits for a blog site, then create a "search for title" link instead.
-      for (var a = 0; a < response.article.source.length; a++) {
-        var url = response.article.source[a].public_url;
-        var tileName = response.article.source[a].source.toLowerCase().replace(" ", "-");
-        var count = response.article.source[a].count;
+    // the order of tiles
+    // research blogging, science seeker, nature blogs, wikipedia
+    // comments, twitter, facebook, trackbacks, google blogs
 
-        //Nature is a special case and will always be displayed.
-        if (tileName == "nature") {
-          natureViews = count;
-        } else if (tileName == "wikipedia") {
-          wikiViews = count;
-          wikiHtml = this.createMetricsTile("wikipedia",
-              url,
-              "/images/logo-wikipedia.png",
-              wikiViews)
-              + '\n';
+    //filter and sort
+    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook']);
+    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'twitter', 'facebook']);
+
+    for (var u = 0; u < sources.length; u++) {
+      source = sources[u];
+      html = '';
+
+      if (source.metrics.total > 0) {
+        if (source.name === 'facebook') {
+          //create tile & toggle noTilesCreated
+          // facebook does not get a link
+          html = this.createMetricsTileNoLink(source.display_name,
+              '/images/logo-' + source.name + '.png', source.metrics.total) + '\n';
+
+          //using these vars because source goes out of scope when tooltip handler is called
+          var likes = source.metrics.likes;
+          var shares = source.metrics.shares;
+          var comments = source.metrics.comments;
+          tooltip = "<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+              "<thead><tr><th>Likes</th><th>Shares</th><th>Posts</th></tr>" +
+              "</thead><tbody><tr><td class=\"data1\">" + likes.format(0, '.', ',') + "</td>" +
+              "<td class=\"data2\">" + shares.format(0, '.', ',') + "</td><td class=\"data1\">" +
+              comments.format(0, '.', ',') + "</td></tr>" +
+              "</tbody></table></div>";
+
+        } else if (source.name === 'twitter') {
+          //use link to our own twitter landing page
+          html = this.createMetricsTile(source.display_name,
+              '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
+              source.metrics.total) + '\n';
+
         } else {
-          if (tileName == "research-blogging") {
-            if (count > 0) {
-              //Research blogging wants the DOI to search on
-              tileHtml = this.createMetricsTile(tileName,
-                url,
-                "/images/logo-" + tileName + ".png",
-                count + '\n');
-
-              tileHtmlList.push({
-                name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
-              });
-            }
+          if (!source.events_url) {
+            html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           } else {
-            //Only list links that HAVE DEFINED URLS
-            if (url && count > 0) {
-
-              tileHtmlList.push({
-                name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
-              });
-
-            } else if (response.article.source[a].search_url != null
-                && response.article.source[a].search_url.length > 0) {
-
-              tileHtmlList.push({
-                name : tileName,
-                html : this.createMetricsTile(tileName, url, "/images/logo-" + tileName + ".png", count ) + '\n'
-              });
-
-            }
+            html = this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           }
+        }
+
+        if (html.length > 0) {
+          discussedElement.append(html);
         }
       }
-    }
+    } // end of for loop
 
-
-    //enforce order by appending all tiles excluding science seeker
-    var sSeekerIndex = null;
-    $.each(tileHtmlList, function (index, tileObject) {
-          if (tileObject.name.toLowerCase() == 'scienceseeker') {
-            sSeekerIndex = index;
-          }
-          else {
-            html += tileObject.html;
-            }
-        }
-    );
-
-    //  If the count for Nature is positive, then show the Nature tile.
-    if (natureViews > 0) {
-      html = html + this.createMetricsTileNoLink("nature",
-          "/images/logo-nature.png",
-          natureViews)
-          + '\n';
-    }
-
-    if (wikiViews > 0) {
-      html = html + wikiHtml;
-    }
-
-    //  Always show the Google Blogs tile.
-    html = html + this.createMetricsTile("google-blogs",
+    $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
+    $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
+    html = this.createMetricsTile("google-blogs",
         "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
         "/images/logo-googleblogs.png",
         "Search")
         + '\n';
+    discussedElement.append(html);
 
-    // now add science seeker using previously obtained index
-    if( sSeekerIndex != null ){
-      html += tileHtmlList[sSeekerIndex].html;
-    }
+    $("#FacebookOnArticleMetricsTab").tooltip({
+      delay: 250,
+      fade: 250,
+      track: true,
+      showURL: false,
+      bodyHandler: function () {
+        return $(tooltip);
+      }
+    });
 
-    $("#" + relatedBlogPostsID).html($("#" + relatedBlogPostsID).html() + html);
-    $("#" + relatedBlogPostsID).show("blind", 500);
+    discussedElement.show('blind', 500);
+  }
+  this.setDiscussedError = function (message, discussedID, loadingID) {
+
+    var discussedElement = $('#' + discussedID);
+    discussedElement.css('display', 'none');
+
+    var articleTitle = $('meta[name=citation_title]').attr('content');
+    var html = 'Search for related blog posts on <a href=\'http://blogsearch.google.com/blogsearch?as_q=%22'
+        + articleTitle + '%22\'>Google Blogs</a><br/><img src=\'/images/icon_error.png\'/>&nbsp;' + message;
+    discussedElement.html(html);
+
+    $("#" + loadingID).fadeOut('slow');
+    discussedElement.show('blind', 500);
+
   };
 
-  this.setRelatedBlogError = function (message, successID, errorID) {
-    $("#" + successID).css("display", "none");
+  this.setCitesSuccess = function(response, citesID, loadingID){
+    $("#" + loadingID).fadeOut('slow');
+    $("#" + citesID).css("display", "none");
 
-    var articleTitle = $('meta[name=citation_title]').attr("content");
-    var html = "Search for related blog posts on <a href=\"http://blogsearch.google.com/blogsearch?as_q=%22"
-        + articleTitle + "%22\">Google Blogs</a><br/><div id=\"relatedBlogPostsError\"></div>";
-
-    $("#" + successID).html(html);
-    $("#" + successID).show("blind", 500);
-
-    $("#" + errorID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + errorID).show("blind", 500);
-  };
-
-  this.setCitesText = function (doi, citesID, loadingID) {
-    var almError = function (message) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-      $("#" + citesID).show("blind", 500);
-    };
-
-    var success = function (response) {
-      $("#" + loadingID).fadeOut('slow');
-      $("#" + citesID).css("display", "none");
-
-      this.setCites(response, citesID);
-      $("#" + citesID).show("blind", 500);
-    };
-
-    this.getCites(doi, jQuery.proxy(success, this), almError);
-  };
-
-  // Sort into ascending order by the "source" variable of each element.  ALWAYS put Scopus first.
-  this.sortCitesBySource = function (a, b) {
-    if (b.source.toLowerCase() == 'scopus') {
-      return 1;
-    } else if (a.source.toLowerCase() == 'scopus' || a.source.toLowerCase() < b.source.toLowerCase()) {
-      return -1;
-    } else if (a.source.toLowerCase() > b.source.toLowerCase()) {
-      return 1;
-    }
-    return 0;
-  };
-
-  this.setCites = function (response, citesID) {
     var numCitesRendered = 0;
-    var doi = escape($('meta[name=citation_doi]').attr("content"));
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
     var html = "";
 
-    if (response.article.source.length > 0) {
-      // Citation Sources should always start with Scopus (if an entry for Scopus exists)
-      // followed by the rest of the sources in alphabetical order.
-      response.article.source = response.article.source.sort(this.sortCitesBySource);
+    // Citation Sources should always start with Scopus (if an entry for Scopus exists)
+    // followed by the rest of the sources in alphabetical order.
+    var sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos"]);
+    sources = this.enforceOrder(sources, ['scopus','crossref','pubmed','wos']);
 
-      for (var a = 0; a < response.article.source.length; a++) {
-        var url = response.article.source[a].public_url;
+    for (var a = 0; a < sources.length; a++) {
+      source = sources[a];
+      if (source.metrics.total > 0) {
+        var url = source.events_url;
         // find all spaces
         var patternForSpace = /\s/g;
-        var tileName = response.article.source[a].source.toLowerCase().replace(patternForSpace, "-");
+        var tileName = source.display_name.toLowerCase().replace(patternForSpace, "-");
         // removing registered trademark symbol from web of science
         tileName = tileName.replace("\u00ae", "");
 
         //  If CrossRef, then compose a URL to our own CrossRef Citations page.
-        if (response.article.source[a].source == 'CrossRef' && response.article.source[a].count > 0) {
+        if (source.name.toLowerCase() == 'crossref') {
           html = html + this.createMetricsTile(tileName,
-              "/article/crossref/info:doi/" + doi,
-              "/images/logo-" + tileName + ".png",
-              response.article.source[a].count)
-              + '\n';
+            "/article/crossref/info:doi/" + doi,
+            "/images/logo-" + tileName + ".png",
+            source.metrics.total)
+            + '\n';
           numCitesRendered++;
         }
         //  Only list links that HAVE DEFINED URLS
-        else if (url && response.article.source[a].count > 0) {
+        else if (source.events_url) {
           html = html + this.createMetricsTile(tileName,
-              url,
-              "/images/logo-" + tileName + ".png",
-              response.article.source[a].count)
-              + '\n';
+            url,
+            "/images/logo-" + tileName + ".png",
+            source.metrics.total)
+            + '\n';
           numCitesRendered++;
         }
       }
@@ -954,13 +762,49 @@ $.fn.alm = function () {
       html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
     } else {
       html = html + this.createMetricsTile("googleScholar",
-          "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
-          "/images/logo-google-scholar.png",
-          "Search");
+        "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
+        "/images/logo-google-scholar.png",
+        "Search");
     }
 
     $("#" + citesID).html(html);
-  };
+    $("#" + citesID).show("blind", 500);
+
+  }
+
+  this.setCitesError = function(message, citesID, loadingID) {
+    $("#" + loadingID).fadeOut('slow');
+    $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
+    $("#" + citesID).show("blind", 500);
+  }
+
+  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID) {
+    //add the goods then show the area which is by default hidden
+
+    var f1k = this.filterSources(response[0].sources, ['f1000']).pop();
+
+    //TODO - delete: this is here to prevent an exception as f1000 is not active and will be null
+    if (!f1k) {
+      return;
+    }
+    if (f1k.metrics.total == 0) {
+      return;
+    }
+
+    var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+    $('#' + f1kHeaderID).show("blind", 500);
+
+    $("#" + f1kSpinnerID).fadeOut('slow');
+    $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
+      f1k.events_url,
+      '/images/logo-' + f1k.name + '.png',
+      f1k.metrics.total)
+      + '\n').show("blind", 500);
+  }
+
+  this.setF1000Error = function (message) {
+    //the f1k section is by default hidden, so no need to do a thing
+  }
 
   this.setChartData = function (doi, usageID, loadingID) {
     //citation_date format = 2006/12/20
@@ -990,7 +834,7 @@ $.fn.alm = function () {
           $("#" + loadingID).fadeOut('slow');
           $usage.css("display", "none");
 
-          var data = this.massageChartData(response.article.source, publishDatems);
+          var data = this.massageChartData(response[0].sources, publishDatems);
 
           var summaryTable = $('<div id="pageViewsSummary"><div id="left"><div class="header">Total Article Views</div>' +
               '<div class="totalCount">' + data.total.format(0, '.', ',') + '</div>' +
@@ -1165,11 +1009,10 @@ $.fn.alm = function () {
 
             var chart = new Highcharts.Chart(options);
 
-
             // check to see if there is any data
             if (data.relativeMetricData != null) {
               var subjectAreas = data.relativeMetricData.subject_areas;
-              if (subjectAreas != null && subjectAreas.length > 0) {
+              if (subjectAreas && subjectAreas.length > 0) {
                 var subjectAreaList = new Array();
 
                 // loop through each subject area and add the data to the chart
@@ -1280,12 +1123,86 @@ $.fn.alm = function () {
           } // end if (isGraphDisplayed)
 
           $usage.append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
+
+          this.addFigshareTile(response[0]);
+
           $usage.show("blind", 500);
         };
 
-        this.getChartData(doi, jQuery.proxy(success, this), almError);
+        doi = this.validateDOI(doi);
+        var request = doi + '&source=pmc,counter,relativemetric,figshare&info=event';
+        this.getData(request, jQuery.proxy(success, this), almError);
       }
     }
+  };
+
+  this.addFigshareTile = function(response) {
+
+    var i = 0, source;
+
+    for (i = 0; i < response.sources.length; i++) {
+      source = response.sources[i];
+      if (source.name.toLowerCase() == "figshare") {
+        if (source.metrics.total > 0) {
+          var tileName = source.name;
+          var tile = this.createMetricsTileNoLink(tileName,
+              "/images/logo-" + tileName + ".png",
+              source.metrics.total);
+
+          $('#views').append(tile);
+        }
+        break;
+      }
+    }
+
+    $.ajax({
+      url: '/article/figureTableList.action?uri=' +  'info:doi/' + response.doi,
+      dataFilter: function (data, type) {
+        return data.replace(/(^\/\*|\*\/$)/g, '');
+      },
+      dataType: 'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+
+        var toolTip = $('<div class=\"tileTooltip\"></div>'), toolTipTable = $('<table class=\"tile_mini\"></table>'),
+            item, totalStat, key, tooltips = {};
+
+        // build tooltip
+        for (i = 0; i < source.events.items.length; i++) {
+          item = source.events.items[i], totalStat = 0, key = "";
+
+          if (item.doi.length == 1) {
+            key = item.doi[0].replace("http://dx.doi.org/", "");
+          } else if (item.doi.length > 1) {
+            key = "SI";
+          }
+
+          totalStat = item.stats.downloads + item.stats.page_views;
+          tooltips[key] = "<td class=\"data1\">" + totalStat + "</td>";
+        }
+
+        for (i = 0; i < data.secondaryObjects.length; i++) {
+          key = data.secondaryObjects[i].doi.replace("info:doi/", "");
+          toolTipTable.append("<tr><td>" + data.secondaryObjects[i].title + "</td>" + tooltips[key] + "</tr>");
+        }
+
+        if (tooltips["SI"]) {
+          toolTipTable.append("<tr><td>Supporting Info files</td>" + tooltips["SI"] + "</tr>");
+        }
+
+        $("#figshareImageOnArticleMetricsTab").tooltip({
+          delay: 250,
+          fade: 250,
+          track: true,
+          showURL: false,
+          bodyHandler: function () {
+            return toolTip.append(toolTipTable);
+          }
+        });
+      }
+    });
   };
 
   this.makeSignPostLI = function (text, value, description, link) {
@@ -1299,6 +1216,60 @@ $.fn.alm = function () {
     }).apply(li);
 
     return li;
+  }
+
+  this.setMetricsTab = function (doi) {
+
+    doi = this.validateDOI(doi);
+
+    //succeed!
+    var success = function(response){
+      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
+      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
+      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
+    }
+
+    //fail!
+    var fail = function(message){
+      this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
+      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner");
+      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setF1000Error(message, "f1000","f1000Spinner");
+    }
+
+    //get the data
+    this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
+  }
+
+  this.filterSources = function(sources, validNames) {
+
+    validSources = [];
+
+    for (var i = 0; i < sources.length; i++) {
+      if ($.inArray(sources[i].name.toLowerCase(), validNames) > -1) {
+        validSources.push(sources[i]);
+      }
+    }
+
+    return validSources;
+  }
+
+  this.enforceOrder = function(sources, orderArray) {
+
+    var sourceNames = [];
+    for (var n = 0; n < sources.length; n++) {
+      sourceNames.push(sources[n].name);
+    }
+
+    var orderedSources = [];
+    for (var d = 0; d < orderArray.length; d++) {
+      var index = $.inArray(orderArray[d], sourceNames);
+      if (index > -1) {
+        orderedSources.push(sources[index]);
+      } 
+    }
+    return orderedSources;
   }
 }
 
@@ -1328,90 +1299,97 @@ function onReadyALM() {
     };
 
     var almSuccess = function (response) {
-      if(response && response.length > 0 ) {
-        if (response[0].groups.length > 0) {
-          var viewdata = almService.massageChartData(response[0].groups[0].sources, publishDatems);
+      if (response && response.length > 0) {
+        responseObject = response[0];
 
-          li = almService.makeSignPostLI("VIEWS", viewdata.total,
-            "Sum of PLOS and PubMed Central page views and downloads",
-            "/static/almInfo#usageInfo");
+        //distinguish sources
+        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref;
+        sources = responseObject.sources;
 
-          $("#almSignPost").append(li);
-        }
-
-        var scopus = 0;
-        var crossref = 0;
-        var bookmarks = 0;
-        var shares = 0;
-
-        for (var curGroup = 0; curGroup < response[0].groupcounts.length; curGroup++) {
-          for (var curSource = 0; curSource < response[0].groupcounts[curGroup].sources.length; curSource++) {
-            var name = response[0].groupcounts[curGroup].sources[curSource].source;
-            var count = response[0].groupcounts[curGroup].sources[curSource].count;
-
-            if (name == "Scopus") {
-              scopus = count;
-            }
-
-            if (name == "CrossRef") {
-              crossref = count;
-            }
-
-            if (name == "Mendeley" || name == "CiteULike") {
-              bookmarks += count;
-            }
-
-            if (name == "Facebook" || name == "Twitter") {
-              shares += count;
-            }
+        for(var i = 0; i < sources.length; i += 1){
+          source = sources[i];
+          if(source.name.toLowerCase() == 'counter'){
+            counter = source;
+          }
+          else if(source.name.toLowerCase() == 'pmc'){
+            pmc = source;
+          }
+          else if(source.name.toLowerCase() == 'scopus'){
+            scopus = source;
+          }
+          else if(source.name.toLowerCase() == 'facebook'){
+            facebook = source;
+          }
+          else if(source.name.toLowerCase() == 'twitter'){
+            twitter = source;
+          }
+          else if(source.name.toLowerCase() == 'mendeley'){
+            mendeley = source;
+          }
+          else if(source.name.toLowerCase() == 'citeulike'){
+            citeulike = source;
+          }
+          else if(source.name.toLowerCase() == 'crossref'){
+            crossref = source;
           }
         }
 
-        var text, li;
 
-        if (scopus > 0) {
+        li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
+          "Sum of PLOS and PubMed Central page views and downloads",
+          "/static/almInfo#usageInfo");
+
+        $("#almSignPost").append(li);
+
+        var text, li;
+        //citations
+        if (scopus.metrics.total > 0) {
           text = "CITATIONS";
-          if (scopus == 1) {
+          if (scopus.metrics.total == 1) {
             text = "CITATION";
           }
 
-          li = almService.makeSignPostLI(text, scopus, "Paper's citation count computed by Scopus",
+          li = almService.makeSignPostLI(text, scopus.metrics.total, "Paper's citation count computed by Scopus",
             "/static/almInfo#citationInfo");
 
           $("#almSignPost").append(li);
         } else {
-          if(crossref > 0) {
+          if(crossref.metrics.total > 0) {
             text = "CITATIONS";
-            if (crossref == 1) {
+            if (crossref.metrics.total == 1) {
               text = "CITATION";
             }
 
-            li = almService.makeSignPostLI(text, crossref, "Scopus data unavailable. Displaying Crossref citation count",
+            li = almService.makeSignPostLI(text, crossref.metrics.total, "Scopus data unavailable. Displaying Crossref citation count",
               "/static/almInfo#citationInfo");
 
             $("#almSignPost").append(li);
           }
         }
 
-        if (bookmarks > 0) {
-          text = "ACADEMIC BOOKMARKS";
-          if (bookmarks == 1) {
-            text = "ACADEMIC BOOKMARK";
+        //bookmarks
+        var bookmarksTotal = mendeley.metrics.total + citeulike.metrics.total;
+        if (bookmarksTotal > 0) {
+          text = "SAVES";
+          if (bookmarksTotal == 1) {
+            text = "SAVE";
           }
 
-          li = almService.makeSignPostLI(text, bookmarks, "Total Mendeley and CiteULike " +
+          li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
             "bookmarks", "/static/almInfo#socialBookmarks");
 
           $("#almSignPost").append(li);
         }
 
-        if (shares > 0) {
-          text = "SOCIAL SHARES";
-          if (shares == 1) {
-            text = "SOCIAL SHARE";
+        //shares
+        var sharesTotal = facebook.metrics.total + twitter.metrics.total;
+        if (sharesTotal > 0) {
+          text = "SHARES";
+          if (sharesTotal == 1) {
+            text = "SHARE";
           }
 
-          li = almService.makeSignPostLI(text, shares, "Sum of Facebook and Twitter activity",
+          li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
             "/static/almInfo#socialBookmarks");
 
           $("#almSignPost").append(li);
@@ -1421,7 +1399,7 @@ function onReadyALM() {
       }
     };
 
-    almService.getSummaryForArticles([ doi ], almSuccess, almError);
+    almService.getArticleSummaries([ doi ], almSuccess, almError);
   }
 }
 
@@ -1430,9 +1408,7 @@ $(document).ready(onReadyALM);
 function onLoadALM() {
   var almService = new $.fn.alm();
   var doi = $('meta[name=citation_doi]').attr("content");
-  almService.setBookmarksText(doi, "relatedBookmarks", "relatedBookmarksSpinner");
-  almService.setRelatedBlogsText(doi, "relatedBlogPosts", "relatedBlogPostsError", "relatedBlogPostsSpinner");
-  almService.setCitesText(doi, "relatedCites", "relatedCitesSpinner");
+
+  almService.setMetricsTab(doi);
   almService.setChartData(doi, "usage", "chartSpinner");
 }
-
