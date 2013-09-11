@@ -179,7 +179,7 @@ public class SearchParametersTest {
     sp.setUnformattedQuery("unformattedQuery: " + test);
     sp.setFilterSubjects(inputStringArray);
     sp.setFilterJournals(inputStringArray);
-    sp.setFilterArticleType(inputStringArray);
+    sp.setFilterArticleTypes(inputStringArray);
     sp.setSort("sort: " + test);
     sp.setStartPage(473);
     sp.setPageSize(216);
@@ -218,11 +218,11 @@ public class SearchParametersTest {
     sp.setFilterJournals(new String[]{});
     assertNotSame(spCopy.getFilterJournals().length, sp.getFilterJournals().length);
 
-    for (int i = 0 ; i < sp.getFilterArticleType().length ; i++) {
-      assertEquals(sp.getFilterArticleType()[i], spCopy.getFilterArticleType()[i]);
+    for (int i = 0 ; i < sp.getFilterArticleTypes().length ; i++) {
+      assertEquals(sp.getFilterArticleTypes()[i], spCopy.getFilterArticleTypes()[i]);
     }
-    sp.setFilterArticleType(new String[]{});
-    assertNotSame(spCopy.getFilterArticleType().length, sp.getFilterArticleType().length);
+    sp.setFilterArticleTypes(new String[]{});
+    assertNotSame(spCopy.getFilterArticleTypes().length, sp.getFilterArticleTypes().length);
 
     assertEquals(spCopy.getSort(), sp.getSort());
     sp.setSort(test);
@@ -253,7 +253,7 @@ public class SearchParametersTest {
     sp.setFilterJournals(inputStringArray);
     sp.setFilterAuthors(inputStringArray);
     sp.setFilterKeyword("keyword");
-    sp.setFilterArticleType(inputStringArray);
+    sp.setFilterArticleTypes(inputStringArray);
     sp.setSort("sortString");
     sp.setStartPage(473);
     sp.setPageSize(216);
