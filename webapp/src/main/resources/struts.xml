@@ -534,13 +534,13 @@
 
     <action name="lightbox" class="org.ambraproject.action.article.SlideshowAction">
       <result name="success" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations</param>
+        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
       </result>
       <result name="error" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations</param>
+        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
       </result>
       <result name="input" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations</param>
+        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
       </result>
     </action>
 
