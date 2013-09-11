@@ -37,7 +37,7 @@
 
   <h2>Ambra 2.8.0</h2>
   <p>Released September 17, 2013</p>
-  <p>Features Implemented in Ambra 2.8.0</p>
+  <h3>Features Implemented in Ambra 2.8.0</h3>
   <ul>
       <li>New PLOS One homepage</li>
       <li>New taxonomy browser and taxonomy browse pages</li>
