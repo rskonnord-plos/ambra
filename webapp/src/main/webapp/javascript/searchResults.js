@@ -1,8 +1,6 @@
 /*
- * $HeadURL::                                                                            $
- * $Id$
+ * Copyright (c) 2006-2013 by Public Library of Science
  *
- * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -73,11 +71,15 @@ $(document).ready(
         $("#searchStripForm").submit();
       });
 
-      $("#clearArticleTypeFilter").click(function(eventObj) {
-        $("input[name|='filterArticleType']").each(function (index, element) {
-          $(element).val('');
+      $("#clearArticleTypesFilter").click(function(eventObj) {
+        $("input[name|='filterArticleTypes']").each(function (index, element) {
+          $(element).removeAttr('checked');
         });
 
+        $("#searchStripForm").submit();
+      });
+
+      $("input[name|='filterArticleTypes']").click(function(eventObj) {
         $("#searchStripForm").submit();
       });
 
