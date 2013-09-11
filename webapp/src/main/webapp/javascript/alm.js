@@ -1334,10 +1334,11 @@ function onReadyALM() {
           }
         }
 
+        doiLink = '/article/metrics/info:doi/' + $('meta[name=citation_doi]').attr("content");
 
         li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
           "Sum of PLOS and PubMed Central page views and downloads",
-          "/static/almInfo#usageInfo");
+          doiLink + "#viewedHeader");
 
         $("#almSignPost").append(li);
 
@@ -1350,7 +1351,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, scopus.metrics.total, "Paper's citation count computed by Scopus",
-            "/static/almInfo#citationInfo");
+            doiLink + "#citedHeader");
 
           $("#almSignPost").append(li);
         } else {
@@ -1361,7 +1362,7 @@ function onReadyALM() {
             }
 
             li = almService.makeSignPostLI(text, crossref.metrics.total, "Scopus data unavailable. Displaying Crossref citation count",
-              "/static/almInfo#citationInfo");
+              doiLink + "#citedHeader");
 
             $("#almSignPost").append(li);
           }
@@ -1376,7 +1377,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
-            "bookmarks", "/static/almInfo#socialBookmarks");
+            "bookmarks", doiLink + "#savedHeader");
 
           $("#almSignPost").append(li);
         }
@@ -1390,7 +1391,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
-            "/static/almInfo#socialBookmarks");
+            doiLink + "#discussedHeader");
 
           $("#almSignPost").append(li);
         }
@@ -1403,6 +1404,30 @@ function onReadyALM() {
   }
 }
 
+function jumpToALMSection(){
+  //if url contains a reference to an alm section, jump there
+  var url = $(location).attr('href');
+  var hashIndex = url.indexOf('#');
+  if(hashIndex == -1){
+    return;
+  }
+
+  var almSection = url.slice(hashIndex);
+
+  switch(almSection){
+    case '#citedHeader':
+      break;
+    case '#viewedHeader':
+      break;
+    case '#savedHeader':
+      break;
+    case 'discussedHeader':
+      break;
+  }
+
+  alert('end function');
+}
+
 $(document).ready(onReadyALM);
 
 function onLoadALM() {
@@ -1411,4 +1436,5 @@ function onLoadALM() {
 
   almService.setMetricsTab(doi);
   almService.setChartData(doi, "usage", "chartSpinner");
+  jumpToALMSection();
 }
