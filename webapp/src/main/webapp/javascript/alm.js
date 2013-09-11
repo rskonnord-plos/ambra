@@ -1208,8 +1208,8 @@ $.fn.alm = function () {
   this.makeSignPostLI = function (text, value, description, link) {
     var li = $('<li>' +
         '<div class="top">' + value.format(0, '.', ',') + '</div><div class="bottom"><div class="center">' +
-        '<div class="text">' + text + '<div class="content"><div class="description">' + description + '&nbsp;&nbsp;' +
-        '<a href="' + link + '">Read more</a>.</div></div></div></div></div></li>');
+        '<div class="text">' + text + '<div class="content"><div class="description">' +
+        '<a href="' + link + '">' + description + '</a>.</div></div></div></div></div></li>');
 
     (function () {
       this.hoverEnhanced({});

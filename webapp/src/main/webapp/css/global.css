@@ -1044,7 +1044,7 @@ ul#almSignPost li div.bottom div.center {
 .article-meta ul#almSignPost li div.content {
   position: absolute;
   right: 0;
-  width: 350px;
+  width: 290px;
   height: 100px;
   -webkit-transition: visibility .4s linear, opacity .3s linear;
   -moz-transition: visibility .4s linear, opacity .3s linear;
@@ -1082,11 +1082,10 @@ ul#almSignPost li div.bottom div.center {
   border-radius: 4px;
   position: absolute;
   padding: 5px;
-  width: 340px;
+  width: 280px;
 }
 
 .article-meta ul#almSignPost li div.description a {
-  text-decoration: underline;
   color: #fff;
 }
 
