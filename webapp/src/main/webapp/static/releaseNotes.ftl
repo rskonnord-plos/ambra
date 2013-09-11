@@ -43,6 +43,7 @@
       <li>New taxonomy browser and taxonomy browse pages</li>
       <li>New article type for service layer</li>
       <li>Fix for search filter bugs</li>
+      <li>Fix for Scopus tile on article page Metrics tab</li>
   </ul>
 
   <h2>Ambra 2.7.9</h2>
