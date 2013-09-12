@@ -1412,20 +1412,9 @@ function jumpToALMSection(){
     return;
   }
 
-  var almSection = url.slice(hashIndex);
-
-  switch(almSection){
-    case '#citedHeader':
-      break;
-    case '#viewedHeader':
-      break;
-    case '#savedHeader':
-      break;
-    case 'discussedHeader':
-      break;
-  }
-
-  alert('end function');
+  var almSectionID = url.slice(hashIndex);
+  verticalPosition = $(almSectionID).position().top;
+  scrollTo(0,verticalPosition);
 }
 
 $(document).ready(onReadyALM);
@@ -1436,5 +1425,5 @@ function onLoadALM() {
 
   almService.setMetricsTab(doi);
   almService.setChartData(doi, "usage", "chartSpinner");
-  jumpToALMSection();
+  setTimeout(jumpToALMSection,300);
 }
