@@ -195,15 +195,10 @@
       return data;
     }
 
-    // For the root of the category hierarchy, we have to add the child terms together.
-    // In all other levels this is directly available.
     if (term === '/') {
-      var view_all_total = 0;
-      $.each(child_terms, function(i, child_term) {
-        view_all_total += term_counts[child_term];
-      });
+      var term_count = term_counts['ROOT'];
     } else {
-      var view_all_total = term_counts[term];
+      var term_count = term_counts[term];
     }
 
     // create the column markup
@@ -211,7 +206,7 @@
       items: createDataObject(child_terms),
       level: term_stack.length, // level is 1-based, array length is 0-based
       view_all_link: buildSubjectUrl(term),
-      view_all_total: view_all_total
+      view_all_total: term_count
     });
 
     // insert the markup into the doc
@@ -630,7 +625,9 @@
     // console.log("after: all_terms = ", all_terms);
 
     // return an encoded version of the URL
-    return API_URL + encodeURIComponent(all_terms.join("/")) + "&journal=" + $('meta[name=currentJournal]').attr("content");
+    return API_URL + encodeURIComponent(all_terms.join("/"))
+        + "&journal=" + $('meta[name=currentJournal]').attr("content")
+        + "&showCounts=true";
   }
 
   /**

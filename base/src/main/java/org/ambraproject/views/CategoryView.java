@@ -18,26 +18,22 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * CategoryView to hold category structure and information
  */
 public class CategoryView {
+
+  /**
+   * Name of the root node of the taxonomy.  This is not exposed in the UI anywhere, but makes dealing
+   * with the taxonomy easier.
+   */
+  public static final String ROOT_NODE_NAME = "ROOT";
+
   private Map<String, CategoryView> parents;
   private Map<String, CategoryView> children;
   private final String name;
-  private long count;
 
   public CategoryView(String name) {
     this.name = name;
-    this.count = -1;
 
     parents = new ConcurrentSkipListMap<String, CategoryView>();
     children = new ConcurrentSkipListMap<String, CategoryView>();
-  }
-
-  public CategoryView(String name, long count) {
-    this(name);
-    this.count = count;
-  }
-
-  public void incrementCount(long increment) {
-    count += increment;
   }
 
   public Map<String, CategoryView> getParents() {
@@ -53,11 +49,10 @@ public class CategoryView {
   }
 
   /**
-   * @return the number of articles that fall within this category, or -1 if that info
-   *     is not available
+   * @return true iff this category is the root of the entire taxonomy tree
    */
-  public long getCount() {
-    return count;
+  public boolean isRoot() {
+    return ROOT_NODE_NAME.equals(name);
   }
 
   @Override

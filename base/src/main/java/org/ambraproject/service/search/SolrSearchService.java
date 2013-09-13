@@ -279,7 +279,42 @@ public class SolrSearchService implements SearchService {
    * @inheritDoc
    */
   @Override
-  public List<Pair<String, Long>> getAllSubjects(String journal) throws ApplicationException {
+  public List<String> getAllSubjects(String journal) throws ApplicationException {
+    QueryResponse queryResponse = executeSubjectFacetSearch("subject_hierarchy", journal);
+    FacetField facet = queryResponse.getFacetField("subject_hierarchy");
+    List<String> results = new ArrayList<String>(facet.getValues().size());
+    for (FacetField.Count count : facet.getValues()) {
+      results.add(count.getName());
+    }
+    return results;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SubjectCounts getAllSubjectCounts(String journal) throws ApplicationException {
+    QueryResponse queryResponse = executeSubjectFacetSearch("subject_facet", journal);
+    FacetField facet = queryResponse.getFacetField("subject_facet");
+    SubjectCounts results = new SubjectCounts();
+    for (FacetField.Count count : facet.getValues()) {
+      results.subjectCounts.put(count.getName(), count.getCount());
+    }
+    results.totalArticles = queryResponse.getResults().getNumFound();
+    return results;
+  }
+
+  /**
+   * Executes a search where results are grouped by one of the subject facets in the solr schema.
+   *
+   * @param facetName the subject facet of interest.  Depending on the application, this should be
+   *     either "subject_facet" or "subject_hierarchy".  The first does not include the entire taxonomy
+   *     path, while the second does.
+   * @param journal journal of interest
+   * @return solr server response
+   * @throws ApplicationException
+   */
+  private QueryResponse executeSubjectFacetSearch(String facetName, String journal) throws ApplicationException {
     SolrQuery query = createQuery("*:*", 0, 0, false);
 
     // We don't care about results, just facet counts.
@@ -287,31 +322,24 @@ public class SolrSearchService implements SearchService {
 
     // We only care about full documents
     query.addFilterQuery(createFilterFullDocuments());
+    query.addFilterQuery(createFilterNoIssueImageDocuments());
 
     // Remove facets we don't use in this case.
     query.removeFacetField("author_facet");
     query.removeFacetField("editor_facet");
     query.removeFacetField("affiliate_facet");
     query.removeFacetField("subject_facet");
+    query.removeFacetField("subject_hierarchy");
 
     // Add the one we do want.
-    query.addFacetField("subject_hierarchy");
+    query.addFacetField(facetName);
 
     if(journal != null && journal.length() > 0) {
       query.addFilterQuery("cross_published_journal_key:" + journal);
     }
 
     query.setFacetLimit(-1);  // unlimited
-
-    QueryResponse queryResponse = getSOLRResponse(query);
-    FacetField facet = queryResponse.getFacetField("subject_hierarchy");
-    List<Pair<String, Long>> results = new ArrayList<Pair<String, Long>>(facet.getValues().size());
-
-    for (FacetField.Count count : facet.getValues()) {
-      results.add(new Pair<String, Long>(count.getName(), count.getCount()));
-    }
-
-    return results;
+    return getSOLRResponse(query);
   }
 
   /**

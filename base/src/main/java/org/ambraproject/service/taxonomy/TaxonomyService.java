@@ -61,4 +61,15 @@ public interface TaxonomyService {
    * @throws ApplicationException
    */
   CategoryView parseCategories(String currentJournal) throws ApplicationException;
+
+  /**
+   * Returns the number of articles, for a given journal, associated with the parent term and all
+   * direct children of a subject taxonomy term.
+   *
+   * @param taxonomy the term in the taxonomy to examine, as well as its direct children
+   * @param currentJournal specifies the journal
+   * @return map from taxonomy term to count of articles
+   * @throws ApplicationException
+   */
+  Map<String, Long> getCounts(CategoryView taxonomy, String currentJournal) throws ApplicationException;
 }

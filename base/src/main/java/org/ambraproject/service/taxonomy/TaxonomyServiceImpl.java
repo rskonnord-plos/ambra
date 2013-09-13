@@ -23,7 +23,6 @@ import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.CategoryUtils;
-import org.ambraproject.util.Pair;
 import org.ambraproject.views.CategoryView;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -119,14 +118,12 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
 
   private SortedMap<String, List<String>> parseTopAndSecondLevelCategoriesWithoutCache(String currentJournal)
     throws ApplicationException {
-
-    List<Pair<String, Long>> fullCategoryPaths = searchService.getAllSubjects(currentJournal);
+    List<String> fullCategoryPaths = searchService.getAllSubjects(currentJournal);
 
     // Since there are lots of duplicates, we start by adding the second-level
     // categories to a Set instead of a List.
     Map<String, Set<String >> map = new HashMap<String, Set<String>>();
-    for (Pair<String, Long> subject : fullCategoryPaths) {
-      String category = subject.getFirst();
+    for (String category : fullCategoryPaths) {
 
       // If the category doesn't start with a slash, it's one of the old-style
       // categories where we didn't store the full path.  Ignore these.
@@ -177,9 +174,53 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
   private CategoryView parseCategoriesWithoutCache(String currentJournal)
     throws ApplicationException {
 
-    List<Pair<String, Long>> subjects = searchService.getAllSubjects(currentJournal);
+    List<String> subjects = searchService.getAllSubjects(currentJournal);
 
     return CategoryUtils.createMapFromStringList(subjects);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<String, Long> getCounts(CategoryView taxonomy, String currentJournal) throws ApplicationException {
+    Map<String, Long> counts = getAllCounts(currentJournal);
+    Map<String, Long> results = new HashMap<String, Long>();
+    for (CategoryView child : taxonomy.getChildren().values()) {
+      results.put(child.getName(), counts.get(child.getName()));
+    }
+    results.put(taxonomy.getName(), counts.get(taxonomy.getName()));
+    return results;
+  }
+
+  /**
+   * Returns article counts for a given journal for all subject terms in the taxonomy.
+   * The results will be cached for CACHE_TTL.
+   *
+   * @param currentJournal specifies the current journal
+   * @return map from subject term to article count
+   * @throws ApplicationException
+   */
+  private Map<String, Long> getAllCounts(final String currentJournal) throws ApplicationException {
+    if (cache == null) {
+      return getAllCountsWithoutCache(currentJournal);
+    } else {
+      String key = ("categoryCountCacheKey" + ((currentJournal == null) ? "" : currentJournal)).intern();
+      return cache.get(key, CACHE_TTL,
+          new Cache.SynchronizedLookup<Map<String, Long>, ApplicationException>(key) {
+            @Override
+            public Map<String, Long> lookup() throws ApplicationException {
+              return getAllCountsWithoutCache(currentJournal);
+            }
+          });
+    }
+  }
+
+  private Map<String, Long> getAllCountsWithoutCache(String currentJournal) throws ApplicationException {
+    SearchService.SubjectCounts subjectCounts = searchService.getAllSubjectCounts(currentJournal);
+    Map<String, Long> counts = subjectCounts.subjectCounts;
+    counts.put(CategoryView.ROOT_NODE_NAME, subjectCounts.totalArticles);
+    return counts;
   }
 
   public void setCache(Cache cache) {

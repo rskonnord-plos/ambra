@@ -11,6 +11,7 @@
 
 package org.ambraproject.action.taxonomy;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.util.CategoryUtils;
@@ -41,6 +42,7 @@ public class TaxonomyAction extends BaseActionSupport {
   private String journal;
   private String[] filter;
   private Map<String, SortedSet<String>> categories;
+  private boolean showCounts;
   private Map<String, Long> counts;
 
   @Override
@@ -80,13 +82,12 @@ public class TaxonomyAction extends BaseActionSupport {
    * @return A map of categories
    */
   @SuppressWarnings("unchecked")
-  private void buildCategoryMap() {
+  private void buildCategoryMap() throws ApplicationException {
     //Should probably implement this in the setter if the getter ever starts to get
     //called more then once
 
     if(this.root == null) {
       categories = CategoryUtils.getShortTree(categoryView);
-      counts = CategoryUtils.getCounts(categoryView);
     }
 
     //Ignore first slash if it exists
@@ -96,17 +97,16 @@ public class TaxonomyAction extends BaseActionSupport {
 
     if(this.root.trim().length() == 0) {
       categories = CategoryUtils.getShortTree(categoryView);
-      counts = CategoryUtils.getCounts(categoryView);
     } else {
       String[] levels = this.root.split("/");
-      CategoryView res = categoryView;
-
       for(String level : levels) {
-        res = res.getChild(level);
+        categoryView = categoryView.getChild(level);
       }
 
-      categories = CategoryUtils.getShortTree(res);
-      counts = CategoryUtils.getCounts(res);
+      categories = CategoryUtils.getShortTree(categoryView);
+    }
+    if (showCounts) {
+      counts = taxonomyService.getCounts(categoryView, journal);
     }
   }
 
@@ -158,6 +158,14 @@ public class TaxonomyAction extends BaseActionSupport {
 
   public Map<String, SortedSet<String>> getCategories() {
     return categories;
+  }
+
+  /**
+   * @param showCounts if true, information about the number of articles associated with each taxonomy
+   *     term will be returned in the response
+   */
+  public void setShowCounts(boolean showCounts) {
+    this.showCounts = showCounts;
   }
 
   public Map<String, Long> getCounts() {

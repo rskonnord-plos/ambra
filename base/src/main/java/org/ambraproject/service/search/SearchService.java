@@ -24,7 +24,9 @@ import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Search service interface.
@@ -46,9 +48,37 @@ public interface SearchService {
    * for the given journal.
    *
    * @param journal name of the journal in question
-   * @return List of Pairs wrapping the category name and the number of articles that fall within it
+   * @return List of category names
    */
-  List<Pair<String, Long>> getAllSubjects(String journal) throws ApplicationException;
+  List<String> getAllSubjects(String journal) throws ApplicationException;
+
+  /**
+   * Simple class wrapping the returned values of getAllSubjectCounts.
+   */
+  public static class SubjectCounts {
+
+    /**
+     * Total number of articles in the corpus for a given journal.  Note that this cannot
+     * be derived from summing everything in subjectCounts, since articles canned by
+     * tagged with multiple subjects.
+     */
+    public long totalArticles;
+
+    /**
+     * Count of articles for a given journal by subject category.
+     */
+    public Map<String, Long> subjectCounts = new HashMap<String, Long>();
+  }
+
+  /**
+   * Returns the number of articles, for a given journal, associated with all the subject
+   * categories in the taxonomy.
+   *
+   * @param journal specifies the journal
+   * @return see comments for {@link SubjectCounts}
+   * @throws ApplicationException
+   */
+  SubjectCounts getAllSubjectCounts(String journal) throws ApplicationException;
 
   /**
    * Returns articles list that are published between the last search time and the current search time for saved search
