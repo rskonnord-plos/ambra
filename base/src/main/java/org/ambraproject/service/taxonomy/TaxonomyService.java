@@ -42,6 +42,17 @@ public interface TaxonomyService {
   public void flagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
 
   /**
+   * Remove a flag from a particular taxonomy term (by database ID).  The authID may be null if the user
+   * is not logged in.  If the userProfileID is left null, in the database, one flag for this articleID/categoryID
+   * pair is removed
+   *
+   * @param articleID articleID
+   * @param categoryID categoryID
+   * @param authID the user's authID.
+   */
+  public void deflagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
+
+  /**
    * Parses a list of slash-delimited categories, as returned by solr, into a sorted map
    * from top-level category to a list of second-level categories.
    *

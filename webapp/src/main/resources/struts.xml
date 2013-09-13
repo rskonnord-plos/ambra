@@ -304,6 +304,25 @@
         <param name="templateFile">/error.ftl</param>
       </result>
     </action>
+
+    <action name="deflagTaxonomyTerm" class="org.ambraproject.action.taxonomy.DeflagTaxonomyTermAction">
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
+          locale, numFieldErrors, rssName, rssPath, texts</param>
+      </result>
+
+      <result name="input" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errors, locale, numFieldErrors,
+          rssName, rssPath, texts</param>
+      </result>
+
+      <result name="error" type="default_freemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/error.ftl</param>
+      </result>
+    </action>
   </package>
 
 

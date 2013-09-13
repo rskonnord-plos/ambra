@@ -31,10 +31,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Flag a particular taxonomy term applied to an article
+ * deflag a particular taxonomy term applied to an article
  */
-public class FlagTaxonomyTermAction extends BaseActionSupport {
-  private static final Logger log = LoggerFactory.getLogger(FlagTaxonomyTermAction.class);
+public class DeflagTaxonomyTermAction extends BaseActionSupport {
+  private static final Logger log = LoggerFactory.getLogger(DeflagTaxonomyTermAction.class);
 
   private TaxonomyService taxonomyService;
 
@@ -52,41 +52,37 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
    */
   @Override
   public String execute() throws Exception {
+    //new list devoid of article / category flag we're removing
     List<Pair<Long, Long>> valuePairs = new ArrayList<Pair<Long, Long>>();
 
     if(articleID != null && categoryID != null) {
       Cookie cookie = getCookie(COOKIE_ARTICLE_CATEGORY_FLAGS);
-      boolean flaggedAlready = false;
 
-      if(cookie != null) {
+      if(cookie == null) {
+        if(this.getAuthId() != null) {
+          taxonomyService.deflagTaxonomyTerm(articleID, categoryID, this.getAuthId());
+        } else {
+          addActionError("Not logged in and flag cookie not found, you can not delete this flag.");
+          return INPUT;
+        }
+      } else {
         String cookieValue = cookie.getValue();
 
         if(cookieValue != null) {
           TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
 
           for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
-            //Add existing values to the set to use for the new cookie
-            valuePairs.add(articleCategory);
-
             long storedArticleID = articleCategory.getFirst();
             long storedCategoryID = articleCategory.getSecond();
 
             if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
-              flaggedAlready = true;
+              taxonomyService.deflagTaxonomyTerm(articleID, categoryID, this.getAuthId());
+            } else {
+              //Add one to the list.
+              valuePairs.add(articleCategory);
             }
           }
         }
-      }
-
-      if(!flaggedAlready) {
-        //Here add new value to the first in the list.  This way if cookie limit is reached, the oldest values will
-        // get lost.
-        List<Pair<Long, Long>> temp = new ArrayList<Pair<Long, Long>>();
-        temp.add(new Pair<Long, Long>(articleID, categoryID));
-        temp.addAll(valuePairs);
-        valuePairs = temp;
-
-        this.taxonomyService.flagTaxonomyTerm(articleID, categoryID, this.getAuthId());
       }
 
       TaxonomyCookie newCookie = new TaxonomyCookie(valuePairs);

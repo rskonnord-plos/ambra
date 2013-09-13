@@ -100,6 +100,45 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
   /**
    * {@inheritDoc}
    */
+  public void deflagTaxonomyTerm(final long articleID, final long categoryID, final String authID) {
+    //The style of query used is significantly different pending the authID is null or not
+
+    //I don't use a hibernate model here to save on precious CPU.
+    if(authID != null && authID.length() > 0) {
+      hibernateTemplate.execute(new HibernateCallback() {
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+          session.createSQLQuery(
+            "delete acf.* from articleCategoryFlagged acf " +
+              "join userProfile up on up.userProfileID = acf.userProfileID " +
+              "where acf.articleID = :articleID and acf.categoryID = :categoryID and " +
+              "up.authId = :authId")
+            .setString("authID", authID)
+            .setLong("articleID", articleID)
+            .setLong("categoryID", categoryID)
+            .executeUpdate();
+
+          return null;
+        }
+      });
+    } else {
+      //Remove one record from the database at random
+      hibernateTemplate.execute(new HibernateCallback() {
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+          session.createSQLQuery(
+            "delete articleCategoryFlagged where articleID = :articleID and categoryID = :categoryID limit 1")
+            .setLong("articleID", articleID)
+            .setLong("categoryID", categoryID)
+            .executeUpdate();
+
+          return null;
+        }
+      });
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public SortedMap<String, List<String>> parseTopAndSecondLevelCategories(final String currentJournal)
     throws ApplicationException {
     if (cache == null) {
