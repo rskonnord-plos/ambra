@@ -20,7 +20,8 @@ package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.taxonomy.TaxonomyService;
-import org.ambraproject.util.TextUtils;
+import org.ambraproject.util.Pair;
+import org.ambraproject.views.TaxonomyCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -51,7 +52,7 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
    */
   @Override
   public String execute() throws Exception {
-    List<List<String>> nameCookieValuePairs = new ArrayList<List<String>>();
+    List<Pair<Long, Long>> valuePairs = new ArrayList<Pair<Long, Long>>();
 
     if(articleID != null && categoryID != null) {
       Cookie cookie = getCookie(COOKIE_ARTICLE_CATEGORY_FLAGS);
@@ -61,25 +62,17 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
         String cookieValue = cookie.getValue();
 
         if(cookieValue != null) {
-          for(List<String> valuePairTemp : TextUtils.parsePipedCSV(cookieValue)) {
-            //If somehow the valuePair is not two elements, log a warning, keep going
-            if(valuePairTemp.size() == 2) {
-              //Add existing value to new cookie value to be set
-              nameCookieValuePairs.add(valuePairTemp);
-              try {
-                long storedArticleID = Long.valueOf(valuePairTemp.get(0));
-                long storedCategoryID = Long.valueOf(valuePairTemp.get(1));
+          TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
 
-                if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
-                  flaggedAlready = true;
-                }
-              } catch (NumberFormatException ex) {
-                log.warn("Strange values stored in: '{}' Cookie: '{}', Specifically: '{}, {}'",
-                  new Object[] { COOKIE_ARTICLE_CATEGORY_FLAGS, cookieValue, valuePairTemp.get(0),
-                    valuePairTemp.get(1) });
-              }
-            } else {
-              log.warn("Strange values stored in: '{}' Cookie: '{}'", COOKIE_ARTICLE_CATEGORY_FLAGS, cookieValue);
+          for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
+            //Add existing values to the set to use for the new cookie
+            valuePairs.add(articleCategory);
+
+            long storedArticleID = articleCategory.getFirst();
+            long storedCategoryID = articleCategory.getSecond();
+
+            if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
+              flaggedAlready = true;
             }
           }
         }
@@ -88,23 +81,19 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
       if(!flaggedAlready) {
         //Here add new value to the first in the list.  This way if cookie limit is reached, the oldest values will
         // get lost.
-        List<List<String>> temp = new ArrayList<List<String>>();
-        temp.add(Arrays.asList(new String[]{ String.valueOf(articleID), String.valueOf(categoryID) }));
-        temp.addAll(nameCookieValuePairs);
-        nameCookieValuePairs = temp;
+        List<Pair<Long, Long>> temp = new ArrayList<Pair<Long, Long>>();
+        temp.add(new Pair<Long, Long>(articleID, categoryID));
+        temp.addAll(valuePairs);
+        valuePairs = temp;
+
         this.taxonomyService.flagTaxonomyTerm(articleID, categoryID, this.getAuthId());
       }
 
-      //Limit cookie length to 3500 characters to stay under the storage limit
-      //We'll be loosing tracked flags, but at this point, I don't see another way to handle it
-      //The actual limit is about 4000 bytes.  But I don't want to walk on other cookie values
-      //set as the limit is by domain, not cookie
-      String cookeValue = TextUtils.createdPipedCSV(nameCookieValuePairs);
-      if(cookeValue.length() > 3500) {
-        cookeValue = cookeValue.substring(0, 3500);
-      }
+      TaxonomyCookie newCookie = new TaxonomyCookie(valuePairs);
 
-      setCookie(new Cookie(COOKIE_ARTICLE_CATEGORY_FLAGS, cookeValue));
+      //Let's make the cookie last a year
+      int cookieAge = 60 * 60 * 24 * 365;
+      setCookie(new Cookie(COOKIE_ARTICLE_CATEGORY_FLAGS, newCookie.toCookieString()), cookieAge);
 
       return SUCCESS;
     }

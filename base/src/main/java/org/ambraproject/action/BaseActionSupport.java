@@ -224,7 +224,7 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
     return null;
   }
 
-  public void setCookie(Cookie cookie) {
+  public void setCookie(Cookie cookie, int maxAgeInSeconds) {
     HttpServletResponse response = ServletActionContext.getResponse();
 
     if(response == null) {
@@ -233,6 +233,7 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
 
     //So all cookies from the domain are accessible across all paths.
     cookie.setPath("/");
+    cookie.setMaxAge(maxAgeInSeconds);
 
     response.addCookie(cookie);
   }

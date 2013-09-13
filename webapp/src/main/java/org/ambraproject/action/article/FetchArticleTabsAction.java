@@ -33,6 +33,7 @@ import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.service.article.NoSuchArticleIdException;
 import org.ambraproject.service.trackback.TrackbackService;
 import org.ambraproject.service.user.UserService;
+import org.ambraproject.util.Pair;
 import org.ambraproject.util.TextUtils;
 import org.ambraproject.util.UriUtil;
 import org.ambraproject.views.AnnotationView;
@@ -40,6 +41,7 @@ import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
+import org.ambraproject.views.TaxonomyCookie;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.RelatedArticleInfo;
@@ -339,7 +341,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
         String value = c.getValue();
 
         if(value != null) {
-          setAdditionalFlags(value);
+          setAdditionalCategoryFlags(value);
         }
       }
     }
@@ -350,35 +352,22 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * a cookie on the user's browser.  Used to track categories they
    * have flagged
    */
-  private void setAdditionalFlags(String cookieValue) {
+  private void setAdditionalCategoryFlags(String cookieValue) {
     //Check to see if the user has flagged any categories anonymously
-    List<List<String>> articleIDCategoryIDFlags = TextUtils.parsePipedCSV(cookieValue);
+    TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
     List<ArticleCategory> newCategories = new ArrayList<ArticleCategory>();
 
     for(ArticleCategory articleCategory : this.getCategories()) {
       ArticleCategory articleCategoryTemp = null;
 
-      for(List<String> valuePairTemp : articleIDCategoryIDFlags) {
-        //Each value in this set is a name value pair
-        //If somehow the valuePair is not two elements, log a warning, keep going
-        if(valuePairTemp.size() == 2) {
-          try {
-            long articleID = Long.valueOf(valuePairTemp.get(0));
-            long categoryID = Long.valueOf(valuePairTemp.get(1));
+      for(Pair<Long, Long> articleCategories : taxonomyCookie.getArticleCategories()) {
+        long articleID = articleCategories.getFirst();
+        long categoryID = articleCategories.getSecond();
 
-            //If we find the user has flagged this pair, let's recreate the view setting the flag
-            if(articleCategory.getCategoryID() == categoryID && this.articleInfoX.getId() == articleID) {
-              articleCategoryTemp = ArticleCategory.builder(articleCategory)
-                .setFlagged(true).build();
-            }
-          } catch (NumberFormatException ex) {
-            log.warn("Strange values stored in: '{}' Cookie: '{}', Specifically: '{}, {}'",
-              new Object[] { COOKIE_ARTICLE_CATEGORY_FLAGS, articleIDCategoryIDFlags, valuePairTemp.get(0),
-                valuePairTemp.get(1)});
-          }
-        } else {
-          log.warn("Strange values stored in: '{}' Cookie: '{}'", COOKIE_ARTICLE_CATEGORY_FLAGS,
-            cookieValue);
+        //If we find the user has flagged this pair, let's recreate the view setting the flag
+        if(articleCategory.getCategoryID() == categoryID && this.articleInfoX.getId() == articleID) {
+          articleCategoryTemp = ArticleCategory.builder(articleCategory)
+            .setFlagged(true).build();
         }
       }
 
