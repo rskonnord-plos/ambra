@@ -87,6 +87,9 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
         valuePairs = temp;
 
         this.taxonomyService.flagTaxonomyTerm(articleID, categoryID, this.getAuthId());
+        log.debug("Article/Category Flagged. ArticleID: {}, CategoryID: {}, AuthID: '{}'", new Object[] { articleID, categoryID, this.getAuthId() });
+      } else {
+        log.debug("Article/Category Flagged already. {}/{}", articleID, categoryID);
       }
 
       TaxonomyCookie newCookie = new TaxonomyCookie(valuePairs);

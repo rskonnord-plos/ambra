@@ -77,6 +77,7 @@ public class DeflagTaxonomyTermAction extends BaseActionSupport {
 
             if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
               taxonomyService.deflagTaxonomyTerm(articleID, categoryID, this.getAuthId());
+              log.debug("Article/Category DE-flagged. ArticleID: {}, CategoryID: {}, AuthID: '{}'", new Object[] { articleID, categoryID, this.getAuthId() });
             } else {
               //Add one to the list.
               valuePairs.add(articleCategory);
