@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Required;
 import java.util.List;
 
 public class BrowseVolumeAction extends BaseActionSupport {
-  private static final Logger log = LoggerFactory.getLogger(BrowseArticlesAction.class);
+  private static final Logger log = LoggerFactory.getLogger(BrowseVolumeAction.class);
   private BrowseService browseService;
   private JournalService journalService;
   private IssueInfo currentIssue;

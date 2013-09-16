@@ -16,14 +16,17 @@
 
 package org.ambraproject.service.article;
 
+import org.ambraproject.action.BaseHttpTest;
+import org.ambraproject.models.Article;
+import org.ambraproject.service.search.SolrException;
+import org.ambraproject.util.Pair;
+import org.ambraproject.views.article.HomePageArticleInfo;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import org.ambraproject.action.BaseHttpTest;
-import org.ambraproject.service.search.SolrException;
-import org.ambraproject.util.Pair;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -56,7 +56,7 @@
     <property name="permissionsService" ref="permissionsService"/>
     <property name="articleService" ref="articleService"/>
     <property name="journalService" ref="journalService"/>
-    <property name="searchService" ref="searchService"/>
+    <property name="mostViewedArticleService" ref="mostViewedArticleService"/>
   </bean>
 
   <bean id="fetchArticleAction" class="org.ambraproject.action.article.FetchArticleAction">
@@ -153,6 +153,7 @@
 
   <bean id="saveSearchAction" class="org.ambraproject.action.search.SaveSearchAction">
     <property name="userService" ref="userService"/>
+    <property name="searchService" ref="searchService"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
   </bean>

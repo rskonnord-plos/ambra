@@ -1,6 +1,7 @@
-/*
- * Copyright (c) 2006-2013 by Public Library of Science
+/* $HeadURL::                                                                            $
+ * $Id$
  *
+ * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -20,18 +21,22 @@
 package org.ambraproject.action;
 
 import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.article.MostViewedArticleService;
 import org.ambraproject.service.journal.JournalService;
-import org.ambraproject.ApplicationException;
-import org.ambraproject.service.search.SearchService;
+import org.ambraproject.service.search.SolrException;
 import org.ambraproject.views.SearchHit;
+import org.ambraproject.views.article.HomePageArticleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+
 import java.net.URI;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * @author stevec
@@ -42,12 +47,61 @@ public class HomePageAction extends BaseActionSupport {
 
   private ArticleService articleService;
   private JournalService journalService;
-  private SearchService searchService;
-  private SortedMap<String, Long> categoryInfos;
+  private MostViewedArticleService mostViewedArticleService;
 
   private List<SearchHit> recentArticles;
+  private List<HomePageArticleInfo> recentArticleInfo;
   private int numDaysInPast;
   private int numArticlesToShow;
+
+  private List<HomePageArticleInfo> mostViewedArticleInfo;
+  // the action returns from mostViewedStartIndex, and sets mostViewedNextIndex = mostViewedStartIndex + mostViewedLimit
+  private int mostViewedNextIndex = 0;
+  private int mostViewedStartIndex = 0;
+
+  private int recentNextIndex = 0;
+  private int recentStartIndex = 0;
+
+  private List<HomePageArticleInfo> newsArticleInfo;
+
+  /**
+   * This execute method always returns SUCCESS
+   */
+  @Override
+  public String execute() {
+    //for PLOSONE
+    log.info("Current journal is " + getCurrentJournal());
+    if ("PLoSONE".equals(getCurrentJournal())) {
+      recentStartIndex = 0;
+      mostViewedStartIndex = 0;
+      executeNews();
+      executeRecent();
+      executeMostViewed();
+    }
+    //for other journals
+    else {
+      initRecentArticles();
+    }
+    return SUCCESS;
+  }
+
+  //only for PLOSONE
+  public String executeNews() {
+    initNewsArticleInfo();
+    return SUCCESS;
+  }
+
+  //only for PLOSONE
+  public String executeRecent() {
+    initRecentArticleInfo();
+    return SUCCESS;
+  }
+
+  //only for PLOSONE
+  public String executeMostViewed() {
+    initMostViewedArticleInfo();
+    return SUCCESS;
+  }
 
   /**
    * Get the URIs for the Article Types which can be displayed on the <i>Recent Articles</i> tab
@@ -101,7 +155,7 @@ public class HomePageAction extends BaseActionSupport {
     return typeUriArticlesToShow;
   }
 
-    /**
+  /**
      * Populate the <b>recentArticles</b> (global) variable with random recent articles of
      * appropriate Article Type(s).
      * <ul>
@@ -125,41 +179,80 @@ public class HomePageAction extends BaseActionSupport {
      * </ul>
      * The CURRENT_JOURNAL_NAME is acquired from the {@link BaseActionSupport#getCurrentJournal()}
      */
-    private void initRecentArticles() {
-      String journalKey = getCurrentJournal();
-      String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
-      String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
-      List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
+  private void initRecentArticles() {
+    String journalKey = getCurrentJournal();
+    String journal_eIssn = journalService.getJournal(journalKey).geteIssn();
+    String rootKey = "ambra.virtualJournals." + journalKey + ".recentArticles";
+    List<URI> typeUriArticlesToShow = getArticleTypesToShow(rootKey);
 
-      numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
-      numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
-      recentArticles = articleService.getRandomRecentArticles(journal_eIssn, typeUriArticlesToShow, numDaysInPast, numArticlesToShow);
-    }
-
-  /**
-   * This execute method always returns SUCCESS
-   */
-  @Override
-  public String execute() {
-    try {
-      categoryInfos = searchService.getTopSubjects();
-    } catch(ApplicationException ex) {
-      log.error("Failed to query search service", ex);
-      categoryInfos = new TreeMap<String, Long>();
-    }
-
-    initRecentArticles();
-
-    return SUCCESS;
+    numDaysInPast = configuration.getInteger(rootKey + ".numDaysInPast", 7);
+    numArticlesToShow = configuration.getInteger(rootKey + ".numArticlesToShow", 5);
+    recentArticles = articleService.getRandomRecentArticles(journal_eIssn, typeUriArticlesToShow, numDaysInPast,numArticlesToShow);
   }
 
   /**
-   * @return Returns category and number of articles for each category.
-   *
-   * Categories are listed for all journals and sorted by name
+   * Populate the <b>newsArticleInfo</b> (global) variable with articles
+   * for PLOSONE
    */
-  public SortedMap<String,Long> getCategoryInfos() {
-    return categoryInfos;
+  private void initNewsArticleInfo() {
+    String listCode = getCurrentJournal().toLowerCase() + "_news";
+    newsArticleInfo = mostViewedArticleService.getNewsArticleInfo(listCode);
+  }
+
+  /**
+   * Populate the <b>recenetArticleInfo</b> (global) variable with articles
+   * for PLOSONE
+   */
+  private void initRecentArticleInfo() {
+    String recentKey = "ambra.virtualJournals." + getCurrentJournal() + ".recentArticles";
+
+    try {
+      String limitKey = (recentStartIndex == 0 ? ".limitFirstPage" :  ".limit");
+      int limit = configuration.getInt(recentKey + limitKey);
+      List<URI> typeUriArticlesToShow = getArticleTypesToShow(recentKey);
+
+      recentArticleInfo = mostViewedArticleService.getRecentArticleInfo(getCurrentJournal(), recentStartIndex, limit, typeUriArticlesToShow);
+      recentNextIndex = recentStartIndex + recentArticleInfo.size();
+    } catch (SolrException e) {
+      log.error("Error querying solr for most viewed articles; returning empty list", e);
+      recentArticleInfo = new LinkedList<HomePageArticleInfo>();
+      recentNextIndex = recentStartIndex;
+    }
+  }
+
+  /**
+   * Populate the <b>mostViewedArticleInfo</b> (global) variable with articles
+   * for PLOSONE
+   *
+   */
+  private void initMostViewedArticleInfo() {
+    String mostViewedKey = "ambra.virtualJournals." + getCurrentJournal() + ".mostViewedArticles";
+    try {
+      String limitKey = (mostViewedStartIndex == 0 ? ".limitFirstPage" :  ".limit");
+      int limit = configuration.getInt(mostViewedKey + limitKey);
+      Integer days;
+      try {
+        days = configuration.getInt(mostViewedKey + ".timeFrame");
+      } catch (Exception e) {
+        days = null;
+      }
+
+      mostViewedArticleInfo = mostViewedArticleService.getMostViewedArticleInfo(getCurrentJournal(), mostViewedStartIndex, limit, days);
+      mostViewedNextIndex = mostViewedStartIndex + mostViewedArticleInfo.size();
+    } catch (SolrException e) {
+      log.error("Error querying solr for most viewed articles; returning empty list", e);
+      mostViewedArticleInfo = new LinkedList<HomePageArticleInfo>();
+      mostViewedNextIndex = mostViewedStartIndex;
+    }
+
+  }
+
+  public void setMostViewedArticleService(MostViewedArticleService mostViewedArticleService) {
+    this.mostViewedArticleService = mostViewedArticleService;
+  }
+
+  public List<HomePageArticleInfo> getMostViewedArticleInfo() {
+    return mostViewedArticleInfo;
   }
 
   /**
@@ -169,6 +262,47 @@ public class HomePageAction extends BaseActionSupport {
    */
   public List<SearchHit> getRecentArticles() {
     return recentArticles;
+  }
+
+  /**
+   * Retrieves the most recently published articles in the last 7 days
+   *
+   * @return array of SearchHit objects
+   */
+  public List<HomePageArticleInfo> getRecentArticleInfo() {
+    return recentArticleInfo;
+  }
+
+  /**
+   * Returns an array of numValues ints which are randomly selected between 0 (inclusive) and
+   * maxValue(exclusive). If maxValue is less than numValues, will return maxValue items. Guarantees
+   * uniqueness of values.
+   *
+   * @param numValues Length of the array
+   * @param maxValue Maximum value of each element of the array
+   * @return array of random ints
+   */
+  public int[] randomNumbers(int numValues, int maxValue) {
+    if (numValues > maxValue) {
+      numValues = maxValue;
+    }
+
+    Random rng = new Random(System.currentTimeMillis());
+    Set<Integer> intValues = new HashSet<Integer>();
+    while (intValues.size() < numValues) {
+      Integer oneNum = rng.nextInt(maxValue);
+      if (!intValues.contains(oneNum)) {
+        intValues.add(oneNum);
+      }
+    }
+
+    Iterator<Integer> iter = intValues.iterator();
+    int[] returnArray = new int[intValues.size()];
+    for (int i = 0; iter.hasNext(); i++) {
+      returnArray[i] = iter.next();
+    }
+
+    return returnArray;
   }
 
   /**
@@ -186,16 +320,48 @@ public class HomePageAction extends BaseActionSupport {
     this.journalService = journalService;
   }
 
-  /**
-   * @param searchService The searchService to set.
-   */
-  @Required
-  public void setSearchService(SearchService searchService) {
-    this.searchService = searchService;
+  public int getNumDaysInPast() {
+    return numDaysInPast;
   }
 
   public int getNumArticlesToShow() {
     return numArticlesToShow;
+  }
+
+  public int getMostViewedNextIndex() {
+    return mostViewedNextIndex;
+  }
+
+  public void setMostViewedNextIndex(int mostViewedNextIndex) {
+    this.mostViewedNextIndex = mostViewedNextIndex;
+  }
+
+  public int getMostViewedStartIndex() {
+    return mostViewedStartIndex;
+  }
+
+  public void setMostViewedStartIndex(int mostViewedStartIndex) {
+    this.mostViewedStartIndex = mostViewedStartIndex;
+  }
+
+  public int getRecentNextIndex() {
+    return recentNextIndex;
+  }
+
+  public void setRecentNextIndex(int recentNextIndex) {
+    this.recentNextIndex = recentNextIndex;
+  }
+
+  public int getRecentStartIndex() {
+    return recentStartIndex;
+  }
+
+  public void setRecentStartIndex(int recentStartIndex) {
+    this.recentStartIndex = recentStartIndex;
+  }
+
+  public List<HomePageArticleInfo> getNewsArticleInfo() {
+    return newsArticleInfo;
   }
 
 }

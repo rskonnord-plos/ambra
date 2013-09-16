@@ -21,9 +21,9 @@
 
 package org.ambraproject.service.search;
 
+import org.ambraproject.util.Pair;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.ambraproject.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Calendar;

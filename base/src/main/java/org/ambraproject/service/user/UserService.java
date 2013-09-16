@@ -16,6 +16,7 @@ import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.UserLogin;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.search.SearchParameters;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.SavedSearchView;
 
 import java.util.List;
@@ -198,4 +199,23 @@ public interface UserService {
    */
   public Long recordUserSearch(Long userProfileID, String searchTerms, String searchParams);
 
+  /**
+   * Whether the logged in user has the specified category in her journal alerts.
+   * Return false if user is not logged in.
+   *
+   * @param category - the category string
+   * @return two value - first is a boolean which is true if the category is saved
+   * as a journal alert search for the logged in user, and second is an integer with
+   * the number of subject categories the user has already subscribed to in this journal.
+   */
+  public Pair<Boolean,Integer> getJournalAlertAndSubjectCount(Long userId, String journal, String category);
+
+  /**
+   * Return a list of subjects for which this user has a journal alert set up.
+   *
+   * @param userId
+   * @param journal
+   * @return  all available list of subject for users
+   */
+  public List<String> getJournalAlertSubjects(Long userId, String journal);
 }

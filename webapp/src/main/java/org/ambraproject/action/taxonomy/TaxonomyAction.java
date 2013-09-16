@@ -9,8 +9,9 @@
  * limitations under the License.
  */
 
-package org.ambraproject.action;
+package org.ambraproject.action.taxonomy;
 
+import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;

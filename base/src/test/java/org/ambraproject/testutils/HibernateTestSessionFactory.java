@@ -74,6 +74,7 @@ public class HibernateTestSessionFactory extends LocalSessionFactoryBean {
       perms.add(UserRole.Permission.MANAGE_ROLES);
       perms.add(UserRole.Permission.MANAGE_JOURNALS);
       perms.add(UserRole.Permission.MANAGE_SEARCH);
+      perms.add(UserRole.Permission.MANAGE_ARTICLE_LISTS);
       perms.add(UserRole.Permission.MANAGE_CACHES);
       perms.add(UserRole.Permission.CROSS_PUB_ARTICLES);
       perms.add(UserRole.Permission.DELETE_ARTICLES);
