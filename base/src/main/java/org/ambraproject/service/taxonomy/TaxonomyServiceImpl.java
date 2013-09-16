@@ -102,20 +102,29 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
    */
   public void deflagTaxonomyTerm(final long articleID, final long categoryID, final String authID) {
     //The style of query used is significantly different pending the authID is null or not
-
     //I don't use a hibernate model here to save on precious CPU.
     if(authID != null && authID.length() > 0) {
       hibernateTemplate.execute(new HibernateCallback() {
         public Object doInHibernate(Session session) throws HibernateException, SQLException {
-          session.createSQLQuery(
+          int rows = session.createSQLQuery(
             "delete acf.* from articleCategoryFlagged acf " +
               "join userProfile up on up.userProfileID = acf.userProfileID " +
               "where acf.articleID = :articleID and acf.categoryID = :categoryID and " +
-              "up.authId = :authId")
+              "up.authId = :authID")
             .setString("authID", authID)
             .setLong("articleID", articleID)
             .setLong("categoryID", categoryID)
             .executeUpdate();
+
+          if(rows == 0) {
+            //If no rows affected, it's likely the user created the flag while not logged in,
+            //And is now trying to remove it.
+            session.createSQLQuery(
+              "delete from articleCategoryFlagged where articleID = :articleID and categoryID = :categoryID limit 1")
+              .setLong("articleID", articleID)
+              .setLong("categoryID", categoryID)
+              .executeUpdate();
+          }
 
           return null;
         }
@@ -125,7 +134,8 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
       hibernateTemplate.execute(new HibernateCallback() {
         public Object doInHibernate(Session session) throws HibernateException, SQLException {
           session.createSQLQuery(
-            "delete articleCategoryFlagged where articleID = :articleID and categoryID = :categoryID limit 1")
+            "delete from articleCategoryFlagged where articleID = :articleID and categoryID = :categoryID " +
+              "and userProfileID is null limit 1")
             .setLong("articleID", articleID)
             .setLong("categoryID", categoryID)
             .executeUpdate();
