@@ -295,8 +295,7 @@
 
       <result name="input" type="json_nocomments">
         <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
-          actionErrors, actionMessages, URL, authId, currentJournal, errors, locale, numFieldErrors,
-          rssName, rssPath, texts</param>
+          URL, authId, currentJournal, errors, locale, numFieldErrors, rssName, rssPath, texts</param>
       </result>
 
       <result name="error" type="default_freemarker">
@@ -314,8 +313,7 @@
 
       <result name="input" type="json_nocomments">
         <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
-          actionErrors, actionMessages, URL, authId, currentJournal, errors, locale, numFieldErrors,
-          rssName, rssPath, texts</param>
+          URL, authId, currentJournal, errors, locale, numFieldErrors, rssName, rssPath, texts</param>
       </result>
 
       <result name="error" type="default_freemarker">
