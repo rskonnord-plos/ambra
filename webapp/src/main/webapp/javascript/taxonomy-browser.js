@@ -556,15 +556,20 @@
       '<li><a href="' + data.view_all_link + '" class="no-children">View All Articles</a></li>',
       terms.join("\n"),
       '</ul>',
-      '</div>',
-      '<a href="#" class="up"></a>',
-      '<a href="#" class="down"></a>',
-      '</div>'
-    ].join("\n");
+      '</div>' ];
 
-    // console.log(markup);
+    //We don't need the up / down arrows for less then 4 items
+    //console.log(data.items.length);
 
-    return markup;
+    if(data.items.length > 4) {
+      markup.push(['<a href="#" class="up"></a>', '<a href="#" class="down"></a>']);
+    }
+
+    markup.push(['</div>']);
+
+    //console.log(markup.join("\n"));
+
+    return markup.join("\n");
   }
 
 
