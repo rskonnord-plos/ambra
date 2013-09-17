@@ -1745,6 +1745,7 @@ html:not(.js) .btn-reveal:hover .content {
   visibility: visible;
   cursor: default;
   opacity: 1;
+  z-index: 5;
 }
 
 #subject-area-sidebar-block-help p {
