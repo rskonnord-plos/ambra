@@ -19,14 +19,13 @@
 package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.views.ArticleCategoryPair;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.service.taxonomy.TaxonomyService;
-import org.ambraproject.util.Pair;
 import org.ambraproject.views.TaxonomyCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class DeflagTaxonomyTermAction extends BaseActionSupport {
   public String execute() throws Exception {
     String cookieValue = Cookies.getCookieValue(Cookies.COOKIE_ARTICLE_CATEGORY_FLAGS);
     //new list devoid of article / category flag we're removing
-    List<Pair<Long, Long>> valuePairs = new ArrayList<Pair<Long, Long>>();
+    List<ArticleCategoryPair> valuePairs = new ArrayList<ArticleCategoryPair>();
 
     if(articleID != null && categoryID != null) {
       if(cookieValue == null) {
@@ -67,9 +66,9 @@ public class DeflagTaxonomyTermAction extends BaseActionSupport {
       } else {
         TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
 
-        for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
-          long storedArticleID = articleCategory.getFirst();
-          long storedCategoryID = articleCategory.getSecond();
+        for(ArticleCategoryPair articleCategory : taxonomyCookie.getArticleCategories()) {
+          long storedArticleID = articleCategory.getArticleID();
+          long storedCategoryID = articleCategory.getCategoryID();
 
           if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
             taxonomyService.deflagTaxonomyTerm(articleID, categoryID, this.getAuthId());

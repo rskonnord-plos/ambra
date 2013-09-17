@@ -18,10 +18,8 @@
  */
 package org.ambraproject.views;
 
-import org.ambraproject.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +28,14 @@ import java.util.List;
  */
 public class TaxonomyCookie {
   private static Logger log = LoggerFactory.getLogger(TaxonomyCookie.class);
-  private final List<Pair<Long, Long>> articleCategories;
+  private final List<ArticleCategoryPair> articleCategories;
 
   /**
    * Create the cookie view from the string representation stored in a cookie
    * @param value the string representation from the cookie
    */
   public TaxonomyCookie(String value) {
-    articleCategories = new ArrayList<Pair<Long, Long>>();
+    articleCategories = new ArrayList<ArticleCategoryPair>();
 
     for(String valueTemp : value.split("\\|")) {
       String[] sPair = valueTemp.split(",");
@@ -47,7 +45,7 @@ public class TaxonomyCookie {
           long storedArticleID = Long.parseLong(sPair[0]);
           long storedCategoryID = Long.parseLong(sPair[1]);
 
-          articleCategories.add(new Pair<Long, Long>(storedArticleID, storedCategoryID));
+          articleCategories.add(new ArticleCategoryPair(storedArticleID, storedCategoryID));
         } catch(NumberFormatException ex) {
           log.warn("Strange values stored in cookie: '{}'", valueTemp);
         }
@@ -62,11 +60,11 @@ public class TaxonomyCookie {
    *
    * @param articleCategories the list / pair to construct the object out of.
    */
-  public TaxonomyCookie(final List<Pair<Long, Long>> articleCategories) {
+  public TaxonomyCookie(final List<ArticleCategoryPair> articleCategories) {
     this.articleCategories = articleCategories;
   }
 
-  public List<Pair<Long, Long>> getArticleCategories() {
+  public List<ArticleCategoryPair> getArticleCategories() {
     return articleCategories;
   }
 
@@ -74,8 +72,8 @@ public class TaxonomyCookie {
   public String toCookieString() {
     String result = "";
 
-    for(Pair<Long, Long> pair : articleCategories) {
-      result = result + "|" + pair.getFirst() + "," + pair.getSecond();
+    for(ArticleCategoryPair pair : articleCategories) {
+      result = result + "|" + pair.getArticleID() + "," + pair.getCategoryID();
     }
 
     //Limit cookie length to 3500 characters to stay under the storage limit

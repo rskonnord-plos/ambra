@@ -18,8 +18,8 @@
  */
 package org.ambraproject.web;
 
-import org.ambraproject.util.Pair;
 import org.ambraproject.views.ArticleCategory;
+import org.ambraproject.views.ArticleCategoryPair;
 import org.ambraproject.views.TaxonomyCookie;
 import org.apache.struts2.ServletActionContext;
 import javax.servlet.http.Cookie;
@@ -140,9 +140,9 @@ public class Cookies {
     for(ArticleCategory articleCategory : flags) {
       ArticleCategory articleCategoryTemp = null;
 
-      for(Pair<Long, Long> articleCategories : taxonomyCookie.getArticleCategories()) {
-        long curArticleID = articleCategories.getFirst();
-        long curCategoryID = articleCategories.getSecond();
+      for(ArticleCategoryPair articleCategories : taxonomyCookie.getArticleCategories()) {
+        long curArticleID = articleCategories.getArticleID();
+        long curCategoryID = articleCategories.getCategoryID();
 
         //If we find the user has flagged this pair, let's recreate the view setting the flag
         if(articleCategory.getCategoryID() == curCategoryID && articleID == curArticleID) {

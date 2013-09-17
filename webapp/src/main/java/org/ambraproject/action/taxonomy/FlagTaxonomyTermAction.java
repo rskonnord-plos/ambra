@@ -19,9 +19,9 @@
 package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.views.ArticleCategoryPair;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.service.taxonomy.TaxonomyService;
-import org.ambraproject.util.Pair;
 import org.ambraproject.views.TaxonomyCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
   @Override
   public String execute() throws Exception {
     String cookieValue = Cookies.getCookieValue(Cookies.COOKIE_ARTICLE_CATEGORY_FLAGS);
-    List<Pair<Long, Long>> valuePairs = new ArrayList<Pair<Long, Long>>();
+    List<ArticleCategoryPair> valuePairs = new ArrayList<ArticleCategoryPair>();
 
     if(articleID != null && categoryID != null) {
       boolean flaggedAlready = false;
@@ -60,12 +60,12 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
       if(cookieValue != null) {
         TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
 
-        for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
+        for(ArticleCategoryPair articleCategory : taxonomyCookie.getArticleCategories()) {
           //Add existing values to the set to use for the new cookie
           valuePairs.add(articleCategory);
 
-          long storedArticleID = articleCategory.getFirst();
-          long storedCategoryID = articleCategory.getSecond();
+          long storedArticleID = articleCategory.getArticleID();
+          long storedCategoryID = articleCategory.getCategoryID();
 
           if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
             flaggedAlready = true;
@@ -76,8 +76,8 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
       if(!flaggedAlready) {
         //Here add new value to the first in the list.  This way if cookie limit is reached, the oldest values will
         // get lost.
-        List<Pair<Long, Long>> temp = new ArrayList<Pair<Long, Long>>();
-        temp.add(new Pair<Long, Long>(articleID, categoryID));
+        List<ArticleCategoryPair> temp = new ArrayList<ArticleCategoryPair>();
+        temp.add(new ArticleCategoryPair(articleID, categoryID));
         temp.addAll(valuePairs);
         valuePairs = temp;
 
