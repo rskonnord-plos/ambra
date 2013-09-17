@@ -5631,3 +5631,24 @@ div.inlinePopup input[type="button"]:hover {
   display:none;
   margin-bottom: 20px;
 }
+
+/*
+Article meta data line
+*/
+ul.date-doi-line {
+  margin: 0;
+  padding: 0;
+}
+
+ul.date-doi-line li {
+  margin-left: 20px;
+  margin-right: 4px;
+  float: left;
+  list-style-type: disc;
+  color: #666;
+}
+
+ul.date-doi-line li:first-child {
+  margin-left: 0px;
+  list-style-type: none;
+}
