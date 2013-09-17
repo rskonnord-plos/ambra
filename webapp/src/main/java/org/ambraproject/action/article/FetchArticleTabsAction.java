@@ -21,6 +21,7 @@ package org.ambraproject.action.article;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
+import org.ambraproject.web.Cookies;
 import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.ArticleView;
@@ -33,7 +34,6 @@ import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.service.article.NoSuchArticleIdException;
 import org.ambraproject.service.trackback.TrackbackService;
 import org.ambraproject.service.user.UserService;
-import org.ambraproject.util.Pair;
 import org.ambraproject.util.TextUtils;
 import org.ambraproject.util.UriUtil;
 import org.ambraproject.views.AnnotationView;
@@ -41,7 +41,6 @@ import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.JournalView;
-import org.ambraproject.views.TaxonomyCookie;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.ArticleType;
 import org.ambraproject.views.article.RelatedArticleInfo;
@@ -50,9 +49,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
-import javax.servlet.http.Cookie;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -127,7 +125,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private TrackbackService trackbackService;
   private UserService userService;
   private ArticleAssetService articleAssetService;
-  private List<ArticleCategory> categories;
+  private Set<ArticleCategory> categories;
   /**
    * Fetch the data for Article Tab
    *
@@ -324,65 +322,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       }
     }
 
-    this.categories = new ArrayList<ArticleCategory>();
-    this.categories.addAll(articleInfoX.getCategories());
-
-    Collections.sort(this.categories);
-
-    getCookiedCategoryFlags();
+    this.categories = Cookies.setAdditionalCategoryFlags(articleInfoX.getCategories(), articleInfoX.getId());
   }
-
-  /**
-   * Get any relevant data out of the cookies
-   */
-  private void getCookiedCategoryFlags() {
-    for(Cookie c : getCookies()) {
-      if(c.getName().equals(COOKIE_ARTICLE_CATEGORY_FLAGS)) {
-        String value = c.getValue();
-
-        if(value != null) {
-          setAdditionalCategoryFlags(value);
-        }
-      }
-    }
-  }
-
-  /**
-   * A collection of articleID/CategoryIDs that are stored in
-   * a cookie on the user's browser.  Used to track categories they
-   * have flagged
-   */
-  private void setAdditionalCategoryFlags(String cookieValue) {
-    //Check to see if the user has flagged any categories anonymously
-    TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
-    List<ArticleCategory> newCategories = new ArrayList<ArticleCategory>();
-
-    for(ArticleCategory articleCategory : this.getCategories()) {
-      ArticleCategory articleCategoryTemp = null;
-
-      for(Pair<Long, Long> articleCategories : taxonomyCookie.getArticleCategories()) {
-        long articleID = articleCategories.getFirst();
-        long categoryID = articleCategories.getSecond();
-
-        //If we find the user has flagged this pair, let's recreate the view setting the flag
-        if(articleCategory.getCategoryID() == categoryID && this.articleInfoX.getId() == articleID) {
-          articleCategoryTemp = ArticleCategory.builder(articleCategory)
-            .setFlagged(true).build();
-        }
-      }
-
-      if(articleCategoryTemp != null) {
-        newCategories.add(articleCategoryTemp);
-      } else {
-        //No match was found, append the old view to the new set
-        newCategories.add(articleCategory);
-      }
-    }
-
-    this.categories = newCategories;
-    Collections.sort(this.categories);
-  }
-
 
   @Override
   public boolean getHasAboutAuthorContent() {
@@ -855,7 +796,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return Return a list of this article's categories
    */
-  public List<ArticleCategory> getCategories() {
+  public Set<ArticleCategory> getCategories() {
     return categories;
   }
 

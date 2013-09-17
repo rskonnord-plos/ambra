@@ -19,15 +19,14 @@
 package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.web.Cookies;
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.util.Pair;
 import org.ambraproject.views.TaxonomyCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import javax.servlet.http.Cookie;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,28 +51,24 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
    */
   @Override
   public String execute() throws Exception {
+    String cookieValue = Cookies.getCookieValue(Cookies.COOKIE_ARTICLE_CATEGORY_FLAGS);
     List<Pair<Long, Long>> valuePairs = new ArrayList<Pair<Long, Long>>();
 
     if(articleID != null && categoryID != null) {
-      Cookie cookie = getCookie(COOKIE_ARTICLE_CATEGORY_FLAGS);
       boolean flaggedAlready = false;
 
-      if(cookie != null) {
-        String cookieValue = cookie.getValue();
+      if(cookieValue != null) {
+        TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
 
-        if(cookieValue != null) {
-          TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
+        for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
+          //Add existing values to the set to use for the new cookie
+          valuePairs.add(articleCategory);
 
-          for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
-            //Add existing values to the set to use for the new cookie
-            valuePairs.add(articleCategory);
+          long storedArticleID = articleCategory.getFirst();
+          long storedCategoryID = articleCategory.getSecond();
 
-            long storedArticleID = articleCategory.getFirst();
-            long storedCategoryID = articleCategory.getSecond();
-
-            if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
-              flaggedAlready = true;
-            }
+          if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
+            flaggedAlready = true;
           }
         }
       }
@@ -93,7 +88,7 @@ public class FlagTaxonomyTermAction extends BaseActionSupport {
       }
 
       TaxonomyCookie newCookie = new TaxonomyCookie(valuePairs);
-      setCookie(new Cookie(COOKIE_ARTICLE_CATEGORY_FLAGS, newCookie.toCookieString()));
+      Cookies.setCookieValue(Cookies.COOKIE_ARTICLE_CATEGORY_FLAGS, newCookie.toCookieString());
 
       return SUCCESS;
     }

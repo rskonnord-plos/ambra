@@ -19,15 +19,15 @@
 package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.web.Cookies;
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.util.Pair;
 import org.ambraproject.views.TaxonomyCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import javax.servlet.http.Cookie;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,13 +52,12 @@ public class DeflagTaxonomyTermAction extends BaseActionSupport {
    */
   @Override
   public String execute() throws Exception {
+    String cookieValue = Cookies.getCookieValue(Cookies.COOKIE_ARTICLE_CATEGORY_FLAGS);
     //new list devoid of article / category flag we're removing
     List<Pair<Long, Long>> valuePairs = new ArrayList<Pair<Long, Long>>();
 
     if(articleID != null && categoryID != null) {
-      Cookie cookie = getCookie(COOKIE_ARTICLE_CATEGORY_FLAGS);
-
-      if(cookie == null) {
+      if(cookieValue == null) {
         if(this.getAuthId() != null) {
           taxonomyService.deflagTaxonomyTerm(articleID, categoryID, this.getAuthId());
         } else {
@@ -66,28 +65,24 @@ public class DeflagTaxonomyTermAction extends BaseActionSupport {
           return INPUT;
         }
       } else {
-        String cookieValue = cookie.getValue();
+        TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
 
-        if(cookieValue != null) {
-          TaxonomyCookie taxonomyCookie = new TaxonomyCookie(cookieValue);
+        for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
+          long storedArticleID = articleCategory.getFirst();
+          long storedCategoryID = articleCategory.getSecond();
 
-          for(Pair<Long, Long> articleCategory : taxonomyCookie.getArticleCategories()) {
-            long storedArticleID = articleCategory.getFirst();
-            long storedCategoryID = articleCategory.getSecond();
-
-            if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
-              taxonomyService.deflagTaxonomyTerm(articleID, categoryID, this.getAuthId());
-              log.debug("Article/Category DE-flagged. ArticleID: {}, CategoryID: {}, AuthID: '{}'", new Object[] { articleID, categoryID, this.getAuthId() });
-            } else {
-              //Add one to the list.
-              valuePairs.add(articleCategory);
-            }
+          if(articleID.equals(storedArticleID) && categoryID.equals(storedCategoryID)) {
+            taxonomyService.deflagTaxonomyTerm(articleID, categoryID, this.getAuthId());
+            log.debug("Article/Category DE-flagged. ArticleID: {}, CategoryID: {}, AuthID: '{}'", new Object[] { articleID, categoryID, this.getAuthId() });
+          } else {
+            //Add one to the list.
+            valuePairs.add(articleCategory);
           }
         }
       }
 
       TaxonomyCookie newCookie = new TaxonomyCookie(valuePairs);
-      setCookie(new Cookie(COOKIE_ARTICLE_CATEGORY_FLAGS, newCookie.toCookieString()));
+      Cookies.setCookieValue(Cookies.COOKIE_ARTICLE_CATEGORY_FLAGS, newCookie.toCookieString());
 
       return SUCCESS;
     }
