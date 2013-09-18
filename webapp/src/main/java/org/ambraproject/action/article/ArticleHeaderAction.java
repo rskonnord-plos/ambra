@@ -1,6 +1,7 @@
 package org.ambraproject.action.article;
 
 import com.opensymphony.xwork2.Action;
+import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.article.ArticleInfo;
@@ -32,4 +33,5 @@ public interface ArticleHeaderAction extends Action {
 
   public abstract boolean getIsResearchArticle();
 
+  public abstract Set<ArticleCategory> getCategories();
 }

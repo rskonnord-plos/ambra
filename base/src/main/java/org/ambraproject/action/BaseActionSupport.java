@@ -53,12 +53,10 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
   private static final String FEED_DEFAULT_NAME = "ambra.services.feed.defaultName";
   private static final String FEED_BASE_PATH = "ambra.services.feed.basePath";
   private static final String FEED_DEFAULT_FILE = "ambra.services.feed.defaultFile";
-  protected static final String COOKIE_ARTICLE_CATEGORY_FLAGS = "ARTICLE_CATEGORY_FLAGS";
 
   public void setRequest(Map map) {
     requestAttributes = map;
   }
-
 
   public UserRole.Permission[] getPermissions()
   {
@@ -192,49 +190,6 @@ public abstract class BaseActionSupport extends ActionSupport implements Request
     }
 
     return (String)httpSession.getAttribute(Constants.AUTH_KEY);
-  }
-
-  protected Cookie[] getCookies() {
-    HttpServletRequest request = ServletActionContext.getRequest();
-
-    if(request == null) {
-      throw new RuntimeException("HttpServletRequest is null");
-    }
-
-    if(request.getCookies() == null) {
-      return new Cookie[] {};
-    } else {
-      return request.getCookies();
-    }
-  }
-
-  protected Cookie getCookie(String name) {
-    HttpServletRequest request = ServletActionContext.getRequest();
-
-    if(request == null) {
-      throw new RuntimeException("HttpServletRequest is null");
-    }
-
-    for(Cookie c : request.getCookies()) {
-      if(c.getName().equals(name)) {
-        return c;
-      }
-    }
-
-    return null;
-  }
-
-  public void setCookie(Cookie cookie) {
-    HttpServletResponse response = ServletActionContext.getResponse();
-
-    if(response == null) {
-      throw new RuntimeException("HttpServletResponse is null");
-    }
-
-    //So all cookies from the domain are accessible across all paths.
-    cookie.setPath("/");
-
-    response.addCookie(cookie);
   }
 
   /**
