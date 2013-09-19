@@ -196,6 +196,12 @@
       </result>
     </action>
 
+    <action name="recentArticlesAlt" class="org.ambraproject.action.HomePageAction" method="executeRecent">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/recentArticles.ftl</param>
+      </result>
+    </action>
+
     <action name="mostCommented" class="org.ambraproject.action.HomePageAction">
       <result name="success" type="naked">
         <param name="templateFile">/article/mostCommented.ftl</param>
@@ -208,31 +214,20 @@
       </result>
     </action>
 
-    <action name="selectList" class="org.ambraproject.action.ListingAction"/>
-
-    <action name="taxonomy" class="org.ambraproject.action.TaxonomyAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/taxonomy.ftl</param>
-      </result>
-
-      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
-           in that case just return a 404.                              -->
-      <result name="error" type="default_freemarker">
-        <param name="status">404</param>
-        <param name="templateFile">/pageNotFound.ftl</param>
+    <action name="mostViewedAlt" class="org.ambraproject.action.HomePageAction" method="executeMostViewed">
+      <result name="success" type="naked">
+        <param name="templateFile">/article/mostViewed.ftl</param>
       </result>
     </action>
 
-    <action name="taxonomyJSON" class="org.ambraproject.action.TaxonomyAction">
-      <result name="success" type="json_nocomments">
-        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
-          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
-          locale, numFieldErrors, rssName, rssPath, texts</param>
+    <action name="selectList" class="org.ambraproject.action.ListingAction"/>
+
+    <action name="browse" class="org.ambraproject.action.BrowseAction">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/taxonomy/browse.ftl</param>
       </result>
 
-      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
-           in that case just return a 404.                              -->
-      <result name="error" type="default_freemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
@@ -259,6 +254,58 @@
 
     <action name="processDump" class="org.ambraproject.action.debug.ProcessDumpAction" />
   </package>
+
+  <package name="taxonomy" extends="default" namespace="/taxonomy">
+    <default-action-ref name="taxonomy"/>
+
+    <action name="taxonomy" class="org.ambraproject.action.taxonomy.TaxonomyAction">
+      <result name="success" type="default_freemarker">
+        <param name="templateFile">/taxonomy/taxonomy.ftl</param>
+      </result>
+
+      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+           in that case just return a 404.                              -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="taxonomyJSON" class="org.ambraproject.action.taxonomy.TaxonomyAction">
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
+          locale, numFieldErrors, rssName, rssPath, texts</param>
+      </result>
+
+      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+           in that case just return a 404.                              -->
+      <result name="error" type="default_freemarker">
+        <param name="status">404</param>
+        <param name="templateFile">/pageNotFound.ftl</param>
+      </result>
+    </action>
+
+    <action name="flagTaxonomyTerm" class="org.ambraproject.action.taxonomy.FlagTaxonomyTermAction">
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errorMessages, errors, fieldErrors,
+          locale, numFieldErrors, rssName, rssPath, texts</param>
+      </result>
+
+      <result name="input" type="json_nocomments">
+        <param name="excludeProperties">advisors, callbacks, permissions, topAndSecondLevelCategories,
+          actionErrors, actionMessages, URL, authId, currentJournal, errors, locale, numFieldErrors,
+          rssName, rssPath, texts</param>
+      </result>
+
+      <result name="error" type="default_freemarker">
+        <param name="status">500</param>
+        <param name="templateFile">/error.ftl</param>
+      </result>
+    </action>
+  </package>
+
 
   <package name="feedback" extends="default" namespace="/feedback">
     <action name="feedback" class="org.ambraproject.action.FeedbackAction" method="executeRender">
@@ -344,9 +391,39 @@
     </action>
 
     <action name="saveSearch" class="org.ambraproject.action.search.SaveSearchAction" method="saveSearch">
-      <result name="input" type="json"/>
-      <result name="success" type="json"/>
-      <result name="error" type="json"/>
+      <result name="input" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">.*</param>
+      </result>
+      <result name="error" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+    </action>
+
+    <action name="saveJournalAlert" class="org.ambraproject.action.search.SaveJournalAlertAction">
+      <result name="input" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">.*</param>
+      </result>
+      <result name="error" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+    </action>
+
+    <action name="unsubscribeJournalAlert" class="org.ambraproject.action.search.SaveJournalAlertAction" method="executeUnsubscribe">
+      <result name="input" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
+      <result name="success" type="json_nocomments">
+        <param name="excludeProperties">.*</param>
+      </result>
+      <result name="error" type="json_nocomments">
+        <param name="includeProperties">action.*</param>
+      </result>
     </action>
   </package>
 
@@ -360,15 +437,6 @@
   </package>
 
   <package name="browse" extends="default" namespace="/article/browse">
-    <action name="subject" class="org.ambraproject.action.article.BrowseArticlesAction">
-      <result name="success" type="default_freemarker">
-        <param name="templateFile">/article/browseSubject.ftl</param>
-      </result>
-      <result name="error" type="default_freemarker">
-        <param name="status">500</param>
-        <param name="templateFile">error.ftl</param>
-      </result>
-    </action>
 
     <action name="issue" class="org.ambraproject.action.article.BrowseIssueAction">
       <result name="success" type="default_freemarker">
@@ -534,13 +602,13 @@
 
     <action name="lightbox" class="org.ambraproject.action.article.SlideshowAction">
       <result name="success" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations</param>
+        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
       </result>
       <result name="error" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations</param>
+        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
       </result>
       <result name="input" type="json">
-        <param name="excludeProperties">advisors, callbacks, annotations</param>
+        <param name="excludeProperties">advisors, callbacks, annotations, figureTables</param>
       </result>
     </action>
 

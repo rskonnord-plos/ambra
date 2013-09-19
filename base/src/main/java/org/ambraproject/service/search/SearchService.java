@@ -24,7 +24,6 @@ import org.ambraproject.views.SearchResultSinglePage;
 
 import java.util.Date;
 import java.util.List;
-import java.util.SortedMap;
 
 /**
  * Search service interface.
@@ -50,14 +49,6 @@ public interface SearchService {
    *     "/Biology and life sciences/Plant science/Plant anatomy/Flowers"
    */
   List<String> getAllSubjects(String journal) throws ApplicationException;
-
-  /**
-   * Returns a list of the top level subject categories associated with all journals
-   *
-   * @return A map of subject areas and a count of their frequency
-   * @throws ApplicationException
-   */
-  SortedMap<String, Long> getTopSubjects() throws ApplicationException;
 
   /**
    * Returns articles list that are published between the last search time and the current search time for saved search

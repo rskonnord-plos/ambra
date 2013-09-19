@@ -13,34 +13,43 @@
 
 package org.ambraproject.util;
 
-import org.w3c.dom.Node;
+import org.ambraproject.views.article.ArticleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.Set;
 
 /**
- * Utility methods currently called by both admin and rhino.  When admin
+ * Utility methods currently called by both ambra and rhino.  If ambra
  * is retired, we will likely move this code back into rhino, or refactor
  * it in some other way.
  */
 public final class Rhino {
 
-  /**
-   * Helper method to get all the text of child nodes of a given node
-   *
-   * @param node - the node to use as base
-   * @return - all nested text in the node
-   */
-  public static String getAllText(Node node) {
+  private static final Logger log = LoggerFactory.getLogger(Rhino.class);
 
-    String text = "";
-    for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-      Node childNode = node.getChildNodes().item(i);
-      if (Node.TEXT_NODE == childNode.getNodeType()) {
-        text += childNode.getNodeValue();
-      } else if (Node.ELEMENT_NODE == childNode.getNodeType()) {
-        text += "<" + childNode.getNodeName() + ">";
-        text += getAllText(childNode);
-        text += "</" + childNode.getNodeName() + ">";
+  public static ArticleType getKnownArticleType(Set<String> types) {
+    if (types == null) {
+      throw new IllegalStateException("types not set");
+    }
+    ArticleType knownType = null;
+    for (String artType : types) {
+      URI articleTypeUri = URI.create(artType);
+      ArticleType typeForURI = ArticleType.getKnownArticleTypeForURI(articleTypeUri);
+      if (typeForURI != null) {
+        if (knownType == null) {
+          knownType = typeForURI;
+        } else if (!knownType.equals(typeForURI) && log.isErrorEnabled()) {
+          /*
+           * The old behavior was to return the first value matched from the Set iterator.
+           * To avoid introducing bugs, continue without changing the value of knownType.
+           */
+          log.error("Multiple article types ({}, {}) matched from: {}",
+              new String[]{knownType.getHeading(), typeForURI.getHeading(), types.toString()});
+        }
       }
     }
-    return text.replaceAll("[\n\t]", "").trim();
+    return knownType == null ? ArticleType.getDefaultArticleType() : knownType;
   }
 }

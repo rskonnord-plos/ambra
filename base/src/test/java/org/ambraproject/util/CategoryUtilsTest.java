@@ -136,6 +136,38 @@ public class CategoryUtilsTest {
     };
   }
 
+  @DataProvider(name = "findCategory")
+  public Object[][] findCategory() {
+    return new Object[][]{
+      {
+        "F",
+        "f",
+        new CategoryView("ROOT") {{
+          addChild(new CategoryView("a"));
+          addChild(new CategoryView("d") {{
+            addChild(new CategoryView("e") {{
+              addChild(new CategoryView("f") {{
+                addChild(new CategoryView("a"));
+              }});
+            }});
+          }});
+
+          addChild(new CategoryView("d") {{
+            addChild(new CategoryView("e") {{
+              addChild(new CategoryView("f") {{
+                addChild(new CategoryView("a"));
+              }});
+            }});
+          }});
+
+          addChild(new CategoryView("b") {{
+            addChild(new CategoryView("a"));
+          }});
+        }}
+      }
+    };
+  }
+
   @Test(dataProvider = "makeMap")
   public void testCreateMap(List<String> before, CategoryView expected) {
     for(String string : before) {
@@ -172,6 +204,15 @@ public class CategoryUtilsTest {
     //Compare both ways to get around testNG bug
     assertEqualRecursive(result, expected);
     assertEqualRecursive(expected, result);
+  }
+
+  @Test(dataProvider = "findCategory")
+  @SuppressWarnings("unchecked")
+  public void testFindCategory(String filter, String expected, CategoryView source) {
+    CategoryView result = CategoryUtils.findCategory(source, filter);
+
+    //Compare both ways to get around testNG bug
+    assertEquals(result.getName(), expected);
   }
 
   private void assertEqualRecursive(CategoryView result, CategoryView expected) {
