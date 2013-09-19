@@ -1,24 +1,39 @@
 /*
- * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ambraproject.service.taxonomy;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.service.cache.Cache;
+import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.orm.hibernate3.HibernateCallback;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,12 +45,57 @@ import java.util.TreeMap;
 /**
  * {@inheritDoc}
  */
-public class TaxonomyServiceImpl implements TaxonomyService {
+public class TaxonomyServiceImpl extends HibernateServiceImpl implements TaxonomyService   {
 
   private static final int CACHE_TTL = 3600 * 24;  // one day
 
   private SearchService searchService;
   private Cache cache;
+
+  /**
+   * {@inheritDoc}
+   */
+  public void flagTaxonomyTerm(final long articleID, final long categoryID, final String authID) {
+    //The style of query used is significantly different pending the authID is null or not
+
+    //I don't use a hibernate model here to save on precious CPU.
+
+    if(authID != null && authID.length() > 0) {
+      //This query will update on a duplicate
+      hibernateTemplate.execute(new HibernateCallback() {
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+          session.createSQLQuery(
+            "insert into articleCategoryFlagged(articleID, categoryID, userProfileID, created, lastModified) select " +
+              ":articleID, :categoryID, up.userProfileID, :created, :lastModified " +
+              "from userProfile up where up.authId = :authID on duplicate key update lastModified = :lastModified")
+            .setString("authID", authID)
+            .setLong("articleID", articleID)
+            .setLong("categoryID", categoryID)
+            .setCalendar("created", Calendar.getInstance())
+            .setCalendar("lastModified", Calendar.getInstance())
+          .executeUpdate();
+
+          return null;
+        }
+      });
+    } else {
+      //Insert userProfileID as a null value
+      hibernateTemplate.execute(new HibernateCallback() {
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+          session.createSQLQuery(
+            "insert into articleCategoryFlagged(articleID, categoryID, userProfileID, created, lastModified) values(" +
+              ":articleID, :categoryID, null, :created, :lastModified)")
+            .setLong("articleID", articleID)
+            .setLong("categoryID", categoryID)
+            .setCalendar("created", Calendar.getInstance())
+            .setCalendar("lastModified", Calendar.getInstance())
+            .executeUpdate();
+
+          return null;
+        }
+      });
+    }
+  }
 
   /**
    * {@inheritDoc}

@@ -48,7 +48,6 @@ import java.util.Map;
 public class SearchAction extends BaseSearchAction {
 
   private static final Logger log = LoggerFactory.getLogger(SearchAction.class);
-  private static final String SEARCH_PAGE_SIZE = "ambra.services.search.pageSize";
   private static final String CONFIG_DOI_RESOLVER_URL = "ambra.services.crossref.plos.doiurl";
   private static final int RECENT_SEARCHES_NUMBER_TO_SHOW = 5;
   private static final int MAX_FILTERS_SHOWN = 50;
@@ -56,15 +55,12 @@ public class SearchAction extends BaseSearchAction {
   // Flag telling this action whether or not the search should be executed.
   private String noSearchFlag;
 
-  private SearchResultSinglePage resultsSinglePage;
-
-  private SearchService searchService;
   private UserService userService;
   private AmbraFreemarkerConfig ambraFreemarkerConfig;
   
   // Used for display of search results
   private Collection<SearchHit> searchResults;
-  private int totalNoOfResults;
+
   private String queryAsExecuted;
   protected String searchType;
 
@@ -78,7 +74,7 @@ public class SearchAction extends BaseSearchAction {
   private String articleURI;
   private String journalURL;
 
-  private String resultView;
+
 
   /**
    * @return return simple search result
@@ -86,7 +82,7 @@ public class SearchAction extends BaseSearchAction {
   public String executeSimpleSearch() throws ApplicationException {
     searchType = "simple";
 
-    setDefaultsCommon();
+    setDefaultSearchParams();
 
     final String queryString = getSearchParameters().getQuery();
 
@@ -99,14 +95,12 @@ public class SearchAction extends BaseSearchAction {
       SearchParameters params = getSearchParameters();
       resultsSinglePage = searchService.simpleSearch(params);
 
-      //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
-      totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
+      //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
       searchResults = resultsSinglePage.getHits();
       queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
-      resultView = params.getResultView();
 
       //If page size is zero, assume totalPages is zero
-      int totPages = (getPageSize() == 0)?0:((totalNoOfResults + getPageSize() - 1) / getPageSize());
+      int totPages = (getPageSize() == 0)?0:((getTotalNoOfResults() + getPageSize() - 1) / getPageSize());
       setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
 
       // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
@@ -128,7 +122,7 @@ public class SearchAction extends BaseSearchAction {
   public String executeUnformattedSearch() {
     searchType = "unformatted";
 
-    setDefaultsCommon();
+    setDefaultSearchParams();
 
     if ( ! doSearch()) {
       try {
@@ -158,13 +152,11 @@ public class SearchAction extends BaseSearchAction {
         SearchParameters params = getSearchParameters();
         resultsSinglePage = searchService.advancedSearch(params);
 
-        //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
-        totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
+        //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
         searchResults = resultsSinglePage.getHits();
         queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
-        resultView = params.getResultView();
 
-        int totPages = (totalNoOfResults + getPageSize() - 1) / getPageSize();
+        int totPages = (getTotalNoOfResults() + getPageSize() - 1) / getPageSize();
         setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
 
         // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
@@ -192,7 +184,7 @@ public class SearchAction extends BaseSearchAction {
   public String executeQuickSearch() {
     searchType = "quickSearch";
 
-    setDefaultsCommon();
+    setDefaultSearchParams();
 
     if ( ! doSearch()) {
 
@@ -247,12 +239,11 @@ public class SearchAction extends BaseSearchAction {
         return "redirectToArticle"; // Tells struts.xml to send the user to fetchArticle.action
       }
 
-      //  TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
-      totalNoOfResults = resultsSinglePage.getTotalNoOfResults();
+      //TODO: take out these intermediary objects and pass "SearchResultSinglePage" to the FTL
       searchResults = resultsSinglePage.getHits();
       queryAsExecuted = resultsSinglePage.getQueryAsExecuted();
 
-      int totPages = (totalNoOfResults + getPageSize() - 1) / getPageSize();
+      int totPages = (getTotalNoOfResults() + getPageSize() - 1) / getPageSize();
       setStartPage(Math.max(0, Math.min(getStartPage(), totPages - 1)));
       
       // Recent Searches must have both a Request URI and a Request Query String, else the URL is useless.
@@ -270,16 +261,6 @@ public class SearchAction extends BaseSearchAction {
       return ERROR;
     }
     return SUCCESS;
-  }
-
-  /**
-   * Set values used for processing and/or display by all searches.
-   */
-  protected void setDefaultsCommon() {
-    // Set default for "pageSize".
-    if (getPageSize() == 0) {
-      setPageSize(configuration.getInt(SEARCH_PAGE_SIZE, 10));
-    }
   }
 
   /**
@@ -340,11 +321,7 @@ public class SearchAction extends BaseSearchAction {
     return queryAsExecuted;
   }
 
-  public SearchResultSinglePage getResultsSinglePage() {
-    return resultsSinglePage;
-  }
-
-  /**
+ /**
    * @param noSearchFlag the noSearchFlag to set
    */
   public void setNoSearchFlag(String noSearchFlag) {
@@ -365,20 +342,6 @@ public class SearchAction extends BaseSearchAction {
   public List getSorts()
   {
     return searchService.getSorts();
-  }
-
-  public List getPageSizes()
-  {
-    return searchService.getPageSizes();
-  }
-
-  /**
-   * The total number of search results
-   *
-   * @return Value for property 'totalNoOfResults'.
-   */
-  public int getTotalNoOfResults() {
-    return totalNoOfResults;
   }
 
   /**
@@ -415,16 +378,6 @@ public class SearchAction extends BaseSearchAction {
   @Required
   public void setUserService(final UserService userService) {
     this.userService = userService;
-  }
-
-  /**
-   * Set the searchService
-   *
-   * @param searchService searchService
-   */
-  @Required
-  public void setSearchService(final SearchService searchService) {
-    this.searchService = searchService;
   }
 
   /**
@@ -518,10 +471,6 @@ public class SearchAction extends BaseSearchAction {
     return ((ServletRequestAttributes)(requestAttributes.get(
               "org.springframework.web.context.request.RequestContextListener.REQUEST_ATTRIBUTES")))
         .getRequest();
-  }
-
-  public String getResultView() {
-    return resultView;
   }
 
 }

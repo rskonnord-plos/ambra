@@ -28,6 +28,7 @@ import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testng.annotations.Test;
+
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -60,7 +61,7 @@ public class MostViewedActionTest extends AmbraHttpTest {
     assertNotNull(mostViewedArticles,"Action had null list of most viewed articles");
     assertEquals(mostViewedArticles.size(), articlesFromSolrXml.size(), "returned incorrect number of articles");
     for (int i = 0; i < mostViewedArticles.size(); i++) {
-      Pair<String, String> actual = mostViewedArticles.get(i);
+      Pair<String,String> actual = mostViewedArticles.get(i);
       Pair<String, String> expected = articlesFromSolrXml.get(i);
       assertEquals(actual.getFirst(), expected.getFirst(), "Didn't have correct doi for entry " + i);
       assertEquals(actual.getSecond(), expected.getSecond(), "Didn't have correct title for entry " + i);

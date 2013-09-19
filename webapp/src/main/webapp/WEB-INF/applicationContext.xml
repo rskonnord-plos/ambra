@@ -413,6 +413,7 @@
   <bean id="mostViewedArticleService" class="org.ambraproject.service.search.SolrMostViewedArticleService">
     <property name="solrFieldConverter" ref="solrFieldConverter"/>
     <property name="solrHttpService" ref="solrHttpService"/>
+    <property name="sessionFactory" ref="hibernateSessionFactory"/>
   </bean>
 
 
@@ -428,6 +429,7 @@
   <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">
     <property name="cache" ref="taxonomyCache" />
     <property name="searchService" ref="searchService" />
+    <property name="sessionFactory" ref="hibernateSessionFactory" />
   </bean>
 
 </beans>

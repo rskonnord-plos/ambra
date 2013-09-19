@@ -98,6 +98,38 @@ public class JournalTest extends BaseHibernateTest {
   }
 
   @Test
+  public void testSaveWithArticleList() {
+    Journal journal = new Journal("journal key with article list");
+
+    final ArticleList articleList1 = new ArticleList("testarticleListForJournal1");
+    articleList1.setDisplayName("News");
+    articleList1.setArticleDois(Arrays.asList("doi1", "doi2", "doi3"));
+
+    final ArticleList articleList2 = new ArticleList("testarticleListForJournal2");
+    articleList2.setDisplayName("SPAM");
+    articleList2.setArticleDois(Arrays.asList("doi1", "doi2", "doi3"));
+
+    journal.setArticleList(Arrays.asList(articleList1, articleList2));
+
+    final Serializable journalId1 = hibernateTemplate.save(journal);
+
+    //need to access the article list in a session b/c they're lazy
+    hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Journal savedJournal = (Journal) session.get(Journal.class, journalId1);
+        assertNotNull(savedJournal, "didn't save journal");
+        assertEquals(savedJournal.getArticleList().toArray(), new ArticleList[]{articleList1, articleList2},
+            "saved journal had incorrect article list");
+        for (ArticleList ai : savedJournal.getArticleList()) {
+          assertNotNull(ai.getCreated(), "Article List didn't get created date set");
+        }
+        return null;
+      }
+    });
+  }
+
+  @Test
   public void testUpdate() {
     final long testStart = Calendar.getInstance().getTimeInMillis();
     final Journal journal = new Journal("old journal key");
