@@ -1259,6 +1259,9 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
 
   var displayModal = function (articleType, title, authors, articleDoi, linkTitle) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',"Lightbox", "Display Modal", ""]);
+    }
     $hdr = $('<div class="header" />');
     if (linkTitle) {
       var articleLink = "http://dx.plos.org/" + articleDoi.replace("info:doi/", "");
@@ -1309,6 +1312,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
   var changeSlide = function (thmb) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',"Lightbox", "Slide Changed", ""]);
+    }
+
     $all_sld.hide();
     this_sld = $all_sld.eq($all_thmb.index(thmb));
     $fig = this_sld.find('div.figure');
@@ -1562,6 +1569,9 @@ if ($toc_block_cover.length) {
 }
 
 var toggleModalState = function () {
+  if(typeof(_gaq) !== 'undefined'){
+    _gaq.push(['_trackEvent',"Lightbox", "Toggle Modal Abstract", ""]);
+  }
   $('#fig-viewer').toggleClass('abstract');
 };
 
