@@ -1118,9 +1118,6 @@ $.fn.alm = function () {
 
                   var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
 
-                  var betaDiv = $('<div id="beta">BETA</div>');
-
-                  $usage.append(betaDiv);
                   $usage.append(relativeMetricDiv);
                 }
               }
