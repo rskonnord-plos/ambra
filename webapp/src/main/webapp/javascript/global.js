@@ -202,6 +202,9 @@ function onReadyMainContainer() {
 function initMainContainer() {
   var $figure_thmbs = $('#figure-thmbs');
 
+  $figure_thmbs.detach();
+  $figure_thmbs.insertBefore($('.article .articleinfo'));
+
   if ($figure_thmbs.length) {
     $lnks = $figure_thmbs.find('.item a');
     $wrap = $figure_thmbs.find('div.wrapper');

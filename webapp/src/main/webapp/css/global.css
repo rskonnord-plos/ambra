@@ -1416,6 +1416,7 @@ span.author span.rel-footnote {
 }
 
 #nav-article {
+  padding-bottom: 20px;
 }
 
 #nav-article ul {
@@ -2072,7 +2073,7 @@ html:not(.js) #figure-thmbs {
 #figure-thmbs .wrapper {
   background: #efefef;
   padding: 20px 0 30px;
-  width: 719px;
+  width: 514px;
   border-left: 18px solid #efefef;
   border-right: 18px solid #efefef;
 }
@@ -2112,7 +2113,7 @@ html:not(.js) #figure-thmbs {
 #figure-thmbs .buttons {
   position: absolute;
   top: 145px;
-  width: 755px;
+  width: 519px;
   text-align: center;
 }
 
@@ -2304,6 +2305,20 @@ div.table-wrap .table-footnote .fn-label {
   margin-bottom: 40px;
 }
 
+.article .articleinfo {
+  border: solid 1px #CCC;
+}
+
+.article .articleinfo p {
+  padding: 10px 20px;
+  margin-bottom: 0px;
+  border-bottom: solid 1px #CCC;
+}
+
+.article .articleinfo p:last-child {
+  border-bottom: none;
+}
+
 .editorsAbstract,
 .article .box {
   background: #efefef;
@@ -2311,7 +2326,6 @@ div.table-wrap .table-footnote .fn-label {
 }
 
 #section1 {
-  border-top: 1px solid #CCC;
   padding-top: 20px;
 }
 
