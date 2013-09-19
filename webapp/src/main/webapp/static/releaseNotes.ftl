@@ -41,7 +41,7 @@
   <h3>Features Implemented in Ambra 2.8.1</h3>
   <ul>
       <li>Added article counts to PLOS One homepage taxonomy browser</li>
-      <li>Fixed post launch ONE hp bug fixes</li>
+      <li>Fixed post launch ONE hp bugs</li>
   </ul>
 
   <h2>Ambra 2.8.0</h2>
