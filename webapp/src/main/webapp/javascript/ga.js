@@ -12,7 +12,7 @@ plosGApropId["genetics-demo.plosjournals.org"] = "UA-36675610-4";
 plosGApropId["medicine-demo.plosjournals.org"] = "UA-36675610-5";
 plosGApropId["ntds-demo.plosjournals.org"] = "UA-36675610-6";
 plosGApropId["pathogens-demo.plosjournals.org"] = "UA-36675610-7";
-plosGApropId["one-demo.plosjournals.org"] = "UA-36675610-1";
+plosGApropId["plosone-local.plos.org"] = "UA-36675610-1";
 
 //Flashlight test server
 plosGApropId["one-taurus.plosjournals.org"] = "UA-36675108-8";

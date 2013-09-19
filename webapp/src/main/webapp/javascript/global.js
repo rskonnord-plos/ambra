@@ -129,6 +129,16 @@ function onReadyDocument() {
   (function () {
     this.hoverEnhanced({});
   }).apply($('#subject-area-sidebar-block-help-icon'));
+
+  //Log clicks to the share buttons
+  var handleSocialClick = function(event) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent', "Article", "Share", $(event.target).attr('title')]);
+    }
+    return true;
+  };
+
+  $('ul.social li a').on('click', handleSocialClick);
 }
 
 
