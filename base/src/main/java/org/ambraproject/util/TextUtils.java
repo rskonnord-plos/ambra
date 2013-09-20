@@ -24,7 +24,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.List;
 import java.util.ArrayList;
@@ -942,52 +941,5 @@ public class TextUtils {
       }
     }
     return shortenedText;
-  }
-
-  /**
-   * Given a value like "44,55,43|44,33|44,455,44"
-   *
-   * Return a list of string lists
-   *
-   * @param value the string value to parse
-   *
-   * @return a list of string lists
-   */
-  public static List<List<String>> parsePipedCSV(String value) {
-    List<List<String>> valuesList = new ArrayList<List<String>>();
-
-    for(String valueTemp : value.split("\\|")) {
-      valuesList.add(Arrays.asList(valueTemp.split(",")));
-    }
-
-    return valuesList;
-  }
-
-  /**
-   * Given a list of lists create a string that looks like:
-   *
-   * "44,55,43|44,33|44,455,44"
-   *
-   * @param values a list of lists
-   * @param <T>
-   * @return a string that looks like: "44,55,43|44,33|44,455,44"
-   */
-  public static <T> String createdPipedCSV(List<List<T>> values) {
-    List<String[]> valuesList = new ArrayList<String[]>();
-    StringBuilder sb = new StringBuilder();
-
-    for(List<T> row : values) {
-      for(T val : row) {
-        sb.append(val.toString());
-        sb.append(",");
-      }
-      //Delete last period
-      sb.deleteCharAt(sb.length() - 1);
-      sb.append("|");
-    }
-    //Delete last pipe symbol
-    sb.deleteCharAt(sb.length() - 1);
-
-    return sb.toString();
   }
 }

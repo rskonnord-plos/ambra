@@ -11,6 +11,7 @@
 
 package org.ambraproject.action.taxonomy;
 
+import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.taxonomy.TaxonomyService;
 import org.ambraproject.util.CategoryUtils;
@@ -18,6 +19,7 @@ import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -34,11 +36,14 @@ public class TaxonomyAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(TaxonomyAction.class);
 
   private Map<String, List<String>> topAndSecondLevelCategories;
-  private CategoryView categories;
+  private CategoryView categoryView;
   private TaxonomyService taxonomyService;
   private String root;
   private String journal;
   private String[] filter;
+  private Map<String, SortedSet<String>> categories;
+  private boolean showCounts;
+  private Map<String, Long> counts;
 
   @Override
   public String execute() throws Exception {
@@ -46,7 +51,8 @@ public class TaxonomyAction extends BaseActionSupport {
     topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
 
     //categories defaults to all journals (the categories journal can be set via parameter)
-    categories = taxonomyService.parseCategories(this.journal);
+    categoryView = taxonomyService.parseCategories(this.journal);
+    buildCategoryMap();
 
     return SUCCESS;
   }
@@ -76,12 +82,12 @@ public class TaxonomyAction extends BaseActionSupport {
    * @return A map of categories
    */
   @SuppressWarnings("unchecked")
-  public Map<String, SortedSet<String>> getCategories() {
+  private void buildCategoryMap() throws ApplicationException {
     //Should probably implement this in the setter if the getter ever starts to get
     //called more then once
 
     if(this.root == null) {
-      return CategoryUtils.getShortTree(categories);
+      categories = CategoryUtils.getShortTree(categoryView);
     }
 
     //Ignore first slash if it exists
@@ -90,16 +96,17 @@ public class TaxonomyAction extends BaseActionSupport {
     }
 
     if(this.root.trim().length() == 0) {
-      return CategoryUtils.getShortTree(categories);
+      categories = CategoryUtils.getShortTree(categoryView);
     } else {
       String[] levels = this.root.split("/");
-      CategoryView res = categories;
-
       for(String level : levels) {
-        res = res.getChild(level);
+        categoryView = categoryView.getChild(level);
       }
 
-      return CategoryUtils.getShortTree(res);
+      categories = CategoryUtils.getShortTree(categoryView);
+    }
+    if (showCounts) {
+      counts = taxonomyService.getCounts(categoryView, journal);
     }
   }
 
@@ -120,7 +127,7 @@ public class TaxonomyAction extends BaseActionSupport {
       }
 
       if(getActionErrors().size() == 0) {
-        CategoryView cv = CategoryUtils.filterMap(categories, this.filter);
+        CategoryView cv = CategoryUtils.filterMap(categoryView, this.filter);
         return cv;
       }
     }
@@ -147,5 +154,21 @@ public class TaxonomyAction extends BaseActionSupport {
    */
   public void setJournal(String journal) {
     this.journal = journal;
+  }
+
+  public Map<String, SortedSet<String>> getCategories() {
+    return categories;
+  }
+
+  /**
+   * @param showCounts if true, information about the number of articles associated with each taxonomy
+   *     term will be returned in the response
+   */
+  public void setShowCounts(boolean showCounts) {
+    this.showCounts = showCounts;
+  }
+
+  public Map<String, Long> getCounts() {
+    return counts;
   }
 }

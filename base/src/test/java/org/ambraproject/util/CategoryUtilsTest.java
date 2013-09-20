@@ -21,20 +21,94 @@ import org.ambraproject.views.CategoryView;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
 import static org.testng.Assert.assertEquals;
 
 public class CategoryUtilsTest {
   private static Logger log = LoggerFactory.getLogger(CategoryUtilsTest.class);
 
+  private CategoryView buildComplicatedExpectedTree() {
+
+    // If you're having trouble debugging this I strongly suggest you draw out
+    // the tree/DAG on paper!
+
+    CategoryView root = new CategoryView("ROOT");
+    CategoryView a = new CategoryView("a");
+    CategoryView b = new CategoryView("b");
+    CategoryView c = new CategoryView("c");
+    CategoryView d = new CategoryView("d");
+    CategoryView e = new CategoryView("e");
+
+    root.addChild(a);
+    root.addChild(e);
+    root.addChild(new CategoryView("f"));
+    root.addChild(new CategoryView("g"));
+    root.addChild(new CategoryView("z"));
+    a.addChild(b);
+    b.addChild(c);
+    a.addChild(c);
+    c.addChild(d);
+    d.addChild(e);
+    c.addChild(e);
+
+    root.addChild(new CategoryView("1") {{
+      addChild(new CategoryView("2") {{
+        addChild(new CategoryView("3"));
+      }});
+    }});
+    root.addChild(new CategoryView("x") {{
+      addChild(new CategoryView("y"));
+    }});
+
+    return root;
+  }
+
   @DataProvider(name = "makeMap")
   public Object[][] createMap() {
+    final CategoryView c = new CategoryView("c");
     return new Object[][]{
+
+      // Simple case that's a plain tree (no nodes have multiple parents).
+      {
+        new ArrayList() {{
+          add("/a");
+          add("/b");
+          add("/b/d");
+          add("/c");
+        }},
+        new CategoryView("ROOT") {{
+          addChild(new CategoryView("a"));
+          addChild(new CategoryView("b") {{
+            addChild(new CategoryView("d"));
+          }});
+          addChild(new CategoryView("c"));
+        }}
+      },
+
+      // Simple case where there is one node with two parents.
+      {
+        new ArrayList() {{
+          add("/a");
+          add("/a/b");
+          add("/a/b/c");
+          add("/a/c");
+        }},
+        new CategoryView("ROOT") {{
+          addChild(new CategoryView("a") {{
+            addChild(new CategoryView("b") {{
+              addChild(c);
+            }});
+            addChild(c);
+          }});
+        }}
+      },
+
+      // Complicated case.
       {
         new ArrayList() {{
           add("/f");
@@ -48,32 +122,7 @@ public class CategoryUtilsTest {
           add("/1/2/3");
           add("/x/y");
         }},
-        new CategoryView("ROOT") {{
-          addChild(new CategoryView("a") {{
-            addChild(new CategoryView("b") {{
-              addChild(new CategoryView("c") {{
-                addChild(new CategoryView("d") {{
-                  addChild(new CategoryView("e"));
-                }});
-              }});
-            }});
-            addChild(new CategoryView("c") {{
-              addChild(new CategoryView("e"));
-            }});
-          }});
-          addChild(new CategoryView("e"));
-          addChild(new CategoryView("g"));
-          addChild(new CategoryView("f"));
-          addChild(new CategoryView("z"));
-          addChild(new CategoryView("1") {{
-            addChild(new CategoryView("2") {{
-              addChild(new CategoryView("3"));
-            }});
-          }});
-          addChild(new CategoryView("x") {{
-            addChild(new CategoryView("y"));
-          }});
-        }}
+        buildComplicatedExpectedTree()
       }
     };
   }
@@ -170,20 +219,20 @@ public class CategoryUtilsTest {
 
   @Test(dataProvider = "makeMap")
   public void testCreateMap(List<String> before, CategoryView expected) {
-    for(String string : before) {
-      log.debug(string);
+    for(String subject : before) {
+      log.debug(subject);
     }
 
     CategoryView result = CategoryUtils.createMapFromStringList(before);
 
     if(log.isDebugEnabled()) {
-      log.debug("Result Map:");
-      printMap(result, 0);
+      log.debug("Expected Map:");
+      printMap(expected, 0);
     }
 
     if(log.isDebugEnabled()) {
-      log.debug("Expected Map:");
-      printMap(expected, 0);
+      log.debug("\nResult Map:");
+      printMap(result, 0);
     }
 
     //Compare both ways to get around testNG bug
@@ -216,6 +265,7 @@ public class CategoryUtilsTest {
   }
 
   private void assertEqualRecursive(CategoryView result, CategoryView expected) {
+    assertEquals(result, expected);
     assertEquals(result.getName(), expected.getName());
 
     for(String key : result.getChildren().keySet()) {
@@ -225,13 +275,10 @@ public class CategoryUtilsTest {
 
   private void printMap(CategoryView view, int depth) {
     String spacer = StringUtils.repeat("-", depth);
-
-    for(String key : view.getChildren().keySet()) {
-      log.debug("{}Key: {}, Size: {}", new Object[] { spacer, key, view.getChild(key).getChildren().size() });
-
-      if(view.getChild(key).getChildren().size() > 0) {
-        printMap(view.getChild(key), depth + 1);
-      }
+    log.debug("{}Key: {}, Children: {}",
+        new Object[] { spacer, view.getName(), view.getChildren().size() });
+    for (CategoryView child : view.getChildren().values()) {
+      printMap(child, depth + 1);
     }
   }
 }

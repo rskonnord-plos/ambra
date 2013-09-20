@@ -18,9 +18,10 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.service.cache.Cache;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
-import org.ambraproject.service.cache.Cache;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -275,10 +276,45 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * @enheritDoc
+   * @inheritDoc
    */
   @Override
   public List<String> getAllSubjects(String journal) throws ApplicationException {
+    QueryResponse queryResponse = executeSubjectFacetSearch("subject_hierarchy", journal);
+    FacetField facet = queryResponse.getFacetField("subject_hierarchy");
+    List<String> results = new ArrayList<String>(facet.getValues().size());
+    for (FacetField.Count count : facet.getValues()) {
+      results.add(count.getName());
+    }
+    return results;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SubjectCounts getAllSubjectCounts(String journal) throws ApplicationException {
+    QueryResponse queryResponse = executeSubjectFacetSearch("subject_facet", journal);
+    FacetField facet = queryResponse.getFacetField("subject_facet");
+    SubjectCounts results = new SubjectCounts();
+    for (FacetField.Count count : facet.getValues()) {
+      results.subjectCounts.put(count.getName(), count.getCount());
+    }
+    results.totalArticles = queryResponse.getResults().getNumFound();
+    return results;
+  }
+
+  /**
+   * Executes a search where results are grouped by one of the subject facets in the solr schema.
+   *
+   * @param facetName the subject facet of interest.  Depending on the application, this should be
+   *     either "subject_facet" or "subject_hierarchy".  The first does not include the entire taxonomy
+   *     path, while the second does.
+   * @param journal journal of interest
+   * @return solr server response
+   * @throws ApplicationException
+   */
+  private QueryResponse executeSubjectFacetSearch(String facetName, String journal) throws ApplicationException {
     SolrQuery query = createQuery("*:*", 0, 0, false);
 
     // We don't care about results, just facet counts.
@@ -286,31 +322,24 @@ public class SolrSearchService implements SearchService {
 
     // We only care about full documents
     query.addFilterQuery(createFilterFullDocuments());
+    query.addFilterQuery(createFilterNoIssueImageDocuments());
 
     // Remove facets we don't use in this case.
     query.removeFacetField("author_facet");
     query.removeFacetField("editor_facet");
     query.removeFacetField("affiliate_facet");
     query.removeFacetField("subject_facet");
+    query.removeFacetField("subject_hierarchy");
 
     // Add the one we do want.
-    query.addFacetField("subject_hierarchy");
+    query.addFacetField(facetName);
 
     if(journal != null && journal.length() > 0) {
       query.addFilterQuery("cross_published_journal_key:" + journal);
     }
 
     query.setFacetLimit(-1);  // unlimited
-
-    QueryResponse queryResponse = getSOLRResponse(query);
-    FacetField facet = queryResponse.getFacetField("subject_hierarchy");
-    List<String> results = new ArrayList<String>(facet.getValues().size());
-
-    for (FacetField.Count count : facet.getValues()) {
-      results.add(count.getName());
-    }
-
-    return results;
+    return getSOLRResponse(query);
   }
 
   /**
