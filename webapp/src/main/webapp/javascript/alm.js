@@ -594,10 +594,11 @@ $.fn.alm = function () {
       bookMarksNode.show("blind", 500, countElementShownCallback);
     }
   }
-  this.setSavedError = function(message, bookMarksID, loadingID){
+  this.setSavedError = function(message, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallBack){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + bookMarksID).show("blind", 500);
+    registerVisualElementCallback();
+    $("#" + bookMarksID).show("blind", 500, countElementShownCallBack());
   }
 
   this.createMetricsTile = function (name, url, imgSrc, linkText) {
@@ -699,7 +700,7 @@ $.fn.alm = function () {
     registerVisualElementCallback('#' + discussedID);
     discussedElement.show('blind', 500, countElementShownCallback);
   }
-  this.setDiscussedError = function (message, discussedID, loadingID) {
+  this.setDiscussedError = function (message, discussedID, loadingID, registerVisualElementCallback, countElementShownCallBack) {
 
     var discussedElement = $('#' + discussedID);
     discussedElement.css('display', 'none');
@@ -710,7 +711,8 @@ $.fn.alm = function () {
     discussedElement.html(html);
 
     $("#" + loadingID).fadeOut('slow');
-    discussedElement.show('blind', 500);
+    registerVisualElementCallback();
+    discussedElement.show('blind', 500, countElementShownCallBack());
 
   };
 
@@ -782,10 +784,11 @@ $.fn.alm = function () {
 
   }
 
-  this.setCitesError = function(message, citesID, loadingID) {
+  this.setCitesError = function(message, citesID, loadingID, registerVisualElementCallback, countElementShownCallBack) {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + citesID).show("blind", 500);
+    registerVisualElementCallback();
+    $("#" + citesID).show("blind", 500, countElementShownCallBack());
   }
 
   this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID, registerVisualElementCallback, countElementShownCallback) {
@@ -1244,10 +1247,12 @@ $.fn.alm = function () {
 
     //fail!
     var fail = function(message){
-      this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
-      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setCitesError(message, "relatedCites", "relatedCitesSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner", registerVisualElementCallback, countElementShownCallBack);
+      //F1000 Prime section is by default hidden, so no need to keep track of any visual rendering
       this.setF1000Error(message, "f1000","f1000Spinner");
+      allTilesRegisteredCallBack();
     }
 
     this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
