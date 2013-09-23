@@ -820,7 +820,7 @@ $.fn.alm = function () {
     //the f1k section is by default hidden, so no need to do a thing
   }
 
-  this.setChartData = function (doi, usageID, loadingID) {
+  this.setChartData = function (doi, usageID, loadingID, registerVisualElementCallback, countElementShownCallback, markChartShownCallback) {
     //citation_date format = 2006/12/20
     //citation_date format = 2006/2/2
 
@@ -833,14 +833,18 @@ $.fn.alm = function () {
       $("#" + usageID).html('This article was only recently published. ' +
           'Although we update our data on a daily basis (not in real time), there may be a 48-hour ' +
           'delay before the most recent numbers are available.<br/><br/>');
-      $("#" + usageID).show("blind", 500);
+      registerVisualElementCallback();
+      $("#" + usageID).show("blind", 500, countElementShownCallback());
       $("#" + loadingID).fadeOut('slow');
+      markChartShownCallback();
     } else {
       if (this.isArticle(doi)) {
         var almError = function (message) {
+          registerVisualElementCallback();
           $("#" + loadingID).fadeOut('slow');
           $("#" + usageID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-          $("#" + usageID).show("blind", 500);
+          $("#" + usageID).show("blind", 500, countElementShownCallback());
+          markChartShownCallback();
         };
 
         var success = function (response) {
@@ -1140,7 +1144,9 @@ $.fn.alm = function () {
 
           this.addFigshareTile(response[0]);
 
-          $usage.show("blind", 500);
+          registerVisualElementCallback();
+          $usage.show("blind", 500, countElementShownCallback());
+          markChartShownCallback();
         };
 
         doi = this.validateDOI(doi);
@@ -1442,7 +1448,7 @@ function onLoadALM() {
   var elementsRegisteredCount = 0;
   var elementShownCount = 0;
   var metricsComplete = false;
-  var chartComplete = true;
+  var chartComplete = false;
 
   var allSectionsDisplayed = function(){
     return metricsComplete && chartComplete && elementsRegisteredCount == elementShownCount;
@@ -1474,7 +1480,7 @@ function onLoadALM() {
   }
 
   almService.setMetricsTab(doi, registerVisualElement, countElementShown, markTilesShown);
-  //almService.setChartData(doi, "usage", "chartSpinner");
+  almService.setChartData(doi, "usage", "chartSpinner", registerVisualElement, countElementShown, markChartShown);
 }
 
 /* Some common display functions for the browse and search results pages */
