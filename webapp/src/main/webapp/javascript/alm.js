@@ -511,6 +511,7 @@ $.fn.alm = function () {
     });
 
     console.log(url);
+
   }
 
   /**
@@ -520,7 +521,7 @@ $.fn.alm = function () {
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setSavedSuccess = function(response, bookMarksID, loadingID){
+  this.setSavedSuccess = function(response, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
     var bookMarksNode = $('#' + bookMarksID);
     $("#" + loadingID).fadeOut('slow');
     bookMarksNode.css("display", "none");
@@ -589,7 +590,8 @@ $.fn.alm = function () {
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
     else{
-      bookMarksNode.show("blind", 500);
+      registerVisualElementCallback('#' + bookMarksID);
+      bookMarksNode.show("blind", 500, countElementShownCallback);
     }
   }
   this.setSavedError = function(message, bookMarksID, loadingID){
@@ -615,7 +617,7 @@ $.fn.alm = function () {
         '</div>';
   };
 
-  this.setDiscussedSuccess = function(response, discussedID, loadingID){
+  this.setDiscussedSuccess = function(response, discussedID, loadingID, registerVisualElementCallback, countElementShownCallback){
 
     $("#" + loadingID).fadeOut('slow');
     var discussedElement = $('#' + discussedID);
@@ -694,7 +696,8 @@ $.fn.alm = function () {
       }
     });
 
-    discussedElement.show('blind', 500);
+    registerVisualElementCallback('#' + discussedID);
+    discussedElement.show('blind', 500, countElementShownCallback);
   }
   this.setDiscussedError = function (message, discussedID, loadingID) {
 
@@ -711,7 +714,7 @@ $.fn.alm = function () {
 
   };
 
-  this.setCitesSuccess = function(response, citesID, loadingID){
+  this.setCitesSuccess = function(response, citesID, loadingID, registerVisualElementCallback, countElementShownCallback){
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).css("display", "none");
 
@@ -774,7 +777,8 @@ $.fn.alm = function () {
     }
 
     $("#" + citesID).html(html);
-    $("#" + citesID).show("blind", 500);
+    registerVisualElementCallback('#' + citesID);
+    $("#" + citesID).show("blind", 500, countElementShownCallback);
 
   }
 
@@ -784,7 +788,7 @@ $.fn.alm = function () {
     $("#" + citesID).show("blind", 500);
   }
 
-  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID) {
+  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID, registerVisualElementCallback, countElementShownCallback) {
     //add the goods then show the area which is by default hidden
 
     var f1k = this.filterSources(response[0].sources, ['f1000']).pop();
@@ -800,12 +804,13 @@ $.fn.alm = function () {
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
     $('#' + f1kHeaderID).show("blind", 500);
 
+    registerVisualElementCallback('#' + f1kContentID);
     $("#" + f1kSpinnerID).fadeOut('slow');
     $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
       f1k.events_url,
       '/images/logo-' + f1k.name + '.png',
       f1k.metrics.total)
-      + '\n').show("blind", 500);
+      + '\n').show("blind", 500, countElementShownCallback);
   }
 
   this.setF1000Error = function (message) {
@@ -1224,16 +1229,17 @@ $.fn.alm = function () {
     return li;
   }
 
-  this.setMetricsTab = function (doi) {
+  this.setMetricsTab = function (doi, registerVisualElementCallback, countElementShownCallBack, allTilesRegisteredCallBack) {
 
     doi = this.validateDOI(doi);
 
     //succeed!
     var success = function(response){
-      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
-      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
-      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
+      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent", registerVisualElementCallback, countElementShownCallBack);
+      allTilesRegisteredCallBack();
     }
 
     //fail!
@@ -1244,7 +1250,6 @@ $.fn.alm = function () {
       this.setF1000Error(message, "f1000","f1000Spinner");
     }
 
-    //get the data
     this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
   }
 
@@ -1429,9 +1434,42 @@ function onLoadALM() {
   var almService = new $.fn.alm();
   var doi = $('meta[name=citation_doi]').attr("content");
 
-  almService.setMetricsTab(doi);
-  almService.setChartData(doi, "usage", "chartSpinner");
-  setTimeout(jumpToALMSection,300);
+  var elementsRegisteredCount = 0;
+  var elementShownCount = 0;
+  var metricsComplete = false;
+  var chartComplete = true;
+
+  var allSectionsDisplayed = function(){
+    return metricsComplete && chartComplete && elementsRegisteredCount == elementShownCount;
+  }
+
+  var registerVisualElement = function(){
+    elementsRegisteredCount++;
+  }
+
+  var countElementShown = function(){
+    elementShownCount++;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  var markTilesShown = function(){
+    metricsComplete = true;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  var markChartShown = function(){
+    chartComplete = true;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  almService.setMetricsTab(doi, registerVisualElement, countElementShown, markTilesShown);
+  //almService.setChartData(doi, "usage", "chartSpinner");
 }
 
 /* Some common display functions for the browse and search results pages */
