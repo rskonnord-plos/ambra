@@ -111,7 +111,11 @@
    * Displays the given term at the given level
    */
   function displayTerm(term, level) {
-    // console.log("displayTerm: " + term + " (level " + level + ")");
+    if(level > 0) {
+      if(typeof(_gaq) !== 'undefined'){
+        _gaq.push(['_trackEvent',"Taxonomy Browser", "Subject Clicked", term]);
+      }
+    }
 
     // if we clcked a lower-level item
     // (ignore the root term in the stack for length calcs)
@@ -766,6 +770,10 @@
   }
 
   function displayBrowser(event) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',"Taxonomy Browser", "Browser Opened", ""]);
+    }
+
     // stop the link
     event.preventDefault();
 
@@ -792,6 +800,10 @@
     $(document).bind('click', function (event) {
       // force close the TB
       toggleTaxonomyBrowser(true);
+
+      if(typeof(_gaq) !== 'undefined'){
+        _gaq.push(['_trackEvent',"Taxonomy Browser", "Browser Closed", ""]);
+      }
     });
 
     // bind a listener to the TB parent node to prevents the closing
