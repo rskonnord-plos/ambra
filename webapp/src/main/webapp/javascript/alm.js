@@ -877,7 +877,7 @@ $.fn.alm = function () {
             return key;
           });
 
-          $usage.append(summaryTable);
+          //$usage.append(summaryTable);
 
           // Display the graph only if there are at least two data points (months)
           var isGraphDisplayed = Object.keys(data.history).length > 1;
@@ -886,6 +886,11 @@ $.fn.alm = function () {
               chart: {
                 renderTo: "chart",
                 animation: false,
+                events: {
+                  redraw: function(){
+                    countElementShownCallback();
+                  }
+                },
                 margin: [40, 40, 40, 80]
               },
               credits: {
@@ -1025,6 +1030,8 @@ $.fn.alm = function () {
                 .css("width", "600px")
                 .css("height", "200px"));
 
+            //chart is redrawn once upon creation, so need to count this to synch display rendering
+            registerVisualElementCallback();
             var chart = new Highcharts.Chart(options);
 
             // check to see if there is any data
@@ -1048,6 +1055,7 @@ $.fn.alm = function () {
                     }
 
                     // add the data for the given subject area to the chart
+                    registerVisualElementCallback();
                     chart.addSeries({
                           id: subjectAreaId,
                           data: subjectAreaData,
@@ -1065,7 +1073,7 @@ $.fn.alm = function () {
                     );
 
                     // hide the line
-                    chart.get(subjectAreaId).hide();
+//action call back                    chart.get(subjectAreaId).hide();
                   }
                 }
 
@@ -1132,8 +1140,8 @@ $.fn.alm = function () {
 
                   var betaDiv = $('<div id="beta">BETA</div>');
 
-                  $usage.append(betaDiv);
-                  $usage.append(relativeMetricDiv);
+//                  $usage.append(betaDiv);
+//                  $usage.append(relativeMetricDiv);
                 }
               }
             }
@@ -1142,11 +1150,15 @@ $.fn.alm = function () {
 
           $usage.append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
 
-          this.addFigshareTile(response[0]);
+          //TODO 'put it BAAAAACK'
+          //this.addFigshareTile(response[0]);
 
           registerVisualElementCallback();
-          $usage.show("blind", 500, countElementShownCallback());
-          markChartShownCallback();
+          $usage.show("blind", 500, function () {
+            countElementShownCallback();
+            markChartShownCallback();
+          });
+
         };
 
         doi = this.validateDOI(doi);
@@ -1447,7 +1459,7 @@ function onLoadALM() {
 
   var elementsRegisteredCount = 0;
   var elementShownCount = 0;
-  var metricsComplete = false;
+  var metricsComplete = true;
   var chartComplete = false;
 
   var allSectionsDisplayed = function(){
