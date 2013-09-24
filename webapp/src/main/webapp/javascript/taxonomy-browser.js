@@ -68,6 +68,9 @@
     // "parent term", "child term", "grandchild term", "great-grandchild term"
   ];
 
+  // Maps subject terms to article count for display in the menus
+  var term_counts = {};
+
   // holds the main element of the taxonomy browser, assigned in initialize()
   var $el = null;
 
@@ -182,7 +185,8 @@
         return {
           'name': term,
           'hasChild': (term_cache[term].length > 0),
-          'link': buildSubjectUrl(term)
+          'link': buildSubjectUrl(term),
+          'count': term_counts[term]
         };
       });
 
@@ -191,11 +195,18 @@
       return data;
     }
 
+    if (term === '/') {
+      var term_count = term_counts['ROOT'];
+    } else {
+      var term_count = term_counts[term];
+    }
+
     // create the column markup
     var markup = buildColumnMarkup({
       items: createDataObject(child_terms),
       level: term_stack.length, // level is 1-based, array length is 0-based
-      view_all_link: buildSubjectUrl(term)
+      view_all_link: buildSubjectUrl(term),
+      view_all_total: term_count
     });
 
     // insert the markup into the doc
@@ -543,7 +554,7 @@
       return [
         '<li>',
         '<a href="' + item.link + '"' + (item.hasChild ? '' : ' class="no-children"') + ' data-level="' + data.level + '">',
-        item.name,
+        item.name + (item.hasChild ? '' : ' (' + item.count + ')'),
         '</a>',
         '</li>'
       ].join("\n");
@@ -553,18 +564,23 @@
       '<div class="level" data-level="' + data.level + '">',
       '<div class="level-scroll">',
       '<ul>',
-      '<li><a href="' + data.view_all_link + '" class="no-children">View All Articles</a></li>',
+      '<li><a href="' + data.view_all_link + '" class="no-children">View All Articles (' + data.view_all_total + ')</a></li>',
       terms.join("\n"),
       '</ul>',
-      '</div>',
-      '<a href="#" class="up"></a>',
-      '<a href="#" class="down"></a>',
-      '</div>'
-    ].join("\n");
+      '</div>' ];
 
-    // console.log(markup);
+    //We don't need the up / down arrows for less then 4 items
+    //console.log(data.items.length);
 
-    return markup;
+    if(data.items.length > 4) {
+      markup.push(['<a href="#" class="up"></a>', '<a href="#" class="down"></a>']);
+    }
+
+    markup.push(['</div>']);
+
+    //console.log(markup.join("\n"));
+
+    return markup.join("\n");
   }
 
 
@@ -614,7 +630,9 @@
     // console.log("after: all_terms = ", all_terms);
 
     // return an encoded version of the URL
-    return API_URL + encodeURIComponent(all_terms.join("/")) + "&journal=" + $('meta[name=currentJournal]').attr("content");
+    return API_URL + encodeURIComponent(all_terms.join("/"))
+        + "&journal=" + $('meta[name=currentJournal]').attr("content")
+        + "&showCounts=true";
   }
 
   /**
@@ -662,6 +680,10 @@
           term_cache[term] = [];
         }
         return term;
+      });
+
+      $.each(data.counts, function(k, v) {
+        term_counts[k] = v;
       });
 
       // add the (sorted) child_terms for this parent to the cache

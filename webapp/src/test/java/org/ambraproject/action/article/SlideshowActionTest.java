@@ -121,7 +121,7 @@ public class SlideshowActionTest extends AmbraWebTest {
   public void testGetFigureTables(String articleUri) throws Exception
   {
     action.setUri(articleUri);
-    String result = action.getFigureTables();
+    String result = action.fetchFigureTables();
     assertEquals(result, BaseActionSupport.SUCCESS, "Action didn't return input");
   }
 

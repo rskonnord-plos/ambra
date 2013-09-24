@@ -70,16 +70,17 @@ $.fn.alm = function () {
    * The data will be missing in the resultset.
    * */
   this.getArticleSummaries = function (dois, callBack, errorCallback) {
+    if(dois.length) {
+      idString = "";
+      idString += this.validateDOI(dois[0]);
 
-    idString = "";
-    idString += this.validateDOI(dois[0]);
+      for (a = 1; a < dois.length; a++) {
+        idString += "," + this.validateDOI(dois[a]);
+      }
 
-    for (a = 1; a < dois.length; a++) {
-      idString += "," + this.validateDOI(dois[a]);
+      var request = idString;
+      this.getData(request, callBack, errorCallback);
     }
-
-    var request = idString;
-    this.getData(request, callBack, errorCallback);
   }
 
   /* Sort the chart data */

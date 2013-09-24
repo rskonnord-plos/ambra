@@ -42,6 +42,17 @@ public interface TaxonomyService {
   public void flagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
 
   /**
+   * Remove a flag from a particular taxonomy term (by database ID).  The authID may be null if the user
+   * is not logged in.  If the userProfileID is left null, in the database, one flag for this articleID/categoryID
+   * pair is removed
+   *
+   * @param articleID articleID
+   * @param categoryID categoryID
+   * @param authID the user's authID.
+   */
+  public void deflagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
+
+  /**
    * Parses a list of slash-delimited categories, as returned by solr, into a sorted map
    * from top-level category to a list of second-level categories.
    *
@@ -61,4 +72,15 @@ public interface TaxonomyService {
    * @throws ApplicationException
    */
   CategoryView parseCategories(String currentJournal) throws ApplicationException;
+
+  /**
+   * Returns the number of articles, for a given journal, associated with the parent term and all
+   * direct children of a subject taxonomy term.
+   *
+   * @param taxonomy the term in the taxonomy to examine, as well as its direct children
+   * @param currentJournal specifies the journal
+   * @return map from taxonomy term to count of articles
+   * @throws ApplicationException
+   */
+  Map<String, Long> getCounts(CategoryView taxonomy, String currentJournal) throws ApplicationException;
 }

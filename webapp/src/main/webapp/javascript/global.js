@@ -103,11 +103,10 @@ function onReadyDocument() {
     collapsible.collapsiblePanel();
   }
 
-  var handleSubjectSideBarClick = function(event) {
-    //If the event occurs on a child element, get the parent LI target for the function work
-    var target = ($(event.target).prop("tagName") == "LI")?event.target:$(event.target).parents("li")[0];
-    var categoryID = $(target).data("categoryid");
-    var articleID = $(target).data("articleid");
+  var handleFlagClick = function(event) {
+    var categoryID = $(event.target).data("categoryid");
+    var articleID = $(event.target).data("articleid");
+    var categoryName = $(event.target).data("categoryname");
 
     $.ajax({
       type: 'POST',
@@ -118,13 +117,38 @@ function onReadyDocument() {
         console.log(errorThrown);
       },
       success:function (data) {
-        $(event.target).unbind('click', handleSubjectSideBarClick);
-        $(target).addClass("flagged");
+        $(event.target).unbind('click', handleFlagClick);
+        $(event.target).bind('click', handleDeflagClick);
+        $(event.target).addClass("flagged");
+        $(event.target).attr('title', "Remove inappropriate flag from '" + categoryName + "'");
       }
     });
-  }
+  };
 
-  $('#subject-area-sidebar-list li div.flagImage').on('click', handleSubjectSideBarClick);
+  var handleDeflagClick = function(event) {
+    var categoryID = $(event.target).data("categoryid");
+    var articleID = $(event.target).data("articleid");
+    var categoryName = $(event.target).data("categoryname");
+
+    $.ajax({
+      type: 'POST',
+      url:'/taxonomy/deflag/json',
+      data: { 'categoryID': categoryID, 'articleID': articleID },
+      dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+        $(event.target).unbind('click', handleDeflagClick);
+        $(event.target).bind('click', handleFlagClick);
+        $(event.target).removeClass("flagged");
+        $(event.target).attr('title', "Flag '" + categoryName + "' as inappropriate");
+      }
+    });
+  };
+
+  $('#subject-area-sidebar-list li div.flagImage').on('click', handleFlagClick);
+  $('#subject-area-sidebar-list li div.flagImage.flagged').on('click', handleDeflagClick);
 
   (function () {
     this.hoverEnhanced({});
