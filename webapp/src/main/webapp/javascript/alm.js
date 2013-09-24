@@ -877,7 +877,7 @@ $.fn.alm = function () {
             return key;
           });
 
-//          $usage.append(summaryTable);
+          $usage.append(summaryTable);
 
           // Display the graph only if there are at least two data points (months)
           var isGraphDisplayed = Object.keys(data.history).length > 1;
@@ -1141,8 +1141,8 @@ $.fn.alm = function () {
 
                   var betaDiv = $('<div id="beta">BETA</div>');
 
-//                  $usage.append(betaDiv);
-//                  $usage.append(relativeMetricDiv);
+                  $usage.append(betaDiv);
+                  $usage.append(relativeMetricDiv);
                 }
               }
             }
@@ -1151,8 +1151,7 @@ $.fn.alm = function () {
 
           $usage.append($('<p>*Although we update our data on a daily basis, there may be a 48-hour delay before the most recent numbers are available. PMC data is posted on a monthly basis and will be made available once received.</p>'));
 
-          //TODO 'put it BAAAAACK'
-          //this.addFigshareTile(response[0]);
+          this.addFigshareTile(response[0]);
 
           registerVisualElementCallback();
           $usage.show("blind", 500, function () {
