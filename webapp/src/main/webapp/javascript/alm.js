@@ -1479,7 +1479,7 @@ function onLoadALM() {
     }
   }
 
-  almService.setMetricsTab(doi, registerVisualElement, countElementShown, markTilesShown);
+  //almService.setMetricsTab(doi, registerVisualElement, countElementShown, markTilesShown);
   almService.setChartData(doi, "usage", "chartSpinner", registerVisualElement, countElementShown, markChartShown);
 }
 
