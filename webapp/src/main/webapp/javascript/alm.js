@@ -598,7 +598,7 @@ $.fn.alm = function () {
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     registerVisualElementCallback();
-    $("#" + bookMarksID).show("blind", 500, countElementShownCallBack());
+    $("#" + bookMarksID).show("blind", 500, countElementShownCallback);
   }
 
   this.createMetricsTile = function (name, url, imgSrc, linkText) {
@@ -712,7 +712,7 @@ $.fn.alm = function () {
 
     $("#" + loadingID).fadeOut('slow');
     registerVisualElementCallback();
-    discussedElement.show('blind', 500, countElementShownCallBack());
+    discussedElement.show('blind', 500, countElementShownCallback);
 
   };
 
@@ -788,7 +788,7 @@ $.fn.alm = function () {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     registerVisualElementCallback();
-    $("#" + citesID).show("blind", 500, countElementShownCallBack());
+    $("#" + citesID).show("blind", 500, countElementShownCallback);
   }
 
   this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID, registerVisualElementCallback, countElementShownCallback) {
@@ -834,7 +834,7 @@ $.fn.alm = function () {
           'Although we update our data on a daily basis (not in real time), there may be a 48-hour ' +
           'delay before the most recent numbers are available.<br/><br/>');
       registerVisualElementCallback();
-      $("#" + usageID).show("blind", 500, countElementShownCallback());
+      $("#" + usageID).show("blind", 500, countElementShownCallback);
       $("#" + loadingID).fadeOut('slow');
       markChartShownCallback();
     } else {
@@ -843,7 +843,7 @@ $.fn.alm = function () {
           registerVisualElementCallback();
           $("#" + loadingID).fadeOut('slow');
           $("#" + usageID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-          $("#" + usageID).show("blind", 500, countElementShownCallback());
+          $("#" + usageID).show("blind", 500, countElementShownCallback);
           markChartShownCallback();
         };
 
@@ -877,7 +877,7 @@ $.fn.alm = function () {
             return key;
           });
 
-          //$usage.append(summaryTable);
+//          $usage.append(summaryTable);
 
           // Display the graph only if there are at least two data points (months)
           var isGraphDisplayed = Object.keys(data.history).length > 1;
@@ -1073,7 +1073,8 @@ $.fn.alm = function () {
                     );
 
                     // hide the line
-//action call back                    chart.get(subjectAreaId).hide();
+                    registerVisualElementCallback();
+                    chart.get(subjectAreaId).hide(0, countElementShownCallback);
                   }
                 }
 
@@ -1459,7 +1460,7 @@ function onLoadALM() {
 
   var elementsRegisteredCount = 0;
   var elementShownCount = 0;
-  var metricsComplete = true;
+  var metricsComplete = false;
   var chartComplete = false;
 
   var allSectionsDisplayed = function(){
