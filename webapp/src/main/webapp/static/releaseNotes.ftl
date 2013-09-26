@@ -42,8 +42,9 @@
       <li>Added of FASTA and FASTQ mime types</li>
       <li>Removed obsolete links at bottom of article page metrics tab</li>
       <li>Added canonical URL to article page</li>
-      <li>Taxonomy synonym mapping</li>
+      <li>Added taxonomy term synonym mapping</li>
       <li>Added field to enable Twitter Cards for PLOS abstracts</li>
+      <li>Fixed figure lightbox bug on ONE homepage</li>
   </ul>
 
   <h2>Ambra 2.8.1</h2>
