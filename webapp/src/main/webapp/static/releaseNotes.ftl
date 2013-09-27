@@ -35,6 +35,26 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.8.2</h2>
+  <p>Released October 1, 2013</p>
+  <h3>Features Implemented in Ambra 2.8.2</h3>
+  <ul>
+      <li>Added of FASTA and FASTQ mime types</li>
+      <li>Removed obsolete links at bottom of article page metrics tab</li>
+      <li>Added canonical URL to article page</li>
+      <li>Added taxonomy term synonym mapping</li>
+      <li>Added field to enable Twitter Cards for PLOS abstracts</li>
+      <li>Fixed figure lightbox bug on ONE homepage</li>
+  </ul>
+
+  <h2>Ambra 2.8.1</h2>
+  <p>Released September 24, 2013</p>
+  <h3>Features Implemented in Ambra 2.8.1</h3>
+  <ul>
+      <li>Added article counts to PLOS One homepage taxonomy browser</li>
+      <li>Fixed post launch ONE hp bugs</li>
+  </ul>
+
   <h2>Ambra 2.8.0</h2>
   <p>Released September 17, 2013</p>
   <h3>Features Implemented in Ambra 2.8.0</h3>

@@ -1753,6 +1753,7 @@ html:not(.js) .btn-reveal:hover .content {
   visibility: visible;
   cursor: default;
   opacity: 1;
+  z-index: 5;
 }
 
 #subject-area-sidebar-block-help p {
@@ -1768,7 +1769,6 @@ html:not(.js) .btn-reveal:hover .content {
 
 #subject-area-sidebar-list li {
   margin-bottom: 4px;
-  cursor: pointer;
   width: 160px;
   display: inline-block;
 }
@@ -1781,11 +1781,7 @@ html:not(.js) .btn-reveal:hover .content {
   color: #FFF;
 }
 
-#subject-area-sidebar-list li.flagged {
-  cursor: default;
-}
-
-#subject-area-sidebar-list li.flagged div.flagImage {
+#subject-area-sidebar-list li div.flagImage.flagged {
   background-position: 0 0;
 }
 
@@ -1801,6 +1797,7 @@ html:not(.js) .btn-reveal:hover .content {
   background-repeat: no-repeat;
   background-image: url('/images/icon.sprite.taxonomy.flags.png');
   float:right;
+  cursor: pointer;
 }
 
 #subject-area-sidebar-list li div.flagText {
