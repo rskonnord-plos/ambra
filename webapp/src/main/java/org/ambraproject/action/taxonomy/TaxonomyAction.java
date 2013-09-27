@@ -88,6 +88,7 @@ public class TaxonomyAction extends BaseActionSupport {
 
     if(this.root == null) {
       categories = CategoryUtils.getShortTree(categoryView);
+      root = "";
     }
 
     //Ignore first slash if it exists
