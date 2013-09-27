@@ -68,6 +68,19 @@ $(function () {
 
     // append new items to the articles-list div
     el.closest('.articles-list').append(content);
+    el.closest('.articles-list').find('a.abstract').on('click', function (e) {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'abstract', true);
+      e.preventDefault();
+      return false;
+    });
+
+    el.closest('.articles-list').find('a.figures').on('click', function (e) {
+      doi = $(this).data('doi');
+      launchModal(doi, null, 'fig', true);
+      e.preventDefault();
+      return false;
+    });
 
     // add the grayscale image
     // use a specific selector so that it targets images that have not been 

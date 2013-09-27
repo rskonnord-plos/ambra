@@ -766,6 +766,15 @@
 
   <rule>
     <note>
+      re-write for de flag taxonomy json
+      /taxonomy/deflag/json -> /taxonomy/deflagTaxonomyTerm.action
+    </note>
+    <from>^(/.+)?/taxonomy/deflag/json(.*)$</from>
+    <to>$1/taxonomy/deflagTaxonomyTerm.action?$2</to>
+  </rule>
+
+  <rule>
+    <note>
       re-write find this taxonomy json
       /taxonomy/json -> /taxonomy/taxonomyJSON.action
     </note>

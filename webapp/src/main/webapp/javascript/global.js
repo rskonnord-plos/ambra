@@ -103,11 +103,10 @@ function onReadyDocument() {
     collapsible.collapsiblePanel();
   }
 
-  var handleSubjectSideBarClick = function(event) {
-    //If the event occurs on a child element, get the parent LI target for the function work
-    var target = ($(event.target).prop("tagName") == "LI")?event.target:$(event.target).parents("li")[0];
-    var categoryID = $(target).data("categoryid");
-    var articleID = $(target).data("articleid");
+  var handleFlagClick = function(event) {
+    var categoryID = $(event.target).data("categoryid");
+    var articleID = $(event.target).data("articleid");
+    var categoryName = $(event.target).data("categoryname");
 
     $.ajax({
       type: 'POST',
@@ -118,17 +117,52 @@ function onReadyDocument() {
         console.log(errorThrown);
       },
       success:function (data) {
-        $(event.target).unbind('click', handleSubjectSideBarClick);
-        $(target).addClass("flagged");
+        $(event.target).unbind('click', handleFlagClick);
+        $(event.target).bind('click', handleDeflagClick);
+        $(event.target).addClass("flagged");
+        $(event.target).attr('title', "Remove inappropriate flag from '" + categoryName + "'");
       }
     });
-  }
+  };
 
-  $('#subject-area-sidebar-list li div.flagImage').on('click', handleSubjectSideBarClick);
+  var handleDeflagClick = function(event) {
+    var categoryID = $(event.target).data("categoryid");
+    var articleID = $(event.target).data("articleid");
+    var categoryName = $(event.target).data("categoryname");
+
+    $.ajax({
+      type: 'POST',
+      url:'/taxonomy/deflag/json',
+      data: { 'categoryID': categoryID, 'articleID': articleID },
+      dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+        $(event.target).unbind('click', handleDeflagClick);
+        $(event.target).bind('click', handleFlagClick);
+        $(event.target).removeClass("flagged");
+        $(event.target).attr('title', "Flag '" + categoryName + "' as inappropriate");
+      }
+    });
+  };
+
+  $('#subject-area-sidebar-list li div.flagImage').on('click', handleFlagClick);
+  $('#subject-area-sidebar-list li div.flagImage.flagged').on('click', handleDeflagClick);
 
   (function () {
     this.hoverEnhanced({});
   }).apply($('#subject-area-sidebar-block-help-icon'));
+
+  //Log clicks to the share buttons
+  var handleSocialClick = function(event) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent', "Article", "Share", $(event.target).attr('title')]);
+    }
+    return true;
+  };
+
+  $('ul.social li a').on('click', handleSocialClick);
 }
 
 
@@ -311,7 +345,7 @@ function initMainContainer() {
   });
 
   $("#nav-article li a").on("click", function(event) {
-    console.log("pjax click " + this.name);
+    //console.log("pjax click " + this.name);
     // for metrics and related content that have dynamic javascript to populate
     // the content, cache the content here when the user navigates away from that
     // page. So that this cache can be reused when the user navigates back to
@@ -1262,6 +1296,9 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
 
   var displayModal = function (articleType, title, authors, articleDoi, linkTitle) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',"Lightbox", "Display Modal", ""]);
+    }
     $hdr = $('<div class="header" />');
     if (linkTitle) {
       var articleLink = "http://dx.plos.org/" + articleDoi.replace("info:doi/", "");
@@ -1312,6 +1349,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
   var changeSlide = function (thmb) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',"Lightbox", "Slide Changed", ""]);
+    }
+
     $all_sld.hide();
     this_sld = $all_sld.eq($all_thmb.index(thmb));
     $fig = this_sld.find('div.figure');
@@ -1565,6 +1606,9 @@ if ($toc_block_cover.length) {
 }
 
 var toggleModalState = function () {
+  if(typeof(_gaq) !== 'undefined'){
+    _gaq.push(['_trackEvent',"Lightbox", "Toggle Modal Abstract", ""]);
+  }
   $('#fig-viewer').toggleClass('abstract');
 };
 
