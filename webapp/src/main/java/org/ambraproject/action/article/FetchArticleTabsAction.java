@@ -21,6 +21,7 @@ package org.ambraproject.action.article;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
+import org.ambraproject.web.Cookies;
 import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.ArticleView;
@@ -48,9 +49,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
-import javax.servlet.http.Cookie;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +125,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private TrackbackService trackbackService;
   private UserService userService;
   private ArticleAssetService articleAssetService;
-  private List<ArticleCategory> categories;
+  private Set<ArticleCategory> categories;
   /**
    * Fetch the data for Article Tab
    *
@@ -322,78 +322,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       }
     }
 
-    this.categories = new ArrayList<ArticleCategory>();
-    this.categories.addAll(articleInfoX.getCategories());
-
-    Collections.sort(this.categories);
-
-    getCookiedCategoryFlags();
+    this.categories = Cookies.setAdditionalCategoryFlags(articleInfoX.getCategories(), articleInfoX.getId());
   }
-
-  /**
-   * Get any relevant data out of the cookies
-   */
-  private void getCookiedCategoryFlags() {
-    for(Cookie c : getCookies()) {
-      if(c.getName().equals(COOKIE_ARTICLE_CATEGORY_FLAGS)) {
-        String value = c.getValue();
-
-        if(value != null) {
-          setAdditionalFlags(value);
-        }
-      }
-    }
-  }
-
-  /**
-   * A collection of articleID/CategoryIDs that are stored in
-   * a cookie on the user's browser.  Used to track categories they
-   * have flagged
-   */
-  private void setAdditionalFlags(String cookieValue) {
-    //Check to see if the user has flagged any categories anonymously
-    List<List<String>> articleIDCategoryIDFlags = TextUtils.parsePipedCSV(cookieValue);
-    List<ArticleCategory> newCategories = new ArrayList<ArticleCategory>();
-
-    for(ArticleCategory articleCategory : this.getCategories()) {
-      ArticleCategory articleCategoryTemp = null;
-
-      for(List<String> valuePairTemp : articleIDCategoryIDFlags) {
-        //Each value in this set is a name value pair
-        //If somehow the valuePair is not two elements, log a warning, keep going
-        if(valuePairTemp.size() == 2) {
-          try {
-            long articleID = Long.valueOf(valuePairTemp.get(0));
-            long categoryID = Long.valueOf(valuePairTemp.get(1));
-
-            //If we find the user has flagged this pair, let's recreate the view setting the flag
-            if(articleCategory.getCategoryID() == categoryID && this.articleInfoX.getId() == articleID) {
-              articleCategoryTemp = ArticleCategory.builder(articleCategory)
-                .setFlagged(true).build();
-            }
-          } catch (NumberFormatException ex) {
-            log.warn("Strange values stored in: '{}' Cookie: '{}', Specifically: '{}, {}'",
-              new Object[] { COOKIE_ARTICLE_CATEGORY_FLAGS, articleIDCategoryIDFlags, valuePairTemp.get(0),
-                valuePairTemp.get(1)});
-          }
-        } else {
-          log.warn("Strange values stored in: '{}' Cookie: '{}'", COOKIE_ARTICLE_CATEGORY_FLAGS,
-            cookieValue);
-        }
-      }
-
-      if(articleCategoryTemp != null) {
-        newCategories.add(articleCategoryTemp);
-      } else {
-        //No match was found, append the old view to the new set
-        newCategories.add(articleCategory);
-      }
-    }
-
-    this.categories = newCategories;
-    Collections.sort(this.categories);
-  }
-
 
   @Override
   public boolean getHasAboutAuthorContent() {
@@ -866,7 +796,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return Return a list of this article's categories
    */
-  public List<ArticleCategory> getCategories() {
+  public Set<ArticleCategory> getCategories() {
     return categories;
   }
 
