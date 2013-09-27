@@ -808,4 +808,13 @@
     <from>^(/.+)?/browse.action\?category=(.*)?</from>
     <to>$1/browse/$2</to>
   </outbound-rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse article
+      /browse.action -> /browse/
+    </note>
+    <from>^(/.+)?/browse.action$</from>
+    <to>$1/browse/</to>
+  </outbound-rule>
 </urlrewrite>
