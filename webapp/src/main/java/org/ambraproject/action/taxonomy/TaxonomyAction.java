@@ -47,6 +47,12 @@ public class TaxonomyAction extends BaseActionSupport {
 
   @Override
   public String execute() throws Exception {
+    String browseValueKey = "ambra.virtualJournals." + getCurrentJournal() + ".taxonomyBrowser";
+    //This journal not configured to use the taxonomy browser, return 404
+    if(!configuration.getBoolean(browseValueKey, false)) {
+      return INPUT;
+    }
+
     //topAndSecondLevelCategories defaults to current journal
     topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
 

@@ -263,9 +263,9 @@
         <param name="templateFile">/taxonomy/taxonomy.ftl</param>
       </result>
 
-      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+      <!-- The action returns INPUT if it comes from a non-taxonomy browser journal;
            in that case just return a 404.                              -->
-      <result name="error" type="default_freemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
@@ -278,9 +278,9 @@
           locale, numFieldErrors, rssName, rssPath, texts</param>
       </result>
 
-      <!-- The action returns ERROR if it comes from a non-PLOS ONE journal;
+      <!-- The action returns INPUT if it comes from a non-taxonomy browser journal;
            in that case just return a 404.                              -->
-      <result name="error" type="default_freemarker">
+      <result name="input" type="default_freemarker">
         <param name="status">404</param>
         <param name="templateFile">/pageNotFound.ftl</param>
       </result>
