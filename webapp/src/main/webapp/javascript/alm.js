@@ -1306,6 +1306,8 @@ function onReadyALM() {
     };
 
     var almSuccess = function (response) {
+      var responseObject, sources, source, totalViews;
+
       if (response && response.length > 0) {
         responseObject = response[0];
 
@@ -1341,12 +1343,14 @@ function onReadyALM() {
           }
         }
 
+        totalViews = counter.metrics.total + pmc.metrics.total;
+        if (totalViews > 0) {
+          li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
+              "Sum of PLOS and PubMed Central page views and downloads",
+              "/static/almInfo#usageInfo");
 
-        li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
-          "Sum of PLOS and PubMed Central page views and downloads",
-          "/static/almInfo#usageInfo");
-
-        $("#almSignPost").append(li);
+          $("#almSignPost").append(li);
+        }
 
         var text, li;
         //citations
