@@ -130,7 +130,7 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
       migrate255();
     }
 
-    if (dbVersion < 283) {
+    if (dbVersion < 282) {
       migrate280();
     }
   }
@@ -148,12 +148,12 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
       public Object doInHibernate(Session session) throws HibernateException, SQLException {
         Version v = new Version();
         //this should match the ambra version we will be going to deploy
-        v.setName("Ambra 2.83");
-        v.setVersion(283);
+        v.setName("Ambra 2.82");
+        v.setVersion(282);
         v.setUpdateInProcess(true);
         session.save(v);
 
-        execSQLScript(session, "migrate_ambra_2_8_3_part1.sql");
+        execSQLScript(session, "migrate_ambra_2_8_2_part1.sql");
 
         v.setUpdateInProcess(false);
         session.update(v);
