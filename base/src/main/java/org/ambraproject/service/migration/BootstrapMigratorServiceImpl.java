@@ -130,7 +130,41 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
       migrate255();
     }
 
+    if (dbVersion < 283) {
+      migrate280();
+    }
   }
+
+  /**
+   * The pattern to match method name is to match earlier db version.
+   * For example, if earlier db version is 280,
+   * next migration method name should be migrate280()
+   */
+  private void migrate280() {
+    log.info("Migration from 280 starting");
+
+    final Long versionID = (Long)hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        //this should match the ambra version we will be going to deploy
+        v.setName("Ambra 2.83");
+        v.setVersion(283);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        execSQLScript(session, "migrate_ambra_2_8_3_part1.sql");
+
+        v.setUpdateInProcess(false);
+        session.update(v);
+
+        return null;
+      }
+    });
+
+    log.info("Migration from 280 complete");
+  }
+
 
   /**
    * The pattern to match method name is to match earlier db version.
