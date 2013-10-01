@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ambraproject.action;
+package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.search.BaseSearchAction;
 import org.ambraproject.models.UserProfile;
