@@ -164,7 +164,7 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
    * @param sort The sort order for the search results
    */
   public void setSort(final String sort) {
-    getSearchParameters().setSort(sort);
+    getSearchParameters().setSortKey(sort);
   }
 
   /**
@@ -172,7 +172,7 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
    * @return The sort order for the search results
    */
   public String getSort() {
-    return getSearchParameters().getSort();
+    return getSearchParameters().getSortKey();
   }
 
   public void setVolume(final String volume) {

@@ -411,15 +411,18 @@ public class SolrSearchService implements SearchService {
    */
   private void setSort(SolrQuery query, SearchParameters sp) throws ApplicationException {
     if (log.isDebugEnabled()) {
-      log.debug("SearchParameters.sort = " + sp.getSort());
+      log.debug("SearchParameters.sort = " + sp.getSortKey());
     }
 
-    if (sp.getSort().length() > 0) {
-      String sortKey = sp.getSort();
+    if (sp.getSortKey().length() > 0 || (sp.getSortValue() != null && sp.getSortValue().length() > 0)) {
+      String sortKey = sp.getSortKey();
       String sortValue = (String) validSorts.get(sortKey);
 
-      if (sortValue == null) {
-        throw new ApplicationException("Invalid sort of '" + sp.getSort() + "' specified.");
+      //This bit allows a consumer of the method to explicitly set the sort instead of specifying it by key
+      if (sortValue == null && (sp.getSortValue() == null || (sp.getSortValue() != null && sp.getSortValue().length() == 0))) {
+        throw new ApplicationException("Invalid sort of '" + sp.getSortKey() + "' specified.");
+      } else {
+        sortValue = sp.getSortValue();
       }
 
       String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);
