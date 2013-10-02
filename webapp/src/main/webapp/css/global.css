@@ -1020,8 +1020,7 @@ ul#almSignPost li div.bottom div.center {
   position: absolute;
   bottom: 0;
 }
-
-.article-meta ul#almSignPost li div.text {
+.article-meta ul#almSignPost li div.text{
   display: inline-block;
   font-weight: bold;
   font-size: 10px;
@@ -1035,8 +1034,12 @@ ul#almSignPost li div.bottom div.center {
   -o-transition: all .3s linear;
   transition: all .3s linear;
 }
+.article-meta ul#almSignPost li div.text a{
+  color: #333;
+}
 
-.article-meta ul#almSignPost li.reveal div.text {
+.article-meta ul#almSignPost li.reveal div.text,
+.article-meta ul#almSignPost li.reveal div.text a{
   background: #3c63af;
   border-radius: 4px;
   color: #fff;
