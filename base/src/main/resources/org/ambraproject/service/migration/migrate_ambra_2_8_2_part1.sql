@@ -8,6 +8,6 @@ create table categoryFeaturedArticle (
   PRIMARY KEY (categoryFeaturedArticleID),
   constraint foreign key (journalID) references journal (journalID),
   constraint foreign key (articleID) references article (articleID),
-  unique key (journalID, articleID, category)
+  unique key (journalID, category)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
