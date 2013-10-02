@@ -100,6 +100,7 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
 
       sp.setFilterSubjects(new String[] { subjectArea });
       sp.setFilterJournals(new String[] { journalKey });
+      //We only need one record
       sp.setPageSize(1);
       sp.setStartPage(0);
 
