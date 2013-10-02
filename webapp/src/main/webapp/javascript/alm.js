@@ -29,6 +29,12 @@ $.fn.alm = function () {
     this.almAPIKey = 'ALM_KEY_NOT_CONFIGURED'
   }
 
+  this.almRequestBatchSize = parseInt($('meta[name=almRequestBatchSize]').attr('content'));
+  if (isNaN(this.almRequestBatchSize)) {
+    // default will be 30
+    this.almRequestBatchSize = 30;
+  }
+
   this.isNewArticle = function (pubDateInMilliseconds) {
     //The article publish date should be stored in the current page is a hidden form variable
     var todayMinus48Hours = (new Date()).getTime() - 172800000;
@@ -70,16 +76,30 @@ $.fn.alm = function () {
    * The data will be missing in the resultset.
    * */
   this.getArticleSummaries = function (dois, callBack, errorCallback) {
+    var idString, a, startIndex, endIndex, total;
+
     if(dois.length) {
-      idString = "";
-      idString += this.validateDOI(dois[0]);
+      total = dois.length;
+      startIndex = 0;
+      endIndex = (total < this.almRequestBatchSize) ? total : this.almRequestBatchSize;
+      while (startIndex < total) {
+        idString = "";
+        idString += this.validateDOI(dois[startIndex]);
 
-      for (a = 1; a < dois.length; a++) {
-        idString += "," + this.validateDOI(dois[a]);
+        for (a = (startIndex + 1); a < endIndex; a++) {
+          console.log(dois[a]);
+          idString += "," + this.validateDOI(dois[a]);
+        }
+
+        var request = idString;
+        this.getData(request, callBack, errorCallback);
+
+        startIndex = endIndex;
+        endIndex = endIndex + this.almRequestBatchSize;
+        if (endIndex > total) {
+          endIndex = total;
+        }
       }
-
-      var request = idString;
-      this.getData(request, callBack, errorCallback);
     }
   }
 
