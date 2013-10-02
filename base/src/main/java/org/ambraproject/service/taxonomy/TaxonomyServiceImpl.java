@@ -78,9 +78,9 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
             "join article a on a.articleID = cfa.articleID " +
             "join journal j on j.journalID = cfa.journalID " +
             "where j.journalKey = :journalKey and " +
-            "cfa.category = :category")
+            "lcase(cfa.category) = :category")
           .setString("journalKey", journalKey)
-          .setString("category", subjectArea)
+          .setString("category", subjectArea.toLowerCase())
           .list();
       }
     });
