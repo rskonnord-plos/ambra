@@ -21,9 +21,13 @@ package org.ambraproject.service.taxonomy;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;
+import org.ambraproject.views.SearchHit;
+import org.ambraproject.views.SearchResultSinglePage;
+import org.ambraproject.views.article.ArticleInfo;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Required;
@@ -50,6 +54,114 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
 
   private SearchService searchService;
   private Cache cache;
+
+  /**
+   * {@inheritDoc}
+   */
+  @SuppressWarnings("unchecked")
+  public ArticleInfo getArticleForSubjectArea(final String journalKey, final String subjectArea) {
+    //Find a "Featured Article" for the given subject area
+    //
+    //First query the database for a manually defined article for the term
+    //
+    // If database doesn't have article, query SOLR for:
+    //  - Most shared in social media (using same roll-up/counting methods used in search sort options) over the last 7 days.
+    //  - If no shares
+    //    - Most viewed Article (using same roll-up/counting methods used in search sort options) over the last 7 days.
+    //    - If no views over past 7 days
+    //      - most viewed Article (over all time) (using same roll-up/counting methods used in search sort options)
+
+    List sqlResults = (List)hibernateTemplate.execute(new HibernateCallback() {
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        return session.createSQLQuery(
+          "select a.doi, a.title, a.strkImgURI from categoryFeaturedArticle cfa " +
+            "join article a on a.articleID = cfa.articleID " +
+            "join journal j on j.journalID = cfa.journalID " +
+            "where j.journalKey = :journalKey and " +
+            "cfa.category = :category")
+          .setString("journalKey", journalKey)
+          .setString("category", subjectArea)
+          .list();
+      }
+    });
+
+    if(sqlResults.size() != 0) {
+      Object[] row = (Object[])sqlResults.get(0);
+
+      ArticleInfo ai = new ArticleInfo();
+
+      ai.setDoi((String)row[0]);
+      ai.setTitle((String) row[1]);
+      ai.setStrkImgURI((String) row[2]);
+
+      return ai;
+    } else {
+      SearchParameters sp = new SearchParameters();
+
+      sp.setFilterSubjects(new String[] { subjectArea });
+      sp.setFilterJournals(new String[] { journalKey });
+      sp.setPageSize(1);
+      sp.setStartPage(0);
+
+      try {
+        //Only search for articles with shares
+        //We might turn this info a filter query for a small performance boost
+        sp.setUnformattedQuery("alm_twitterCount:[1 TO *] OR alm_facebookCount:[1 TO *]");
+        sp.setSortValue("sum(alm_twitterCount, alm_facebookCount) desc");
+        SearchResultSinglePage solrResults = searchService.advancedSearch(sp);
+
+        if(solrResults.getHits().size() > 0) {
+          SearchHit hit = solrResults.getHits().get(0);
+
+          ArticleInfo ai = new ArticleInfo(hit.getUri());
+          ai.setTitle(hit.getTitle());
+          ai.setStrkImgURI(hit.getStrikingImage());
+
+          return ai;
+        } else {
+          //No articles with shares found for the given category.  Lets try views over the past 30 days
+          //Only search for articles with views this month
+          //We might turn this info a filter query for a small performance boost
+          sp.setUnformattedQuery("counter_total_month:[1 TO *]");
+          sp.setSortValue("counter_total_month desc");
+
+          solrResults = searchService.advancedSearch(sp);
+
+          if(solrResults.getHits().size() > 0) {
+            SearchHit hit = solrResults.getHits().get(0);
+
+            ArticleInfo ai = new ArticleInfo(hit.getUri());
+            ai.setTitle(hit.getTitle());
+            ai.setStrkImgURI(hit.getStrikingImage());
+
+            return ai;
+          } else {
+            //No articles with views this month for the given category.  Use all time views
+            //We might turn this info a filter query for a small performance boost
+            sp.setUnformattedQuery("counter_total_all:[1 TO *]");
+            sp.setSortValue("counter_total_all desc");
+
+            solrResults = searchService.advancedSearch(sp);
+
+            if(solrResults.getHits().size() > 0) {
+              SearchHit hit = solrResults.getHits().get(0);
+
+              ArticleInfo ai = new ArticleInfo(hit.getUri());
+              ai.setTitle(hit.getTitle());
+              ai.setStrkImgURI(hit.getStrikingImage());
+
+              return ai;
+            } else {
+              //This is a very sad subject category :-(
+              return null;
+            }
+          }
+        }
+      } catch(ApplicationException ex) {
+        throw new RuntimeException(ex.getMessage(), ex);
+      }
+    }
+  }
 
   /**
    * {@inheritDoc}

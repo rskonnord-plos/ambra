@@ -20,6 +20,7 @@ package org.ambraproject.service.taxonomy;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.views.CategoryView;
+import org.ambraproject.views.article.ArticleInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,23 @@ import java.util.Map;
  * @author Joe Osowski
  */
 public interface TaxonomyService {
+  /**
+   * Find a "Featured Article" for the given subject area
+   *
+   * First query the database for a manually defined article for the term
+   *
+   *  If database doesn't have article, query SOLR for:
+   *   - Most shared in social media (using same roll-up/counting methods used in search sort options) over the last 7 days.
+   *   - If no shares
+   *     - Most viewed Article (using same roll-up/counting methods used in search sort options) over the last 7 days.
+   *     - If no views over past 7 days
+   *       - most viewed Article (over all time) (using same roll-up/counting methods used in search sort options)
+   *
+   * @param journalKey the key of the journal
+   * @param subjectArea the subject area to search for
+   */
+  public ArticleInfo getArticleForSubjectArea(final String journalKey, final String subjectArea);
+
   /**
    * Flag a particular taxonomy term (by database ID) that it may not be correct.  The authID may be null if the user
    * is not logged in.  If so, the userProfileID is left null in the database

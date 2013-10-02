@@ -25,6 +25,7 @@ import org.ambraproject.service.user.UserService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.util.Pair;
 import org.ambraproject.views.CategoryView;
+import org.ambraproject.views.article.ArticleInfo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class BrowseAction extends BaseSearchAction {
   private UserService userService;
 
   private String category;
+  private ArticleInfo featuredArticle;
   private String[] parents;
   private String[] children;
   private boolean subscribed = false;
@@ -81,6 +83,11 @@ public class BrowseAction extends BaseSearchAction {
         }
 
         children = view.getChildren().keySet().toArray(new String[view.getChildren().keySet().size()]);
+
+        //Get the featured article for this category
+        if(this.category != null && this.category.length() > 0) {
+          featuredArticle = taxonomyService.getArticleForSubjectArea(this.getCurrentJournal(), this.category);
+        }
       }
 
       setFilterSubjects(new String[] { this.category } );
@@ -125,6 +132,13 @@ public class BrowseAction extends BaseSearchAction {
    */
   public String getCategory() {
     return this.category;
+  }
+
+  /**
+   * Get the featured article
+   */
+  public ArticleInfo getFeaturedArticle() {
+    return featuredArticle;
   }
 
   /**
