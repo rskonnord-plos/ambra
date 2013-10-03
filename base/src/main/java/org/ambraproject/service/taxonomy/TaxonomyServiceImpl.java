@@ -19,8 +19,10 @@
 package org.ambraproject.service.taxonomy;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.models.UserRole;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
+import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.CategoryUtils;
@@ -53,6 +55,7 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
   private static final int CACHE_TTL = 3600 * 24;  // one day
 
   private SearchService searchService;
+  private PermissionsService permissionsService;
   private Cache cache;
 
   /**
@@ -161,6 +164,79 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
       } catch(ApplicationException ex) {
         throw new RuntimeException(ex.getMessage(), ex);
       }
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Map<String, String> getFeaturedArticles(final String journalKey) {
+    Map<String, String> resultMap = new HashMap<String, String>();
+
+    List sqlResults = (List)hibernateTemplate.execute(new HibernateCallback() {
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        return session.createSQLQuery(
+          "select cfa.category, a.doi from categoryFeaturedArticle cfa " +
+            "join article a on a.articleID = cfa.articleID " +
+            "join journal j on j.journalID = cfa.journalID " +
+            "where j.journalKey = :journalKey")
+          .setString("journalKey", journalKey)
+          .list();
+      }
+    });
+
+    for(Object row : sqlResults) {
+      resultMap.put((String)((Object[])row)[0], (String)((Object[])row)[1]);
+    }
+
+    return resultMap;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void deleteFeaturedArticle(final String journalKey, final String subjectArea, final String authID) {
+
+    permissionsService.checkPermission(UserRole.Permission.MANAGE_FEATURED_ARTICLES, authID);
+
+    hibernateTemplate.execute(new HibernateCallback() {
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        return session.createSQLQuery(
+          "delete cfa from categoryFeaturedArticle cfa " +
+            "join article a on a.articleID = cfa.articleID " +
+            "join journal j on j.journalID = cfa.journalID " +
+            "where j.journalKey = :journalKey and " +
+            "lcase(cfa.category) = :category")
+          .setString("journalKey", journalKey)
+          .setString("category", subjectArea.toLowerCase())
+          .executeUpdate();
+      }
+    });
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void createFeaturedArticle(final String journalKey, final String subjectArea, final String doi,
+      final String authID) {
+
+    permissionsService.checkPermission(UserRole.Permission.MANAGE_FEATURED_ARTICLES, authID);
+
+    int result = (Integer)hibernateTemplate.execute(new HibernateCallback() {
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        return session.createSQLQuery(
+          "insert into categoryFeaturedArticle(journalID, articleID, category, created, lastModified) " +
+            "select j.journalID, a.articleID, :category, NOW(), NOW() from article a, journal j " +
+            "where j.journalKey = :journalKey and a.doi = :doi")
+          .setString("journalKey", journalKey)
+          .setString("category", subjectArea)
+          .setString("doi", doi)
+          .executeUpdate();
+      }
+    });
+
+    if(result == 0) {
+      throw new RuntimeException("No records created, invalid journalKey or DOI specified.");
     }
   }
 
@@ -382,5 +458,10 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
   @Required
   public void setSearchService(final SearchService searchService) {
     this.searchService = searchService;
+  }
+
+  @Required
+  public void setPermissionsService(final PermissionsService permissionsService) {
+    this.permissionsService = permissionsService;
   }
 }

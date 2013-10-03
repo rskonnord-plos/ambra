@@ -50,6 +50,33 @@ public interface TaxonomyService {
   public ArticleInfo getArticleForSubjectArea(final String journalKey, final String subjectArea);
 
   /**
+   * For the given journal, get a map of subject areas (key) and their article DOIS (values)
+   * @param journalKey The journal key to look for
+   *
+   * @return a map of subject areas, and article DOIs
+   */
+  public Map<String, String> getFeaturedArticles(final String journalKey);
+
+  /**
+   * Delete a featured article
+   *
+   * @param journalKey the journal
+   * @param subjectArea the subject area to remove
+   * @param authID the authID of the current user
+   */
+  public void deleteFeaturedArticle(final String journalKey, final String subjectArea, final String authID);
+
+  /**
+   * Create a featured article
+   *
+   * @param journalKey the journal
+   * @param subjectArea the subject area
+   * @param doi the doi
+   * @param authID the authID of the current user
+   */
+  public void createFeaturedArticle(final String journalKey, final String subjectArea, final String doi, final String authID);
+
+  /**
    * Flag a particular taxonomy term (by database ID) that it may not be correct.  The authID may be null if the user
    * is not logged in.  If so, the userProfileID is left null in the database
    *
