@@ -76,7 +76,7 @@ $.fn.alm = function () {
    * The data will be missing in the resultset.
    * */
   this.getArticleSummaries = function (dois, callBack, errorCallback) {
-    var idString, a, startIndex, endIndex, total;
+    var idString, a, startIndex, endIndex, total, requests = new Array();
 
     if(dois.length) {
       total = dois.length;
@@ -87,12 +87,19 @@ $.fn.alm = function () {
         idString += this.validateDOI(dois[startIndex]);
 
         for (a = (startIndex + 1); a < endIndex; a++) {
-          console.log(dois[a]);
           idString += "," + this.validateDOI(dois[a]);
         }
 
         var request = idString;
-        this.getData(request, callBack, errorCallback);
+
+        // duplication of code from getData function
+        var url = this.almHost + '?api_key=' + this.almAPIKey + '&ids=' + request;
+        requests.push($.jsonp({
+          url: url,
+          context: document.body,
+          timeout: 20000,
+          callbackParameter: "callback"
+        }));
 
         startIndex = endIndex;
         endIndex = endIndex + this.almRequestBatchSize;
@@ -101,6 +108,26 @@ $.fn.alm = function () {
         }
       }
     }
+
+    $.when.apply($, requests).then(function() {
+      // success / done
+      var successData = new Array();
+
+      if (arguments.length >= 2 && arguments[1] === "success") {
+        // single request
+        successData = successData.concat(arguments[0]);
+      } else {
+        // multiple requests
+        for (var i = 0; i < arguments.length; i++) {
+          successData = successData.concat(arguments[i][0]);
+        }
+      }
+
+      callBack(successData);
+    }, function() {
+      // failure
+      errorCallback();
+    });
   }
 
   /* Sort the chart data */
