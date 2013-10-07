@@ -755,6 +755,15 @@
     <to>$1/taxonomy/taxonomy.action</to>
   </rule>
 
+  <outbound-rule>
+    <note>
+      re-write for outbound taxonomy / taxonomy namespace
+      /taxonomy/taxonomy.action -> /taxonomy/
+    </note>
+    <from>^(/.+)?/taxonomy/taxonomy.action$</from>
+    <to>$1/taxonomy</to>
+  </outbound-rule>
+
   <rule>
     <note>
       re-write for flag taxonomy json
@@ -798,5 +807,14 @@
     </note>
     <from>^(/.+)?/browse.action\?category=(.*)?</from>
     <to>$1/browse/$2</to>
+  </outbound-rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound browse article
+      /browse.action -> /browse/
+    </note>
+    <from>^(/.+)?/browse.action$</from>
+    <to>$1/browse/</to>
   </outbound-rule>
 </urlrewrite>
