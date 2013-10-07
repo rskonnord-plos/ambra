@@ -29,6 +29,12 @@ $.fn.alm = function () {
     this.almAPIKey = 'ALM_KEY_NOT_CONFIGURED'
   }
 
+  this.almRequestBatchSize = parseInt($('meta[name=almRequestBatchSize]').attr('content'));
+  if (isNaN(this.almRequestBatchSize)) {
+    // default will be 30
+    this.almRequestBatchSize = 30;
+  }
+
   this.isNewArticle = function (pubDateInMilliseconds) {
     //The article publish date should be stored in the current page is a hidden form variable
     var todayMinus48Hours = (new Date()).getTime() - 172800000;
@@ -70,17 +76,58 @@ $.fn.alm = function () {
    * The data will be missing in the resultset.
    * */
   this.getArticleSummaries = function (dois, callBack, errorCallback) {
-    if(dois.length) {
-      idString = "";
-      idString += this.validateDOI(dois[0]);
+    var idString, a, startIndex, endIndex, total, requests = new Array();
 
-      for (a = 1; a < dois.length; a++) {
-        idString += "," + this.validateDOI(dois[a]);
+    if(dois.length) {
+      total = dois.length;
+      startIndex = 0;
+      endIndex = (total < this.almRequestBatchSize) ? total : this.almRequestBatchSize;
+      while (startIndex < total) {
+        idString = "";
+        idString += this.validateDOI(dois[startIndex]);
+
+        for (a = (startIndex + 1); a < endIndex; a++) {
+          idString += "," + this.validateDOI(dois[a]);
+        }
+
+        var request = idString;
+
+        // duplication of code from getData function
+        var url = this.almHost + '?api_key=' + this.almAPIKey + '&ids=' + request;
+        requests.push($.jsonp({
+          url: url,
+          context: document.body,
+          timeout: 20000,
+          callbackParameter: "callback"
+        }));
+
+        startIndex = endIndex;
+        endIndex = endIndex + this.almRequestBatchSize;
+        if (endIndex > total) {
+          endIndex = total;
+        }
+      }
+    }
+
+    $.when.apply($, requests).then(function() {
+      // success / done
+      var successData = new Array();
+
+      if (arguments.length >= 2 && arguments[1] === "success") {
+        // single request
+        successData = successData.concat(arguments[0]);
+      } else {
+        // multiple requests
+        for (var i = 0; i < arguments.length; i++) {
+          successData = successData.concat(arguments[i][0]);
+        }
       }
 
-      var request = idString;
-      this.getData(request, callBack, errorCallback);
-    }
+      callBack(successData);
+    }, function() {
+      // failure
+      errorCallback();
+    });
   }
 
   /* Sort the chart data */
