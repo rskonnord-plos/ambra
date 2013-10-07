@@ -512,6 +512,7 @@ $.fn.alm = function () {
     });
 
     console.log(url);
+
   }
 
   /**
@@ -521,7 +522,7 @@ $.fn.alm = function () {
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setSavedSuccess = function(response, bookMarksID, loadingID){
+  this.setSavedSuccess = function(response, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
     var bookMarksNode = $('#' + bookMarksID);
     $("#" + loadingID).fadeOut('slow');
     bookMarksNode.css("display", "none");
@@ -590,13 +591,15 @@ $.fn.alm = function () {
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
     else{
-      bookMarksNode.show("blind", 500);
+      registerVisualElementCallback('#' + bookMarksID);
+      bookMarksNode.show("blind", 500, countElementShownCallback);
     }
   }
-  this.setSavedError = function(message, bookMarksID, loadingID){
+  this.setSavedError = function(message, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallBack){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + bookMarksID).show("blind", 500);
+    registerVisualElementCallback();
+    $("#" + bookMarksID).show("blind", 500, countElementShownCallback);
   }
 
   this.createMetricsTile = function (name, url, imgSrc, linkText) {
@@ -616,7 +619,7 @@ $.fn.alm = function () {
         '</div>';
   };
 
-  this.setDiscussedSuccess = function(response, discussedID, loadingID){
+  this.setDiscussedSuccess = function(response, discussedID, loadingID, registerVisualElementCallback, countElementShownCallback){
 
     $("#" + loadingID).fadeOut('slow');
     var discussedElement = $('#' + discussedID);
@@ -695,9 +698,10 @@ $.fn.alm = function () {
       }
     });
 
-    discussedElement.show('blind', 500);
+    registerVisualElementCallback('#' + discussedID);
+    discussedElement.show('blind', 500, countElementShownCallback);
   }
-  this.setDiscussedError = function (message, discussedID, loadingID) {
+  this.setDiscussedError = function (message, discussedID, loadingID, registerVisualElementCallback, countElementShownCallBack) {
 
     var discussedElement = $('#' + discussedID);
     discussedElement.css('display', 'none');
@@ -708,11 +712,12 @@ $.fn.alm = function () {
     discussedElement.html(html);
 
     $("#" + loadingID).fadeOut('slow');
-    discussedElement.show('blind', 500);
+    registerVisualElementCallback();
+    discussedElement.show('blind', 500, countElementShownCallback);
 
   };
 
-  this.setCitesSuccess = function(response, citesID, loadingID){
+  this.setCitesSuccess = function(response, citesID, loadingID, registerVisualElementCallback, countElementShownCallback){
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).css("display", "none");
 
@@ -775,17 +780,19 @@ $.fn.alm = function () {
     }
 
     $("#" + citesID).html(html);
-    $("#" + citesID).show("blind", 500);
+    registerVisualElementCallback('#' + citesID);
+    $("#" + citesID).show("blind", 500, countElementShownCallback);
 
   }
 
-  this.setCitesError = function(message, citesID, loadingID) {
+  this.setCitesError = function(message, citesID, loadingID, registerVisualElementCallback, countElementShownCallBack) {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + citesID).show("blind", 500);
+    registerVisualElementCallback();
+    $("#" + citesID).show("blind", 500, countElementShownCallback);
   }
 
-  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID) {
+  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID, registerVisualElementCallback, countElementShownCallback) {
     //add the goods then show the area which is by default hidden
 
     var f1k = this.filterSources(response[0].sources, ['f1000']).pop();
@@ -801,19 +808,20 @@ $.fn.alm = function () {
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
     $('#' + f1kHeaderID).show("blind", 500);
 
+    registerVisualElementCallback('#' + f1kContentID);
     $("#" + f1kSpinnerID).fadeOut('slow');
     $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
       f1k.events_url,
       '/images/logo-' + f1k.name + '.png',
       f1k.metrics.total)
-      + '\n').show("blind", 500);
+      + '\n').show("blind", 500, countElementShownCallback);
   }
 
   this.setF1000Error = function (message) {
     //the f1k section is by default hidden, so no need to do a thing
   }
 
-  this.setChartData = function (doi, usageID, loadingID) {
+  this.setChartData = function (doi, usageID, loadingID, registerVisualElementCallback, countElementShownCallback, markChartShownCallback) {
     //citation_date format = 2006/12/20
     //citation_date format = 2006/2/2
 
@@ -826,14 +834,18 @@ $.fn.alm = function () {
       $("#" + usageID).html('This article was only recently published. ' +
           'Although we update our data on a daily basis (not in real time), there may be a 48-hour ' +
           'delay before the most recent numbers are available.<br/><br/>');
-      $("#" + usageID).show("blind", 500);
+      registerVisualElementCallback();
+      $("#" + usageID).show("blind", 500, countElementShownCallback);
       $("#" + loadingID).fadeOut('slow');
+      markChartShownCallback();
     } else {
       if (this.isArticle(doi)) {
         var almError = function (message) {
+          registerVisualElementCallback();
           $("#" + loadingID).fadeOut('slow');
           $("#" + usageID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-          $("#" + usageID).show("blind", 500);
+          $("#" + usageID).show("blind", 500, countElementShownCallback);
+          markChartShownCallback();
         };
 
         var success = function (response) {
@@ -875,6 +887,11 @@ $.fn.alm = function () {
               chart: {
                 renderTo: "chart",
                 animation: false,
+                events: {
+                  redraw: function(){
+                    countElementShownCallback();
+                  }
+                },
                 margin: [40, 40, 40, 80]
               },
               credits: {
@@ -1014,6 +1031,8 @@ $.fn.alm = function () {
                 .css("width", "600px")
                 .css("height", "200px"));
 
+            //chart is redrawn once upon creation, so need to count this to synch display rendering
+            registerVisualElementCallback();
             var chart = new Highcharts.Chart(options);
 
             // check to see if there is any data
@@ -1037,6 +1056,7 @@ $.fn.alm = function () {
                     }
 
                     // add the data for the given subject area to the chart
+                    registerVisualElementCallback();
                     chart.addSeries({
                           id: subjectAreaId,
                           data: subjectAreaData,
@@ -1054,7 +1074,8 @@ $.fn.alm = function () {
                     );
 
                     // hide the line
-                    chart.get(subjectAreaId).hide();
+                    registerVisualElementCallback();
+                    chart.get(subjectAreaId).hide(0, countElementShownCallback);
                   }
                 }
 
@@ -1133,7 +1154,12 @@ $.fn.alm = function () {
 
           this.addFigshareTile(response[0]);
 
-          $usage.show("blind", 500);
+          registerVisualElementCallback();
+          $usage.show("blind", 500, function () {
+            countElementShownCallback();
+            markChartShownCallback();
+          });
+
         };
 
         doi = this.validateDOI(doi);
@@ -1213,10 +1239,14 @@ $.fn.alm = function () {
   };
 
   this.makeSignPostLI = function (text, value, description, link) {
+
+//    as per amec-1801, make alm signpost links
+    var textHref = '<a href="' + link + '">' + text + '</a>';
+
     var li = $('<li>' +
-        '<div class="top">' + value.format(0, '.', ',') + '</div><div class="bottom"><div class="center">' +
-        '<div class="text">' + text + '<div class="content"><div class="description">' + description + '&nbsp;&nbsp;' +
-        '<a href="' + link + '">Read more</a>.</div></div></div></div></div></li>');
+      '<div class="top">' + value.format(0, '.', ',') + '</div><div class="bottom"><div class="center">' +
+      '<div class="text">' + textHref + '<div class="content"><div class="description">' +
+      '<a href="' + link + '">' + description + '</a>.</div></div></div></div></div></li>');
 
     (function () {
       this.hoverEnhanced({});
@@ -1225,27 +1255,29 @@ $.fn.alm = function () {
     return li;
   }
 
-  this.setMetricsTab = function (doi) {
+  this.setMetricsTab = function (doi, registerVisualElementCallback, countElementShownCallBack, allTilesRegisteredCallBack) {
 
     doi = this.validateDOI(doi);
 
     //succeed!
     var success = function(response){
-      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
-      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
-      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
+      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent", registerVisualElementCallback, countElementShownCallBack);
+      allTilesRegisteredCallBack();
     }
 
     //fail!
     var fail = function(message){
-      this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
-      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
+      this.setCitesError(message, "relatedCites", "relatedCitesSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner", registerVisualElementCallback, countElementShownCallBack);
+      //F1000 Prime section is by default hidden, so no need to keep track of any visual rendering
       this.setF1000Error(message, "f1000","f1000Spinner");
+      allTilesRegisteredCallBack();
     }
 
-    //get the data
     this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
   }
 
@@ -1306,6 +1338,8 @@ function onReadyALM() {
     };
 
     var almSuccess = function (response) {
+      var responseObject, sources, source, totalViews;
+
       if (response && response.length > 0) {
         responseObject = response[0];
 
@@ -1341,12 +1375,16 @@ function onReadyALM() {
           }
         }
 
+        doiLink = '/article/metrics/info:doi/' + $('meta[name=citation_doi]').attr("content");
 
-        li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
-          "Sum of PLOS and PubMed Central page views and downloads",
-          "/static/almInfo#usageInfo");
+        totalViews = counter.metrics.total + pmc.metrics.total;
+        if (totalViews > 0) {
+          li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
+              "Sum of PLOS and PubMed Central page views and downloads",
+              doiLink + "#viewedHeader");
 
-        $("#almSignPost").append(li);
+          $("#almSignPost").append(li);
+        }
 
         var text, li;
         //citations
@@ -1357,7 +1395,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, scopus.metrics.total, "Paper's citation count computed by Scopus",
-            "/static/almInfo#citationInfo");
+            doiLink + "#citedHeader");
 
           $("#almSignPost").append(li);
         } else {
@@ -1368,7 +1406,7 @@ function onReadyALM() {
             }
 
             li = almService.makeSignPostLI(text, crossref.metrics.total, "Scopus data unavailable. Displaying Crossref citation count",
-              "/static/almInfo#citationInfo");
+              doiLink + "#citedHeader");
 
             $("#almSignPost").append(li);
           }
@@ -1383,7 +1421,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
-            "bookmarks", "/static/almInfo#socialBookmarks");
+            "bookmarks", doiLink + "#savedHeader");
 
           $("#almSignPost").append(li);
         }
@@ -1397,7 +1435,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
-            "/static/almInfo#socialBookmarks");
+            doiLink + "#discussedHeader");
 
           $("#almSignPost").append(li);
         }
@@ -1410,14 +1448,61 @@ function onReadyALM() {
   }
 }
 
+function jumpToALMSection(){
+  //if url contains a reference to an alm section, jump there
+  var url = $(location).attr('href');
+  var hashIndex = url.indexOf('#');
+  if(hashIndex == -1){
+    return;
+  }
+
+  var almSectionID = url.slice(hashIndex);
+  verticalPosition = $(almSectionID).position().top;
+  scrollTo(0,verticalPosition);
+}
+
 $(document).ready(onReadyALM);
 
 function onLoadALM() {
   var almService = new $.fn.alm();
   var doi = $('meta[name=citation_doi]').attr("content");
 
-  almService.setMetricsTab(doi);
-  almService.setChartData(doi, "usage", "chartSpinner");
+  var elementsRegisteredCount = 0;
+  var elementShownCount = 0;
+  var metricsComplete = false;
+  var chartComplete = false;
+
+  var allSectionsDisplayed = function(){
+    return metricsComplete && chartComplete && elementsRegisteredCount == elementShownCount;
+  }
+
+  var registerVisualElement = function(){
+    elementsRegisteredCount++;
+  }
+
+  var countElementShown = function(){
+    elementShownCount++;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  var markTilesShown = function(){
+    metricsComplete = true;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  var markChartShown = function(){
+    chartComplete = true;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  almService.setMetricsTab(doi, registerVisualElement, countElementShown, markTilesShown);
+  almService.setChartData(doi, "usage", "chartSpinner", registerVisualElement, countElementShown, markChartShown);
 }
 
 /* Some common display functions for the browse and search results pages */

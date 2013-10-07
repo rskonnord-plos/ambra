@@ -1022,8 +1022,7 @@ ul#almSignPost li div.bottom div.center {
   position: absolute;
   bottom: 0;
 }
-
-.article-meta ul#almSignPost li div.text {
+.article-meta ul#almSignPost li div.text{
   display: inline-block;
   font-weight: normal;
   font-size: 10px;
@@ -1038,8 +1037,12 @@ ul#almSignPost li div.bottom div.center {
   -o-transition: all .3s linear;
   transition: all .3s linear;
 }
+.article-meta ul#almSignPost li div.text a{
+  color: #333;
+}
 
-.article-meta ul#almSignPost li.reveal div.text {
+.article-meta ul#almSignPost li.reveal div.text,
+.article-meta ul#almSignPost li.reveal div.text a{
   background: #3c63af;
   border-radius: 4px;
   color: #fff;
@@ -1053,7 +1056,7 @@ ul#almSignPost li div.bottom div.center {
 .article-meta ul#almSignPost li div.content {
   position: absolute;
   right: 0;
-  width: 350px;
+  width: 290px;
   height: 100px;
   -webkit-transition: visibility .4s linear, opacity .3s linear;
   -moz-transition: visibility .4s linear, opacity .3s linear;
@@ -1091,11 +1094,10 @@ ul#almSignPost li div.bottom div.center {
   border-radius: 4px;
   position: absolute;
   padding: 5px;
-  width: 340px;
+  width: 280px;
 }
 
 .article-meta ul#almSignPost li div.description a {
-  text-decoration: underline;
   color: #fff;
 }
 

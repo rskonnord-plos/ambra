@@ -35,6 +35,20 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.8.3</h2>
+  <p>Released October 8, 2013</p>
+  <h3>Features Implemented in Ambra 2.8.3</h3>
+  <ul>
+      <li>Minor improvement to SOLR API response format</li>
+      <li>Fixed signpost bug</li>
+      <li>Fixed for plos one taxonomy page</li>
+      <li>Added new signposts link in article page Metrics tab</li>
+      <li>Browse url refactor</li>
+      <li>Removed Relative Metrics accompaniment article types</li>
+      <li>Added SEO to PLOS One subject area browse pages</li>
+  </ul> 
+
+
   <h2>Ambra 2.8.2</h2>
   <p>Released October 1, 2013</p>
   <h3>Features Implemented in Ambra 2.8.2</h3>
