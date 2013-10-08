@@ -1861,3 +1861,16 @@ function tableOpen(tableId, type) {
   return false;
 }
 
+$(document).ready(function() {
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      "linebreaks": {
+        "automatic": true,
+        "width": "550px"
+      }
+    },
+    "MathMenu": { showRenderer: false }
+  });
+
+  MathJax.Hub.Configured();
+});
