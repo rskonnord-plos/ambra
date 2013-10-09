@@ -763,7 +763,7 @@
                         <xsl:element name="li">
                           <xsl:element name="a">
                             <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
-                            <xsl:attribute name="target">_blank</xsl:attribute>
+                            <xsl:attribute name="target">_new</xsl:attribute>
                             <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
                             CrossRef
                           </xsl:element>
@@ -773,7 +773,7 @@
                         <xsl:element name="li">
                           <xsl:element name="a">
                             <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubMedUrl"/></xsl:attribute>
-                            <xsl:attribute name="target">_blank</xsl:attribute>
+                            <xsl:attribute name="target">_new</xsl:attribute>
                             <xsl:attribute name="title">Go to article in PubMed</xsl:attribute>
                             PubMed/NCBI
                           </xsl:element>
@@ -783,7 +783,7 @@
                         <xsl:element name="li">
                           <xsl:element name="a">
                             <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@googleScholarUrl"/></xsl:attribute>
-                            <xsl:attribute name="target">_blank</xsl:attribute>
+                            <xsl:attribute name="target">_new</xsl:attribute>
                             <xsl:attribute name="title">Go to article in Google Scholar</xsl:attribute>
                             Google Scholar
                           </xsl:element>
