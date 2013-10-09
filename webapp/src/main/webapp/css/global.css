@@ -1603,7 +1603,7 @@ span.author span.rel-footnote {
 }
 
 .btn-reveal.reveal .btn {
-  background: #3C63AF;
+  background-color: #3C63AF;
   color: #FFF;
 }
 
@@ -5660,7 +5660,7 @@ div.inlinePopup input[type="button"]:hover {
 
 .article-actions .dropdown span {
   width: 10px;
-  background-image: url(../images/bul.wht.pt.dn.gif);
+  background-image: url(../images/bul.wht.pt.dn.png);
   background-repeat: no-repeat;
   background-size: 9px 5px;
   background-position: 10px 16px;
