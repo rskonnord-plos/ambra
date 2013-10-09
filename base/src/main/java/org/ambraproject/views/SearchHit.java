@@ -91,12 +91,8 @@ public class SearchHit implements Serializable {
     this.hasAssets = hasAssets;
 
     //Make a list of first, second, third creators
-    if(creators!=null) {
-      if(creators.size() < 3) {
-        this.firstSecondLastCreator = StringUtils.join(creators, ", ");
-      } else {
-        this.firstSecondLastCreator = creators.get(0) + ", " + creators.get(1) + ", "  + creators.get(creators.size() - 1);
-      }
+    if(creators != null) {
+      this.firstSecondLastCreator = TextUtils.makeAuthorString(creators.toArray(new String[creators.size()]));
     }
   }
 
