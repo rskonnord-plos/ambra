@@ -278,4 +278,124 @@ $.fn.twitter = function () {
 
     return anchor;
   };
+
+  this.displayTweetsArticleSidebar = function(doi) {
+    var alm = new $.fn.alm();
+    alm.getCitesTwitterOnly(doi, jQuery.proxy(this.showTweetsArticleSidebar, this) , jQuery.proxy(this.setError, this));
+  }
+
+  this.showTweetsArticleSidebar = function(json) {
+    var twitterResponse, events, totalEventCount, minDisplayEventCount, maxDisplayEventCount, ol, i,
+        tweet, created_dt,
+        li,
+        tweetText,
+        div, ul,
+        tweetActionLinks, replyLink, reTweetLink, favoriteLink;
+
+    minDisplayEventCount = 2;
+    maxDisplayEventCount = 5;
+
+    //assuming here the request was properly formatted to get only twitter in sources[0]
+    twitterResponse = json[0].sources[0];
+
+    if (twitterResponse && twitterResponse.metrics.total > 0) {
+      // just display one
+      events = twitterResponse.events;
+      events = events.sort(jQuery.proxy(this.sort_tweets_by_date,this));
+
+      totalEventCount = (events.length > maxDisplayEventCount) ? maxDisplayEventCount : events.length;
+
+      ol = $('<ol></ol>');
+
+      for (i = 0; i < totalEventCount; i++) {
+        tweet = events[i].event;
+
+        created_dt = isNaN(Date.parse(tweet.created_at))?
+            $.datepicker.formatDate("M d, yy", this.parseTwitterDate(tweet.created_at)):
+            $.datepicker.formatDate("M d, yy", new Date(tweet.created_at));
+
+        if (i < minDisplayEventCount) {
+          li = $("<li></li>").addClass("tweet-entry display");
+        } else {
+          li = $("<li></li>").addClass("tweet-entry hide");
+        }
+
+        li.hover(
+          function(){
+            // in
+            $(this).find("ul.tweet-actions").css("visibility", "visible");
+          },
+          function(){
+            // out
+            $(this).find("ul.tweet-actions").css("visibility", "hidden");
+          });
+
+        // TODO add the twitter user full name once we have it
+        div = $("<div></div>")
+            .addClass("tweet-user")
+            .append($("<img>")
+                .attr("src", tweet.user_profile_image))
+//            .append($("<span></span>")
+//                .addClass("twitter-fullname").
+//                html())
+            .append($("<span></span>")
+                .html("@" + tweet.user));
+        li.append(div);
+
+        tweetText = $("<div></div>")
+            .addClass("tweet-text")
+            .html(this.linkify(tweet.text));
+        li.append(tweetText);
+
+        replyLink = $("<a></a>")
+            .attr("href", "https://twitter.com/intent/favorite?in_reply_to=" + tweet.id)
+            .addClass("tweet-reply-action")
+            .attr("title", "Reply")
+            .html("<span></span>Reply");
+
+        reTweetLink = $("<a></a>")
+            .attr("href", "https://twitter.com/intent/retweet?tweet_id=" + tweet.id)
+            .addClass("tweet-retweet-action")
+            .attr("title", "Retweet")
+            .html("<span></span>Retweet");
+
+        favoriteLink = $("<a></a>")
+            .attr("href", "https://twitter.com/intent/favorite?tweet_id=" + tweet.id)
+            .addClass("tweet-favorite-action")
+            .attr("title", "Favorite")
+            .html("<span></span>Favorite");
+
+        ul = $("<ul></ul>").addClass("tweet-actions")
+            .append($("<li></li>").append(replyLink))
+            .append($("<li></li>").append(reTweetLink))
+            .append($("<li></li>").append(favoriteLink));
+
+        div = $("<div></div>").append(ul);
+        li.append(div);
+
+        ol.append(li);
+      }
+
+      $("#twitter-alm-timeline").append(ol);
+
+      if (events.length > minDisplayEventCount) {
+        $("#twitter-alm-timeline").append(
+          $("<button></button>")
+            .html("Load More")
+            .click(function() {
+              $("#twitter-alm-timeline li.tweet-entry.hide").removeClass("hide").addClass("display");
+            }
+          )
+        );
+      }
+
+      $("#twitter-alm-timeline").prepend(
+        $("<div></div>")
+          .addClass("tweet-header")
+          .append($("<img>").addClass("tweet-header-logo").attr("src", "/images/tweet_bird_blue_32.png"))
+          .append($("<b></b>").html("Tweets"))
+      );
+
+    }
+  }
 };

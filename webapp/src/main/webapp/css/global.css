@@ -5630,3 +5630,115 @@ div.inlinePopup input[type="button"]:hover {
   display:none;
   margin-bottom: 20px;
 }
+
+/*
+  twitter display on the article right hand side
+*/
+
+#article-block .sidebar .twitter-alm-timeline {
+  margin-bottom: 35px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-header {
+  margin-bottom: 7px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-header-logo {
+  width: 20px;
+  margin-right: 5px;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol li.tweet-entry {
+  margin-bottom: 7px;
+  padding-top: 5px;
+  border-top: 1px solid #e8e8e8;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol li.tweet-entry.hide {
+  display: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user span {
+  margin-right: 5px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user img {
+  width: 48px;
+  height: 48px;
+  border-radius: 5px;
+  display: block;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-fullname {
+  font-weight: bold;
+}
+
+#article-block .sidebar ul.tweet-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#article-block .sidebar ul.tweet-actions {
+  min-height: 30px;
+}
+
+#article-block .sidebar ul.tweet-actions li {
+  float: left;
+  margin: 1px 2px 2px 1px;
+}
+
+#article-block .sidebar ul.tweet-actions {
+  min-height: 40px;
+  visibility: hidden;
+}
+
+#article-block .sidebar ul.tweet-actions span {
+  background-image: url('/images/tweet-everything-spritev2.png');
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin: 0 2px 0 2px;
+  vertical-align: text-top;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-reply-action:hover span {
+  background-position: -16px 0;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-retweet-action span {
+  background-position: -80px 0
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-retweet-action:hover span {
+  background-position: -96px 0
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-favorite-action span {
+  background-position: -32px 0;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-favorite-action:hover span {
+  background-position: -48px 0;
+}
+
+#article-block .sidebar .twitter-alm-timeline button {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 5px, 0, 5px, 0;
+  background-color: white;
+  color: #3c63af;
+  font-size: larger;
+
+  background-image: url('/images/bul.pt.blu.dn.gif');
+  background-repeat: no-repeat;
+  background-position: 85% 50%;
+}
