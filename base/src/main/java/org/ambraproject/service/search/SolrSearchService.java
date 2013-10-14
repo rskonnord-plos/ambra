@@ -419,10 +419,12 @@ public class SolrSearchService implements SearchService {
       String sortValue = (String) validSorts.get(sortKey);
 
       //This bit allows a consumer of the method to explicitly set the sort instead of specifying it by key
-      if (sortValue == null && (sp.getSortValue() == null || (sp.getSortValue() != null && sp.getSortValue().length() == 0))) {
-        throw new ApplicationException("Invalid sort of '" + sp.getSortKey() + "' specified.");
-      } else {
+      if(sp.getSortValue() != null && sp.getSortValue().length() > 0) {
         sortValue = sp.getSortValue();
+      } else {
+        if (sortValue == null) {
+          throw new ApplicationException("Invalid sort key of '" + sp.getSortKey() + "' specified.");
+        }
       }
 
       String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);
