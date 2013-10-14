@@ -5476,36 +5476,211 @@ div.findArticle h4 {
 ol.references ul.find {
   margin: 0;
   padding: 0;
-  height: 25px;
 }
 
-ol.references ul.find li {
+ol.references ul.find:after,
+#ref-popup .find:after {
+  content: "\0020";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+ol.references ul.find li,
+#ref-popup .find li {
   float: left;
   margin-right: 4px;
   margin-left: 20px;
   list-style-type: disc;
 }
 
-ol.references ul.find li:first-child {
+ol.references ul.find li:first-child,
+#ref-popup .find li:first-child {
   margin-left: 0px;
   list-style-type: none;
+}
+
+ol.references {
+  padding: 0;
+  margin: 0;
+}
+
+#article-refs ol.references {
+  margin-left: -7px;
 }
 
 ol.references li {
   list-style-type: none;
 }
 
+ol.references > li {
+  padding: 8px 10px 6px 39px;
+  position: relative;
+}
+
+ol.references li span.label,
+#ref-popup .label {
+  position: absolute;
+  top: 10px;
+  min-width: 16px;
+  line-height: 20px;
+  padding: 0 2px;
+  text-align: center;
+  background: #333;
+  color: #fff;
+  font-weight: bold;
+}
+
 ol.references li span.label {
-  margin-left: -26px;
-  float: left;
-  width: 20px;
-  text-align: right;
+  top: 10px;
+  right: 528px;
+}
+
+#ref-popup .label {
+  top: 20px;
+  right: 444px;
+}
+
+ol.references .title,
+#ref-popup .title {
+  font-size: 16px;
+  line-height: 1.125;
+  font-weight: bold;
+}
+
+ol.references .authors,
+#ref-popup .authors {
+  font-size: 14px;
 }
 
 ol.references ul.find-nolinks {
   margin: 0;
   padding: 0;
-  height: 8px;
+}
+
+.ref-target {
+  background: #eee;
+}
+
+#ref-popup {
+  display: none;
+  width: 415px;
+  padding: 18px 20px 18px 50px;
+}
+
+#ref-popup.active {
+  display: block;
+  position: absolute;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid;
+  border-color: #ececec #cacaca #a2a2a2;
+  box-shadow: 0 3px 7px rgba(12,13,13,0.44);
+  z-index: 150;
+}
+
+#ref-popup.active:after {
+  content: '';
+  position: absolute;
+  bottom: -13px;
+  left: 50%;
+  margin-left: -13px;
+  border-top: 13px solid #fff;
+  border-right: 12px solid transparent;
+  border-left: 12px solid transparent;
+}
+
+#ref-popup.active:before {
+  content: '';
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  margin-left: -14px;
+  border-top: 14px solid #b7b7b7;
+  border-right: 13px solid transparent;
+  border-left: 13px solid transparent;
+}
+
+#ref-popup ul {
+  margin: 0;
+  padding: 0;
+}
+
+.hdr-article-refs h3 {
+  float: left;
+}
+
+.hdr-article-refs #ref-sort {
+  float: right;
+}
+
+#ref-sort {
+  position: relative;
+  text-align: right;
+  width: 185px;
+  border-radius: 5px 5px 0 0;
+  padding-top: 8px;
+  top: -8px;
+  font-weight: bold;
+  color: #3c63af;
+}
+
+#ref-sort .title {
+  font-size: 15px;
+  padding: 0 10px 0 0;
+}
+
+#ref-sort .title:after {
+  content: '';
+  border-top: 5px solid #3c63af;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  display: inline-block;
+  margin-left: 10px;
+  position: relative;
+  top: -2px;
+}
+
+#ref-sort.reveal {
+  background: #3c63af;
+  color: #fff;
+}
+
+#ref-sort.reveal .title:after {
+  border-top-color: #fff;
+}
+
+#ref-sort .content {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  background: #3c63af;
+  padding: 10px 30px 5px 0;
+  width: 155px;
+  border-radius: 0 0 5px 5px;
+}
+
+#ref-sort.reveal .content {
+  display: block;
+}
+
+#ref-sort ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#ref-sort li {
+  cursor: pointer;
+  font-size: 16px;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+
+#ref-sort .active {
+  cursor: default;
+  color: #8ba2cd;
 }
 
 /*

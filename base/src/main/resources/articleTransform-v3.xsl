@@ -722,11 +722,12 @@
     <xsl:template match="app" />
 
     <!-- 1/4/12: plos modifications -->
-    <xsl:template match="ref-list" name="ref-list">
-      <div>
+  <xsl:template match="ref-list" name="ref-list">
+    <div>
+      <div class="header hdr-article-refs">
         <xsl:choose>
           <xsl:when test="not(title)">
-            <a id="refs" name="refs" toc="refs" title="References"/>
+            <a id="references" name="references" toc="references" title="References"/>
             <h3>References</h3>
             <xsl:call-template name="newline1"/>
           </xsl:when>
@@ -734,19 +735,35 @@
             <xsl:apply-templates select="title"/>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:apply-templates select="p"/>
+        <div id="ref-sort" class="">
+          <span class="title">Sort by</span>
+          <div class="content">
+            <ul>
+              <li id="ref-sort-default" class="active">Original Order</li>
+              <li id="ref-sort-author">Author</li>
+              <li id="ref-sort-title">Title</li>
+              <li id="ref-sort-date">Date</li>
+              <li id="ref-sort-publication">Publication</li>
+              <li id="ref-sort-citedcount">Cited in paper</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <xsl:apply-templates select="p"/>
+      <div id="article-refs">
         <ol class="references">
           <xsl:for-each select="ref">
             <xsl:sort data-type="number" select="label"/>
             <li>
+              <xsl:variable name="cit" select="element-citation | mixed-citation | nlm-citation"/>
+              <xsl:apply-templates select="$cit" mode="attributes"/>
               <span class="label">
-                <xsl:value-of select="label"/>.
+                <xsl:value-of select="label"/>
               </span>
               <a>
                 <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
                 <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
               </a>
-              <xsl:variable name="cit" select="element-citation | mixed-citation | nlm-citation"/>
               <xsl:apply-templates select="$cit"/>
               <xsl:text> </xsl:text>
               <xsl:if test="$cit[@publication-type='journal']">
@@ -812,7 +829,8 @@
           </xsl:for-each>
         </ol>
       </div>
-    </xsl:template>
+    </div>
+  </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="sec-meta" />
@@ -1440,7 +1458,7 @@
       <xsl:apply-templates/>
       <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
+        <br/>doi:
         <xsl:element name="a">
           <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
           <xsl:value-of select="$citedArticleDoi"/>
@@ -1472,7 +1490,7 @@
       <xsl:call-template name="citationComment"/>
       <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
+        <br/>doi:
         <xsl:element name="a">
           <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
           <xsl:value-of select="$citedArticleDoi"/>
@@ -1482,18 +1500,70 @@
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-type journal and no publication-type) -->
     <xsl:template match="element-citation">
-      <xsl:apply-templates select="person-group" mode="book"/>
-      <xsl:apply-templates select="collab" mode="book"/>
-      <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
+      <div class="title">
+        <xsl:choose>
+          <xsl:when test="article-title">
+            <xsl:apply-templates select="article-title" mode="none"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="source" mode="none"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </div>
+      <div class="authors">
+        <xsl:apply-templates select="person-group" mode="book"/>
+        <xsl:apply-templates select="collab" mode="book"/>
+      </div>
+      <xsl:choose>
+        <xsl:when test="article-title">
+          <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::year)
+              and not(self::article-title) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::year)
+              and not(self::source) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="year" mode="none"/>
       <xsl:call-template name="citationComment" />
       <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
+        <br/>doi:
         <xsl:element name="a">
           <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
           <xsl:value-of select="$citedArticleDoi"/>
         </xsl:element>.
       </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="mixed-citation" mode="attributes">
+      <xsl:variable name="authors"><xsl:apply-templates select="name"/></xsl:variable>
+      <xsl:attribute name="data-author"><xsl:value-of select="lower-case($authors)"/></xsl:attribute>
+      <xsl:attribute name="data-date"><xsl:value-of select="year"/></xsl:attribute>
+      <xsl:variable name="title">
+        <xsl:choose>
+          <xsl:when test="article-title">
+            <xsl:value-of select="article-title"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="source"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:attribute name="data-title">
+        <xsl:value-of select="replace(lower-case($title), '[^a-z0-9\s]', '')"/>
+      </xsl:attribute>
+    </xsl:template>
+
+    <xsl:template match="nlm-citation | element-citation" mode="attributes">
+      <xsl:variable name="authors"><xsl:apply-templates select="person-group" mode="book"/><xsl:apply-templates select="collab" mode="book"/></xsl:variable>
+      <xsl:attribute name="data-author"><xsl:value-of select="normalize-space(lower-case($authors))"/></xsl:attribute>
+      <xsl:attribute name="data-date"><xsl:value-of select="year"/></xsl:attribute>
+      <xsl:variable name="title"><xsl:choose><xsl:when test="article-title"
+          ><xsl:value-of select="article-title"/></xsl:when><xsl:otherwise
+          ><xsl:value-of select="source"/></xsl:otherwise></xsl:choose></xsl:variable>
+      <xsl:attribute name="data-title"><xsl:value-of select="replace(lower-case($title), '[^a-z0-9\s]', '')"
+          /></xsl:attribute>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-types book and other) -->
@@ -1504,10 +1574,13 @@
       <xsl:choose>
         <!-- chapter in edited book -->
         <xsl:when test="$augroupcount>1 and person-group[@person-group-type!='author'] and article-title">
-          <xsl:apply-templates select="person-group[@person-group-type='author']" mode="book"/>
-          <xsl:apply-templates select="collab" mode="book"/>
-          <xsl:apply-templates select="year | month" mode="book"/>
-          <xsl:apply-templates select="article-title" mode="editedbook"/>
+          <div class="title">
+            <xsl:apply-templates select="article-title" mode="editedbook"/>
+          </div>
+          <div class="authors">
+            <xsl:apply-templates select="person-group[@person-group-type='author']" mode="book"/>
+            <xsl:apply-templates select="collab" mode="book"/>
+          </div>
           <xsl:text> In:</xsl:text>
           <xsl:apply-templates select="person-group[@person-group-type='editor']" mode="book"/>
           <xsl:apply-templates select="source" mode="book"/>
@@ -1516,14 +1589,27 @@
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
           <xsl:apply-templates select="size | page-count" mode="book"/>
+          <xsl:apply-templates select="year | month" mode="book"/>
         </xsl:when>
         <!-- when person-group without pgtype exists -->
         <xsl:when test="person-group[not(@person-group-type)]">
-          <xsl:apply-templates select="person-group" mode="book"/>
-          <xsl:apply-templates select="collab" mode="book"/>
-          <xsl:apply-templates select="year | month" mode="book"/>
-          <xsl:apply-templates select="article-title" mode="book"/>
-          <xsl:apply-templates select="source" mode="book"/>
+          <xsl:choose>
+            <xsl:when test="article-title">
+              <div class="title">
+                <xsl:apply-templates select="article-title" mode="book"/>
+              </div>
+              <xsl:apply-templates select="source" mode="book"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <div class="title">
+                <xsl:apply-templates select="source" mode="book"/>
+              </div>
+            </xsl:otherwise>
+          </xsl:choose>
+          <div class="authors">
+            <xsl:apply-templates select="person-group" mode="book"/>
+            <xsl:apply-templates select="collab" mode="book"/>
+          </div>
           <xsl:apply-templates select="edition" mode="book"/>
           <xsl:apply-templates select="person-group[@person-group-type='editor']" mode="book"/>
           <xsl:apply-templates select="volume" mode="book"/>
@@ -1531,14 +1617,27 @@
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
           <xsl:apply-templates select="size | page-count" mode="book"/>
+          <xsl:apply-templates select="year | month" mode="book"/>
         </xsl:when>
         <!-- when pgtype author exists but not chapter in edited book -->
         <xsl:when test="person-group[@person-group-type='author']">
-          <xsl:apply-templates select="person-group[@person-group-type='author']" mode="book"/>
-          <xsl:apply-templates select="collab" mode="book"/>
-          <xsl:apply-templates select="year | month" mode="book"/>
-          <xsl:apply-templates select="article-title" mode="book"/>
-          <xsl:apply-templates select="source" mode="book"/>
+          <xsl:choose>
+            <xsl:when test="article-title">
+              <div class="title">
+                <xsl:apply-templates select="article-title" mode="book"/>
+              </div>
+              <xsl:apply-templates select="source" mode="book"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <div class="title">
+                <xsl:apply-templates select="source" mode="book"/>
+              </div>
+            </xsl:otherwise>
+          </xsl:choose>
+          <div class="authors">
+            <xsl:apply-templates select="person-group[@person-group-type='author']" mode="book"/>
+            <xsl:apply-templates select="collab" mode="book"/>
+          </div>
           <xsl:apply-templates select="edition" mode="book"/>
           <xsl:apply-templates select="person-group[@person-group-type='editor']" mode="book"/>
           <xsl:apply-templates select="volume" mode="book"/>
@@ -1546,20 +1645,34 @@
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
           <xsl:apply-templates select="size | page-count" mode="book"/>
+          <xsl:apply-templates select="year | month" mode="book"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- all others -->
-          <xsl:apply-templates select="person-group[@person-group-type='editor']"  mode="book"/>
-          <xsl:apply-templates select="collab" mode="book"/>
-          <xsl:apply-templates select="year | month" mode="book"/>
-          <xsl:apply-templates select="article-title" mode="book"/>
-          <xsl:apply-templates select="source" mode="book"/>
+          <xsl:choose>
+            <xsl:when test="article-title">
+              <div class="title">
+                <xsl:apply-templates select="article-title" mode="book"/>
+              </div>
+              <xsl:apply-templates select="source" mode="book"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <div class="title">
+                <xsl:apply-templates select="source" mode="book"/>
+              </div>
+            </xsl:otherwise>
+          </xsl:choose>
+          <div class="authors">
+            <xsl:apply-templates select="person-group[@person-group-type='editor']"  mode="book"/>
+            <xsl:apply-templates select="collab" mode="book"/>
+          </div>
           <xsl:apply-templates select="edition" mode="book"/>
           <xsl:apply-templates select="volume" mode="book"/>
           <xsl:apply-templates select="issue" mode="none"/>
           <xsl:apply-templates select="publisher-name | publisher-loc" mode="none"/>
           <xsl:apply-templates select="fpage | lpage" mode="book"/>
           <xsl:apply-templates select="size | page-count" mode="book"/>
+          <xsl:apply-templates select="year | month" mode="book"/>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:call-template name="citationComment" />
