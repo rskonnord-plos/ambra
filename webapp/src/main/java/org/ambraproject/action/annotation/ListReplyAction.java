@@ -64,6 +64,8 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
   private boolean isResearchArticle;
   private boolean hasAboutAuthorContent;
   private Set<ArticleCategory> categories;
+  private List<List<String>> articleIssues;
+  private AnnotationView[] commentary = new AnnotationView[0];
 
   @Override
   public String execute() throws Exception {
@@ -83,6 +85,12 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorCompetingInterests(doc)));
 
       this.categories = Cookies.setAdditionalCategoryFlags(articleInfo.getCategories(), articleInfo.getId());
+
+      articleIssues = articleService.getArticleIssues(articleInfo.getDoi());
+      commentary = annotationService.listAnnotations(articleInfo.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationService.AnnotationOrder.MOST_RECENT_REPLY);
+
     } catch (Exception ae) {
       log.error("Could not list all replies for root: " + root, ae);
       addActionError("Reply fetching failed with error message: " + ae.getMessage());
@@ -193,5 +201,13 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
    */
   public Set<ArticleCategory> getCategories() {
     return categories;
+  }
+
+  public List<List<String>> getArticleIssues() {
+    return articleIssues;
+  }
+
+  public AnnotationView[] getCommentary() {
+    return commentary;
   }
 }
