@@ -595,7 +595,7 @@ $.fn.alm = function () {
       bookMarksNode.show("blind", 500, countElementShownCallback);
     }
   }
-  this.setSavedError = function(message, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallBack){
+  this.setSavedError = function(message, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     registerVisualElementCallback();
@@ -785,7 +785,7 @@ $.fn.alm = function () {
 
   }
 
-  this.setCitesError = function(message, citesID, loadingID, registerVisualElementCallback, countElementShownCallBack) {
+  this.setCitesError = function(message, citesID, loadingID, registerVisualElementCallback, countElementShownCallback) {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     registerVisualElementCallback();
