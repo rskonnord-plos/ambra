@@ -286,11 +286,7 @@ $.fn.twitter = function () {
 
   this.showTweetsArticleSidebar = function(json) {
     var twitterResponse, events, totalEventCount, minDisplayEventCount, maxDisplayEventCount, ol, i,
-        tweet, created_dt,
-        li,
-        tweetText,
-        div, ul,
-        tweetActionLinks, replyLink, reTweetLink, favoriteLink;
+        tweet, created_dt, li, tweetText, div, ul, replyLink, reTweetLink, favoriteLink;
 
     minDisplayEventCount = 2;
     maxDisplayEventCount = 5;
@@ -384,6 +380,10 @@ $.fn.twitter = function () {
             .html("Load More")
             .click(function() {
               $("#twitter-alm-timeline li.tweet-entry.hide").removeClass("hide").addClass("display");
+              var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
+              var a =$("<a></a>").attr("href", '/article/twitter/info:doi/' + doi).html("View all tweets");
+              $(this).html("").append(a);
+              $(this).css("background-image", "none")
             }
           )
         );
