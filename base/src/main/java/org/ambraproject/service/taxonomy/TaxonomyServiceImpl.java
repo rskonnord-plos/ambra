@@ -99,20 +99,62 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
 
       return ai;
     } else {
-      SearchParameters sp = new SearchParameters();
-
-      sp.setFilterSubjects(new String[] { subjectArea });
-      sp.setFilterJournals(new String[] { journalKey });
-      //We only need one record
-      sp.setPageSize(1);
-      sp.setStartPage(0);
-
       try {
-        //Only search for articles with shares
-        //We might turn this info a filter query for a small performance boost
-        sp.setUnformattedQuery("alm_twitterCount:[1 TO *] OR alm_facebookCount:[1 TO *]");
-        sp.setSortValue("sum(alm_twitterCount, alm_facebookCount) desc");
-        SearchResultSinglePage solrResults = searchService.advancedSearch(sp);
+        //Nothing defined, select an article from SOLR
+        return selectFeaturedArticleSOLR(journalKey, subjectArea);
+      } catch(ApplicationException ex) {
+        throw new RuntimeException(ex.getMessage(), ex);
+      }
+    }
+  }
+
+  /**
+   *
+   * Compute a featured article from SOLR for a journal / subject area by the following logic:
+   *
+   * Most shared in social media (using same roll-up/counting methods used in search sort options) over the last 7 days.
+   *  - If no shares
+   *    - Most viewed Article (using same roll-up/counting methods used in search sort options) over the last 7 days.
+   *      - If no views over past 7 days
+   *        - most viewed Article (over all time) (using same roll-up/counting methods used in search sort options)
+   *
+   * @param journalKey the given journal
+   * @param subjectArea the given subject area
+   *
+   * @return the computed articleInfo
+   *
+   * @throws ApplicationException
+   */
+  private ArticleInfo selectFeaturedArticleSOLR(final String journalKey, final String subjectArea)
+      throws ApplicationException {
+
+    //Only search for articles with shares
+    SearchResultSinglePage solrResults = searchService.getMostSharedForJournalCategory(journalKey, subjectArea);
+
+    if(solrResults.getHits().size() > 0) {
+      SearchHit hit = solrResults.getHits().get(0);
+
+      ArticleInfo ai = new ArticleInfo(hit.getUri());
+      ai.setTitle(hit.getTitle());
+      ai.setStrkImgURI(hit.getStrikingImage());
+
+      return ai;
+    } else {
+      //No articles with shares found for the given category.  Lets try views over the past 30 days
+      //Only search for articles with views this month
+      solrResults = searchService.getMostViewedForJournalCategory(journalKey, subjectArea);
+
+      if(solrResults.getHits().size() > 0) {
+        SearchHit hit = solrResults.getHits().get(0);
+
+        ArticleInfo ai = new ArticleInfo(hit.getUri());
+        ai.setTitle(hit.getTitle());
+        ai.setStrkImgURI(hit.getStrikingImage());
+
+        return ai;
+      } else {
+        //No articles with views this month for the given category.  Use all time views
+        solrResults = searchService.getMostViewedAllTimeForJournalCategory(journalKey, subjectArea);
 
         if(solrResults.getHits().size() > 0) {
           SearchHit hit = solrResults.getHits().get(0);
@@ -123,46 +165,9 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
 
           return ai;
         } else {
-          //No articles with shares found for the given category.  Lets try views over the past 30 days
-          //Only search for articles with views this month
-          //We might turn this info a filter query for a small performance boost
-          sp.setUnformattedQuery("counter_total_month:[1 TO *]");
-          sp.setSortValue("counter_total_month desc");
-
-          solrResults = searchService.advancedSearch(sp);
-
-          if(solrResults.getHits().size() > 0) {
-            SearchHit hit = solrResults.getHits().get(0);
-
-            ArticleInfo ai = new ArticleInfo(hit.getUri());
-            ai.setTitle(hit.getTitle());
-            ai.setStrkImgURI(hit.getStrikingImage());
-
-            return ai;
-          } else {
-            //No articles with views this month for the given category.  Use all time views
-            //We might turn this info a filter query for a small performance boost
-            sp.setUnformattedQuery("counter_total_all:[1 TO *]");
-            sp.setSortValue("counter_total_all desc");
-
-            solrResults = searchService.advancedSearch(sp);
-
-            if(solrResults.getHits().size() > 0) {
-              SearchHit hit = solrResults.getHits().get(0);
-
-              ArticleInfo ai = new ArticleInfo(hit.getUri());
-              ai.setTitle(hit.getTitle());
-              ai.setStrkImgURI(hit.getStrikingImage());
-
-              return ai;
-            } else {
-              //This is a very sad subject category :-(
-              return null;
-            }
-          }
+          //This is a very sad subject category :-(
+          return null;
         }
-      } catch(ApplicationException ex) {
-        throw new RuntimeException(ex.getMessage(), ex);
       }
     }
   }

@@ -39,6 +39,42 @@ public interface SearchService {
 
   SearchResultSinglePage advancedSearch(SearchParameters searchParameters) throws ApplicationException;
 
+  /**
+   * Get the most shared (Twitter and Facebook only) article for the given journal and category
+   *
+   * @param journal a journal to filter on
+   * @param subjectArea a category to filter on
+   *
+   * @return the search results
+   *
+   * @throws ApplicationException
+   */
+  SearchResultSinglePage getMostSharedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+
+  /**
+   * Get the most viewed article in the last 30 days for the given journal and category
+   *
+   * @param journal a journal to filter on
+   * @param subjectArea a category to filter on
+   *
+   * @return the search results
+   *
+   * @throws ApplicationException
+   */
+  SearchResultSinglePage getMostViewedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+
+  /**
+   * Get the most viewed article for all time for the given journal and category
+   *
+   * @param journal a journal to filter on
+   * @param subjectArea a category to filter on
+   *
+   * @return the search results
+   *
+   * @throws ApplicationException
+   */
+  SearchResultSinglePage getMostViewedAllTimeForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+
   SearchResultSinglePage findAnArticleSearch(SearchParameters searchParameters) throws ApplicationException;
 
   SearchResultSinglePage getFilterData(SearchParameters searchParameters) throws ApplicationException;

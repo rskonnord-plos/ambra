@@ -184,6 +184,74 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchResultSinglePage getMostSharedForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("alm_twitterCount:[1 TO *] OR alm_facebookCount:[1 TO *]");
+    sp.setSortValue("sum(alm_twitterCount, alm_facebookCount) desc");
+
+    return advancedSearch(sp);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchResultSinglePage getMostViewedForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("counter_total_month:[1 TO *]");
+    sp.setSortValue("counter_total_month desc");
+
+    return advancedSearch(sp);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchResultSinglePage getMostViewedAllTimeForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("counter_total_all:[1 TO *]");
+    sp.setSortValue("counter_total_all desc");
+
+    return advancedSearch(sp);
+  }
+
+
+
+  /**
    * Populate facets of the search object.
    * <p/>
    * If no search results and hence facets are found remove defined filters and try the search again.  Journals will
