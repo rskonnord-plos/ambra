@@ -49,7 +49,7 @@ public interface SearchService {
    *
    * @throws ApplicationException
    */
-  SearchResultSinglePage getMostSharedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+  SearchHit getMostSharedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
 
   /**
    * Get the most viewed article in the last 30 days for the given journal and category
@@ -61,7 +61,7 @@ public interface SearchService {
    *
    * @throws ApplicationException
    */
-  SearchResultSinglePage getMostViewedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+  SearchHit getMostViewedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
 
   /**
    * Get the most viewed article for all time for the given journal and category
@@ -73,7 +73,7 @@ public interface SearchService {
    *
    * @throws ApplicationException
    */
-  SearchResultSinglePage getMostViewedAllTimeForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+  SearchHit getMostViewedAllTimeForJournalCategory(String journal, String subjectArea) throws ApplicationException;
 
   SearchResultSinglePage findAnArticleSearch(SearchParameters searchParameters) throws ApplicationException;
 

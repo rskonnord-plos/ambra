@@ -187,7 +187,7 @@ public class SolrSearchService implements SearchService {
    * @inheritDoc
    */
   @Override
-  public SearchResultSinglePage getMostSharedForJournalCategory(String journal, String subjectArea)
+  public SearchHit getMostSharedForJournalCategory(String journal, String subjectArea)
       throws ApplicationException {
     SearchParameters sp = new SearchParameters();
 
@@ -202,14 +202,19 @@ public class SolrSearchService implements SearchService {
     sp.setUnformattedQuery("alm_twitterCount:[1 TO *] OR alm_facebookCount:[1 TO *]");
     sp.setSortValue("sum(alm_twitterCount, alm_facebookCount) desc");
 
-    return advancedSearch(sp);
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
   }
 
   /**
    * @inheritDoc
    */
   @Override
-  public SearchResultSinglePage getMostViewedForJournalCategory(String journal, String subjectArea)
+  public SearchHit getMostViewedForJournalCategory(String journal, String subjectArea)
       throws ApplicationException {
     SearchParameters sp = new SearchParameters();
 
@@ -224,14 +229,19 @@ public class SolrSearchService implements SearchService {
     sp.setUnformattedQuery("counter_total_month:[1 TO *]");
     sp.setSortValue("counter_total_month desc");
 
-    return advancedSearch(sp);
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
   }
 
   /**
    * @inheritDoc
    */
   @Override
-  public SearchResultSinglePage getMostViewedAllTimeForJournalCategory(String journal, String subjectArea)
+  public SearchHit getMostViewedAllTimeForJournalCategory(String journal, String subjectArea)
       throws ApplicationException {
     SearchParameters sp = new SearchParameters();
 
@@ -246,7 +256,12 @@ public class SolrSearchService implements SearchService {
     sp.setUnformattedQuery("counter_total_all:[1 TO *]");
     sp.setSortValue("counter_total_all desc");
 
-    return advancedSearch(sp);
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
   }
 
 

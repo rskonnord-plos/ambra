@@ -129,11 +129,9 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
       throws ApplicationException {
 
     //Only search for articles with shares
-    SearchResultSinglePage solrResults = searchService.getMostSharedForJournalCategory(journalKey, subjectArea);
+    SearchHit hit = searchService.getMostSharedForJournalCategory(journalKey, subjectArea);
 
-    if(solrResults.getHits().size() > 0) {
-      SearchHit hit = solrResults.getHits().get(0);
-
+    if(hit != null) {
       ArticleInfo ai = new ArticleInfo(hit.getUri());
       ai.setTitle(hit.getTitle());
       ai.setStrkImgURI(hit.getStrikingImage());
@@ -142,11 +140,9 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
     } else {
       //No articles with shares found for the given category.  Lets try views over the past 30 days
       //Only search for articles with views this month
-      solrResults = searchService.getMostViewedForJournalCategory(journalKey, subjectArea);
+      hit = searchService.getMostViewedForJournalCategory(journalKey, subjectArea);
 
-      if(solrResults.getHits().size() > 0) {
-        SearchHit hit = solrResults.getHits().get(0);
-
+      if(hit != null) {
         ArticleInfo ai = new ArticleInfo(hit.getUri());
         ai.setTitle(hit.getTitle());
         ai.setStrkImgURI(hit.getStrikingImage());
@@ -154,11 +150,9 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
         return ai;
       } else {
         //No articles with views this month for the given category.  Use all time views
-        solrResults = searchService.getMostViewedAllTimeForJournalCategory(journalKey, subjectArea);
+        hit = searchService.getMostViewedAllTimeForJournalCategory(journalKey, subjectArea);
 
-        if(solrResults.getHits().size() > 0) {
-          SearchHit hit = solrResults.getHits().get(0);
-
+        if(hit != null) {
           ArticleInfo ai = new ArticleInfo(hit.getUri());
           ai.setTitle(hit.getTitle());
           ai.setStrkImgURI(hit.getStrikingImage());
