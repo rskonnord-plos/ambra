@@ -47,7 +47,7 @@ public interface TaxonomyService {
    * @param journalKey the key of the journal
    * @param subjectArea the subject area to search for
    */
-  public ArticleInfo getFeaturedArticleForSubjectArea(final String journalKey, final String subjectArea);
+  public ArticleInfo getFeaturedArticleForSubjectArea(String journalKey, String subjectArea);
 
   /**
    * For the given journal, get a map of subject areas (key) and their article DOIS (values)
@@ -55,7 +55,7 @@ public interface TaxonomyService {
    *
    * @return a map of subject areas, and article DOIs
    */
-  public Map<String, String> getFeaturedArticles(final String journalKey);
+  public Map<String, String> getFeaturedArticles(String journalKey);
 
   /**
    * Delete a featured article
@@ -64,7 +64,7 @@ public interface TaxonomyService {
    * @param subjectArea the subject area to remove
    * @param authID the authID of the current user
    */
-  public void deleteFeaturedArticle(final String journalKey, final String subjectArea, final String authID);
+  public void deleteFeaturedArticle(String journalKey, String subjectArea, String authID);
 
   /**
    * Create a featured article
@@ -74,7 +74,7 @@ public interface TaxonomyService {
    * @param doi the doi
    * @param authID the authID of the current user
    */
-  public void createFeaturedArticle(final String journalKey, final String subjectArea, final String doi, final String authID);
+  public void createFeaturedArticle(String journalKey, String subjectArea, String doi, String authID);
 
   /**
    * Flag a particular taxonomy term (by database ID) that it may not be correct.  The authID may be null if the user
@@ -84,7 +84,7 @@ public interface TaxonomyService {
    * @param categoryID categoryID
    * @param authID the user's authID.
    */
-  public void flagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
+  public void flagTaxonomyTerm(long articleID, long categoryID, String authID);
 
   /**
    * Remove a flag from a particular taxonomy term (by database ID).  The authID may be null if the user
@@ -95,7 +95,7 @@ public interface TaxonomyService {
    * @param categoryID categoryID
    * @param authID the user's authID.
    */
-  public void deflagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
+  public void deflagTaxonomyTerm(long articleID, long categoryID, String authID);
 
   /**
    * Parses a list of slash-delimited categories, as returned by solr, into a sorted map
