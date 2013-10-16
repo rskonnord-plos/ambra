@@ -39,6 +39,9 @@ import org.springframework.beans.factory.annotation.Required;
 public class BrowseAction extends BaseSearchAction {
   private static final Logger log = LoggerFactory.getLogger(BrowseAction.class);
 
+  //The UI is pinned to this page size
+  private static final int FIXED_PAGE_SIZE = 13;
+
   private TaxonomyService taxonomyService;
   private UserService userService;
 
@@ -57,7 +60,7 @@ public class BrowseAction extends BaseSearchAction {
     setFilterJournals(new String[] { super.getCurrentJournal() });
 
     //The UI is pinned to this page size
-    setPageSize(13);
+    setPageSize(FIXED_PAGE_SIZE);
 
     setUnformattedQuery("*:*");
 
