@@ -62,7 +62,7 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
    * {@inheritDoc}
    */
   @SuppressWarnings("unchecked")
-  public ArticleInfo getArticleForSubjectArea(final String journalKey, final String subjectArea) {
+  public ArticleInfo getFeaturedArticleForSubjectArea(final String journalKey, final String subjectArea) {
     //Find a "Featured Article" for the given subject area
     //
     //First query the database for a manually defined article for the term

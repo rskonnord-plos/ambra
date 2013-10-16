@@ -83,7 +83,7 @@ public class BrowseAction extends BaseSearchAction {
 
         //Get the featured article for this category
         if(this.category != null && this.category.length() > 0) {
-          featuredArticle = taxonomyService.getArticleForSubjectArea(this.getCurrentJournal(), this.category);
+          featuredArticle = taxonomyService.getFeaturedArticleForSubjectArea(this.getCurrentJournal(), this.category);
         }
       }
 

@@ -47,7 +47,7 @@ public interface TaxonomyService {
    * @param journalKey the key of the journal
    * @param subjectArea the subject area to search for
    */
-  public ArticleInfo getArticleForSubjectArea(final String journalKey, final String subjectArea);
+  public ArticleInfo getFeaturedArticleForSubjectArea(final String journalKey, final String subjectArea);
 
   /**
    * For the given journal, get a map of subject areas (key) and their article DOIS (values)
