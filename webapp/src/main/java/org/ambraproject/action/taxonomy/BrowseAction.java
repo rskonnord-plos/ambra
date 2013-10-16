@@ -56,13 +56,7 @@ public class BrowseAction extends BaseSearchAction {
   public String execute() throws Exception {
     CategoryView categoryView = taxonomyService.parseCategories(super.getCurrentJournal());
 
-    setDefaultSearchParams();
-    setFilterJournals(new String[] { super.getCurrentJournal() });
-
-    //The UI is pinned to this page size
-    setPageSize(FIXED_PAGE_SIZE);
-
-    setUnformattedQuery("*:*");
+    setDefaults();
 
     if(category != null && category.length() > 0) {
       //Recreate the category name as stored in the DB
@@ -117,6 +111,16 @@ public class BrowseAction extends BaseSearchAction {
       }
       return SUCCESS;
     }
+  }
+
+  private void setDefaults() {
+    setDefaultSearchParams();
+    setFilterJournals(new String[] { super.getCurrentJournal() });
+
+    //The UI is pinned to this page size
+    setPageSize(FIXED_PAGE_SIZE);
+
+    setUnformattedQuery("*:*");
   }
 
   public int getSubjectCount() {
