@@ -930,140 +930,8 @@ $.fn.alm = function () {
           // Display the graph only if there are at least two data points (months)
           var isGraphDisplayed = Object.keys(data.history).length > 1;
           if (isGraphDisplayed) {
-            var options = {
-              chart: {
-                renderTo: "chart",
-                animation: false,
-                events: {
-                  redraw: function(){
-                    countElementShownCallback();
-                  }
-                },
-                margin: [40, 40, 40, 80]
-              },
-              credits: {
-                enabled: false
-              },
-              exporting: {
-                enabled: false
-              },
-              title: {
-                text: null
-              },
-              legend: {
-                enabled: false
-              },
-              xAxis: {
-                title: {
-                  text: "Months",
-                  style: {
-                    fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
-                    fontWeight: "normal",
-                    color: "#000"
-                  },
-                  align: "high"
-                },
-                labels: {
-                  step: (dataHistoryKeys.length < 15) ? 1 : Math.round(dataHistoryKeys.length / 15),
-                  formatter: function () {
-                    return this.value + 1;
-                  }
-                },
-                categories: []
-              },
-              yAxis: [
-                {
-                  title: {
-                    text: "Cumulative Views",
-                    style: {
-                      fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
-                      fontWeight: "normal",
-                      color: "#000",
-                      height: "50px"
-                    }
-                  },
-                  labels: {
-                    style: {
-                      color: "#000"
-                    }
-                  }
-                }
-              ],
-              plotOptions: {
-                column: {
-                  stacking: "normal"
-                },
-                animation: false,
-                series: {
-                  pointPadding: 0,
-                  groupPadding: 0,
-                  borderWidth: 0,
-                  shadow: false
-                }
-              },
-              series: [
-                {
-                  name: "PMC",
-                  type: "column",
-                  data: [],
-                  color: "#6d84bf"
-                },
-                {
-                  name: "PLOS",
-                  type: "column",
-                  data: [],
-                  color: "#3c63af"
-                }
-              ],
-              tooltip: {
-                //Make background invisible
-                backgroundColor: "rgba(255, 255, 255, 0.0)",
-                useHTML: true,
-                shared: true,
-                shadow: false,
-                borderWidth: 0,
-                borderRadius: 0,
-                positioner: function (labelHeight, labelWidth, point) {
-                  var newX = point.plotX + (labelWidth / 2) + 25,
-                      newY = point.plotY - (labelHeight / 2) + 25;
-                  return { x: newX, y: newY };
-                },
-                formatter: function () {
-                  var key = this.points[0].key,
-                      h = data.history;
 
-                  return '<table id="mini" cellpadding="0" cellspacing="0">'
-                      + '<tr><th></td><td colspan="2">Views in '
-                      + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                      + '</td><td colspan="2">Views through ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                      + '</td></tr><tr><th>Source</th><th class="header1">PLOS</th><th class="header2">PMC</th>'
-                      + '<th class="header1">PLOS</th><th class="header2">PMC</th></tr>'
-                      + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.totalHTML.format(0, '.', ',') : "n.a.") + '</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.cumulativeHTML.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                      + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.totalPDF.format(0, '.', ',') : "n.a.") + '</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativePDF.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.cumulativePDF.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                      + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
-                      + '<td class="data2">n.a.</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativeXML.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">n.a.</td></tr>'
-                      + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.total.format(0, '.', ',') : "n.a.") + '</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.cumulativeTotal.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                      + '</table>';
-                }
-              }
-            };
+            var options = this.buildChartOptions(data, dataHistoryKeys);
 
             for (var key in data.history) {
               if (data.history[key].source.pmcViews != null) {
@@ -1082,118 +950,7 @@ $.fn.alm = function () {
             registerVisualElementCallback();
             var chart = new Highcharts.Chart(options);
 
-            // check to see if there is any data
-            if (data.relativeMetricData != null) {
-              var subjectAreas = data.relativeMetricData.subject_areas;
-              if (subjectAreas && subjectAreas.length > 0) {
-                var subjectAreaList = new Array();
-
-                // loop through each subject area and add the data to the chart
-                for (var i = 0; i < subjectAreas.length; i++) {
-                  var subjectAreaId = subjectAreas[i].subject_area;
-                  var subjectAreaData = subjectAreas[i].average_usage;
-
-                  // product wants the graph to display if and only if it is a line (not a dot)
-                  if (subjectAreaData.length >= 2) {
-                    subjectAreaList.push(subjectAreaId);
-
-                    // make sure the data will fit the graph
-                    if (subjectAreaData.length > dataHistoryKeys.length) {
-                      subjectAreaData = subjectAreaData.slice(0, dataHistoryKeys.length);
-                    }
-
-                    // add the data for the given subject area to the chart
-                    registerVisualElementCallback();
-                    chart.addSeries({
-                          id: subjectAreaId,
-                          data: subjectAreaData,
-                          type: "line",
-                          color: "#01DF01",
-                          marker: {
-                            enabled: false,
-                            states: {
-                              hover: {
-                                enabled: false
-                              }
-                            }
-                          }
-                        }
-                    );
-
-                    // hide the line
-                    registerVisualElementCallback();
-                    chart.get(subjectAreaId).hide(0, countElementShownCallback);
-                  }
-                }
-
-                // make sure we have subject areas to add to the select control
-                if (subjectAreaList.length > 0) {
-                  // build the drop down list of subject areas
-                  var defaultSubjectAreaSelected;
-                  var subjectAreasDropdown = $('<select id="subject_areas"></select>');
-                  // sort the list so that the subject areas are grouped correctly
-                  subjectAreaList.sort();
-                  for (i = 0; i < subjectAreaList.length; i++) {
-                    var subjectArea = subjectAreaList[i].substr(1);
-                    var subjectAreaLevels = subjectArea.split("/");
-
-                    if (subjectAreaLevels.length == 1) {
-                      // add the first level subject area
-                      subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
-                    } else if (subjectAreaLevels.length == 2) {
-                      // add the second level subject area
-                      subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
-
-                      if (defaultSubjectAreaSelected == null) {
-                        defaultSubjectAreaSelected = subjectAreaList[i];
-                      }
-                    }
-                  }
-
-                  // if there wasn't a second level subject area to pick, pick the first first level subject area
-                  if (defaultSubjectAreaSelected == null) {
-                    defaultSubjectAreaSelected = subjectAreaList[0];
-                  }
-
-                  // select the subject area that should be selected when the page loads
-                  subjectAreasDropdown.find('option[value="' + defaultSubjectAreaSelected + '"]').attr("selected", "selected")
-                  // display the line in the chart for the selected subject area
-                  chart.get(defaultSubjectAreaSelected).show();
-
-                  // when a subject area is selected, display the correct data (line)
-                  subjectAreasDropdown.change(function () {
-
-                    $("#subject_areas option").each(function () {
-                      chart.get($(this).val()).hide();
-                    });
-
-                    chart.get($(this).val()).show();
-                    var linkToRefset = $('input[name="refsetLinkValue"]').val();
-                    $('#linkToRefset').attr("href", linkToRefset.replace("SUBJECT_AREA", $(this).val()))
-
-                  });
-
-                  // build the output
-                  var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
-                      + new Date(data.relativeMetricData.start_date).getUTCFullYear() + "</b> in the subject area: "
-                      + '<a href="/static/almInfo#relativeMetrics" class="ir" title="More information">info</a>');
-
-                  // build the link to the search result reference set
-                  var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date:[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
-
-                  var description2Div = $('<div></div>').append(subjectAreasDropdown)
-                      .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
-                      .append('<input type="hidden" name="refsetLinkValue" value="' + encodeURI(linkToRefset) + '" >');
-
-                  var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
-
-                  var betaDiv = $('<div id="beta">BETA</div>');
-
-                  $usage.append(betaDiv);
-                  $usage.append(relativeMetricDiv);
-                }
-              }
-            }
+            this.addRelativeMetricInfo(data, dataHistoryKeys, chart, $usage, registerVisualElementCallback);
 
           } // end if (isGraphDisplayed)
 
@@ -1215,6 +972,253 @@ $.fn.alm = function () {
       }
     }
   };
+
+  this.buildChartOptions = function(data, dataHistoryKeys) {
+    var options = {
+      chart: {
+        renderTo: "chart",
+        animation: false,
+        margin: [40, 40, 40, 80]
+      },
+      credits: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+      title: {
+        text: null
+      },
+      legend: {
+        enabled: false
+      },
+      xAxis: {
+        title: {
+          text: "Months",
+          style: {
+            fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
+            fontWeight: "normal",
+            color: "#000"
+          },
+          align: "high"
+        },
+        labels: {
+          step: (dataHistoryKeys.length < 15) ? 1 : Math.round(dataHistoryKeys.length / 15),
+          formatter: function () {
+            return this.value + 1;
+          }
+        },
+        categories: []
+      },
+      yAxis: [
+        {
+          title: {
+            text: "Cumulative Views",
+            style: {
+              fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
+              fontWeight: "normal",
+              color: "#000",
+              height: "50px"
+            }
+          },
+          labels: {
+            style: {
+              color: "#000"
+            }
+          }
+        }
+      ],
+      plotOptions: {
+        column: {
+          stacking: "normal"
+        },
+        animation: false,
+        series: {
+          pointPadding: 0,
+          groupPadding: 0,
+          borderWidth: 0,
+          shadow: false
+        }
+      },
+      series: [
+        {
+          name: "PMC",
+          type: "column",
+          data: [],
+          color: "#6d84bf"
+        },
+        {
+          name: "PLOS",
+          type: "column",
+          data: [],
+          color: "#3c63af"
+        }
+      ],
+      tooltip: {
+        //Make background invisible
+        backgroundColor: "rgba(255, 255, 255, 0.0)",
+        useHTML: true,
+        shared: true,
+        shadow: false,
+        borderWidth: 0,
+        borderRadius: 0,
+        positioner: function (labelHeight, labelWidth, point) {
+          var newX = point.plotX + (labelWidth / 2) + 25,
+              newY = point.plotY - (labelHeight / 2) + 25;
+          return { x: newX, y: newY };
+        },
+        formatter: function () {
+          var key = this.points[0].key,
+              h = data.history;
+
+          return '<table id="mini" cellpadding="0" cellspacing="0">'
+              + '<tr><th></td><td colspan="2">Views in '
+              + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+              + '</td><td colspan="2">Views through ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+              + '</td></tr><tr><th>Source</th><th class="header1">PLOS</th><th class="header2">PMC</th>'
+              + '<th class="header1">PLOS</th><th class="header2">PMC</th></tr>'
+              + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.totalHTML.format(0, '.', ',') : "n.a.") + '</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML.format(0, '.', ',') + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.cumulativeHTML.format(0, '.', ',') : "n.a.") + '</td></tr>'
+              + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.totalPDF.format(0, '.', ',') : "n.a.") + '</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativePDF.format(0, '.', ',') + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.cumulativePDF.format(0, '.', ',') : "n.a.") + '</td></tr>'
+              + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
+              + '<td class="data2">n.a.</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativeXML.format(0, '.', ',') + '</td>'
+              + '<td class="data2">n.a.</td></tr>'
+              + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.total.format(0, '.', ',') : "n.a.") + '</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal.format(0, '.', ',') + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.cumulativeTotal.format(0, '.', ',') : "n.a.") + '</td></tr>'
+              + '</table>';
+        }
+      }
+    };
+
+    return options;
+  };
+
+  this.addRelativeMetricInfo = function(data, dataHistoryKeys, chart, usage, registerVisualElementCallback) {
+
+    // check to see if there is any data
+    if (data.relativeMetricData != null) {
+      var subjectAreas = data.relativeMetricData.subject_areas;
+      if (subjectAreas && subjectAreas.length > 0) {
+        var subjectAreaList = new Array();
+
+        // loop through each subject area and add the data to the chart
+        for (var i = 0; i < subjectAreas.length; i++) {
+          var subjectAreaId = subjectAreas[i].subject_area;
+          var subjectAreaData = subjectAreas[i].average_usage;
+
+          // product wants the graph to display if and only if it is a line (not a dot)
+          if (subjectAreaData.length >= 2) {
+            subjectAreaList.push(subjectAreaId);
+
+            // make sure the data will fit the graph
+            if (subjectAreaData.length > dataHistoryKeys.length) {
+              subjectAreaData = subjectAreaData.slice(0, dataHistoryKeys.length);
+            }
+
+            // add the data for the given subject area to the chart
+            registerVisualElementCallback();
+            chart.addSeries({
+                  id: subjectAreaId,
+                  data: subjectAreaData,
+                  type: "line",
+                  color: "#01DF01",
+                  marker: {
+                    enabled: false,
+                    states: {
+                      hover: {
+                        enabled: false
+                      }
+                    }
+                  }
+                }
+            );
+
+            // hide the line
+            registerVisualElementCallback();
+            chart.get(subjectAreaId).hide();
+          }
+        }
+
+        // make sure we have subject areas to add to the select control
+        if (subjectAreaList.length > 0) {
+          // build the drop down list of subject areas
+          var defaultSubjectAreaSelected;
+          var subjectAreasDropdown = $('<select id="subject_areas"></select>');
+          // sort the list so that the subject areas are grouped correctly
+          subjectAreaList.sort();
+          for (i = 0; i < subjectAreaList.length; i++) {
+            var subjectArea = subjectAreaList[i].substr(1);
+            var subjectAreaLevels = subjectArea.split("/");
+
+            if (subjectAreaLevels.length == 1) {
+              // add the first level subject area
+              subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
+            } else if (subjectAreaLevels.length == 2) {
+              // add the second level subject area
+              subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
+
+              if (defaultSubjectAreaSelected == null) {
+                defaultSubjectAreaSelected = subjectAreaList[i];
+              }
+            }
+          }
+
+          // if there wasn't a second level subject area to pick, pick the first first level subject area
+          if (defaultSubjectAreaSelected == null) {
+            defaultSubjectAreaSelected = subjectAreaList[0];
+          }
+
+          // select the subject area that should be selected when the page loads
+          subjectAreasDropdown.find('option[value="' + defaultSubjectAreaSelected + '"]').attr("selected", "selected")
+          // display the line in the chart for the selected subject area
+          chart.get(defaultSubjectAreaSelected).show();
+
+          // when a subject area is selected, display the correct data (line)
+          subjectAreasDropdown.change(function () {
+
+            $("#subject_areas option").each(function () {
+              chart.get($(this).val()).hide();
+            });
+
+            chart.get($(this).val()).show();
+            var linkToRefset = $('input[name="refsetLinkValue"]').val();
+            $('#linkToRefset').attr("href", linkToRefset.replace("SUBJECT_AREA", $(this).val()))
+
+          });
+
+          // build the output
+          var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
+              + new Date(data.relativeMetricData.start_date).getUTCFullYear() + "</b> in the subject area: "
+              + '<a href="/static/almInfo#relativeMetrics" class="ir" title="More information">info</a>');
+
+          // build the link to the search result reference set
+          var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date:[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
+
+          var description2Div = $('<div></div>').append(subjectAreasDropdown)
+              .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
+              .append('<input type="hidden" name="refsetLinkValue" value="' + encodeURI(linkToRefset) + '" >');
+
+          var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
+
+          usage.append(relativeMetricDiv);
+        }
+      }
+    }
+  }
 
   this.addFigshareTile = function(response) {
 
