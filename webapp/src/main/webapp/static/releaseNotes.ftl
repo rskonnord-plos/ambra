@@ -44,6 +44,8 @@
       <li>Remapped notion of citations for article ALMs</li>
       <li>New download button display on article page</li>
       <li>Fix for article page right rail display bug</li>
+      <li>Canonical URL on PLOS One Browse pages</li>
+      <li>Removed accompaniment article types from Relative Metrics</li>
   </ul>
 
   <h2>Ambra 2.8.3</h2>
