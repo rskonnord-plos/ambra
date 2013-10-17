@@ -950,7 +950,7 @@ $.fn.alm = function () {
             registerVisualElementCallback();
             var chart = new Highcharts.Chart(options);
 
-            this.addRelativeMetricInfo(data, dataHistoryKeys, chart, $usage);
+            this.addRelativeMetricInfo(data, dataHistoryKeys, chart, $usage, registerVisualElementCallback);
 
           } // end if (isGraphDisplayed)
 
@@ -1107,7 +1107,7 @@ $.fn.alm = function () {
     return options;
   };
 
-  this.addRelativeMetricInfo = function(data, dataHistoryKeys, chart, usage) {
+  this.addRelativeMetricInfo = function(data, dataHistoryKeys, chart, usage, registerVisualElementCallback) {
 
     // check to see if there is any data
     if (data.relativeMetricData != null) {
