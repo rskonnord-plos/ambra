@@ -11,6 +11,7 @@
 
 package org.ambraproject.action.taxonomy;
 
+import com.opensymphony.xwork2.ActionContext;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.taxonomy.TaxonomyService;
@@ -49,7 +50,11 @@ public class TaxonomyAction extends BaseActionSupport {
   public String execute() throws Exception {
     String browseValueKey = "ambra.virtualJournals." + getCurrentJournal() + ".taxonomyBrowser";
     //This journal not configured to use the taxonomy browser, return 404
-    if(!configuration.getBoolean(browseValueKey, false)) {
+    //This action is also called via a JSON request to render taxonomy options
+    //on the userProfile page.  In this case the context name is taxonomyJSON, and we don't want
+    //to return INPUT
+    if(!configuration.getBoolean(browseValueKey, false) &&
+      ActionContext.getContext().getName().equals("taxonomy") ) {
       return INPUT;
     }
 
