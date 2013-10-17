@@ -23,13 +23,11 @@ import org.ambraproject.models.UserRole;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.permission.PermissionsService;
-import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.views.CategoryView;
 import org.ambraproject.views.SearchHit;
-import org.ambraproject.views.SearchResultSinglePage;
-import org.ambraproject.views.article.ArticleInfo;
+import org.ambraproject.views.article.FeaturedArticle;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Required;
@@ -62,7 +60,7 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
    * {@inheritDoc}
    */
   @SuppressWarnings("unchecked")
-  public ArticleInfo getFeaturedArticleForSubjectArea(final String journalKey, final String subjectArea) {
+  public FeaturedArticle getFeaturedArticleForSubjectArea(final String journalKey, final String subjectArea) {
     //Find a "Featured Article" for the given subject area
     //
     //First query the database for a manually defined article for the term
@@ -91,13 +89,12 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
     if(sqlResults.size() != 0) {
       Object[] row = (Object[])sqlResults.get(0);
 
-      ArticleInfo ai = new ArticleInfo();
-
-      ai.setDoi((String)row[0]);
-      ai.setTitle((String) row[1]);
-      ai.setStrkImgURI((String) row[2]);
-
-      return ai;
+      return FeaturedArticle.builder()
+        .setDoi((String)row[0])
+        .setTitle((String) row[1])
+        .setStrkImgURI((String) row[2])
+        .setType("Featured Article")
+        .build();
     } else {
       try {
         //Nothing defined, select an article from SOLR
@@ -125,39 +122,42 @@ public class TaxonomyServiceImpl extends HibernateServiceImpl implements Taxonom
    *
    * @throws ApplicationException
    */
-  private ArticleInfo selectFeaturedArticleSOLR(final String journalKey, final String subjectArea)
+  private FeaturedArticle selectFeaturedArticleSOLR(final String journalKey, final String subjectArea)
       throws ApplicationException {
 
     //Only search for articles with shares
     SearchHit hit = searchService.getMostSharedForJournalCategory(journalKey, subjectArea);
 
     if(hit != null) {
-      ArticleInfo ai = new ArticleInfo(hit.getUri());
-      ai.setTitle(hit.getTitle());
-      ai.setStrkImgURI(hit.getStrikingImage());
-
-      return ai;
+      return FeaturedArticle.builder()
+        .setDoi(hit.getUri())
+        .setTitle(hit.getTitle())
+        .setStrkImgURI(hit.getStrikingImage())
+        .setType("Most Shared Article")
+        .build();
     } else {
       //No articles with shares found for the given category.  Lets try views over the past 30 days
       //Only search for articles with views this month
       hit = searchService.getMostViewedForJournalCategory(journalKey, subjectArea);
 
       if(hit != null) {
-        ArticleInfo ai = new ArticleInfo(hit.getUri());
-        ai.setTitle(hit.getTitle());
-        ai.setStrkImgURI(hit.getStrikingImage());
-
-        return ai;
+        return FeaturedArticle.builder()
+          .setDoi(hit.getUri())
+          .setTitle(hit.getTitle())
+          .setStrkImgURI(hit.getStrikingImage())
+          .setType("Most Viewed Article")
+          .build();
       } else {
         //No articles with views this month for the given category.  Use all time views
         hit = searchService.getMostViewedAllTimeForJournalCategory(journalKey, subjectArea);
 
         if(hit != null) {
-          ArticleInfo ai = new ArticleInfo(hit.getUri());
-          ai.setTitle(hit.getTitle());
-          ai.setStrkImgURI(hit.getStrikingImage());
-
-          return ai;
+          return FeaturedArticle.builder()
+            .setDoi(hit.getUri())
+            .setTitle(hit.getTitle())
+            .setStrkImgURI(hit.getStrikingImage())
+            .setType("Most Viewed Article")
+            .build();
         } else {
           //This is a very sad subject category :-(
           return null;

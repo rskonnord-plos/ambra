@@ -20,8 +20,7 @@ package org.ambraproject.service.taxonomy;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.views.CategoryView;
-import org.ambraproject.views.article.ArticleInfo;
-
+import org.ambraproject.views.article.FeaturedArticle;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public interface TaxonomyService {
    * @param journalKey the key of the journal
    * @param subjectArea the subject area to search for
    */
-  public ArticleInfo getFeaturedArticleForSubjectArea(String journalKey, String subjectArea);
+  public FeaturedArticle getFeaturedArticleForSubjectArea(String journalKey, String subjectArea);
 
   /**
    * For the given journal, get a map of subject areas (key) and their article DOIS (values)
