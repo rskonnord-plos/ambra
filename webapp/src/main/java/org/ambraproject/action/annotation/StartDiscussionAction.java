@@ -19,6 +19,9 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.models.AnnotationType;
+import org.ambraproject.service.annotation.AnnotationService;
+import org.ambraproject.views.AnnotationView;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.service.article.ArticleService;
@@ -32,6 +35,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +48,7 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
 
   private ArticleService articleService;
   private FetchArticleService fetchArticleService;
+  private AnnotationService annotationService;
 
   private String articleURI;
   private ArticleInfo articleInfo;
@@ -52,11 +57,18 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
   private boolean hasAboutAuthorContent;
   private List<AuthorView> authors;
   private Set<ArticleCategory> categories;
+  private List<List<String>> articleIssues;
+  private AnnotationView[] commentary = new AnnotationView[0];
 
   @Override
   public String execute() throws Exception {
     articleInfo = articleService.getArticleInfo(articleURI, getAuthId());
     articleType = articleInfo.getKnownArticleType();
+
+    articleIssues = articleService.getArticleIssues(articleURI);
+    commentary = annotationService.listAnnotations(articleInfo.getId(),
+        EnumSet.of(AnnotationType.COMMENT),
+        AnnotationService.AnnotationOrder.MOST_RECENT_REPLY);
 
     Document doc = fetchArticleService.getArticleDocument(articleInfo);
     isResearchArticle = articleService.isResearchArticle(articleInfo);
@@ -106,6 +118,11 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
     this.fetchArticleService = fetchArticleService;
   }
 
+  @Required
+  public void setAnnotationService(AnnotationService annotationService) {
+    this.annotationService = annotationService;
+  }
+
   public void setArticleURI(String articleURI) {
     this.articleURI = articleURI;
   }
@@ -152,5 +169,13 @@ public class StartDiscussionAction extends BaseActionSupport implements ArticleH
    */
   public Set<ArticleCategory> getCategories() {
     return categories;
+  }
+
+  public List<List<String>> getArticleIssues() {
+    return articleIssues;
+  }
+
+  public AnnotationView[] getCommentary() {
+    return commentary;
   }
 }
