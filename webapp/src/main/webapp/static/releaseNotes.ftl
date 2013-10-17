@@ -42,6 +42,8 @@
       <li>PLOS One Editorial Board performance optimization</li>
       <li>Fix for author display on browse page figure view results</li>
       <li>Remapped notion of citations for article ALMs</li>
+      <li>New download button display on article page</li>
+      <li>Fix for article page right rail display bug</li>
   </ul>
 
   <h2>Ambra 2.8.3</h2>
