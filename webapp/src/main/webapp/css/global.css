@@ -5554,11 +5554,6 @@ ol.references .authors,
   font-size: 14px;
 }
 
-ol.references ul.find-nolinks {
-  margin: 0;
-  padding: 0;
-}
-
 .ref-target {
   background: #eee;
 }

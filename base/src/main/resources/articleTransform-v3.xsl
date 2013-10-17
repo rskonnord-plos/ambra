@@ -722,115 +722,141 @@
     <xsl:template match="app" />
 
     <!-- 1/4/12: plos modifications -->
-  <xsl:template match="ref-list" name="ref-list">
-    <div>
-      <div class="header hdr-article-refs">
-        <xsl:choose>
-          <xsl:when test="not(title)">
-            <a id="references" name="references" toc="references" title="References"/>
-            <h3>References</h3>
-            <xsl:call-template name="newline1"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="title"/>
-          </xsl:otherwise>
-        </xsl:choose>
-        <div id="ref-sort" class="">
-          <span class="title">Sort by</span>
-          <div class="content">
-            <ul>
-              <li id="ref-sort-default" class="active">Original Order</li>
-              <li id="ref-sort-author">Author</li>
-              <li id="ref-sort-title">Title</li>
-              <li id="ref-sort-date">Date</li>
-              <li id="ref-sort-publication">Publication</li>
-              <li id="ref-sort-citedcount">Cited in paper</li>
-            </ul>
+    <xsl:template match="ref-list" name="ref-list">
+      <div>
+        <div class="header hdr-article-refs">
+          <xsl:choose>
+            <xsl:when test="not(title)">
+              <a id="references" name="references" toc="references" title="References"/>
+              <h3>References</h3>
+              <xsl:call-template name="newline1"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="title"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          <div id="ref-sort" class="">
+            <span class="title">Sort by</span>
+            <div class="content">
+              <ul>
+                <li id="ref-sort-default" class="active">Original Order</li>
+                <li id="ref-sort-author">Author</li>
+                <li id="ref-sort-title">Title</li>
+                <li id="ref-sort-date">Date</li>
+                <li id="ref-sort-publication">Publication</li>
+                <li id="ref-sort-citedcount">Cited in paper</li>
+              </ul>
+            </div>
           </div>
         </div>
+        <xsl:apply-templates select="p"/>
+        <div id="article-refs">
+          <ol class="references">
+            <xsl:for-each select="ref">
+              <xsl:sort data-type="number" select="label"/>
+              <li>
+                <xsl:variable name="cit" select="element-citation | mixed-citation | nlm-citation"/>
+                <xsl:attribute name="data-citation-id"><xsl:value-of select="@id"/></xsl:attribute>
+                <xsl:apply-templates select="$cit" mode="attributes"/>
+                <span class="label">
+                  <xsl:value-of select="label"/>
+                </span>
+                <a>
+                  <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
+                  <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+                </a>
+                <xsl:apply-templates select="$cit"/>
+                <xsl:text> </xsl:text>
+                <xsl:call-template name="citationLinks"/>
+              </li>
+            </xsl:for-each>
+          </ol>
+        </div>
       </div>
-      <xsl:apply-templates select="p"/>
-      <div id="article-refs">
-        <ol class="references">
-          <xsl:for-each select="ref">
-            <xsl:sort data-type="number" select="label"/>
-            <li>
-              <xsl:variable name="cit" select="element-citation | mixed-citation | nlm-citation"/>
-              <xsl:apply-templates select="$cit" mode="attributes"/>
-              <span class="label">
-                <xsl:value-of select="label"/>
-              </span>
-              <a>
-                <xsl:attribute name="name"><xsl:value-of select="@id"/></xsl:attribute>
-                <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
-              </a>
-              <xsl:apply-templates select="$cit"/>
-              <xsl:text> </xsl:text>
-              <xsl:if test="$cit[@publication-type='journal']">
-                <xsl:variable name="apos">'</xsl:variable>
-                <xsl:if test="$cit/extraCitationInfo">
-                  <xsl:if test="not(element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link)">
-                    <xsl:element name="ul">
-                      <xsl:attribute name="class">find</xsl:attribute>
-                      <xsl:attribute name="data-citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:attribute>
-                      <xsl:if test="$cit/extraCitationInfo/@doi">
-                        <xsl:attribute name="data-doi"><xsl:value-of select="$cit/extraCitationInfo/@doi"/></xsl:attribute>
-                      </xsl:if>
-                      <xsl:if test="$cit/extraCitationInfo/@crossRefUrl">
-                        <xsl:element name="li">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
-                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
-                            <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
-                            CrossRef
-                          </xsl:element>
-                        </xsl:element>
-                      </xsl:if>
-                      <xsl:if test="$cit/extraCitationInfo/@pubMedUrl">
-                        <xsl:element name="li">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubMedUrl"/></xsl:attribute>
-                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
-                            <xsl:attribute name="title">Go to article in PubMed</xsl:attribute>
-                            PubMed/NCBI
-                          </xsl:element>
-                        </xsl:element>
-                      </xsl:if>
-                      <xsl:if test="$cit/extraCitationInfo/@googleScholarUrl">
-                        <xsl:element name="li">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@googleScholarUrl"/></xsl:attribute>
-                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
-                            <xsl:attribute name="title">Go to article in Google Scholar</xsl:attribute>
-                            Google Scholar
-                          </xsl:element>
-                        </xsl:element>
-                      </xsl:if>
-                    </xsl:element>
-                  </xsl:if>
-                  <xsl:if test="element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link">
-                    <xsl:element name="ul">
-                      <xsl:attribute name="class">find-nolinks</xsl:attribute>
-                    </xsl:element>
-                  </xsl:if>
-                </xsl:if>
-                <xsl:if test="not($cit/extraCitationInfo)">
-                  <xsl:element name="ul">
-                    <xsl:attribute name="class">find-nolinks</xsl:attribute>
-                  </xsl:element>
-                </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="citationLinks">
+      <xsl:variable name="cit" select="element-citation | mixed-citation | nlm-citation"/>
+      <xsl:if test="$cit[@publication-type='journal']">
+        <xsl:variable name="apos">'</xsl:variable>
+        <xsl:if test="$cit/extraCitationInfo">
+          <xsl:if test="not(element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link)">
+            <xsl:element name="ul">
+              <xsl:attribute name="class">find</xsl:attribute>
+              <xsl:attribute name="data-citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:attribute>
+              <xsl:if test="$cit/extraCitationInfo/@doi">
+                <xsl:attribute name="data-doi"><xsl:value-of select="$cit/extraCitationInfo/@doi"/></xsl:attribute>
               </xsl:if>
-              <xsl:if test="$cit[@publication-type!='journal']">
-                <xsl:element name="ul">
-                  <xsl:attribute name="class">find-nolinks</xsl:attribute>
+              <xsl:if test="$cit/extraCitationInfo/@crossRefUrl">
+                <xsl:element name="li">
+                  <xsl:element name="a">
+                    <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
+                    <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                    <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
+                    CrossRef
+                  </xsl:element>
                 </xsl:element>
               </xsl:if>
-            </li>
-          </xsl:for-each>
-        </ol>
-      </div>
-    </div>
-  </xsl:template>
+              <xsl:if test="$cit/extraCitationInfo/@pubMedUrl">
+                <xsl:element name="li">
+                  <xsl:element name="a">
+                    <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubMedUrl"/></xsl:attribute>
+                    <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                    <xsl:attribute name="title">Go to article in PubMed</xsl:attribute>
+                    PubMed/NCBI
+                  </xsl:element>
+                </xsl:element>
+              </xsl:if>
+              <xsl:if test="$cit/extraCitationInfo/@googleScholarUrl">
+                <xsl:element name="li">
+                  <xsl:element name="a">
+                    <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@googleScholarUrl"/></xsl:attribute>
+                    <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                    <xsl:attribute name="title">Go to article in Google Scholar</xsl:attribute>
+                    Google Scholar
+                  </xsl:element>
+                </xsl:element>
+              </xsl:if>
+            </xsl:element>
+          </xsl:if>
+        </xsl:if>
+      </xsl:if>
+      <xsl:if test="substring($cit/extraCitationInfo/@doi,1,8) = '10.1371/'">
+        <xsl:variable name="citedArticleDoi">info:doi/<xsl:value-of select="$cit/extraCitationInfo/@doi"/></xsl:variable>
+        <xsl:element name="ul">
+          <xsl:attribute name="class">find citation-links-plos</xsl:attribute>
+          <xsl:element name="li">
+            <xsl:element name="a">
+              <xsl:attribute name="href">#</xsl:attribute>
+              <xsl:attribute name="class">abstract</xsl:attribute>
+              <xsl:attribute name="data-doi"><xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
+              Abstract
+            </xsl:element>
+          </xsl:element>
+          <xsl:element name="li">
+            <xsl:element name="a">
+              <xsl:attribute name="href">#</xsl:attribute>
+              <xsl:attribute name="class">figures</xsl:attribute>
+              <xsl:attribute name="data-doi"><xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
+              Figures
+            </xsl:element>
+          </xsl:element>
+          <xsl:element name="li">
+            <xsl:element name="a">
+              <xsl:attribute name="href">/article/<xsl:value-of select="encode-for-uri($citedArticleDoi)"/></xsl:attribute>
+              Full Text
+            </xsl:element>
+          </xsl:element>
+          <xsl:element name="li">
+            <xsl:element name="a">
+              <xsl:attribute name="href">/article/fetchObject.action?uri=<xsl:value-of select="encode-for-uri($citedArticleDoi)"/>&amp;representation=PDF</xsl:attribute>
+              <xsl:attribute name="target">_blank</xsl:attribute>
+              Download PDF
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
+      </xsl:if>
+    </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use -->
     <xsl:template match="sec-meta" />
@@ -1553,17 +1579,49 @@
       <xsl:attribute name="data-title">
         <xsl:value-of select="replace(lower-case($title), '[^a-z0-9\s]', '')"/>
       </xsl:attribute>
+      <xsl:variable name="publication">
+        <xsl:value-of select="source"/>
+      </xsl:variable>
+      <xsl:attribute name="data-publication">
+        <xsl:value-of select="replace(lower-case($publication), '[^a-z0-9\s]', '')"/>
+      </xsl:attribute>
     </xsl:template>
 
     <xsl:template match="nlm-citation | element-citation" mode="attributes">
-      <xsl:variable name="authors"><xsl:apply-templates select="person-group" mode="book"/><xsl:apply-templates select="collab" mode="book"/></xsl:variable>
-      <xsl:attribute name="data-author"><xsl:value-of select="normalize-space(lower-case($authors))"/></xsl:attribute>
+      <xsl:variable name="authors">
+        <xsl:apply-templates select="person-group" mode="book"/>
+        <xsl:apply-templates select="collab" mode="book"/>
+      </xsl:variable>
+      <xsl:attribute name="data-author">
+        <xsl:value-of select="normalize-space(lower-case($authors))"/>
+      </xsl:attribute>
       <xsl:attribute name="data-date"><xsl:value-of select="year"/></xsl:attribute>
-      <xsl:variable name="title"><xsl:choose><xsl:when test="article-title"
-          ><xsl:value-of select="article-title"/></xsl:when><xsl:otherwise
-          ><xsl:value-of select="source"/></xsl:otherwise></xsl:choose></xsl:variable>
-      <xsl:attribute name="data-title"><xsl:value-of select="replace(lower-case($title), '[^a-z0-9\s]', '')"
-          /></xsl:attribute>
+      <xsl:variable name="title">
+        <xsl:choose>
+          <xsl:when test="article-title">
+            <xsl:value-of select="article-title"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="source"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:attribute name="data-title">
+        <xsl:value-of select="replace(lower-case($title), '[^a-z0-9\s]', '')"/>
+      </xsl:attribute>
+      <xsl:variable name="publication">
+        <xsl:choose>
+          <xsl:when test="source">
+            <xsl:value-of select="source"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="publisher-name"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:attribute name="data-publication">
+        <xsl:value-of select="replace(lower-case($publication), '[^a-z0-9\s]', '')"/>
+      </xsl:attribute>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-types book and other) -->

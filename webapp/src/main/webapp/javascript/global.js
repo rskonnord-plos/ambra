@@ -205,6 +205,8 @@ function onReadyMainContainer() {
   $('.article a[href^="#"]').on('click', function (e) {
     e.preventDefault();
     var href = $(this).attr('href').split('#')[1];
+    if (!href)
+      return;
     var b = $('a[name="' + href + '"]');
     $('li.ref-target').removeClass('ref-target');
     b.closest('li').addClass('ref-target');
@@ -293,7 +295,7 @@ function initMainContainer() {
   }
 
   // figure search results
-  var $fig_results = $('#fig-search-results, .article-block .actions, #subject-list-view .actions');
+  var $fig_results = $('#fig-search-results, .article-block .actions, #subject-list-view .actions, .citation-links-plos');
   if ($fig_results.length) {
     $fig_results.find('a.figures').on('click', function (e) {
       doi = $(this).data('doi');
@@ -1932,6 +1934,8 @@ function tableOpen(tableId, type) {
       var $ref_btn_ttl = $('#ref-sort-title');
       var $ref_btn_athr = $('#ref-sort-author');
       var $ref_btn_dt = $('#ref-sort-date');
+      var $ref_btn_pub = $('#ref-sort-publication');
+      var $ref_btn_cc = $('#ref-sort-citedcount');
       var $ref_lst = $('#article-refs');
       var $ref_lst_default = $ref_lst.html();
       var $ref_lst_itms = $ref_lst.find('ol.references > li');
@@ -1941,24 +1945,35 @@ function tableOpen(tableId, type) {
       var ref_athr = [];
       var ref_dt_keys = [];
       var ref_dt = [];
+      var ref_pub_keys = [];
+      var ref_pub = [];
+      var ref_cc_keys = [];
+      var ref_cc = [];
       var $new_ttl_lst = $('<ol class="references" />');
       var $new_athr_lst = $('<ol class="references" />');
       var $new_dt_lst = $('<ol class="references" />');
+      var $new_pub_lst = $('<ol class="references" />');
+      var $new_cc_lst = $('<ol class="references" />');
 
       $ref_lst_itms.each(function(index) {
         var $this = $(this);
+        var indexstr = (index < 10 ? "00" + index : (index < 100 ? "0" + index : "" + index));
         var ttl = $this.data('title');
-        ttl += "-" + index;
+        ttl += "-" + indexstr;
         ref_ttl_keys[ttl] = index;
         ref_ttl.push(ttl);
         var dt = $this.data('date');
-        dt += "-" + index;
+        dt += "-" + indexstr;
         ref_dt_keys[dt] = index;
         ref_dt.push(dt);
         var athr = $this.data('author');
         athr += dt;
         ref_athr_keys[athr] = index;
         ref_athr.push(athr);
+        var pub = $this.data('publication');
+        pub += "-" + indexstr;
+        ref_pub_keys[pub] = index;
+        ref_pub.push(pub);
       });
 
       $ref_btn_ttl.one('click', function() {
@@ -1994,6 +2009,44 @@ function tableOpen(tableId, type) {
         sortDisplay($(this), $new_dt_lst);
       });
 
+      $ref_btn_pub.one('click', function() {
+        ref_pub.sort();
+        jQuery.each(ref_pub, function(index, value) {
+          var key = ref_pub_keys[value];
+          $new_pub_lst.append($ref_lst_itms.eq(key).clone());
+        });
+      });
+      $ref_btn_pub.on('click', function() {
+        sortDisplay($(this), $new_pub_lst);
+      });
+
+      $ref_btn_cc.one('click', function() {
+        $ref_lst_itms.each(function(index) {
+          var $this = $(this);
+          var cid = $this.data('citation-id');
+          var cc = $('a[href="#' + cid + '"]').length;
+          var ccstr = (cc < 10 ? "00" + cc : (cc < 100 ? "0" + cc : "" + cc));
+          var rindex = $ref_lst_itms.length - index;
+          var indexstr = (rindex < 10 ? "00" + rindex : (rindex < 100 ? "0" + rindex : "" + rindex));
+          ccstr += "-" + indexstr;
+          ref_cc_keys[ccstr] = index;
+          ref_cc.push(ccstr);
+
+          $this.find(".label").after(
+              '<span class="cited-count" style="display: none; position: absolute; top: 30px; right: 528px;">(' + cc + ')</span>');
+        });
+        ref_cc.sort();
+        ref_cc.reverse();
+        jQuery.each(ref_cc, function(index, value) {
+          var key = ref_cc_keys[value];
+          $new_cc_lst.append($ref_lst_itms.eq(key).clone());
+        });
+      });
+      $ref_btn_cc.on('click', function() {
+        $new_cc_lst.find("span.cited-count").css("display", "block");
+        sortDisplay($(this), $new_cc_lst);
+      });
+
       $('#ref-sort-default').on('click', function() {
         sortDisplay($(this), $ref_lst_default);
       });
@@ -2007,4 +2060,3 @@ function tableOpen(tableId, type) {
     });
   };
 })(jQuery);
-
