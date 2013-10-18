@@ -716,6 +716,8 @@ $.fn.alm = function () {
           if (!source.events_url) {
             html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           } else {
+            // logic for wikipedia,  we only want to escape the double quotes around the doi (the doi itself is already escaped)
+            source.events_url = source.events_url.replace(/"/g, "%22");
             html = this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           }
         }
