@@ -36,7 +36,7 @@
   </p>
 
   <h2>Ambra 2.8.4</h2>
-  <p>Released October 15, 2013</p>
+  <p>Released October 29, 2013</p>
   <h3>Features Implemented in Ambra 2.8.4</h3>
   <ul>
       <li>PLOS One Editorial Board performance optimization</li>
