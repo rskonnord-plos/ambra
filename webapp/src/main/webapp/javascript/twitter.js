@@ -384,13 +384,13 @@ $.fn.twitter = function () {
 
       $("#twitter-alm-timeline").append(ol);
 
+      var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
       if (events.length > minDisplayEventCount) {
         $("#twitter-alm-timeline").append(
             $("<button></button>")
                 .html("Load More")
                 .click(function () {
                   $("#twitter-alm-timeline li.tweet-entry.hide").removeClass("hide").addClass("display");
-                  var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
                   var a = $("<a></a>").attr("href", '/article/twitter/info:doi/' + doi).html("View all tweets");
                   $(this).html("").append(a);
                   $(this).css("background-image", "none")
