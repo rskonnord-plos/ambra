@@ -192,13 +192,17 @@ $.fn.edBoard = function () {
         nameDiv.append($("<span></span>").addClass("section_ed").html(" Section Editor"));
       }
 
-      entry.append($("<div></div>")
-          .addClass("organization")
-          .html(editor.ae_institute.join(", ")));
+      if (editor.ae_institute) {
+        entry.append($("<div></div>")
+            .addClass("organization")
+            .html(editor.ae_institute.join(", ")));
+      }
 
-      entry.append($("<div></div>")
-          .addClass("location")
-          .html(editor.ae_country.join(", ")));
+      if (editor.ae_country) {
+        entry.append($("<div></div>")
+            .addClass("location")
+            .html(editor.ae_country.join(", ")));
+      }
 
       if (editor.ae_subject) {
         //highlight the subjects
