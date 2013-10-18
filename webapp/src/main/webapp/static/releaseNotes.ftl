@@ -35,6 +35,19 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.8.4</h2>
+  <p>Released October 29, 2013</p>
+  <h3>Features Implemented in Ambra 2.8.4</h3>
+  <ul>
+      <li>PLOS One Editorial Board performance optimization</li>
+      <li>Fix for author display on browse page figure view results</li>
+      <li>Remapped notion of citations for article ALMs</li>
+      <li>New download button display on article page</li>
+      <li>Fix for article page right rail display bug</li>
+      <li>Canonical URL on PLOS One Browse pages</li>
+      <li>Removed accompaniment article types from Relative Metrics</li>
+  </ul>
+
   <h2>Ambra 2.8.3</h2>
   <p>Released October 8, 2013</p>
   <h3>Features Implemented in Ambra 2.8.3</h3>
