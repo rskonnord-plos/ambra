@@ -286,7 +286,8 @@ $.fn.twitter = function () {
 
   this.showTweetsArticleSidebar = function(json) {
     var twitterResponse, events, totalEventCount, minDisplayEventCount, maxDisplayEventCount, ol, i,
-        tweet, created_dt, li, tweetText, div, ul, replyLink, reTweetLink, favoriteLink;
+        tweet, created_dt, li, tweetText, div, ul, replyLink, reTweetLink, favoriteLink, tweetPostTime,
+        linkToTweet;
 
     minDisplayEventCount = 2;
     maxDisplayEventCount = 5;
@@ -326,16 +327,25 @@ $.fn.twitter = function () {
             $(this).find("ul.tweet-actions").css("visibility", "hidden");
           });
 
+        tweetPostTime = this.getTweetTimeDisplay(tweet.created_at);
+        linkToTweet = "<a href=\"https://twitter.com/" + tweet.user + "/statuses/" + tweet.id + "\">" + tweetPostTime + "</a>";
         // TODO add the twitter user full name once we have it
         div = $("<div></div>")
             .addClass("tweet-user")
-            .append($("<img>")
-                .attr("src", tweet.user_profile_image))
-//            .append($("<span></span>")
-//                .addClass("twitter-fullname").
-//                html())
-            .append($("<span></span>")
-                .html("@" + tweet.user));
+            .append($("<div></div>")
+                .addClass("twitter-posttime")
+                .html(linkToTweet))
+            .append($("<a></a>")
+                .attr("href", "https://twitter.com/" + tweet.user)
+                .append($("<img>")
+                    .attr("src", tweet.user_profile_image))
+                .append($("<div></div>")
+                    .append($("<span></span>")
+                        .addClass("twitter-fullname")
+                        .html(tweet.user_name))
+                    .append($("<span></span>")
+                        .addClass("twitter-username")
+                        .html("@" + tweet.user))));
         li.append(div);
 
         tweetText = $("<div></div>")
@@ -387,15 +397,52 @@ $.fn.twitter = function () {
             }
           )
         );
+      } else {
+        $("#twitter-alm-timeline").append(
+          $("<button></button>").append($("<a></a>").attr("href", '/article/twitter/info:doi/' + doi).html("View all tweets")).css("background-image", "none")
+        );
       }
+
 
       $("#twitter-alm-timeline").prepend(
         $("<div></div>")
           .addClass("tweet-header")
           .append($("<img>").addClass("tweet-header-logo").attr("src", "/images/tweet_bird_blue_32.png"))
-          .append($("<b></b>").html("Tweets"))
+          .append($("<b></b>").html("Archived Tweets"))
       );
-
     }
+  }
+
+  this.getTweetTimeDisplay = function(dateString) {
+    var tweetDate = isNaN(Date.parse(dateString)) ? this.parseTwitterDate(dateString) : new Date(dateString);
+    var now = new Date().getTime();
+    // difference in hours
+    var timeDiff = Math.round((now - tweetDate)/1000/60/60);
+    var output = "";
+    var yearInHours = 365 * 24;
+
+    if (timeDiff > yearInHours) {
+      output = $.datepicker.formatDate("d M y", tweetDate);
+    } else if (timeDiff >= 24.0) {
+      // day month
+      output = $.datepicker.formatDate("d M", tweetDate);
+    } else {
+      if (timeDiff >= 1.0) {
+        // hour
+        output = Math.round(timeDiff) + "h";
+      } else  {
+        // minute
+        timeDiff = (now - tweetDate)/1000/60;
+        if (timeDiff >= 1.0) {
+          output = Math.round(timeDiff) + "m";
+        } else {
+          // second
+          timeDiff = (now - tweetDate)/1000;
+          output = Math.round(timeDiff) + "s";
+        }
+      }
+    }
+
+    return output;
   }
 };

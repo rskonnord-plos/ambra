@@ -5656,7 +5656,7 @@ div.inlinePopup input[type="button"]:hover {
 
 #article-block .sidebar .twitter-alm-timeline ol li.tweet-entry {
   margin-bottom: 7px;
-  padding-top: 5px;
+  padding-top: 10px;
   border-top: 1px solid #e8e8e8;
 }
 
@@ -5664,8 +5664,12 @@ div.inlinePopup input[type="button"]:hover {
   display: none;
 }
 
-#article-block .sidebar .twitter-alm-timeline .tweet-user span {
-  margin-right: 5px;
+#article-block .sidebar .twitter-alm-timeline .tweet-user a {
+  color: #333;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a:hover {
+  text-decoration: none;
 }
 
 #article-block .sidebar .twitter-alm-timeline .tweet-user img {
@@ -5673,30 +5677,44 @@ div.inlinePopup input[type="button"]:hover {
   height: 48px;
   border-radius: 5px;
   display: block;
+  margin-bottom: 5px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-posttime a {
+  float: right;
+  color: #707070;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-posttime a:hover {
+  text-decoration: underline;
 }
 
 #article-block .sidebar .twitter-alm-timeline .twitter-fullname {
   font-weight: bold;
+  margin-right: 3px;
+  display: inline-block;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a:hover .twitter-fullname {
+  text-decoration: underline;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-username {
+  color: #707070;
+  font-size: smaller;
 }
 
 #article-block .sidebar ul.tweet-actions {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-#article-block .sidebar ul.tweet-actions {
-  min-height: 30px;
+  min-height: 40px;
+  visibility: hidden;
 }
 
 #article-block .sidebar ul.tweet-actions li {
   float: left;
   margin: 1px 2px 2px 1px;
-}
-
-#article-block .sidebar ul.tweet-actions {
-  min-height: 40px;
-  visibility: hidden;
 }
 
 #article-block .sidebar ul.tweet-actions span {
@@ -5707,6 +5725,10 @@ div.inlinePopup input[type="button"]:hover {
   display: inline-block;
   margin: 0 2px 0 2px;
   vertical-align: text-top;
+}
+
+#article-block .sidebar ul.tweet-actions a {
+  color: #707070;
 }
 
 #article-block .sidebar ul.tweet-actions .tweet-reply-action:hover span {
@@ -5736,7 +5758,7 @@ div.inlinePopup input[type="button"]:hover {
   padding: 5px, 0, 5px, 0;
   background-color: white;
   color: #3c63af;
-  font-size: larger;
+  font: 18px 'FS Albert Web Regular', Verdana, sans-serif;
 
   background-image: url('/images/bul.pt.blu.dn.gif');
   background-repeat: no-repeat;
