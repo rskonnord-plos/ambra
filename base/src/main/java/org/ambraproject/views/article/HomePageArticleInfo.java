@@ -58,14 +58,7 @@ public class HomePageArticleInfo implements Serializable {
     this.authors = authors;       //Make a list of first, second, third creators
 
     if (authors != null) {
-      String[] authorsArray = authors.split(",");
-      if (authorsArray.length <= 3) {
-        this.truncatedAuthors = authors; // same as authors list
-      }
-      else {
-        // use first two and last.
-        this.truncatedAuthors = authorsArray[0].trim() + ", " + authorsArray[1].trim() + ", [...], " + authorsArray[authorsArray.length-1].trim();
-      }
+      this.truncatedAuthors = TextUtils.makeAuthorString(authors.split(","));
     }
   }
 
