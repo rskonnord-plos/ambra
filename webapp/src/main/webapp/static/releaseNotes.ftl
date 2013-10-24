@@ -35,8 +35,17 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
-  <h2>Ambra 2.8.4</h2>
+  <h2>Ambra 2.8.5</h2>
   <p>Released October 29, 2013</p>
+  <h3>Features Implemented in Ambra 2.8.5</h3>
+  <ul>
+      <li>Featured, Most Shared, and Most Viewed article blocks on PLOS One Subject Area browse pages</li>
+      <li>Article page Metrics tab Wikipedia tile bug fix</li>
+      <li>Article page Metrics tab bug fix for subset of newly published articles with metrics display issues</li>
+  </ul>
+
+  <h2>Ambra 2.8.4</h2>
+  <p>Released October 22, 2013</p>
   <h3>Features Implemented in Ambra 2.8.4</h3>
   <ul>
       <li>PLOS One Editorial Board performance optimization</li>
