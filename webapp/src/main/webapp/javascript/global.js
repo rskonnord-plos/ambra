@@ -342,7 +342,6 @@ function initMainContainer() {
   });
 
   $("#nav-article li a").on("click", function(event) {
-    //console.log("pjax click " + this.name);
     // for metrics and related content that have dynamic javascript to populate
     // the content, cache the content here when the user navigates away from that
     // page. So that this cache can be reused when the user navigates back to

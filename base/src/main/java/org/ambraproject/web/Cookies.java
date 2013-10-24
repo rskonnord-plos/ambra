@@ -98,9 +98,9 @@ public class Cookies {
   }
 
   /**
-   * A collection of articleID/CategoryIDs that are stored in
-   * a cookie on the user's browser.  Used to track categories they
-   * have flagged
+   * Used to set a collection of articleID/CategoryIDs that are stored in
+   * a cookie on the user's browser.  This is in turn is used to track categories they
+   * have flagged to prevent users from flagging a term for an article multiple times
    *
    * @param flags the working set of ArticleCategories
    * @param articleID the current articleIO
@@ -122,9 +122,9 @@ public class Cookies {
   }
 
   /**
-   * A collection of articleID/CategoryIDs that are stored in
-   * a cookie on the user's browser.  Used to track categories they
-   * have flagged
+   * Used to set a collection of articleID/CategoryIDs that are stored in
+   * a cookie on the user's browser.  This is in turn is used to track categories they
+   * have flagged to prevent users from flagging a term for an article multiple times
    *
    * @param cookieValue the value of the current COOKIE_ARTICLE_CATEGORY_FLAGS cookie
    * @param flags the working set of ArticleCategories

@@ -184,6 +184,89 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchHit getMostSharedForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("alm_twitterCount:[1 TO *] OR alm_facebookCount:[1 TO *]");
+    sp.setSortValue("sum(alm_twitterCount, alm_facebookCount) desc");
+
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchHit getMostViewedForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("counter_total_month:[1 TO *]");
+    sp.setSortValue("counter_total_month desc");
+
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchHit getMostViewedAllTimeForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("counter_total_all:[1 TO *]");
+    sp.setSortValue("counter_total_all desc");
+
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
+  }
+
+
+
+  /**
    * Populate facets of the search object.
    * <p/>
    * If no search results and hence facets are found remove defined filters and try the search again.  Journals will
@@ -411,15 +494,20 @@ public class SolrSearchService implements SearchService {
    */
   private void setSort(SolrQuery query, SearchParameters sp) throws ApplicationException {
     if (log.isDebugEnabled()) {
-      log.debug("SearchParameters.sort = " + sp.getSort());
+      log.debug("SearchParameters.sort = " + sp.getSortKey());
     }
 
-    if (sp.getSort().length() > 0) {
-      String sortKey = sp.getSort();
+    if (sp.getSortKey().length() > 0 || (sp.getSortValue() != null && sp.getSortValue().length() > 0)) {
+      String sortKey = sp.getSortKey();
       String sortValue = (String) validSorts.get(sortKey);
 
-      if (sortValue == null) {
-        throw new ApplicationException("Invalid sort of '" + sp.getSort() + "' specified.");
+      //This bit allows a consumer of the method to explicitly set the sort instead of specifying it by key
+      if(sp.getSortValue() != null && sp.getSortValue().length() > 0) {
+        sortValue = sp.getSortValue();
+      } else {
+        if (sortValue == null) {
+          throw new ApplicationException("Invalid sort key of '" + sp.getSortKey() + "' specified.");
+        }
       }
 
       String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);

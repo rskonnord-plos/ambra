@@ -54,6 +54,7 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
   private String                 issue;
   private List<AssetView>        articleAssets;
   private List<CitedArticle>     citedArticles;
+  private String                 strkImgURI;
 
   private transient String unformattedTitle = null;
 
@@ -228,6 +229,14 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
     this.citedArticles = citedArticles;
   }
 
+  public String getStrkImgURI() {
+    return strkImgURI;
+  }
+
+  public void setStrkImgURI(String strkImgURI) {
+    this.strkImgURI = strkImgURI;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -251,6 +260,7 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
     if (relatedArticles != null ? !relatedArticles.equals(that.relatedArticles) : that.relatedArticles != null)
       return false;
     if (rights != null ? !rights.equals(that.rights) : that.rights != null) return false;
+    if (strkImgURI != null ? !strkImgURI.equals(that.strkImgURI) : that.strkImgURI != null) return false;
     if (unformattedTitle != null ? !unformattedTitle.equals(that.unformattedTitle) : that.unformattedTitle != null)
       return false;
     if (volume != null ? !volume.equals(that.volume) : that.volume != null) return false;
@@ -275,6 +285,7 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
     result = 31 * result + (issue != null ? issue.hashCode() : 0);
     result = 31 * result + (articleAssets != null ? articleAssets.hashCode() : 0);
     result = 31 * result + (citedArticles != null ? citedArticles.hashCode() : 0);
+    result = 31 * result + (strkImgURI != null ? strkImgURI.hashCode() : 0);
     result = 31 * result + (unformattedTitle != null ? unformattedTitle.hashCode() : 0);
     return result;
   }
