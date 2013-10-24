@@ -642,7 +642,7 @@ $.fn.alm = function () {
       bookMarksNode.show("blind", 500, countElementShownCallback);
     }
   }
-  this.setSavedError = function(message, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallBack){
+  this.setSavedError = function(message, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     registerVisualElementCallback();
@@ -750,7 +750,7 @@ $.fn.alm = function () {
     registerVisualElementCallback('#' + discussedID);
     discussedElement.show('blind', 500, countElementShownCallback);
   }
-  this.setDiscussedError = function (message, discussedID, loadingID, registerVisualElementCallback, countElementShownCallBack) {
+  this.setDiscussedError = function (message, discussedID, loadingID, registerVisualElementCallback, countElementShownCallback) {
 
     var discussedElement = $('#' + discussedID);
     discussedElement.css('display', 'none');
@@ -834,7 +834,7 @@ $.fn.alm = function () {
 
   }
 
-  this.setCitesError = function(message, citesID, loadingID, registerVisualElementCallback, countElementShownCallBack) {
+  this.setCitesError = function(message, citesID, loadingID, registerVisualElementCallback, countElementShownCallback) {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
     registerVisualElementCallback();
@@ -864,10 +864,6 @@ $.fn.alm = function () {
       '/images/logo-' + f1k.name + '.png',
       f1k.metrics.total)
       + '\n').show("blind", 500, countElementShownCallback);
-  }
-
-  this.setF1000Error = function (message) {
-    //the f1k section is by default hidden, so no need to do a thing
   }
 
   this.setChartData = function (doi, usageID, loadingID, registerVisualElementCallback, countElementShownCallback, markChartShownCallback) {
@@ -1327,7 +1323,7 @@ $.fn.alm = function () {
       this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner", registerVisualElementCallback, countElementShownCallBack);
       this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner", registerVisualElementCallback, countElementShownCallBack);
       //F1000 Prime section is by default hidden, so no need to keep track of any visual rendering
-      this.setF1000Error(message, "f1000","f1000Spinner");
+      // and also because it is by default hidden, no need to do a thing
       allTilesRegisteredCallBack();
     }
 
