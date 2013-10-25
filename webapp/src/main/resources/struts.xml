@@ -222,7 +222,7 @@
 
     <action name="selectList" class="org.ambraproject.action.ListingAction"/>
 
-    <action name="browse" class="org.ambraproject.action.BrowseAction">
+    <action name="browse" class="org.ambraproject.action.taxonomy.BrowseAction">
       <result name="success" type="default_freemarker">
         <param name="templateFile">/taxonomy/browse.ftl</param>
       </result>
