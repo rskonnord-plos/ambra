@@ -429,6 +429,7 @@
   <bean id="taxonomyService" class="org.ambraproject.service.taxonomy.TaxonomyServiceImpl">
     <property name="cache" ref="taxonomyCache" />
     <property name="searchService" ref="searchService" />
+    <property name="permissionsService" ref="permissionsService" />
     <property name="sessionFactory" ref="hibernateSessionFactory" />
   </bean>
 
