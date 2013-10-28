@@ -29,6 +29,12 @@ $.fn.alm = function () {
     this.almAPIKey = 'ALM_KEY_NOT_CONFIGURED'
   }
 
+  this.almRequestBatchSize = parseInt($('meta[name=almRequestBatchSize]').attr('content'));
+  if (isNaN(this.almRequestBatchSize)) {
+    // default will be 30
+    this.almRequestBatchSize = 30;
+  }
+
   this.isNewArticle = function (pubDateInMilliseconds) {
     //The article publish date should be stored in the current page is a hidden form variable
     var todayMinus48Hours = (new Date()).getTime() - 172800000;
@@ -70,17 +76,58 @@ $.fn.alm = function () {
    * The data will be missing in the resultset.
    * */
   this.getArticleSummaries = function (dois, callBack, errorCallback) {
-    if(dois.length) {
-      idString = "";
-      idString += this.validateDOI(dois[0]);
+    var idString, a, startIndex, endIndex, total, requests = new Array();
 
-      for (a = 1; a < dois.length; a++) {
-        idString += "," + this.validateDOI(dois[a]);
+    if(dois.length) {
+      total = dois.length;
+      startIndex = 0;
+      endIndex = (total < this.almRequestBatchSize) ? total : this.almRequestBatchSize;
+      while (startIndex < total) {
+        idString = "";
+        idString += this.validateDOI(dois[startIndex]);
+
+        for (a = (startIndex + 1); a < endIndex; a++) {
+          idString += "," + this.validateDOI(dois[a]);
+        }
+
+        var request = idString;
+
+        // duplication of code from getData function
+        var url = this.almHost + '?api_key=' + this.almAPIKey + '&ids=' + request;
+        requests.push($.jsonp({
+          url: url,
+          context: document.body,
+          timeout: 20000,
+          callbackParameter: "callback"
+        }));
+
+        startIndex = endIndex;
+        endIndex = endIndex + this.almRequestBatchSize;
+        if (endIndex > total) {
+          endIndex = total;
+        }
+      }
+    }
+
+    $.when.apply($, requests).then(function() {
+      // success / done
+      var successData = new Array();
+
+      if (arguments.length >= 2 && arguments[1] === "success") {
+        // single request
+        successData = successData.concat(arguments[0]);
+      } else {
+        // multiple requests
+        for (var i = 0; i < arguments.length; i++) {
+          successData = successData.concat(arguments[i][0]);
+        }
       }
 
-      var request = idString;
-      this.getData(request, callBack, errorCallback);
-    }
+      callBack(successData);
+    }, function() {
+      // failure
+      errorCallback();
+    });
   }
 
   /* Sort the chart data */
@@ -512,6 +559,7 @@ $.fn.alm = function () {
     });
 
     console.log(url);
+
   }
 
   /**
@@ -521,7 +569,7 @@ $.fn.alm = function () {
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setSavedSuccess = function(response, bookMarksID, loadingID){
+  this.setSavedSuccess = function(response, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
     var bookMarksNode = $('#' + bookMarksID);
     $("#" + loadingID).fadeOut('slow');
     bookMarksNode.css("display", "none");
@@ -590,13 +638,15 @@ $.fn.alm = function () {
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
     else{
-      bookMarksNode.show("blind", 500);
+      registerVisualElementCallback('#' + bookMarksID);
+      bookMarksNode.show("blind", 500, countElementShownCallback);
     }
   }
-  this.setSavedError = function(message, bookMarksID, loadingID){
+  this.setSavedError = function(message, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
     $("#" + loadingID).fadeOut('slow');
     $("#" + bookMarksID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + bookMarksID).show("blind", 500);
+    registerVisualElementCallback();
+    $("#" + bookMarksID).show("blind", 500, countElementShownCallback);
   }
 
   this.createMetricsTile = function (name, url, imgSrc, linkText) {
@@ -616,7 +666,7 @@ $.fn.alm = function () {
         '</div>';
   };
 
-  this.setDiscussedSuccess = function(response, discussedID, loadingID){
+  this.setDiscussedSuccess = function(response, discussedID, loadingID, registerVisualElementCallback, countElementShownCallback){
 
     $("#" + loadingID).fadeOut('slow');
     var discussedElement = $('#' + discussedID);
@@ -666,6 +716,8 @@ $.fn.alm = function () {
           if (!source.events_url) {
             html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           } else {
+            // logic for wikipedia,  we only want to escape the double quotes around the doi (the doi itself is already escaped)
+            source.events_url = source.events_url.replace(/"/g, "%22");
             html = this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
           }
         }
@@ -695,9 +747,10 @@ $.fn.alm = function () {
       }
     });
 
-    discussedElement.show('blind', 500);
+    registerVisualElementCallback('#' + discussedID);
+    discussedElement.show('blind', 500, countElementShownCallback);
   }
-  this.setDiscussedError = function (message, discussedID, loadingID) {
+  this.setDiscussedError = function (message, discussedID, loadingID, registerVisualElementCallback, countElementShownCallback) {
 
     var discussedElement = $('#' + discussedID);
     discussedElement.css('display', 'none');
@@ -708,11 +761,12 @@ $.fn.alm = function () {
     discussedElement.html(html);
 
     $("#" + loadingID).fadeOut('slow');
-    discussedElement.show('blind', 500);
+    registerVisualElementCallback();
+    discussedElement.show('blind', 500, countElementShownCallback);
 
   };
 
-  this.setCitesSuccess = function(response, citesID, loadingID){
+  this.setCitesSuccess = function(response, citesID, loadingID, registerVisualElementCallback, countElementShownCallback){
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).css("display", "none");
 
@@ -775,17 +829,19 @@ $.fn.alm = function () {
     }
 
     $("#" + citesID).html(html);
-    $("#" + citesID).show("blind", 500);
+    registerVisualElementCallback('#' + citesID);
+    $("#" + citesID).show("blind", 500, countElementShownCallback);
 
   }
 
-  this.setCitesError = function(message, citesID, loadingID) {
+  this.setCitesError = function(message, citesID, loadingID, registerVisualElementCallback, countElementShownCallback) {
     $("#" + loadingID).fadeOut('slow');
     $("#" + citesID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-    $("#" + citesID).show("blind", 500);
+    registerVisualElementCallback();
+    $("#" + citesID).show("blind", 500, countElementShownCallback);
   }
 
-  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID) {
+  this.setF1000Success = function (response, f1kHeaderID, f1kSpinnerID, f1kContentID, registerVisualElementCallback, countElementShownCallback) {
     //add the goods then show the area which is by default hidden
 
     var f1k = this.filterSources(response[0].sources, ['f1000']).pop();
@@ -801,19 +857,16 @@ $.fn.alm = function () {
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
     $('#' + f1kHeaderID).show("blind", 500);
 
+    registerVisualElementCallback('#' + f1kContentID);
     $("#" + f1kSpinnerID).fadeOut('slow');
     $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
       f1k.events_url,
       '/images/logo-' + f1k.name + '.png',
       f1k.metrics.total)
-      + '\n').show("blind", 500);
+      + '\n').show("blind", 500, countElementShownCallback);
   }
 
-  this.setF1000Error = function (message) {
-    //the f1k section is by default hidden, so no need to do a thing
-  }
-
-  this.setChartData = function (doi, usageID, loadingID) {
+  this.setChartData = function (doi, usageID, loadingID, registerVisualElementCallback, countElementShownCallback, markChartShownCallback) {
     //citation_date format = 2006/12/20
     //citation_date format = 2006/2/2
 
@@ -826,14 +879,18 @@ $.fn.alm = function () {
       $("#" + usageID).html('This article was only recently published. ' +
           'Although we update our data on a daily basis (not in real time), there may be a 48-hour ' +
           'delay before the most recent numbers are available.<br/><br/>');
-      $("#" + usageID).show("blind", 500);
+      registerVisualElementCallback();
+      $("#" + usageID).show("blind", 500, countElementShownCallback);
       $("#" + loadingID).fadeOut('slow');
+      markChartShownCallback();
     } else {
       if (this.isArticle(doi)) {
         var almError = function (message) {
+          registerVisualElementCallback();
           $("#" + loadingID).fadeOut('slow');
           $("#" + usageID).html("<img src=\"/images/icon_error.png\"/>&nbsp;" + message);
-          $("#" + usageID).show("blind", 500);
+          $("#" + usageID).show("blind", 500, countElementShownCallback);
+          markChartShownCallback();
         };
 
         var success = function (response) {
@@ -871,135 +928,8 @@ $.fn.alm = function () {
           // Display the graph only if there are at least two data points (months)
           var isGraphDisplayed = Object.keys(data.history).length > 1;
           if (isGraphDisplayed) {
-            var options = {
-              chart: {
-                renderTo: "chart",
-                animation: false,
-                margin: [40, 40, 40, 80]
-              },
-              credits: {
-                enabled: false
-              },
-              exporting: {
-                enabled: false
-              },
-              title: {
-                text: null
-              },
-              legend: {
-                enabled: false
-              },
-              xAxis: {
-                title: {
-                  text: "Months",
-                  style: {
-                    fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
-                    fontWeight: "normal",
-                    color: "#000"
-                  },
-                  align: "high"
-                },
-                labels: {
-                  step: (dataHistoryKeys.length < 15) ? 1 : Math.round(dataHistoryKeys.length / 15),
-                  formatter: function () {
-                    return this.value + 1;
-                  }
-                },
-                categories: []
-              },
-              yAxis: [
-                {
-                  title: {
-                    text: "Cumulative Views",
-                    style: {
-                      fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
-                      fontWeight: "normal",
-                      color: "#000",
-                      height: "50px"
-                    }
-                  },
-                  labels: {
-                    style: {
-                      color: "#000"
-                    }
-                  }
-                }
-              ],
-              plotOptions: {
-                column: {
-                  stacking: "normal"
-                },
-                animation: false,
-                series: {
-                  pointPadding: 0,
-                  groupPadding: 0,
-                  borderWidth: 0,
-                  shadow: false
-                }
-              },
-              series: [
-                {
-                  name: "PMC",
-                  type: "column",
-                  data: [],
-                  color: "#6d84bf"
-                },
-                {
-                  name: "PLOS",
-                  type: "column",
-                  data: [],
-                  color: "#3c63af"
-                }
-              ],
-              tooltip: {
-                //Make background invisible
-                backgroundColor: "rgba(255, 255, 255, 0.0)",
-                useHTML: true,
-                shared: true,
-                shadow: false,
-                borderWidth: 0,
-                borderRadius: 0,
-                positioner: function (labelHeight, labelWidth, point) {
-                  var newX = point.plotX + (labelWidth / 2) + 25,
-                      newY = point.plotY - (labelHeight / 2) + 25;
-                  return { x: newX, y: newY };
-                },
-                formatter: function () {
-                  var key = this.points[0].key,
-                      h = data.history;
 
-                  return '<table id="mini" cellpadding="0" cellspacing="0">'
-                      + '<tr><th></td><td colspan="2">Views in '
-                      + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                      + '</td><td colspan="2">Views through ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
-                      + '</td></tr><tr><th>Source</th><th class="header1">PLOS</th><th class="header2">PMC</th>'
-                      + '<th class="header1">PLOS</th><th class="header2">PMC</th></tr>'
-                      + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.totalHTML.format(0, '.', ',') : "n.a.") + '</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.cumulativeHTML.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                      + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.totalPDF.format(0, '.', ',') : "n.a.") + '</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativePDF.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.cumulativePDF.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                      + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
-                      + '<td class="data2">n.a.</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativeXML.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">n.a.</td></tr>'
-                      + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.total.format(0, '.', ',') : "n.a.") + '</td>'
-                      + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal.format(0, '.', ',') + '</td>'
-                      + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
-                      h[key].source.pmcViews.cumulativeTotal.format(0, '.', ',') : "n.a.") + '</td></tr>'
-                      + '</table>';
-                }
-              }
-            };
+            var options = this.buildChartOptions(data, dataHistoryKeys);
 
             for (var key in data.history) {
               if (data.history[key].source.pmcViews != null) {
@@ -1014,118 +944,11 @@ $.fn.alm = function () {
                 .css("width", "600px")
                 .css("height", "200px"));
 
+            //chart is redrawn once upon creation, so need to count this to synch display rendering
+            registerVisualElementCallback();
             var chart = new Highcharts.Chart(options);
 
-            // check to see if there is any data
-            if (data.relativeMetricData != null) {
-              var subjectAreas = data.relativeMetricData.subject_areas;
-              if (subjectAreas && subjectAreas.length > 0) {
-                var subjectAreaList = new Array();
-
-                // loop through each subject area and add the data to the chart
-                for (var i = 0; i < subjectAreas.length; i++) {
-                  var subjectAreaId = subjectAreas[i].subject_area;
-                  var subjectAreaData = subjectAreas[i].average_usage;
-
-                  // product wants the graph to display if and only if it is a line (not a dot)
-                  if (subjectAreaData.length >= 2) {
-                    subjectAreaList.push(subjectAreaId);
-
-                    // make sure the data will fit the graph
-                    if (subjectAreaData.length > dataHistoryKeys.length) {
-                      subjectAreaData = subjectAreaData.slice(0, dataHistoryKeys.length);
-                    }
-
-                    // add the data for the given subject area to the chart
-                    chart.addSeries({
-                          id: subjectAreaId,
-                          data: subjectAreaData,
-                          type: "line",
-                          color: "#01DF01",
-                          marker: {
-                            enabled: false,
-                            states: {
-                              hover: {
-                                enabled: false
-                              }
-                            }
-                          }
-                        }
-                    );
-
-                    // hide the line
-                    chart.get(subjectAreaId).hide();
-                  }
-                }
-
-                // make sure we have subject areas to add to the select control
-                if (subjectAreaList.length > 0) {
-                  // build the drop down list of subject areas
-                  var defaultSubjectAreaSelected;
-                  var subjectAreasDropdown = $('<select id="subject_areas"></select>');
-                  // sort the list so that the subject areas are grouped correctly
-                  subjectAreaList.sort();
-                  for (i = 0; i < subjectAreaList.length; i++) {
-                    var subjectArea = subjectAreaList[i].substr(1);
-                    var subjectAreaLevels = subjectArea.split("/");
-
-                    if (subjectAreaLevels.length == 1) {
-                      // add the first level subject area
-                      subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
-                    } else if (subjectAreaLevels.length == 2) {
-                      // add the second level subject area
-                      subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
-
-                      if (defaultSubjectAreaSelected == null) {
-                        defaultSubjectAreaSelected = subjectAreaList[i];
-                      }
-                    }
-                  }
-
-                  // if there wasn't a second level subject area to pick, pick the first first level subject area
-                  if (defaultSubjectAreaSelected == null) {
-                    defaultSubjectAreaSelected = subjectAreaList[0];
-                  }
-
-                  // select the subject area that should be selected when the page loads
-                  subjectAreasDropdown.find('option[value="' + defaultSubjectAreaSelected + '"]').attr("selected", "selected")
-                  // display the line in the chart for the selected subject area
-                  chart.get(defaultSubjectAreaSelected).show();
-
-                  // when a subject area is selected, display the correct data (line)
-                  subjectAreasDropdown.change(function () {
-
-                    $("#subject_areas option").each(function () {
-                      chart.get($(this).val()).hide();
-                    });
-
-                    chart.get($(this).val()).show();
-                    var linkToRefset = $('input[name="refsetLinkValue"]').val();
-                    $('#linkToRefset').attr("href", linkToRefset.replace("SUBJECT_AREA", $(this).val()))
-
-                  });
-
-                  // build the output
-                  var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
-                      + new Date(data.relativeMetricData.start_date).getUTCFullYear() + "</b> in the subject area: "
-                      + '<a href="/static/almInfo#relativeMetrics" class="ir" title="More information">info</a>');
-
-                  // build the link to the search result reference set
-                  var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date:[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
-
-                  var description2Div = $('<div></div>').append(subjectAreasDropdown)
-                      .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
-                      .append('<input type="hidden" name="refsetLinkValue" value="' + encodeURI(linkToRefset) + '" >');
-
-                  var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
-
-                  var betaDiv = $('<div id="beta">BETA</div>');
-
-                  $usage.append(betaDiv);
-                  $usage.append(relativeMetricDiv);
-                }
-              }
-            }
+            this.addRelativeMetricInfo(data, dataHistoryKeys, chart, $usage, registerVisualElementCallback);
 
           } // end if (isGraphDisplayed)
 
@@ -1133,7 +956,12 @@ $.fn.alm = function () {
 
           this.addFigshareTile(response[0]);
 
-          $usage.show("blind", 500);
+          registerVisualElementCallback();
+          $usage.show("blind", 500, function () {
+            countElementShownCallback();
+            markChartShownCallback();
+          });
+
         };
 
         doi = this.validateDOI(doi);
@@ -1142,6 +970,253 @@ $.fn.alm = function () {
       }
     }
   };
+
+  this.buildChartOptions = function(data, dataHistoryKeys) {
+    var options = {
+      chart: {
+        renderTo: "chart",
+        animation: false,
+        margin: [40, 40, 40, 80]
+      },
+      credits: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+      title: {
+        text: null
+      },
+      legend: {
+        enabled: false
+      },
+      xAxis: {
+        title: {
+          text: "Months",
+          style: {
+            fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
+            fontWeight: "normal",
+            color: "#000"
+          },
+          align: "high"
+        },
+        labels: {
+          step: (dataHistoryKeys.length < 15) ? 1 : Math.round(dataHistoryKeys.length / 15),
+          formatter: function () {
+            return this.value + 1;
+          }
+        },
+        categories: []
+      },
+      yAxis: [
+        {
+          title: {
+            text: "Cumulative Views",
+            style: {
+              fontFamily: "'FS Albert Web Regular', Verdana, sans-serif",
+              fontWeight: "normal",
+              color: "#000",
+              height: "50px"
+            }
+          },
+          labels: {
+            style: {
+              color: "#000"
+            }
+          }
+        }
+      ],
+      plotOptions: {
+        column: {
+          stacking: "normal"
+        },
+        animation: false,
+        series: {
+          pointPadding: 0,
+          groupPadding: 0,
+          borderWidth: 0,
+          shadow: false
+        }
+      },
+      series: [
+        {
+          name: "PMC",
+          type: "column",
+          data: [],
+          color: "#6d84bf"
+        },
+        {
+          name: "PLOS",
+          type: "column",
+          data: [],
+          color: "#3c63af"
+        }
+      ],
+      tooltip: {
+        //Make background invisible
+        backgroundColor: "rgba(255, 255, 255, 0.0)",
+        useHTML: true,
+        shared: true,
+        shadow: false,
+        borderWidth: 0,
+        borderRadius: 0,
+        positioner: function (labelHeight, labelWidth, point) {
+          var newX = point.plotX + (labelWidth / 2) + 25,
+              newY = point.plotY - (labelHeight / 2) + 25;
+          return { x: newX, y: newY };
+        },
+        formatter: function () {
+          var key = this.points[0].key,
+              h = data.history;
+
+          return '<table id="mini" cellpadding="0" cellspacing="0">'
+              + '<tr><th></td><td colspan="2">Views in '
+              + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+              + '</td><td colspan="2">Views through ' + $.datepicker.formatDate('M yy', new Date(h[key].year, h[key].month - 1, 2))
+              + '</td></tr><tr><th>Source</th><th class="header1">PLOS</th><th class="header2">PMC</th>'
+              + '<th class="header1">PLOS</th><th class="header2">PMC</th></tr>'
+              + '<tr><td>HTML</td><td class="data1">' + h[key].source.counterViews.totalHTML + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.totalHTML.format(0, '.', ',') : "n.a.") + '</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativeHTML.format(0, '.', ',') + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.cumulativeHTML.format(0, '.', ',') : "n.a.") + '</td></tr>'
+              + '<tr><td>PDF</td><td class="data1">' + h[key].source.counterViews.totalPDF + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.totalPDF.format(0, '.', ',') : "n.a.") + '</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativePDF.format(0, '.', ',') + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.cumulativePDF.format(0, '.', ',') : "n.a.") + '</td></tr>'
+              + '<tr><td>XML</td><td class="data1">' + h[key].source.counterViews.totalXML + '</td>'
+              + '<td class="data2">n.a.</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativeXML.format(0, '.', ',') + '</td>'
+              + '<td class="data2">n.a.</td></tr>'
+              + '<tr><td>Total</td><td class="data1">' + h[key].source.counterViews.total + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.total.format(0, '.', ',') : "n.a.") + '</td>'
+              + '<td class="data1">' + h[key].source.counterViews.cumulativeTotal.format(0, '.', ',') + '</td>'
+              + '<td class="data2">' + (h[key].source.hasOwnProperty("pmcViews") ?
+              h[key].source.pmcViews.cumulativeTotal.format(0, '.', ',') : "n.a.") + '</td></tr>'
+              + '</table>';
+        }
+      }
+    };
+
+    return options;
+  };
+
+  this.addRelativeMetricInfo = function(data, dataHistoryKeys, chart, usage, registerVisualElementCallback) {
+
+    // check to see if there is any data
+    if (data.relativeMetricData != null) {
+      var subjectAreas = data.relativeMetricData.subject_areas;
+      if (subjectAreas && subjectAreas.length > 0) {
+        var subjectAreaList = new Array();
+
+        // loop through each subject area and add the data to the chart
+        for (var i = 0; i < subjectAreas.length; i++) {
+          var subjectAreaId = subjectAreas[i].subject_area;
+          var subjectAreaData = subjectAreas[i].average_usage;
+
+          // product wants the graph to display if and only if it is a line (not a dot)
+          if (subjectAreaData.length >= 2) {
+            subjectAreaList.push(subjectAreaId);
+
+            // make sure the data will fit the graph
+            if (subjectAreaData.length > dataHistoryKeys.length) {
+              subjectAreaData = subjectAreaData.slice(0, dataHistoryKeys.length);
+            }
+
+            // add the data for the given subject area to the chart
+            registerVisualElementCallback();
+            chart.addSeries({
+                  id: subjectAreaId,
+                  data: subjectAreaData,
+                  type: "line",
+                  color: "#01DF01",
+                  marker: {
+                    enabled: false,
+                    states: {
+                      hover: {
+                        enabled: false
+                      }
+                    }
+                  }
+                }
+            );
+
+            // hide the line
+            registerVisualElementCallback();
+            chart.get(subjectAreaId).hide();
+          }
+        }
+
+        // make sure we have subject areas to add to the select control
+        if (subjectAreaList.length > 0) {
+          // build the drop down list of subject areas
+          var defaultSubjectAreaSelected;
+          var subjectAreasDropdown = $('<select id="subject_areas"></select>');
+          // sort the list so that the subject areas are grouped correctly
+          subjectAreaList.sort();
+          for (i = 0; i < subjectAreaList.length; i++) {
+            var subjectArea = subjectAreaList[i].substr(1);
+            var subjectAreaLevels = subjectArea.split("/");
+
+            if (subjectAreaLevels.length == 1) {
+              // add the first level subject area
+              subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).text(subjectAreaLevels[0]));
+            } else if (subjectAreaLevels.length == 2) {
+              // add the second level subject area
+              subjectAreasDropdown.append($('<option></option>').attr('value', subjectAreaList[i]).html("&nbsp;&nbsp;&nbsp;" + subjectAreaLevels[1]));
+
+              if (defaultSubjectAreaSelected == null) {
+                defaultSubjectAreaSelected = subjectAreaList[i];
+              }
+            }
+          }
+
+          // if there wasn't a second level subject area to pick, pick the first first level subject area
+          if (defaultSubjectAreaSelected == null) {
+            defaultSubjectAreaSelected = subjectAreaList[0];
+          }
+
+          // select the subject area that should be selected when the page loads
+          subjectAreasDropdown.find('option[value="' + defaultSubjectAreaSelected + '"]').attr("selected", "selected")
+          // display the line in the chart for the selected subject area
+          chart.get(defaultSubjectAreaSelected).show();
+
+          // when a subject area is selected, display the correct data (line)
+          subjectAreasDropdown.change(function () {
+
+            $("#subject_areas option").each(function () {
+              chart.get($(this).val()).hide();
+            });
+
+            chart.get($(this).val()).show();
+            var linkToRefset = $('input[name="refsetLinkValue"]').val();
+            $('#linkToRefset').attr("href", linkToRefset.replace("SUBJECT_AREA", $(this).val()))
+
+          });
+
+          // build the output
+          var descriptionDiv = $('<div></div>').html('<span class="colorbox"></span>&nbsp;Compare average usage for articles published in <b>'
+              + new Date(data.relativeMetricData.start_date).getUTCFullYear() + "</b> in the subject area: "
+              + '<a href="/static/almInfo#relativeMetrics" class="ir" title="More information">info</a>');
+
+          // build the link to the search result reference set
+          var linkToRefset = "/search/advanced?pageSize=12&unformattedQuery=(publication_date:[" + data.relativeMetricData.start_date + " TO " + data.relativeMetricData.end_date + "]) AND subject:\"SUBJECT_AREA\"";
+
+          var description2Div = $('<div></div>').append(subjectAreasDropdown)
+              .append('&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="linkToRefset" href="' + encodeURI(linkToRefset.replace("SUBJECT_AREA", defaultSubjectAreaSelected)) + '" >Show reference set</a>')
+              .append('<input type="hidden" name="refsetLinkValue" value="' + encodeURI(linkToRefset) + '" >');
+
+          var relativeMetricDiv = $('<div id="averageViewsSummary"></div>').append(descriptionDiv).append(description2Div);
+
+          usage.append(relativeMetricDiv);
+        }
+      }
+    }
+  }
 
   this.addFigshareTile = function(response) {
 
@@ -1213,10 +1288,14 @@ $.fn.alm = function () {
   };
 
   this.makeSignPostLI = function (text, value, description, link) {
+
+//    as per amec-1801, make alm signpost links
+    var textHref = '<a href="' + link + '">' + text + '</a>';
+
     var li = $('<li>' +
-        '<div class="top">' + value.format(0, '.', ',') + '</div><div class="bottom"><div class="center">' +
-        '<div class="text">' + text + '<div class="content"><div class="description">' + description + '&nbsp;&nbsp;' +
-        '<a href="' + link + '">Read more</a>.</div></div></div></div></div></li>');
+      '<div class="top">' + value.format(0, '.', ',') + '</div><div class="bottom"><div class="center">' +
+      '<div class="text">' + textHref + '<div class="content"><div class="description">' +
+      '<a href="' + link + '">' + description + '</a>.</div></div></div></div></div></li>');
 
     (function () {
       this.hoverEnhanced({});
@@ -1225,27 +1304,29 @@ $.fn.alm = function () {
     return li;
   }
 
-  this.setMetricsTab = function (doi) {
+  this.setMetricsTab = function (doi, registerVisualElementCallback, countElementShownCallBack, allTilesRegisteredCallBack) {
 
     doi = this.validateDOI(doi);
 
     //succeed!
     var success = function(response){
-      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner");
-      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner");
-      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent");
+      this.setCitesSuccess(response, "relatedCites", "relatedCitesSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setSavedSuccess(response, "relatedBookmarks", "relatedBookmarksSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setDiscussedSuccess(response, "relatedBlogPosts", "relatedBlogPostsSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setF1000Success(response, "f1kHeader","f1KSpinner","f1kContent", registerVisualElementCallback, countElementShownCallBack);
+      allTilesRegisteredCallBack();
     }
 
     //fail!
     var fail = function(message){
-      this.setCitesError(message, "relatedCites", "relatedCitesSpinner");
-      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner");
-      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner");
-      this.setF1000Error(message, "f1000","f1000Spinner");
+      this.setCitesError(message, "relatedCites", "relatedCitesSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setSavedError(message, "relatedBookmarks", "relatedBookmarksSpinner", registerVisualElementCallback, countElementShownCallBack);
+      this.setDiscussedError(message, "relatedBlogPosts", "relatedBlogPostsSpinner", registerVisualElementCallback, countElementShownCallBack);
+      //F1000 Prime section is by default hidden, so no need to keep track of any visual rendering
+      // and also because it is by default hidden, no need to do a thing
+      allTilesRegisteredCallBack();
     }
 
-    //get the data
     this.getData(doi, $.proxy(success, this), $.proxy(fail, this));
   }
 
@@ -1306,6 +1387,8 @@ function onReadyALM() {
     };
 
     var almSuccess = function (response) {
+      var responseObject, sources, source, totalViews;
+
       if (response && response.length > 0) {
         responseObject = response[0];
 
@@ -1341,12 +1424,16 @@ function onReadyALM() {
           }
         }
 
+        doiLink = '/article/metrics/info:doi/' + $('meta[name=citation_doi]').attr("content");
 
-        li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
-          "Sum of PLOS and PubMed Central page views and downloads",
-          "/static/almInfo#usageInfo");
+        totalViews = counter.metrics.total + pmc.metrics.total;
+        if (totalViews > 0) {
+          li = almService.makeSignPostLI("VIEWS", counter.metrics.total + pmc.metrics.total,
+              "Sum of PLOS and PubMed Central page views and downloads",
+              doiLink + "#viewedHeader");
 
-        $("#almSignPost").append(li);
+          $("#almSignPost").append(li);
+        }
 
         var text, li;
         //citations
@@ -1357,7 +1444,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, scopus.metrics.total, "Paper's citation count computed by Scopus",
-            "/static/almInfo#citationInfo");
+            doiLink + "#citedHeader");
 
           $("#almSignPost").append(li);
         } else {
@@ -1368,7 +1455,7 @@ function onReadyALM() {
             }
 
             li = almService.makeSignPostLI(text, crossref.metrics.total, "Scopus data unavailable. Displaying Crossref citation count",
-              "/static/almInfo#citationInfo");
+              doiLink + "#citedHeader");
 
             $("#almSignPost").append(li);
           }
@@ -1383,7 +1470,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, mendeley.metrics.total + citeulike.metrics.total, "Total Mendeley and CiteULike " +
-            "bookmarks", "/static/almInfo#socialBookmarks");
+            "bookmarks", doiLink + "#savedHeader");
 
           $("#almSignPost").append(li);
         }
@@ -1397,7 +1484,7 @@ function onReadyALM() {
           }
 
           li = almService.makeSignPostLI(text, facebook.metrics.total + twitter.metrics.total, "Sum of Facebook and Twitter activity",
-            "/static/almInfo#socialBookmarks");
+            doiLink + "#discussedHeader");
 
           $("#almSignPost").append(li);
         }
@@ -1410,14 +1497,61 @@ function onReadyALM() {
   }
 }
 
+function jumpToALMSection(){
+  //if url contains a reference to an alm section, jump there
+  var url = $(location).attr('href');
+  var hashIndex = url.indexOf('#');
+  if(hashIndex == -1){
+    return;
+  }
+
+  var almSectionID = url.slice(hashIndex);
+  verticalPosition = $(almSectionID).position().top;
+  scrollTo(0,verticalPosition);
+}
+
 $(document).ready(onReadyALM);
 
 function onLoadALM() {
   var almService = new $.fn.alm();
   var doi = $('meta[name=citation_doi]').attr("content");
 
-  almService.setMetricsTab(doi);
-  almService.setChartData(doi, "usage", "chartSpinner");
+  var elementsRegisteredCount = 0;
+  var elementShownCount = 0;
+  var metricsComplete = false;
+  var chartComplete = false;
+
+  var allSectionsDisplayed = function(){
+    return metricsComplete && chartComplete && elementsRegisteredCount == elementShownCount;
+  }
+
+  var registerVisualElement = function(){
+    elementsRegisteredCount++;
+  }
+
+  var countElementShown = function(){
+    elementShownCount++;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  var markTilesShown = function(){
+    metricsComplete = true;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  var markChartShown = function(){
+    chartComplete = true;
+    if(allSectionsDisplayed()){
+      jumpToALMSection();
+    }
+  }
+
+  almService.setMetricsTab(doi, registerVisualElement, countElementShown, markTilesShown);
+  almService.setChartData(doi, "usage", "chartSpinner", registerVisualElement, countElementShown, markChartShown);
 }
 
 /* Some common display functions for the browse and search results pages */

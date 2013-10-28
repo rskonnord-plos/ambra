@@ -26,7 +26,7 @@ import java.util.SortedSet;
 
 /**
  * Action class for displaying a list of all top-level and second-level categories
- * in the taxonomy associated with any PLOS ONE article.
+ * in the taxonomy associated with any article.  This also generates JSON responses for the taxonony browser
  *
  * @author John Callaway
  * @author Joe Osowski
@@ -47,6 +47,12 @@ public class TaxonomyAction extends BaseActionSupport {
 
   @Override
   public String execute() throws Exception {
+    String browseValueKey = "ambra.virtualJournals." + getCurrentJournal() + ".taxonomyBrowser";
+    //This journal not configured to use the taxonomy browser, return 404
+    if(!configuration.getBoolean(browseValueKey, false)) {
+      return INPUT;
+    }
+
     //topAndSecondLevelCategories defaults to current journal
     topAndSecondLevelCategories = taxonomyService.parseTopAndSecondLevelCategories(getCurrentJournal());
 
@@ -88,6 +94,7 @@ public class TaxonomyAction extends BaseActionSupport {
 
     if(this.root == null) {
       categories = CategoryUtils.getShortTree(categoryView);
+      root = "";
     }
 
     //Ignore first slash if it exists
