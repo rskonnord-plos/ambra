@@ -1437,8 +1437,9 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
-      <xsl:apply-templates/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+      <xsl:apply-templates select="*[not(self::comment)]"/>
+      <xsl:call-template name="citationComment"/>
+      <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1470,7 +1471,7 @@
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+      <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1486,7 +1487,7 @@
       <xsl:apply-templates select="collab" mode="book"/>
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+      <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1896,7 +1897,7 @@
     <xsl:template name="citationComment">
       <!-- only output a single comment tag that appears as the very last child of the citation -->
       <xsl:variable name="x" select="child::comment[position()=last()]"/>
-      <xsl:if test="not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
+      <xsl:if test="not(starts-with($x,'doi:')) and not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
         <xsl:text> </xsl:text><xsl:apply-templates select="$x"/>
       </xsl:if>
     </xsl:template>
@@ -2101,13 +2102,8 @@
     <!-- 1/4/12: suppress, we don't use. removed ext-link from list (we process independently) -->
     <xsl:template match="uri | inline-supplementary-material" />
 
-    <!-- 1/4/12: plos-specific template -->
-    <xsl:template match="ext-link">
-      <a>
-        <xsl:call-template name="assign-href"/>
-        <xsl:apply-templates/>
-      </a>
-    </xsl:template>
+    <!-- 10/28/13: suppress, we don't use -->
+    <xsl:template match="ext-link" />
 
     <!-- 1/4/12: suppress, we don't use  -->
     <xsl:template match="funding-source" />
