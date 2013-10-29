@@ -202,7 +202,7 @@ function onReadyMainContainer() {
     });
   });
 
-  $('.article a[href^="#"]').on('click', function (e) {
+  $('.article a[href^="#"]').not('#figure-thmbs .item a').on('click', function (e) {
     e.preventDefault();
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
