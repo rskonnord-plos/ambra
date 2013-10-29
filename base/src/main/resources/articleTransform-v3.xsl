@@ -1437,7 +1437,7 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
-      <xsl:apply-templates select="*[not(self::comment)]"/>
+      <xsl:apply-templates select="*[not(self::comment)]|text()"/>
       <xsl:call-template name="citationComment"/>
       <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
