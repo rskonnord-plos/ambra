@@ -15,10 +15,9 @@ import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.Article;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.models.CitedArticleAuthor;
-import org.ambraproject.routes.CrossRefLookupRoutes;
+import org.ambraproject.routes.CitedArticleLookupRoutes;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -39,7 +38,7 @@ import static org.testng.Assert.assertTrue;
  */
 @ContextConfiguration
 public class CrossRefLookupRoutesTest extends BaseTest {
-  @Produce(uri = CrossRefLookupRoutes.UPDATE_CITED_ARTICLES_QUEUE)
+  @Produce(uri = CitedArticleLookupRoutes.UPDATE_CITED_ARTICLES_QUEUE)
   protected ProducerTemplate start;
 
   @DataProvider(name="testData")
@@ -103,7 +102,7 @@ public class CrossRefLookupRoutesTest extends BaseTest {
     Long time1 = System.currentTimeMillis();
 
     start.sendBodyAndHeaders(article1.getDoi(), new HashMap() {{
-      put(CrossRefLookupRoutes.HEADER_AUTH_ID, BaseTest.DEFAULT_USER_AUTHID);
+      put(CitedArticleLookupRoutes.HEADER_AUTH_ID, BaseTest.DEFAULT_USER_AUTHID);
     }});
 
     Long time2 = System.currentTimeMillis();

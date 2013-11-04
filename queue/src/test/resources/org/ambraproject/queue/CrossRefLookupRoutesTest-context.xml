@@ -84,7 +84,7 @@
     <constructor-arg index="0" value="ambra-test-config.xml"/>
   </bean>
 
-  <bean id="routeBuilder" class="org.ambraproject.routes.CrossRefLookupRoutes"
+  <bean id="routeBuilder" class="org.ambraproject.routes.CitedArticleLookupRoutes"
     depends-on="activemq, articleService"/>
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">

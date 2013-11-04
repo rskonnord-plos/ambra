@@ -963,7 +963,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   @Override
   @Transactional
-  public String refreshCitedArticle(Long citedArticleID) throws Exception {
+  public String refreshCitedArticleDOI(Long citedArticleID) throws Exception {
     log.debug("refreshArticleCitation for citedArticleID: {}", citedArticleID);
     StringBuilder sb = new StringBuilder();
 
@@ -1054,6 +1054,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     return doi;
+  }
+
+  public String refreshCitedArticleLicense(String doi) throws Exception {
+    log.debug("Received license request for {}", doi);
+
+    //TODO: Implement
+
+    return ArticleService.LICENSE_RESPONSE_PROCESSING;
   }
 
   /**
