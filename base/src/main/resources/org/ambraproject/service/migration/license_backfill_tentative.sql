@@ -7,8 +7,8 @@ alter table citedArticle
 
 #per citation licensing information
 create table citedArticleLicense (
-  publicationIDType varchar (15) character set utf8 collate utf8_bin,
   canonicalPublicationID varchar(50) character set utf8 collate utf8_bin,
+  publicationIDType varchar (15) character set utf8 collate utf8_bin,
   status varchar(30) char set utf8 collate utf8_bin,
   maintainer varchar(30) character set utf8 collate utf8_bin,
   title varchar(100) character set utf8 collate utf8_bin,
