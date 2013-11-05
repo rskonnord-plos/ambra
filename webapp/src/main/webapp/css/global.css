@@ -5525,7 +5525,7 @@ ol.references li span.label,
   top: 10px;
   min-width: 16px;
   line-height: 20px;
-  padding: 0 2px;
+  padding: 1px 3px 0px 3px;
   text-align: center;
   background: #333;
   color: #fff;

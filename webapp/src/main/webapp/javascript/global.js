@@ -1917,7 +1917,7 @@ function tableOpen(tableId, type) {
         }
       }
       var hidePopupDelay = function() {
-        window.hidePopupTimeout = setTimeout(hidePopup,750);
+        window.hidePopupTimeout = setTimeout(hidePopup,350);
       }
       var hidePopup = function() {
         $ref_pop.removeClass('active');
@@ -2031,8 +2031,14 @@ function tableOpen(tableId, type) {
           ref_cc_keys[ccstr] = index;
           ref_cc.push(ccstr);
 
-          $this.find(".label").after(
-              '<span class="cited-count" style="display: none; position: absolute; top: 30px; right: 528px;">(' + cc + ')</span>');
+          var anchor = $this.find("ul");
+          var item = '<span class="cited-count" style="display: none;">Cited ' + cc + (cc > 1 ? ' times' : ' time') + ' in this paper</span>';
+          if (anchor && anchor.length > 0) {
+            anchor.before(item);
+          }
+          else {
+            $this.append($(item));
+          }
         });
         ref_cc.sort();
         ref_cc.reverse();
