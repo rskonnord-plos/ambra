@@ -73,7 +73,6 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
     //Route for updating one citedArticle
     //TODO: Make this multi threaded?
     from(UPDATE_CITED_ARTICLE_QUEUE)
-      //TODO: Rename this method:
       .to("bean:articleService?method=refreshCitedArticleDOI")
       .choice()
         .when(body().isNotNull())
