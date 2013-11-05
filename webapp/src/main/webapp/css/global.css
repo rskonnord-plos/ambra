@@ -992,22 +992,23 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   border-right: 1px solid #d1d1d1;
   padding: 15px 7px 0;
   width: 75px;
-  height: 65px;
+  height: 45px;
   line-height: 1.1;
   position: relative;
 }
 
 .article-meta ul#almSignPost li .top {
   text-align: center;
-  font-size: 25px;
-  font-weight: normal;
+  font-size: 19px;
+  font-weight: bold;
+  color: #333;
   line-height: 1;
-  height: 30px;
+  height: 20px;
 }
 
 .article-meta ul#almSignPost li div.bottom {
   display: block;
-  height: 35px;
+  height: 25px;
   position: relative;
   font-size: 10px;
   font-weight: bold;
@@ -1024,9 +1025,11 @@ ul#almSignPost li div.bottom div.center {
   display: inline-block;
   font-weight: bold;
   font-size: 10px;
+  color: #333;
   text-transform: uppercase;
   position: relative;
   padding: 5px;
+  margin-bottom: -5px;
   cursor: pointer;
   -webkit-transition: all .3s linear;
   -moz-transition: all .3s linear;
@@ -1113,7 +1116,7 @@ ul#almSignPost li div.bottom div.center {
   min-height: 15px;
   text-transform: uppercase;
   margin-right: 10px;
-  font: 0.923em/1.25 'FS Albert Web Regular', Verdana, sans-serif;
+  font: 0.769em/1.25 'FS Albert Web Regular', Verdana, sans-serif;
   font-size-adjust: 0.48;
 }
 
@@ -1133,18 +1136,24 @@ ul#almSignPost li div.bottom div.center {
 
 #hdr-article {
   padding: 0 50px 20px 10px;
-  margin-top: -10px;
+  margin-top: -36px;
+}
+
+#hdr-article h1 {
+  font-size: 27px;
+  font-weight: normal;
 }
 
 #article-block .article-kicker {
   position: relative;
   display: inline-block;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
+  margin-top: 6px;
   cursor: pointer;
 }
 
 #article-block .article-kicker span {
-  font-size: 0.846em;
+  font-size: 0.769em;
   line-height: 1;
   text-transform: uppercase;
   cursor: pointer;
