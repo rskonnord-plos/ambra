@@ -1,0 +1,58 @@
+{
+  "requested":1,
+  "errors":[
+    {
+      "identifer":"id",
+      "error":"...description..."
+    }
+  ],
+  "results":[
+    {
+      "identifier":[
+        {
+          "type":"doi",
+          "id":"10.1371/journal.pone.0073361",
+          "canonical":"doi:10.1371/journal.pone.0073361"
+        }
+      ],
+      "id":"doi:10.1371_journal.pone.0073361",
+      "license":[
+        {
+          "status":"active",
+          "open_access":true,
+          "provenance":{
+            "category":"page_scrape",
+            "description":"License decided by scraping the resource at http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0073361 and looking for the following license statement: \"This is an open-access article, free of all copyright, and may be freely reproduced, distributed, transmitted, modified, built upon, or otherwise used by anyone for any lawful purpose. The work is made available under the Creative Commons CC0 public domain dedication.\".",
+            "agent":"OpenArticleGauge Service/0.1 alpha",
+            "source":"http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0073361",
+            "handler":"plos",
+            "date":"2013-10-16T17:48:11Z",
+            "handler_version":"0.1"
+          },
+          "maintainer":"",
+          "description":"",
+          "family":"",
+          "title":"Creative Commons CCZero",
+          "domain_data":true,
+          "NC":false,
+          "ND":false,
+          "jurisdiction":"",
+          "url":"http://www.opendefinition.org/licenses/cc-zero",
+          "version":"",
+          "domain_content":true,
+          "is_okd_compliant":true,
+          "is_osi_compliant":false,
+          "SA":false,
+          "domain_software":false,
+          "type":"cc-zero",
+          "BY":false
+        }
+      ]
+    }
+  ],
+  "processing":[
+    {
+      "identifier":"id"
+    }
+  ]
+}

@@ -17,6 +17,8 @@
  */
 package org.ambraproject.service.cottagelabs;
 
+import org.ambraproject.service.cottagelabs.json.Response;
+
 /**
  * Methods to talk to the cottage labs API
  */
@@ -29,5 +31,5 @@ public interface CottageLabsLicenseService {
    * @return the license response object
    * @throws Exception
    */
-  public Object findLicense(String doi) throws Exception;
+  public Response findLicense(String doi) throws Exception;
 }
