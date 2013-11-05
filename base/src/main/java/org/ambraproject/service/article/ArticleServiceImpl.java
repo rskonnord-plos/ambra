@@ -19,6 +19,12 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.service.cottagelabs.CottageLabsLicenseService;
+import org.ambraproject.service.cottagelabs.json.License;
+import org.ambraproject.service.cottagelabs.json.Processing;
+import org.ambraproject.service.cottagelabs.json.Response;
+import org.ambraproject.service.cottagelabs.json.Error;
+import org.ambraproject.service.cottagelabs.json.Result;
 import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.UserProfileInfo;
@@ -83,6 +89,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
 
   private PermissionsService permissionsService;
   private CrossRefLookupService crossRefLookupService;
+  private CottageLabsLicenseService cottageLabsLicenseService;
 
   /**
    * Determines if the articleURI is of type researchArticle
@@ -1059,9 +1066,38 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   public String refreshCitedArticleLicense(String doi) throws Exception {
     log.debug("Received license request for {}", doi);
 
-    //TODO: Implement
+    //We only ever work with one DOI at a time.  If there is a processing or error node
+    //The given DOI is still in process or in error
 
-    return ArticleService.LICENSE_RESPONSE_PROCESSING;
+    Response response = cottageLabsLicenseService.findLicense(doi);
+
+    for(Error error : response.getErrors()) {
+      log.warn("Error received from cottage labs: {}, {}", new Object[] {
+        error.getIdentifer(), error.getError() });
+      return ArticleService.LICENSE_RESPONSE_FAILURE;
+    }
+
+    //We only ever work with one DOI at a time.  If there is still a processing node
+    //The given DOI is still in process
+    for(Processing processing : response.getProcessing()) {
+      log.debug("Still in process at cottage labs: {}, {}", processing.getIdentifier());
+      return ArticleService.LICENSE_RESPONSE_PROCESSING;
+    }
+
+    for(Result result : response.getResults()) {
+      if(result.getLicense().size() == 0) {
+        //All the collections are empty?
+        throw new Exception("Unexpected message format from cottage labs");
+      }
+      License license = result.getLicense().get(0);
+
+      log.debug("Got license: {}", license.getTitle());
+      //TODO: Store license
+
+      return ArticleService.LICENSE_RESPONSE_SUCCESS;
+    }
+
+    throw new Exception("Unhandled response from cottage labs");
   }
 
   /**
@@ -1222,5 +1258,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Required
   public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
     this.crossRefLookupService = crossRefLookupService;
+  }
+
+  /**
+   *
+   * @param cottageLabsLicenseService the cottageLabs license service to use
+   */
+  @Required
+  public void setCottageLabsLicenseService(CottageLabsLicenseService cottageLabsLicenseService) {
+    this.cottageLabsLicenseService = cottageLabsLicenseService;
   }
 }

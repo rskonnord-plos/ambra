@@ -267,6 +267,10 @@
         <xsl>crossref.xsl</xsl>
       </crossref>
 
+      <cottageLabs>
+        <licenseLookup>http://oag.cottagelabs.com/lookup</licenseLookup>
+      </cottageLabs>
+
       <!-- FIXME: failover:tcp://address:port of ActiveMQ broker -->
       <activemq>tcp://${ambra.network.hosts.default}:61616</activemq>
 

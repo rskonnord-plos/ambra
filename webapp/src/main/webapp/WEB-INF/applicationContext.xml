@@ -124,6 +124,7 @@
     <property name="sessionFactory" ref="hibernateSessionFactory"/>
     <property name="permissionsService" ref="permissionsService"/>
     <property name="crossRefLookupService" ref="crossRefLookupService"/>
+    <property name="cottageLabsLicenseService" ref="cottageLabsLicenseService"/>
   </bean>
 
   <bean id="feedService" class="org.ambraproject.service.feed.FeedServiceImpl">
@@ -159,6 +160,11 @@
   <bean id="crossRefLookupService" class="org.ambraproject.service.crossref.CrossRefLookupServiceImpl">
     <property name="httpClient" ref="httpClient"/>
     <property name="crossRefUrl" value="${ambra.services.crossref.query.url}"/>
+  </bean>
+
+  <bean id="cottageLabsLicenseService" class="org.ambraproject.service.cottagelabs.CottageLabsLicenseServiceImpl">
+    <property name="httpClient" ref="httpClient"/>
+    <property name="cottageLabsURL" value="${ambra.services.cottagelabs.licenseLookup}"/>
   </bean>
 
   <!-- Warning. Spring does not autowire 'simple' properties like primitives, Strings and Classes -->

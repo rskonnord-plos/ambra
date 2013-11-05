@@ -56,7 +56,6 @@ public class CottageLabsLicenseServiceImpl implements CottageLabsLicenseService 
     GetMethod get = createGetMethod(doi);
 
     try {
-      long timestamp = System.currentTimeMillis();
       int response = httpClient.executeMethod(get);
 
       log.debug("Http get complete");
