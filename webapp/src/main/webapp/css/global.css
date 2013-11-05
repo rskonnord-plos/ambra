@@ -1427,6 +1427,7 @@ span.author span.rel-footnote {
 }
 
 #nav-article {
+  padding-bottom: 20px;
 }
 
 #nav-article ul {
@@ -2063,6 +2064,9 @@ html:not(.js) .btn-reveal:hover .content {
 
 #figure-thmbs {
   position: relative;
+  margin-bottom: 20px;
+  /*make visible in global.js */
+  visibility: hidden;
 }
 
 html:not(.js) #figure-thmbs {
@@ -2080,7 +2084,7 @@ html:not(.js) #figure-thmbs {
 #figure-thmbs .wrapper {
   background: #efefef;
   padding: 20px 0 30px;
-  width: 719px;
+  width: 514px;
   border-left: 18px solid #efefef;
   border-right: 18px solid #efefef;
 }
@@ -2120,7 +2124,7 @@ html:not(.js) #figure-thmbs {
 #figure-thmbs .buttons {
   position: absolute;
   top: 145px;
-  width: 755px;
+  width: 519px;
   text-align: center;
 }
 
@@ -2138,28 +2142,6 @@ html:not(.js) #figure-thmbs {
 #figure-thmbs .buttons span:hover,
 #figure-thmbs .buttons .active {
   background: #3c63af;
-}
-
-#fig-toggle {
-  margin-bottom: 25px;
-}
-
-#fig-toggle span {
-  background: #efefef url(../images/bul.pt.blu.up.gif) no-repeat 160px 50%;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  color: #3c63af;
-  display: inline-block;
-  padding: 10px 50px 10px 20px;
-  min-width: 120px;
-  float: right;
-  line-height: 1;
-  border-radius: 0 0 5px 5px;
-}
-
-#fig-toggle .hide {
-  background-image: url(../images/bul.pt.blu.dn.gif);
 }
 
 #figure-thmbs .button {
@@ -2304,12 +2286,29 @@ div.table-wrap .table-footnote .fn-label {
   font-size: 10px;
 }
 
-.article .abstract,
 .article .articleinfo,
 .article .editorsAbstract,
 .article .section,
 .article .contributions {
   margin-bottom: 40px;
+}
+
+.article .abstract{
+  margin-bottom: 20px;
+}
+
+.article .articleinfo {
+  border: solid 1px #CCC;
+}
+
+.article .articleinfo p {
+  padding: 10px 20px;
+  margin-bottom: 0px;
+  border-bottom: solid 1px #CCC;
+}
+
+.article .articleinfo p:last-child {
+  border-bottom: none;
 }
 
 .editorsAbstract,
@@ -2319,7 +2318,6 @@ div.table-wrap .table-footnote .fn-label {
 }
 
 #section1 {
-  border-top: 1px solid #CCC;
   padding-top: 20px;
 }
 

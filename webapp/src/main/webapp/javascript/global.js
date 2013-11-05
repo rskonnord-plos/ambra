@@ -202,7 +202,7 @@ function onReadyMainContainer() {
     });
   });
 
-  $('.article a[href^="#"]').on('click', function (e) {
+  $('.article a[href^="#"]').not('#figure-thmbs .item a').on('click', function (e) {
     e.preventDefault();
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
@@ -236,7 +236,13 @@ function onReadyMainContainer() {
 function initMainContainer() {
   var $figure_thmbs = $('#figure-thmbs');
 
+  $figure_thmbs.detach();
+  $figure_thmbs.insertBefore($('.article .articleinfo'));
+
   if ($figure_thmbs.length) {
+    $figure_thmbs.css('visibility', 'visible');
+    $('<h3>Figures</h3>').insertBefore($figure_thmbs);
+
     $lnks = $figure_thmbs.find('.item a');
     $wrap = $figure_thmbs.find('div.wrapper');
     if ($lnks.length) {
@@ -246,21 +252,6 @@ function initMainContainer() {
         ref = $(this).data('uri');
         launchModal(doi, ref, 'fig');
       });
-      $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
-          $wrap.hide();
-          $figure_thmbs.find('div.buttons').hide();
-          $figure_thmbs.find('div.controls').hide();
-          $fig_tog.html('Show Figures')
-            .toggleClass('hide');
-        },function () {
-          $wrap.show();
-          $figure_thmbs.find('div.buttons').show();
-          $figure_thmbs.find('div.controls').show();
-          $fig_tog.html('Hide Figures')
-            .toggleClass('hide');
-        }
-      ).insertAfter($figure_thmbs)
-        .wrap('<div id="fig-toggle" class="cf" />');
     } else {
       $figure_thmbs.addClass('collapse');
     }
