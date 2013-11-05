@@ -1023,7 +1023,7 @@ ul#almSignPost li div.bottom div.center {
 }
 .article-meta ul#almSignPost li div.text{
   display: inline-block;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 10px;
   color: #333;
   text-transform: uppercase;
