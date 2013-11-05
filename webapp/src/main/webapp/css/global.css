@@ -5652,6 +5652,11 @@ ul.date-doi-line li:first-child {
   list-style-type: none;
 }
 
+#title-banner ul.date-doi-line {
+  display: none;
+  visibility: hidden;
+}
+
 /*
  Drop down in DownloadPDF
 */
