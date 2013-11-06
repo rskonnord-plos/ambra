@@ -59,7 +59,7 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
   @Override
   @Transactional(readOnly = true)
   public String findDoi(String searchString) throws Exception {
-    CrossRefResponse response = queryCrossRef(searchString);
+    CrossRefResponse response = queryCrossRef(new String[] { searchString });
 
     if(response != null && response.results.length > 0) {
       return response.results[0].doi;
@@ -68,9 +68,27 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     }
   }
 
-  private CrossRefResponse queryCrossRef(String searchString)
+  @Override
+  @Transactional(readOnly = true)
+  public String[] findDois(String[] searchString) throws Exception {
+    CrossRefResponse response = queryCrossRef(searchString);
+
+    if(response != null && response.results.length > 0) {
+      String[] dois = new String[response.results.length];
+
+      for(int a = 0; a < response.results.length; a++) {
+        dois[a] = response.results[a].doi;
+      }
+
+      return dois;
+    } else {
+      return null;
+    }
+  }
+
+  private CrossRefResponse queryCrossRef(String[] searchStrings)
   {
-    PostMethod post = createCrossRefPost(searchString);
+    PostMethod post = createCrossRefPost(searchStrings);
 
     try {
       long timestamp = System.currentTimeMillis();
@@ -143,15 +161,22 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
     }};
   }
 
-  private PostMethod createCrossRefPost(String searchString)
+  private PostMethod createCrossRefPost(String[] searchStrings)
   {
     StringBuilder builder = new StringBuilder();
 
     //Example query to post:
     //["Young GC,Analytical methods in palaeobiogeography, and the role of early vertebrate studies;Palaeoworld;19;160-173"]
+    //We group the requests and return them back later in a batch
 
-    //Use toJSON to encode strings with proper escaping
-    final String json = "[" + (new Gson()).toJson(searchString) + "]";
+    for(String searchString : searchStrings) {
+      //Use toJSON to encode strings with proper escaping
+      builder.append((new Gson()).toJson(searchString));
+      builder.append(",");
+    }
+
+    //Convert to string minus the last period
+    final String json = "[" + builder.substring(0, builder.length() - 1)  + "]";
 
     if(this.crossRefUrl == null) {
       throw new RuntimeException("ambra.services.crossref.query.url value not found in configuration.");
