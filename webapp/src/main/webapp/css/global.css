@@ -307,9 +307,9 @@ th {
 
 .btn,
 a.btn,
-/* active an inactive buttons in search results */
+  /* active an inactive buttons in search results */
 #search-view span.figs,
-#search-view span.list  {
+#search-view span.list {
   background: #333;
   font-size: 15px;
   line-height: 35px;
@@ -342,13 +342,12 @@ a.btn,
 /* inactive button */
 /* clear all filters button */
 .clear-filter .btn.primary,
-/* search results buttons */
+  /* search results buttons */
 #fig-search-block span.list,
-#search-results-block span.figs{
-     background-color: #646464;
-     color: #FFF;
+#search-results-block span.figs {
+  background-color: #646464;
+  color: #FFF;
 }
-
 
 input.btn {
   line-height: normal;
@@ -1020,7 +1019,8 @@ ul#almSignPost li div.bottom div.center {
   position: absolute;
   bottom: 0;
 }
-.article-meta ul#almSignPost li div.text{
+
+.article-meta ul#almSignPost li div.text {
   display: inline-block;
   font-weight: bold;
   font-size: 10px;
@@ -1036,12 +1036,13 @@ ul#almSignPost li div.bottom div.center {
   -o-transition: all .3s linear;
   transition: all .3s linear;
 }
-.article-meta ul#almSignPost li div.text a{
+
+.article-meta ul#almSignPost li div.text a {
   color: #333;
 }
 
 .article-meta ul#almSignPost li.reveal div.text,
-.article-meta ul#almSignPost li.reveal div.text a{
+.article-meta ul#almSignPost li.reveal div.text a {
   background: #3c63af;
   border-radius: 4px;
   color: #fff;
@@ -1799,7 +1800,7 @@ html:not(.js) .btn-reveal:hover .content {
   background-position: 0 -39px;
   background-repeat: no-repeat;
   background-image: url('/images/icon.sprite.taxonomy.flags.png');
-  float:right;
+  float: right;
   cursor: pointer;
 }
 
@@ -1813,7 +1814,7 @@ html:not(.js) .btn-reveal:hover .content {
   overflow: hidden;
   display: inline-block;
   text-overflow: ellipsis;
-  float:left;
+  float: left;
 }
 
 #article-block .sidebar .block h3 {
@@ -2254,7 +2255,7 @@ div.table-wrap div.table-download .icon {
 }
 
 div.table-wrap div.table-download .label {
- cursor: pointer;
+  cursor: pointer;
 }
 
 div.table-wrap .expand {
@@ -2349,7 +2350,7 @@ div.table-wrap .table-footnote .fn-label {
   display: block;
   margin-top: 1.25em;
   font-size: 145%;
-  text-align:center;
+  text-align: center;
 }
 
 .article .equation img {
@@ -3352,7 +3353,7 @@ dl.authors dt {
 
 .pageSize {
   width: 160px;
-  float:right;
+  float: right;
   display: inline-block;
   margin: 20px 0;
 }
@@ -3394,7 +3395,7 @@ dl.authors dt {
 }
 
 #hdr-search-results .options .btn,
-/* search results buttons */
+  /* search results buttons */
 #search-results-block span.list,
 #search-results-block span.figs,
 #fig-search-block span.list,
@@ -3832,8 +3833,8 @@ img.clear-filter {
   margin: 4px 0 15px;
 }
 
-.hdr-results span.text{
-  font:16px 'Arial';
+.hdr-results span.text {
+  font: 16px 'Arial';
   margin-right: 9px;
 }
 
@@ -3879,7 +3880,7 @@ img.clear-filter {
 /*#search-results-block span.figs,*/
 /*#fig-search-block span.list,*/
 /*#fig-search-block span.figs {*/
-  /*line-height: 28px;*/
+/*line-height: 28px;*/
 /*}*/
 
 /* margin to right of figure button */
@@ -4715,7 +4716,7 @@ legend.conjunction span {
   left: 0;
   z-index: 110;
   opacity: 0.6;
-  filter: alpha(opacity = 60);
+  filter: alpha(opacity=60);
 }
 
 /* applied to body element while modal is active to prevent scrolling */
@@ -5629,11 +5630,11 @@ div.inlinePopup input[type="button"]:hover {
 */
 
 .twitter-timeline-rendered {
-  display:none;
+  display: none;
 }
 
 .twitter-timeline {
-  display:none;
+  display: none;
   margin-bottom: 20px;
 }
 
@@ -5664,7 +5665,7 @@ ul.date-doi-line li:first-child {
 }
 
 /*
- Drop down in DownloadPDF
+  Drop down in DownloadPDF
 */
 .article-actions .download {
   position: absolute;
@@ -5698,4 +5699,138 @@ ul.date-doi-line li:first-child {
   background-position: 10px 16px;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
+}
+
+/*
+  twitter display on the article right hand side
+*/
+
+#article-block .sidebar .twitter-alm-timeline {
+  margin-bottom: 35px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-header {
+  margin-bottom: 7px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-header-logo {
+  width: 20px;
+  margin-right: 5px;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol li.tweet-entry {
+  margin-bottom: 7px;
+  padding-top: 10px;
+  border-top: 1px solid #e8e8e8;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol li.tweet-entry.hide {
+  display: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a {
+  color: #333;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a:hover {
+  text-decoration: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user img {
+  width: 48px;
+  height: 48px;
+  border-radius: 5px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-posttime a {
+  float: right;
+  color: #707070;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-posttime a:hover {
+  text-decoration: underline;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-fullname {
+  font-weight: bold;
+  margin-right: 3px;
+  display: inline-block;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a:hover .twitter-fullname {
+  text-decoration: underline;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-username {
+  color: #707070;
+  font-size: smaller;
+}
+
+#article-block .sidebar ul.tweet-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 40px;
+  visibility: hidden;
+}
+
+#article-block .sidebar ul.tweet-actions li {
+  float: left;
+  margin: 1px 2px 2px 1px;
+}
+
+#article-block .sidebar ul.tweet-actions span {
+  background-image: url('/images/tweet-everything-spritev2.png');
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin: 0 2px 0 2px;
+  vertical-align: text-top;
+}
+
+#article-block .sidebar ul.tweet-actions a {
+  color: #707070;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-reply-action:hover span {
+  background-position: -16px 0;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-retweet-action span {
+  background-position: -80px 0
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-retweet-action:hover span {
+  background-position: -96px 0
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-favorite-action span {
+  background-position: -32px 0;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-favorite-action:hover span {
+  background-position: -48px 0;
+}
+
+#article-block .sidebar .twitter-alm-timeline button {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 5px, 0, 5px, 0;
+  background-color: white;
+  color: #3c63af;
+  font: 18px 'FS Albert Web Regular', Verdana, sans-serif;
+
+  background-image: url('/images/bul.pt.blu.dn.gif');
+  background-repeat: no-repeat;
+  background-position: 85% 50%;
 }
