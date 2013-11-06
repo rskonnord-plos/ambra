@@ -89,7 +89,7 @@ public class CottageLabsLicenseServiceImpl implements CottageLabsLicenseService 
 
     for(String doi : dois) {
       //Use toJSON to encode strings with proper escaping
-      builder.append((new Gson()).toJson(dois));
+      builder.append((new Gson()).toJson(doi));
       builder.append(",");
     }
 
