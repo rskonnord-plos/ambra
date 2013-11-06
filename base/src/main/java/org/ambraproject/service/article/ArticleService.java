@@ -229,13 +229,11 @@ public interface ArticleService {
   /**
    * Query crossref for the latest cited article dois and update the database
    *
-   * @param articleID the articleID to get the cited DOIs for
-   *
-   * @return the DOI found
+   * @param articleDoi the article DOI to get the cited DOIs for
    *
    * @throws Exception
    */
-  public void refreshArticleCiteDOIs(Long articleID, String authId) throws Exception;
+  public void refreshArticleCiteDOIs(String articleDoi, String authId) throws Exception;
 
   /**
    * Populates DB objects as necessary to assign the given categories to the given article.

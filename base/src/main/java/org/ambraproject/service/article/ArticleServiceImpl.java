@@ -970,10 +970,10 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   @Override
   @Transactional
-  public void refreshArticleCiteDOIs(final Long articleID, final String authId) throws Exception {
-    log.debug("refreshArticleCiteDOIs for articleID: {}", articleID);
+  public void refreshArticleCiteDOIs(final String articleDOI, final String authId) throws Exception {
+    log.debug("refreshArticleCiteDOIs for article DOI: {}", articleDOI);
 
-    Article article = getArticle(articleID, authId);
+    Article article = getArticle(articleDOI, authId);
     String[] searchStrings = new String[article.getCitedArticles().size()];
 
     for(int a = 0; a < searchStrings.length; a++) {
