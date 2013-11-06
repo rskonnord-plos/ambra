@@ -348,7 +348,6 @@ function initMainContainer() {
   });
 
   $("#nav-article li a").on("click", function(event) {
-    //console.log("pjax click " + this.name);
     // for metrics and related content that have dynamic javascript to populate
     // the content, cache the content here when the user navigates away from that
     // page. So that this cache can be reused when the user navigates back to
@@ -1732,7 +1731,7 @@ $(function() {
   //Stolen from:
   //http://www.vancelucas.com/blog/fixing-ie7-z-index-issues-with-jquery/
   if($.browser.msie && jQuery.browser.version < 10) {
-    var zIndexNumber = 1000;
+    var zIndexNumber = 500;
     $('div.sidebar').find('div').each(function() {
       $(this).css('zIndex', zIndexNumber);
       zIndexNumber -= 10;

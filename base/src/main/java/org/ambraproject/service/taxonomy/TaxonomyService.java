@@ -20,7 +20,7 @@ package org.ambraproject.service.taxonomy;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.views.CategoryView;
-
+import org.ambraproject.views.article.FeaturedArticle;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +32,50 @@ import java.util.Map;
  */
 public interface TaxonomyService {
   /**
+   * Find a "Featured Article" for the given subject area
+   *
+   * First query the database for a manually defined article for the term
+   *
+   *  If database doesn't have article, query SOLR for:
+   *   - Most shared in social media (using same roll-up/counting methods used in search sort options) over the last 7 days.
+   *   - If no shares
+   *     - Most viewed Article (using same roll-up/counting methods used in search sort options) over the last 7 days.
+   *     - If no views over past 7 days
+   *       - most viewed Article (over all time) (using same roll-up/counting methods used in search sort options)
+   *
+   * @param journalKey the key of the journal
+   * @param subjectArea the subject area to search for
+   */
+  public FeaturedArticle getFeaturedArticleForSubjectArea(String journalKey, String subjectArea);
+
+  /**
+   * For the given journal, get a map of subject areas (key) and their article DOIS (values)
+   * @param journalKey The journal key to look for
+   *
+   * @return a map of subject areas, and article DOIs
+   */
+  public Map<String, String> getFeaturedArticles(String journalKey);
+
+  /**
+   * Delete a featured article
+   *
+   * @param journalKey the journal
+   * @param subjectArea the subject area to remove
+   * @param authID the authID of the current user
+   */
+  public void deleteFeaturedArticle(String journalKey, String subjectArea, String authID);
+
+  /**
+   * Create a featured article
+   *
+   * @param journalKey the journal
+   * @param subjectArea the subject area
+   * @param doi the doi
+   * @param authID the authID of the current user
+   */
+  public void createFeaturedArticle(String journalKey, String subjectArea, String doi, String authID);
+
+  /**
    * Flag a particular taxonomy term (by database ID) that it may not be correct.  The authID may be null if the user
    * is not logged in.  If so, the userProfileID is left null in the database
    *
@@ -39,7 +83,7 @@ public interface TaxonomyService {
    * @param categoryID categoryID
    * @param authID the user's authID.
    */
-  public void flagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
+  public void flagTaxonomyTerm(long articleID, long categoryID, String authID);
 
   /**
    * Remove a flag from a particular taxonomy term (by database ID).  The authID may be null if the user
@@ -50,7 +94,7 @@ public interface TaxonomyService {
    * @param categoryID categoryID
    * @param authID the user's authID.
    */
-  public void deflagTaxonomyTerm(final long articleID, final long categoryID, final String authID);
+  public void deflagTaxonomyTerm(long articleID, long categoryID, String authID);
 
   /**
    * Parses a list of slash-delimited categories, as returned by solr, into a sorted map

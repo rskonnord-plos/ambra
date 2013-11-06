@@ -1604,7 +1604,7 @@ span.author span.rel-footnote {
 }
 
 .btn-reveal.reveal .btn {
-  background: #3C63AF;
+  background-color: #3C63AF;
   color: #FFF;
 }
 
@@ -1623,7 +1623,7 @@ span.author span.rel-footnote {
   width: 140px;
   font-size: 16px;
   line-height: 1;
-  min-height: 85px;
+  min-height: 60px;
   z-index: 5;
 }
 
@@ -5630,6 +5630,43 @@ div.inlinePopup input[type="button"]:hover {
 .twitter-timeline {
   display: none;
   margin-bottom: 20px;
+}
+
+/*
+  Drop down in DownloadPDF
+*/
+.article-actions .download {
+  position: absolute;
+  z-index: 10;
+}
+
+.article-actions .download span {
+  width: 110px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.article-actions .download span a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.article-actions .dropdown {
+  position: relative;
+}
+
+.article-actions .dropdown .dropdown-icon {
+  text-align: right;
+}
+
+.article-actions .dropdown span {
+  width: 10px;
+  background-image: url(../images/bul.wht.pt.dn.png);
+  background-repeat: no-repeat;
+  background-size: 9px 5px;
+  background-position: 10px 16px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 
 /*
