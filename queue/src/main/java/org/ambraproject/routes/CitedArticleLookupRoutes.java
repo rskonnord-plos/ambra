@@ -35,7 +35,7 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
    * header
    */
   public static final String HEADER_AUTH_ID = "authId";
-  public static final String UPDATE_CITED_ARTICLE_QUEUE = "activemq:plos.updateCitedArticle";
+  public static final String UPDATE_CITED_ARTICLE_QUEUE = "activemq:plos.updateArticleCites";
   public static final String UPDATE_CITED_ARTICLE = "seda:plos.updatedCitedArticles";
   public static final String UPDATE_CITED_ARTICLE_LICENSE = "seda:plos.updateCitedArticleLicense";
   public static final String UPDATE_CITED_ARTICLE_LICENSE_RETRY = "seda:plos.updateCitedArticleLicense.retry";
