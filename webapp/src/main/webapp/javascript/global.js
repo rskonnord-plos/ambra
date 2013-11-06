@@ -240,12 +240,12 @@ function initMainContainer() {
   $figure_thmbs.insertBefore($('.article .articleinfo'));
 
   if ($figure_thmbs.length) {
-    $figure_thmbs.css('visibility', 'visible');
-    $('<h3>Figures</h3>').insertBefore($figure_thmbs);
-
     $lnks = $figure_thmbs.find('.item a');
     $wrap = $figure_thmbs.find('div.wrapper');
     if ($lnks.length) {
+      $figure_thmbs.css('visibility', 'visible');
+      $('<h3>Figures</h3>').insertBefore($figure_thmbs);
+
       $lnks.on('click', function (e) {
         e.preventDefault();
         doi = $(this).data('doi');
