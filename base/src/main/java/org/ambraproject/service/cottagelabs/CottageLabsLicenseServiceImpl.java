@@ -22,12 +22,16 @@ import com.google.gson.Gson;
 import org.ambraproject.service.cottagelabs.json.Response;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * @inheritDoc
@@ -51,37 +55,74 @@ public class CottageLabsLicenseServiceImpl implements CottageLabsLicenseService 
    * @inheritDoc
    */
   @Override
-  public Response findLicense(String doi) throws Exception {
+  public Response findLicenses(String[] dois) throws Exception {
     Gson gson = new Gson();
-    GetMethod get = createGetMethod(doi);
+    PostMethod post = createCottageLabsPost(dois);
 
     try {
-      int response = httpClient.executeMethod(get);
+      int response = httpClient.executeMethod(post);
 
       log.debug("Http get complete");
 
       if (response == 200) {
-        String result = get.getResponseBodyAsString();
+        String result = post.getResponseBodyAsString();
         if(result != null) {
           log.trace("JSON response received: {}", result);
           return gson.fromJson(result, Response.class);
         }
         log.error("Received empty response, response code {}, when executing query  {}", new Object[] {
-          response, get.getURI().toString() } );
+          response, post.getURI().toString() } );
       } else {
         log.error("Received response code {} when executing query {}", new Object[] {
-          response, get.getURI().toString() } );
+          response, post.getURI().toString() } );
       }
     } finally {
-      get.releaseConnection();
+      post.releaseConnection();
     }
 
     return null;
   }
 
-  private GetMethod createGetMethod(String doi) throws UnsupportedEncodingException {
-    return new GetMethod(this.cottageLabsURL + "/" + URLEncoder.encode(doi, "UTF-8")) {{
+  private PostMethod createCottageLabsPost(String[] dois)
+  {
+    StringBuilder builder = new StringBuilder();
+
+    for(String doi : dois) {
+      //Use toJSON to encode strings with proper escaping
+      builder.append((new Gson()).toJson(dois));
+      builder.append(",");
+    }
+
+    //Convert to string minus the last period
+    final String json = "[" + builder.substring(0, builder.length() - 1)  + "]";
+
+    if(this.cottageLabsURL == null) {
+      throw new RuntimeException("Cottage Labs hostname is not defined.");
+    }
+
+    return new PostMethod(this.cottageLabsURL) {{
       addRequestHeader("Content-Type","application/json");
+      setRequestEntity(new RequestEntity() {
+        @Override
+        public boolean isRepeatable() {
+          return false;
+        }
+
+        @Override
+        public void writeRequest(OutputStream outputStream) throws IOException {
+          outputStream.write(json.getBytes());
+        }
+
+        @Override
+        public long getContentLength() {
+          return json.getBytes().length;
+        }
+
+        @Override
+        public String getContentType() {
+          return "application/json";
+        }
+      });
     }};
   }
 }

@@ -970,11 +970,51 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    */
   @Override
   @Transactional
-  public String refreshCitedArticleDOI(Long citedArticleID) throws Exception {
-    log.debug("refreshArticleCitation for citedArticleID: {}", citedArticleID);
-    StringBuilder sb = new StringBuilder();
+  public void refreshArticleCiteDOIs(final Long articleID, final String authId) throws Exception {
+    log.debug("refreshArticleCiteDOIs for articleID: {}", articleID);
 
-    CitedArticle citedArticle = hibernateTemplate.get(CitedArticle.class, citedArticleID);
+    Article article = getArticle(articleID, authId);
+    String[] searchStrings = new String[article.getCitedArticles().size()];
+
+    for(int a = 0; a < searchStrings.length; a++) {
+      searchStrings[a] = makeCrossRefSearchString(article.getCitedArticles().get(a));
+    }
+
+    String[] DOIs = null;
+
+    if(searchStrings.length == 0) {
+      log.debug("No citations ({}), not searching.", article.getDoi());
+    } else {
+      //I Assume here DOIS are in the same order and length as the request strings
+      //And in the same order and length of the original citedArticles collection
+      DOIs = crossRefLookupService.findDois(searchStrings);
+
+      if (DOIs != null && DOIs.length > 0) {
+        if(DOIs.length != searchStrings.length) {
+          //note above comment.
+          throw new Exception("Received crossref response of inappropriate length");
+        }
+
+        for(int a = 0; a < searchStrings.length; a++) {
+          String doi = DOIs[a];
+
+          if(doi != null && doi.length() > 0) {
+            //A fix for FEND-1077. crossref seems to append a URL to the DOI.  WTF
+            doi = doi.replace("http://dx.doi.org/","");
+
+            log.debug("refreshArticleCitation doi found: {}", doi);
+
+            setCitationDoi(article.getCitedArticles().get(a), doi);
+          }
+        }
+      } else {
+        log.debug("refreshArticleCitation nothing found");
+      }
+    }
+  }
+
+  private String makeCrossRefSearchString(CitedArticle citedArticle) {
+    StringBuilder sb = new StringBuilder();
 
     for(CitedArticleEditor editor : citedArticle.getEditors()) {
       sb.append(", ");
@@ -1042,62 +1082,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       sb.append(name);
     }
 
-    String doi = null;
-
-    if(sb.length() == 0) {
-      log.debug("No data for citation ({}), not searching for DOI", citedArticleID);
-    } else {
-      doi = crossRefLookupService.findDoi(sb.toString());
-
-      if (doi != null && !doi.isEmpty()) {
-        //A fix for FEND-1077. crossref seems to append a URL to the DOI.  WTF
-        doi = doi.replace("http://dx.doi.org/","");
-
-        log.debug("refreshArticleCitation doi found: {}", doi);
-        setCitationDoi(citedArticle, doi);
-      } else {
-        log.debug("refreshArticleCitation nothing found");
-      }
-    }
-
-    return doi;
-  }
-
-  public String refreshCitedArticleLicense(String doi) throws Exception {
-    log.debug("Received license request for {}", doi);
-
-    //We only ever work with one DOI at a time.  If there is a processing or error node
-    //The given DOI is still in process or in error
-
-    Response response = cottageLabsLicenseService.findLicense(doi);
-
-    for(Error error : response.getErrors()) {
-      log.warn("Error received from cottage labs: {}, {}", new Object[] {
-        error.getIdentifer(), error.getError() });
-      return ArticleService.LICENSE_RESPONSE_FAILURE;
-    }
-
-    //We only ever work with one DOI at a time.  If there is still a processing node
-    //The given DOI is still in process
-    for(Processing processing : response.getProcessing()) {
-      log.debug("Still in process at cottage labs: {}, {}", processing.getIdentifier());
-      return ArticleService.LICENSE_RESPONSE_PROCESSING;
-    }
-
-    for(Result result : response.getResults()) {
-      if(result.getLicense().size() == 0) {
-        //All the collections are empty?
-        throw new Exception("Unexpected message format from cottage labs");
-      }
-      License license = result.getLicense().get(0);
-
-      log.debug("Got license: {}", license.getTitle());
-      //TODO: Store license
-
-      return ArticleService.LICENSE_RESPONSE_SUCCESS;
-    }
-
-    throw new Exception("Unhandled response from cottage labs");
+    return sb.toString();
   }
 
   /**

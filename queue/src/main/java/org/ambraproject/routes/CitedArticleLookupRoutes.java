@@ -11,16 +11,17 @@
 package org.ambraproject.routes;
 
 import org.ambraproject.models.Article;
-import org.ambraproject.models.CitedArticle;
 import org.ambraproject.service.article.ArticleService;
+import org.ambraproject.service.cottagelabs.CottageLabsLicenseService;
+import org.ambraproject.service.cottagelabs.json.Processing;
+import org.ambraproject.service.cottagelabs.json.Response;
+import org.ambraproject.service.cottagelabs.json.Error;
+import org.ambraproject.service.cottagelabs.json.Result;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
-import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,11 +36,15 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
    */
   public static final String HEADER_AUTH_ID = "authId";
   public static final String UPDATE_CITED_ARTICLE_QUEUE = "activemq:plos.updateCitedArticle";
-  public static final String UPDATE_CITED_ARTICLE_LICENSE_QUEUE = "activemq:plos.updateCitedArticleLicense";
-  public static final String UPDATE_CITED_ARTICLES_QUEUE = "activemq:plos.updatedCitedArticles";
+  public static final String UPDATE_CITED_ARTICLE = "seda:plos.updatedCitedArticles";
+  public static final String UPDATE_CITED_ARTICLE_LICENSE = "seda:plos.updateCitedArticleLicense";
+  public static final String UPDATE_CITED_ARTICLE_LICENSE_RETRY = "seda:plos.updateCitedArticleLicense.retry";
 
-  public static final String HEADER_LICENSE_RESPONSE = "licenseResponse";
-  public static final int LICENSE_RETRY = 30000; //Set to retry every 30 seconds
+  public static final String HEADER_LICENSE_RETRY_DOIS = "license.response.retry.dois";
+
+  //public static final int LICENSE_RETRY_DELAY = 300000; //Set to retry every 5 minutes
+  public static final int LICENSE_RETRY_DELAY = 15000; //Set to retry every 15 seconds
+  public static final int QUEUE_CONSUMERS = 10; //Set to run 10 consumers in parallel
 
   private static final Logger log = LoggerFactory.getLogger(CitedArticleLookupRoutes.class);
 
@@ -47,74 +52,149 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
   public void configure() throws Exception {
     log.info("Setting up route for looking up cross ref DOIS");
 
-    //Route for updating all the citedArticles for an article
+    //Route for updating all the citedArticle DOIs for an article
     //Requires articleDoi as the body and authId set on the header
-    from(UPDATE_CITED_ARTICLES_QUEUE)
-      .to("bean:articleService?method=getArticle(${body}, ${headers." + HEADER_AUTH_ID + "})")
-      .process(new Processor() {
-        @Override
-        public void process(Exchange exchange) throws Exception {
-          //exchange.getContext().getSe
-          //All we care about is the citedArticle IDs list
-          List<CitedArticle> citedArticles = exchange.getIn().getBody(Article.class).getCitedArticles();
-          List<Long> ids = new ArrayList<Long>();
-
-          for (CitedArticle ca : citedArticles) {
-            ids.add(ca.getID());
-          }
-
-          exchange.getOut().setBody(ids);
-        }
-      })
-      .split().body() //Create a job for each CitedArticle
-      .to(UPDATE_CITED_ARTICLE_QUEUE);
-
-
-    //Route for updating one citedArticle
-    //TODO: Make this multi threaded?
     from(UPDATE_CITED_ARTICLE_QUEUE)
-      .to("bean:articleService?method=refreshCitedArticleDOI")
-      .choice()
-        .when(body().isNotNull())
-          .log(LoggingLevel.DEBUG, "DOI Found ${body}")
-          .to(UPDATE_CITED_ARTICLE_LICENSE_QUEUE);
+      //Immediately pass all messages off to a route with multiple consumers
+      .to(UPDATE_CITED_ARTICLE);
 
-    //Request the license data
-      //If the job returns a 'success' result
-        //Do nothing
-      //If the job returns a 'error' result
-        //abort and log
-      //If the job returns a 'processing' result
-        //Pause N time
-        //Requeue
-    from(UPDATE_CITED_ARTICLE_LICENSE_QUEUE)
+    from(UPDATE_CITED_ARTICLE_QUEUE + "?concurrentConsumers=" + QUEUE_CONSUMERS)
+      //Refresh all cited article DOIs for a given articleID
+      .to("bean:articleService?method=refreshArticleCiteDOIs(${body}, ${headers." + HEADER_AUTH_ID + "})")
+      .to(UPDATE_CITED_ARTICLE_LICENSE);
+
+    from(UPDATE_CITED_ARTICLE_LICENSE + "?concurrentConsumers=" + QUEUE_CONSUMERS)
       .process(new Processor() {
+        /**
+         * Request the license data
+         *  For the items that return a 'success' result
+         *    Store
+         *  For the items that return a 'error' result
+         *    abort and log
+         *  For the items that are still in a 'processing' state
+         *    Pause N time
+         *    Requeue
+         *
+         * @param exchange
+         *
+         * @throws Exception
+         */
         @Override
         public void process(Exchange exchange) throws Exception {
           ArticleService articleService = (ArticleService)getApplicationContext().getBean("articleService");
+          CottageLabsLicenseService clService = (CottageLabsLicenseService)getApplicationContext().getBean("cottageLabsLicenseService");
 
-          String doi = (String)exchange.getIn().getBody();
-          String result = articleService.refreshCitedArticleLicense(doi);
+          String articleDoi = (String)exchange.getIn().getBody();
+          String authID = (String)exchange.getIn().getHeader(HEADER_AUTH_ID);
+          Article article = articleService.getArticle(articleDoi, authID);
 
-          log.debug("Result received: {}, {}", new Object[] { result, doi });
+          String[] DOIs = new String[article.getCitedArticles().size()];
 
-          //COPY DOI and result to outgoing message
-          Message message = exchange.getOut();
-          message.setHeader(HEADER_LICENSE_RESPONSE, result);
-          message.setBody(exchange.getIn().getBody());
+          for(int a = 0; a < article.getCitedArticles().size(); a++) {
+            DOIs[a] = article.getCitedArticles().get(a).getDoi();
+          }
+
+          Response response = clService.findLicenses(DOIs);
+
+          //Log errors
+          logErrors(response.getErrors());
+
+          //Store results
+          storeResults(response.getResults());
+
+          //Get results that are still in process
+          String[] retryDOIs = getDOISinProcess(response.getProcessing());
+
+          //COPY results to outgoing message
+          exchange.getOut().setHeader(HEADER_LICENSE_RETRY_DOIS, retryDOIs);
         }
       })
       .choice()
-        .when(header(HEADER_LICENSE_RESPONSE).isEqualTo(ArticleService.LICENSE_RESPONSE_SUCCESS))
-          .log(LoggingLevel.DEBUG, "License for DOI Found ${body}")
-        .when(header(HEADER_LICENSE_RESPONSE).isEqualTo(ArticleService.LICENSE_RESPONSE_FAILURE))
-          .log(LoggingLevel.DEBUG, "License for ERROR ${body}")
-        .when(header(HEADER_LICENSE_RESPONSE).isEqualTo(ArticleService.LICENSE_RESPONSE_PROCESSING))
-          //If the result is a "still processing" status, re-queue the job
-          .log(LoggingLevel.DEBUG, "DOI still processing")
-          //Delay 30 seconds
-          .delay(LICENSE_RETRY)
-          .asyncDelayed() //TODO: Do I really need this?
-          .to(UPDATE_CITED_ARTICLE_LICENSE_QUEUE);
+        .when(header(HEADER_LICENSE_RETRY_DOIS).isNotNull())
+          //If the header value was not null, there are still DOIs to retry
+          .delay(LICENSE_RETRY_DELAY)
+          .to(UPDATE_CITED_ARTICLE_LICENSE_RETRY);
+
+    from(UPDATE_CITED_ARTICLE_LICENSE_RETRY + "?concurrentConsumers=" + QUEUE_CONSUMERS)
+      .process(new Processor() {
+        @Override
+        public void process(Exchange exchange) throws Exception {
+          String[] DOIs = (String[])exchange.getIn().getBody();
+
+          CottageLabsLicenseService clService = (CottageLabsLicenseService)getApplicationContext().getBean("cottageLabsLicenseService");
+
+          Response response = clService.findLicenses(DOIs);
+
+          //Log errors
+          logErrors(response.getErrors());
+
+          //Store results
+          storeResults(response.getResults());
+
+          //Get results that are still in process
+          String[] retryDOIs = getDOISinProcess(response.getProcessing());
+
+          //COPY results to outgoing message
+          exchange.getOut().setHeader(HEADER_LICENSE_RETRY_DOIS, retryDOIs);
+        }
+      })
+      .choice()
+        .when(header(HEADER_LICENSE_RETRY_DOIS).isNotNull())
+          //If the header value was not null, there are still DOIs to retry
+          .delay(LICENSE_RETRY_DELAY)
+          .to(UPDATE_CITED_ARTICLE_LICENSE_RETRY);
+  }
+
+  /**
+   * Store results from cottagelabs
+   * @param results
+   */
+  private void storeResults(List<Result> results) {
+    for(Result result : results) {
+      log.debug("Received License for {}, \"{}\"", new Object[] {
+        result.getIdentifier().get(0).getId(),
+        result.getLicense().get(0).getTitle()
+      });
+
+      //TODO: Store this someplace
+    }
+  }
+
+  /**
+   * log any errors to the log
+   *
+   * @param errors
+   */
+  private static void logErrors(List<Error> errors) {
+    for(Error error : errors) {
+      log.error("Error received from cottage labs for DOI: {}, Error \"{}\"", new Object[] {
+        error.getIdentifer(),
+        error.getError()
+      });
+    }
+  }
+
+  /**
+   * From the given response, get all the DOIS that are still in process
+   *
+   * @param processing
+   * @return
+   */
+  private static String[] getDOISinProcess(List<Processing> processing) {
+    String[] retryDOIs = new String[processing.size()];
+    for(int a = 0; a < processing.size(); a++) {
+      retryDOIs[a] = processing.get(a).getIdentifier();
+    }
+
+    if(log.isDebugEnabled()) {
+      log.debug("Retrying {} DOIS", retryDOIs.length);
+
+      for(String doi : retryDOIs) {
+        log.debug("DOI: {}", doi);
+      }
+    }
+
+    return retryDOIs;
   }
 }
+

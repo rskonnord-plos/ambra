@@ -25,11 +25,11 @@ import org.ambraproject.service.cottagelabs.json.Response;
 public interface CottageLabsLicenseService {
 
   /**
-   * For a given DOI, query the cottage labs API and get the license if it is available
+   * For the given DOIs, query the cottage labs API and get the licenses if they are available
    *
-   * @param doi the DOI to get the license for
+   * @param doi the DOIs to get the licenses for
    * @return the license response object
    * @throws Exception
    */
-  public Response findLicense(String doi) throws Exception;
+  public Response findLicenses(String[] doi) throws Exception;
 }

@@ -45,7 +45,7 @@ public class CottageLabsFindLicenseTest {
     service.setHttpClient(mockHttpClient);
     service.setCottageLabsURL("http://bleh.bleh");
 
-    Response response = service.findLicense("Synopsis of the families of Vertebrata");
+    Response response = service.findLicenses(new String[] { "Synopsis of the families of Vertebrata" });
     assertEquals(response.getResults().get(0).getLicense().get(0).getTitle(), "Creative Commons CCZero");
   }
 }

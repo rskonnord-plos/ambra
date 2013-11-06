@@ -38,7 +38,7 @@ import static org.testng.Assert.assertTrue;
  */
 @ContextConfiguration
 public class CrossRefLookupRoutesTest extends BaseTest {
-  @Produce(uri = CitedArticleLookupRoutes.UPDATE_CITED_ARTICLES_QUEUE)
+  @Produce(uri = CitedArticleLookupRoutes.UPDATE_CITED_ARTICLE_QUEUE)
   protected ProducerTemplate start;
 
   @DataProvider(name="testData")

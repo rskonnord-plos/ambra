@@ -36,11 +36,6 @@ import java.util.List;
  */
 
 public interface ArticleService {
-
-  public static final String LICENSE_RESPONSE_PROCESSING = "PROCESSING";
-  public static final String LICENSE_RESPONSE_SUCCESS = "SUCCESS";
-  public static final String LICENSE_RESPONSE_FAILURE = "FAILURE";
-
   /**
    * Determines if the articleURI is of type researchArticle
    *
@@ -232,26 +227,15 @@ public interface ArticleService {
   public void setCitationDoi(CitedArticle citedArticle, String doi);
 
   /**
-   * Query crossref for the latest article doi and update the database
+   * Query crossref for the latest cited article dois and update the database
    *
-   * @param citedArticleID the citedArticleID record to update
+   * @param articleID the articleID to get the cited DOIs for
    *
    * @return the DOI found
    *
    * @throws Exception
    */
-  public String refreshCitedArticleDOI(Long citedArticleID) throws Exception;
-
-  /**
-   * Query cottage labs for the latest article license and update the database
-   *
-   * @param doi the DOI to find the license for
-   *
-   * @return the status of the request
-   *
-   * @throws Exception
-   */
-  public String refreshCitedArticleLicense(String doi) throws Exception;
+  public void refreshArticleCiteDOIs(Long articleID, String authId) throws Exception;
 
   /**
    * Populates DB objects as necessary to assign the given categories to the given article.
