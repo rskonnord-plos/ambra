@@ -164,7 +164,7 @@ function onReadyDocument() {
 
   $('ul.social li a').on('click', handleSocialClick);
 
-  if (!$("#twitter-alm-timeline div.tweet-header").is(":visible")) {
+  if ($.fn.twitter && !$("#twitter-alm-timeline div.tweet-header").is(":visible")) {
     var doi = $('meta[name=citation_doi]').attr("content");
     var twitter = new $.fn.twitter();
     twitter.displayTweetsArticleSidebar(doi);
