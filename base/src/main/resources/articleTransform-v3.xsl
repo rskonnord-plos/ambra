@@ -724,10 +724,17 @@
     <!-- 1/4/12: plos modifications -->
     <xsl:template match="ref-list" name="ref-list">
       <div>
+        <xsl:choose>
+          <xsl:when test="not(title)">
+            <a id="references" name="references" toc="references" title="References"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="title" mode="anchorname"/>
+          </xsl:otherwise>
+        </xsl:choose>
         <div class="header hdr-article-refs">
           <xsl:choose>
             <xsl:when test="not(title)">
-              <a id="references" name="references" toc="references" title="References"/>
               <h3>References</h3>
               <xsl:call-template name="newline1"/>
             </xsl:when>
@@ -985,6 +992,12 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="back/ref-list/title">
+      <h3>
+        <xsl:apply-templates/>
+      </h3>
+    </xsl:template>
+
+    <xsl:template match="back/ref-list/title" mode="anchorname">
       <a>
         <xsl:attribute name="id"><xsl:value-of select="replace(lower-case(.),' ','')"/></xsl:attribute>
         <xsl:attribute name="name"><xsl:value-of select="replace(lower-case(.),' ','')"/></xsl:attribute>
@@ -1000,10 +1013,8 @@
           </xsl:choose>
         </xsl:attribute>
       </a>
-      <h3>
-        <xsl:apply-templates/>
-      </h3>
     </xsl:template>
+
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="notes/sec/title">
