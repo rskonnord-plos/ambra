@@ -977,18 +977,26 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       searchStrings[a] = makeCrossRefSearchString(citedArticles[a]);
     }
 
-    //Lets batch requests of citedArticles to crossref in batches of 15 to reduce the network time
-    //and avoid socket timeouts and connection time outs (That are hard coded to 30 seconds)
-    //There is a hard limit of 2000 cited Articles per request
+    //With query sets at 50, I was getting network timeouts
+    //batching requests of citedArticles to crossref in batches of 15 to reduce this
+    //and avoid socket timeouts and connection time outs (hard coded to 30 seconds)
+    //There is a hard limit of 2000 cited Articles per request per their API documentation
     if(searchStrings.length < CROSS_REF_DOI_BATCH_SIZE) {
       runCrossrefSearchBatch(searchStrings, citedArticles);
     } else {
       for(int a = 0; a < searchStrings.length; a = a + CROSS_REF_DOI_BATCH_SIZE) {
-
-        runCrossrefSearchBatch(
-          Arrays.copyOfRange(searchStrings, a, a + CROSS_REF_DOI_BATCH_SIZE),
-          Arrays.copyOfRange(citedArticles, a, a + CROSS_REF_DOI_BATCH_SIZE)
-        );
+        //Lets not overstep bounds
+        if(a + CROSS_REF_DOI_BATCH_SIZE > searchStrings.length) {
+          runCrossrefSearchBatch(
+            Arrays.copyOfRange(searchStrings, a, searchStrings.length),
+            Arrays.copyOfRange(citedArticles, a, searchStrings.length)
+          );
+        } else {
+          runCrossrefSearchBatch(
+            Arrays.copyOfRange(searchStrings, a, a + CROSS_REF_DOI_BATCH_SIZE),
+            Arrays.copyOfRange(citedArticles, a, a + CROSS_REF_DOI_BATCH_SIZE)
+          );
+        }
       }
     }
   }
