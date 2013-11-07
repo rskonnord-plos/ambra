@@ -986,8 +986,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       for(int a = 0; a < searchStrings.length; a = a + CROSS_REF_DOI_BATCH_SIZE) {
 
         runCrossrefSearchBatch(
-          Arrays.copyOfRange(searchStrings, a, CROSS_REF_DOI_BATCH_SIZE),
-          Arrays.copyOfRange(citedArticles, a, CROSS_REF_DOI_BATCH_SIZE)
+          Arrays.copyOfRange(searchStrings, a, a + CROSS_REF_DOI_BATCH_SIZE),
+          Arrays.copyOfRange(citedArticles, a, a + CROSS_REF_DOI_BATCH_SIZE)
         );
       }
     }
