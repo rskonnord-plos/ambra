@@ -1,8 +1,12 @@
 {
-  "requested":1,
+  "requested":6,
   "errors":[
     {
-      "identifer":"id",
+      "identifier": {
+        "type": "doi",
+        "id": "10.1128/aem.70.11.6855-6864.2004",
+        "canonical": "doi:10.1128/aem.70.11.6855-6864.2004"
+      },
       "error":"...description..."
     }
   ],
@@ -50,9 +54,34 @@
       ]
     }
   ],
-  "processing":[
+  "processing": [
     {
-      "identifier":"id"
+      "identifier": {
+        "type": "doi",
+        "id": "10.1007/978-94-017-3284-0_2",
+        "canonical": "doi:10.1007/978-94-017-3284-0_2"
+      }
+    },
+    {
+      "identifier": {
+        "type": "doi",
+        "id": "10.1126/science.1086050",
+        "canonical": "doi:10.1126/science.1086050"
+      }
+    },
+    {
+      "identifier": {
+        "type": "doi",
+        "id": "10.1007/s00338-006-0122-9",
+        "canonical": "doi:10.1007/s00338-006-0122-9"
+      }
+    },
+    {
+      "identifier": {
+        "type": "doi",
+        "id": "10.1007/978-94-017-3284-0_1",
+        "canonical": "doi:10.1007/978-94-017-3284-0_1"
+      }
     }
   ]
 }

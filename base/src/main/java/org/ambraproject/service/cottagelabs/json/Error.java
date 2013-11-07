@@ -23,16 +23,16 @@ import javax.annotation.Generated;
 @Generated("com.googlecode.jsonschema2pojo")
 public class Error {
   @Expose
-  private String identifer;
+  private Identifier identifier;
   @Expose
   private String error;
 
-  public String getIdentifer() {
-    return identifer;
+  public Identifier getIdentifer() {
+    return identifier;
   }
 
-  public void setIdentifer(String identifer) {
-    this.identifer = identifer;
+  public void setIdentifier(Identifier identifier) {
+    this.identifier = identifier;
   }
 
   public String getError() {

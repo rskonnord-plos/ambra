@@ -44,8 +44,17 @@ public class CottageLabsFindLicenseTest {
     HttpClientMock mockHttpClient = new HttpClientMock(200, json);
     service.setHttpClient(mockHttpClient);
     service.setCottageLabsURL("http://bleh.bleh");
-
     Response response = service.findLicenses(new String[] { "Synopsis of the families of Vertebrata" });
+
+    //Test that we're parsing the returned JSON correctly
     assertEquals(response.getResults().get(0).getLicense().get(0).getTitle(), "Creative Commons CCZero");
+
+    assertEquals(response.getErrors().size(), 1);
+    assertEquals(response.getErrors().get(0).getIdentifer().getId(), "10.1128/aem.70.11.6855-6864.2004");
+
+    assertEquals(response.getProcessing().size(), 4);
+    assertEquals(response.getProcessing().get(0).getIdentifier().getId(), "10.1007/978-94-017-3284-0_2");
+    assertEquals(response.getProcessing().get(0).getIdentifier().getCanonical(), "doi:10.1007/978-94-017-3284-0_2");
+    assertEquals(response.getProcessing().get(0).getIdentifier().getType(), "doi");
   }
 }

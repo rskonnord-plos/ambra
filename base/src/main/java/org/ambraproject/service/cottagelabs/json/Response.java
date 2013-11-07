@@ -31,7 +31,7 @@ public class Response {
   @Expose
   private List<Result> results = new ArrayList<Result>();
   @Expose
-  private List<Identifier> processing = new ArrayList<Identifier>();
+  private List<Processing> processing = new ArrayList<Processing>();
 
   public Integer getRequested() {
     return requested;
@@ -57,11 +57,11 @@ public class Response {
     this.results = results;
   }
 
-  public List<Identifier> getProcessing() {
+  public List<Processing> getProcessing() {
     return processing;
   }
 
-  public void setProcessing(List<Identifier> processing) {
+  public void setProcessing(List<Processing> processing) {
     this.processing = processing;
   }
 }
