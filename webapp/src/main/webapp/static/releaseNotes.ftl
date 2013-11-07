@@ -40,8 +40,8 @@
   <h3>Features Implemented in Ambra 2.8.6</h3>
   <ul>
       <li>Article page refresh phase I: new metadata, figure lightbox display, block quotes, metrics signposts, article tweets widget, publication date and DOI display</li>
-      <li>Change of references DOIs to CitedArticle CrossRef DOIs</li>
-      <li>Fix to properly open reference links to CrossRef, PubMed and Google Scholar in new tabs(user settings permitting)</li>
+      <li>Change of article references DOIs to CrossRef DOIs</li>
+      <li>Fix to properly open article reference links to CrossRef, PubMed and Google Scholar in new tabs(user settings permitting)</li>
   </ul>
 
   <h2>Ambra 2.8.5</h2>
