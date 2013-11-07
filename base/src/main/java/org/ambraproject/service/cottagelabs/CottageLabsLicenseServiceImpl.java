@@ -96,6 +96,8 @@ public class CottageLabsLicenseServiceImpl implements CottageLabsLicenseService 
     //Convert to string minus the last period
     final String json = "[" + builder.substring(0, builder.length() - 1)  + "]";
 
+    log.trace("JSON request sending: {}", json);
+
     if(this.cottageLabsURL == null) {
       throw new RuntimeException("Cottage Labs hostname is not defined.");
     }
