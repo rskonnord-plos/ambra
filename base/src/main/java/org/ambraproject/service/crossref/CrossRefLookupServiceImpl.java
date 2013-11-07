@@ -151,10 +151,7 @@ public class CrossRefLookupServiceImpl implements CrossRefLookupService {
           res.score = resultObj.getAsJsonPrimitive("score").getAsString();
         }
 
-        //Some results aren't actually valid
-        if(res.doi != null) {
-          resultTemp.add(res);
-        }
+        resultTemp.add(res);
       }
 
       this.results = resultTemp.toArray(new CrossRefResult[resultTemp.size()]);
