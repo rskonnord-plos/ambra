@@ -22,6 +22,8 @@ import org.apache.camel.Processor;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,13 +90,17 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
           String authID = (String)exchange.getIn().getHeader(HEADER_AUTH_ID);
           Article article = articleService.getArticle(articleDoi, authID);
 
-          String[] DOIs = new String[article.getCitedArticles().size()];
+          List<String> DOIs = new ArrayList<String>();
 
           for(int a = 0; a < article.getCitedArticles().size(); a++) {
-            DOIs[a] = article.getCitedArticles().get(a).getDoi();
+            String doi = article.getCitedArticles().get(a).getDoi();
+
+            if(doi != null) {
+              DOIs.add(doi);
+            }
           }
 
-          Response response = clService.findLicenses(DOIs);
+          Response response = clService.findLicenses(DOIs.toArray(new String[DOIs.size()]));
 
           //Log errors
           logErrors(response.getErrors());
