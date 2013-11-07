@@ -19,12 +19,6 @@
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.service.cottagelabs.CottageLabsLicenseService;
-import org.ambraproject.service.cottagelabs.json.License;
-import org.ambraproject.service.cottagelabs.json.Processing;
-import org.ambraproject.service.cottagelabs.json.Response;
-import org.ambraproject.service.cottagelabs.json.Error;
-import org.ambraproject.service.cottagelabs.json.Result;
 import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.UserProfileInfo;
@@ -87,9 +81,10 @@ import java.util.Set;
 public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleService {
   private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
+  private static final int CROSS_REF_DOI_BATCH_SIZE = 15;
+
   private PermissionsService permissionsService;
   private CrossRefLookupService crossRefLookupService;
-  private CottageLabsLicenseService cottageLabsLicenseService;
 
   /**
    * Determines if the articleURI is of type researchArticle
@@ -975,16 +970,34 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
 
     Article article = getArticle(articleDOI, authId);
     String[] searchStrings = new String[article.getCitedArticles().size()];
+    CitedArticle[] citedArticles = new CitedArticle[article.getCitedArticles().size()];
 
     for(int a = 0; a < searchStrings.length; a++) {
-      searchStrings[a] = makeCrossRefSearchString(article.getCitedArticles().get(a));
+      citedArticles[a] = article.getCitedArticles().get(a);
+      searchStrings[a] = makeCrossRefSearchString(citedArticles[a]);
     }
 
+    //Lets batch requests of citedArticles to crossref in batches of 15 to reduce the network time
+    //and avoid socket timeouts and connection time outs (That are hard coded to 30 seconds)
+    //There is a hard limit of 2000 cited Articles per request
+    if(searchStrings.length < CROSS_REF_DOI_BATCH_SIZE) {
+      runCrossrefSearchBatch(searchStrings, citedArticles);
+    } else {
+      for(int a = 0; a < searchStrings.length; a = a + CROSS_REF_DOI_BATCH_SIZE) {
+
+        runCrossrefSearchBatch(
+          Arrays.copyOfRange(searchStrings, a, CROSS_REF_DOI_BATCH_SIZE),
+          Arrays.copyOfRange(citedArticles, a, CROSS_REF_DOI_BATCH_SIZE)
+        );
+      }
+    }
+  }
+
+  private void runCrossrefSearchBatch(String[] searchStrings, CitedArticle[] citedArticles) throws Exception
+  {
     String[] DOIs = null;
 
-    if(searchStrings.length == 0) {
-      log.debug("No citations ({}), not searching.", article.getDoi());
-    } else {
+    if(searchStrings.length > 0) {
       //I Assume here DOIS are in the same order and length as the request strings
       //And in the same order and length of the original citedArticles collection
       DOIs = crossRefLookupService.findDois(searchStrings);
@@ -1004,7 +1017,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
 
             log.debug("refreshArticleCitation doi found: {}", doi);
 
-            setCitationDoi(article.getCitedArticles().get(a), doi);
+            setCitationDoi(citedArticles[a], doi);
           }
         }
       } else {
@@ -1243,14 +1256,5 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Required
   public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
     this.crossRefLookupService = crossRefLookupService;
-  }
-
-  /**
-   *
-   * @param cottageLabsLicenseService the cottageLabs license service to use
-   */
-  @Required
-  public void setCottageLabsLicenseService(CottageLabsLicenseService cottageLabsLicenseService) {
-    this.cottageLabsLicenseService = cottageLabsLicenseService;
   }
 }
