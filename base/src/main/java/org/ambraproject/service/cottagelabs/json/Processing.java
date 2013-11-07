@@ -19,17 +19,18 @@ package org.ambraproject.service.cottagelabs.json;
 
 import com.google.gson.annotations.Expose;
 import javax.annotation.Generated;
+import java.util.List;
 
 @Generated("com.googlecode.jsonschema2pojo")
 public class Processing {
   @Expose
-  private String identifier;
+  private List<Identifier> identifier;
 
-  public String getIdentifier() {
+  public List<Identifier> getIdentifier() {
     return identifier;
   }
 
-  public void setIdentifier(String identifier) {
+  public void setIdentifier(List<Identifier> identifier) {
     this.identifier = identifier;
   }
 }
