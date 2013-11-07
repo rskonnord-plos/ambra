@@ -13,6 +13,7 @@ package org.ambraproject.routes;
 import org.ambraproject.models.Article;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.cottagelabs.CottageLabsLicenseService;
+import org.ambraproject.service.cottagelabs.json.Identifier;
 import org.ambraproject.service.cottagelabs.json.Processing;
 import org.ambraproject.service.cottagelabs.json.Response;
 import org.ambraproject.service.cottagelabs.json.Error;
@@ -41,8 +42,6 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
   public static final String UPDATE_CITED_ARTICLE = "seda:plos.updatedCitedArticles";
   public static final String UPDATE_CITED_ARTICLE_LICENSE = "seda:plos.updateCitedArticleLicense";
   public static final String UPDATE_CITED_ARTICLE_LICENSE_RETRY = "seda:plos.updateCitedArticleLicense.retry";
-
-  public static final String HEADER_LICENSE_RETRY_DOIS = "license.response.retry.dois";
 
   //public static final int LICENSE_RETRY_DELAY = 300000; //Set to retry every 5 minutes
   public static final int LICENSE_RETRY_DELAY = 15000; //Set to retry every 15 seconds
@@ -101,22 +100,13 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
           }
 
           Response response = clService.findLicenses(DOIs.toArray(new String[DOIs.size()]));
+          String[] retryDOIs = processCottageLabsResponse(response);
 
-          //Log errors
-          logErrors(response.getErrors());
-
-          //Store results
-          storeResults(response.getResults());
-
-          //Get results that are still in process
-          String[] retryDOIs = getDOISinProcess(response.getProcessing());
-
-          //COPY results to outgoing message
-          exchange.getOut().setHeader(HEADER_LICENSE_RETRY_DOIS, retryDOIs);
+          exchange.getOut().setBody(retryDOIs);
         }
       })
       .choice()
-        .when(header(HEADER_LICENSE_RETRY_DOIS).isNotNull())
+        .when(body().isNotNull())
           //If the header value was not null, there are still DOIs to retry
           .delay(LICENSE_RETRY_DELAY)
           .to(UPDATE_CITED_ARTICLE_LICENSE_RETRY);
@@ -130,25 +120,41 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
           CottageLabsLicenseService clService = (CottageLabsLicenseService)getApplicationContext().getBean("cottageLabsLicenseService");
 
           Response response = clService.findLicenses(DOIs);
+          String[] retryDOIs = processCottageLabsResponse(response);
 
-          //Log errors
-          logErrors(response.getErrors());
-
-          //Store results
-          storeResults(response.getResults());
-
-          //Get results that are still in process
-          String[] retryDOIs = getDOISinProcess(response.getProcessing());
-
-          //COPY results to outgoing message
-          exchange.getOut().setHeader(HEADER_LICENSE_RETRY_DOIS, retryDOIs);
+          exchange.getOut().setBody(retryDOIs);
         }
       })
       .choice()
-        .when(header(HEADER_LICENSE_RETRY_DOIS).isNotNull())
+        .when(body().isNotNull())
           //If the header value was not null, there are still DOIs to retry
           .delay(LICENSE_RETRY_DELAY)
           .to(UPDATE_CITED_ARTICLE_LICENSE_RETRY);
+  }
+
+  /**
+   * Process the response from cottage labs
+   *
+   * @param response the marshalled response from the cottage labs API
+   *
+   * @return an array of DOIS that are still in process or null if there are none
+   */
+  private String[] processCottageLabsResponse(Response response) {
+    //Log errors
+    logErrors(response.getErrors());
+
+    //Store results
+    storeResults(response.getResults());
+
+    //Get results that are still in process
+    String[] retryDOIs = getDOISinProcess(response.getProcessing());
+
+    //COPY results to outgoing message
+    if(retryDOIs != null && retryDOIs.length > 0) {
+      return retryDOIs;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -157,7 +163,7 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
    */
   private void storeResults(List<Result> results) {
     for(Result result : results) {
-      log.debug("Received License for {}, \"{}\"", new Object[] {
+      log.debug("Received CottageLabs License for {}, \"{}\"", new Object[] {
         result.getIdentifier().get(0).getId(),
         result.getLicense().get(0).getTitle()
       });
@@ -181,22 +187,23 @@ public class CitedArticleLookupRoutes extends SpringRouteBuilder {
   }
 
   /**
-   * From the given response, get all the DOIS that are still in process
+   * For the given response, get all the DOIS that are still in process
    *
-   * @param processing
+   * @param processing the marshalled response from the cottage labs API
+   *
    * @return
    */
   private static String[] getDOISinProcess(List<Processing> processing) {
     String[] retryDOIs = new String[processing.size()];
     for(int a = 0; a < processing.size(); a++) {
-      retryDOIs[a] = processing.get(a).getIdentifier();
+      retryDOIs[a] = processing.get(a).getIdentifier().getId();
     }
 
-    if(log.isDebugEnabled()) {
-      log.debug("Retrying {} DOIS", retryDOIs.length);
+    log.info("CottageLabs DOIS still in process {}", retryDOIs.length);
 
+    if(log.isDebugEnabled()) {
       for(String doi : retryDOIs) {
-        log.debug("DOI: {}", doi);
+        log.debug("CottageLab DOI Still in process: {}", doi);
       }
     }
 
