@@ -2287,7 +2287,14 @@
     <xsl:template match="uri | inline-supplementary-material" />
 
     <!-- 10/28/13: suppress, we don't use -->
-    <xsl:template match="ext-link" />
+    <xsl:template match="ext-link">
+      <xsl:if test="not(ancestor::ref-list)">
+        <a>
+          <xsl:call-template name="assign-href"/>
+          <xsl:apply-templates/>
+        </a>
+      </xsl:if>
+    </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use  -->
     <xsl:template match="funding-source" />
