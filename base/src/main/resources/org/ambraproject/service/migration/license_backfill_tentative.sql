@@ -12,7 +12,7 @@ create table license (
   description varchar(1500) character set utf8 collate utf8_bin,
   is_okd_compliant bit,
   is_osi_compliant bit,
-  url varchar(100) character set utf8 collate utf8_bin, #ask jLin
+  url text character set utf8 collate utf8_bin, #ask jLin
   domain_software bit,
   domain_data bit,
   domain_content bit,
@@ -38,7 +38,7 @@ create table citedArticleLicense (
   maintainer varchar(30) character set utf8 collate utf8_bin,
   open_access bit,
   provenanceCategory varchar(30) char set utf8 collate utf8_bin,
-  provenanceDescription varchar(1500) char set utf8 collate utf8_bin,
+  provenanceDescription text char set utf8 collate utf8_bin,
   provenanceAgent varchar(100) char set utf8 collate utf8_bin,
   provenanceSource varchar(100) char set utf8 collate utf8_bin,
   provenanceDate datetime,
