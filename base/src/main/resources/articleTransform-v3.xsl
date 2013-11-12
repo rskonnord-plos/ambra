@@ -2100,7 +2100,7 @@
     <xsl:template name="citationComment">
       <!-- only output a single comment tag that appears as the very last child of the citation -->
       <xsl:variable name="x" select="child::comment[position()=last()]"/>
-      <xsl:if test="not(starts-with($x,'doi:')) and not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
+      <xsl:if test="not(starts-with(lower-case($x),'doi:')) and not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
         <xsl:text> </xsl:text><xsl:apply-templates select="$x"/>
       </xsl:if>
     </xsl:template>
@@ -2307,7 +2307,7 @@
 
     <!-- 10/28/13: suppress, we don't use -->
     <xsl:template match="ext-link">
-      <xsl:if test="not(ancestor::ref-list)">
+      <xsl:if test="not(ancestor::ref-list) or not(ends-with(lower-case(normalize-space(preceding::text()[1])),'doi:'))">
         <a>
           <xsl:call-template name="assign-href"/>
           <xsl:apply-templates/>
