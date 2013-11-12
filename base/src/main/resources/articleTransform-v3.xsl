@@ -1494,7 +1494,21 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
-      <xsl:apply-templates select="*[not(self::comment)]|text()"/>
+      <xsl:choose>
+        <xsl:when test="article-title | name">
+          <div class="title">
+            <xsl:apply-templates select="article-title" mode="none"/>
+          </div>
+          <div class="authors">
+            <xsl:apply-templates select="name"/>
+          </div>
+          <xsl:apply-templates select="*[not(self::comment) and not(self::article-title) and not(self::name) and not(self::year)]" mode="none"/>
+          <xsl:apply-templates select="year" mode="none"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="*[not(self::comment)]|text()" mode="none"/>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:call-template name="citationComment"/>
       <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
@@ -1515,18 +1529,23 @@
         <xsl:text> </xsl:text>
         <xsl:apply-templates select="suffix"/>
       </xsl:if>
+      <xsl:if test="not(position()=last())">, </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific templates for legacy references (element-citation: journal/no citation, book/other, supporting templates -->
 
     <!-- 6/8/12: plos-specific template: legacy nlm-citation references (need separate transform to account for different tag order) -->
     <xsl:template match="nlm-citation">
-      <xsl:apply-templates select="person-group" mode="book"/>
-      <xsl:apply-templates select="collab" mode="book"/>
-      <xsl:apply-templates select="year" mode="none"/>
-      <xsl:apply-templates select="article-title" mode="none"/>
+      <div class="title">
+        <xsl:apply-templates select="article-title" mode="none"/>
+      </div>
+      <div class="authors">
+        <xsl:apply-templates select="person-group" mode="book"/>
+        <xsl:apply-templates select="collab" mode="book"/>
+      </div>
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
+      <xsl:apply-templates select="year" mode="none"/>
       <xsl:call-template name="citationComment"/>
       <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>

@@ -1953,6 +1953,22 @@ function tableOpen(tableId, type) {
 
       $ref_lst_itms.each(function(index) {
         var $this = $(this);
+        var cid = $this.data('citation-id');
+        var cc = $('a[href="#' + cid + '"]').length;
+        var ccstr = (cc < 10 ? "00" + cc : (cc < 100 ? "0" + cc : "" + cc));
+        $this.attr("cited-count", ccstr)
+        var anchor = $this.find("ul");
+        var item = '<span class="cited-count" style="display:block;">Cited ' + cc + (cc > 1 ? ' times' : ' time') + ' in this paper</span>';
+        if (anchor && anchor.length > 0) {
+          anchor.before(item);
+        }
+        else {
+          $this.append($(item));
+        }
+      });
+
+      $ref_lst_itms.each(function(index) {
+        var $this = $(this);
         var indexstr = (index < 10 ? "00" + index : (index < 100 ? "0" + index : "" + index));
         var ttl = $this.data('title');
         ttl += "-" + indexstr;
@@ -1970,6 +1986,13 @@ function tableOpen(tableId, type) {
         pub += "-" + indexstr;
         ref_pub_keys[pub] = index;
         ref_pub.push(pub);
+
+        var ccstr = $this.attr('cited-count');
+        var rindex = $ref_lst_itms.length - index;
+        var rindexstr = (rindex < 10 ? "00" + rindex : (rindex < 100 ? "0" + rindex : "" + rindex));
+        ccstr += "-" + rindexstr;
+        ref_cc_keys[ccstr] = index;
+        ref_cc.push(ccstr);
       });
 
       $ref_btn_ttl.one('click', function() {
@@ -2017,26 +2040,6 @@ function tableOpen(tableId, type) {
       });
 
       $ref_btn_cc.one('click', function() {
-        $ref_lst_itms.each(function(index) {
-          var $this = $(this);
-          var cid = $this.data('citation-id');
-          var cc = $('a[href="#' + cid + '"]').length;
-          var ccstr = (cc < 10 ? "00" + cc : (cc < 100 ? "0" + cc : "" + cc));
-          var rindex = $ref_lst_itms.length - index;
-          var indexstr = (rindex < 10 ? "00" + rindex : (rindex < 100 ? "0" + rindex : "" + rindex));
-          ccstr += "-" + indexstr;
-          ref_cc_keys[ccstr] = index;
-          ref_cc.push(ccstr);
-
-          var anchor = $this.find("ul");
-          var item = '<span class="cited-count" style="display: none;">Cited ' + cc + (cc > 1 ? ' times' : ' time') + ' in this paper</span>';
-          if (anchor && anchor.length > 0) {
-            anchor.before(item);
-          }
-          else {
-            $this.append($(item));
-          }
-        });
         ref_cc.sort();
         ref_cc.reverse();
         jQuery.each(ref_cc, function(index, value) {
@@ -2045,7 +2048,7 @@ function tableOpen(tableId, type) {
         });
       });
       $ref_btn_cc.on('click', function() {
-        $new_cc_lst.find("span.cited-count").css("display", "block");
+        //$new_cc_lst.find("span.cited-count").css("display", "block");
         sortDisplay($(this), $new_cc_lst);
       });
 
