@@ -2106,7 +2106,7 @@
 
     <!-- 10/28/13: suppress, we don't use -->
     <xsl:template match="ext-link">
-      <xsl:if test="not(ancestor::ref-list) or not(lower-case(normalize-space(preceding::text()[1]))='doi:')">
+      <xsl:if test="not(ancestor::ref-list) or not(ends-with(lower-case(normalize-space(preceding::text()[1])),'doi:'))">
         <a>
           <xsl:call-template name="assign-href"/>
           <xsl:apply-templates/>
