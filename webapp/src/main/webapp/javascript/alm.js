@@ -773,39 +773,32 @@ $.fn.alm = function () {
     // Citation Sources should always start with Scopus (if an entry for Scopus exists)
     // followed by the rest of the sources in alphabetical order.
     var sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos","pmceurope", "pmceuropedata", "datacite"]);
-    sources = this.enforceOrder(sources, ['scopus','crossref','pubmed','wos', 'pmceurope', 'pmceuropedata', 'datacite']);
-
-    for (var a = 0; a < sources.length -3 ; a++) {
-      source = sources[a];
+    var sourceOrder = ['scopus','crossref','pubmed','wos', 'google', 'pmceurope', 'pmceuropedata', 'datacite'];
+    var  sourceMap = {};
+    for (var index = 0; index < sources.length; index++ ) {
+      var source = sources[index];
       if (source.metrics.total > 0) {
+        numCitesRendered++;
         var url = source.events_url;
-        // find all spaces
-        var patternForSpace = /\s/g;
-        var tileName = source.display_name.toLowerCase().replace(patternForSpace, "-");
         // removing registered trademark symbol from web of science
-        tileName = tileName.replace("\u00ae", "");
+        source.display_name = source.display_name.replace("\u00ae", "");
 
         //  If CrossRef, then compose a URL to our own CrossRef Citations page.
         if (source.name.toLowerCase() == 'crossref') {
-          html = html + this.createMetricsTile(tileName,
-            "/article/crossref/info:doi/" + doi,
-            "/images/logo-" + source.name + ".png",
-            source.metrics.total);
-          numCitesRendered++;
-
-        } else if (source.events_url) {
-          //  Only list links that HAVE DEFINED URLS
-          html = html + this.createMetricsTile(tileName,
-            url,
-            "/images/logo-" + source.name + ".png",
-            source.metrics.total);
-          numCitesRendered++;
-
-        } else {
-          html = html + this.createMetricsTileNoLink(tileName,
+           sourceMap[source.name] = this.createMetricsTile(source.display_name,
+              "/article/crossref/info:doi/" + doi,
               "/images/logo-" + source.name + ".png",
               source.metrics.total);
-          numCitesRendered++;
+        } else if (source.events_url) {
+          //  Only list links that HAVE DEFINED URLS
+          sourceMap[source.name] =  this.createMetricsTile(source.display_name,
+              url,
+              "/images/logo-" + source.name + ".png",
+              source.metrics.total);
+        } else {
+          sourceMap[source.name] = this.createMetricsTileNoLink(source.display_name,
+              "/images/logo-" + source.name + ".png",
+              source.metrics.total);
         }
       }
     }
@@ -813,51 +806,20 @@ $.fn.alm = function () {
     // A link for searching Google Scholar should ALWAYS show up, but the display of that link
     //   depends on whether there are other citation Metrics Tiles displayed.
     var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
-    if (numCitesRendered == 0) {
-      html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
-    } else {
-      html = html + this.createMetricsTile("googleScholar",
+    sourceMap['google'] =  this.createMetricsTile("googleScholar",
         "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
         "/images/logo-google-scholar.png",
         "Search");
+
+    if (numCitesRendered != 0) {
+       for (var index = 0; index < sourceOrder.length; index++) {
+         if (sourceOrder[index] in sourceMap) {
+           html = html + sourceMap[sourceOrder[index]];
+         }
+       }
+    } else {
+      html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
     }
-
-
-     for (var a = sources.length - 3; a < sources.length; a++) {
-          source = sources[a];
-          if (source.metrics.total > 0) {
-              var url = source.events_url;
-              // find all spaces
-              var patternForSpace = /\s/g;
-              var tileName = source.display_name.toLowerCase().replace(patternForSpace, "-");
-              // removing registered trademark symbol from web of science
-              tileName = tileName.replace("\u00ae", "");
-
-              //  If CrossRef, then compose a URL to our own CrossRef Citations page.
-              if (source.name.toLowerCase() == 'crossref') {
-                  html = html + this.createMetricsTile(tileName,
-                      "/article/crossref/info:doi/" + doi,
-                      "/images/logo-" + source.name + ".png",
-                      source.metrics.total);
-                  numCitesRendered++;
-
-              } else if (source.events_url) {
-                  //  Only list links that HAVE DEFINED URLS
-                  html = html + this.createMetricsTile(tileName,
-                      url,
-                      "/images/logo-" + source.name + ".png",
-                      source.metrics.total);
-                  numCitesRendered++;
-
-              } else {
-                  html = html + this.createMetricsTileNoLink(tileName,
-                      "/images/logo-" + source.name + ".png",
-                      source.metrics.total);
-                  numCitesRendered++;
-              }
-          }
-      }
-
 
     $("#" + citesID).html(html);
     registerVisualElementCallback('#' + citesID);
