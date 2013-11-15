@@ -4342,51 +4342,52 @@ legend.conjunction span {
 
 /************************figure viewer*********************/
 #fig-viewer {
-  background: #fff;
-  width: 870px;
-  overflow: hidden;
+  background: #333;
+  background: rgba(0,0,0,0.8);
   position: fixed;
+  top: 0;
   z-index: 1000;
+  width: 100%;
+}
+
+#fig-viewer-content {
+  background: #efefef;
+  margin: 10px;
 }
 
 #fig-viewer .header {
-  padding: 15px 20px 0;
-  height: 60px;
-  border-bottom: 1px solid #d2d2d2;
-  background: url(../images/logo.plos.95.png) no-repeat 716px 15px;
+  font-family: 'FS Albert Web Regular', Verdana, sans-serif;
+  padding: 7px 21.5em 0 1.1%;
+  min-height: 39px;
+  background: #333;
   position: relative;
-}
-
-#fig-viewer .header #article-type-heading {
-  text-transform: uppercase;
-}
-
-#fig-viewer .article-kicker {
-  margin-bottom: 3px;
+  border-right: 46px solid transparent;
 }
 
 #fig-viewer h1 {
-  font: bold 1.077em arial, sans-serif;
+  font-size: 1.077em;
   margin-bottom: 2px;
-  width: 685px;
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #efefef;
 }
 
 #fig-viewer h1 a {
-  color: #000000;
+  color: #efefef;
 }
 
 #fig-viewer .authors {
-  font-size: 0.923em;
-  margin: 0;
-  width: 460px;
+  font-size: 0.846em;
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   list-style: none;
   padding: 0;
+  margin: 0;
+  color: #ccc;
 }
 
 #fig-viewer .authors li {
@@ -4405,312 +4406,461 @@ legend.conjunction span {
   display: none;
 }
 
-#fig-viewer .close {
-  position: absolute;
-  right: 20px;
-  top: 17px;
-  display: block;
-  width: 25px;
-  height: 25px;
-  background-image: url(../images/btn.sprite.close.png);
-  background-color: #F8AF2D;
-  text-indent: -9999px;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-#fig-viewer .close:hover {
-  background-position: 0 -24px;
-  background-color: #3C63AF;
-}
-
-#fig-viewer .lnks {
-  background: #333;
-  color: #fff;
-  padding: 17px 20px 0;
-  height: 78px;
-  position: absolute;
-  bottom: 0;
-  width: 620px;
-}
-
-#fig-viewer .lnks .download {
-  list-style: none;
-  margin: 0 0 20px 0;
-  padding: 0;
-}
-
-#fig-viewer .lnks .download li {
-  display: inline-block;
-  margin-right: 15px;
-
-}
-
-#fig-viewer .lnks .download li.label {
-  margin-right: 10px;
-}
-
-#fig-viewer .lnks .download li a {
-  color: #FFF;
-}
-
-#fig-viewer .lnks .icon {
-  width: 30px;
-  height: 12px;
-  text-align: center;
-  background-color: #F8AF2D;
-  font-size: 9px;
-  color: #000;
-  padding: 2px 0 1px 0;
-  display: inline-block;
-  border-radius: 2px;
-}
-
-.figure_navigation {
+#fig-viewer .nav {
   margin: 0;
   padding: 0;
   list-style: none;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-.figure_navigation li {
-  display: inline-block;
-}
-
-#fig-viewer .btn {
-  cursor: pointer;
-  font-size: 13px;
-  line-height: 28px;
-  margin-right: 5px;
-  background: #636363;
-}
-
-#fig-viewer .active {
-  cursor: default;
-  background: #F8AF2D;
-  color: #333;
-}
-
-#fig-viewer-thmbs {
-  padding: 5px 0 20px;
-  background: #efefef;
-  width: 208px;
-  float: right;
-  height: 605px;
-  overflow: auto;
-}
-
-#fig-viewer-thmbs .thmb {
-  width: 162px;
-  margin: 0 auto;
-  height: 104px;
-  overflow: hidden;
-  padding: 4px 5px;
-  background: #fff;
-  border: 5px solid #efefef;
-  cursor: pointer;
-}
-
-#fig-viewer-thmbs .thmb .thmb-wrap {
-  width: 162px;
-  height: 104px;
-  display: table-cell;
-  vertical-align: middle;
-}
-
-/* allows for vertical centering */
-#fig-viewer-thmbs .active {
-  border-color: #f8af2d;
-}
-
-#fig-viewer-thmbs .thmb img {
-  height: auto;
-  width: auto;
-  max-width: 162px;
-  max-height: 104px;
-  display: block;
-  margin: 0 auto;
-}
-
-#fig-viewer-slides {
-  width: 660px;
-  height: 630px;
-  overflow: hidden;
+#fig-viewer .nav li {
   float: left;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.231em;
+  line-height: 46px;
+  border-right: 1px solid #666;
+  padding: 0 0.938em;
+}
+
+#fig-viewer .nav li:hover {
+  background: #3c63af;
+}
+
+#fig-viewer.abst .nav .abst,
+#fig-viewer.figs .nav .figs,
+#fig-viewer.refs .nav .refs {
+  cursor: default;
+}
+
+#fig-viewer .close {
+  position: absolute;
+  right: -46px;
+  top: 0;
+  display: block;
+  width: 46px;
+  height: 46px;
+  background: url(../images/fv.sprite.png) no-repeat -40px 0;
+  cursor: pointer;
+}
+
+#fig-viewer .pane {
+  display: none;
+}
+
+.figs #fig-viewer-figs {
+  display: block;
   position: relative;
 }
 
+.abst #fig-viewer-abst {
+  display: block;
+}
+
+#fig-viewer-controls {
+  position: absolute;
+  bottom: 90px;
+  width: 100%;  
+  height: 30px;
+}
+
+#fig-viewer-controls .loading-bar {
+  position: absolute;
+  left: 50%;
+  top: 11px;
+  width: 218px;
+  height: 10px;
+  margin-left: -109px;
+  text-align: center;
+  background-color: rgba(255,255,255,0.39);
+  border-radius: 5px;
+  background-image: -webkit-linear-gradient(-45deg, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.4) 25%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.4));
+  background-image: linear-gradient(-45deg, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.4) 25%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.4));
+  background-size:10px 10px;
+  -webkit-animation: lb_move 3s linear infinite;
+  animation: lb_move 3s linear infinite;
+}
+
+@-webkit-keyframes lb_move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}	
+@keyframes lb_move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+#fv-zoom {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 7px;
+  width: 256px;
+  margin-left: -128px;
+  padding-top: 5px;
+}
+
+#fv-zoom-sldr {
+  width: 206px;
+  margin: 0 auto;
+  height: 7px;
+  border: 0;
+  border-radius: 3px;
+  background: #ccc;
+  background: rgba(255,255,255,0.64);
+}
+#fv-zoom-sldr .ui-slider-handle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0;
+  margin-left: -7px;
+  top: -4px;
+  cursor: ew-resize
+}
+#fv-zoom-min,
+#fv-zoom-max {
+  width: 16px;
+  height: 16px;
+  background: url(../images/fv.sprite.png);
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+}
+#fv-zoom-min {
+  left: 0;
+  background-position: -110px 0;
+  cursor: -webkit-zoom-out;
+  cursor: -moz-zoom-out;
+}
+
+#fv-zoom-max {
+  right: 0;
+  background-position: -90px 0;
+  cursor: -webkit-zoom-in; 
+  cursor: -moz-zoom-in;
+}
+
+#fig-viewer-controls .fig-btn {
+  display: block;
+  float: right;
+  padding: 0 10px;
+  border-left: 1px solid #666;
+  border-color: rgba(51,51,51,0.25);
+  font: 1.077em/30px 'FS Albert Web Regular', Verdana, sans-serif;
+  cursor: pointer;
+}
+
+#fig-viewer-controls .thmb-btn {
+  padding: 0;
+  width: 162px;
+  text-align: center;
+}
+
+.fig-btn .icn {
+  display: block;
+  width: 7px;
+  height: 11px;
+  background-image: url(../images/fv.sprite.png);
+  margin-top: 10px;
+}
+
+#fig-viewer-controls .fig-btn:hover,
+.thmbs-vis #fig-viewer-controls .thmb-btn {
+  background-color: #3c63af;
+  color: #fff;
+}
+
+.fig-btn.next .icn {
+  background-position: -140px 0;
+  float: right;
+  margin-left: 6px;
+}
+.fig-btn.next:hover .icn {
+  background-position: -140px -20px;
+}
+.fig-btn.prev .icn {
+  background-position: -130px 0;
+  float: left;
+  margin-right: 6px;
+}
+.fig-btn.prev:hover .icn {
+  background-position: -130px -20px;
+}
+
 #fig-viewer-slides .slide {
-  width: 660px;
-  height: 100%;
   overflow: hidden;
   display: none;
   position: relative;
 }
 
 #fig-viewer-slides .figure {
-  padding-top: 10px;
-  overflow: auto;
-  height: 445px;
-  width: 660px;
-  display: table-cell;
-  vertical-align: middle;
+  overflow: hidden;
 }
 
 #fig-viewer-slides .figure img {
-  height: auto;
-  width: auto;
-  /* This will scale the image on smaller browser windows, set to max-height:445px is case of problem */
-  max-height: 100%;
-  margin: 0 auto;
   display: block;
 }
 
-#fig-viewer-slides .fig-btn {
-  width: 23px;
-  height: 50px;
-  display: block;
-  background-image: url(../images/btn.sprite.fig.png);
+#fig-viewer-slides .ui-draggable {
+  cursor: move;
+}
+
+#fig-viewer-figs .drag-bx {
   position: absolute;
-  top: 36%;
-  cursor: pointer;
 }
 
-#fig-viewer-slides .prev {
-  left: 7px;
-  background-position: 0 0;
-}
-
-#fig-viewer-slides .prev:hover {
-  background-position: 0 -50px;
-}
-
-#fig-viewer-slides .next {
-  right: 7px;
-  background-position: -25px 0;
-}
-
-#fig-viewer-slides .next:hover {
-  background-position: -25px -50px;
-}
-
-#fig-viewer-slides .txt {
-  background: #efefef;
-  position: absolute;
-  bottom: 95px;
-  left: 10px;
-  width: 620px;
-  padding: 8px 10px;
-  z-index: 10;
-  margin-bottom: 10px;
-}
-
-#fig-viewer-slides .txt .content {
-  clear: both;
-}
-
-#fig-viewer-slides .txt div.content.expand {
-  height: 170px;
-  overflow-y: auto;
-}
-
-#fig-viewer-slides .txt .titleexpand {
-  width: 605px !important;
-  white-space: normal !important;
-  float: none !important;
-}
-
-#fig-viewer-slides .txt .hidden {
+#fig-viewer-figs .staging {
   display: none;
 }
 
+#fig-viewer-slides .data {
+  position: relative;
+  padding-top: 30px;
+  height: 90px;
+  text-align: center;
+  background: #efefef;
+}
+
+#fig-viewer-slides .txt {
+  width: 34.4%;
+  background: #efefef;
+  background: rgba(239,239,239,0.95);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: left;
+  z-index: 10;
+}
+
+#fig-viewer-slides .txt .content {
+  height: 88px;
+  padding: 0 5% 0 3.1%;
+  font-family: 'FS Albert Web Regular', Verdana, sans-serif;
+}
+
+#fig-viewer-slides.txt-expand .txt .content {
+  height: 330px;
+  overflow-y: auto;
+  border-top: 1px solid #bbb;
+  border-color: rgba(0,0,0,0.2);
+}
+
 #fig-viewer-slides .txt .title {
-  width: 550px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  float: left;
+  padding-top: 3px;
+  font-size: 1.077em;
+  line-height: 1.143;
+}
+#fig-viewer-slides .txt .title b {
+  font-weight: normal;
+  color: #636363;
+  text-transform: uppercase;
 }
 
-#fig-viewer-slides .txt.expand {
-  float: left;
+#fig-viewer-slides.txt-expand .txt .title {
+  line-height: 1.286;
+  padding-right: 16px;
 }
 
-#fig-viewer-slides .title {
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1.071;
-}
-
-#fig-viewer-slides .txt .toggle {
-  display: inline;
-  line-height: 1.154;
-  color: #3c63af;
+#fig-viewer-slides .txt .toggle.more {
   text-decoration: underline;
+  color: #3c63af;
+  margin-top: 1px;
   cursor: pointer;
-  margin-left: 5px;
-  float: right;
 }
 
 #fig-viewer-slides .txt .toggle.less {
-  margin-bottom: 5px;
+  width: 11px;
+  height: 11px;
+  background: url(../images/fv.sprite.png) -20px 0;
+  position: absolute;
+  top: 9px;
+  right: 0.9%;
+  margin-right: 14px;
+  cursor: pointer;
+  display: none;
+  border-radius: 2px;
+}
+
+#fig-viewer-slides .txt .toggle.less:hover {
+  background-color: #3c63af;
+  background-position: -20px -20px;
+}
+
+#fig-viewer-slides.txt-expand .txt .toggle.more {
+  display: none;
+}
+
+#fig-viewer-slides.txt-expand .txt .toggle.less {
+  display: block;
 }
 
 #fig-viewer-slides .desc {
   display: none;
-  color: #666;
   font-size: 0.923em;
-  margin-top: 8px;
+  line-height: 1.167;
+  padding: 5px 0 15px;
 }
 
-#fig-viewer-slides .expand .desc {
+#fig-viewer-slides.txt-expand .desc {
   display: block;
 }
 
 #fig-viewer-slides .desc p {
-  margin-bottom: 0;
+  margin: 0;
+}
+
+#fig-viewer-slides .data .btn {
+  font-size: 13px;
+  line-height: 27px;
+  padding: 0 15px;
+}
+
+#fig-viewer-slides .lnk_context {
+  margin-top: 11px;
+}
+
+#fig-viewer-figs .download {
+ position: absolute;
+ top: 41px;
+ right: 2.7%;
+}
+
+#fig-viewer-figs .download h3 {
+ float: left;
+ font-size: 13px;
+ line-height: 27px;
+ margin: 0;
+}
+
+#fig-viewer-figs .download .item {
+ float: left;
+ margin-left: 25px;
+}
+#fig-viewer-figs .download .item a {
+ display: block;
+ color: #333;
+ text-decoration: none;
+}
+#fig-viewer-figs .download .size {
+  display: block;
+  font-size: 0.769em;
+  margin-top: 5px;
+}
+#fig-viewer-figs .download .item a:hover .btn {
+  background: #3c63af;
+  color: #fff;
+}
+
+#fig-viewer-thmbs {
+  display: none;
+  padding-top: 35px;
+  width: 163px;
+  position: absolute;
+  bottom: 120px;
+  right: 0;
+  background: #eae9e9;  
+}
+
+.thmbs-vis #fig-viewer-thmbs {
+  display: block;  
+}
+
+#fig-viewer-thmbs .btn-thmb-close {
+  background: url(../images/fv.sprite.png) 0 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+#fig-viewer-thmbs .btn-thmb-close:hover {
+  background-color: #3c63af;
+  background-position: 0 -20px;
+}
+
+#fig-viewer-thmbs-content {
+  padding-left: 17px;
+  overflow: auto;
+  background: #eae9e9;
+  background: -webkit-linear-gradient(left,  #eae9e9 0%,#eae9e9 20px,#efefef 20px,#efefef 143px,#eae9e9 143px,#eae9e9 100%);
+  background: linear-gradient(to right,  #eae9e9 0%,#eae9e9 20px,#efefef 20px,#efefef 143px,#eae9e9 143px,#eae9e9 100%);
+}
+
+#fig-viewer-thmbs .thmb {
+  width: 129px;
+  height: 96px;
+  overflow: hidden;
+  cursor: pointer;
+  margin-top: 1px;
+}
+
+#fig-viewer-thmbs .thmb .thmb-wrap {
+  width: 129px;
+  height: 96px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#fig-viewer-thmbs .thmb.active {
+  cursor: default;
+}
+
+#fig-viewer-thmbs .thmb img {
+  border: 3px solid transparent;
+  height: auto;
+  width: auto;
+  max-width: 123px;
+  max-height: 90px;
+  display: block;
+  margin: 0 auto;
 }
 
 #fig-viewer-abst {
-  display: none;
-  height: 630px;
-}
-
-#fig-viewer-abst .txt {
-  font-size: 1.077em;
-  line-height: 1.429;
-  padding: 0 80px 0 20px;
-  height: 535px;
   overflow: auto;
+  font-family: 'FS Albert Web Regular', Verdana, sans-serif;
+}
+#fig-viewer-abst .abstract {
+  float: left;
+  width: 59.7%;
+  margin-left: 1.1%;
+  padding: 37px 0 75px;
+  font-size: 1.462em;
+  line-height: 1.158;
 }
 
-#fig-viewer-abst .txt p {
-  margin: 25px 0;
+#fig-viewer-abst .abstract p {
+  margin-bottom: 25px;
+  font-size: 0.842em;
+  line-height: 1.25;
 }
 
-.abstract #fig-viewer-slides {
-  display: none;
+#fig-viewer-abst .info {
+  float: right;
+  width: 34.8%;
+  margin-right: 1.1%;
+  padding: 40px 0 75px;
+  line-height: 1.077;
 }
-
-.abstract #fig-viewer-thmbs {
-  display: none;
-}
-
-.abstract #fig-viewer-abst {
-  display: block;
-}
-
-#fig-viewer.abstract .lnks {
-  width: 830px;
-}
-
-#modal-mask {
-  background: #000;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 110;
-  opacity: 0.6;
-  filter: alpha(opacity = 60);
+.fv-lnk-pdf a {
+  padding: 0 23px;
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: normal;
+  background: #636363;
 }
 
 /* applied to body element while modal is active to prevent scrolling */
