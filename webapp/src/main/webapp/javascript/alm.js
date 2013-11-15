@@ -671,25 +671,30 @@ $.fn.alm = function () {
 
     var articleTitle = $('meta[name=citation_title]').attr("content");
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
-    var html = '', source = null, tooltip = "";
+    var source = null, tooltip = "";
 
     // the order of tiles
     // research blogging, science seeker, nature blogs, wikipedia, wordpress
     // twitter, facebook, reddit, comments  trackbacks, google blogs
 
-    //filter and sort
-    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook', 'reddit', 'wordpress']);
-    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wordpress', 'wikipedia', 'twitter', 'facebook', 'reddit']);
+    var sourceOrder = ['researchblogging','scienceseeker', 'nature', 'wordpress', 'wikipedia', 'twitter', 'facebook', 'reddit'];
+    // filter
+    var sources = this.filterSources(response[0].sources, sourceOrder);
 
-    for (var u = 0; u < sources.length; u++) {
-      source = sources[u];
-      html = '';
+    var sourceMap = {};
+
+    // map the sources with citation metrics to their corresponding tiles
+    for (var index = 0; index < sources.length; index++) {
+      source = sources[index];
 
       if (source.metrics.total > 0) {
+        // remove white spaces in display name
+        source.display_name = source.display_name.replace(/\s/g, "");
+
         if (source.name === 'facebook') {
           //create tile & toggle noTilesCreated
           // facebook does not get a link
-          html = this.createMetricsTileNoLink(source.display_name,
+          sourceMap[source.name] =  this.createMetricsTileNoLink(source.display_name,
               '/images/logo-' + source.name + '.png', source.metrics.total);
 
           //using these vars because source goes out of scope when tooltip handler is called
@@ -705,29 +710,32 @@ $.fn.alm = function () {
 
         } else if (source.name === 'twitter') {
           //use link to our own twitter landing page
-          html = this.createMetricsTile(source.display_name,
+          sourceMap[source.name] = this.createMetricsTile(source.display_name,
               '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
               source.metrics.total);
 
         } else {
           if (!source.events_url) {
-            html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total);
+            sourceMap[source.name] = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total);
           } else {
             // logic for wikipedia,  we only want to escape the double quotes around the doi (the doi itself is already escaped)
             source.events_url = source.events_url.replace(/"/g, "%22");
-            html = this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total);
+            sourceMap[source.name] =  this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total);
           }
-        }
-
-        if (html.length > 0) {
-          discussedElement.append(html);
         }
       }
     } // end of for loop
 
+    // add the source tiles to the page html in the desired order
+    for (index = 0; index < sourceOrder.length; index++) {
+      if (sourceOrder[index] in sourceMap) {
+        discussedElement.append(sourceMap[sourceOrder[index]]);
+      }
+    }
     $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
     $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
-    html = this.createMetricsTile("google-blogs",
+
+    var html = this.createMetricsTile("google-blogs",
         "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
         "/images/logo-googleblogs.png",
         "Search");
@@ -809,7 +817,7 @@ $.fn.alm = function () {
 
     // add the source tiles to the page html in the desired order
     if (numCitesRendered != 0) {
-      // Google Scholar tile is displayed if some other citation metrics is available
+      // Google Scholar tile is created if some other citation metrics is available
       var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
       sourceMap['google'] =  this.createMetricsTile("GoogleScholar",
           "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
