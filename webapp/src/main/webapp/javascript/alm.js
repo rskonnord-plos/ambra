@@ -569,72 +569,81 @@ $.fn.alm = function () {
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setSavedSuccess = function(response, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
+  this.setSavedSuccess = function (response, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback) {
     var bookMarksNode = $('#' + bookMarksID);
     $("#" + loadingID).fadeOut('slow');
     bookMarksNode.css("display", "none");
 
-    //filter and sort
-    var sources = this.filterSources(response[0].sources, ['citeulike','connotea', 'mendeley']);
-    sources = this.enforceOrder(sources, ['citeulike','connotea', 'mendeley']);
+    //filter
+    var sourceOrder = ['citeulike', 'connotea', 'mendeley'];
+    var sources = this.filterSources(response[0].sources, sourceOrder);
+    var sourceMap = {}, tooltip = '';
 
-    //create tiles
+    // create the tiles and map each source to its corresponding tile
     var noTilesCreated = true;
-    for(var w = 0; w < sources.length; w++){
-      var source = sources[w];
+    for (var index = 0; index < sources.length; index++) {
+      var source = sources[index];
 
       if (source.metrics.total > 0) {
         noTilesCreated = false;
+        source.display_name = source.display_name.replace(/\s/g, "");
+        if (source.name == 'mendeley') {
 
-        switch (source.name) {
-          case 'mendeley':
-            bookMarksNode.append(this.createMetricsTile(source.display_name,
+          sourceMap[source.name] = this.createMetricsTile(source.display_name,
               source.events_url,
               '/images/logo-' + source.name + '.png',
-              source.metrics.total))
+              source.metrics.total);
 
-            var individuals = source.metrics.shares;
-            var groups = source.metrics.groups;
-            $('#MendeleyImageOnArticleMetricsTab').tooltip({
-              backgroundColor: "rgba(255, 255, 255, 0.0)",
-              delay: 250,
-              fade: 250,
-              track: true,
-              shadow: false,
-              showURL: false,
-              bodyHandler: function () {
-                return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-                  "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
-                  "</thead><tbody><tr><td class=\"data1\">" + individuals.format(0, '.', ',') + "</td>" +
-                  "<td class=\"data2\">" + groups.format(0, '.', ',') + "</td></tr>" +
-                  "</tbody></table></div>");
-              }
-            });
-            break;
+          var individuals = source.metrics.shares;
+          var groups = source.metrics.groups;
 
-          case 'connotea':
-            // connotea does not get a link
-            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
-                '/images/logo-' + source.name + '.png',
-                source.metrics.total));
-            break;
 
-          default:
-            bookMarksNode.append(this.createMetricsTile(source.display_name,
+          tooltip = "<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+              "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
+              "</thead><tbody><tr><td class=\"data1\">" + individuals.format(0, '.', ',') + "</td>" +
+              "<td class=\"data2\">" + groups.format(0, '.', ',') + "</td></tr>" +
+              "</tbody></table></div>";
+
+
+        } else if (!source.events_url) {
+          sourceMap[source.name] = this.createMetricsTileNoLink(source.display_name,
+              '/images/logo-' + source.name + '.png',
+              source.metrics.total);
+
+        } else {
+          sourceMap[source.name] = this.createMetricsTile(source.display_name,
               source.events_url,
               '/images/logo-' + source.name + '.png',
-              source.metrics.total));
-            break;
+              source.metrics.total);
+
         }
+      }
+    } // end of loop
 
+    // add the source tiles to the page html in the desired order
+    for (index = 0; index < sourceOrder.length; index++) {
+      if (sourceOrder[index] in sourceMap) {
+        bookMarksNode.append(sourceMap[sourceOrder[index]]);
       }
     }
 
+    $('#MendeleyImageOnArticleMetricsTab').tooltip({
+      backgroundColor: "rgba(255, 255, 255, 0.0)",
+      delay: 250,
+      fade: 250,
+      track: true,
+      shadow: false,
+      showURL: false,
+      bodyHandler: function () {
+        return $(tooltip);
+      }
+    });
+
     //if no tiles created, do not display header and section
-    if(noTilesCreated){
+    if (noTilesCreated) {
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
-    else{
+    else {
       registerVisualElementCallback('#' + bookMarksID);
       bookMarksNode.show("blind", 500, countElementShownCallback);
     }
@@ -675,7 +684,7 @@ $.fn.alm = function () {
 
     // the order of tiles
     // research blogging, science seeker, nature blogs, wikipedia, wordpress
-    // twitter, facebook, reddit, comments  trackbacks, google blogs
+    // twitter, facebook, reddit, comments,  trackbacks, google blogs
 
     var sourceOrder = ['researchblogging','scienceseeker', 'nature', 'wordpress', 'wikipedia', 'twitter', 'facebook', 'reddit'];
     // filter
@@ -683,7 +692,7 @@ $.fn.alm = function () {
 
     var sourceMap = {};
 
-    // map the sources with citation metrics to their corresponding tiles
+    // create the tiles  and map the sources to their corresponding tiles
     for (var index = 0; index < sources.length; index++) {
       source = sources[index];
 
@@ -784,7 +793,7 @@ $.fn.alm = function () {
     var sourceOrder = ['scopus','crossref','pubmed','wos', 'google', 'pmceurope', 'pmceuropedata', 'datacite'];
     var  sourceMap = {};
 
-    // map the sources with citation metrics to their corresponding tiles
+    // create the tiles and map the sources to their corresponding tiles
     for (var index = 0; index < sources.length; index++ ) {
       var source = sources[index];
       if (source.metrics.total > 0) {
@@ -813,7 +822,7 @@ $.fn.alm = function () {
               source.metrics.total);
         }
       }
-    }
+    } // end of loop
 
     // add the source tiles to the page html in the desired order
     if (numCitesRendered != 0) {
