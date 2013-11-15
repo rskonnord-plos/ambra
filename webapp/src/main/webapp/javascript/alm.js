@@ -775,11 +775,15 @@ $.fn.alm = function () {
     var sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos","pmceurope", "pmceuropedata", "datacite"]);
     var sourceOrder = ['scopus','crossref','pubmed','wos', 'google', 'pmceurope', 'pmceuropedata', 'datacite'];
     var  sourceMap = {};
+
+    // map the sources with citation metrics to their corresponding tiles
     for (var index = 0; index < sources.length; index++ ) {
       var source = sources[index];
       if (source.metrics.total > 0) {
         numCitesRendered++;
         var url = source.events_url;
+        // remove white spaces in display name
+        source.display_name = source.display_name.replace(/\s/g, "");
         // removing registered trademark symbol from web of science
         source.display_name = source.display_name.replace("\u00ae", "");
 
@@ -803,21 +807,22 @@ $.fn.alm = function () {
       }
     }
 
-    // A link for searching Google Scholar should ALWAYS show up, but the display of that link
-    //   depends on whether there are other citation Metrics Tiles displayed.
-    var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
-    sourceMap['google'] =  this.createMetricsTile("googleScholar",
-        "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
-        "/images/logo-google-scholar.png",
-        "Search");
-
+    // add the source tiles to the page html in the desired order
     if (numCitesRendered != 0) {
-       for (var index = 0; index < sourceOrder.length; index++) {
+      // Google Scholar tile is displayed if some other citation metrics is available
+      var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
+      sourceMap['google'] =  this.createMetricsTile("GoogleScholar",
+          "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
+          "/images/logo-google-scholar.png",
+          "Search");
+
+       for (index = 0; index < sourceOrder.length; index++) {
          if (sourceOrder[index] in sourceMap) {
            html = html + sourceMap[sourceOrder[index]];
          }
        }
     } else {
+      // Google Scholar link is displayed if no citation metric is available
       html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
     }
 
