@@ -5222,8 +5222,8 @@ div.metrics_tile {
   vertical-align: text-top;
   display: inline-block;
   border: 1px solid #CCCCCC;
-  margin-right: 8px;
-  margin-bottom: 10px;
+  margin-right: 12px;
+  margin-bottom: 12px;
   background-color: #E5E4E4;
   *zoom: 1; /*  Workaround for IE */
   *display: inline; /*  Workaround for IE */
@@ -5259,8 +5259,8 @@ div.metrics_tile_no_link {
   vertical-align: text-top;
   display: inline-block;
   border: 1px solid #CCCCCC;
-  margin-right: 8px;
-  margin-bottom: 10px;
+  margin-right: 12px;
+  margin-bottom: 12px;
   background-color: #E5E4E4;
   *zoom: 1; /*  Workaround for IE */
   *display: inline; /*  Workaround for IE */

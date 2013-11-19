@@ -569,75 +569,81 @@ $.fn.alm = function () {
    * @param bookMarksID the ID of the element to contain the bookmarks text
    * @parem loadingID the ID of the "loading" element to fade out after completion
    */
-  this.setSavedSuccess = function(response, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback){
+  this.setSavedSuccess = function (response, bookMarksID, loadingID, registerVisualElementCallback, countElementShownCallback) {
     var bookMarksNode = $('#' + bookMarksID);
     $("#" + loadingID).fadeOut('slow');
     bookMarksNode.css("display", "none");
 
-    //filter and sort
-    var sources = this.filterSources(response[0].sources, ['citeulike','connotea', 'mendeley']);
-    sources = this.enforceOrder(sources, ['citeulike','connotea', 'mendeley']);
+    //filter
+    var sourceOrder = ['citeulike', 'connotea', 'mendeley'];
+    var sources = this.filterSources(response[0].sources, sourceOrder);
+    var sourceMap = {}, tooltip = '';
 
-    //create tiles
+    // create the tiles and map each source to its corresponding tile
     var noTilesCreated = true;
-    for(var w = 0; w < sources.length; w++){
-      var source = sources[w];
+    for (var index = 0; index < sources.length; index++) {
+      var source = sources[index];
 
       if (source.metrics.total > 0) {
         noTilesCreated = false;
+        source.display_name = source.display_name.replace(/\s/g, "");
+        if (source.name == 'mendeley') {
 
-        switch (source.name) {
-          case 'mendeley':
-            bookMarksNode.append(this.createMetricsTile(source.display_name,
+          sourceMap[source.name] = this.createMetricsTile(source.display_name,
               source.events_url,
               '/images/logo-' + source.name + '.png',
-              source.metrics.total)
-              + '\n')
+              source.metrics.total);
 
-            var individuals = source.metrics.shares;
-            var groups = source.metrics.groups;
-            $('#MendeleyImageOnArticleMetricsTab').tooltip({
-              backgroundColor: "rgba(255, 255, 255, 0.0)",
-              delay: 250,
-              fade: 250,
-              track: true,
-              shadow: false,
-              showURL: false,
-              bodyHandler: function () {
-                return $("<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
-                  "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
-                  "</thead><tbody><tr><td class=\"data1\">" + individuals.format(0, '.', ',') + "</td>" +
-                  "<td class=\"data2\">" + groups.format(0, '.', ',') + "</td></tr>" +
-                  "</tbody></table></div>");
-              }
-            });
-            break;
+          var individuals = source.metrics.shares;
+          var groups = source.metrics.groups;
 
-          case 'connotea':
-            // connotea does not get a link
-            bookMarksNode.append(this.createMetricsTileNoLink(source.display_name,
-                '/images/logo-' + source.name + '.png',
-                source.metrics.total)
-                + '\n');
-            break;
 
-          default:
-            bookMarksNode.append(this.createMetricsTile(source.display_name,
+          tooltip = "<div class=\"tileTooltip\"><table class=\"tile_mini\">" +
+              "<thead><tr><th>Individuals</th><th>Groups</th></tr>" +
+              "</thead><tbody><tr><td class=\"data1\">" + individuals.format(0, '.', ',') + "</td>" +
+              "<td class=\"data2\">" + groups.format(0, '.', ',') + "</td></tr>" +
+              "</tbody></table></div>";
+
+
+        } else if (!source.events_url) {
+          sourceMap[source.name] = this.createMetricsTileNoLink(source.display_name,
+              '/images/logo-' + source.name + '.png',
+              source.metrics.total);
+
+        } else {
+          sourceMap[source.name] = this.createMetricsTile(source.display_name,
               source.events_url,
               '/images/logo-' + source.name + '.png',
-              source.metrics.total)
-              + '\n')
-            break;
+              source.metrics.total);
+
         }
+      }
+    } // end of loop
 
+    // add the source tiles to the page html in the desired order
+    for (index = 0; index < sourceOrder.length; index++) {
+      if (sourceOrder[index] in sourceMap) {
+        bookMarksNode.append(sourceMap[sourceOrder[index]]);
       }
     }
 
+    $('#MendeleyImageOnArticleMetricsTab').tooltip({
+      backgroundColor: "rgba(255, 255, 255, 0.0)",
+      delay: 250,
+      fade: 250,
+      track: true,
+      shadow: false,
+      showURL: false,
+      bodyHandler: function () {
+        return $(tooltip);
+      }
+    });
+
     //if no tiles created, do not display header and section
-    if(noTilesCreated){
+    if (noTilesCreated) {
       $('#socialNetworksOnArticleMetricsPage').css("display", "none");
     }
-    else{
+    else {
       registerVisualElementCallback('#' + bookMarksID);
       bookMarksNode.show("blind", 500, countElementShownCallback);
     }
@@ -674,26 +680,31 @@ $.fn.alm = function () {
 
     var articleTitle = $('meta[name=citation_title]').attr("content");
     var doi = encodeURI($('meta[name=citation_doi]').attr("content"));
-    var html = '', source = null, tooltip = "";
+    var source = null, tooltip = "";
 
     // the order of tiles
-    // research blogging, science seeker, nature blogs, wikipedia
-    // comments, twitter, facebook, trackbacks, google blogs
+    // research blogging, science seeker, nature blogs, wikipedia, wordpress
+    // twitter, facebook, reddit, comments,  trackbacks, google blogs
 
-    //filter and sort
-    var sources = this.filterSources(response[0].sources,['researchblogging','scienceseeker','nature','wikipedia', 'twitter', 'facebook']);
-    sources = this.enforceOrder(sources,['researchblogging','scienceseeker', 'nature', 'wikipedia', 'twitter', 'facebook']);
+    var sourceOrder = ['researchblogging','scienceseeker', 'nature', 'wordpress', 'wikipedia', 'twitter', 'facebook', 'reddit'];
+    // filter
+    var sources = this.filterSources(response[0].sources, sourceOrder);
 
-    for (var u = 0; u < sources.length; u++) {
-      source = sources[u];
-      html = '';
+    var sourceMap = {};
+
+    // create the tiles  and map the sources to their corresponding tiles
+    for (var index = 0; index < sources.length; index++) {
+      source = sources[index];
 
       if (source.metrics.total > 0) {
+        // remove white spaces in display name
+        source.display_name = source.display_name.replace(/\s/g, "");
+
         if (source.name === 'facebook') {
           //create tile & toggle noTilesCreated
           // facebook does not get a link
-          html = this.createMetricsTileNoLink(source.display_name,
-              '/images/logo-' + source.name + '.png', source.metrics.total) + '\n';
+          sourceMap[source.name] =  this.createMetricsTileNoLink(source.display_name,
+              '/images/logo-' + source.name + '.png', source.metrics.total);
 
           //using these vars because source goes out of scope when tooltip handler is called
           var likes = source.metrics.likes;
@@ -708,33 +719,35 @@ $.fn.alm = function () {
 
         } else if (source.name === 'twitter') {
           //use link to our own twitter landing page
-          html = this.createMetricsTile(source.display_name,
+          sourceMap[source.name] = this.createMetricsTile(source.display_name,
               '/article/twitter/info:doi/' + doi, '/images/logo-' + source.name + '.png',
-              source.metrics.total) + '\n';
+              source.metrics.total);
 
         } else {
           if (!source.events_url) {
-            html = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+            sourceMap[source.name] = this.createMetricsTileNoLink(source.display_name, "/images/logo-" + source.name + '.png', source.metrics.total);
           } else {
             // logic for wikipedia,  we only want to escape the double quotes around the doi (the doi itself is already escaped)
             source.events_url = source.events_url.replace(/"/g, "%22");
-            html = this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total) + '\n';
+            sourceMap[source.name] =  this.createMetricsTile(source.display_name, source.events_url, "/images/logo-" + source.name + '.png', source.metrics.total);
           }
-        }
-
-        if (html.length > 0) {
-          discussedElement.append(html);
         }
       }
     } // end of for loop
 
+    // add the source tiles to the page html in the desired order
+    for (index = 0; index < sourceOrder.length; index++) {
+      if (sourceOrder[index] in sourceMap) {
+        discussedElement.append(sourceMap[sourceOrder[index]]);
+      }
+    }
     $('#notesAndCommentsOnArticleMetricsTab').appendTo(discussedElement);
     $('#trackbackOnArticleMetricsTab').appendTo(discussedElement);
-    html = this.createMetricsTile("google-blogs",
+
+    var html = this.createMetricsTile("google-blogs",
         "http://blogsearch.google.com/blogsearch?as_q=%22" + articleTitle + "%22",
         "/images/logo-googleblogs.png",
-        "Search")
-        + '\n';
+        "Search");
     discussedElement.append(html);
 
     $("#FacebookOnArticleMetricsTab").tooltip({
@@ -776,56 +789,58 @@ $.fn.alm = function () {
 
     // Citation Sources should always start with Scopus (if an entry for Scopus exists)
     // followed by the rest of the sources in alphabetical order.
-    var sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos"]);
-    sources = this.enforceOrder(sources, ['scopus','crossref','pubmed','wos']);
+    var sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos","pmceurope", "pmceuropedata", "datacite"]);
+    var sourceOrder = ['scopus','crossref','pubmed','wos', 'google', 'pmceurope', 'pmceuropedata', 'datacite'];
+    var  sourceMap = {};
 
-    for (var a = 0; a < sources.length; a++) {
-      source = sources[a];
+    // create the tiles and map the sources to their corresponding tiles
+    for (var index = 0; index < sources.length; index++ ) {
+      var source = sources[index];
       if (source.metrics.total > 0) {
+        numCitesRendered++;
         var url = source.events_url;
-        // find all spaces
-        var patternForSpace = /\s/g;
-        var tileName = source.display_name.toLowerCase().replace(patternForSpace, "-");
+        // remove white spaces in display name
+        source.display_name = source.display_name.replace(/\s/g, "");
         // removing registered trademark symbol from web of science
-        tileName = tileName.replace("\u00ae", "");
+        source.display_name = source.display_name.replace("\u00ae", "");
 
         //  If CrossRef, then compose a URL to our own CrossRef Citations page.
         if (source.name.toLowerCase() == 'crossref') {
-          html = html + this.createMetricsTile(tileName,
-            "/article/crossref/info:doi/" + doi,
-            "/images/logo-" + tileName + ".png",
-            source.metrics.total)
-            + '\n';
-          numCitesRendered++;
-
+           sourceMap[source.name] = this.createMetricsTile(source.display_name,
+              "/article/crossref/info:doi/" + doi,
+              "/images/logo-" + source.name + ".png",
+              source.metrics.total);
         } else if (source.events_url) {
           //  Only list links that HAVE DEFINED URLS
-          html = html + this.createMetricsTile(tileName,
-            url,
-            "/images/logo-" + tileName + ".png",
-            source.metrics.total)
-            + '\n';
-          numCitesRendered++;
-
+          sourceMap[source.name] =  this.createMetricsTile(source.display_name,
+              url,
+              "/images/logo-" + source.name + ".png",
+              source.metrics.total);
         } else {
-          html = html + this.createMetricsTileNoLink(tileName,
-              "/images/logo-" + tileName + ".png",
-              source.metrics.total) + '\n';
-          numCitesRendered++;
+          sourceMap[source.name] = this.createMetricsTileNoLink(source.display_name,
+              "/images/logo-" + source.name + ".png",
+              source.metrics.total);
         }
       }
-    }
+    } // end of loop
 
-    // A link for searching Google Scholar should ALWAYS show up, but the display of that link
-    //   depends on whether there are other citation Metrics Tiles displayed.
-    var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
-    if (numCitesRendered == 0) {
-      html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
+    // add the source tiles to the page html in the desired order
+    if (numCitesRendered != 0) {
+      // Google Scholar tile is created if some other citation metrics is available
+      var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
+      sourceMap['google'] =  this.createMetricsTile("GoogleScholar",
+          "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
+          "/images/logo-google-scholar.png",
+          "Search");
+
+       for (index = 0; index < sourceOrder.length; index++) {
+         if (sourceOrder[index] in sourceMap) {
+           html = html + sourceMap[sourceOrder[index]];
+         }
+       }
     } else {
-      html = html + this.createMetricsTile("googleScholar",
-        "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
-        "/images/logo-google-scholar.png",
-        "Search");
+      // Google Scholar link is displayed if no citation metric is available
+      html = "No related citations found<br/>Search for citations in <a href=\"http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL + "\">Google Scholar</a>";
     }
 
     $("#" + citesID).html(html);
@@ -862,8 +877,7 @@ $.fn.alm = function () {
     $('#' + f1kContentID).append(this.createMetricsTile(f1k.display_name,
       f1k.events_url,
       '/images/logo-' + f1k.name + '.png',
-      f1k.metrics.total)
-      + '\n').show("blind", 500, countElementShownCallback);
+      f1k.metrics.total)).show("blind", 500, countElementShownCallback);
   }
 
   this.setChartData = function (doi, usageID, loadingID, registerVisualElementCallback, countElementShownCallback, markChartShownCallback) {
