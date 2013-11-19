@@ -621,7 +621,7 @@ $.fn.alm = function () {
     } // end of loop
 
     // add the source tiles to the page html in the desired order
-    for (index = 0; index < sourceOrder.length; index++) {
+    for (var index = 0; index < sourceOrder.length; index++) {
       if (sourceOrder[index] in sourceMap) {
         bookMarksNode.append(sourceMap[sourceOrder[index]]);
       }
@@ -736,7 +736,7 @@ $.fn.alm = function () {
     } // end of for loop
 
     // add the source tiles to the page html in the desired order
-    for (index = 0; index < sourceOrder.length; index++) {
+    for (var index = 0; index < sourceOrder.length; index++) {
       if (sourceOrder[index] in sourceMap) {
         discussedElement.append(sourceMap[sourceOrder[index]]);
       }
@@ -833,7 +833,7 @@ $.fn.alm = function () {
           "/images/logo-google-scholar.png",
           "Search");
 
-       for (index = 0; index < sourceOrder.length; index++) {
+       for (var index = 0; index < sourceOrder.length; index++) {
          if (sourceOrder[index] in sourceMap) {
            html = html + sourceMap[sourceOrder[index]];
          }
