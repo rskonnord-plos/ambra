@@ -11,13 +11,14 @@
 
 package org.ambraproject.views;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * CategoryView to hold category structure and information
  */
-public class CategoryView {
+public class CategoryView implements Serializable {
 
   /**
    * Name of the root node of the taxonomy.  This is not exposed in the UI anywhere, but makes dealing
