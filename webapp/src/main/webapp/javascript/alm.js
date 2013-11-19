@@ -790,7 +790,7 @@ $.fn.alm = function () {
     // Citation Sources should always start with Scopus (if an entry for Scopus exists)
     // followed by the rest of the sources in alphabetical order.
     var sources = this.filterSources(response[0].sources, ["crossref", "pubmed", "scopus", "wos","pmceurope", "pmceuropedata", "datacite"]);
-    var sourceOrder = ['scopus','crossref','pubmed','wos', 'google', 'pmceurope', 'pmceuropedata', 'datacite'];
+    var sourceOrder = ['scopus','crossref','pubmed','wos', 'pmceurope', 'pmceuropedata', 'datacite', 'google'];
     var  sourceMap = {};
 
     // create the tiles and map the sources to their corresponding tiles
