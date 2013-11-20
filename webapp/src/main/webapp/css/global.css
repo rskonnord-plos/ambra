@@ -2815,6 +2815,7 @@ ul.bulletlist li {
 /* related research */
 #suggestions,
 #more_by_authors,
+#media_coverage,
 #people_view,
 #related_collections {
   margin: 30px 0;
@@ -2864,6 +2865,7 @@ ul.bulletlist li {
 }
 
 /* more by authors / people also viewed */
+#media_coverage ul,
 #more_by_authors ul,
 #people_view ul {
   list-style: none;

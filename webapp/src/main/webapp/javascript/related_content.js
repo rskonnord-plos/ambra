@@ -61,4 +61,96 @@ $(function () {
     });
   }
 
+
+  var categoryDisplayNameMap = { "News": "News Media Coverage", "Blogs": "Blog Coverage", "Other": "Related Resources" };
+
+  //Put the ALM mediaTracker response array into buckets matching their types
+  var categorizeReferences = function(response) {
+    //The names of these buckets may have to be changed to reflect API changes
+    var result = { "News": [], "Blogs": [], "Other": [] };
+    var typeGroupOther = result["Other"];
+
+    for(var a = 0; a < response.length; a++) {
+      var cur = response[a];
+      var typeGroup = result[cur.type];
+
+      if(typeof typeGroup === 'undefined') {
+        typeGroupOther.push(cur);
+      } else {
+        typeGroup.push(cur);
+      }
+    }
+
+    return result;
+  };
+
+  //Create the LI block for one referral
+  var createReferenceLI = function(curReference) {
+    var publication = "Unkown"
+    if(curReference.publication.length > 0) {
+      publication = curReference.publication;
+    }
+
+    var title = "Unkown"
+    if(curReference.title.length > 0) {
+      title = curReference.title;
+    }
+
+    var publication_date = "Unkown"
+    if(curReference.publishedOn.length > 0) {
+      publication_date = $.datepicker.formatDate('dd M yy', new Date(Date.parse(curReference.publishedOn)));
+    }
+
+    var liItem = $('<li></li>').html('<b>' + publication + '</b>: "<a href="' + curReference.referral + '">' + title +
+      '</a>"&nbsp;&nbsp;' + publication_date);
+
+    return liItem;
+  };
+
+  //Create the HTML block for the media coverage
+  var createReferencesHTML = function(categorizedResults) {
+    var html = $('<div></div>');
+    var keys = Object.keys(categorizedResults);
+    for(var a = 0; a < keys.length; a++) {
+      var category = keys[a];
+      var categoryDisplay = categoryDisplayNameMap[category];
+      $(html).append($('<h3></h3>').html(categoryDisplay));
+
+      if(categorizedResults[category].length > 0) {
+        var list = $('<ul></ul>');
+        for(var b = 0; b < categorizedResults[category].length; b++) {
+          var curReference = categorizedResults[category][b];
+          list.append(createReferenceLI(curReference));
+        }
+
+        $(html).append(list);
+      }
+    }
+
+    return html;
+  };
+
+
+  var mediaReferenceSucces = function(result) {
+    //Put results into buckets
+    var categorizedResults = categorizeReferences(result);
+
+    //Build up the UI
+    var docFragment = createReferencesHTML(categorizedResults);
+
+    $("#media_coverage").append(docFragment);
+    $("#media_coverage").show();
+  };
+
+  var mediaReferenceFailure = function(result) {
+    var error = $('<div></div>').attr("class", "error").html("There was an error.");
+    $("#media_coverage").append(error);
+    $("#media_coverage").show();
+
+    console.error(result);
+  };
+
+  var almService = new $.fn.alm();
+
+  almService.getMediaReferences(doi, mediaReferenceSucces, mediaReferenceFailure)
 });
