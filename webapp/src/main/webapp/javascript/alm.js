@@ -70,6 +70,80 @@ $.fn.alm = function () {
     this.getData(request, callBack, errorCallback);
   }
 
+  this.getMediaReferences = function (doi, callBack, errorCallback) {
+    doi = this.validateDOI(doi);
+
+    var request = doi + "&source=mediaTrackCurrated";
+    //this.getData(request, callBack, errorCallback);
+    //TODO: Replace with real data
+    var successData = [
+          {
+            "publication" : "ABC News 1",
+            "title" : "Article title 1",
+            "type" : "News",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC News 2",
+            "title" : "Article title 2",
+            "type" : "News",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC News 3",
+            "title" : "Article title 3",
+            "type" : "News",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC Blogs 1",
+            "title" : "Article Blog title 1",
+            "type" : "Blogs",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC Blogs 2",
+            "title" : "Article Blog title 2",
+            "type" : "Blogs",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC Blogs 3",
+            "title" : "Article Blog title 3",
+            "type" : "Blogs",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC Related 1",
+            "title" : "Article Related title 1",
+            "type" : "Related Sources",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC Related 2",
+            "title" : "Article Related title 2",
+            "type" : "Related Sources",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          },
+          {
+            "publication" : "ABC Related 3",
+            "title" : "Article Related title 3",
+            "type" : "Related Sources",
+            "referral": "http://www.wikipia.org",
+            "publishedOn" : "2013-11-18T09:47:34Z"
+          }
+        ];
+    callBack(successData);
+  }
+
   /*
    * Get summaries and counter data for the collection of article IDs
    * passed in.  If an article is not found, or a source data is not found
