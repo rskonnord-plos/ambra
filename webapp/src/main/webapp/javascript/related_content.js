@@ -55,7 +55,7 @@ $(function () {
             var li = $('<li></li>').attr("class", "cf").append(views, citations, info);
             $('div[id="more_by_authors"] > ul').append(li);
           }
-          $('div[id="more_by_authors"]').show();
+          $('div[id="more_by_authors"]').show("blind", 500);
         }
       }
     });
@@ -139,13 +139,13 @@ $(function () {
     var docFragment = createReferencesHTML(categorizedResults);
 
     $("#media_coverage").append(docFragment);
-    $("#media_coverage").show();
+    $("#media_coverage").show("blind", 500);
   };
 
   var mediaReferenceFailure = function(result) {
     var error = $('<div></div>').attr("class", "error").html("There was an error.");
     $("#media_coverage").append(error);
-    $("#media_coverage").show();
+    $("#media_coverage").show("blind", 500);
 
     console.error(result);
   };
