@@ -1,8 +1,3 @@
-#performance optimization duplicates some information from citedArticleLicense to minimize sql joins via hibernate
-alter table citedArticle
-    add column citedArticleLicenseID bigint(20),
-    add constraint foreign key (citedArticleLicenseID) references citedArticleLicense (citedArticleLicenseID);
-
 #contains common licensing information
 create table license (
   licenseID bigint(20),
@@ -50,3 +45,7 @@ create table citedArticleLicense (
   constraint foreign key (licenseID) references license (licenseID),
   index (status)
 ) engine=innodb auto_increment=1 default charset=utf8;
+
+alter table citedArticle
+add column citedArticleLicenseID bigint(20),
+add constraint foreign key (citedArticleLicenseID) references citedArticleLicense (citedArticleLicenseID);
