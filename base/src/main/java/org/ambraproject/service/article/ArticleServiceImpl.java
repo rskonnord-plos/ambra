@@ -64,15 +64,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Joe Osowski
@@ -707,7 +699,9 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     articleInfo.setArticleAssets(aViews);
 
     Set<Category> categories = article.getCategories();
-    Set<ArticleCategory> catViews = new HashSet<ArticleCategory>(categories.size());
+    // Set<ArticleCategory> categoryViews = new HashSet<ArticleCategory>(categories.size());
+    List<ArticleCategory> catViews = new ArrayList<ArticleCategory>();
+
 
     //See if the user flagged any of the existing categories
     List<Long> flaggedCategories = getFlaggedCategories(article.getID(), authId);
@@ -724,7 +718,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       );
     }
 
-    articleInfo.setCategories(catViews);
+    List<ArticleCategory> orderedCategories = sortCategories(catViews);
+    articleInfo.setOrderedCategories(orderedCategories);
 
     //authors (list of UserProfileInfo)
     //TODO: Refactor ArticleInfo and CitationInfo objects
@@ -1214,5 +1209,23 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Required
   public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
     this.crossRefLookupService = crossRefLookupService;
+  }
+
+  public List<ArticleCategory> sortCategories (List<ArticleCategory> categories) {
+    Hashtable<String, Integer> indexMap = new Hashtable<String, Integer>();
+    List<String>  temp = new ArrayList<String>();
+    List<ArticleCategory>  orderedCategories = new ArrayList<ArticleCategory>();
+    for (int index = 0; index < categories.size(); index++) {
+      ArticleCategory cat = categories.get(index);
+      if (cat.getSubCategory() != null && cat.getSubCategory().length() > 0) {
+        indexMap.put(cat.getSubCategory(), index);
+        temp.add(cat.getSubCategory());
+      }
+    }
+    Collections.sort(temp);
+    for (int index = 0; index < temp.size(); index++) {
+      orderedCategories.add(categories.get(indexMap.get(temp.get(index))));
+    }
+    return orderedCategories;
   }
 }
