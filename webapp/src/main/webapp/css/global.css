@@ -2980,6 +2980,15 @@ ul.bulletlist li {
   text-decoration: none;
 }
 
+/* article related content, media coverage section */
+#media_coverage h3 {
+  margin-bottom: 5px;
+}
+
+#media_coverage h3+ul {
+  margin-top: .25em;
+}
+
 /* sidebar search terms */
 #search_terms {
   margin: 20px 0;

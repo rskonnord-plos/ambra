@@ -62,16 +62,16 @@ $(function () {
   }
 
 
-  var categoryDisplayNameMap = { "News": "News Media Coverage", "Blogs": "Blog Coverage", "Other": "Related Resources" };
+  var categoryDisplayNameMap = { "News": "News Media Coverage", "Blog": "Blog Coverage", "Other": "Related Resources" };
 
   //Put the ALM mediaTracker response array into buckets matching their types
   var categorizeReferences = function(response) {
     //The names of these buckets may have to be changed to reflect API changes
-    var result = { "News": [], "Blogs": [], "Other": [] };
+    var result = { "News": [], "Blog": [], "Other": [] };
     var typeGroupOther = result["Other"];
 
     for(var a = 0; a < response.length; a++) {
-      var cur = response[a];
+      var cur = response[a].event;
       var typeGroup = result[cur.type];
 
       if(typeof typeGroup === 'undefined') {
@@ -97,8 +97,8 @@ $(function () {
     }
 
     var publication_date = "Unkown"
-    if(curReference.publishedOn.length > 0) {
-      publication_date = $.datepicker.formatDate('dd M yy', new Date(Date.parse(curReference.publishedOn)));
+    if(curReference.published_on.length > 0) {
+      publication_date = $.datepicker.formatDate('dd M yy', new Date(Date.parse(curReference.published_on)));
     }
 
     var liItem = $('<li></li>').html('<b>' + publication + '</b>: "<a href="' + curReference.referral + '">' + title +
@@ -133,19 +133,25 @@ $(function () {
 
   var mediaReferenceSucces = function(result) {
     //Put results into buckets
-    var categorizedResults = categorizeReferences(result);
 
-    //Build up the UI
-    var docFragment = createReferencesHTML(categorizedResults);
+    //assuming here the request was properly formatted to only get media information
+    var mediaSource = result[0].sources[0]
 
-    $("#media_coverage").append(docFragment);
-    $("#media_coverage").show("blind", 500);
+    // don't display anything if there isn't any data
+    if (mediaSource.events.length > 0) {
+      var categorizedResults = categorizeReferences(mediaSource.events);
+
+      //Build up the UI
+      var docFragment = createReferencesHTML(categorizedResults);
+
+      $("#media_coverage").append(docFragment);
+      $("#media_coverage").show("blind", 500);
+    }
   };
 
   var mediaReferenceFailure = function(result) {
-    var error = $('<div></div>').attr("class", "error").html("There was an error.");
-    $("#media_coverage").append(error);
-    $("#media_coverage").show("blind", 500);
+    // don't display anything if there is an error
+    $("#media_coverage").hide();
 
     console.error(result);
   };
