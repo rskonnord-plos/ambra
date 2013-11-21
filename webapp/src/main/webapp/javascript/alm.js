@@ -70,6 +70,13 @@ $.fn.alm = function () {
     this.getData(request, callBack, errorCallback);
   }
 
+  this.getMediaReferences = function (doi, callBack, errorCallback) {
+    doi = this.validateDOI(doi);
+
+    var request = doi + "&source=articlecoveragecurated&info=event";
+    this.getData(request, callBack, errorCallback);
+  }
+
   /*
    * Get summaries and counter data for the collection of article IDs
    * passed in.  If an article is not found, or a source data is not found
