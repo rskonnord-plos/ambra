@@ -108,6 +108,8 @@
                   CiteULike</a></li>
                 <li><a href="TEST"><img src="/images/icon.mendeley.16.png" width="16" height="16" alt="Mendeley">
                   Mendeley</a></li>
+                <li><a href="TEST"><img src="/images/icon.pubchase.16.png" width="16" height="16" alt="PubChase">
+                  PubChase</a></li>
                 <li><a href="TEST"><img src="/images/icon.twtr.16.png" width="16" height="16" alt="Twitter">
                   Twitter</a></li>
                 <li><a href="TEST"><img src="/images/icon.email.16.png" width="16" height="16" alt="Email">
