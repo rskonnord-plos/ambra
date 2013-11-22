@@ -699,8 +699,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     articleInfo.setArticleAssets(aViews);
 
     Set<Category> categories = article.getCategories();
-    // Set<ArticleCategory> categoryViews = new HashSet<ArticleCategory>(categories.size());
-    List<ArticleCategory> catViews = new ArrayList<ArticleCategory>();
+    Set<ArticleCategory> catViews = new HashSet<ArticleCategory>(categories.size());
 
 
     //See if the user flagged any of the existing categories
@@ -718,7 +717,10 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       );
     }
 
-    List<ArticleCategory> orderedCategories = sortCategories(catViews);
+    articleInfo.setCategories(catViews);
+    List<ArticleCategory> catList = new ArrayList<ArticleCategory>();
+    catList.addAll(catViews);
+    List<ArticleCategory> orderedCategories = sortCategories(catList);
     articleInfo.setOrderedCategories(orderedCategories);
 
     //authors (list of UserProfileInfo)
@@ -1211,20 +1213,35 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     this.crossRefLookupService = crossRefLookupService;
   }
 
+  /**
+   * This method sorts the categories in alphabetical order. It uses the subcategory
+   * for sorting; if the subcategory does not exist (in case of one-level deep categories)
+   * it uses the main category.
+   *
+   * @param categories the 'categories' property of an article as a list
+   * @return the alphabetically ordered categories
+   */
   public List<ArticleCategory> sortCategories (List<ArticleCategory> categories) {
     Hashtable<String, Integer> indexMap = new Hashtable<String, Integer>();
-    List<String>  temp = new ArrayList<String>();
+    List<String> subjectAreaList = new ArrayList<String>();
     List<ArticleCategory>  orderedCategories = new ArrayList<ArticleCategory>();
+    String subjectArea;
+
     for (int index = 0; index < categories.size(); index++) {
       ArticleCategory cat = categories.get(index);
       if (cat.getSubCategory() != null && cat.getSubCategory().length() > 0) {
-        indexMap.put(cat.getSubCategory(), index);
-        temp.add(cat.getSubCategory());
+        subjectArea = cat.getSubCategory();
+      } else {
+        subjectArea = cat.getMainCategory();
       }
+      indexMap.put(subjectArea, index);
+      subjectAreaList.add(subjectArea);
     }
-    Collections.sort(temp);
-    for (int index = 0; index < temp.size(); index++) {
-      orderedCategories.add(categories.get(indexMap.get(temp.get(index))));
+    // order the subcategories
+    Collections.sort(subjectAreaList);
+    // order the categories based on the ordered subcategories
+    for (int index = 0; index < subjectAreaList.size(); index++) {
+      orderedCategories.add(categories.get(indexMap.get(subjectAreaList.get(index))));
     }
     return orderedCategories;
   }
