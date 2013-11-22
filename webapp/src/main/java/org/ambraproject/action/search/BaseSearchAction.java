@@ -161,6 +161,8 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
 
   /**
    * Setter for 'sort', the clause which orders the query results.
+   * 'sort' is passed in the query string when the user selects the type of sort.
+   * It is the name of the sort field in the form.
    * @param sort The sort order for the search results
    */
   public void setSort(final String sort) {
@@ -168,12 +170,33 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   }
 
   /**
-   * Getter for 'sort', the clause which orders the query results.
+   * Getter for 'sort', the clause which orders the query results
    * @return The sort order for the search results
    */
   public String getSort() {
     return getSearchParameters().getSortKey();
   }
+
+  /**
+   * Setter for 'sortKey', the clause which orders the query results.
+   * 'sortKey' is passed in the query string when the user navigates through the
+   * pages after choosing the sort type.
+   * In pagination macro, the search parameters are passed as the query String;
+   * therefore the query string contains 'sortKey' rather than 'sort'.
+   * @param sortKey The sort order for the search results
+   */
+  public void setSortKey(final String sortKey) {
+    getSearchParameters().setSortKey(sortKey);
+  }
+
+  /**
+   * Getter for 'sortKey', the clause which orders the query results.
+   * @return The sort order for the search results
+   */
+  public String getSortKey() {
+    return getSearchParameters().getSortKey();
+  }
+
 
   public void setVolume(final String volume) {
     getSearchParameters().setVolume(volume);
