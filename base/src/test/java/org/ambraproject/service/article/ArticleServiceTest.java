@@ -78,6 +78,7 @@ public class ArticleServiceTest extends BaseTest {
     article1.setIssue("Fake Issue for Article 1");
     article1.setPublisherLocation("Fake PublisherLocation for Article 1");
     article1.setPublisherName("Fake PublisherName for Article 1");
+    article1.setStrkImgURI("Article 1 fake strkImgURI");
     article1.setJournal("Fake Journal for Article 1");
 
     List<String> collaborativeAuthorsForArticle1 = new LinkedList<String>();
@@ -276,6 +277,7 @@ public class ArticleServiceTest extends BaseTest {
     article2.setIssue("Fake Issue for Article 1");
     article2.setPublisherLocation("Fake PublisherLocation for Article 1");
     article2.setPublisherName("Fake PublisherName for Article 1");
+    article2.setStrkImgURI("Article 2 fake strkImgURI");
     article2.setJournal("Fake Journal for Article 1");
 
     List<String> collaborativeAuthorsForArticle2 = new LinkedList<String>();
@@ -499,6 +501,38 @@ public class ArticleServiceTest extends BaseTest {
         + articleDoi + " but returned " + article.getDoi());
 
     compareArticles(article, expectedArticle);
+  }
+
+  @DataProvider(name = "savedArticlesStrikingImageURI")
+  public Object[][] strikingImageURI() {
+    log.debug("data-savedArticles");
+
+    dummyDataStore.store(getArticle1());
+    dummyDataStore.store(getArticle2());
+
+    return new Object[][]{
+        { getArticle1().getStrkImgURI(), getArticle1() },
+        { getArticle2().getStrkImgURI(), getArticle2() }
+    };
+  }
+
+//  @Test(dataProvider = "savedArticlesStrikingImageURI")
+//  public void testGetStrikingImage(String imageURI, Article expectedArticle) {
+//    log.debug("test striking image URI");
+//
+//    String doi = "hi";
+//    Article article = articleService.getArticle(doi, DEFAULT_ADMIN_AUTHID);
+//
+//  }
+
+  @Test(dataProvider = "savedArticlesStrikingImageURI")
+  public void testGetStrikingImage(String imageURI, Article expectedArticle) throws NoSuchArticleIdException {
+    log.debug("test-testGetArticle");
+
+    Article article = articleService.getArticle(expectedArticle.getDoi(), DEFAULT_ADMIN_AUTHID);
+
+    assertEquals(article.getStrkImgURI(), imageURI, "returned article with incorrect striking image URI.  Expected "
+        + imageURI + " but returned " + article.getStrkImgURI());
   }
 
   @Test(dataProvider = "savedArticlesID")

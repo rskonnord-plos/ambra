@@ -694,6 +694,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     articleInfo.setVolume(article.getVolume());
     articleInfo.seteLocationId(article.geteLocationId());
     articleInfo.setCitedArticles(article.getCitedArticles());
+    articleInfo.setStrkImgURI(article.getStrkImgURI());
     //Set the citation info
     CitationInfo citationInfo = new CitationInfo();
     citationInfo.setId(URI.create(article.getDoi()));
