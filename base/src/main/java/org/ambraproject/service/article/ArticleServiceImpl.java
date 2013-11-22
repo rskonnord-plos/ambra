@@ -718,9 +718,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     articleInfo.setCategories(catViews);
-    List<ArticleCategory> catList = new ArrayList<ArticleCategory>();
-    catList.addAll(catViews);
-    List<ArticleCategory> orderedCategories = sortCategories(catList);
+    List<ArticleCategory> orderedCategories = sortCategories(catViews);
     articleInfo.setOrderedCategories(orderedCategories);
 
     //authors (list of UserProfileInfo)
@@ -1214,35 +1212,18 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
-   * This method sorts the categories in alphabetical order. It uses the subcategory
-   * for sorting; if the subcategory does not exist (in case of one-level deep categories)
-   * it uses the main category.
+   * This method sorts the categories in alphabetical order. It uses the overridden
+   * compareTo() method in the ArticleCategory to compare the subcategories for sorting;
+   * if the subcategory does not exist (in case of one-level deep categories)
+   * this method uses the main category.
    *
-   * @param categories the 'categories' property of an article as a list
+   * @param categoryViews the 'categories' property of an article as a list
    * @return the alphabetically ordered categories
    */
-  public List<ArticleCategory> sortCategories (List<ArticleCategory> categories) {
-    Hashtable<String, Integer> indexMap = new Hashtable<String, Integer>();
-    List<String> subjectAreaList = new ArrayList<String>();
-    List<ArticleCategory>  orderedCategories = new ArrayList<ArticleCategory>();
-    String subjectArea;
-
-    for (int index = 0; index < categories.size(); index++) {
-      ArticleCategory cat = categories.get(index);
-      if (cat.getSubCategory() != null && cat.getSubCategory().length() > 0) {
-        subjectArea = cat.getSubCategory();
-      } else {
-        subjectArea = cat.getMainCategory();
-      }
-      indexMap.put(subjectArea, index);
-      subjectAreaList.add(subjectArea);
-    }
-    // order the subcategories
-    Collections.sort(subjectAreaList);
-    // order the categories based on the ordered subcategories
-    for (int index = 0; index < subjectAreaList.size(); index++) {
-      orderedCategories.add(categories.get(indexMap.get(subjectAreaList.get(index))));
-    }
+ public List<ArticleCategory> sortCategories (Set<ArticleCategory> categoryViews) {
+   List<ArticleCategory> orderedCategories = new ArrayList<ArticleCategory>();
+   orderedCategories.addAll(categoryViews);
+   Collections.sort(orderedCategories);
     return orderedCategories;
   }
 }
