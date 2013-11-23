@@ -1107,9 +1107,17 @@ var FigViewerInit = function(doi, ref, state, external_page) {
   $FV.external_page = external_page ? true : false;
 
   var loadJSON = function() {
+    var apiurl = '/article/lightbox.action?uri=' + doi;
+
+    // from article tab where references exists, no need to fetch
+    // references from the server.
+    if ($(".article .references").size() > 0 &&
+        typeof selected_tab != "undefined" && selected_tab == "article") {
+      apiurl += "&fetchReferences=no";
+    }
+
     $.ajax({
-      url:'/article/lightbox.action?uri=' + doi,
-      // url: 'article/' + doi,
+      url:apiurl,
       dataFilter:function (data, type) {
         return data.replace(/(^\/\*|\*\/$)/g, '');
       },
@@ -1124,6 +1132,7 @@ var FigViewerInit = function(doi, ref, state, external_page) {
         FVBuildHdr(data.articleTitle, data.authors, data.uri);        
         FVBuildFigs(data);        
         FVBuildAbs(data);
+        FVBuildRefs(data, $(".article .references"));
         displayModal();
         
         // rerun mathjax
@@ -1213,7 +1222,8 @@ var FVSize = function () {
   $FV.cont.css('height', win_h - frame_h);
   $FV.figs.css('height', fig_h);
   $FV.thumbs_cont.css('height', fig_h - parseInt($FV.thumbs_el.css('paddingTop')));
-  $FV.abst_pane.css('height', win_h - frame_h - hdr_h); 
+  $FV.abst_pane.css('height', win_h - frame_h - hdr_h);
+  $FV.refs_pane.css('height', win_h - frame_h - hdr_h);
   if ($FV.thmbs_vis) {
     FVThumbPos($FV.thumbs.active);
   }
@@ -1396,11 +1406,27 @@ var FVBuildAbs = function(data) {
 
   if (!abstractText || /^\s*$/.test(abstractText)) {
     // There is no abstract. Go back and hide the "view abstract" button created in FVBuildHdr.
-    $FV.hdr.find('li.absract').hide();
+    $FV.hdr.find('li.abstract').hide();
   }
 
 };
-  
+
+// build references pane
+var FVBuildRefs = function(data, existing_references) {
+  $FV.refs_pane = $('<div id="fig-viewer-refs" class="pane cf" />');
+  var $refs_content = $('<ol class="references" />');
+  if (data.references) {
+    // TODO: write code to display data.references
+    $refs_content.append("Display " + data.references.length + " references here");
+  }
+  else if (existing_references.size() > 0) {
+    // copy existing article's references' HTML
+    $refs_content.html(existing_references.html());
+  }
+  $FV.refs_pane.append($refs_content);
+  $FV.cont.append($FV.refs_pane);
+};
+
 
 // toggle between panes
 var FVDisplayPane = function(pane) {

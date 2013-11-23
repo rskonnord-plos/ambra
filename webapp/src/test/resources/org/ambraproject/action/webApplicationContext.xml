@@ -49,6 +49,7 @@
     <property name="permissionsService" ref="permissionsService"/>
     <property name="articleService" ref="articleService"/>
     <property name="searchService" ref="searchService"/>
+    <property name="fetchArticleService" ref="fetchArticleService"/>
   </bean>
 
   <bean id="homePageAction" class="org.ambraproject.action.HomePageAction">

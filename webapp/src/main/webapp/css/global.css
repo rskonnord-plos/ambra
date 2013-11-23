@@ -4476,6 +4476,11 @@ legend.conjunction span {
   display: block;
 }
 
+.refs #fig-viewer-refs {
+  display: block;
+  overflow: auto;
+}
+
 #fig-viewer-controls {
   position: absolute;
   bottom: 90px;
