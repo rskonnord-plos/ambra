@@ -139,7 +139,7 @@ var FVSize = function () {
   var hdr_h = $FV.hdr.innerHeight()
   var fig_h = win_h - frame_h - $FV.slides.eq(0).find('div.data').innerHeight() - hdr_h;
   $FV.cont.css('height', win_h - frame_h);
-  $FV.figs.css('height', fig_h);
+  $FV.figs.css('height', fig_h - 4); // added border of 2px
   $FV.thumbs_cont.css('height', fig_h - parseInt($FV.thumbs_el.css('paddingTop')));
   $FV.abst_pane.css('height', win_h - frame_h - hdr_h);
   $FV.refs_pane.css('height', win_h - frame_h - hdr_h);
@@ -620,10 +620,15 @@ var FVFigFunctions = function($fig) {
 
   // max(+) buttton
   $FV.zoom.max.on('click', function() {
-    $FV.zoom.sldr.slider('value', real_h );
-    imgResize(real_h);
+    var value = $FV.zoom.sldr.slider("value");
+    value = resize_h + (real_h - resize_h) / 4 * Math.ceil((value - resize_h) * 4 / (real_h - resize_h) + 0.1);
+    value = Math.min(Math.ceil(value), real_h);
+
+    $FV.zoom.sldr.slider('value', value );
+    imgResize(value);
     FVDragInit($fig, $img);
-    FVSizeDragBox($fig, $img)
+    FVSizeDragBox($fig, $img);
+    drag = true;
   });
 
   // min(-) buttton
@@ -631,14 +636,23 @@ var FVFigFunctions = function($fig) {
     if (!drag) { // dragging is not enabled, so image must be zoomed in, nothing to do here
       return false;
     }
-    $FV.zoom.sldr.slider('value', resize_h );
-    $img.css({
-      'height': resize_h,
-      'marginTop': img_mt,
-      'marginLeft': img_ml
-    });
-    FVDragStop($fig, $img);
-    drag = false;
+    var value = $FV.zoom.sldr.slider("value");
+    value = resize_h + (real_h - resize_h) / 4 * Math.floor((value - resize_h) * 4 / (real_h - resize_h) - 0.1);
+    value = Math.max(Math.floor(value), resize_h);
+
+    $FV.zoom.sldr.slider('value', value );
+    if (value <= resize_h) {
+      $img.css({
+        'height': value,
+        'marginTop': img_mt,
+        'marginLeft': img_ml
+      });
+      FVDragStop($fig, $img);
+      drag = false;
+    }
+    else {
+      imgResize(value);
+    }
   });
 
   var imgResize = function(x) {
@@ -648,6 +662,20 @@ var FVFigFunctions = function($fig) {
       'marginLeft': img_ml - Math.round(((x - resize_h) / 2) * (real_w / real_h))
     });
   }
+
+  $fig.on('DOMMouseScroll mousewheel', function (event) {
+    var value = $FV.zoom.sldr.slider("value");
+    if (event.originalEvent.wheelDeltaY < 0) {
+      value = Math.min(value + 20, real_h);
+      imgResize(value);
+      $FV.zoom.sldr.slider('value', value );
+    }
+    else if (event.originalEvent.wheelDeltaY > 0) {
+      value = Math.max(value - 20, resize_h);
+      imgResize(value);
+      $FV.zoom.sldr.slider('value', value );
+    }
+  });
 };
 
 var FVDragInit = function($fig, $img) {

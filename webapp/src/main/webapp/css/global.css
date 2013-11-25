@@ -4588,6 +4588,7 @@ legend.conjunction span {
   padding: 0;
   width: 162px;
   text-align: center;
+  font-weight: bold;
 }
 
 .fig-btn .icn {
@@ -4629,6 +4630,8 @@ legend.conjunction span {
 
 #fig-viewer-slides .figure {
   overflow: hidden;
+  border: solid 2px #efefef;
+  position: relative;
 }
 
 #fig-viewer-slides .figure img {
@@ -4682,10 +4685,10 @@ legend.conjunction span {
 #fig-viewer-slides .txt .title {
   padding-top: 3px;
   font-size: 1.077em;
+  font-weight: bold;
   line-height: 1.143;
 }
 #fig-viewer-slides .txt .title b {
-  font-weight: normal;
   color: #636363;
   text-transform: uppercase;
 }
