@@ -64,15 +64,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Joe Osowski
@@ -709,6 +701,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     Set<Category> categories = article.getCategories();
     Set<ArticleCategory> catViews = new HashSet<ArticleCategory>(categories.size());
 
+
     //See if the user flagged any of the existing categories
     List<Long> flaggedCategories = getFlaggedCategories(article.getID(), authId);
 
@@ -725,6 +718,8 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     }
 
     articleInfo.setCategories(catViews);
+    List<ArticleCategory> orderedCategories = sortCategories(catViews);
+    articleInfo.setOrderedCategories(orderedCategories);
 
     //authors (list of UserProfileInfo)
     //TODO: Refactor ArticleInfo and CitationInfo objects
@@ -1214,5 +1209,21 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Required
   public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
     this.crossRefLookupService = crossRefLookupService;
+  }
+
+  /**
+   * This method sorts the categories in alphabetical order. It uses the overridden
+   * compareTo() method in the ArticleCategory to compare the subcategories for sorting;
+   * if the subcategory does not exist (in case of one-level deep categories)
+   * this method uses the main category.
+   *
+   * @param categoryViews the 'categories' property of an article as a list
+   * @return the alphabetically ordered categories
+   */
+ public List<ArticleCategory> sortCategories (Set<ArticleCategory> categoryViews) {
+   List<ArticleCategory> orderedCategories = new ArrayList<ArticleCategory>();
+   orderedCategories.addAll(categoryViews);
+   Collections.sort(orderedCategories);
+    return orderedCategories;
   }
 }
