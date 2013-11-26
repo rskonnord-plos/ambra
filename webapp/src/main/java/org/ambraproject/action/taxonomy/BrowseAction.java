@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ambraproject.action;
+package org.ambraproject.action.taxonomy;
 
 import org.ambraproject.action.search.BaseSearchAction;
 import org.ambraproject.models.UserProfile;
@@ -25,6 +25,7 @@ import org.ambraproject.service.user.UserService;
 import org.ambraproject.util.CategoryUtils;
 import org.ambraproject.util.Pair;
 import org.ambraproject.views.CategoryView;
+import org.ambraproject.views.article.FeaturedArticle;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +39,14 @@ import org.springframework.beans.factory.annotation.Required;
 public class BrowseAction extends BaseSearchAction {
   private static final Logger log = LoggerFactory.getLogger(BrowseAction.class);
 
+  //The UI is pinned to this page size
+  private static final int FIXED_PAGE_SIZE = 13;
+
   private TaxonomyService taxonomyService;
   private UserService userService;
 
   private String category;
+  private FeaturedArticle featuredArticle;
   private String[] parents;
   private String[] children;
   private boolean subscribed = false;
@@ -57,13 +62,7 @@ public class BrowseAction extends BaseSearchAction {
 
     CategoryView categoryView = taxonomyService.parseCategories(super.getCurrentJournal());
 
-    setDefaultSearchParams();
-    setFilterJournals(new String[] { super.getCurrentJournal() });
-
-    //The UI is pinned to this page size
-    setPageSize(13);
-
-    setUnformattedQuery("*:*");
+    setDefaults();
 
     if(category != null && category.length() > 0) {
       //Recreate the category name as stored in the DB
@@ -87,6 +86,11 @@ public class BrowseAction extends BaseSearchAction {
         }
 
         children = view.getChildren().keySet().toArray(new String[view.getChildren().keySet().size()]);
+
+        //Get the featured article for this category
+        if(this.category != null && this.category.length() > 0) {
+          featuredArticle = taxonomyService.getFeaturedArticleForSubjectArea(this.getCurrentJournal(), this.category);
+        }
       }
 
       setFilterSubjects(new String[] { this.category } );
@@ -115,6 +119,16 @@ public class BrowseAction extends BaseSearchAction {
     }
   }
 
+  private void setDefaults() {
+    setDefaultSearchParams();
+    setFilterJournals(new String[] { super.getCurrentJournal() });
+
+    //The UI is pinned to this page size
+    setPageSize(FIXED_PAGE_SIZE);
+
+    setUnformattedQuery("*:*");
+  }
+
   public int getSubjectCount() {
     return subjectCount;
   }
@@ -131,6 +145,13 @@ public class BrowseAction extends BaseSearchAction {
    */
   public String getCategory() {
     return this.category;
+  }
+
+  /**
+   * Get the featured article
+   */
+  public FeaturedArticle getFeaturedArticle() {
+    return featuredArticle;
   }
 
   /**

@@ -163,6 +163,12 @@ function onReadyDocument() {
   };
 
   $('ul.social li a').on('click', handleSocialClick);
+
+  if ($.fn.twitter && !$("#twitter-alm-timeline div.tweet-header").is(":visible")) {
+    var doi = $('meta[name=citation_doi]').attr("content");
+    var twitter = new $.fn.twitter();
+    twitter.displayTweetsArticleSidebar(doi);
+  }
 }
 
 
@@ -202,7 +208,7 @@ function onReadyMainContainer() {
     });
   });
 
-  $('.article a[href^="#"]').on('click', function (e) {
+  $('.article a[href^="#"]').not('#figure-thmbs .item a').on('click', function (e) {
     e.preventDefault();
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
@@ -236,31 +242,22 @@ function onReadyMainContainer() {
 function initMainContainer() {
   var $figure_thmbs = $('#figure-thmbs');
 
+  $figure_thmbs.detach();
+  $figure_thmbs.insertBefore($('.article .articleinfo'));
+
   if ($figure_thmbs.length) {
     $lnks = $figure_thmbs.find('.item a');
     $wrap = $figure_thmbs.find('div.wrapper');
     if ($lnks.length) {
+      $figure_thmbs.css('visibility', 'visible');
+      $('<h3>Figures</h3>').insertBefore($figure_thmbs);
+
       $lnks.on('click', function (e) {
         e.preventDefault();
         doi = $(this).data('doi');
         ref = $(this).data('uri');
         launchModal(doi, ref, 'fig');
       });
-      $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
-          $wrap.hide();
-          $figure_thmbs.find('div.buttons').hide();
-          $figure_thmbs.find('div.controls').hide();
-          $fig_tog.html('Show Figures')
-            .toggleClass('hide');
-        },function () {
-          $wrap.show();
-          $figure_thmbs.find('div.buttons').show();
-          $figure_thmbs.find('div.controls').show();
-          $fig_tog.html('Hide Figures')
-            .toggleClass('hide');
-        }
-      ).insertAfter($figure_thmbs)
-        .wrap('<div id="fig-toggle" class="cf" />');
     } else {
       $figure_thmbs.addClass('collapse');
     }
@@ -342,7 +339,6 @@ function initMainContainer() {
   });
 
   $("#nav-article li a").on("click", function(event) {
-    //console.log("pjax click " + this.name);
     // for metrics and related content that have dynamic javascript to populate
     // the content, cache the content here when the user navigates away from that
     // page. So that this cache can be reused when the user navigates back to
@@ -1726,7 +1722,7 @@ $(function() {
   //Stolen from:
   //http://www.vancelucas.com/blog/fixing-ie7-z-index-issues-with-jquery/
   if($.browser.msie && jQuery.browser.version < 10) {
-    var zIndexNumber = 1000;
+    var zIndexNumber = 500;
     $('div.sidebar').find('div').each(function() {
       $(this).css('zIndex', zIndexNumber);
       zIndexNumber -= 10;
