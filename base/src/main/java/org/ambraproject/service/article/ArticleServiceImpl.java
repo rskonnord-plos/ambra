@@ -1234,6 +1234,6 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    List<ArticleCategory> orderedCategories = new ArrayList<ArticleCategory>();
    orderedCategories.addAll(categoryViews);
    Collections.sort(orderedCategories);
-    return orderedCategories;
+   return orderedCategories;
   }
 }
