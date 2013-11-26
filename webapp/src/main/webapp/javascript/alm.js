@@ -1253,6 +1253,8 @@ $.fn.alm = function () {
               source.metrics.total);
 
           $('#views').append(tile);
+        } else {
+          return;
         }
         break;
       }
