@@ -1,15 +1,14 @@
-/* $HeadURL::                                                                            $
- * $Id:ListReplyAction.java 722 2006-10-02 16:42:45Z viru $
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  *
- * Copyright (c) 2006-2010 by Public Library of Science
- * http://plos.org
- * http://ambraproject.org
+ *   http://plos.org
+ *   http://ambraproject.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,12 +19,14 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.web.Cookies;
 import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.service.annotation.AnnotationService;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.FetchArticleService;
 import org.ambraproject.views.AnnotationView;
+import org.ambraproject.views.ArticleCategory;
 import org.ambraproject.views.AuthorView;
 import org.ambraproject.views.JournalView;
 import org.ambraproject.views.article.ArticleInfo;
@@ -62,6 +63,9 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
   private int numComments;
   private boolean isResearchArticle;
   private boolean hasAboutAuthorContent;
+  private Set<ArticleCategory> categories;
+  private List<List<String>> articleIssues;
+  private AnnotationView[] commentary = new AnnotationView[0];
 
   @Override
   public String execute() throws Exception {
@@ -79,6 +83,14 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
           || CollectionUtils.isNotEmpty(fetchArticleService.getCorrespondingAuthors(doc))
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorContributions(doc))
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorCompetingInterests(doc)));
+
+      this.categories = Cookies.setAdditionalCategoryFlags(articleInfo.getCategories(), articleInfo.getId());
+
+      articleIssues = articleService.getArticleIssues(articleInfo.getDoi());
+      commentary = annotationService.listAnnotations(articleInfo.getId(),
+          EnumSet.of(AnnotationType.COMMENT),
+          AnnotationService.AnnotationOrder.MOST_RECENT_REPLY);
+
     } catch (Exception ae) {
       log.error("Could not list all replies for root: " + root, ae);
       addActionError("Reply fetching failed with error message: " + ae.getMessage());
@@ -174,4 +186,28 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
     this.fetchArticleService = fetchArticleService;
   }
 
+  /**
+   * Return a list of this article's categories.
+   *
+   * Note: These values may be different pending the user's cookies then the values stored in the database.
+   *
+   * If a user is logged in, a list is built of categories(and if they have been flagged) for the article
+   * from the database
+   *
+   * If a user is not logged in, a list is built of categories for the article.  Then we append (from a cookie)
+   * flagged categories for this article
+   *
+   * @return Return a list of this article's categories
+   */
+  public Set<ArticleCategory> getCategories() {
+    return categories;
+  }
+
+  public List<List<String>> getArticleIssues() {
+    return articleIssues;
+  }
+
+  public AnnotationView[] getCommentary() {
+    return commentary;
+  }
 }

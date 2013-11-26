@@ -529,51 +529,53 @@
     <!-- 1/4/12: plos-specific template (creates editor list in citation) -->
     <xsl:template name="editors-list">
       <xsl:param name="r"/>
-      <p>
-        <xsl:for-each select="$r">
-          <!-- for the first item, print out the role first, i.e. Editor -->
-          <xsl:if test="position()=1">
-            <strong>
+      <xsl:if test="$r">
+        <p>
+          <xsl:for-each select="$r">
+            <!-- for the first item, print out the role first, i.e. Editor -->
+            <xsl:if test="position()=1">
+              <strong>
+                <xsl:choose>
+                  <xsl:when test="role">
+                    <xsl:value-of select="role"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    Academic Editor
+                  </xsl:otherwise>
+                </xsl:choose>
+                <!-- if multiple editors, make role plural -->
+                <xsl:if test="last() > 1">s</xsl:if>
+                <xsl:text>: </xsl:text>
+              </strong>
+            </xsl:if>
+            <xsl:apply-templates select="name | collab" mode="metadata"/>
+            <xsl:apply-templates select="*[not(self::name) and not(self::collab) and not(self::xref)
+                  and not(self::degrees) and not(self::role)]" mode="metadata"/>
+            <xsl:variable name="matchto" select="xref/@rid"/>
+            <xsl:if test="../following-sibling::aff">
+              <!-- use commas between name & aff if single editor; else use parens -->
               <xsl:choose>
-                <xsl:when test="role">
-                  <xsl:value-of select="role"/>
+                <xsl:when test="position() = 1 and position() = last()">
+                  <xsl:text>, </xsl:text>
+                  <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
                 </xsl:when>
                 <xsl:otherwise>
-                  Academic Editor
+                  <xsl:text> (</xsl:text>
+                  <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
+                  <xsl:text>)</xsl:text>
                 </xsl:otherwise>
               </xsl:choose>
-              <!-- if multiple editors, make role plural -->
-              <xsl:if test="last() > 1">s</xsl:if>
-              <xsl:text>: </xsl:text>
-            </strong>
-          </xsl:if>
-          <xsl:apply-templates select="name | collab" mode="metadata"/>
-          <xsl:apply-templates select="*[not(self::name) and not(self::collab) and not(self::xref)
-                and not(self::degrees) and not(self::role)]" mode="metadata"/>
-          <xsl:variable name="matchto" select="xref/@rid"/>
-          <xsl:if test="../following-sibling::aff">
-            <!-- use commas between name & aff if single editor; else use parens -->
-            <xsl:choose>
-              <xsl:when test="position() = 1 and position() = last()">
-                <xsl:text>, </xsl:text>
-                <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text> (</xsl:text>
-                <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
-                <xsl:text>)</xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:if>
-          <!-- appropriately place commas and "and" -->
-          <xsl:if test="position() != last()">
-            <xsl:text>, </xsl:text>
-          </xsl:if>
-          <xsl:if test="position() = last()-1">
-            <xsl:text>and </xsl:text>
-          </xsl:if>
-        </xsl:for-each>
-      </p>
+            </xsl:if>
+            <!-- appropriately place commas and "and" -->
+            <xsl:if test="position() != last()">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
+            <xsl:if test="position() = last()-1">
+              <xsl:text>and </xsl:text>
+            </xsl:if>
+          </xsl:for-each>
+        </p>
+      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
@@ -763,7 +765,7 @@
                         <xsl:element name="li">
                           <xsl:element name="a">
                             <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
-                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                            <xsl:attribute name="target">_new</xsl:attribute>
                             <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
                             CrossRef
                           </xsl:element>
@@ -773,7 +775,7 @@
                         <xsl:element name="li">
                           <xsl:element name="a">
                             <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubMedUrl"/></xsl:attribute>
-                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                            <xsl:attribute name="target">_new</xsl:attribute>
                             <xsl:attribute name="title">Go to article in PubMed</xsl:attribute>
                             PubMed/NCBI
                           </xsl:element>
@@ -783,7 +785,7 @@
                         <xsl:element name="li">
                           <xsl:element name="a">
                             <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@googleScholarUrl"/></xsl:attribute>
-                            <xsl:attribute name="onclick">window.open(this.href, 'ambraFindArticle', ''); return false;</xsl:attribute>
+                            <xsl:attribute name="target">_new</xsl:attribute>
                             <xsl:attribute name="title">Go to article in Google Scholar</xsl:attribute>
                             Google Scholar
                           </xsl:element>
@@ -1437,8 +1439,9 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
-      <xsl:apply-templates/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+      <xsl:apply-templates select="*[not(self::comment)]|text()"/>
+      <xsl:call-template name="citationComment"/>
+      <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1470,7 +1473,7 @@
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+      <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1486,7 +1489,7 @@
       <xsl:apply-templates select="collab" mode="book"/>
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+      <xsl:if test="extraCitationInfo/@doi">
         <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
         doi:
         <xsl:element name="a">
@@ -1896,7 +1899,7 @@
     <xsl:template name="citationComment">
       <!-- only output a single comment tag that appears as the very last child of the citation -->
       <xsl:variable name="x" select="child::comment[position()=last()]"/>
-      <xsl:if test="not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
+      <xsl:if test="not(starts-with(lower-case($x),'doi:')) and not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
         <xsl:text> </xsl:text><xsl:apply-templates select="$x"/>
       </xsl:if>
     </xsl:template>
@@ -2101,12 +2104,14 @@
     <!-- 1/4/12: suppress, we don't use. removed ext-link from list (we process independently) -->
     <xsl:template match="uri | inline-supplementary-material" />
 
-    <!-- 1/4/12: plos-specific template -->
+    <!-- 10/28/13: suppress, we don't use -->
     <xsl:template match="ext-link">
-      <a>
-        <xsl:call-template name="assign-href"/>
-        <xsl:apply-templates/>
-      </a>
+      <xsl:if test="not(ancestor::ref-list) or not(ends-with(lower-case(normalize-space(preceding::text()[1])),'doi:'))">
+        <a>
+          <xsl:call-template name="assign-href"/>
+          <xsl:apply-templates/>
+        </a>
+      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use  -->

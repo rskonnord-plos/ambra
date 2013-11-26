@@ -18,6 +18,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+//***************************************
+// ALM Service and some other globals
+//***************************************
+var almService = new $.fn.alm(),
+  ids = new Array(),
+  //When we get the results back, we put those IDs into this list.
+  confirmed_ids = new Array();
+
 $(document).ready(
     function() {
       //***************************************
@@ -68,6 +77,14 @@ $(document).ready(
       $("#clearAuthorFilter").click(function(eventObj) {
         $("input[name|='filterAuthors']").each(function (index, element) {
           $(element).removeAttr('checked');
+        });
+
+        $("#searchStripForm").submit();
+      });
+
+      $("#clearArticleTypeFilter").click(function(eventObj) {
+        $("input[name|='filterArticleType']").each(function (index, element) {
+          $(element).val('');
         });
 
         $("#searchStripForm").submit();
@@ -182,337 +199,11 @@ $(document).ready(
 
       $('#pageSizePicklistFig').uniform();
 
-      //***************************************
-      //Wire in ALM Stats
-      //***************************************
-      var almService = new $.fn.alm(),
-          ids = new Array(),
-      //When we get the results back, we put those IDs into this list.
-          confirmed_ids = new Array();
-
-      $("li[doi]:visible").each(function(index, element) {
-        ids[ids.length] = $(element).attr("doi");
+      $("li[data-doi]:visible").each(function(index, element) {
+        ids[ids.length] = $(element).data("doi");
       });
 
       almService.getArticleSummaries(ids, setALMSearchWidgets, setALMSearchWidgetsError);
-
-      function setALMSearchWidgets(articles) {
-        for (a = 0; a < articles.length; a++) {
-          var article = articles[a];
-          var doi = article.doi;
-          var sources = article.sources;
-          var scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter;
-          scopus = citeulike = counter = mendeley = crossref, wos, pmc, pubmed, facebook, twitter = null;
-
-
-          //get references to specific sources
-          var sourceNames = [];
-          for (var s = 0; s < sources.length; s++) {
-            sourceNames.push(sources[s].name);
-          }
-          scopus = sources[sourceNames.indexOf('scopus')];
-          citeulike = sources[sourceNames.indexOf('citeulike')];
-          pubmed = sources[sourceNames.indexOf('pubmed')];
-          counter = sources[sourceNames.indexOf('counter')];
-          mendeley = sources[sourceNames.indexOf('mendeley')];
-          crossref = sources[sourceNames.indexOf('crossref')];
-          wos = sources[sourceNames.indexOf('wos')];
-          pmc = sources[sourceNames.indexOf('pmc')];
-          facebook = sources[sourceNames.indexOf('facebook')];
-          twitter = sources[sourceNames.indexOf('twitter')];
-
-          //determine if article cited, bookmarked, or socialised, or even seen
-          var hasData = false;
-          if (scopus.metrics.total > 0 ||
-              citeulike.metrics.total > 0 ||
-              pmc.metrics.total + counter.metrics.total > 0 ||
-            mendeley.metrics.total > 0 ||
-            facebook.metrics.shares + twitter.metrics.total > 0) {
-            hasData = true;
-          }
-
-          //show widgets only when you have data
-          if (hasData) {
-            confirmed_ids[confirmed_ids.length] = doi;
-            makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter);
-          }
-        }
-        confirmALMDataDisplayed();
-      }
-
-      function makeALMSearchWidget(doi, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter) {
-        var nodeList = getSearchWidgetByDOI(doi);
-        var metricsURL = getMetricsURL(doi);
-
-        var anim = $(nodeList).fadeOut(250, function() {
-          var searchWidget = $("<span></span>");
-          searchWidget.addClass("almSearchWidget");
-
-          buildWidgetText(searchWidget, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter);
-
-          $(nodeList).html("");
-          $(nodeList).append(searchWidget);
-          $(nodeList).fadeIn(250);
-        });
-      }
-
-      //TODO: messy but correct - clean up
-      function buildWidgetText(node, metricsURL, scopus, citeulike, counter, mendeley, crossref, wos, pmc, pubmed, facebook, twitter) {
-        var newNode = null;
-
-        var total = pmc.metrics.total + counter.metrics.total;
-        var totalHTML = pmc.metrics.html + counter.metrics.html;
-        var totalPDF = pmc.metrics.pdf + counter.metrics.pdf;
-        //alm response json has no metric for xml, but xml = total - pdf - html
-        var totalXML = total - totalPDF - pmc.metrics.html - counter.metrics.html;
-        if (total > 0) {
-          newNode = $("<a></a>")
-            .attr("href", metricsURL + "#usage")
-            .html("Views: " + total.format(0, '.', ','))
-            .addClass("data");
-
-          newNode.tooltip({
-            delay: 250,
-            fade: 250,
-            top: -40,
-            left: 20,
-            track: true,
-            showURL: false,
-            bodyHandler: function () {
-              return "<span class=\"searchResultsTip\">HTML: <b>" + totalHTML.format(0, '.', ',') + "</b>"
-                + ", PDF: <b>" + totalPDF.format(0, '.', ',') + "</b>"
-                + ", XML: <b>" + totalXML.format(0, '.', ',') + "</b>"
-                + ", Grand Total: <b>" + total.format(0, '.', ',') + "</b></span>";
-            }
-          });
-
-
-          node.append($("<span></span>").append(newNode));
-        } else {
-          node.appendChild($("<span></span>")
-            .addClass("no-data")
-            .html("Views: Not available"));
-        }
-
-        //using scopus for display
-        if (scopus.metrics.total > 0) {
-          newNode = $("<a></a>")
-            .attr("href", metricsURL + "#citations")
-            .html("Citations: " + scopus.metrics.total.format(0, '.', ','))
-            .addClass("data");
-
-          newNode.tooltip({
-            delay: 250,
-            fade: 250,
-            top: -40,
-            left: 20,
-            track: true,
-            showURL: false,
-
-            bodyHandler: function () {
-              //adding citation sources manually and IN ALPHABETIC ORDER
-              //if this is generified, remember to sort, and remember the comma
-              var someSources = [crossref, pubmed, wos];
-              var tipText = scopus.display_name + ": <b>" + scopus.metrics.total.format(0, '.', ',') + "</b>"; //scopus.metrics.total always > 0
-
-              for (var s = 0; s < someSources.length; s++) {
-                var source = someSources[s];
-                if (source.metrics.total > 0) {
-                  tipText += ', ' + source.display_name + ": <b>" + source.metrics.total.format(0, '.', ',') + "</b>";
-                }
-              }
-
-              return "<span class=\"searchResultsTip\">" + tipText + "</span>";
-            }
-          });
-
-          //new dijit.Tooltip({ connectId: newNode, label: tipText });
-          appendBullIfNeeded(node);
-          node.append($("<span></span>").append(newNode));
-        } else {
-          appendBullIfNeeded(node);
-          node.append($("<span></span>")
-            .html("Citations: None")
-            .addClass("no-data"));
-        }
-
-        var markCount = mendeley.metrics.total + citeulike.metrics.total;
-        if (markCount > 0) {
-          newNode = $("<a></a>")
-            .attr("href", metricsURL + "#other")
-            .html("Saves: " + markCount.format(0, '.', ','))
-            .addClass("data");
-
-          appendBullIfNeeded(node);
-
-          newNode.tooltip({
-            delay: 250,
-            fade: 250,
-            top: -40,
-            left: 20,
-            track: true,
-            showURL: false,
-            bodyHandler: function () {
-              var tipText = "";
-
-              if (mendeley.metrics.total > 0) {
-                tipText += mendeley.display_name + ": <b>" + mendeley.metrics.total.format(0, '.', ',') + "</b>";
-              }
-
-              if (citeulike.metrics.total > 0) {
-                if (tipText != "") {
-                  tipText += ", "
-                }
-                tipText += citeulike.display_name + ": <b>" + citeulike.metrics.total.format(0, '.', ',') + "</b>";
-              }
-
-
-              return "<span class=\"searchResultsTip\">" + tipText + "</span>";
-            }
-          });
-
-          node.append($("<span></span>").append(newNode));
-        } else {
-          appendBullIfNeeded(node);
-          node.append($("<span></span>")
-            .html("Saves: None")
-            .addClass("no-data"));
-        }
-
-        var shareCount = facebook.metrics.shares + twitter.metrics.total;
-        if (shareCount > 0) {
-          newNode = $("<a></a>")
-            .attr("href", metricsURL + "#other")
-            .html("Shares: " + shareCount)
-            .addClass("data");
-
-          appendBullIfNeeded(node);
-
-          newNode.tooltip({
-            delay: 250,
-            fade: 250,
-            top: -40,
-            left: 20,
-            track: true,
-            showURL: false,
-            bodyHandler: function () {
-              var tipText = "";
-
-              if (facebook.metrics.shares > 0) {
-                tipText += facebook.display_name + ": <b>" + facebook.metrics.shares.format(0, '.', ',') + "</b>";
-              }
-
-              if (twitter.metrics.total > 0) {
-                if (tipText != "") {
-                  tipText += ", "
-                }
-                tipText += twitter.display_name + ": <b>" + twitter.metrics.total.format(0, '.', ',') + "</b>";
-              }
-
-              return "<span class=\"searchResultsTip\">" + tipText + "</span>";
-            }
-          });
-
-          node.append($("<span></span>").append(newNode));
-        } else {
-          appendBullIfNeeded(node);
-          node.append($("<span></span>")
-            .html("Shares: None")
-            .addClass("no-data"));
-        }
-      }
-
-      function appendBullIfNeeded(node) {
-        if(node.size() > 0) {
-          node.append("&nbsp;&bull;&nbsp;");
-        }
-      }
-
-      function getSearchWidgetByDOI(doi) {
-        return $("li[doi='" + doi  + "'] span.metrics");
-      }
-
-      function getMetricsURL(doi){
-        return $($("li[doi='" + doi  + "']")[0]).attr("metricsURL");
-      }
-
-      function setALMSearchWidgetsError() {
-        confirmALMDataDisplayed();
-      }
-
-      function makeALMSearchWidgetError(doi, message) {
-        var nodeList = getSearchWidgetByDOI(doi);
-        var spanNode = nodeList[0];
-
-        var errorMsg = $("<span></span>");
-        errorMsg.addClass("inlineError");
-        errorMsg.css("display","none");
-        errorMsg.html(message);
-
-        $(spanNode).find("span").fadeOut(250, function() {
-          $(spanNode).append(errorMsg);
-          $(errorMsg).fadeIn(250);
-        });
-      }
-
-      /*
-       * Walk through the ids and confirmed_ids list.  If
-       * If some ids are not confirmed.  Lets let the
-       * front end know that no data was received.
-       * */
-      function confirmALMDataDisplayed() {
-        if(confirmed_ids != null) {
-          for(a = 0; a < confirmed_ids.length; a++) {
-            for(b = 0; b < ids.length; b++) {
-              if(confirmed_ids[a] == ids[b]) {
-                ids.remove(b);
-              }
-            }
-          }
-        }
-
-        //if any ids are left.  We know there is no data
-        //Make note of that now.
-        for(a = 0; a < ids.length; a++) {
-          var nodeList = $("li[doi='" + ids[a] + "']");
-          var pubDate = $(nodeList[0]).attr("pdate");
-
-          //If the article is less then two days old and there is no data,
-          //it's not really an error, alm is a few days behind
-          if(pubDate > ((new Date().getTime()) -  172800000)) {
-            makeALMSearchWidgetError(ids[a],
-                "Metrics unavailable for recently published articles. Please check back later.");
-          } else {
-            makeALMSearchWidgetError(ids[a],
-                "<img src=\"../images/icon_error.png\"/>&nbsp;Metrics unavailable. Please check back later.");
-          }
-        }
-      }
-
-      function showFigSearchView() {
-        $('#search-results-block').hide();
-        $('#fig-search-block').show();
-
-        $('#resultView').val("fig");
-
-        $('div[class="figure"] > img[fakesrc]').each(function () {
-          $(this).attr("src", $(this).attr("fakesrc"));
-          $(this).removeAttr("fakesrc");
-        });
-
-        $('a[href]').attr('href', function(index, href) {
-          var startIndex = href.indexOf('resultView=');
-          var endIndex = 0;
-          var newResultView = "";
-          if (startIndex >= 0) {
-            endIndex = href.indexOf('&', startIndex);
-            if (endIndex >= 0) {
-              href = href.replace(href.substring(startIndex, endIndex), 'resultView=fig')
-            }
-          }
-          return href;
-        });
-      }
 
       if ($('#resultView').val() === "fig") {
         showFigSearchView();
@@ -542,12 +233,11 @@ $(document).ready(
         showFigSearchView();
       });
 
-      $('a.save-search').click(function() {
-
-        //if the request is from author/editor facet for save search, setting the search name with anchor id.
+      var showModalForSavedSearch = function() {
+        //if the request is from author/editor facet for save search, setting the search name with anchor name.
         //else the regular search term is used.
-        if($(this).attr('id')) {
-          $('#text_name_savedsearch').val($(this).attr('id'));
+        if($(this).attr('name')) {
+          $('#text_name_savedsearch').val($(this).attr('name'));
         }
         else if ($('#searchOnResult')) {
           $('#text_name_savedsearch').val($('#searchOnResult').val());
@@ -555,7 +245,7 @@ $(document).ready(
         $('#span_error_savedsearch').html('');
 
         //logic to show the pop-up
-        var saveSearchBox = $(this).attr('href');
+        var saveSearchBox = $('#save-search-box');
 
         //Fade in the Popup
         $(saveSearchBox).fadeIn(300);
@@ -573,17 +263,22 @@ $(document).ready(
         $('body').append('<div id="mask"></div>');
         $('#mask').fadeIn(300);
 
+        $(document).bind('keydown', keyDownEventHandler);
+        $(document).bind('click', clickEventHandler);
+        $('#text_name_savedsearch').focus();
+        //This may seems a bit odd, but this sets the cursor at the end of the string
+        var input = $('#text_name_savedsearch')[0];
+        input.selectionStart = input.selectionEnd = input.value.length;
+
         return false;
+      };
 
-      });
-
-      $('#btn_save_savedsearch').click(function() {
-
+      var saveSearch = function() {
         $('#searchName').val($('#text_name_savedsearch').val());
         $('#weekly').val($('#cb_weekly_savedsearch').is(':checked'));
         $('#monthly').val($('#cb_monthly_savedsearch').is(':checked'));
 
-        var uqry="";
+        var uqry= "";
         var query = $('#searchOnResult').attr('value');
 
         // if saving the author/editor facet search, then set the query to empty and
@@ -627,24 +322,99 @@ $(document).ready(
         //This is required if the user wants to save the original search.
         $('#searchOnResult').attr('value',query);
         $('#saveSearchFacetVal').attr('value',"");
-      });
+      };
 
-      $('#btn_cancel_savedsearch').click(function() {
-        $('#mask , #save-search-box').fadeOut(300 , function() {
+      var showModalForLogin = function(e) {
+        $('#save-journal-alert-error').html('');
+
+        //logic to show the pop-up
+        var loginBox = $('#login-box');
+
+        //Fade in the Popup
+        $(loginBox).fadeIn(300);
+
+        //Set the center alignment padding + border see css style
+        var popMargTop = ($(loginBox).height() + 24) / 2;
+        var popMargLeft = ($(loginBox).width() + 24) / 2;
+
+        $(loginBox).css({
+          'margin-top' : -popMargTop,
+          'margin-left' : -popMargLeft
+        });
+
+        // Add the mask to body
+        $('body').append('<div id="mask"></div>');
+        $('#mask').fadeIn(300);
+
+        $(document).bind('keydown', keyDownEventHandler);
+        $(document).bind('click', clickEventHandler);
+
+        return false;
+      };
+
+      var removeModal = function() {
+        $('#mask , .inlinePopup').fadeOut(300 , function() {
           $('#mask').remove();
         });
-      });
 
-      $(document).bind('keydown', function(e) {
+        $(document).unbind('keydown', keyDownEventHandler);
+        $(document).unbind('click', clickEventHandler);
+      };
+
+      var keyDownEventHandler = function(e) {
         if (e.which == 27) {
-          $('#mask , #save-search-box').fadeOut(300 , function() {
-            $('#mask').remove();
-          });
+          removeModal();
         }
-      });
+        if (e.which == 13) {
+          saveSearch();
 
+          //Prevent default event (Submits the form)
+          e.preventDefault();
+          return false;
+        }
+      };
+
+      var clickEventHandler = function(e) {
+        //If the click happens outside of the modal, close the modal
+        if($(e.target).is("inlinePopup") || $(e.target).parents(".inlinePopup").size()) {
+          //Do nothing (clicked inside box)
+        } else {
+          //Close the modal (clicked outside box);
+          removeModal();
+        }
+      };
+
+      $('.save-search-link').bind('click', showModalForSavedSearch);
+      $('.login-link').bind('click', showModalForLogin);
+      $('#btn-save-savedsearch').bind('click', saveSearch);
+      $('.btn-cancel-savedsearch').bind('click', removeModal);
     });
 
 function setFacetSearchValue(id){
   $('#saveSearchFacetVal').attr('value',id);
+}
+
+function showFigSearchView() {
+  $('#search-results-block').hide();
+  $('#fig-search-block').show();
+
+  $('#resultView').val("fig");
+
+  $('div[class="figure"] > img[fakesrc]').each(function () {
+    $(this).attr("src", $(this).attr("fakesrc"));
+    $(this).removeAttr("fakesrc");
+  });
+
+  $('a[href]').attr('href', function(index, href) {
+    var startIndex = href.indexOf('resultView=');
+    var endIndex = 0;
+    var newResultView = "";
+    if (startIndex >= 0) {
+      endIndex = href.indexOf('&', startIndex);
+      if (endIndex >= 0) {
+        href = href.replace(href.substring(startIndex, endIndex), 'resultView=fig')
+      }
+    }
+    return href;
+  });
 }

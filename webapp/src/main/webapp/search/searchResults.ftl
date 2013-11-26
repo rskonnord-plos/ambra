@@ -548,11 +548,10 @@
 
             <ul id="search-results">
               <#list searchResults as hit>
-                <@s.url id="fetchArticleMetricsURL" action="fetchArticleMetrics" namespace="/article" articleURI="info:doi/${hit.uri}" includeParams="none"/>
-                <li doi="${hit.uri}" pdate="${hit.date.getTime()?string.computer}" metricsURL="${fetchArticleMetricsURL}">
+                <li data-doi="${hit.uri}" data-pdate="${hit.date.getTime()?string.computer}">
                   <span class="article">
-                    <@s.url id="fetchArticleURL" action="fetchArticle" namespace="/article" articleURI="info:doi/${hit.uri}" includeParams="none"/>
-                    <@s.a href="${(freemarker_config.getJournalUrlFromIssn(hit.issn))!(freemarker_config.doiResolverURL)}%{fetchArticleURL}" title="Read Open-Access Article"><@articleFormat>${hit.title}</@articleFormat></@s.a>
+                   <@s.url id="fetchArticleURL" action="fetchArticle" namespace="/article" articleURI="info:doi/${hit.uri}" includeParams="none"/>
+                   <@s.a href="${(freemarker_config.getJournalUrlFromIssn(hit.issn))!(freemarker_config.doiResolverURL)}%{fetchArticleURL}" title="Read Open-Access Article"><@articleFormat>${hit.title}</@articleFormat></@s.a>
                   </span>
                   <span class="authors">${hit.creator!""}</span>
 

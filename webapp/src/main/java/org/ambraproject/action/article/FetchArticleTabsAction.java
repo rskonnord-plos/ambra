@@ -1,10 +1,16 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -15,6 +21,7 @@ package org.ambraproject.action.article;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
+import org.ambraproject.web.Cookies;
 import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.ArticleView;
@@ -44,16 +51,12 @@ import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.ambraproject.service.annotation.AnnotationService.AnnotationOrder;
-
 
 /**
  * This class fetches the information from the service tier for the article Tabs.  Common data is defined in the
@@ -116,14 +119,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private Set<JournalView> journalList;
   private ArticleAssetWrapper[] articleAssetWrapper;
   private AmbraFreemarkerConfig ambraFreemarkerConfig;
-
   private FetchArticleService fetchArticleService;
   private AnnotationService annotationService;
   private ArticleService articleService;
   private TrackbackService trackbackService;
   private UserService userService;
   private ArticleAssetService articleAssetService;
-
+  private Set<ArticleCategory> categories;
   /**
    * Fetch the data for Article Tab
    *
@@ -319,6 +321,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
         publishedJournal = ambraFreemarkerConfig.getDisplayName(j.getJournalKey());
       }
     }
+
+    this.categories = Cookies.setAdditionalCategoryFlags(articleInfoX.getCategories(), articleInfoX.getId());
   }
 
   @Override
@@ -780,26 +784,20 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * Return a list of this article's main categories
+   * Return a list of this article's categories.
    *
-   * @return a Set<String> of category names
-   * @throws ApplicationException when the article has not been set
+   * Note: These values may be different pending the user's cookies then the values stored in the database.
+   *
+   * If a user is logged in, a list is built of categories(and if they have been flagged) for the article
+   * from the database
+   *
+   * If a user is not logged in, a list is built of categories for the article.  Then we append (from a cookie)
+   * flagged categories for this article
+   *
+   * @return Return a list of this article's categories
    */
-  public List<String> getMainCategories() throws ApplicationException {
-    Set<String> mainCats = new HashSet<String>();
-
-    if (articleInfoX == null) {
-      throw new ApplicationException("Article not set");
-    }
-
-    for (ArticleCategory curCategory : articleInfoX.getCategories()) {
-      mainCats.add(curCategory.getMainCategory());
-    }
-
-    List<String> mainCatsList = new LinkedList<String>(mainCats);
-    Collections.sort(mainCatsList);
-
-    return mainCatsList;
+  public Set<ArticleCategory> getCategories() {
+    return categories;
   }
 
   /**

@@ -1,10 +1,16 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -127,11 +133,10 @@ hr {
 }
 
 blockquote {
-  margin: 40px 40px;
-  border-top: 5px solid #444;
-  border-bottom: 1px solid #CCC;
-  padding: 30px 0;
-  font-size: 1.385em;
+  margin-left: 0;
+  border-left: 5px solid #CCC;
+  padding-left: 30px;
+  font-style: italic;
 }
 
 blockquote p {
@@ -302,9 +307,11 @@ th {
 
 .btn,
 a.btn,
-/* active an inactive buttons in search results */
+  /* active an inactive buttons in search results */
 #search-view span.figs,
 #search-view span.list  {
+  background: #444;
+#search-view span.list {
   background: #444;
   font-size: 15px;
   line-height: 35px;
@@ -337,13 +344,12 @@ a.btn,
 /* inactive button */
 /* clear all filters button */
 .clear-filter .btn.primary,
-/* search results buttons */
+  /* search results buttons */
 #fig-search-block span.list,
-#search-results-block span.figs{
-     background-color: #646464;
-     color: #FFF;
+#search-results-block span.figs {
+  background-color: #646464;
+  color: #FFF;
 }
-
 
 input.btn {
   line-height: normal;
@@ -776,7 +782,7 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   overflow: hidden;
   font-size: 0.923em;
   line-height: 14px;
-  padding: 25px 0 40px;
+  padding: 25px 0 60px;
   color: #ccc;
 }
 
@@ -989,22 +995,23 @@ html:not(.js) #nav-main > ul > li:hover .submenu {
   border-right: 1px solid #d1d1d1;
   padding: 15px 7px 0;
   width: 75px;
-  height: 65px;
+  height: 45px;
   line-height: 1.1;
   position: relative;
 }
 
 .article-meta ul#almSignPost li .top {
   text-align: center;
-  font-size: 25px;
-  font-weight: normal;
+  font-size: 19px;
+  font-weight: bold;
+  color: #333;
   line-height: 1;
-  height: 30px;
+  height: 20px;
 }
 
 .article-meta ul#almSignPost li div.bottom {
   display: block;
-  height: 35px;
+  height: 25px;
   position: relative;
   font-size: 10px;
   font-weight: bold;
@@ -1022,9 +1029,11 @@ ul#almSignPost li div.bottom div.center {
   display: inline-block;
   font-weight: bold;
   font-size: 10px;
+  color: #333;
   text-transform: uppercase;
   position: relative;
   padding: 5px;
+  margin-bottom: -5px;
   cursor: pointer;
   -webkit-transition: all .3s linear;
   -moz-transition: all .3s linear;
@@ -1033,7 +1042,12 @@ ul#almSignPost li div.bottom div.center {
   transition: all .3s linear;
 }
 
-.article-meta ul#almSignPost li.reveal div.text {
+.article-meta ul#almSignPost li div.text a {
+  color: #333;
+}
+
+.article-meta ul#almSignPost li.reveal div.text,
+.article-meta ul#almSignPost li.reveal div.text a {
   background: #b04e0f;
   border-radius: 4px;
   color: #fff;
@@ -1047,7 +1061,7 @@ ul#almSignPost li div.bottom div.center {
 .article-meta ul#almSignPost li div.content {
   position: absolute;
   right: 0;
-  width: 350px;
+  width: 290px;
   height: 100px;
   -webkit-transition: visibility .4s linear, opacity .3s linear;
   -moz-transition: visibility .4s linear, opacity .3s linear;
@@ -1085,11 +1099,10 @@ ul#almSignPost li div.bottom div.center {
   border-radius: 4px;
   position: absolute;
   padding: 5px;
-  width: 340px;
+  width: 280px;
 }
 
 .article-meta ul#almSignPost li div.description a {
-  text-decoration: underline;
   color: #fff;
 }
 
@@ -1108,7 +1121,7 @@ ul#almSignPost li div.bottom div.center {
   min-height: 15px;
   text-transform: uppercase;
   margin-right: 10px;
-  font: 0.923em/1.25 Georgia, serif;
+  font: 0.769em/1.25 Georgia, serif;
   font-size-adjust: 0.48;
 }
 
@@ -1128,18 +1141,24 @@ ul#almSignPost li div.bottom div.center {
 
 #hdr-article {
   padding: 0 50px 20px 10px;
-  margin-top: -10px;
+  margin-top: -36px;
+}
+
+#hdr-article h1 {
+  font-size: 27px;
+  font-weight: normal;
 }
 
 #article-block .article-kicker {
   position: relative;
   display: inline-block;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
+  margin-top: 6px;
   cursor: pointer;
 }
 
 #article-block .article-kicker span {
-  font-size: 0.846em;
+  font-size: 0.769em;
   line-height: 1;
   text-transform: uppercase;
   cursor: pointer;
@@ -1416,6 +1435,7 @@ span.author span.rel-footnote {
   font-family: Arial, sans-serif;
   text-transform: uppercase;
   text-align: center;
+  padding-bottom: 20px;
 }
 
 #nav-article ul {
@@ -1608,7 +1628,7 @@ span.author span.rel-footnote {
 }
 
 .btn-reveal.reveal .btn {
-  background: #b04e0f;
+  background-color: #b04e0f;
   color: #FFF;
 }
 
@@ -1627,7 +1647,7 @@ span.author span.rel-footnote {
   width: 140px;
   font-size: 16px;
   line-height: 1;
-  min-height: 85px;
+  min-height: 60px;
   z-index: 5;
 }
 
@@ -1706,6 +1726,110 @@ html:not(.js) .btn-reveal:hover .content {
   border-bottom: 1px solid #dedede;
   padding-bottom: 10px;
   margin-bottom: 8px;
+}
+
+#subject-area-sidebar-block {
+  position: relative;
+}
+
+#subject-area-sidebar-block div.header h3 {
+  float: left;
+}
+
+#subject-area-sidebar-block-help-icon {
+  cursor: pointer;
+  float: right;
+}
+
+#subject-area-sidebar-block-help {
+  width: 375px;
+  height: 68px;
+  background-color: #3c63af;
+  border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: -215px;
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  transition: visibility .4s linear, opacity .3s linear;
+  visibility: hidden;
+  opacity: 0;
+}
+
+#subject-area-sidebar-block-help-icon.reveal #subject-area-sidebar-block-help {
+  -webkit-transition: visibility .4s linear, opacity .3s linear;
+  -webkit-transition-delay: 0s;
+  -moz-transition: visibility .4s linear, opacity .3s linear;
+  -moz-transition-delay: 0s;
+  -ms-transition: visibility .4s linear, opacity .3s linear;
+  -ms-transition-delay: 0s;
+  -o-transition: visibility .4s linear, opacity .3s linear;
+  -o-transition-delay: 0s;
+  transition: visibility .4s linear, opacity .3s linear;
+  transition-delay: 0s;
+  visibility: visible;
+  cursor: default;
+  opacity: 1;
+  z-index: 5;
+}
+
+#subject-area-sidebar-block-help p {
+  padding: 10px;
+  color: #fff;
+}
+
+#subject-area-sidebar-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#subject-area-sidebar-list li {
+  margin-bottom: 4px;
+  width: 160px;
+  display: inline-block;
+}
+
+#subject-area-sidebar-list li a {
+  color: inherit;
+}
+
+#subject-area-sidebar-list li div.flagText:hover {
+  color: #FFF;
+}
+
+#subject-area-sidebar-list li div.flagImage.flagged {
+  background-position: 0 0;
+}
+
+#subject-area-sidebar-list div.flagImage:hover {
+  background-position: 0 -19px;
+}
+
+#subject-area-sidebar-list li div.flagImage {
+  margin-top: 5px;
+  width: 15px;
+  height: 20px;
+  background-position: 0 -39px;
+  background-repeat: no-repeat;
+  background-image: url('/images/icon.sprite.taxonomy.flags.png');
+  float: right;
+  cursor: pointer;
+}
+
+#subject-area-sidebar-list li div.flagText {
+  background: #F8AF2D;
+  border-radius: 4px 4px 4px 4px;
+  font-weight: bold;
+  padding: 5px;
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  float: left;
 }
 
 #article-block .sidebar .block h3 {
@@ -1956,6 +2080,9 @@ html:not(.js) .btn-reveal:hover .content {
 
 #figure-thmbs {
   position: relative;
+  margin-bottom: 20px;
+  /*make visible in global.js */
+  visibility: hidden;
 }
 
 html:not(.js) #figure-thmbs {
@@ -1973,7 +2100,7 @@ html:not(.js) #figure-thmbs {
 #figure-thmbs .wrapper {
   background: #efefef;
   padding: 20px 0 30px;
-  width: 719px;
+  width: 514px;
   border-left: 18px solid #efefef;
   border-right: 18px solid #efefef;
 }
@@ -2013,7 +2140,7 @@ html:not(.js) #figure-thmbs {
 #figure-thmbs .buttons {
   position: absolute;
   top: 145px;
-  width: 755px;
+  width: 519px;
   text-align: center;
 }
 
@@ -2168,7 +2295,7 @@ div.table-wrap div.table-download .icon {
 }
 
 div.table-wrap div.table-download .label {
- cursor: pointer;
+  cursor: pointer;
 }
 
 div.table-wrap .expand {
@@ -2199,12 +2326,29 @@ div.table-wrap .table-footnote .fn-label {
   font-size: 10px;
 }
 
-.article .abstract,
 .article .articleinfo,
 .article .editorsAbstract,
 .article .section,
 .article .contributions {
   margin-bottom: 40px;
+}
+
+.article .abstract{
+  margin-bottom: 20px;
+}
+
+.article .articleinfo {
+  border: solid 1px #CCC;
+}
+
+.article .articleinfo p {
+  padding: 10px 20px;
+  margin-bottom: 0px;
+  border-bottom: solid 1px #CCC;
+}
+
+.article .articleinfo p:last-child {
+  border-bottom: none;
 }
 
 .editorsAbstract,
@@ -2214,7 +2358,6 @@ div.table-wrap .table-footnote .fn-label {
 }
 
 #section1 {
-  border-top: 1px solid #CCC;
   padding-top: 20px;
 }
 
@@ -2247,7 +2390,7 @@ div.table-wrap .table-footnote .fn-label {
   display: block;
   margin-top: 1.25em;
   font-size: 145%;
-  text-align:center;
+  text-align: center;
 }
 
 .article .equation img {
@@ -2712,6 +2855,7 @@ ul.bulletlist li {
 /* related research */
 #suggestions,
 #more_by_authors,
+#media_coverage,
 #people_view,
 #related_collections {
   margin: 30px 0;
@@ -2761,6 +2905,7 @@ ul.bulletlist li {
 }
 
 /* more by authors / people also viewed */
+#media_coverage ul,
 #more_by_authors ul,
 #people_view ul {
   list-style: none;
@@ -2873,6 +3018,15 @@ ul.bulletlist li {
   background: #4a0100;
   color: #444;
   text-decoration: none;
+}
+
+/* article related content, media coverage section */
+#media_coverage h3 {
+  margin-bottom: 5px;
+}
+
+#media_coverage h3+ul {
+  margin-top: .25em;
 }
 
 /* sidebar search terms */
@@ -3250,7 +3404,7 @@ dl.authors dt {
 
 .pageSize {
   width: 160px;
-  float:right;
+  float: right;
   display: inline-block;
   margin: 20px 0;
 }
@@ -3292,7 +3446,7 @@ dl.authors dt {
 }
 
 #hdr-search-results .options .btn,
-/* search results buttons */
+  /* search results buttons */
 #search-results-block span.list,
 #search-results-block span.figs,
 #fig-search-block span.list,
@@ -3730,8 +3884,8 @@ img.clear-filter {
   margin: 4px 0 15px;
 }
 
-.hdr-results span.text{
-  font:16px 'Arial';
+.hdr-results span.text {
+  font: 16px 'Arial';
   margin-right: 9px;
 }
 
@@ -3777,7 +3931,7 @@ img.clear-filter {
 /*#search-results-block span.figs,*/
 /*#fig-search-block span.list,*/
 /*#fig-search-block span.figs {*/
-  /*line-height: 28px;*/
+/*line-height: 28px;*/
 /*}*/
 
 /* margin to right of figure button */
@@ -4249,7 +4403,7 @@ legend.conjunction span {
   width: 870px;
   overflow: hidden;
   position: fixed;
-  z-index: 150;
+  z-index: 1000;
 }
 
 #fig-viewer .header {
@@ -4614,7 +4768,7 @@ legend.conjunction span {
   left: 0;
   z-index: 110;
   opacity: 0.6;
-  filter: alpha(opacity = 60);
+  filter: alpha(opacity=60);
 }
 
 /* applied to body element while modal is active to prevent scrolling */
@@ -5120,8 +5274,8 @@ div.metrics_tile {
   vertical-align: text-top;
   display: inline-block;
   border: 1px solid #CCCCCC;
-  margin-right: 8px;
-  margin-bottom: 10px;
+  margin-right: 12px;
+  margin-bottom: 12px;
   background-color: #E5E4E4;
   *zoom: 1; /*  Workaround for IE */
   *display: inline; /*  Workaround for IE */
@@ -5157,8 +5311,8 @@ div.metrics_tile_no_link {
   vertical-align: text-top;
   display: inline-block;
   border: 1px solid #CCCCCC;
-  margin-right: 8px;
-  margin-bottom: 10px;
+  margin-right: 12px;
+  margin-bottom: 12px;
   background-color: #E5E4E4;
   *zoom: 1; /*  Workaround for IE */
   *display: inline; /*  Workaround for IE */
@@ -5413,4 +5567,324 @@ ol.references ul.find-nolinks {
   margin: 0;
   padding: 0;
   height: 8px;
+}
+
+/*
+  Shadow box and mask for search alerts
+*/
+
+div.inlinePopup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 180px;
+  border: solid 1px #C8DFED;
+  padding-bottom: 16px;
+  font: 85% Verdana, Arial, Helvetica, sans-serif;
+  background: #FFFFFF;
+  z-index: 99999;
+}
+
+/* Journal alerts are a little smaller.  Note the footer in browse.ftl */
+div#journal-alert-box.journalAlert {
+  height: 150px;
+}
+
+div#login-box.login {
+  height: 110px;
+}
+
+div.inlinePopup div.top-header {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  background-color: #333333;
+  color: #ffffff;
+}
+
+div.inlinePopup span.heading {
+  font-weight: bold;
+  font-size: 14px;
+  position: absolute;
+  left: 20px;
+  top: 10px;
+}
+
+div.inlinePopup div.body-wrapper {
+  position: absolute;
+  top: 40px;
+  bottom: 40px;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 12px;
+}
+
+div.inlinePopup .big-box {
+  width: 350px;
+  border: solid 1px #606060;
+}
+
+div.inlinePopup div.check-box {
+  padding-top: 4px;
+  width: 370px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+div.inlinePopup div.grey-text {
+  color: #606060;
+  margin-top: 8px;
+  width: 370px;
+}
+
+div.inlinePopup div.button-wrapper {
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+div.inlinePopup span.errortext {
+  color: #ff0000;
+}
+
+div.inlinePopup input[type="button"] {
+  background: #333;
+  color: #fff;
+  margin-right: 2px;
+  padding: 9px 10px;
+  border: 0;
+  display: inline-block;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+div.inlinePopup input[type="button"]:hover {
+  background: #3c63af !important;
+  color: #fff !important;
+}
+
+#mask {
+  display: none;
+  background: #000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  z-index: 999;
+}
+
+/*
+  End shadow box and mask for search alerts
+*/
+
+.twitter-timeline-rendered {
+  display: none;
+}
+
+.twitter-timeline {
+  display: none;
+  margin-bottom: 20px;
+}
+
+/*
+Article meta data line
+*/
+ul.date-doi-line {
+  margin: 0;
+  padding: 10px 0px 0px;
+}
+
+ul.date-doi-line li {
+  margin-left: 20px;
+  margin-right: 4px;
+  float: left;
+  list-style-type: disc;
+  color: #666;
+}
+
+ul.date-doi-line li:first-child {
+  margin-left: 0px;
+  list-style-type: none;
+}
+
+#title-banner ul.date-doi-line {
+  display: none;
+  visibility: hidden;
+}
+
+/*
+  Drop down in DownloadPDF
+*/
+.article-actions .download {
+  position: absolute;
+  z-index: 10;
+}
+
+.article-actions .download span {
+  width: 110px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.article-actions .download span a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.article-actions .dropdown {
+  position: relative;
+}
+
+.article-actions .dropdown .dropdown-icon {
+  text-align: right;
+}
+
+.article-actions .dropdown span {
+  width: 10px;
+  background-image: url(../images/bul.wht.pt.dn.png);
+  background-repeat: no-repeat;
+  background-size: 9px 5px;
+  background-position: 10px 16px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+/*
+  twitter display on the article right hand side
+*/
+
+#article-block .sidebar .twitter-alm-timeline {
+  margin-bottom: 35px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-header {
+  margin-bottom: 7px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-header-logo {
+  width: 20px;
+  margin-right: 5px;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol li.tweet-entry {
+  margin-bottom: 7px;
+  padding-top: 10px;
+  border-top: 1px solid #e8e8e8;
+}
+
+#article-block .sidebar .twitter-alm-timeline ol li.tweet-entry.hide {
+  display: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a {
+  color: #333;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a:hover {
+  text-decoration: none;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user img {
+  width: 48px;
+  height: 48px;
+  border-radius: 5px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-posttime a {
+  float: right;
+  color: #707070;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-posttime a:hover {
+  text-decoration: underline;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-fullname {
+  font-weight: bold;
+  margin-right: 3px;
+  display: inline-block;
+}
+
+#article-block .sidebar .twitter-alm-timeline .tweet-user a:hover .twitter-fullname {
+  text-decoration: underline;
+}
+
+#article-block .sidebar .twitter-alm-timeline .twitter-username {
+  color: #707070;
+  font-size: smaller;
+}
+
+#article-block .sidebar ul.tweet-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 40px;
+  visibility: hidden;
+}
+
+#article-block .sidebar ul.tweet-actions li {
+  float: left;
+  margin: 1px 2px 2px 1px;
+}
+
+#article-block .sidebar ul.tweet-actions span {
+  background-image: url('/images/tweet-everything-spritev2.png');
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin: 0 2px 0 2px;
+  vertical-align: text-top;
+}
+
+#article-block .sidebar ul.tweet-actions a {
+  color: #707070;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-reply-action:hover span {
+  background-position: -16px 0;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-retweet-action span {
+  background-position: -80px 0
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-retweet-action:hover span {
+  background-position: -96px 0
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-favorite-action span {
+  background-position: -32px 0;
+}
+
+#article-block .sidebar ul.tweet-actions .tweet-favorite-action:hover span {
+  background-position: -48px 0;
+}
+
+#article-block .sidebar .twitter-alm-timeline button {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 5px, 0, 5px, 0;
+  background-color: white;
+  color: #3c63af;
+  font: 18px 'FS Albert Web Regular', Verdana, sans-serif;
+
+  background-image: url('/images/bul.pt.blu.dn.gif');
+  background-repeat: no-repeat;
+  background-position: 85% 50%;
 }

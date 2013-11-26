@@ -116,13 +116,13 @@ public class SlideshowAction extends BaseActionSupport {
   }
 
   /**
-   * Tet a list of figure/table doi and its title
+   * Get a list of figure/table doi and its title
    * This is used in tooltip for the figshare tile in the article metrics tab.
    *
    * @return list of figure/table doi and title
    * @throws Exception
    */
-  public String getFigureTables() throws Exception {
+  public String fetchFigureTables() throws Exception {
 
     articleAssetWrapper = articleAssetService.listFiguresTables(uri, getAuthId());
 

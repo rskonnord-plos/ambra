@@ -21,6 +21,7 @@
     <meta name="termsHost" content="${freemarker_config.get("termsHost")}" />
     <meta name="solrApiKey" content="${freemarker_config.get("solrApiKey")}" />
     <meta name="almAPIKey" content="${freemarker_config.get("almAPIKey")}" />
+    <meta name="almRequestBatchSize" content="${freemarker_config.get("almRequestBatchSize")}" />
 
     <#include "/article/article_variables.ftl">
 

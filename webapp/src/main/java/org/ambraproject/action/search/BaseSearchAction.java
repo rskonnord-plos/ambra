@@ -22,14 +22,22 @@ package org.ambraproject.action.search;
 
 import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.service.search.SearchParameters;
+import org.ambraproject.service.search.SearchService;
 import org.ambraproject.util.DateParser;
 import org.ambraproject.util.InvalidDateException;
+import org.ambraproject.views.SearchResultSinglePage;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.util.Date;
+import java.util.List;
 
 public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
   // All of the parameters used to execute any search.
   private SearchParameters searchParameters;
+
+  protected static final String SEARCH_PAGE_SIZE = "ambra.services.search.pageSize";
+  protected SearchService searchService;
+  protected SearchResultSinglePage resultsSinglePage;
 
   /**
    * Return the object used to store all of the parameters used to create a query.
@@ -43,6 +51,17 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
     }
     return searchParameters;
   }
+
+  /**
+   * Set values used for processing and/or display by all searches.
+   */
+  protected void setDefaultSearchParams() {
+    // Set default for "pageSize".
+    if (getPageSize() == 0) {
+      setPageSize(configuration.getInt(SEARCH_PAGE_SIZE, 10));
+    }
+  }
+
 
   /**
    * Converts a String array whose first element may be a comma delimited String
@@ -142,19 +161,42 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
 
   /**
    * Setter for 'sort', the clause which orders the query results.
+   * 'sort' is passed in the query string when the user selects the type of sort.
+   * It is the name of the sort field in the form.
    * @param sort The sort order for the search results
    */
   public void setSort(final String sort) {
-    getSearchParameters().setSort(sort);
+    getSearchParameters().setSortKey(sort);
   }
 
   /**
-   * Getter for 'sort', the clause which orders the query results.
+   * Getter for 'sort', the clause which orders the query results
    * @return The sort order for the search results
    */
   public String getSort() {
-    return getSearchParameters().getSort();
+    return getSearchParameters().getSortKey();
   }
+
+  /**
+   * Setter for 'sortKey', the clause which orders the query results.
+   * 'sortKey' is passed in the query string when the user navigates through the
+   * pages after choosing the sort type.
+   * In pagination macro, the search parameters are passed as the query String;
+   * therefore the query string contains 'sortKey' rather than 'sort'.
+   * @param sortKey The sort order for the search results
+   */
+  public void setSortKey(final String sortKey) {
+    getSearchParameters().setSortKey(sortKey);
+  }
+
+  /**
+   * Getter for 'sortKey', the clause which orders the query results.
+   * @return The sort order for the search results
+   */
+  public String getSortKey() {
+    return getSearchParameters().getSortKey();
+  }
+
 
   public void setVolume(final String volume) {
     getSearchParameters().setVolume(volume);
@@ -271,5 +313,33 @@ public abstract class BaseSearchAction extends BaseSessionAwareActionSupport {
 
   public Date getFilterStartDate() {
     return getSearchParameters().getFilterStartDate();
+  }
+
+  /**
+   * The total number of search results
+   *
+   * @return Value for property 'totalNoOfResults'.
+   */
+  public int getTotalNoOfResults() {
+    return resultsSinglePage.getTotalNoOfResults();
+  }
+
+  public List getPageSizes()
+  {
+    return searchService.getPageSizes();
+  }
+
+  public SearchResultSinglePage getResultsSinglePage() {
+    return resultsSinglePage;
+  }
+
+  /**
+   * Set the searchService
+   *
+   * @param searchService searchService
+   */
+  @Required
+  public void setSearchService(final SearchService searchService) {
+    this.searchService = searchService;
   }
 }

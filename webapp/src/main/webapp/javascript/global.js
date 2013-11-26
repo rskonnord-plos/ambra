@@ -1,8 +1,16 @@
 /*
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -94,7 +102,76 @@ function onReadyDocument() {
   if (collapsible) {
     collapsible.collapsiblePanel();
   }
+
+  var handleFlagClick = function(event) {
+    var categoryID = $(event.target).data("categoryid");
+    var articleID = $(event.target).data("articleid");
+    var categoryName = $(event.target).data("categoryname");
+
+    $.ajax({
+      type: 'POST',
+      url:'/taxonomy/flag/json',
+      data: { 'categoryID': categoryID, 'articleID': articleID },
+      dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+        $(event.target).unbind('click', handleFlagClick);
+        $(event.target).bind('click', handleDeflagClick);
+        $(event.target).addClass("flagged");
+        $(event.target).attr('title', "Remove inappropriate flag from '" + categoryName + "'");
+      }
+    });
+  };
+
+  var handleDeflagClick = function(event) {
+    var categoryID = $(event.target).data("categoryid");
+    var articleID = $(event.target).data("articleid");
+    var categoryName = $(event.target).data("categoryname");
+
+    $.ajax({
+      type: 'POST',
+      url:'/taxonomy/deflag/json',
+      data: { 'categoryID': categoryID, 'articleID': articleID },
+      dataType:'json',
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+      },
+      success:function (data) {
+        $(event.target).unbind('click', handleDeflagClick);
+        $(event.target).bind('click', handleFlagClick);
+        $(event.target).removeClass("flagged");
+        $(event.target).attr('title', "Flag '" + categoryName + "' as inappropriate");
+      }
+    });
+  };
+
+  $('#subject-area-sidebar-list li div.flagImage').on('click', handleFlagClick);
+  $('#subject-area-sidebar-list li div.flagImage.flagged').on('click', handleDeflagClick);
+
+  (function () {
+    this.hoverEnhanced({});
+  }).apply($('#subject-area-sidebar-block-help-icon'));
+
+  //Log clicks to the share buttons
+  var handleSocialClick = function(event) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent', "Article", "Share", $(event.target).attr('title')]);
+    }
+    return true;
+  };
+
+  $('ul.social li a').on('click', handleSocialClick);
+
+  if ($.fn.twitter && !$("#twitter-alm-timeline div.tweet-header").is(":visible")) {
+    var doi = $('meta[name=citation_doi]').attr("content");
+    var twitter = new $.fn.twitter();
+    twitter.displayTweetsArticleSidebar(doi);
+  }
 }
+
+
 
 // This is tab content initialization that is run once on page load,
 // and then everytime on tab navigation when the tab content loads.
@@ -131,7 +208,7 @@ function onReadyMainContainer() {
     });
   });
 
-  $('.article a[href^="#"]').on('click', function (e) {
+  $('.article a[href^="#"]').not('#figure-thmbs .item a').on('click', function (e) {
     e.preventDefault();
     var href = $(this).attr('href').split('#')[1];
     var b = $('a[name="' + href + '"]');
@@ -163,38 +240,24 @@ function onReadyMainContainer() {
 // and then everytime when the tab content loads via Pjax.
 
 function initMainContainer() {
-  var $nav_article = $('#nav-article');
-  if ($nav_article.length) {
-    items_l = $nav_article.find('li').length
-    $nav_article.addClass('items-' + items_l);
-  }
-
   var $figure_thmbs = $('#figure-thmbs');
+
+  $figure_thmbs.detach();
+  $figure_thmbs.insertBefore($('.article .articleinfo'));
+
   if ($figure_thmbs.length) {
     $lnks = $figure_thmbs.find('.item a');
     $wrap = $figure_thmbs.find('div.wrapper');
     if ($lnks.length) {
+      $figure_thmbs.css('visibility', 'visible');
+      $('<h3>Figures</h3>').insertBefore($figure_thmbs);
+
       $lnks.on('click', function (e) {
         e.preventDefault();
         doi = $(this).data('doi');
         ref = $(this).data('uri');
         launchModal(doi, ref, 'fig');
       });
-      $fig_tog = $('<span>Hide Figures</span>').toggle(function () {
-          $wrap.hide();
-          $figure_thmbs.find('div.buttons').hide();
-          $figure_thmbs.find('div.controls').hide();
-          $fig_tog.html('Show Figures')
-            .toggleClass('hide');
-        },function () {
-          $wrap.show();
-          $figure_thmbs.find('div.buttons').show();
-          $figure_thmbs.find('div.controls').show();
-          $fig_tog.html('Hide Figures')
-            .toggleClass('hide');
-        }
-      ).insertAfter($figure_thmbs)
-        .wrap('<div id="fig-toggle" class="cf" />');
     } else {
       $figure_thmbs.addClass('collapse');
     }
@@ -214,15 +277,19 @@ function initMainContainer() {
   }
 
   // figure search results
-  var $fig_results = $('#fig-search-results');
+  var $fig_results = $('#fig-search-results, .article-block .actions, #subject-list-view .actions');
   if ($fig_results.length) {
-    $fig_results.find('a.figures').on('click', function () {
+    $fig_results.find('a.figures').on('click', function (e) {
       doi = $(this).data('doi');
       launchModal(doi, null, 'fig', true);
+      e.preventDefault();
+      return false;
     });
-    $fig_results.find('a.abstract').on('click', function () {
+    $fig_results.find('a.abstract').on('click', function (e) {
       doi = $(this).data('doi');
       launchModal(doi, null, 'abstract', true);
+      e.preventDefault();
+      return false;
     });
   }
 
@@ -272,7 +339,6 @@ function initMainContainer() {
   });
 
   $("#nav-article li a").on("click", function(event) {
-    console.log("pjax click " + this.name);
     // for metrics and related content that have dynamic javascript to populate
     // the content, cache the content here when the user navigates away from that
     // page. So that this cache can be reused when the user navigates back to
@@ -1201,7 +1267,7 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
       + '<ul class="download">'
       + '<li class="label">Download: </li>'
 //   + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-      + '<li><span class="icon">PDF</span> <a href="' + "/article/fetchObjectAttachment.action?uri=" + doi + "&representation=PDF" + '" class="pdf">Full Article PDF Version</a></li>'
+      + '<li><span class="icon">PDF</span> <a href="' + "/article/" + doi + "/pdf" + '" class="pdf" target="_blank">Full Article PDF Version</a></li>'
       + '</ul>'
       + '<ul class="figure_navigation">'
       + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
@@ -1223,6 +1289,9 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
 
 
   var displayModal = function (articleType, title, authors, articleDoi, linkTitle) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',"Lightbox", "Display Modal", ""]);
+    }
     $hdr = $('<div class="header" />');
     if (linkTitle) {
       var articleLink = "http://dx.plos.org/" + articleDoi.replace("info:doi/", "");
@@ -1273,6 +1342,10 @@ var launchModal = function (doi, ref, state, imgNotOnPage) {
   };
 
   var changeSlide = function (thmb) {
+    if(typeof(_gaq) !== 'undefined'){
+      _gaq.push(['_trackEvent',"Lightbox", "Slide Changed", ""]);
+    }
+
     $all_sld.hide();
     this_sld = $all_sld.eq($all_thmb.index(thmb));
     $fig = this_sld.find('div.figure');
@@ -1419,7 +1492,9 @@ var killModal = function () {
 
   $win.unbind('resize.modal');
   //will record the timeStamp for when the modal is closed
-  close_time = event.timeStamp;
+  if(typeof event !== 'undefined') {
+    close_time = event.timeStamp;
+  }
 };
 
 // End Figure Viewer
@@ -1524,6 +1599,9 @@ if ($toc_block_cover.length) {
 }
 
 var toggleModalState = function () {
+  if(typeof(_gaq) !== 'undefined'){
+    _gaq.push(['_trackEvent',"Lightbox", "Toggle Modal Abstract", ""]);
+  }
   $('#fig-viewer').toggleClass('abstract');
 };
 
@@ -1551,6 +1629,8 @@ $(window).load(function () {
 });
 
 
+//Why is this bound universally?  That seems strange.
+//-Joe
 $(document).bind('keydown', function (e) {
   if (e.which == 27) {
     killModal();
@@ -1642,7 +1722,7 @@ $(function() {
   //Stolen from:
   //http://www.vancelucas.com/blog/fixing-ie7-z-index-issues-with-jquery/
   if($.browser.msie && jQuery.browser.version < 10) {
-    var zIndexNumber = 1000;
+    var zIndexNumber = 500;
     $('div.sidebar').find('div').each(function() {
       $(this).css('zIndex', zIndexNumber);
       zIndexNumber -= 10;

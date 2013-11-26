@@ -17,10 +17,6 @@
   /*background: #efefef;*/
 }
 
-#pagebdy {
-  padding-top: 30px;
-}
-
 #headlines {
   padding: 10px 15px 15px;
   background: #fff;
@@ -292,15 +288,6 @@
 
 #adWrap iframe {
   float: left;
-}
-
-.twitter-timeline-rendered {
-  display:none;
-}
-
-.twitter-timeline {
-  display:none;
-  margin-bottom: 20px;
 }
 
 /*plos one*/

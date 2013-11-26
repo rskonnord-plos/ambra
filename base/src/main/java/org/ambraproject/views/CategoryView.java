@@ -11,13 +11,21 @@
 
 package org.ambraproject.views;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * CategoryView to hold category structure and information
  */
-public class CategoryView {
+public class CategoryView implements Serializable {
+
+  /**
+   * Name of the root node of the taxonomy.  This is not exposed in the UI anywhere, but makes dealing
+   * with the taxonomy easier.
+   */
+  public static final String ROOT_NODE_NAME = "ROOT";
+
   private Map<String, CategoryView> parents;
   private Map<String, CategoryView> children;
   private final String name;
@@ -41,6 +49,13 @@ public class CategoryView {
     return name;
   }
 
+  /**
+   * @return true iff this category is the root of the entire taxonomy tree
+   */
+  public boolean isRoot() {
+    return ROOT_NODE_NAME.equals(name);
+  }
+
   @Override
   public String toString() {
     return name;
@@ -62,5 +77,18 @@ public class CategoryView {
   public void addChild(CategoryView categoryView) {
     children.put(categoryView.getName(), categoryView);
     categoryView.parents.put(this.name, this);
+  }
+
+  @Override
+  public boolean equals(Object that) {
+    if (that == null || !(that instanceof CategoryView)) {
+      return false;
+    }
+    return name.equals(((CategoryView) (that)).name);
+  }
+
+  @Override
+  public int hashCode() {
+    return name.hashCode();
   }
 }

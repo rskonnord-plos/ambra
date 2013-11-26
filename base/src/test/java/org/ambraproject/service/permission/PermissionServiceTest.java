@@ -58,6 +58,7 @@ public class PermissionServiceTest extends BaseTest {
     permissionsService.checkPermission(Permission.MANAGE_JOURNALS, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.MANAGE_SEARCH, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.MANAGE_CACHES, DEFAULT_ADMIN_AUTHID);
+    permissionsService.checkPermission(Permission.MANAGE_ARTICLE_LISTS, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.CROSS_PUB_ARTICLES, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.DELETE_ARTICLES, DEFAULT_ADMIN_AUTHID);
     permissionsService.checkPermission(Permission.VIEW_UNPUBBED_ARTICLES, DEFAULT_ADMIN_AUTHID);
