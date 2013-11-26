@@ -516,14 +516,6 @@ public class ArticleServiceTest extends BaseTest {
     };
   }
 
-//  @Test(dataProvider = "savedArticlesStrikingImageURI")
-//  public void testGetStrikingImage(String imageURI, Article expectedArticle) {
-//    log.debug("test striking image URI");
-//
-//    String doi = "hi";
-//    Article article = articleService.getArticle(doi, DEFAULT_ADMIN_AUTHID);
-//
-//  }
 
   @Test(dataProvider = "savedArticlesStrikingImageURI")
   public void testGetStrikingImage(String imageURI, Article expectedArticle) throws NoSuchArticleIdException {
@@ -542,8 +534,7 @@ public class ArticleServiceTest extends BaseTest {
     Article article = articleService.getArticle(articleID, DEFAULT_ADMIN_AUTHID);
 
     assertNotNull(article, "returned null article");
-    assertEquals(article.getID(), articleID, "returned article with incorrect ID.  Expected "
-        + articleID + " but returned " + article.getID());
+    assertEquals(article.getID(), articleID, "returned article with incorrect ID");
 
     compareArticles(article, expectedArticle);
   }
