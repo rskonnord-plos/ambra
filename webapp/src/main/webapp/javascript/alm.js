@@ -830,11 +830,10 @@ $.fn.alm = function () {
         }
       }
     } // end of loop
-
+    var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
     // add the source tiles to the page html in the desired order
     if (numCitesRendered != 0) {
       // Google Scholar tile is created if some other citation metrics is available
-      var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
       sourceMap['google'] =  this.createMetricsTile("GoogleScholar",
           "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
           "/images/logo-google-scholar.png",
