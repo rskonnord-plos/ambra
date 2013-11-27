@@ -35,6 +35,30 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.8.9</h2>
+  <p>Released December 3, 2013</p>
+  <h3>Features Implemented in Ambra 2.8.9</h3>
+  <ul>
+      <li>Fix for Google Scholar article metrics tab link</li>
+      <li>Fix for Figshare article metrics tab data display</li>
+      <li>Fix for display errors on user's preferences tab in community journals</li>
+      <li>Fix for author search facet "where my keywords appear"</li>
+      <li>Fix for abbreviated publication date month on article page</li>
+      <li>Fix for cross browser alphabetized display of subject areas on article page</li>
+  </ul>
+
+  <h2>Ambra 2.8.8</h2>
+  <p>Released November 26, 2013</p>
+  <h3>Features Implemented in Ambra 2.8.8</h3>
+  <ul>
+      <li>New ALMs on article metrics tab: Wordpress, PMC Europe, PMC Europe DB, Datacite DB, Reddit</li>
+      <li>New PubChase share badge on article page</li>
+      <li>Fix for sorting bug with pagination on PLOS One browse pages and all journal search results pages</li>
+      <li>Fix for article page download links on html5 tables</li>
+      <li>Fix for touch interaction with figure viewer</li>
+      <li>Media tracking data display on article page</li>
+  </ul>
+
   <h2>Ambra 2.8.7</h2>
   <p>Released November 19, 2013</p>
   <h3>Features Implemented in Ambra 2.8.7</h3>
