@@ -20,137 +20,117 @@
 
 package org.ambraproject.service.password;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.math.random.RandomDataImpl;
 
-import java.security.MessageDigest;
+import java.nio.charset.Charset;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Random;
 
 /**
- * Password digest service. It should hash the password such that it should be difficult to get the original password
- * back from it.
+ * Password digest service. Salts and hashes passwords such that they can be verified, but it is cryptographically
+ * infeasible to get the password from the hash.
  *
- * @author viru
+ * @author Ryan Skonnord
  */
 public class PasswordDigestService {
-  private String algorithm;
-  private final String ERROR_MESSAGE = "Password digesting failed";
-
   private static final Log log = LogFactory.getLog(PasswordDigestService.class);
-  private String encodingCharset;
 
-  /**
-   * Set the algorithm.
-   *
-   * @param algorithm algorithm for hashing
-   */
-  public void setAlgorithm(final String algorithm) {
-    this.algorithm = algorithm;
+  private static final HashFunction HASH_FUNCTION = Hashing.sha256();
+  private static final int HASH_LENGTH = HASH_FUNCTION.bits() / Byte.SIZE;
+  private static final int SECURE_SALT_LENGTH = HASH_LENGTH;
+  private static final int LEGACY_SALT_LENGTH = 6;
+
+  static {
+    assert SECURE_SALT_LENGTH != LEGACY_SALT_LENGTH;
   }
 
-  /**
-   * Return the digest for a given password
-   *
-   * @param password password
-   * @return digest of the password
-   * @throws PasswordServiceException on failure
-   */
-  public String getDigestPassword(final String password) throws PasswordServiceException {
-    return getDigestPassword(password, createRandomSalt());
+  private static final Charset BYTE_ENCODING = Charsets.UTF_8;
+  private static final BaseEncoding STRING_ENCODING = BaseEncoding.base16().lowerCase();
+
+
+  private final Random random;
+
+  public PasswordDigestService() {
+    this(new SecureRandom());
   }
 
-  /**
-   * Return a digest of the password also known as hashing. Use the salt as provided to make the deduction of the
-   * original password more time consuming.
-   *
-   * @param password password
-   * @param salt     salt
-   * @return digest password
-   * @throws PasswordServiceException on failure
-   */
-  private String getDigestPassword(final String password, final String salt)
-      throws PasswordServiceException {
-    try {
-      final MessageDigest md = MessageDigest.getInstance(algorithm);
-      final byte[] bytes = md.digest((salt + password).getBytes(encodingCharset));
-      return salt + getString(bytes);
-    } catch (final Exception ex) {
-      log.error(ERROR_MESSAGE, ex);
-      throw new PasswordServiceException(ERROR_MESSAGE, ex);
+  @VisibleForTesting
+  PasswordDigestService(Random random) {
+    if (!(random instanceof SecureRandom)) {
+      log.warn("The source for random salts is not guaranteed to be secure");
     }
+    this.random = Preconditions.checkNotNull(random);
   }
 
-  /**
-   * Verify that the user password matched the digest password
-   *
-   * @param passwordToVerify user's password
-   * @param savedPassword    digest password
-   * @return true if verified successfully, false otherwise
-   * @throws PasswordServiceException on failure
-   */
-  public boolean verifyPassword(final String passwordToVerify, final String savedPassword)
-      throws PasswordServiceException {
-    final String salt = getSalt(savedPassword);
-    final String newPasswordDigest = getDigestPassword(passwordToVerify, salt);
 
-    return savedPassword.equals(newPasswordDigest);
+  private byte[] produceHash(byte[] salt, String plaintextPassword) {
+    byte[] passwordBytes = plaintextPassword.getBytes(BYTE_ENCODING);
+    Hasher hasher = HASH_FUNCTION.newHasher(salt.length + passwordBytes.length);
+    hasher.putBytes(salt);
+    hasher.putBytes(passwordBytes);
+    return hasher.hash().asBytes();
   }
 
-  private String getSalt(final String digestPassword) {
-    return digestPassword.substring(0, getSaltLength());
+  public String generateDigest(String plaintextPassword) {
+    byte[] salt = new byte[SECURE_SALT_LENGTH];
+    random.nextBytes(salt);
+
+    byte[] hash = produceHash(salt, plaintextPassword);
+
+    byte[] digest = new byte[salt.length + hash.length];
+    System.arraycopy(salt, 0, digest, 0, salt.length);
+    System.arraycopy(hash, 0, digest, salt.length, hash.length);
+    return STRING_ENCODING.encode(digest);
   }
 
-  private String createRandomSalt() {
-    final RandomDataImpl random = new RandomDataImpl();
-    final int saltLength = getSaltLength();
-    return saltLength == 0 ? "" : random.nextHexString(saltLength);
-  }
-
-  /**
-   * Convert the bytes to hex notational printable characters
-   *
-   * @param bytes bytes
-   * @return the printable bytes
-   */
-  private static String getString(final byte[] bytes) {
-    final StringBuilder sb = new StringBuilder();
-    for (final byte bite : bytes) {
-      final int intByte = (int) (0x00FF & bite);
-      sb.append(getPaddedHexString(intByte));
+  public boolean verifyPassword(String plaintextPassword, String digest) {
+    if (digest.length() == LEGACY_SALT_LENGTH + HASH_LENGTH / 4) {
+      return verifyLegacy(digest, plaintextPassword);
     }
-    return sb.toString();
+
+    byte[] digestBytes = STRING_ENCODING.decode(digest);
+    byte[] salt = new byte[digestBytes.length - HASH_LENGTH];
+    System.arraycopy(digestBytes, 0, salt, 0, salt.length);
+    byte[] providedHash = new byte[HASH_LENGTH];
+    System.arraycopy(digestBytes, salt.length, providedHash, 0, providedHash.length);
+
+    byte[] expectedHash = produceHash(salt, plaintextPassword);
+    return Arrays.equals(providedHash, expectedHash);
   }
 
-  /**
-   * Ensures that the hex string returned is of length 2.
-   *
-   * @param intByte byte
-   * @return padded hex string
-   */
-  private static String getPaddedHexString(final int intByte) {
-    String hexString = Integer.toHexString(intByte);
-    if (hexString.length() == 1) {
-      hexString = "0" + hexString;
-    }
-    return hexString;
+  private boolean verifyLegacy(String digest, String plaintextPassword) {
+    String saltString = digest.substring(0, LEGACY_SALT_LENGTH);
+    byte[] saltBytes = saltString.getBytes(BYTE_ENCODING);
+    /*
+     * Yes, saltBytes really is this and not STRING_ENCODING.decode(saltString). This was a bug in the legacy
+     * implementation of this service, which we must reproduce in order to verify with digests that it wrote.
+     *
+     * The saltString will look like a hex encoding of three bytes
+     *     (e.g., "6b3882" -> [0x6b, 0x38, 0x82]),
+     * but we actually convert it to the salt by taking the ASCII encoding of those six digit characters
+     *     (e.g., "6b3882" -> ['6', 'b', '3', '8', '8', '2'] -> [0x36, 0x62, 0x33, 0x38, 0x38, 0x32]).
+     * This effectively gives only three bytes of entropy.
+     */
+
+    byte[] hashBytes = produceHash(saltBytes, plaintextPassword);
+    String hashHex = STRING_ENCODING.encode(hashBytes);
+
+    /*
+     * As a mirror image of the previous bug, the legacy implementation did not store the digest by concatenating the
+     * salt bytes to the hash bytes and encoding that to hexidecimal. Rather, concatenate the six hex digit characters,
+     * whose ASCII encodings were the salt, to the hex representation of the hash bytes.
+     */
+    String expectedDigest = saltString + hashHex;
+    return expectedDigest.equals(digest);
   }
 
-  /**
-   * Keeping the salt length hard coded for now, thinking that it might be better for security than if plainly visible
-   * in the spring configuration
-   *
-   * @return the length of salt
-   */
-  private int getSaltLength() {
-    return 6;
-  }
-
-  /**
-   * Set the encoding charset for the password
-   *
-   * @param encodingCharset encodingCharset
-   */
-  public void setEncodingCharset(final String encodingCharset) {
-    this.encodingCharset = encodingCharset;
-  }
 }
