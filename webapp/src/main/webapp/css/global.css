@@ -4676,7 +4676,7 @@ legend.conjunction span {
 }
 
 #fig-viewer-slides.txt-expand .txt .content {
-  height: 330px;
+  height: 190px;
   overflow-y: auto;
   border-top: 1px solid #bbb;
   border-color: rgba(0,0,0,0.2);
@@ -4830,7 +4830,8 @@ legend.conjunction span {
   height: 96px;
   overflow: hidden;
   cursor: pointer;
-  margin-top: 1px;
+  margin-bottom: 5px;
+  background-color: #ffffff;
 }
 
 #fig-viewer-thmbs .thmb .thmb-wrap {

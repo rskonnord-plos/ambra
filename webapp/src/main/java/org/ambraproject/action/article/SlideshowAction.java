@@ -56,7 +56,11 @@ public class SlideshowAction extends BaseActionSupport {
   private List<String> authors;
   private String abstractText;
   private List<CitationReference> references;
+  private String metaData;
+
   private String fetchReferences = "yes";
+  private String fetchMetaData = "yes";
+  private String fetchAbstract = "yes";
 
   /**
    * Action to return list of Secondary object for an article that are enclosed in Tables (table-warp)
@@ -112,7 +116,9 @@ public class SlideshowAction extends BaseActionSupport {
         return INPUT;
       }
 
-      abstractText = searchService.fetchAbstractText(uri);
+      if ("yes".equals(fetchAbstract)) {
+        abstractText = searchService.fetchAbstractText(uri);
+      }
 
       if ("yes".equals(fetchReferences)) {
         // references are extracted from XML document because the database
@@ -120,6 +126,10 @@ public class SlideshowAction extends BaseActionSupport {
         ArticleInfo articleInfoX = articleService.getArticleInfo(uri, getAuthId());
         Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
         references = this.fetchArticleService.getReferences(doc);
+      }
+
+      if ("yes".equals(fetchMetaData)) {
+        metaData = "TODO: get this data";
       }
     } catch (Exception ex) {
       log.info("Couldn't retrieve secondary object for URI: " + uri, ex);
@@ -188,8 +198,20 @@ public class SlideshowAction extends BaseActionSupport {
     return references;
   }
 
+  public String getMetaData() {
+    return metaData;
+  }
+
   public void setFetchReferences(String fetchReferences) {
     this.fetchReferences = fetchReferences;
+  }
+
+  public void setFetchMetaData(String fetchMetaData) {
+    this.fetchMetaData = fetchMetaData;
+  }
+
+  public void setFetchAbstract(String fetchAbstract) {
+    this.fetchAbstract = fetchAbstract;
   }
 
   /**
