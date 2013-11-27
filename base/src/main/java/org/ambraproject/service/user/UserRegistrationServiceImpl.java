@@ -3,6 +3,8 @@ package org.ambraproject.service.user;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.mailer.AmbraMailer;
+import org.ambraproject.service.password.PasswordDigestService;
+import org.ambraproject.service.password.PasswordServiceException;
 import org.ambraproject.util.TokenGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -14,8 +16,6 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.service.password.PasswordDigestService;
-import org.ambraproject.service.password.PasswordServiceException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +42,7 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
 
   /**
    * {@inheritDoc}
+   *
    * @param userProfile
    * @param password
    */

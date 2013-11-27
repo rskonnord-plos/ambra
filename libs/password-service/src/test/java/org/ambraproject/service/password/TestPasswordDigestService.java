@@ -20,9 +20,9 @@
 
 package org.ambraproject.service.password;
 
-import java.util.Random;
-
 import junit.framework.TestCase;
+
+import java.util.Random;
 
 public class TestPasswordDigestService extends TestCase {
 
@@ -33,8 +33,8 @@ public class TestPasswordDigestService extends TestCase {
 
     for (int count = 0; count < 100; count++) {
       final StringBuilder sb = new StringBuilder();
-      for (int length = 1; length < random.nextInt(20); length++ ) {
-        final char ch = (char)(64 + random.nextInt(60));
+      for (int length = 1; length < random.nextInt(20); length++) {
+        final char ch = (char) (64 + random.nextInt(60));
         sb.append(ch);
       }
 
@@ -59,20 +59,20 @@ public class TestPasswordDigestService extends TestCase {
 
     for (int count = 0; count < 100; count++) {
       final StringBuilder sb = new StringBuilder();
-      for (int length = 1; length < random.nextInt(20); length++ ) {
-        final char ch = (char)(64 + random.nextInt(60));
+      for (int length = 1; length < random.nextInt(20); length++) {
+        final char ch = (char) (64 + random.nextInt(60));
         sb.append(ch);
       }
 
       final String originalPassword = sb.toString();
       final String digestPassword = passwordDigestService.getDigestPassword(originalPassword);
       assertFalse(originalPassword.equalsIgnoreCase(digestPassword));
-      assertFalse(passwordDigestService.verifyPassword(originalPassword+"1", digestPassword));
+      assertFalse(passwordDigestService.verifyPassword(originalPassword + "1", digestPassword));
     }
   }
 
   public void testHashingOfSameStringShouldGiveDifferentResult()
-    throws InterruptedException, PasswordServiceException {
+      throws InterruptedException, PasswordServiceException {
     final PasswordDigestService passwordDigestService = getPasswordDigestService();
 
     final Random random = new Random();

@@ -2,11 +2,11 @@ package org.ambraproject.service.user;
 
 import org.ambraproject.action.BaseTest;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.password.PasswordDigestService;
+import org.ambraproject.service.password.PasswordServiceException;
 import org.ambraproject.testutils.DummyAmbraMailer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import org.ambraproject.service.password.PasswordDigestService;
-import org.ambraproject.service.password.PasswordServiceException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -73,7 +73,7 @@ public class UserRegistrationServiceTest extends BaseTest {
 
   @Test
   public void testResendVerificationEmail() throws DuplicateUserException, UserAlreadyVerifiedException, NoSuchUserException {
-    UserProfile profile = new UserProfile("testResendVerification@test.org", "resendVerificationEmail@example.com",  "pass");
+    UserProfile profile = new UserProfile("testResendVerification@test.org", "resendVerificationEmail@example.com", "pass");
     dummyDataStore.store(profile);
 
     String oldVerificationToken = profile.getVerificationToken();
@@ -97,7 +97,7 @@ public class UserRegistrationServiceTest extends BaseTest {
   @Test(expectedExceptions = {UserAlreadyVerifiedException.class})
   public void testResendToVerifiedUser() throws DuplicateUserException, UserAlreadyVerifiedException, NoSuchUserException {
     String email = "resendToVerifiedUser@test.org";
-    UserProfile profile = new UserProfile(email, "testResendToVerifiedUser","pass");
+    UserProfile profile = new UserProfile(email, "testResendToVerifiedUser", "pass");
     profile.setVerified(true);
     dummyDataStore.store(profile);
 

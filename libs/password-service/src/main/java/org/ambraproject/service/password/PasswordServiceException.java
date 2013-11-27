@@ -31,7 +31,7 @@ public class PasswordServiceException extends Exception {
   }
 
   /**
-   * @param message message
+   * @param message   message
    * @param exception exception
    * @see Exception#Exception(String, Throwable)
    */
