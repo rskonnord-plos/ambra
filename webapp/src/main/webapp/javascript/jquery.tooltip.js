@@ -20,6 +20,8 @@
  *  * limitations under the License.
  *
  */
+
+/* Source: http://jquery.bassistance.de/tooltip/jquery.tooltip.js */
  
 ;(function($) {
 	
