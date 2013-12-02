@@ -1,6 +1,4 @@
 /*
- * $HeadURL$
- * $Id$
  * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,9 +9,6 @@
  * limitations under the License.
  */
 
-/*
- BEGIN FIGURE VIEWER ********************************************
- */
 var $FV = {};
 
 var FigViewerInit = function(doi, ref, state, external_page) {
@@ -25,22 +20,20 @@ var FigViewerInit = function(doi, ref, state, external_page) {
   $FV.thmbs_vis = false; // figure thumbnails are hidden
   $FV.external_page = external_page ? true : false;
 
+  var rerunMathjax = function() {
+    // rerun mathjax
+    try {
+      var domelem = $FV[0];
+      if (domelem && typeof MathJax != "undefined") {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub,domelem]);
+      }
+    } catch (e) {
+      // ignore
+    }
+  };
+
   var loadJSON = function() {
     var apiurl = '/article/lightbox.action?uri=' + doi;
-
-    // from article tab where references,abstract and metadata exists, no need to fetch
-    // them again from the server.
-    if (typeof selected_tab != "undefined" && selected_tab == "article") {
-      if ($(".article .references").size() > 0) {
-        apiurl += "&fetchReferences=no";
-      }
-      if ($(".article .articleinfo").size() > 0) {
-        apiurl += "&fetchMetaData=no";
-      }
-      if ($(".article .abstract").size() > 0) {
-        apiurl += "&fetchAbstract=no";
-      }
-    }
 
     $.ajax({
       url:apiurl,
@@ -57,18 +50,25 @@ var FigViewerInit = function(doi, ref, state, external_page) {
 
         FVBuildHdr(data.articleTitle, data.authors, data.uri);
         FVBuildFigs(data);
-        FVBuildAbs(data, $(".article .abstract"), $(".article .articleinfo"));
-        FVBuildRefs(data, $(".article .references"));
-        displayModal();
 
-        // rerun mathjax
-        try {
-          var domelem = $FV[0];
-          if (domelem && typeof MathJax != "undefined") {
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub,domelem]);
-          }
-        } catch (e) {
-          // ignore
+        // from article tab where references,abstract and metadata exists, no need to fetch
+        // them again from the server.
+        if (typeof selected_tab != "undefined" && selected_tab == "article") {
+          FVBuildAbs(doi, $(".article .abstract"), $(".article .articleinfo"));
+          FVBuildRefs($(".article .references"));
+          displayModal();
+          rerunMathjax();
+        }
+        else {
+          var articleUrl = "/article/" + doi;
+          console.log("fetch full article: " + articleUrl);
+          $.ajax({url: articleUrl, success: function(fullArticleHtml) {
+            var article = $(fullArticleHtml);
+            FVBuildAbs(doi, article.find(".article .abstract"), article.find(".article .articleinfo"));
+            FVBuildRefs(article.find(".article .references"));
+            displayModal();
+            rerunMathjax();
+          }});
         }
       }
     });
@@ -312,40 +312,26 @@ var FVBuildFigs = function(data) {
 
 
 // build abstract pane
-var FVBuildAbs = function(data, existing_abstract, existing_metadata) {
+var FVBuildAbs = function(doi, abstractText, metadata) {
   $FV.abst_pane = $('<div id="fig-viewer-abst" class="pane cf" />');
   var $abst_content = $('<div class="abstract" />');
 
-  if (data.abstractText) {
-    var abstractText = data.abstractText;
-    $abst_content.append(abstractText);
-    if (!$abst_content.find('p').length) {
-      $abst_content.wrapInner('<p>');
-    }
 
-    if (!abstractText || /^\s*$/.test(abstractText)) {
-      // There is no abstract. Go back and hide the "view abstract" button created in FVBuildHdr.
-      $FV.hdr.find('li.abstract').hide();
-    }
+  if (abstractText.size() == 0) {
+    // There is no abstract. Go back and hide the "view abstract" button created in FVBuildHdr.
+    $FV.hdr.find('li.abstract').hide();
   }
   else {
-    $abst_content.html(existing_abstract.html());
+    $abst_content.html(abstractText.html());
     $abst_content.find("h2").remove();
     $abst_content.find('a[name="abstract0"]').remove();
   }
 
-  var lnk_pdf = '<div class="fv-lnk-pdf"><a href="/article/fetchObject.action?uri=' + data.uri + '&representation=PDF" target="_blank" class="btn">Download: Full Article PDF Version</a></div>'
+  var lnk_pdf = '<div class="fv-lnk-pdf"><a href="/article/fetchObject.action?uri=' + doi + '&representation=PDF" target="_blank" class="btn">Download: Full Article PDF Version</a></div>'
   $abst_content.append(lnk_pdf);
 
   var $abst_info = $('<div class="info" />');
-  if (data.metaData) {
-    // TODO: write code to display data.articleinfo
-    $abst_info.html('Display ' + data.metaData);
-  }
-  else if (existing_metadata.size() > 0) {
-    // copy existing article's metadata HTML
-    $abst_info.html(existing_metadata.html());
-  }
+  $abst_info.html(metadata.html());
 
   $FV.abst_pane.append($abst_content);
   $FV.abst_pane.append($abst_info);
@@ -354,17 +340,10 @@ var FVBuildAbs = function(data, existing_abstract, existing_metadata) {
 };
 
 // build references pane
-var FVBuildRefs = function(data, existing_references) {
+var FVBuildRefs = function(references) {
   $FV.refs_pane = $('<div id="fig-viewer-refs" class="pane cf" />');
   var $refs_content = $('<ol class="references" />');
-  if (data.references) {
-    // TODO: write code to display data.references
-    $refs_content.append("Display " + data.references.length + " references here");
-  }
-  else if (existing_references.size() > 0) {
-    // copy existing article's references' HTML
-    $refs_content.html(existing_references.html());
-  }
+  $refs_content.html(references.html());
   $FV.refs_pane.append($refs_content);
   $FV.cont.append($FV.refs_pane);
 };
@@ -798,9 +777,3 @@ $(document).bind('keydown', function (e) {
     FVClose();
   }
 });
-
-
-/*
- END FIGURE VIEWER ********************************************
- */
-

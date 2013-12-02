@@ -24,15 +24,11 @@ import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleAssetService;
 import org.ambraproject.service.article.ArticleAssetWrapper;
 import org.ambraproject.service.article.ArticleService;
-import org.ambraproject.service.article.FetchArticleService;
-import org.ambraproject.service.search.SearchService;
 import org.ambraproject.service.xml.XMLService;
-import org.ambraproject.views.CitationReference;
 import org.ambraproject.views.article.ArticleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,19 +44,10 @@ public class SlideshowAction extends BaseActionSupport {
   private ArticleAssetService articleAssetService;
   private XMLService secondaryObjectService;
   private ArticleService articleService;
-  private SearchService searchService;
-  private FetchArticleService fetchArticleService;
 
   private String articleTitle;
   private String articleType;
   private List<String> authors;
-  private String abstractText;
-  private List<CitationReference> references;
-  private String metaData;
-
-  private String fetchReferences = "yes";
-  private String fetchMetaData = "yes";
-  private String fetchAbstract = "yes";
 
   /**
    * Action to return list of Secondary object for an article that are enclosed in Tables (table-warp)
@@ -116,21 +103,6 @@ public class SlideshowAction extends BaseActionSupport {
         return INPUT;
       }
 
-      if ("yes".equals(fetchAbstract)) {
-        abstractText = searchService.fetchAbstractText(uri);
-      }
-
-      if ("yes".equals(fetchReferences)) {
-        // references are extracted from XML document because the database
-        // does not have correct values for mixed-citation types.
-        ArticleInfo articleInfoX = articleService.getArticleInfo(uri, getAuthId());
-        Document doc = this.fetchArticleService.getArticleDocument(articleInfoX);
-        references = this.fetchArticleService.getReferences(doc);
-      }
-
-      if ("yes".equals(fetchMetaData)) {
-        metaData = "TODO: get this data";
-      }
     } catch (Exception ex) {
       log.info("Couldn't retrieve secondary object for URI: " + uri, ex);
       return INPUT;
@@ -190,30 +162,6 @@ public class SlideshowAction extends BaseActionSupport {
     return authors;
   }
 
-  public String getAbstractText() {
-    return abstractText;
-  }
-
-  public List<CitationReference> getReferences() {
-    return references;
-  }
-
-  public String getMetaData() {
-    return metaData;
-  }
-
-  public void setFetchReferences(String fetchReferences) {
-    this.fetchReferences = fetchReferences;
-  }
-
-  public void setFetchMetaData(String fetchMetaData) {
-    this.fetchMetaData = fetchMetaData;
-  }
-
-  public void setFetchAbstract(String fetchAbstract) {
-    this.fetchAbstract = fetchAbstract;
-  }
-
   /**
    * Set the secondary objects
    * @param articleAssetService articleAssetService
@@ -235,16 +183,5 @@ public class SlideshowAction extends BaseActionSupport {
   public void setArticleService(ArticleService articleService) {
     this.articleService = articleService;
   }
-
-  @Required
-  public void setSearchService(SearchService searchService) {
-    this.searchService = searchService;
-  }
-
-  @Required
-  public void setFetchArticleService(FetchArticleService fetchArticleService) {
-    this.fetchArticleService = fetchArticleService;
-  }
-
 
 }
