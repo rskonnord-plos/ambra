@@ -5459,6 +5459,10 @@ The CSS for dialog widget,
     background: none;
 }
 
+#popup .tile_mini a {
+    color: #3C63AF;
+}
+
 /* Tabbed content */
 .tab-nav {
   padding: 5px 0 25px;
