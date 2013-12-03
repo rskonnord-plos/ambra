@@ -1300,7 +1300,7 @@ $.fn.alm = function () {
         }
 
         if (tooltips["SI"]) {
-          var link = "<a href=\"" + tooltips[key].link + "\" target=_blank>  Supporting Info Files </a>";
+          var link = "<a href=\"" + tooltips["SI"].link + "\" target=_blank>  Supporting Info Files </a>";
           toolTipTable.append("<tr><td>" + link + "</td>" + tooltips["SI"].stat + "</tr>");
         }
 
