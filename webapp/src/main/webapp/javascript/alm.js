@@ -1315,13 +1315,12 @@ $.fn.alm = function () {
           width: "auto",
           closeText:"",
           modal: true,
-          position: {my: "left top", at:"right center", of:"#figshareImageOnArticleMetricsTab"} ,
+          position: {my: "left top", at:"right center", of:"#figshareImageOnArticleMetricsTab"},
           open: function(){
             $('.ui-widget-overlay').bind('click',function(){
               popup.dialog('close');
             })
           }
-
         });
         $("#figshareImageOnArticleMetricsTab").click(function() {
           popup.dialog("open");
