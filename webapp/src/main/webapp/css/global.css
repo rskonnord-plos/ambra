@@ -5390,12 +5390,12 @@ The CSS for dialog widget,
 
 .ui-dialog .ui-dialog-titlebar-close span {
     display: block;
-    margin: 1px;
 }
 
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus {
     padding: 0;
 }
+
 
 .ui-dialog .ui-dialog-content {
     position: relative;
@@ -5430,12 +5430,21 @@ The CSS for dialog widget,
     bottom: 3px;
 }
 
+
 .ui-draggable .ui-dialog-titlebar {
     cursor: move;
 }
 
 
 /* Customized css for the FigShare dialog */
+
+/* jqueryUI overrides*/
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close.ui-state-hover {
+    border: none /*{borderColorHover}*/;
+    background: none;
+    font-weight: normal /*{fwDefault}*/;
+}
+
 .ui-dialog.tooltip-like {
     border-radius: 0px;
     -webkit-border-radius: 0px;
@@ -5462,6 +5471,37 @@ The CSS for dialog widget,
 #popup .tile_mini a {
     color: #3C63AF;
 }
+
+
+/* css for the close button on the dialog */
+
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close {
+    position: absolute;
+    right: 2px;
+    top: 12px;
+    margin: -10px 0 0 0;
+    padding: 0px;
+    background-color: #F8AF2D;
+    text-indent: -9999px;
+    border-radius: 2px;
+    display: block;
+}
+
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close span {
+    background-image: url('../images/btn.sprite.close.small.png');
+    background-position: 2px 1px;
+    width: 17px;
+    height: 17px;
+}
+
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close:hover {
+    background-color: #3C63AF;
+}
+
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close:hover span {
+    background-position: 2px -13px;
+}
+
 
 /* Tabbed content */
 .tab-nav {
