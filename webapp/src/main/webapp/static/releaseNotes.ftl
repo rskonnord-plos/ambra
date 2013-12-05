@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.0</h2>
+  <p>Released December 10, 2013</p>
+  <h3>Features Implemented in Ambra 2.9.0<h3>
+  <ul>
+     <li>Follow up fix for touch interaction with figure viewer</li>
+     <li>Follow up fix for twitter card meta fields</li>
+     <li>Added links to Figshare tile dialog on article metrics tab</li>
+  </ul>
+
   <h2>Ambra 2.8.9</h2>
   <p>Released December 3, 2013</p>
   <h3>Features Implemented in Ambra 2.8.9</h3>
