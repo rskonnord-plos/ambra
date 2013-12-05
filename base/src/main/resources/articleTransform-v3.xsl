@@ -765,7 +765,7 @@
                             <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
                             <xsl:attribute name="target">_new</xsl:attribute>
                             <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
-                            CrossRef
+                            View Article
                           </xsl:element>
                         </xsl:element>
                       </xsl:if>
