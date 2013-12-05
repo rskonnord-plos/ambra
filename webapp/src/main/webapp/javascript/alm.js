@@ -1270,8 +1270,8 @@ $.fn.alm = function () {
       },
       success:function (data) {
 
-        var toolTip = $('<div class=\"tileTooltip\"></div>'), toolTipTable = $('<table class=\"tile_mini\"></table>'),
-            item, totalStat, key, tooltips = {};
+        var popup = $('<div id=\"popup\"></div>'), dialogTable = $('<table class=\"tile_mini\"></table>'),
+            item, totalStat, key, itemInfoMap = {};
 
         // build tooltip
         for (i = 0; i < source.events.items.length; i++) {
@@ -1285,27 +1285,45 @@ $.fn.alm = function () {
               key = "SI";
             }
           }
+
+          var itemInfo = new Object();
           totalStat = item.stats.downloads + item.stats.page_views;
-          tooltips[key] = "<td class=\"data1\">" + totalStat + "</td>";
+          itemInfo.stat = "<td class=\"data1\">" + totalStat + "</td>";
+          itemInfo.link =  item.figshare_url;
+          itemInfoMap[key] = itemInfo;
         }
 
         for (i = 0; i < data.secondaryObjects.length; i++) {
           key = data.secondaryObjects[i].doi.replace("info:doi/", "");
-          toolTipTable.append("<tr><td>" + data.secondaryObjects[i].title + "</td>" + tooltips[key] + "</tr>");
+          var link = "<a href=\"" + itemInfoMap[key].link + "\" target=_blank>" + data.secondaryObjects[i].title + "</a>";
+          dialogTable.append("<tr><td>" + link + "</td>" + itemInfoMap[key].stat + "</tr>");
         }
 
-        if (tooltips["SI"]) {
-          toolTipTable.append("<tr><td>Supporting Info files</td>" + tooltips["SI"] + "</tr>");
+        if (itemInfoMap["SI"]) {
+          var link = "<a href=\"" + itemInfoMap["SI"].link + "\" target=_blank>  Supporting Info Files </a>";
+          dialogTable.append("<tr><td>" + link + "</td>" + itemInfoMap["SI"].stat + "</tr>");
         }
 
-        $("#figshareImageOnArticleMetricsTab").tooltip({
-          delay: 250,
-          fade: 250,
-          track: true,
-          showURL: false,
-          bodyHandler: function () {
-            return toolTip.append(toolTipTable);
+
+        popup.append(dialogTable);
+        popup.dialog({
+          dialogClass: "tooltip-like figure-table",
+          autoOpen: false,
+          draggable: false,
+          resizable: false,
+          height: "auto",
+          width: "auto",
+          closeText:"",
+          modal: true,
+          position: {my: "left top", at:"right center", of:"#figshareImageOnArticleMetricsTab"},
+          open: function(){
+            $('.ui-widget-overlay').bind('click',function(){
+              popup.dialog('close');
+            })
           }
+        });
+        $("#figshareImageOnArticleMetricsTab").click(function() {
+          popup.dialog("open");
         });
       }
     });
@@ -1871,3 +1889,6 @@ function confirmALMDataDisplayed() {
     }
   }
 }
+
+
+
