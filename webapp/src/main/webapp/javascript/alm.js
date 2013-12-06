@@ -830,11 +830,10 @@ $.fn.alm = function () {
         }
       }
     } // end of loop
-
+    var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
     // add the source tiles to the page html in the desired order
     if (numCitesRendered != 0) {
       // Google Scholar tile is created if some other citation metrics is available
-      var docURL = "http://dx.plos.org/" + doi.replace("info%3Adoi/", "");
       sourceMap['google'] =  this.createMetricsTile("GoogleScholar",
           "http://scholar.google.com/scholar?hl=en&lr=&cites=" + docURL,
           "/images/logo-google-scholar.png",
@@ -1253,6 +1252,8 @@ $.fn.alm = function () {
               source.metrics.total);
 
           $('#views').append(tile);
+        } else {
+          return;
         }
         break;
       }
@@ -1275,13 +1276,15 @@ $.fn.alm = function () {
         // build tooltip
         for (i = 0; i < source.events.items.length; i++) {
           item = source.events.items[i], totalStat = 0, key = "";
-
-          if (item.doi.length == 1) {
-            key = item.doi[0].replace("http://dx.doi.org/", "");
-          } else if (item.doi.length > 1) {
-            key = "SI";
+          if (typeof item.doi !== 'undefined' && item.doi.length > 0) {
+            // if the doi ends in (.s\d+), it refers to SIs
+            var pattern = /\.s\d+$/g;
+            if (item.doi.length == 1 && !pattern.test(item.doi[0])) {
+              key = item.doi[0].replace("http://dx.doi.org/", "");
+            } else {
+              key = "SI";
+            }
           }
-
           totalStat = item.stats.downloads + item.stats.page_views;
           tooltips[key] = "<td class=\"data1\">" + totalStat + "</td>";
         }

@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -49,6 +48,7 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
   private String                 journal;
   private String                 pages;
   private Set<ArticleCategory>   categories;
+  private List<ArticleCategory>  orderedCategories;
   private String                 eLocationId;
   private String                 volume;
   private String                 issue;
@@ -197,6 +197,14 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
     this.categories = categories;
   }
 
+  public List<ArticleCategory> getOrderedCategories() {
+    return this.orderedCategories;
+  }
+
+  public void setOrderedCategories(List<ArticleCategory> orderedCategories) {
+    this.orderedCategories = orderedCategories;
+  }
+
   public String geteLocationId() {
     return eLocationId;
   }
@@ -247,6 +255,7 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
 
     if (articleAssets != null ? !articleAssets.equals(that.articleAssets) : that.articleAssets != null) return false;
     if (categories != null ? !categories.equals(that.categories) : that.categories != null) return false;
+    if (orderedCategories != null ? !orderedCategories.equals(that.orderedCategories) : that.orderedCategories != null) return false;
     if (citedArticles != null ? !citedArticles.equals(that.citedArticles) : that.citedArticles != null) return false;
     if (collaborativeAuthors != null ? !collaborativeAuthors.equals(that.collaborativeAuthors) : that.collaborativeAuthors != null)
       return false;
@@ -280,6 +289,7 @@ public class ArticleInfo extends BaseArticleInfo implements Serializable {
     result = 31 * result + (journal != null ? journal.hashCode() : 0);
     result = 31 * result + (pages != null ? pages.hashCode() : 0);
     result = 31 * result + (categories != null ? categories.hashCode() : 0);
+    result = 31 * result + (orderedCategories != null ? orderedCategories.hashCode() : 0);
     result = 31 * result + (eLocationId != null ? eLocationId.hashCode() : 0);
     result = 31 * result + (volume != null ? volume.hashCode() : 0);
     result = 31 * result + (issue != null ? issue.hashCode() : 0);
