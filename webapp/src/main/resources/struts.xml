@@ -806,6 +806,12 @@
         </param>
       </result>
     </action>
+
+    <action name="mediaCoverageSubmit" class="org.ambraproject.action.article.MediaCoverageAction">
+      <result name="success" type="json">
+      </result>
+    </action>
+
   </package>
 
   <package name="article-feed" extends="default" namespace="/article/feed">
