@@ -50,6 +50,7 @@ public class TestPasswordDigestService extends TestCase {
     //Quick check of the password service with a value from the database copied over
     final String expected = "6584abbf44d354572af470f6de0d48c11d595968636b75b38006e5a60043b6641aeba7";
     final String password = "fedoraAdmin";
+    assertTrue(passwordDigestService.verifyPassword(password, expected));
   }
 
   public void testVerificationShouldFailForWrongPassword() {

@@ -93,7 +93,7 @@ public class PasswordDigestService {
   }
 
   public boolean verifyPassword(String plaintextPassword, String digest) {
-    if (digest.length() == LEGACY_SALT_LENGTH + HASH_LENGTH / 4) {
+    if (digest.length() == LEGACY_SALT_LENGTH + HASH_LENGTH * 2) {
       return verifyLegacy(digest, plaintextPassword);
     }
 
