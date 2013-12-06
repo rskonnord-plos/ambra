@@ -114,9 +114,9 @@ $(function () {
     for(var a = 0; a < keys.length; a++) {
       var category = keys[a];
       var categoryDisplay = categoryDisplayNameMap[category];
-      $(html).append($('<h3></h3>').html(categoryDisplay));
 
       if(categorizedResults[category].length > 0) {
+        $(html).append($('<h3></h3>').html(categoryDisplay));
         var list = $('<ul></ul>');
         for(var b = 0; b < categorizedResults[category].length; b++) {
           var curReference = categorizedResults[category][b];
