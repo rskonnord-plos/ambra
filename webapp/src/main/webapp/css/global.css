@@ -2390,6 +2390,14 @@ div.fch {
   margin-bottom: 1em;
 }
 
+div.new_corr {
+    background:#efefef;
+    padding: 18px 20px 15px;
+    margin-bottom: 1em;
+}
+
+
+
 span.genus-species {
   font-style: italic;
 }
