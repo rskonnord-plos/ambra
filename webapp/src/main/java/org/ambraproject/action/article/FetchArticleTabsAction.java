@@ -85,11 +85,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public static final String ARTICLE_NOT_FOUND = "articleNotFound";
   public static final String OBJECT_OF_CONCERN_RELATION = "object-of-concern";
+  public static final String CORRECTED__ARTICLE_RELATION = "correction-forward";
 
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
   private String expressionOfConcern = "";
+  private String articleCorrection = "";
 
   private List<String> correspondingAuthor;
   private List<String> authorContributions;
@@ -137,6 +139,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
       populateFromAnnotations();
       fetchExpressionOfConcern();
+      fetchArticleCorrection();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
@@ -177,6 +180,37 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
     return expressionOfConcern;
   }
+
+  /**
+   * check if the article has any amendments, if so fetch the value
+   * @return String
+   */
+  private String fetchArticleCorrection() {
+
+    if(articleInfoX.getRelatedArticles() != null) {
+
+      for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
+
+        try {
+          if((relatedArticleInfo.getArticleTypes() != null) &&
+                  CORRECTED__ARTICLE_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+                  articleService.isCorrectionArticle(relatedArticleInfo)) {
+
+            ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
+            Document document = this.fetchArticleService.getArticleDocument(articleInfo);
+            articleCorrection = "The correction article";
+
+          }
+        } catch (Exception e) {
+          populateErrorMessages(e);
+          return ERROR;
+        }
+      }
+    }
+
+    return articleCorrection;
+  }
+
 
   /**
    * Fetch data for Comments Tab
@@ -758,6 +792,19 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   public void setExpressionOfConcern(String expressionOfConcern) {
     this.expressionOfConcern = expressionOfConcern;
   }
+
+  /**
+   *
+   * @return article corrections
+   */
+  public String getArticleCorrection() {
+    return articleCorrection;
+  }
+
+  public void setArticleCorrection(String articleCorrection) {
+    this.articleCorrection = articleCorrection;
+  }
+
 
   /**
    * @return an array of retractions
