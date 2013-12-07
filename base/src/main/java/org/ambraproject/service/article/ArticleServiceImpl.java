@@ -167,6 +167,23 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     return ArticleType.isEocArticle(articleType);
   }
 
+  public boolean isCorrectionArticle(final BaseArticleInfo articleInfo)
+          throws ApplicationException, NoSuchArticleIdException {
+    ArticleType articleType = ArticleType.getDefaultArticleType();
+
+    for (String artTypeUri : articleInfo.getTypes()) {
+      if (ArticleType.getKnownArticleTypeForURI(URI.create(artTypeUri)) != null) {
+        articleType = ArticleType.getKnownArticleTypeForURI(URI.create(artTypeUri));
+        break;
+      }
+    }
+    if (articleType == null) {
+      throw new ApplicationException("Unable to resolve article type for: " + articleInfo.getDoi());
+    }
+
+    return ArticleType.isCorrectionArticle(articleType);
+  }
+
   /**
    * Change an articles state.
    *

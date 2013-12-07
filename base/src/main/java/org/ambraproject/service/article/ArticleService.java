@@ -74,6 +74,18 @@ public interface ArticleService {
 
 
   /**
+   * Determines if the articleURI is of type Correction
+   *
+   * @param articleInfo The ArticleType object
+   * @return True if the article is a correction article
+   * @throws ApplicationException
+   * @throws NoSuchArticleIdException When the article does not exist
+   */
+  public boolean isCorrectionArticle(final BaseArticleInfo articleInfo)
+          throws NoSuchArticleIdException, ApplicationException;
+
+
+  /**
    * Get a List of all of the Journal/Volume/Issue combinations that contain the <code>articleURI</code> which was
    * passed in. Each primary List element contains a secondary List of six Strings which are, in order: <ul>
    * <li><strong>Element 0: </strong> Journal URI</li> <li><strong>Element 1: </strong> Journal key</li>
