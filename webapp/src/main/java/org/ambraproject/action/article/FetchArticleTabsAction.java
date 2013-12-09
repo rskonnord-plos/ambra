@@ -91,7 +91,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private String transformedArticle;
   private String annotationId = "";
   private String expressionOfConcern = "";
-  private String articleCorrection = "";
+  private List<ArticleInfo> articleCorrection = new ArrayList<ArticleInfo>();
 
   private List<String> correspondingAuthor;
   private List<String> authorContributions;
@@ -187,19 +187,15 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   private String fetchArticleCorrection() {
 
-    if(articleInfoX.getRelatedArticles() != null) {
-
+    if (articleInfoX.getRelatedArticles() != null) {
       for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
-
         try {
-          if((relatedArticleInfo.getArticleTypes() != null) &&
+          if ((relatedArticleInfo.getArticleTypes() != null) &&
                   CORRECTED__ARTICLE_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                   articleService.isCorrectionArticle(relatedArticleInfo)) {
 
             ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
-            Document document = this.fetchArticleService.getArticleDocument(articleInfo);
-            articleCorrection = "The correction article";
-
+            articleCorrection.add(articleInfo);
           }
         } catch (Exception e) {
           populateErrorMessages(e);
@@ -207,8 +203,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
         }
       }
     }
-
-    return articleCorrection;
+    return SUCCESS;
   }
 
 
@@ -797,11 +792,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return article corrections
    */
-  public String getArticleCorrection() {
+  public List<ArticleInfo> getArticleCorrection() {
     return articleCorrection;
   }
 
-  public void setArticleCorrection(String articleCorrection) {
+  public void setArticleCorrection(List<ArticleInfo> articleCorrection) {
     this.articleCorrection = articleCorrection;
   }
 
