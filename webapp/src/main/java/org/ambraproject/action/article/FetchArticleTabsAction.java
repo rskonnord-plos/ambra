@@ -21,6 +21,7 @@ package org.ambraproject.action.article;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
+import org.ambraproject.models.Article;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.models.AnnotationType;
@@ -91,7 +92,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private String transformedArticle;
   private String annotationId = "";
   private String expressionOfConcern = "";
-  private List<ArticleInfo> articleCorrection = new ArrayList<ArticleInfo>();
+  private List<Article> articleCorrection = new ArrayList<Article>();
 
   private List<String> correspondingAuthor;
   private List<String> authorContributions;
@@ -186,16 +187,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * @return String
    */
   private String fetchArticleCorrection() {
-
     if (articleInfoX.getRelatedArticles() != null) {
       for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
         try {
           if ((relatedArticleInfo.getArticleTypes() != null) &&
                   CORRECTED__ARTICLE_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                   articleService.isCorrectionArticle(relatedArticleInfo)) {
-
-            ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
-            articleCorrection.add(articleInfo);
+            Article article = articleService.getArticle(relatedArticleInfo.getDoi(), getAuthId());
+            articleCorrection.add(article);
           }
         } catch (Exception e) {
           populateErrorMessages(e);
@@ -486,9 +485,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private void populateFromAnnotations() {
     //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
     AnnotationView[] annotationViews = annotationService.listAnnotations(
-        articleInfoX.getId(),
-        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
-        AnnotationOrder.NEWEST_TO_OLDEST
+            articleInfoX.getId(),
+            EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
+            AnnotationOrder.NEWEST_TO_OLDEST
     );
     for (AnnotationView annotationView : annotationViews) {
       AnnotationType annotationType = annotationView.getType();
@@ -792,11 +791,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return article corrections
    */
-  public List<ArticleInfo> getArticleCorrection() {
+  public List<Article> getArticleCorrection() {
     return articleCorrection;
   }
 
-  public void setArticleCorrection(List<ArticleInfo> articleCorrection) {
+  public void setArticleCorrection(List<Article> articleCorrection) {
     this.articleCorrection = articleCorrection;
   }
 
