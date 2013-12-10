@@ -20,6 +20,7 @@
 
 package org.ambraproject.action.article;
 
+import org.ambraproject.views.CitationView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -44,31 +45,11 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class CreateCitation extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(CreateCitation.class);
-  private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-  private static final SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-  private static final SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
-  private static final String INFO_DOI_PREFIX = "info:doi/";
 
   private ArticleService articleService;     // OTM service Spring injected.
-
   private String articleURI;
-  private String journal;
-  private String eLocationId;
   private String doi;
-  private String volume;
-  private String title;
-  private String issue;
-  private String summary;
-  private String url;
-  private String publisherName;
-  private String month;
-  private String day;
-  private String year;
-  private Date publishedDate;
-
-  //needs to not be named 'authors' else it will conflict with some freemarker variables in the global nav bar
-  private List<ArticleAuthor> authorList;
-  private List<String> collaborativeAuthors;
+  private CitationView citation;
 
   /**
    * Get Citation object from database
@@ -85,26 +66,9 @@ public class CreateCitation extends BaseActionSupport {
 
     try {
       Article article = articleService.getArticle(articleURI, getAuthId());
-
-      title = article.getTitle();
-
-      authorList = article.getAuthors();
-      collaborativeAuthors = article.getCollaborativeAuthors();
-
-      doi = article.getDoi().replaceAll(INFO_DOI_PREFIX,"");
-      eLocationId = article.geteLocationId();
-      volume = article.getVolume();
-      journal = article.getJournal();
-      issue = article.getIssue();
-      summary = article.getDescription();
-      url = article.getUrl();
-      publisherName = article.getPublisherName();
-      publishedDate = article.getDate();
-
-      year = yearFormat.format(publishedDate);
-      month = monthFormat.format(publishedDate);
-      day = dayFormat.format(publishedDate);
-
+      doi = article.getDoi();
+      citation = new CitationView();
+      citation.buildCitationFromArticle(article);
 
     } catch (NoSuchArticleIdException ex) {
       return ERROR;
@@ -136,75 +100,13 @@ public class CreateCitation extends BaseActionSupport {
   }
 
   /**
-   * @return Returns the article title
+   * @return return the article citation info
    */
-  public String getTitle() {
-    return title;
-  }
-
-  /**
-   *
-   * @return the authors of the article
-   */
-  public List<ArticleAuthor> getAuthorList() {
-    return authorList;
-  }
-
-  /**
-   * Get a list of collaborative authors
-   * @return
-   */
-  public List<String> getCollaborativeAuthors()
-  {
-    return collaborativeAuthors;
-  }
-
-  public String getJournal() {
-    return journal;
-  }
-
-  public String getELocationId() {
-    return eLocationId;
+  public CitationView getCitation() {
+    return citation;
   }
 
   public String getDoi() {
     return doi;
-  }
-
-  public String getIssue() {
-    return issue;
-  }
-
-  public String getVolume() {
-    return volume;
-
-  }
-
-  public String getSummary() {
-    return summary;
-  }
-
-  public String getMonth() {
-    return month;
-  }
-
-  public String getDay() {
-    return day;
-  }
-
-  public String getPublisherName() {
-    return publisherName;
-  }
-
-  public String getYear() {
-    return year;
-  }
-
-  public Date getPublishedDate() {
-    return publishedDate;
-  }
-
-  public String getUrl() {
-    return url;
   }
 }

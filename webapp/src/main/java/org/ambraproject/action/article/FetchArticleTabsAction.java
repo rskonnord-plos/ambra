@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.models.Article;
+import org.ambraproject.views.CitationView;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.models.AnnotationType;
@@ -92,7 +93,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private String transformedArticle;
   private String annotationId = "";
   private String expressionOfConcern = "";
-  private List<Article> articleCorrection = new ArrayList<Article>();
+  private List<CitationView> articleCorrection = new ArrayList<CitationView>();
 
   private List<String> correspondingAuthor;
   private List<String> authorContributions;
@@ -194,7 +195,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
                   CORRECTED__ARTICLE_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                   articleService.isCorrectionArticle(relatedArticleInfo)) {
             Article article = articleService.getArticle(relatedArticleInfo.getDoi(), getAuthId());
-            articleCorrection.add(article);
+            CitationView citation = new CitationView();
+            citation.buildCitationFromArticle(article);
+            articleCorrection.add(citation);
           }
         } catch (Exception e) {
           populateErrorMessages(e);
@@ -791,11 +794,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    *
    * @return article corrections
    */
-  public List<Article> getArticleCorrection() {
+  public List<CitationView> getArticleCorrection() {
     return articleCorrection;
   }
 
-  public void setArticleCorrection(List<Article> articleCorrection) {
+  public void setArticleCorrection(List<CitationView> articleCorrection) {
     this.articleCorrection = articleCorrection;
   }
 

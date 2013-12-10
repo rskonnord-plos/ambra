@@ -73,14 +73,14 @@ public class CreateCitationTest extends AmbraWebTest {
   }
 
 
-  @Test(dataProvider = "testCitation")
+ @Test(dataProvider = "testCitation")
   public void testExecute(String articleUri, List<ArticleAuthor> expectedAuthors) throws Exception {
     action.setArticleURI(articleUri);
     assertEquals(action.execute(), BaseActionSupport.SUCCESS, "Action didn't return success");
-    assertEquals(action.getAuthorList().size(), expectedAuthors.size(), "Didn't return correct number of authors");
+    assertEquals(action.getCitation().getAuthorList().size(), expectedAuthors.size(), "Didn't return correct number of authors");
 
     for (int i = 0; i < expectedAuthors.size(); i++) {
-      ArticleAuthor actual = action.getAuthorList().get(i);
+      ArticleAuthor actual = action.getCitation().getAuthorList().get(i);
       ArticleAuthor expected = expectedAuthors.get(i);
       assertEquals(actual.getFullName(), expected.getFullName(), "Author didn't have correct full name");
       assertEquals(actual.getSurnames(), expected.getSurnames(), "Author didn't have correct surname");
