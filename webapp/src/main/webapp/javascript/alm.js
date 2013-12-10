@@ -1304,7 +1304,6 @@ $.fn.alm = function () {
           dialogTable.append("<tr><td>" + link + "</td>" + itemInfoMap["SI"].stat + "</tr>");
         }
 
-
         popup.append(dialogTable);
         popup.dialog({
           dialogClass: "tooltip-like figure-table",
