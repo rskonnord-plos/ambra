@@ -1432,12 +1432,7 @@
     <xsl:template match="mixed-citation">
       <xsl:apply-templates/>
       <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
-        <xsl:element name="a">
-          <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
-          <xsl:value-of select="$citedArticleDoi"/>
-        </xsl:element>.
+        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
       </xsl:if>
     </xsl:template>
 
@@ -1464,12 +1459,7 @@
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
       <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
-        <xsl:element name="a">
-          <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
-          <xsl:value-of select="$citedArticleDoi"/>
-        </xsl:element>.
+        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
       </xsl:if>
     </xsl:template>
 
@@ -1480,12 +1470,7 @@
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
       <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
-        <xsl:element name="a">
-          <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
-          <xsl:value-of select="$citedArticleDoi"/>
-        </xsl:element>.
+        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
       </xsl:if>
     </xsl:template>
 
@@ -2096,10 +2081,18 @@
 
     <!-- 10/28/13: suppress, we don't use -->
     <xsl:template match="ext-link">
-      <a>
-        <xsl:call-template name="assign-href"/>
-        <xsl:apply-templates/>
-      </a>
+      <xsl:variable name="previousText"><xsl:value-of select="lower-case(normalize-space(preceding::text()[1]))"/></xsl:variable>
+      <xsl:choose>
+        <xsl:when test="not(ancestor::ref-list) or not(substring($previousText, string-length($previousText)-3)='doi:')">
+          <a>
+            <xsl:call-template name="assign-href"/>
+            <xsl:apply-templates/>
+          </a>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use  -->
