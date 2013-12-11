@@ -1408,6 +1408,8 @@ function onReadyALM() {
   //TODO: Review if this should go into it's own file or not.
   //Appropriate results.
 
+  // Adding media coverage link logic in almSuccess
+
   var fadeInDuration = 300, twoDaysInMilliseconds = 172800000;
 
   if ($("#almSignPost").length > 0) {
@@ -1435,7 +1437,7 @@ function onReadyALM() {
         responseObject = response[0];
 
         //distinguish sources
-        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref;
+        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref, articleCoverageCurated, doiLink;
         sources = responseObject.sources;
 
         for(var i = 0; i < sources.length; i += 1){
@@ -1463,6 +1465,9 @@ function onReadyALM() {
           }
           else if(source.name.toLowerCase() == 'crossref'){
             crossref = source;
+          }
+          else if(source.name.toLowerCase() == 'articlecoveragecurated'){
+            articleCoverageCurated = source;
           }
         }
 
@@ -1532,6 +1537,25 @@ function onReadyALM() {
         }
 
         $('#almSignPost').fadeIn(fadeInDuration);
+
+
+        // this logic is NOT part of the almSignPost logic.
+        // this logic adds "Media Coverage" link on the left hand side article nav
+        if (articleCoverageCurated.metrics.total > 0) {
+
+          var mediaCoverageLink = $("<a></a>")
+              .attr("href", "/article/related/info:doi/" + $('meta[name=citation_doi]').attr("content"))
+              .text("Media Coverage (" + articleCoverageCurated.metrics.total + ")");
+
+          // the media coverage link should be above the "Figures" link
+          // if "Figures" link doesn't exist, add it to the bottom of the list
+          if ($("#nav-article-page #nav-figures").length > 0) {
+            $("#nav-article-page #nav-figures").before($("<li></li>").append(mediaCoverageLink));
+          } else {
+            $("#nav-article-page ul:nth-child(2)").append($("<li></li>").append(mediaCoverageLink));
+          }
+        }
+
       }
     };
 
