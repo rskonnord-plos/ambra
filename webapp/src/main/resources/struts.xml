@@ -808,8 +808,8 @@
     </action>
 
     <action name="mediaCoverageSubmit" class="org.ambraproject.action.article.MediaCoverageAction">
-      <result name="success" type="json">
-      </result>
+      <result name="success" type="json"/>
+      <result name="error" type="json"/>
     </action>
 
   </package>

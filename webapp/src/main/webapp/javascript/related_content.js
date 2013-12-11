@@ -109,7 +109,7 @@ $(function () {
 
   //Create the HTML block for the media coverage
   var createReferencesHTML = function(categorizedResults) {
-    var html = $('<div></div>');
+    var html = $('#media-coverage-data');
     var keys = Object.keys(categorizedResults);
     for(var a = 0; a < keys.length; a++) {
       var category = keys[a];
@@ -144,14 +144,12 @@ $(function () {
       //Build up the UI
       var docFragment = createReferencesHTML(categorizedResults);
 
-      $("#media_coverage").append(docFragment);
-      $("#media_coverage").show("blind", 500);
+      docFragment.show("blind", 500);
     }
   };
 
   var mediaReferenceFailure = function(result) {
     // don't display anything if there is an error
-    $("#media_coverage").hide();
 
     console.error(result);
   };
@@ -159,4 +157,89 @@ $(function () {
   var almService = new $.fn.alm();
 
   almService.getMediaReferences(doi, mediaReferenceSucces, mediaReferenceFailure)
+
+
+  this.submitMediaCoverageLink = function () {
+    $("#media-coverage-form :input + span").text("");
+
+    var data = {
+      name: $('#mcform-name').val(),
+      email: $('#mcform-email').val(),
+      link: $('#mcform-link').val(),
+      comment: $('#mcform-comment').val(),
+      recaptcha_challenge_field: $('#recaptcha_response_field').val(),
+      recaptcha_response_field: $('#recaptcha_challenge_field').val()
+    };
+
+    sendRequest("/article/mediaCoverageSubmit.action", data)
+  };
+
+  function sendRequest(url, data) {
+    $.ajax(url, {
+      type: "post",
+      dataType:"json",
+      data: data,
+      dataFilter:function (data, type) {
+        // Remove block comment from around JSON, if present
+        return data.replace(/(^\s*\/\*\s*)|(\s*\*\/\s*$)/g, '');
+      },
+      success:function (data, textStatus, jqXHR) {
+        // check to see if there was any error
+        if (data.actionErrors && data.actionErrors.length > 0) {
+          // check for an error message for each field
+          if (data.fieldErrors.link) {
+            $("#mcform-link").next().text(data.fieldErrors.link);
+          }
+
+          if (data.fieldErrors.name) {
+            $("#mcform-name").next().text(data.fieldErrors.name);
+          }
+
+          if (data.fieldErrors.email) {
+            $("#mcform-email").next().text(data.fieldErrors.email);
+          }
+
+          if (data.fieldErrors.captcha) {
+            $("#mcform-captcha").next().text(data.fieldErrors.captcha);
+            Recaptcha.reload();
+          }
+        } else {
+          // display success message and close the form
+          $('#media-coverage-form').hide();
+          $('#media-coverage-success').show();
+
+          setTimeout(function() {
+            $("#media-coverage-modal").dialog("close");
+          }, 1500);
+
+        }
+      },
+      error:function (jqXHR, textStatus, errorThrown) {
+        // display the error message and close the form
+        $('#media-coverage-form').hide();
+        $('#media-coverage-failure').show();
+
+        setTimeout(function() {
+          $("#media-coverage-modal").dialog("close");
+        }, 3000);
+      }
+    });
+  }
+});
+
+$("#media-coverage-form-link").on('click', function (e) {
+  $("#media-coverage-form :input + span").text("");
+
+  Recaptcha.reload();
+
+  $('#media-coverage-success').hide();
+  $('#media-coverage-failure').hide();
+
+  $('#media-coverage-form').show();
+  // clear all the input field values
+  $('#media-coverage-form :input').val('');
+
+  $("#media-coverage-modal").dialog({ autoOpen: false, modal: true, resizable: false, minWidth: 600 });
+  $("#media-coverage-modal").dialog("open");
+
 });

@@ -5211,6 +5211,10 @@ a.irs {
   color: #f03;
 }
 
+.form-error {
+  color: #f03;
+}
+
 .emailrequired {
   color: #A61200
 }
