@@ -21,6 +21,7 @@ package org.ambraproject.action.article;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
+import org.ambraproject.service.captcha.CaptchaService;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.models.AnnotationType;
@@ -126,6 +127,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private UserService userService;
   private ArticleAssetService articleAssetService;
   private Set<ArticleCategory> categories;
+  private CaptchaService captchaService;
+  private String captchaHTML;
+  private UserProfile user;
+
+
   /**
    * Fetch the data for Article Tab
    *
@@ -242,6 +248,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();      
       populateRelatedAuthorSearchQuery();
+      this.captchaHTML = captchaService.getCaptchaHTML();
+      user = getCurrentUser();
     } catch (Exception e) {
      populateErrorMessages(e);
     }
@@ -444,6 +452,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       populateRelatedAuthorSearchQuery();
+      this.captchaHTML = captchaService.getCaptchaHTML();
+      user = getCurrentUser();
     } catch (Exception e) {
       populateErrorMessages(e);
       return ERROR;
@@ -883,5 +893,18 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public String getRelatedAuthorSearchQuery() {
     return relatedAuthorSearchQuery;
+  }
+
+  public String getCaptchaHTML() {
+    return captchaHTML;
+  }
+
+  public UserProfile getUser() {
+    return user;
+  }
+
+  @Required
+  public void setCaptchaService(CaptchaService captchaService) {
+    this.captchaService = captchaService;
   }
 }

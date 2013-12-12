@@ -4171,7 +4171,7 @@ ul.chart-bar li + li + li + li .bar {
 }
 
 form.advSearch input[type="button"],
-form.advSearch input[type="submit"] {
+form.advSearch input[type="submit"]{
   background: #333;
   color: #fff;
   margin-right: 2px;
@@ -5211,6 +5211,10 @@ a.irs {
   color: #f03;
 }
 
+.form-error {
+  color: #f03;
+}
+
 .emailrequired {
   color: #A61200
 }
@@ -5993,3 +5997,110 @@ ul.date-doi-line li:first-child {
   background-repeat: no-repeat;
   background-position: 85% 50%;
 }
+
+
+/* slouching toward more modular styles */
+
+/* Modal overwrites */
+.default-modal.ui-corner-all {
+    border-radius: 0;
+    padding: 0;
+    border: 1px solid #fff;
+}
+
+.default-modal .ui-dialog-titlebar{
+    background: #333;
+    color: #fff;
+    border-radius: 0;
+    margin: 0;
+    border: 0 none;
+    font-weight: normal;
+}
+
+.default-modal .ui-dialog-content{
+     padding: 1em;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.default-modal + .ui-widget-overlay{background: #333; opacity: .4;}
+
+/* form elements */
+
+form.standard{
+    color: #333;
+}
+
+form.standard ul li{list-style-type: none; padding-left: 0; margin-left: 0; margin-bottom: 10px; display: block;
+ }
+form.standard ul li.short{ }
+form.standard ul{list-style-type: none; padding-left: 0; margin-left: 0; }
+
+form.standard input[type="text"],form.standard textarea {
+    font-size: 16px;
+    border: 1px solid #b3b3b3;
+    border-radius: 3px;
+    padding: 8px 10px 6px;
+    box-shadow: inset 3px 3px 3px rgba(0,0,0,0.1);
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+form.standard textarea {
+    height: 10.5em;
+}
+
+form.standard li.small div{
+  width: 48%;
+    float: left;
+}
+
+form.standard li.small div.last {
+    float: right;
+}
+
+form.standard label {
+    display: inline-block;
+    font: 12px 'FS Albert Web Regular', Verdana, sans-serif;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+
+form.standard input[type="button"],
+form.standard input[type="submit"],
+form.standard .button{
+    background: #333;
+    color: #fff;
+    margin-right: 2px;
+    padding: 9px 10px;
+    border: 0;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+form.standard input[type="button"]:hover,
+form.standard input[type="submit"]:hover,
+form.standard .button:hover{
+    background: #3c63af !important;
+    color: #fff !important;
+}
+
+form.standard input[type="button"].primary,
+form.standard input[type="submit"].primary,
+form.standard .button.primary{
+    background: #f8af2d;
+    color: #333;
+}
+
+form.standard .note{
+    font-size: 11px;
+}
+
