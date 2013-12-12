@@ -128,8 +128,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private ArticleAssetService articleAssetService;
   private Set<ArticleCategory> categories;
   private CaptchaService captchaService;
-  private String captchaHTML;
   private UserProfile user;
+  private String reCaptchaPublicKey;
 
 
   /**
@@ -248,7 +248,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();      
       populateRelatedAuthorSearchQuery();
-      this.captchaHTML = captchaService.getCaptchaHTML();
       user = getCurrentUser();
     } catch (Exception e) {
      populateErrorMessages(e);
@@ -331,6 +330,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     }
 
     this.categories = Cookies.setAdditionalCategoryFlags(articleInfoX.getCategories(), articleInfoX.getId());
+
+    reCaptchaPublicKey = captchaService.getPublicKey();
   }
 
   @Override
@@ -452,7 +453,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       populateRelatedAuthorSearchQuery();
-      this.captchaHTML = captchaService.getCaptchaHTML();
       user = getCurrentUser();
     } catch (Exception e) {
       populateErrorMessages(e);
@@ -895,12 +895,12 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     return relatedAuthorSearchQuery;
   }
 
-  public String getCaptchaHTML() {
-    return captchaHTML;
-  }
-
   public UserProfile getUser() {
     return user;
+  }
+
+  public String getReCaptchaPublicKey() {
+    return reCaptchaPublicKey;
   }
 
   @Required
