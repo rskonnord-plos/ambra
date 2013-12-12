@@ -517,8 +517,9 @@ enum LegacyMigration implements Migration {
   private final int version;
 
   private LegacyMigration(int version) {
-    Preconditions.checkArgument(version > MIN_VERSION);
-    Preconditions.checkArgument(version < SchemaMigration.THRESHOLD);
+    Preconditions.checkArgument(version > MIN_VERSION, "Legacy versions don't go below " + MIN_VERSION);
+    Preconditions.checkArgument(version < SchemaMigration.THRESHOLD,
+        "Legacy versions must be less than " + SchemaMigration.THRESHOLD);
     this.version = version;
   }
 

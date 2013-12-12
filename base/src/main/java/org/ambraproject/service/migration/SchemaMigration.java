@@ -49,7 +49,8 @@ abstract class SchemaMigration implements Migration {
   private final int version;
 
   SchemaMigration(int version) {
-    Preconditions.checkArgument(version > THRESHOLD);
+    Preconditions.checkArgument(version > THRESHOLD,
+        "Migration version numbers below " + THRESHOLD + " are reserved for legacy migrations");
     this.version = version;
   }
 

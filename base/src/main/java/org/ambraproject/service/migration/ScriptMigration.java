@@ -41,7 +41,7 @@ class ScriptMigration extends SchemaMigration {
   ScriptMigration(int version, String... scriptPaths) {
     super(version);
     this.scriptPaths = ImmutableList.copyOf(scriptPaths);
-    Preconditions.checkArgument(!this.scriptPaths.isEmpty());
+    Preconditions.checkArgument(!this.scriptPaths.isEmpty(), "Empty list of migration scripts");
   }
 
   @Override
