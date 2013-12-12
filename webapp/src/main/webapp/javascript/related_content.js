@@ -160,9 +160,10 @@ $(function () {
 
 
   this.submitMediaCoverageLink = function () {
-    $("#media-coverage-form :input + span").text("");
+    $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
 
     var data = {
+      uri: "info:doi/"  + $('meta[name=citation_doi]').attr("content"),
       name: $('#mcform-name').val(),
       email: $('#mcform-email').val(),
       link: $('#mcform-link').val(),
@@ -228,7 +229,7 @@ $(function () {
 });
 
 $("#media-coverage-form-link").on('click', function (e) {
-  $("#media-coverage-form :input + span").text("");
+  $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
 
   Recaptcha.reload();
 

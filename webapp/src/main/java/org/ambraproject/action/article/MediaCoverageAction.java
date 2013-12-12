@@ -64,7 +64,7 @@ public class MediaCoverageAction extends BaseActionSupport {
     String linkComment = this.name + ", " + this.email + "\n" + this.comment;
 
     List<NameValuePair> params = new ArrayList<NameValuePair>();
-    params.add(new BasicNameValuePair("doi", this.uri));
+    params.add(new BasicNameValuePair("doi", this.uri.replaceFirst("info:doi/", "")));
     params.add(new BasicNameValuePair("link", this.link));
     params.add(new BasicNameValuePair("comment", linkComment));
     UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
