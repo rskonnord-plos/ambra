@@ -168,8 +168,8 @@ $(function () {
       email: $('#mcform-email').val(),
       link: $('#mcform-link').val(),
       comment: $('#mcform-comment').val(),
-      recaptcha_challenge_field: $('#recaptcha_response_field').val(),
-      recaptcha_response_field: $('#recaptcha_challenge_field').val()
+      recaptcha_challenge_field: $('#recaptcha_challenge_field').val(),
+      recaptcha_response_field: $('#recaptcha_response_field').val()
     };
 
     sendRequest("/article/mediaCoverageSubmit.action", data)
