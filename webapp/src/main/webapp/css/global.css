@@ -5663,6 +5663,7 @@ ol.references ul.find li:first-child {
 
 ol.references li {
   list-style-type: none;
+  margin-bottom: 10px;
 }
 
 ol.references li span.label {
@@ -5670,6 +5671,7 @@ ol.references li span.label {
   float: left;
   width: 20px;
   text-align: right;
+  font-weight: bold;
 }
 
 ol.references ul.find-nolinks {
