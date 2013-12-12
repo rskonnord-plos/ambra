@@ -129,6 +129,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private Set<ArticleCategory> categories;
   private CaptchaService captchaService;
   private String captchaHTML;
+  private UserProfile user;
 
 
   /**
@@ -248,6 +249,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       setCommonData();      
       populateRelatedAuthorSearchQuery();
       this.captchaHTML = captchaService.getCaptchaHTML();
+      user = getCurrentUser();
     } catch (Exception e) {
      populateErrorMessages(e);
     }
@@ -451,6 +453,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       populateRelatedAuthorSearchQuery();
       this.captchaHTML = captchaService.getCaptchaHTML();
+      user = getCurrentUser();
     } catch (Exception e) {
       populateErrorMessages(e);
       return ERROR;
@@ -894,6 +897,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   public String getCaptchaHTML() {
     return captchaHTML;
+  }
+
+  public UserProfile getUser() {
+    return user;
   }
 
   @Required

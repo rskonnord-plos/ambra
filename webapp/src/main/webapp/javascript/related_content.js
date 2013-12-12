@@ -237,8 +237,8 @@ $("#media-coverage-form-link").on('click', function (e) {
   $('#media-coverage-failure').hide();
 
   $('#media-coverage-form').show();
-  // clear all the input field values
-  $('#media-coverage-form :input').val('');
+  // clear input field values
+  $('#media-coverage-form :input').not("#mcform-name, #mcform-email").val('');
 
   $("#media-coverage-modal").dialog({ autoOpen: false, modal: true, resizable: false, minWidth: 600 });
   $("#media-coverage-modal").dialog("open");
