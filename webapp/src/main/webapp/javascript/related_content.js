@@ -156,10 +156,11 @@ $(function () {
 
   var almService = new $.fn.alm();
 
-  almService.getMediaReferences(doi, mediaReferenceSucces, mediaReferenceFailure)
+  almService.getMediaReferences(doi, mediaReferenceSucces, mediaReferenceFailure);
 
+  showRecaptcha('mcform-captcha');
 
-  this.submitMediaCoverageLink = function () {
+   $("#media-coverage-modal").on('click','.button.primary', function (e) {
     $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
 
     var data = {
@@ -172,8 +173,8 @@ $(function () {
       recaptcha_response_field: $('#recaptcha_response_field').val()
     };
 
-    sendRequest("/article/mediaCoverageSubmit.action", data)
-  };
+    sendRequest("/article/mediaCoverageSubmit.action", data);
+  });
 
   function sendRequest(url, data) {
     $.ajax(url, {
@@ -187,23 +188,39 @@ $(function () {
       success:function (data, textStatus, jqXHR) {
         // check to see if there was any error
         if (data.actionErrors && data.actionErrors.length > 0) {
-          // check for an error message for each field
-          if (data.fieldErrors.link) {
-            $("#mcform-link").next().text(data.fieldErrors.link);
+          var fieldErrorKeys = $.map(data.fieldErrors, function (value, key) {
+            return key;
+          });
+
+          if (fieldErrorKeys.length > 0) {
+            // check for an error message for each field
+            if (data.fieldErrors.link) {
+              $("#mcform-link").next().text(data.fieldErrors.link);
+            }
+
+            if (data.fieldErrors.name) {
+              $("#mcform-name").next().text(data.fieldErrors.name);
+            }
+
+            if (data.fieldErrors.email) {
+              $("#mcform-email").next().text(data.fieldErrors.email);
+            }
+
+            if (data.fieldErrors.captcha) {
+              $("#mcform-captcha").next().text(data.fieldErrors.captcha);
+              Recaptcha.reload();
+            }
+
+          } else {
+            // display the error message and close the form
+            $('#media-coverage-form').hide();
+            $('#media-coverage-failure').show();
+
+            setTimeout(function() {
+              $("#media-coverage-modal").dialog("close");
+            }, 3000);
           }
 
-          if (data.fieldErrors.name) {
-            $("#mcform-name").next().text(data.fieldErrors.name);
-          }
-
-          if (data.fieldErrors.email) {
-            $("#mcform-email").next().text(data.fieldErrors.email);
-          }
-
-          if (data.fieldErrors.captcha) {
-            $("#mcform-captcha").next().text(data.fieldErrors.captcha);
-            Recaptcha.reload();
-          }
         } else {
           // display success message and close the form
           $('#media-coverage-form').hide();
@@ -226,28 +243,25 @@ $(function () {
       }
     });
   }
-});
 
+  $(document.body).on('click',"#media-coverage-form-link", function (e) {
+    $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
 
+    Recaptcha.reload();
 
-$("#media-coverage-form-link").on('click', function (e) {
-  $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
+    $('#media-coverage-success').hide();
+    $('#media-coverage-failure').hide();
 
-  Recaptcha.reload();
+    $('#media-coverage-form').show();
+    // clear input field values
+    $('#media-coverage-form :input').not("#mcform-name, #mcform-email").val('');
 
-  $('#media-coverage-success').hide();
-  $('#media-coverage-failure').hide();
+    $("#media-coverage-modal").dialog({ autoOpen: false, modal: true, resizable: false, minWidth: 600, dialogClass: 'default-modal', title: 'Submit a link to media coverage of this article' });
+    $("#media-coverage-modal").dialog("open");
+  });
 
-  $('#media-coverage-form').show();
-  // clear input field values
-  $('#media-coverage-form :input').not("#mcform-name, #mcform-email").val('');
-
-  $("#media-coverage-modal").dialog({ autoOpen: false, modal: true, resizable: false, minWidth: 600, dialogClass: 'default-modal', title: 'Submit a link to media coverage of this article' });
-  $("#media-coverage-modal").dialog("open");
-
-
-});
-
-$("#media-coverage-modal").on('click','.button.cancel', function (e) {
+  $("#media-coverage-modal").on('click','.button.cancel', function (e) {
     $("#media-coverage-modal").dialog("close");
+  });
+
 });

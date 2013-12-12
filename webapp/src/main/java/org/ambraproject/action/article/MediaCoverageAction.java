@@ -38,6 +38,9 @@ import java.util.List;
 public class MediaCoverageAction extends BaseActionSupport {
   private static final Logger log = LoggerFactory.getLogger(MediaCoverageAction.class);
 
+  // TODO better value?
+  private static final int MAX_LENGTH = 1000;
+
   private CaptchaService captchaService;
 
   private String captchaChallenge;
@@ -101,16 +104,22 @@ public class MediaCoverageAction extends BaseActionSupport {
    * @return true if everything is ok
    */
   private boolean validateInput() {
+    // TODO handle data better
+
     boolean isValid = true;
 
     if (StringUtils.isBlank(link)) {
       addFieldError("link", "This field is required.");
       isValid = false;
+    } else {
+      this.link = this.link.substring(0, Math.min(this.link.length(), MAX_LENGTH));
     }
 
     if (StringUtils.isBlank(name)) {
       addFieldError("name", "This field is required.");
       isValid = false;
+    } else {
+      this.name = this.name.substring(0, Math.min(this.name.length(), MAX_LENGTH));
     }
 
     if (StringUtils.isBlank(email)) {
@@ -119,6 +128,12 @@ public class MediaCoverageAction extends BaseActionSupport {
     } else if (!EmailValidator.getInstance().isValid(email)) {
       addFieldError("email", "Invalid e-mail address");
       isValid = false;
+    } else {
+      this.email = this.email.substring(0, Math.min(this.email.length(), MAX_LENGTH));
+    }
+
+    if (!StringUtils.isBlank(comment)) {
+      this.comment = this.comment.substring(0, Math.min(this.comment.length(), MAX_LENGTH));
     }
 
     HttpServletRequest request = ServletActionContext.getRequest();
