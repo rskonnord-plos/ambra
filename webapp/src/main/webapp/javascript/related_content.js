@@ -228,6 +228,8 @@ $(function () {
   }
 });
 
+
+
 $("#media-coverage-form-link").on('click', function (e) {
   $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
 
@@ -240,7 +242,12 @@ $("#media-coverage-form-link").on('click', function (e) {
   // clear all the input field values
   $('#media-coverage-form :input').val('');
 
-  $("#media-coverage-modal").dialog({ autoOpen: false, modal: true, resizable: false, minWidth: 600 });
+  $("#media-coverage-modal").dialog({ autoOpen: false, modal: true, resizable: false, minWidth: 600, dialogClass: 'default-modal', title: 'Submit a link to media coverage of this article' });
   $("#media-coverage-modal").dialog("open");
 
+
+});
+
+$("#media-coverage-modal").on('click','.button.cancel', function (e) {
+    $("#media-coverage-modal").dialog("close");
 });
