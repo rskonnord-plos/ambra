@@ -6104,3 +6104,6 @@ form.standard .note{
     font-size: 11px;
 }
 
+a#media-coverage-form-link {
+  cursor: pointer;
+}
