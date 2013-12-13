@@ -529,51 +529,53 @@
     <!-- 1/4/12: plos-specific template (creates editor list in citation) -->
     <xsl:template name="editors-list">
       <xsl:param name="r"/>
-      <p>
-        <xsl:for-each select="$r">
-          <!-- for the first item, print out the role first, i.e. Editor -->
-          <xsl:if test="position()=1">
-            <strong>
+      <xsl:if test="$r">
+        <p>
+          <xsl:for-each select="$r">
+            <!-- for the first item, print out the role first, i.e. Editor -->
+            <xsl:if test="position()=1">
+              <strong>
+                <xsl:choose>
+                  <xsl:when test="role">
+                    <xsl:value-of select="role"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    Academic Editor
+                  </xsl:otherwise>
+                </xsl:choose>
+                <!-- if multiple editors, make role plural -->
+                <xsl:if test="last() > 1">s</xsl:if>
+                <xsl:text>: </xsl:text>
+              </strong>
+            </xsl:if>
+            <xsl:apply-templates select="name | collab" mode="metadata"/>
+            <xsl:apply-templates select="*[not(self::name) and not(self::collab) and not(self::xref)
+                  and not(self::degrees) and not(self::role)]" mode="metadata"/>
+            <xsl:variable name="matchto" select="xref/@rid"/>
+            <xsl:if test="../following-sibling::aff">
+              <!-- use commas between name & aff if single editor; else use parens -->
               <xsl:choose>
-                <xsl:when test="role">
-                  <xsl:value-of select="role"/>
+                <xsl:when test="position() = 1 and position() = last()">
+                  <xsl:text>, </xsl:text>
+                  <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
                 </xsl:when>
                 <xsl:otherwise>
-                  Academic Editor
+                  <xsl:text> (</xsl:text>
+                  <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
+                  <xsl:text>)</xsl:text>
                 </xsl:otherwise>
               </xsl:choose>
-              <!-- if multiple editors, make role plural -->
-              <xsl:if test="last() > 1">s</xsl:if>
-              <xsl:text>: </xsl:text>
-            </strong>
-          </xsl:if>
-          <xsl:apply-templates select="name | collab" mode="metadata"/>
-          <xsl:apply-templates select="*[not(self::name) and not(self::collab) and not(self::xref)
-                and not(self::degrees) and not(self::role)]" mode="metadata"/>
-          <xsl:variable name="matchto" select="xref/@rid"/>
-          <xsl:if test="../following-sibling::aff">
-            <!-- use commas between name & aff if single editor; else use parens -->
-            <xsl:choose>
-              <xsl:when test="position() = 1 and position() = last()">
-                <xsl:text>, </xsl:text>
-                <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text> (</xsl:text>
-                <xsl:apply-templates select="../following-sibling::aff[@id=$matchto]" mode="editor-metadata"/>
-                <xsl:text>)</xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:if>
-          <!-- appropriately place commas and "and" -->
-          <xsl:if test="position() != last()">
-            <xsl:text>, </xsl:text>
-          </xsl:if>
-          <xsl:if test="position() = last()-1">
-            <xsl:text>and </xsl:text>
-          </xsl:if>
-        </xsl:for-each>
-      </p>
+            </xsl:if>
+            <!-- appropriately place commas and "and" -->
+            <xsl:if test="position() != last()">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
+            <xsl:if test="position() = last()-1">
+              <xsl:text>and </xsl:text>
+            </xsl:if>
+          </xsl:for-each>
+        </p>
+      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template -->
