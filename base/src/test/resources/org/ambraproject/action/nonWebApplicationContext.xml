@@ -34,8 +34,8 @@
 
   <!--Cache stuff-->
 
-  <bean id="articleHtmlCache" class="org.ambraproject.service.cache.MockCache"/>
-  <bean id="rolesCache" class="org.ambraproject.service.cache.MockCache"/>
+  <bean id="articleHtmlCache" class="org.ambraproject.service.cache.EternalCache"/>
+  <bean id="rolesCache" class="org.ambraproject.service.cache.EternalCache"/>
 
   <!--The doi for the article that's in the test filestore-->
   <bean class="java.lang.String" id="articleInFilestore">
