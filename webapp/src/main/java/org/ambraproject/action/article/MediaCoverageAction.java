@@ -117,6 +117,10 @@ public class MediaCoverageAction extends BaseActionSupport {
 
     boolean isValid = true;
 
+    if (StringUtils.isBlank(uri)) {
+      isValid = false;
+    }
+
     UrlValidator urlValidator = new UrlValidator();
 
     if (StringUtils.isBlank(link)) {
