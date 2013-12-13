@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.1</h2>
+  <p>Released December 17, 2013</p>
+  <h3>Features Implemented in Ambra 2.9.1</h3>
+  <ul>
+     <li>Fix for CSS file path mistake</li>
+     <li>Crowd sourced media coverage form on article page</li>
+     <li>Update to article page references section style, linking, and doi display logic</li>
+  </ul>
+
   <h2>Ambra 2.9.0</h2>
   <p>Released December 10, 2013</p>
   <h3>Features Implemented in Ambra 2.9.0</h3>
