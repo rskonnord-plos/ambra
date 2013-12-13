@@ -1,7 +1,6 @@
-/* $HeadURL::                                                                            $
- * $Id$
+/*
+ * Copyright (c) 2006-2013 by Public Library of Science
  *
- * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -350,7 +349,7 @@ public class TextUtils {
    * @return hyperlinked text
    */
   public static String hyperlinkEnclosedWithPTags(final String text) {
-    return hyperlinkEnclosedWithPTags(text,0);
+    return hyperlinkEnclosedWithPTags(text, 0);
   }
 
   /**
@@ -942,5 +941,22 @@ public class TextUtils {
       }
     }
     return shortenedText;
+  }
+
+  /**
+   * Create a list of first, second and last authors
+   *
+   * @param authors the list of authors
+   *
+   * @return a combined string of first, second and last authors
+   */
+  public static String makeAuthorString(String[] authors) {
+    if (authors.length <= 3) {
+      return StringUtils.join(authors, ", ");
+    }
+    else {
+      //use first two and last.
+      return authors[0].trim() + ", " + authors[1].trim() + ", [...], " + authors[authors.length-1].trim();
+    }
   }
 }

@@ -19,12 +19,14 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
 /**
  * Search service interface.
@@ -37,6 +39,42 @@ public interface SearchService {
 
   SearchResultSinglePage advancedSearch(SearchParameters searchParameters) throws ApplicationException;
 
+  /**
+   * Get the most shared (Twitter and Facebook only) article for the given journal and category
+   *
+   * @param journal a journal to filter on
+   * @param subjectArea a category to filter on
+   *
+   * @return the search results
+   *
+   * @throws ApplicationException
+   */
+  SearchHit getMostSharedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+
+  /**
+   * Get the most viewed article in the last 30 days for the given journal and category
+   *
+   * @param journal a journal to filter on
+   * @param subjectArea a category to filter on
+   *
+   * @return the search results
+   *
+   * @throws ApplicationException
+   */
+  SearchHit getMostViewedForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+
+  /**
+   * Get the most viewed article for all time for the given journal and category
+   *
+   * @param journal a journal to filter on
+   * @param subjectArea a category to filter on
+   *
+   * @return the search results
+   *
+   * @throws ApplicationException
+   */
+  SearchHit getMostViewedAllTimeForJournalCategory(String journal, String subjectArea) throws ApplicationException;
+
   SearchResultSinglePage findAnArticleSearch(SearchParameters searchParameters) throws ApplicationException;
 
   SearchResultSinglePage getFilterData(SearchParameters searchParameters) throws ApplicationException;
@@ -46,18 +84,37 @@ public interface SearchService {
    * for the given journal.
    *
    * @param journal name of the journal in question
-   * @return List of category strings, slash-delimited to indicate hierarchy.  Example:
-   *     "/Biology and life sciences/Plant science/Plant anatomy/Flowers"
+   * @return List of category names
    */
   List<String> getAllSubjects(String journal) throws ApplicationException;
 
   /**
-   * Returns a list of the top level subject categories associated with all journals
+   * Simple class wrapping the returned values of getAllSubjectCounts.
+   */
+  public static class SubjectCounts {
+
+    /**
+     * Total number of articles in the corpus for a given journal.  Note that this cannot
+     * be derived from summing everything in subjectCounts, since articles canned by
+     * tagged with multiple subjects.
+     */
+    public long totalArticles;
+
+    /**
+     * Count of articles for a given journal by subject category.
+     */
+    public Map<String, Long> subjectCounts = new HashMap<String, Long>();
+  }
+
+  /**
+   * Returns the number of articles, for a given journal, associated with all the subject
+   * categories in the taxonomy.
    *
-   * @return A map of subject areas and a count of their frequency
+   * @param journal specifies the journal
+   * @return see comments for {@link SubjectCounts}
    * @throws ApplicationException
    */
-  SortedMap<String, Long> getTopSubjects() throws ApplicationException;
+  SubjectCounts getAllSubjectCounts(String journal) throws ApplicationException;
 
   /**
    * Returns articles list that are published between the last search time and the current search time for saved search

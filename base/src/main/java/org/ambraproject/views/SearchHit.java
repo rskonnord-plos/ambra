@@ -1,5 +1,8 @@
 /*
- * Copyright (c) 2006-2013 by Public Library of Science
+ * $HeadURL$
+ * $Id$
+ *
+ * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -23,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Value object that holds the result of a single search item
@@ -38,7 +42,8 @@ public class SearchHit implements Serializable {
   private final String title;
   private final Date date;
   private final String creator;
-  private final Collection<String> listOfCreators;
+  private String firstSecondLastCreator;
+  private final List<String> listOfCreators;
   private final String issn;
   private final String journalTitle;
   private final String articleTypeForDisplay;
@@ -63,7 +68,7 @@ public class SearchHit implements Serializable {
    * @param hasAssets
    */
   public SearchHit(Float hitScore, String uri, String title,
-                   Collection<String> creators, Date date, String issn,
+                   List<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
                    Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage, boolean hasAssets) {
     if (hitScore == null) {
@@ -84,6 +89,11 @@ public class SearchHit implements Serializable {
     this.subjectsPolyhierarchy = subjectsPolyhierarchy;
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
+
+    //Make a list of first, second, third creators
+    if(creators != null) {
+      this.firstSecondLastCreator = TextUtils.makeAuthorString(creators.toArray(new String[creators.size()]));
+    }
   }
 
   /**
@@ -201,6 +211,10 @@ public class SearchHit implements Serializable {
     return this.listOfCreators;
   }
 
+  public String getFirstSecondLastCreator() {
+    return firstSecondLastCreator;
+  }
+
   public String getStrikingImage() {
     return strikingImage;
   }
@@ -223,8 +237,7 @@ public class SearchHit implements Serializable {
     private String title;
     private String highlight;
     private Date date;
-    private String creator;
-    private Collection<String> listOfCreators;
+    private List<String> listOfCreators;
     private Collection<String> subjects;
     private Collection<String> subjectsPolyhierarchy;
     private String issn;
@@ -264,9 +277,9 @@ public class SearchHit implements Serializable {
       return this;
     }
 
-    public Builder setListOfCreators(Collection<String> listOfCreators) {
+    public Builder setListOfCreators(List<String> listOfCreators) {
       this.listOfCreators = listOfCreators;
-      this.creator = StringUtils.join(listOfCreators, ", ");
+
       return this;
     }
 

@@ -98,7 +98,7 @@
         contextElement varchar(255),
         contentType varchar(255),
         title longtext,
-        description varchar(255),
+        description longtext,
         size bigint,
         articleID bigint,
         sortOrder integer,
@@ -117,6 +117,24 @@
         name varchar(255),
         sortOrder integer not null,
         primary key (articleID, sortOrder)
+    );
+
+    create table articleList (
+        articleListID bigint not null auto_increment,
+        lastModified datetime not null,
+        created datetime not null,
+        listCode varchar(255) not null unique,
+        displayName varchar(255),
+        journalID bigint,
+        journalSortOrder integer,
+        primary key (articleListID)
+    );
+
+    create table articleListJoinTable (
+        articleListID bigint not null,
+        doi varchar(255),
+        sortOrder integer not null,
+        primary key (articleListID, sortOrder)
     );
 
     create table articlePerson (
@@ -474,6 +492,18 @@
         add constraint FK204FE589DFD5CDF3 
         foreign key (articleID) 
         references article (articleID);
+
+    alter table articleList 
+        add index FK30C186B4FA7E0635 (journalID), 
+        add constraint FK30C186B4FA7E0635 
+        foreign key (journalID) 
+        references journal (journalID);
+
+    alter table articleListJoinTable 
+        add index FKA693FC704946C7CF (articleListID), 
+        add constraint FKA693FC704946C7CF 
+        foreign key (articleListID) 
+        references articleList (articleListID);
 
     alter table articlePerson 
         add index FKD1543EBDFD5CDF3 (articleID), 

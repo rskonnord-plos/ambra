@@ -48,5 +48,12 @@
       <index column="journalSortOrder"/>
       <one-to-many class="Volume"/>
     </list>
+
+    <list name="articleList" lazy="true" cascade="save-update">
+      <key column="journalID"/>
+      <index column="journalSortOrder"/>
+      <one-to-many class="ArticleList"/>
+    </list>
+
   </class>
 </hibernate-mapping>

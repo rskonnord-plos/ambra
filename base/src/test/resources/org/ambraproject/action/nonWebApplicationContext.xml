@@ -34,8 +34,8 @@
 
   <!--Cache stuff-->
 
-  <bean id="articleHtmlCache" class="org.ambraproject.service.cache.MockCache"/>
-  <bean id="rolesCache" class="org.ambraproject.service.cache.MockCache"/>
+  <bean id="articleHtmlCache" class="org.ambraproject.service.cache.EternalCache"/>
+  <bean id="rolesCache" class="org.ambraproject.service.cache.EternalCache"/>
 
   <!--The doi for the article that's in the test filestore-->
   <bean class="java.lang.String" id="articleInFilestore">
@@ -121,6 +121,12 @@
     <property name="configuration" ref="ambraConfiguration"/>
   </bean>
 
+  <bean id="mostViewedArticleService" class="org.ambraproject.service.search.SolrMostViewedArticleService">
+    <property name="solrFieldConverter" ref="solrFieldConverter"/>
+    <property name="solrHttpService" ref="solrHttpService"/>
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
   <bean id="browseService" class="org.ambraproject.service.article.BrowseServiceImpl" depends-on="ambraConfiguration">
     <property name="journalService" ref="journalService"/>
     <property name="browseSolrCache">
@@ -204,6 +210,11 @@
         <entry key="30" value="one_month_field"/>
       </map>
     </property>
+  </bean>
+
+  <bean id="solrHttpService" class="org.ambraproject.service.search.SolrHttpServiceImpl">
+    <property name="config" ref="ambraConfiguration"/>
+    <property name="httpClient" ref="httpClient"/>
   </bean>
 
   <bean id="fetchArticleService" class="org.ambraproject.service.article.FetchArticleServiceImpl">

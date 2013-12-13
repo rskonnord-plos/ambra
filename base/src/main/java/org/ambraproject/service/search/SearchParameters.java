@@ -72,8 +72,11 @@ public class SearchParameters implements Serializable {
   private Date          filterStartDate           = null; //Only search for articles published in this date range
   private Date          filterEndDate             = null;
 
-  // Controls results order
-  private String        sort                  = "";
+  // Controls results order by key
+  private String        sortKey                   = "";
+
+  // Controls results order by value
+  private String        sortValue                  = "";
 
   //  Formatting elements
   private int           startPage = 0;
@@ -255,15 +258,23 @@ public class SearchParameters implements Serializable {
     }
   }
 
-  public String getSort() {
-    return sort;
+  public String getSortKey() {
+    return sortKey;
   }
 
-  public void setSort(String sort) {
-    if (sort == null || sort.trim().length() < 1)
-      this.sort = "";
+  public void setSortKey(String sortKey) {
+    if (sortKey == null || sortKey.trim().length() < 1)
+      this.sortKey = "";
     else
-      this.sort = sort.trim();
+      this.sortKey = sortKey.trim();
+  }
+
+  public String getSortValue() {
+    return sortValue;
+  }
+
+  public void setSortValue(String sortValue) {
+    this.sortValue = sortValue;
   }
 
   public int getStartPage() {
@@ -324,7 +335,8 @@ public class SearchParameters implements Serializable {
     sp.setFilterSubjectsDisjunction(this.getFilterSubjectsDisjunction());
     sp.setFilterAuthors(this.getFilterAuthors());
     sp.setFilterJournals(this.getFilterJournals().clone());
-    sp.setSort(this.getSort());
+    sp.setSortKey(this.getSortKey());
+    sp.setSortValue(this.getSortValue());
     sp.setStartPage(this.getStartPage());
     sp.setPageSize(this.getPageSize());
     sp.setResultView(this.getResultView());
@@ -349,7 +361,8 @@ public class SearchParameters implements Serializable {
         ", filterJournals=" + (filterJournals == null ? null : Arrays.asList(filterJournals)) +
         ", filterStartDate=" + filterStartDate +
         ", filterEndDate=" + filterEndDate +
-        ", sort='" + sort + "'" +
+        ", sortKey='" + sortKey + "'" +
+        ", sortValue='" + sortValue + "'" +
         ", startPage=" + startPage +
         ", pageSize=" + pageSize +
         ", resultView='" + resultView + "'" +

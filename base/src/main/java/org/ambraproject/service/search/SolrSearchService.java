@@ -18,9 +18,10 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
+import org.ambraproject.service.cache.Cache;
+import org.ambraproject.util.Pair;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
-import org.ambraproject.service.cache.Cache;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -208,6 +209,89 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchHit getMostSharedForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("alm_twitterCount:[1 TO *] OR alm_facebookCount:[1 TO *]");
+    sp.setSortValue("sum(alm_twitterCount, alm_facebookCount) desc");
+
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchHit getMostViewedForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("counter_total_month:[1 TO *]");
+    sp.setSortValue("counter_total_month desc");
+
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SearchHit getMostViewedAllTimeForJournalCategory(String journal, String subjectArea)
+      throws ApplicationException {
+    SearchParameters sp = new SearchParameters();
+
+    sp.setFilterSubjects(new String[] { subjectArea });
+    sp.setFilterJournals(new String[] { journal });
+    //We only need one record
+    sp.setPageSize(1);
+    sp.setStartPage(0);
+
+    //Only search for articles with shares
+    //We might turn this info a filter query for a small performance boost
+    sp.setUnformattedQuery("counter_total_all:[1 TO *]");
+    sp.setSortValue("counter_total_all desc");
+
+    SearchResultSinglePage results = advancedSearch(sp);
+    if(results.getHits().size() > 0) {
+      return results.getHits().get(0);
+    } else {
+      return null;
+    }
+  }
+
+
+
+  /**
    * Populate facets of the search object.
    * <p/>
    * If no search results and hence facets are found remove defined filters and try the search again.  Journals will
@@ -302,10 +386,45 @@ public class SolrSearchService implements SearchService {
   }
 
   /**
-   * @enheritDoc
+   * @inheritDoc
    */
   @Override
   public List<String> getAllSubjects(String journal) throws ApplicationException {
+    QueryResponse queryResponse = executeSubjectFacetSearch("subject_hierarchy", journal);
+    FacetField facet = queryResponse.getFacetField("subject_hierarchy");
+    List<String> results = new ArrayList<String>(facet.getValues().size());
+    for (FacetField.Count count : facet.getValues()) {
+      results.add(count.getName());
+    }
+    return results;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public SubjectCounts getAllSubjectCounts(String journal) throws ApplicationException {
+    QueryResponse queryResponse = executeSubjectFacetSearch("subject_facet", journal);
+    FacetField facet = queryResponse.getFacetField("subject_facet");
+    SubjectCounts results = new SubjectCounts();
+    for (FacetField.Count count : facet.getValues()) {
+      results.subjectCounts.put(count.getName(), count.getCount());
+    }
+    results.totalArticles = queryResponse.getResults().getNumFound();
+    return results;
+  }
+
+  /**
+   * Executes a search where results are grouped by one of the subject facets in the solr schema.
+   *
+   * @param facetName the subject facet of interest.  Depending on the application, this should be
+   *     either "subject_facet" or "subject_hierarchy".  The first does not include the entire taxonomy
+   *     path, while the second does.
+   * @param journal journal of interest
+   * @return solr server response
+   * @throws ApplicationException
+   */
+  private QueryResponse executeSubjectFacetSearch(String facetName, String journal) throws ApplicationException {
     SolrQuery query = createQuery("*:*", 0, 0, false);
 
     // We don't care about results, just facet counts.
@@ -313,37 +432,29 @@ public class SolrSearchService implements SearchService {
 
     // We only care about full documents
     query.addFilterQuery(createFilterFullDocuments());
+    query.addFilterQuery(createFilterNoIssueImageDocuments());
 
     // Remove facets we don't use in this case.
     query.removeFacetField("author_facet");
     query.removeFacetField("editor_facet");
     query.removeFacetField("affiliate_facet");
     query.removeFacetField("subject_facet");
+    query.removeFacetField("subject_hierarchy");
 
     // Add the one we do want.
-    query.addFacetField("subject_hierarchy");
+    query.addFacetField(facetName);
 
     if(journal != null && journal.length() > 0) {
       query.addFilterQuery("cross_published_journal_key:" + journal);
     }
 
     query.setFacetLimit(-1);  // unlimited
-
-    QueryResponse queryResponse = getSOLRResponse(query);
-    FacetField facet = queryResponse.getFacetField("subject_hierarchy");
-    List<String> results = new ArrayList<String>(facet.getValues().size());
-
-    for (FacetField.Count count : facet.getValues()) {
-      results.add(count.getName());
-    }
-
-    return results;
+    return getSOLRResponse(query);
   }
 
   /**
    * @enheritDoc
    */
-  @Override
   public SortedMap<String, Long> getTopSubjects() throws ApplicationException {
     if (cache == null) {
       return getTopSubjectsFromSOLR();
@@ -410,15 +521,20 @@ public class SolrSearchService implements SearchService {
    */
   private void setSort(SolrQuery query, SearchParameters sp) throws ApplicationException {
     if (log.isDebugEnabled()) {
-      log.debug("SearchParameters.sort = " + sp.getSort());
+      log.debug("SearchParameters.sort = " + sp.getSortKey());
     }
 
-    if (sp.getSort().length() > 0) {
-      String sortKey = sp.getSort();
+    if (sp.getSortKey().length() > 0 || (sp.getSortValue() != null && sp.getSortValue().length() > 0)) {
+      String sortKey = sp.getSortKey();
       String sortValue = (String) validSorts.get(sortKey);
 
-      if (sortValue == null) {
-        throw new ApplicationException("Invalid sort of '" + sp.getSort() + "' specified.");
+      //This bit allows a consumer of the method to explicitly set the sort instead of specifying it by key
+      if(sp.getSortValue() != null && sp.getSortValue().length() > 0) {
+        sortValue = sp.getSortValue();
+      } else {
+        if (sortValue == null) {
+          throw new ApplicationException("Invalid sort key of '" + sp.getSortKey() + "' specified.");
+        }
       }
 
       String[] sortOptions = SORT_OPTION_PATTERN.split(sortValue);

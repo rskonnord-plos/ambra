@@ -14,6 +14,7 @@ package org.ambraproject.util;
 import org.ambraproject.views.CategoryView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,11 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
- * Utilities for working with Maps
+ * Utilities for working with Maps.
+ * <p/>
+ * TODO: consider mergine this code with org.ambraproject.service.taxonomy.TaxonomyServiceImpl.
+ * In practice, TaxonomyService code mostly delegates to hibernate and solr, while this class
+ * deals with taxonomy data structures.  But the distinction isn't clear-cut.
  */
 public class CategoryUtils {
   private static final Logger log = LoggerFactory.getLogger(CategoryUtils.class);
@@ -101,39 +106,76 @@ public class CategoryUtils {
   }
 
   /**
-   * Given a list of "/" delimited strings build a structured map
+   * For the passed in category, find the matching CategoryView.  This will come in handy when looking for
+   * getting the correctly formatted case corrected category name
    *
-   * @param strings
+   * @param categoryView the categoryView to search from
+   * @param category the string of the category to search for
    *
-   * @return a new treeMap
+   * @return The first matching category view
+   *
+   * @throws org.ambraproject.ApplicationException
    */
-  public static CategoryView createMapFromStringList(List<String> strings) {
-    CategoryView root = new CategoryView("ROOT");
+  public static CategoryView findCategory(CategoryView categoryView, String category) {
+    if(categoryView.getName().toLowerCase().equals(category.toLowerCase())) {
+      return categoryView;
+    }
 
-    for (String string : strings) {
-      if(string.charAt(0) == '/') {
-        //Ignore first "/"
-        root = recurseValues(root, string.substring(1).split("\\/"), 0);
-      } else {
-        root = recurseValues(root, string.split("\\/"), 0);
+    for(String key : categoryView.getChildren().keySet()) {
+      CategoryView res = findCategory(categoryView.getChild(key), category);
+
+      if(res != null) {
+        return res;
       }
     }
 
+    return null;
+  }
+
+  /**
+   * Given a list of "/" delimited strings build a structured map
+   *
+   * @param categories list of Pairs wrapping the category name and article count
+   *
+   * @return a new treeMap
+   */
+  public static CategoryView createMapFromStringList(List<String> categories) {
+    CategoryView root = new CategoryView("ROOT");
+
+    // Since there can be multiple paths to the same child, we don't want to create the same
+    // child more than once.  Hence the need for this map.
+    Map<String, CategoryView> createdCategories = new HashMap<String, CategoryView>();
+    for (String category : categories) {
+      if(category.charAt(0) == '/') {
+        //Ignore first "/"
+        root = recurseValues(root, category.substring(1).split("\\/"), 0, createdCategories);
+      } else {
+        root = recurseValues(root, category.split("\\/"), 0, createdCategories);
+      }
+    }
+
+    // See comment below.
+//    incrementAncestorCounts(root);
     return root;
   }
 
-  private static CategoryView recurseValues(CategoryView category, String categories[], int index) {
-    CategoryView rootCategory = category.getChildren().get(categories[index]);
+  private static CategoryView recurseValues(CategoryView root, String categories[], int index,
+      Map<String, CategoryView> created) {
+    CategoryView child = root.getChildren().get(categories[index]);
 
-    if (rootCategory == null) {
-      rootCategory = new CategoryView(categories[index]);
-      category.addChild(rootCategory);
+    if (child == null) {
+      child = created.get(categories[index]);
+      if (child == null) {
+        child = new CategoryView(categories[index]);
+        created.put(categories[index], child);
+      }
+      root.addChild(child);
     }
 
     if ((index + 1) < categories.length) { // path end
-      recurseValues(rootCategory, categories, index + 1);
+      recurseValues(child, categories, index + 1, created);
     }
 
-    return category;
+    return root;
   }
 }

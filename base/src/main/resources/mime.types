@@ -81,6 +81,8 @@ audio/x-ms-wma  wma
 audio/x-pn-realaudio		ram rm
 audio/x-realaudio ra
 audio/x-wav				wav
+chemical/seq-na-fastq				fastq fq
+chemical/seq-na-fasta				fasta fa fna fsa mpfa
 drawing/x-dwf				dwf
 image/cgm				cgm
 image/fif				fif

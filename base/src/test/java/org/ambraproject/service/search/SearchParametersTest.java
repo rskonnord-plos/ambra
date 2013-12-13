@@ -142,12 +142,12 @@ public class SearchParametersTest {
   @Test
   public void testSort() throws Exception {
     SearchParameters sp = new SearchParameters();
-    sp.setSort(test);
-    assertEquals(sp.getSort(), test);
-    sp.setSort(null);
-    assertEquals(sp.getSort(), empty); // Should never return null
-    sp.setSort(trimTestPrefix + test + trimTestSuffix);
-    assertEquals(sp.getSort(), test); // test "trim" of field
+    sp.setSortKey(test);
+    assertEquals(sp.getSortKey(), test);
+    sp.setSortKey(null);
+    assertEquals(sp.getSortKey(), empty); // Should never return null
+    sp.setSortKey(trimTestPrefix + test + trimTestSuffix);
+    assertEquals(sp.getSortKey(), test); // test "trim" of field
   }
 
   @Test
@@ -180,7 +180,7 @@ public class SearchParametersTest {
     sp.setFilterSubjects(inputStringArray);
     sp.setFilterJournals(inputStringArray);
     sp.setFilterArticleTypes(inputStringArray);
-    sp.setSort("sort: " + test);
+    sp.setSortKey("sort: " + test);
     sp.setStartPage(473);
     sp.setPageSize(216);
     
@@ -224,9 +224,9 @@ public class SearchParametersTest {
     sp.setFilterArticleTypes(new String[]{});
     assertNotSame(spCopy.getFilterArticleTypes().length, sp.getFilterArticleTypes().length);
 
-    assertEquals(spCopy.getSort(), sp.getSort());
-    sp.setSort(test);
-    assertNotSame(spCopy.getSort(), sp.getSort());
+    assertEquals(spCopy.getSortKey(), sp.getSortKey());
+    sp.setSortKey(test);
+    assertNotSame(spCopy.getSortKey(), sp.getSortKey());
 
     assertEquals(spCopy.getStartPage(), sp.getStartPage());
     sp.setStartPage(932);
@@ -254,7 +254,8 @@ public class SearchParametersTest {
     sp.setFilterAuthors(inputStringArray);
     sp.setFilterKeyword("keyword");
     sp.setFilterArticleTypes(inputStringArray);
-    sp.setSort("sortString");
+    sp.setSortKey("sortString");
+    sp.setSortValue("sortValue");
     sp.setStartPage(473);
     sp.setPageSize(216);
     sp.setResultView("fig");
@@ -272,7 +273,8 @@ public class SearchParametersTest {
         " filterJournals=[element Two, element Six with some special characters: !@#$%^&*()[]{}, element Eleven, element Twelve]," +
         " filterStartDate=null," +
         " filterEndDate=null," +
-        " sort='sortString'," +
+        " sortKey='sortString'," +
+        " sortValue='sortValue'," +
         " startPage=473," +
         " pageSize=216," +
         " resultView='fig'}");

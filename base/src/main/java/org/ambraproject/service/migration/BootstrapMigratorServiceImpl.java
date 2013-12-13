@@ -126,6 +126,74 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
       migrate250();
     }
 
+    if (dbVersion < 280) {
+      migrate255();
+    }
+
+    if (dbVersion < 282) {
+      migrate280();
+    }
+  }
+
+  /**
+   * The pattern to match method name is to match earlier db version.
+   * For example, if earlier db version is 280,
+   * next migration method name should be migrate280()
+   */
+  private void migrate280() {
+    log.info("Migration from 280 starting");
+
+    final Long versionID = (Long)hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        //this should match the ambra version we will be going to deploy
+        v.setName("Ambra 2.82");
+        v.setVersion(282);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        execSQLScript(session, "migrate_ambra_2_8_2_part1.sql");
+
+        v.setUpdateInProcess(false);
+        session.update(v);
+
+        return null;
+      }
+    });
+
+    log.info("Migration from 280 complete");
+  }
+
+
+  /**
+   * The pattern to match method name is to match earlier db version.
+   * For example, if earlier db version is 237,
+   * next migration method name should be migrate237()
+   */
+  private void migrate255() {
+    log.info("Migration from 255 starting");
+
+    final Long versionID = (Long)hibernateTemplate.execute(new HibernateCallback() {
+      @Override
+      public Object doInHibernate(Session session) throws HibernateException, SQLException {
+        Version v = new Version();
+        //this should match the ambra version we will be going to deploy
+        v.setName("Ambra 2.80");
+        v.setVersion(280);
+        v.setUpdateInProcess(true);
+        session.save(v);
+
+        execSQLScript(session, "migrate_ambra_2_8_0_part1.sql");
+
+        v.setUpdateInProcess(false);
+        session.update(v);
+
+        return null;
+      }
+    });
+
+    log.info("Migration from 255 complete");
   }
 
   /**

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2006-2013 by Public Library of Science
+ *
  * http://plos.org
  * http://ambraproject.org
  *
@@ -10,12 +11,11 @@
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- *   limitations under the License.
+ * limitations under the License.
  */
-
 package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
@@ -60,10 +60,10 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
+import java.math.BigInteger;
 import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -73,6 +73,8 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+
 
 /**
  * @author Joe Osowski
@@ -694,6 +696,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     articleInfo.setVolume(article.getVolume());
     articleInfo.seteLocationId(article.geteLocationId());
     articleInfo.setCitedArticles(article.getCitedArticles());
+    articleInfo.setStrkImgURI(article.getStrkImgURI());
     //Set the citation info
     CitationInfo citationInfo = new CitationInfo();
     citationInfo.setId(URI.create(article.getDoi()));
@@ -709,11 +712,25 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     Set<Category> categories = article.getCategories();
     Set<ArticleCategory> catViews = new HashSet<ArticleCategory>(categories.size());
 
-    for(Category cat : categories) {
-      catViews.add(new ArticleCategory(cat.getMainCategory(), cat.getSubCategory()));
-    }
-    articleInfo.setCategories(catViews);
 
+    //See if the user flagged any of the existing categories
+    List<Long> flaggedCategories = getFlaggedCategories(article.getID(), authId);
+
+    for(Category cat : categories) {
+      catViews.add(
+        ArticleCategory.builder()
+          .setCategoryID(cat.getID())
+          .setMainCategory(cat.getMainCategory())
+          .setSubCategory(cat.getSubCategory())
+          .setPath(cat.getPath())
+          .setFlagged(flaggedCategories.contains(cat.getID()))
+        .build()
+      );
+    }
+
+    articleInfo.setCategories(catViews);
+    List<ArticleCategory> orderedCategories = sortCategories(catViews);
+    articleInfo.setOrderedCategories(orderedCategories);
 
     //authors (list of UserProfileInfo)
     //TODO: Refactor ArticleInfo and CitationInfo objects
@@ -815,6 +832,42 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     ArticleInfo articleInfo = getBasicArticleViewArticleInfo(articleDoi);
 
     return articleInfo;
+  }
+
+  /**
+   * Return a list of categories this user flagged for this article
+   *
+   * @param articleID an articleID
+   * @param authID the user's authorization ID
+   *
+   * @return list of category IDs this user flagged for this article
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly = true)
+  private List<Long> getFlaggedCategories(final long articleID, final String authID) {
+    if(authID != null && authID.length() > 0) {
+      return hibernateTemplate.execute(new HibernateCallback<List<Long>>() {
+        public List<Long> doInHibernate(Session session) throws HibernateException, SQLException {
+          List<BigInteger> categories = session.createSQLQuery(
+            "select acf.categoryID from articleCategoryFlagged acf " +
+              "join userProfile up on up.userProfileID = acf.userProfileID " +
+              "where up.authId = :authID and acf.articleID = :articleID")
+            .setString("authID", authID)
+            .setLong("articleID", articleID)
+            .list();
+
+          List<Long> results = new ArrayList<Long>();
+
+          for(BigInteger row : categories) {
+            results.add(row.longValue());
+          }
+
+          return results;
+        }
+      });
+    } else {
+      return new ArrayList<Long>();
+    }
   }
 
   /**
@@ -1167,5 +1220,21 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   @Required
   public void setCrossRefLookupService(CrossRefLookupService crossRefLookupService) {
     this.crossRefLookupService = crossRefLookupService;
+  }
+
+  /**
+   * This method sorts the categories in alphabetical order. It uses the overridden
+   * compareTo() method in the ArticleCategory to compare the subcategories for sorting;
+   * if the subcategory does not exist (in case of one-level deep categories)
+   * this method uses the main category.
+   *
+   * @param categoryViews the 'categories' property of an article as a list
+   * @return the alphabetically ordered categories
+   */
+ public List<ArticleCategory> sortCategories (Set<ArticleCategory> categoryViews) {
+   List<ArticleCategory> orderedCategories = new ArrayList<ArticleCategory>();
+   orderedCategories.addAll(categoryViews);
+   Collections.sort(orderedCategories);
+   return orderedCategories;
   }
 }
