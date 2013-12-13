@@ -36,4 +36,8 @@ public class DummyCaptcha implements CaptchaService {
   public String getCaptchaHTML() {
     return "";
   }
+
+  public String getPublicKey() {
+    return "";
+  }
 }

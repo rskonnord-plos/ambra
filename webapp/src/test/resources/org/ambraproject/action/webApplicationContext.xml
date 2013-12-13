@@ -75,6 +75,7 @@
     <property name="articleService" ref="articleService"/>
     <property name="fetchArticleService" ref="fetchArticleService"/>
     <property name="articleAssetService" ref="articleAssetService"/>
+    <property name="captchaService" ref="captchaService"/>
   </bean>
 
   <bean id="fetchObjectAction" class="org.ambraproject.action.article.FetchObjectAction">

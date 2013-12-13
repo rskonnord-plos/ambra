@@ -54,6 +54,10 @@ public class CaptchaServiceImpl implements CaptchaService {
     );
   }
 
+  public String getPublicKey() {
+    return configuration.getString(PUBLIC_KEY_KEY);
+  }
+
   /**
    * Setter method for configuration. Injected through Spring.
    *
