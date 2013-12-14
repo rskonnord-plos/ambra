@@ -22,7 +22,7 @@ package org.ambraproject.views.article;
 import java.io.Serializable;
 import java.net.URI;
 
-public class RelatedArticleInfo extends BaseArticleInfo implements Serializable {
+public class RelatedArticleInfo extends BaseArticleInfo implements Serializable, Comparable<RelatedArticleInfo>  {
   public URI    uri;
   public String relationType;
 
@@ -73,5 +73,13 @@ public class RelatedArticleInfo extends BaseArticleInfo implements Serializable 
     int result = super.hashCode();
     result = 31 * result + (uri != null ? uri.hashCode() : 0);
     return result;
+  }
+
+  @Override
+  public int compareTo(RelatedArticleInfo o) {
+    if (this.getDate() == null || o.getDate() == null) {
+      return 0;
+    }
+    return o.getDate().compareTo(this.getDate());
   }
 }
