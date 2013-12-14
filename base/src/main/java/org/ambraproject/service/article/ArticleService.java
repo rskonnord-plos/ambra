@@ -60,6 +60,16 @@ public interface ArticleService {
   public boolean isResearchArticle(final ArticleInfo articleInfo)
       throws NoSuchArticleIdException, ApplicationException;
 
+  /**
+   * Determines if the article is of type retraction
+   *
+   * @param articleInfo The ArticleInfo object
+   * @return True if the article is a retraction article
+   * @throws NoSuchArticleIdException
+   * @throws ApplicationException
+   */
+  public boolean isRetractionArticle(final BaseArticleInfo articleInfo)
+          throws NoSuchArticleIdException, ApplicationException;
 
   /**
    * Determines if the articleURI is of type expression of concern
@@ -74,9 +84,9 @@ public interface ArticleService {
 
 
   /**
-   * Determines if the articleURI is of type Correction
+   * Determines if the article is of type Correction
    *
-   * @param articleInfo The ArticleType object
+   * @param articleInfo The ArticleInfo object
    * @return True if the article is a correction article
    * @throws ApplicationException
    * @throws NoSuchArticleIdException When the article does not exist

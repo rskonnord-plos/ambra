@@ -143,6 +143,30 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   }
 
   /**
+   *
+   * @param articleInfo The ArticleInfo object
+   * @return
+   * @throws ApplicationException
+   * @throws NoSuchArticleIdException
+   */
+  public boolean isRetractionArticle(final BaseArticleInfo articleInfo)
+          throws ApplicationException, NoSuchArticleIdException {
+    ArticleType articleType = ArticleType.getDefaultArticleType();
+
+    for (String artTypeUri : articleInfo.getTypes()) {
+      if (ArticleType.getKnownArticleTypeForURI(URI.create(artTypeUri)) != null) {
+        articleType = ArticleType.getKnownArticleTypeForURI(URI.create(artTypeUri));
+        break;
+      }
+    }
+    if (articleType == null) {
+      throw new ApplicationException("Unable to resolve article type for: " + articleInfo.getDoi());
+    }
+
+    return ArticleType.isRetractionArticle(articleType);
+  }
+
+  /**
    * Determines if the articleURI is of type Expression of Concern
    *
    * @param articleInfo The articleInfo Object
@@ -818,6 +842,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
         }
       }
     }
+
 
     log.debug("loaded ArticleInfo: id={}, articleTypes={}, " +
       "date={}, title={}, authors={}, related-articles={}",
