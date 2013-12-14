@@ -664,7 +664,8 @@ $(document).on("click", "#related_collections li a", function(){
           this_a = $(this);
           title = this_a.attr('title');
           target = this_a.attr('toc');
-          new_li = $('<li><a href="#' + target + '" class="scroll">' + title + '</a></li>').appendTo($new_ul);
+          itemClass = this_a.attr('id');
+          new_li = $('<li><a href="#' + target + '" class="scroll">' + title + '</a></li>').addClass(itemClass).appendTo($new_ul);
         });
         $new_ul.find('li').eq(0).addClass('active');
 
