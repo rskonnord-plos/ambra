@@ -1152,7 +1152,7 @@ ul#almSignPost li div.bottom div.center {
   cursor: pointer;
 }
 
-#article-block .article-kicker span {
+#article-block .article-kicker span#article-type-heading{
   font-size: 0.769em;
   line-height: 1;
   text-transform: uppercase;
@@ -1165,6 +1165,10 @@ ul#almSignPost li div.bottom div.center {
   -ms-transition: all .3s linear;
   -o-transition: all .3s linear;
   transition: all .3s linear;
+}
+
+#article-block .article-kicker span#article-type-heading.eoc-ret{
+  color: #e53350;
 }
 
 #article-block .article-kicker.reveal span#article-type-heading {
@@ -1567,10 +1571,10 @@ span.author span.rel-footnote {
   cursor: pointer;
 }
 
-#nav-article-page li.corrections a {
+/*#nav-article-page li.corrections a {
   color: #E53350;
   font-weight: bold;
-}
+}*/
 
 #nav-article-page .nav-page {
   border-bottom: 1px solid #d1d1d1;
@@ -2376,6 +2380,7 @@ div.table-wrap .table-footnote .fn-label {
   margin: 1em 0;
 }
 
+/* Amendment box */
 div.fch {
   background: #fce2e5;
   padding: 18px 20px 15px;
@@ -2390,10 +2395,79 @@ div.fch {
   margin-bottom: 1em;
 }
 
-div.new_corr {
+.eoc-ret_title {
+    width: auto;
+    height: 16px;
+    margin-bottom:1.5em;
+}
+
+.eoc-ret_title span, .eoc-ret_header {
+    width: 14px;
+    height: 15px;
+    display: inline-block;
+    background: url(../images/icon-ExpOfConcern-retraction.png) no-repeat;
+    margin-right: 0.3em;
+}
+
+.eoc-ret_title strong {
+    font-size: 17px;
+}
+
+.fch .citation a {
+    color: #3c63af;
+    font-weight: bold;
+}
+
+.fch .citation .date {
+    font-weight: bold;
+}
+
+div.fch_corr {
     background:#efefef;
     padding: 18px 20px 15px;
     margin-bottom: 1em;
+}
+
+.corr_title span, .corr_header {
+    width: 13px;
+    height: 15px;
+    display: inline-block;
+    background: url(../images/icon-correction.png) no-repeat;
+    margin-right: 0.3em;
+}
+
+.corr_title strong {
+    font-size: 17px;
+}
+
+.corr_title {
+    width: auto;
+    height: 16px;
+    margin-bottom:1.5em;
+}
+
+.fch_corr .citation li {
+    margin-bottom: 1em;
+}
+
+.fch_corr .citation a {
+    color: #3c63af;
+    font-weight: bold;
+}
+
+.fch_corr .citation .date {
+    font-weight: bold;
+}
+
+/* Amendment left nav */
+#nav-article-page li.eoc a {
+  color: #e53350;
+  font-weight: bold;
+}
+
+#nav-article-page li.corrections a {
+    color: #333333;
+    font-weight: bold;
 }
 
 span.genus-species {
