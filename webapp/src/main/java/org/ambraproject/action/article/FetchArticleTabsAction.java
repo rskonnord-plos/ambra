@@ -53,6 +53,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -87,12 +88,16 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public static final String ARTICLE_NOT_FOUND = "articleNotFound";
   public static final String OBJECT_OF_CONCERN_RELATION = "object-of-concern";
-  public static final String CORRECTED__ARTICLE_RELATION = "correction-forward";
+  public static final String CORRECTION_RELATION = "correction-forward";
+  public static final String RETRACTION_RELATION = "retraction";
 
   private String articleURI;
   private String transformedArticle;
   private String annotationId = "";
+  private String retraction = "";
   private String expressionOfConcern = "";
+  private CitationView retractionCitation;
+  private CitationView  eocCitation;
   private List<CitationView> articleCorrection = new ArrayList<CitationView>();
 
   private List<String> correspondingAuthor;
@@ -140,8 +145,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       setCommonData();
       articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
       populateFromAnnotations();
-      fetchExpressionOfConcern();
-      fetchArticleCorrection();
+      fetchAmendment();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
       messages.add("No article found for id: " + articleURI);
@@ -154,24 +158,53 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * check if the article has Expression of concern, if so fetch the value
+   * check if the article has any amendments; if the article has eoc or retraction, fetch the body and citation.
+   * If the article has only corrections fetch the citations.
+   *
    * @return String
    */
-  private String fetchExpressionOfConcern() {
+  private String fetchAmendment() {
 
-    if(articleInfoX.getRelatedArticles() != null) {
+    if (articleInfoX.getRelatedArticles() != null) {
+      // sort the related articles by date
+      Collections.sort(articleInfoX.getRelatedArticles());
 
       for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
-
         try {
-          if((relatedArticleInfo.getArticleTypes() != null) &&
-              OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
-              articleService.isEocArticle(relatedArticleInfo)) {
-
+          if ((relatedArticleInfo.getArticleTypes() != null)) {
+            // currently, we don't have many related articles; therefore, these lines
+            // shouldn't cause performance overhead.
+            Article article = articleService.getArticle(relatedArticleInfo.getDoi(), getAuthId());
             ArticleInfo articleInfo = articleService.getArticleInfo(relatedArticleInfo.getDoi(), getAuthId());
             Document document = this.fetchArticleService.getArticleDocument(articleInfo);
-            expressionOfConcern = this.fetchArticleService.getEocBody(document);
 
+            if (RETRACTION_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+                    articleService.isRetractionArticle(relatedArticleInfo)) {
+
+              retraction = this.fetchArticleService.getAmendmentBody(document);
+              retractionCitation = new CitationView();
+              retractionCitation.buildCitationFromArticle(article);
+              break;
+
+            }
+
+            if (OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+                    articleService.isEocArticle(relatedArticleInfo)) {
+
+              expressionOfConcern = this.fetchArticleService.getAmendmentBody(document);
+              eocCitation = new CitationView();
+              eocCitation.buildCitationFromArticle(article);
+              break;
+            }
+
+            if (CORRECTION_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+                    articleService.isCorrectionArticle(relatedArticleInfo)) {
+
+              CitationView citation = new CitationView();
+              citation.buildCitationFromArticle(article);
+              articleCorrection.add(citation);
+
+            }
           }
         } catch (Exception e) {
           populateErrorMessages(e);
@@ -179,12 +212,12 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
         }
       }
     }
-
-    return expressionOfConcern;
+    return SUCCESS;
   }
 
+
   /**
-   * check if the article has any amendments, if so fetch the value
+   * check if the article has any correction, if so fetch the citation
    * @return String
    */
   private String fetchArticleCorrection() {
@@ -192,7 +225,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
         try {
           if ((relatedArticleInfo.getArticleTypes() != null) &&
-                  CORRECTED__ARTICLE_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+                  CORRECTION_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                   articleService.isCorrectionArticle(relatedArticleInfo)) {
             Article article = articleService.getArticle(relatedArticleInfo.getDoi(), getAuthId());
             CitationView citation = new CitationView();
@@ -382,7 +415,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
           EnumSet.of(AnnotationType.COMMENT),
           AnnotationOrder.MOST_RECENT_REPLY);
       populateFromAnnotations();
-      fetchExpressionOfConcern();
+      fetchAmendment();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (Exception e) {
       populateErrorMessages(e);
@@ -780,7 +813,23 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   /**
    *
-   * @return Expression Of Concern data
+   * @return body test of the article's retraction
+   */
+  public String getRetraction() {
+    return this.retraction;
+  }
+
+  /**
+   *
+   * @return the citation for the article's retraction
+   */
+  public CitationView getRetractionCitation() {
+    return retractionCitation;
+  }
+
+  /**
+   *
+   * @return the body text of Expression Of Concern
    */
   public String getExpressionOfConcern() {
     return expressionOfConcern;
@@ -788,6 +837,14 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
 
   public void setExpressionOfConcern(String expressionOfConcern) {
     this.expressionOfConcern = expressionOfConcern;
+  }
+
+  /**
+   *
+   * @return the citation of the article's expression of concern
+   */
+  public CitationView getEocCitation() {
+    return eocCitation;
   }
 
   /**
