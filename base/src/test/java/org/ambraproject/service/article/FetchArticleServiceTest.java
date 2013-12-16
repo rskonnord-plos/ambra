@@ -1019,7 +1019,7 @@ public class FetchArticleServiceTest extends BaseTest {
      InputStream fs = fileStoreService.getFileInStream(fsid);
      org.w3c.dom.Document dom = xmlService.createDocBuilder().parse(fs);
 
-    String eoc = fetchArticleService.getEocBody(dom);
+    String eoc = fetchArticleService.getAmendmentBody(dom);
     assertEquals(eocTest.trim(), eoc.trim(), "Expression of concerns didn't match");
 
   }
