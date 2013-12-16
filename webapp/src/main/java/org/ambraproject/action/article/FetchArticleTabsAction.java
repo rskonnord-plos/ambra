@@ -23,6 +23,7 @@ import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.models.Article;
 import org.ambraproject.views.CitationView;
+import org.ambraproject.service.captcha.CaptchaService;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.freemarker.AmbraFreemarkerConfig;
 import org.ambraproject.models.AnnotationType;
@@ -135,6 +136,11 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private UserService userService;
   private ArticleAssetService articleAssetService;
   private Set<ArticleCategory> categories;
+  private CaptchaService captchaService;
+  private UserProfile user;
+  private String reCaptchaPublicKey;
+
+
   /**
    * Fetch the data for Article Tab
    *
@@ -306,6 +312,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();      
       populateRelatedAuthorSearchQuery();
+      user = getCurrentUser();
     } catch (Exception e) {
      populateErrorMessages(e);
     }
@@ -387,6 +394,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     }
 
     this.categories = Cookies.setAdditionalCategoryFlags(articleInfoX.getCategories(), articleInfoX.getId());
+
+    reCaptchaPublicKey = captchaService.getPublicKey();
   }
 
   @Override
@@ -508,6 +517,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       populateRelatedAuthorSearchQuery();
+      user = getCurrentUser();
     } catch (Exception e) {
       populateErrorMessages(e);
       return ERROR;
@@ -984,5 +994,18 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    */
   public String getRelatedAuthorSearchQuery() {
     return relatedAuthorSearchQuery;
+  }
+
+  public UserProfile getUser() {
+    return user;
+  }
+
+  public String getReCaptchaPublicKey() {
+    return reCaptchaPublicKey;
+  }
+
+  @Required
+  public void setCaptchaService(CaptchaService captchaService) {
+    this.captchaService = captchaService;
   }
 }

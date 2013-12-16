@@ -63,11 +63,10 @@ public interface AnnotationService {
    * @param title            title
    * @param body             body
    * @param ciStatement      competing interesting statement
-   * @param flagAsCorrection if true, flag the created comment as a potential correction
    * @return the id of the stored annotation
    */
   public Long createComment(UserProfile user, final String articleDoi, final String title, final String body,
-                            @Nullable final String ciStatement, boolean flagAsCorrection);
+                            @Nullable final String ciStatement);
 
   /**
    * Create a reply to an annotation

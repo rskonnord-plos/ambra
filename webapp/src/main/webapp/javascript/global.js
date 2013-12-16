@@ -1705,13 +1705,10 @@ if ($(document).pjax) {
     // For related pages, if no item exists under more_by_authors and
     // the page is not yet cached, reload the javascript to populate the
     // related content.
+    // now that related content fetches data from alm to grab media coverage information,
+    // we will need to reload the tab every time.
     else if (pjax_selected_tab == "related"){
-      if($('div[id="more_by_authors"] > ul > li').length == 0) {
-        if($.pjax.contentCache[window.location.href] === undefined ||
-            !$.pjax.contentCache[window.location.href].loaded) {
-          $.getScript("/javascript/related_content.js");
-        }
-      }
+      $.getScript("/javascript/related_content.js");
     }
 
   });
