@@ -1708,6 +1708,7 @@ if ($(document).pjax) {
     // we will need to reload the tab every time.
     else if (pjax_selected_tab == "related"){
       $.getScript("/javascript/related_content.js");
+      $.getScript("http://www.google.com/recaptcha/api/js/recaptcha_ajax.js")
     }
 
   });

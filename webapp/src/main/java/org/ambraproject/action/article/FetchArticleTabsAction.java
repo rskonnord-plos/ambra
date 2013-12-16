@@ -249,6 +249,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       setCommonData();      
       populateRelatedAuthorSearchQuery();
       user = getCurrentUser();
+      reCaptchaPublicKey = captchaService.getPublicKey();
     } catch (Exception e) {
      populateErrorMessages(e);
     }
@@ -330,8 +331,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     }
 
     this.categories = Cookies.setAdditionalCategoryFlags(articleInfoX.getCategories(), articleInfoX.getId());
-
-    reCaptchaPublicKey = captchaService.getPublicKey();
   }
 
   @Override
@@ -454,6 +453,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       populateRelatedAuthorSearchQuery();
       user = getCurrentUser();
+      reCaptchaPublicKey = captchaService.getPublicKey();
     } catch (Exception e) {
       populateErrorMessages(e);
       return ERROR;
