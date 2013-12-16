@@ -385,7 +385,7 @@ public class AnnotationServiceTest extends BaseTest {
     String body = "Test body";
     String title = "test title";
     String ciStatement = "ciStatement";
-    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, false);
+    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement);
     assertNotNull(id, "Returned null annotation id");
 
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
@@ -466,7 +466,7 @@ public class AnnotationServiceTest extends BaseTest {
     String title = "test title";
     String ciStatement = "ciStatement";
     String expectedXpath = article.getDoi() + "#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
-    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, false);
+    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement);
     assertNotNull(id, "Returned null annotation id");
 
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
@@ -490,7 +490,7 @@ public class AnnotationServiceTest extends BaseTest {
     dummyDataStore.store(article);
     dummyDataStore.store(user);
 
-    annotationService.createComment(user, article.getDoi(), "foo", null, "foo", false);
+    annotationService.createComment(user, article.getDoi(), "foo", null, "foo");
   }
 
   @Test(expectedExceptions = {IllegalArgumentException.class})
@@ -498,7 +498,7 @@ public class AnnotationServiceTest extends BaseTest {
     Article article = new Article("id:doiForCreateWithNullUser");
     dummyDataStore.store(article);
 
-    annotationService.createComment(null, article.getDoi(), "foo", "foo", "foo", false);
+    annotationService.createComment(null, article.getDoi(), "foo", "foo", "foo");
   }
 
   @Test(expectedExceptions = {IllegalArgumentException.class})
@@ -509,7 +509,7 @@ public class AnnotationServiceTest extends BaseTest {
         "displayNAmeForCreateWithBadDoi", "pass");
     dummyDataStore.store(user);
 
-    annotationService.createComment(user, article.getDoi(), "foo", "foo", "foo", false);
+    annotationService.createComment(user, article.getDoi(), "foo", "foo", "foo");
   }
 
   @Test
@@ -527,7 +527,7 @@ public class AnnotationServiceTest extends BaseTest {
 
     String expectedXpath = article.getDoi() + "#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
 
-    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement, true);
+    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement);
     assertNotNull(id, "Returned null annotation id");
 
     Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);

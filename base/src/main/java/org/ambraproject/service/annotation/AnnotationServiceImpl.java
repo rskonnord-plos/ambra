@@ -307,7 +307,7 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
 
   @Override
   @Transactional
-  public Long createComment(UserProfile user, String articleDoi, String title, String body, String ciStatement, boolean flagAsCorrection) {
+  public Long createComment(UserProfile user, String articleDoi, String title, String body, String ciStatement) {
     if (articleDoi == null) {
       throw new IllegalArgumentException("Attempted to create comment with null article id");
     } else if (user == null || user.getID() == null) {
@@ -336,11 +336,6 @@ public class AnnotationServiceImpl extends HibernateServiceImpl implements Annot
     comment.setCompetingInterestBody(ciStatement);
 
     Long id = (Long) hibernateTemplate.save(comment);
-    if (flagAsCorrection) {
-      Flag flag = new Flag(user, FlagReasonCode.CORRECTION, comment);
-      flag.setComment("Note created and flagged as a correction");
-      hibernateTemplate.save(flag);
-    }
 
     return id;
   }

@@ -36,7 +36,6 @@ public class CreateAnnotationAction extends DiscussionAction {
   private String mimeType = "text/plain";
   private String annotationId;
   private boolean isPublic = false;
-  private String noteType;
   private String supercedes;
 
   protected AnnotationService annotationService;
@@ -45,14 +44,12 @@ public class CreateAnnotationAction extends DiscussionAction {
 
   @Override
   protected void create() {
-    boolean flagAsCorrection = "correction".equals(noteType);
     annotationId = annotationService.createComment(
         getCurrentUser(),
         target,
         commentTitle,
         comment,
-        ciStatement,
-        flagAsCorrection).toString();
+        ciStatement).toString();
 
     articleHtmlCache.remove(target);
   }
@@ -136,20 +133,6 @@ public class CreateAnnotationAction extends DiscussionAction {
    */
   public boolean getIsPublic() {
     return isPublic;
-  }
-
-  /**
-   * @param noteType the note type
-   */
-  public void setNoteType(final String noteType) {
-    this.noteType = noteType;
-  }
-
-  /**
-   * @return the note type
-   */
-  public String getNoteType() {
-    return noteType;
   }
 
   /**
