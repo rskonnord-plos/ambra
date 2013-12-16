@@ -158,8 +158,6 @@ $(function () {
 
   almService.getMediaReferences(doi, mediaReferenceSucces, mediaReferenceFailure);
 
-  showRecaptcha('mcform-captcha');
-
    $("#media-coverage-modal").on('click','.button.primary', function (e) {
     $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
 
@@ -247,7 +245,7 @@ $(function () {
   $(document.body).on('click',"#media-coverage-form-link", function (e) {
     $("#media-coverage-form :input + span.form-error, #mcform-captcha + span.form-error").text("");
 
-    Recaptcha.reload();
+    showRecaptcha('mcform-captcha');
 
     $('#media-coverage-success').hide();
     $('#media-coverage-failure').hide();
@@ -264,4 +262,9 @@ $(function () {
     $("#media-coverage-modal").dialog("close");
   });
 
+  function showRecaptcha(element) {
+    Recaptcha.create($('#reCaptcha-info').val(), element, {
+      theme: "white",
+      callback: Recaptcha.focus_response_field});
+  }
 });
