@@ -21,7 +21,6 @@
 package org.ambraproject.service.annotation;
 
 import org.ambraproject.action.BaseTest;
-import org.ambraproject.service.cache.Cache;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationCitation;
 import org.ambraproject.models.AnnotationType;
@@ -33,7 +32,6 @@ import org.ambraproject.models.UserProfile;
 import org.ambraproject.views.AnnotationView;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -52,10 +50,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEqualsNoOrder;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test for methods of {@link AnnotationService}.  The test just references methods of the interface so that different
@@ -510,46 +507,6 @@ public class AnnotationServiceTest extends BaseTest {
     dummyDataStore.store(user);
 
     annotationService.createComment(user, article.getDoi(), "foo", "foo", "foo");
-  }
-
-  @Test
-  public void testCreateAndFlagAsCorrection() {
-    Article article = new Article("id:doiForCreateAndFlagByService");
-    UserProfile user = new UserProfile(
-        "email@CreateAndFlagByService.org",
-        "displayNAmeForCreateAndFlagByService", "pass");
-    dummyDataStore.store(article);
-    dummyDataStore.store(user);
-
-    String body = "Test body";
-    String title = "test title";
-    String ciStatement = "ciStatement";
-
-    String expectedXpath = article.getDoi() + "#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
-
-    Long id = annotationService.createComment(user, article.getDoi(), title, body, ciStatement);
-    assertNotNull(id, "Returned null annotation id");
-
-    Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
-    assertNotNull(storedAnnotation, "didn't store annotation to the db");
-
-    assertEquals(storedAnnotation.getArticleID(), article.getID(), "stored annotation had incorrect article id");
-    assertEquals(storedAnnotation.getBody(), body, "stored annotation had incorrect body");
-    assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
-    assertEquals(storedAnnotation.getCompetingInterestBody(), ciStatement, "stored annotation had incorrect ci statement");
-    assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Stored annotation had incorrect type");
-    assertNotNull(storedAnnotation.getAnnotationUri(), "Service didn't generate an annotation uri");
-
-    List<Flag> allFlags = dummyDataStore.getAll(Flag.class);
-    assertTrue(allFlags.size() > 0, "didn't create a flag for comment");
-    boolean foundFlag = false;
-    for (Flag flag : allFlags) {
-      if (flag.getFlaggedAnnotation().getID().equals(id)) {
-        foundFlag = true;
-        assertEquals(flag.getReason(), FlagReasonCode.CORRECTION, "Flag had incorrect reason code");
-      }
-    }
-    assertTrue(foundFlag, "Didn't create a flag for annotation");
   }
 
   @DataProvider(name = "storedAnnotation")

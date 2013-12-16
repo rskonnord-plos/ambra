@@ -19,19 +19,14 @@ import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.models.Annotation;
 import org.ambraproject.models.AnnotationType;
 import org.ambraproject.models.Article;
-import org.ambraproject.models.Flag;
-import org.ambraproject.models.FlagReasonCode;
 import org.ambraproject.models.UserProfile;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Alex Kudlick 3/9/12
@@ -64,7 +59,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(true);
     action.setCiStatement(ciStatement);
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.SUCCESS, "action didn't return success");
@@ -103,7 +97,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.SUCCESS, "action didn't return success");
@@ -122,57 +115,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     assertNull(storedAnnotation.getCompetingInterestBody(), "stored annotation had incorrect ci statement");
     assertNotNull(storedAnnotation.getAnnotationUri(), "didn't generate an annotation uri");
 
-  }
-
-  @Test
-  public void testCreateAndFlag() throws Exception {
-    UserProfile creator = new UserProfile(
-        "email@createAndFlag.org",
-        "displayNameForCreateAndFlag", "pass");
-    dummyDataStore.store(creator);
-    login(creator);
-    Article article = new Article("id:doi-for-create-and-flag-action");
-    dummyDataStore.store(article);
-
-    String title = "Red-Handed";
-    String body = "Ruby suddenly disappears after being seen with a mysterious man. " +
-        "Meanwhile, the back story of Red Riding hood is revealed. ";
-    String expectedXpointer = "id:doi-for-create-and-flag-action#xpointer(string-range%28%2Farticle%5B1%5D%2Fbody%5B1%5D%2Fsec%5B1%5D%2Fp%5B3%5D%2C+%27%27%2C+107%2C+533%29%5B1%5D)";
-    action.setCommentTitle(title);
-    action.setComment(body);
-    action.setTarget(article.getDoi());
-    action.setIsCompetingInterest(false);
-    action.setCiStatement(null);
-    action.setNoteType("correction");
-
-    String result = action.execute();
-    assertEquals(result, Action.SUCCESS, "action didn't return success");
-    assertEquals(action.getActionErrors().size(), 0,
-        "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
-    assertEquals(action.getFieldErrors().size(), 0,
-        "Action returned field error messages: " + StringUtils.join(action.getFieldErrors().values(), ";"));
-
-    assertNotNull(action.getAnnotationId(), "action had null annotation id");
-    Long id = Long.valueOf(action.getAnnotationId());
-    Annotation storedAnnotation = dummyDataStore.get(Annotation.class, id);
-    assertNotNull(storedAnnotation, "Didn't store annotation to the db");
-    assertEquals(storedAnnotation.getType(), AnnotationType.COMMENT, "Created annotation with incorrect type");
-    assertEquals(storedAnnotation.getTitle(), title, "stored annotation had incorrect title");
-    assertEquals(storedAnnotation.getBody(), body, "stored annotation had incorrect body");
-    assertNull(storedAnnotation.getCompetingInterestBody(), "stored annotation had incorrect ci statement");
-    assertNotNull(storedAnnotation.getAnnotationUri(), "didn't generate an annotation uri");
-
-    List<Flag> flags = dummyDataStore.getAll(Flag.class);
-    assertTrue(flags.size() > 0, "didn't create any flags");
-    boolean foundFlag = false;
-    for (Flag flag : flags) {
-      if (flag.getFlaggedAnnotation().getID().equals(id)) {
-        foundFlag = true;
-        assertEquals(flag.getReason(), FlagReasonCode.CORRECTION, "Flag had incorrect reason code");
-      }
-    }
-
-    assertTrue(foundFlag, "didn't create flag for annotation");
   }
 
   @Test
@@ -190,7 +132,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.INPUT, "action didn't return input");
@@ -215,7 +156,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(true);
     action.setCiStatement(null);
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.INPUT, "action didn't return input");
@@ -240,7 +180,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.INPUT, "action didn't return success");
@@ -263,7 +202,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.INPUT, "action didn't return input");
@@ -286,7 +224,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(true);
     action.setCiStatement("ass");
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.INPUT, "action didn't return input");
@@ -314,7 +251,6 @@ public class CreateAnnotationActionTest extends AmbraWebTest {
     action.setTarget(article.getDoi());
     action.setIsCompetingInterest(false);
     action.setCiStatement(null);
-    action.setNoteType("note");
 
     String result = action.execute();
     assertEquals(result, Action.INPUT, "action didn't return input");
