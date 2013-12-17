@@ -45,6 +45,8 @@ public class ArticleType implements Serializable {
    */
   public static final String ARTICLE_TYPE_HEADING_RESEARCH = "Research Article";
   public static final String ARTICLE_TYPE_HEADING_EOC = "Expression of Concern";
+  public static final String ARTICLE_TYPE_HEADING_CORRECTION = "Correction";
+  public static final String ARTICLE_TYPE_HEADING_RETRACTION = "Retraction";
 
   private static Map<URI, ArticleType> knownArticleTypes = new HashMap<URI, ArticleType>();
   private static Map<URI, ArticleType> newArticleTypes = new HashMap<URI, ArticleType>();
@@ -242,14 +244,32 @@ public class ArticleType implements Serializable {
                                  ARTICLE_TYPE_HEADING_RESEARCH.equals(articleType.getHeading());
   }
 
+  public static boolean isRetractionArticle(ArticleType articleType) {
+
+    return articleType == null ? false :
+            ARTICLE_TYPE_HEADING_RETRACTION.equals(articleType.getHeading());
+  }
+
   /**
    * Is the given {@link ArticleType} is of type Expression of Concern?
    * @param articleType an articleType
    * @return true/false
    */
   public static boolean isEocArticle(ArticleType articleType) {
+
     return articleType == null ? false :
         ARTICLE_TYPE_HEADING_EOC.equals(articleType.getHeading());
+  }
+
+
+  /**
+   * Is the given {@link ArticleType} is of type Correction?
+   * @param articleType an articleType
+   * @return true/false
+   */
+  public static boolean isCorrectionArticle(ArticleType articleType) {
+    return articleType == null ? false :
+            ARTICLE_TYPE_HEADING_CORRECTION.equals(articleType.getHeading());
   }
 
   /**

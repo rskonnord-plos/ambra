@@ -19,9 +19,9 @@
   limitations under the License.
 -->
 TY  - JOUR
-T1  - ${title}
+T1  - ${citation.title}
 <#assign authorTag = "A1">
-<#list authorList as author>
+<#list citation.authorList as author>
 <#if author.suffix?has_content>
   <#assign authorSuffix = ", " + author.suffix>
 <#else>
@@ -29,18 +29,18 @@ T1  - ${title}
 </#if>
 ${authorTag}  - ${author.surnames!}, ${author.givenNames!} ${authorSuffix!}
 </#list>
-<#list collaborativeAuthors as collab>
+<#list citation.collaborativeAuthors as collab>
 ${authorTag}  - ${collab}
 </#list>
-Y1  - ${year!"0000"}/${month!}/${day!}
-N2  - ${summary!}
-JF  - ${journal!}
-JA  - ${journal!}
-VL  - ${volume!}
-IS  - ${issue!}
-UR  - ${url!}
-SP  - ${eLocationId!}
+Y1  - ${citation.year!"0000"}/${citation.month!}/${citation.day!}
+N2  - ${citation.summary!}
+JF  - ${citation.journal!}
+JA  - ${citation.journal!}
+VL  - ${citation.volume!}
+IS  - ${citation.issue!}
+UR  - ${citation.url!}
+SP  - ${citation.eLocationId!}
 EP  -
-PB  - ${publisherName!}
-M3  - doi:${doi!}
+PB  - ${citation.publisherName!}
+M3  - doi:${citation.doi!}
 ER  -

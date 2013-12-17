@@ -62,13 +62,14 @@ public interface FetchArticleService extends HibernateService {
   public List<AuthorView> getAuthors(Document doc);
 
   /**
-   * Get the Expression of Concern content from the article.
+   * Get the Expression of Concern or Retraction content from the article.
    * @param doc
-   * @return expressionOfConcern text
+   * @return expressionOfConcern/retraction text
    * @throws TransformerException
    * @throws XPathExpressionException
    */
-  public String  getEocBody(Document doc) throws TransformerException, XPathExpressionException;
+
+  public String  getAmendmentBody(Document doc) throws TransformerException, XPathExpressionException;
 
   /**
    *

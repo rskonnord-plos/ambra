@@ -19,7 +19,7 @@
   limitations under the License.
 -->
 <#assign authorListFormatted = "">
-<#list authorList as author>
+<#list citation.authorList as author>
   <#assign authorListFormatted = authorListFormatted + author.surnames>
   <#assign authorListFormatted = authorListFormatted + ", ">
   <#if author.suffix?exists>
@@ -29,27 +29,27 @@
   <#assign authorListFormatted = authorListFormatted + author.givenNames!"">
   <#if author_has_next><#assign authorListFormatted = authorListFormatted + " AND "></#if>
 </#list>
-<#if collaborativeAuthors?has_content>
+<#if citation.collaborativeAuthors?has_content>
   <#assign authorListFormatted = authorListFormatted + " AND ">
-  <#list collaborativeAuthors as collab>
+  <#list citation.collaborativeAuthors as collab>
     <#assign authorListFormatted = authorListFormatted + collab>
     <#if collab_has_next><#assign authorListFormatted = authorListFormatted + ", "></#if>
   </#list>
 </#if>
 
-@article{${doi},
+@article{${citation.doi},
     author = {${authorListFormatted}},
-    journal = {${journal}},
-    publisher = {${publisherName}},
-    title = {${title}},
-    year = {${year!"0000"}},
-    month = {${month!}},
-    volume = {${volume!}},
-    url = {${url!}},
-    pages = {${eLocationId!}},
-    abstract = {${summary!}},
-    number = {${issue!}},
-    doi = {${doi}}
+    journal = {${citation.journal}},
+    publisher = {${citation.publisherName}},
+    title = {${citation.title}},
+    year = {${citation.year!"0000"}},
+    month = {${citation.month!}},
+    volume = {${citation.volume!}},
+    url = {${citation.url!}},
+    pages = {${citation.eLocationId!}},
+    abstract = {${citation.summary!}},
+    number = {${citation.issue!}},
+    doi = {${citation.doi}}
 }        
 
 

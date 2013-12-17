@@ -703,23 +703,21 @@ public class FetchArticleServiceImpl extends HibernateServiceImpl implements Fet
   }
 
   /**
-   * Extract the body content from EoC article, clean the text and return it.
+   * Extract the body content from EoC or retraction article, clean the text and return it.
    * @param doc
-   * @return expressionOfConcern text
+   * @return expressionOfConcern or retraction text
    * @throws TransformerException
    * @throws XPathExpressionException
    */
-  public String getEocBody(Document doc) throws TransformerException, XPathExpressionException {
 
-    Node eocBody = xPathUtil.selectSingleNode(doc, "//body");
-    Node eocTitle =  xPathUtil.selectSingleNode(doc, "//title-group/article-title");
-    String bodyText = TextUtils.getAsXMLString(eocBody);
+  public String getAmendmentBody(Document doc) throws TransformerException, XPathExpressionException {
+
+    Node amendmentBody = xPathUtil.selectSingleNode(doc, "//body");
+    String bodyText = TextUtils.getAsXMLString(amendmentBody);
 
     for (int index = 0; index < PATTERNS.length; index++) {
       bodyText = PATTERNS[index].matcher(bodyText).replaceAll(REPLACEMENTS[index]);
     }
-
-    bodyText = "<p><strong>" + eocTitle.getTextContent() + "</strong></p>" + bodyText ;
     return bodyText;
   }
 
