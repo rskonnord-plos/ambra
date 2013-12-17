@@ -965,8 +965,7 @@ public class FetchArticleServiceTest extends BaseTest {
     //Test an  article with Expression of concern
     ArticleInfo a1 = new ArticleInfo("info:doi/10.1371/journal.pone.0049703");
 
-    String eocTest = "<p><strong>Expression of Concern: Novel Allelic Variants in the Canine Cyclooxgenase-2 (Cox-2) " +
-        "Promoter Are Associated with Renal Dysplasia in Dogs</strong></p>\n" +
+    String eocTest = "\n" +
         "    \n" +
         "      \n" +
         "      <p>After the publication of this article, a number of concerns were raised in relation to different " +
