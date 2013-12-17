@@ -67,8 +67,20 @@ public class CreateCitation extends BaseActionSupport {
     try {
       Article article = articleService.getArticle(articleURI, getAuthId());
       doi = article.getDoi();
-      citation = new CitationView();
-      citation.buildCitationFromArticle(article);
+      citation =  CitationView.builder()
+              .setDoi(article.getDoi())
+              .seteLocationId(article.geteLocationId())
+              .setUrl(article.getUrl())
+              .setTitle(article.getTitle())
+              .setJournal(article.getJournal())
+              .setVolume(article.getVolume())
+              .setIssue(article.getIssue())
+              .setSummary(article.getDescription())
+              .setPublisherName(article.getPublisherName())
+              .setPublishedDate(article.getDate())
+              .setAuthorList(article.getAuthors())
+              .setCollaborativeAuthors(article.getCollaborativeAuthors())
+              .build();
 
     } catch (NoSuchArticleIdException ex) {
       return ERROR;

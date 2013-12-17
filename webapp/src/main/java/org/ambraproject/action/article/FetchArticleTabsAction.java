@@ -188,26 +188,23 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
                     articleService.isRetractionArticle(relatedArticleInfo)) {
 
               retraction = this.fetchArticleService.getAmendmentBody(document);
-              retractionCitation = new CitationView();
-              retractionCitation.buildCitationFromArticle(article);
-              break;
+              retractionCitation = buildCitationFromArticle(article);
 
+              break;
             }
 
             if (OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                     articleService.isEocArticle(relatedArticleInfo)) {
 
               expressionOfConcern = this.fetchArticleService.getAmendmentBody(document);
-              eocCitation = new CitationView();
-              eocCitation.buildCitationFromArticle(article);
+              eocCitation =  buildCitationFromArticle(article);
               break;
             }
 
             if (CORRECTION_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                     articleService.isCorrectionArticle(relatedArticleInfo)) {
 
-              CitationView citation = new CitationView();
-              citation.buildCitationFromArticle(article);
+              CitationView citation =  buildCitationFromArticle(article);
               articleCorrection.add(citation);
 
             }
@@ -221,7 +218,23 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     return SUCCESS;
   }
 
-
+  private CitationView buildCitationFromArticle(Article article)  {
+    CitationView citation =  CitationView.builder()
+            .setDoi(article.getDoi())
+            .seteLocationId(article.geteLocationId())
+            .setUrl(article.getUrl())
+            .setTitle(article.getTitle())
+            .setJournal(article.getJournal())
+            .setVolume(article.getVolume())
+            .setIssue(article.getIssue())
+            .setSummary(article.getDescription())
+            .setPublisherName(article.getPublisherName())
+            .setPublishedDate(article.getDate())
+            .setAuthorList(article.getAuthors())
+            .setCollaborativeAuthors(article.getCollaborativeAuthors())
+            .build();
+    return citation;
+  }
   /**
    * check if the article has any correction, if so fetch the citation
    * @return String
@@ -234,8 +247,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
                   CORRECTION_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                   articleService.isCorrectionArticle(relatedArticleInfo)) {
             Article article = articleService.getArticle(relatedArticleInfo.getDoi(), getAuthId());
-            CitationView citation = new CitationView();
-            citation.buildCitationFromArticle(article);
+            CitationView citation =  buildCitationFromArticle(article);
             articleCorrection.add(citation);
           }
         } catch (Exception e) {
