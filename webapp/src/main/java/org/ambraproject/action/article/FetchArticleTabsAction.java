@@ -235,30 +235,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
             .build();
     return citation;
   }
-  /**
-   * check if the article has any correction, if so fetch the citation
-   * @return String
-   */
-  private String fetchArticleCorrection() {
-    if (articleInfoX.getRelatedArticles() != null) {
-      for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
-        try {
-          if ((relatedArticleInfo.getArticleTypes() != null) &&
-                  CORRECTION_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
-                  articleService.isCorrectionArticle(relatedArticleInfo)) {
-            Article article = articleService.getArticle(relatedArticleInfo.getDoi(), getAuthId());
-            CitationView citation =  buildCitationFromArticle(article);
-            articleCorrection.add(citation);
-          }
-        } catch (Exception e) {
-          populateErrorMessages(e);
-          return ERROR;
-        }
-      }
-    }
-    return SUCCESS;
-  }
-
 
   /**
    * Fetch data for Comments Tab
