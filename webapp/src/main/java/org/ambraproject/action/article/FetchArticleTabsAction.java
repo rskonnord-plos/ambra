@@ -150,7 +150,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
       articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
-      populateFromAnnotations();
       fetchAmendment();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
@@ -410,7 +409,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
           articleInfoX.getId(),
           EnumSet.of(AnnotationType.COMMENT),
           AnnotationOrder.MOST_RECENT_REPLY);
-      populateFromAnnotations();
       fetchAmendment();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (Exception e) {
@@ -543,7 +541,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
         default:
           throw new RuntimeException("Unhandled enum value: " + annotationType);
       }
-    }    
+    }
     numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
   }
 
