@@ -128,6 +128,7 @@ public class MediaCoverageAction extends BaseActionSupport {
       isValid = false;
     } else if (!urlValidator.isValid(link)) {
       addFieldError("link", "Invalid Media link URL");
+      isValid = false;
     }
 
     if (StringUtils.isBlank(name)) {
