@@ -155,7 +155,6 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
   @Override
   public ArticleAsset getArticleAsset(final String assetUri, final String representation, final String authId)
       throws NoSuchObjectIdException {
-
     // sanity check parms
     if (assetUri == null)
       throw new IllegalArgumentException("URI == null");
@@ -165,13 +164,19 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
     }
     checkPermissions(assetUri, authId);
     try {
-      return (ArticleAsset) hibernateTemplate.findByCriteria(
-          DetachedCriteria.forClass(ArticleAsset.class)
-              .add(Restrictions.eq("doi", assetUri))
-              .add(Restrictions.eq("extension", representation)), 0, 1).get(0);
+
+      List<ArticleAsset> asset = hibernateTemplate.findByCriteria(
+              DetachedCriteria.forClass(ArticleAsset.class)
+                      .add(Restrictions.eq("doi", assetUri))
+                      .add(Restrictions.eq("extension", representation)), 0, 1);
+      if (asset != null && asset.size() > 0) {
+        return asset.get(0);
+      }
+
     } catch (DataAccessException e) {
       throw new NoSuchObjectIdException(assetUri);
     }
+    return null;
   }
 
   @SuppressWarnings("unchecked")
