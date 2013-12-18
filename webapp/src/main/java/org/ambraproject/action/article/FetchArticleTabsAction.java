@@ -139,6 +139,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private CaptchaService captchaService;
   private UserProfile user;
   private String reCaptchaPublicKey;
+  private boolean hasPDF;
 
 
   /**
@@ -150,6 +151,10 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
       articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
+      hasPDF = true;
+      if (articleAssetService.getArticleAsset(articleURI, "PDF", getAuthId()) == null) {
+        hasPDF = false;
+      }
       fetchAmendment();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
@@ -993,5 +998,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   @Required
   public void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
+  }
+
+  public boolean isHasPDF() {
+    return hasPDF;
   }
 }
