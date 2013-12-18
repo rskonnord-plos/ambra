@@ -19,11 +19,13 @@
 
 package org.ambraproject.action.article;
 
+import com.opensymphony.xwork2.Action;
 import org.ambraproject.action.AmbraWebTest;
 import org.ambraproject.action.BaseActionSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class MediaCoverageActionTest extends AmbraWebTest {
     action.setRecaptcha_challenge_field("");
     action.setRecaptcha_response_field("");
 
-    assertEquals(action.execute(), BaseActionSupport.ERROR, "The result of the request was not the same");
+    assertEquals(action.execute(), Action.ERROR, "The result of the request was not the same");
 
     Map<String, List<String>> fieldErrors = action.getFieldErrors();
 
@@ -71,7 +73,7 @@ public class MediaCoverageActionTest extends AmbraWebTest {
     action.setEmail("email");
     action.setLink("dsfaljjklklklsa");
 
-    assertEquals(action.execute(), BaseActionSupport.ERROR, "The result of the request was not the same");
+    assertEquals(action.execute(), Action.ERROR, "The result of the request was not the same");
 
     Map<String, List<String>> actualFieldErrors = action.getFieldErrors();
 
@@ -86,8 +88,63 @@ public class MediaCoverageActionTest extends AmbraWebTest {
     assertEquals(actualFieldErrors.get("link"), linkMsg, "The error message for link was not the same");
   }
 
+  @Test
+  public void testUrlInputValidation() throws Exception {
+    // only link is incorrect
+    action.setUri("info:doi/10.1371/journal.pone.0005723");
+    action.setName("Your Name");
+
+    action.setEmail("email@email.com");
+    action.setLink("dsfaljjklklklsa");
+
+    Method method = action.getClass().getDeclaredMethod("validateInput");
+    method.setAccessible(true);
+    Object result = method.invoke(action, null);
+
+    assertEquals(result, false, "The output of the validateInput method was not the same");
+
+    action.clearFieldErrors();
+    assertEquals(action.execute(), Action.ERROR, "The result of the request was not the same");
+
+    Map<String, List<String>> actualFieldErrors = action.getFieldErrors();
+
+    List<String> linkMsg = new ArrayList<String>();
+    linkMsg.add("Invalid Media link URL");
+
+    assertEquals(actualFieldErrors.size(), 1, "The number of error messages was not the same");
+    assertEquals(actualFieldErrors.get("link"), linkMsg, "The error message for link was not the same");
+  }
+
+  @Test
+  public void testEmailInputValidation() throws Exception {
+    // only email is incorrect
+    action.setUri("info:doi/10.1371/journal.pone.0005723");
+    action.setName("Your Name");
+
+    action.setEmail("email");
+    action.setLink("http://www.plos.org");
+
+    Method method = action.getClass().getDeclaredMethod("validateInput");
+    method.setAccessible(true);
+    Object result = method.invoke(action, null);
+
+    assertEquals(result, false, "The output of the validateInput method was not the same");
+
+    action.clearFieldErrors();
+    assertEquals(action.execute(), Action.ERROR, "The result of the request was not the same");
+
+    Map<String, List<String>> actualFieldErrors = action.getFieldErrors();
+
+    List<String> emailMsg = new ArrayList<String>();
+    emailMsg.add("Invalid e-mail address");
+
+    assertEquals(actualFieldErrors.size(), 1, "The number of error messages was not the same");
+    assertEquals(actualFieldErrors.get("email"), emailMsg, "The error message for email was not the same");
+  }
+
   @Override
   protected BaseActionSupport getAction() {
     return action;
   }
 }
+
