@@ -5946,7 +5946,9 @@ ul.date-doi-line li:first-child {
   border-bottom-left-radius: 0px;
 }
 
-.article-actions .btn-reveal:hover span {background-color: #3c63af; }
+.article-actions .btn-reveal:hover span {
+    background-color: #3c63af;
+}
 /*
   twitter display on the article right hand side
 */
@@ -6075,7 +6077,6 @@ ul.date-doi-line li:first-child {
   background-color: white;
   color: #3c63af;
   font: 18px 'FS Albert Web Regular', Verdana, sans-serif;
-
   background-image: url('/images/bul.pt.blu.dn.gif');
   background-repeat: no-repeat;
   background-position: 85% 50%;
@@ -6107,7 +6108,10 @@ ul.date-doi-line li:first-child {
     box-sizing: border-box;
 }
 
-.default-modal + .ui-widget-overlay{background: #333; opacity: .4;}
+.default-modal + .ui-widget-overlay {
+    background: #333;
+    opacity: .4;
+}
 
 /* form elements */
 
@@ -6115,10 +6119,22 @@ form.standard{
     color: #333;
 }
 
-form.standard ul li{list-style-type: none; padding-left: 0; margin-left: 0; margin-bottom: 10px; display: block;
- }
-form.standard ul li.short{ }
-form.standard ul{list-style-type: none; padding-left: 0; margin-left: 0; }
+form.standard ul li {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+    margin-bottom: 10px;
+    display: block;
+}
+
+form.standard ul li.short {
+}
+
+form.standard ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+}
 
 form.standard input[type="text"],form.standard textarea {
     font-size: 16px;
@@ -6139,7 +6155,7 @@ form.standard textarea {
 
 form.standard li.small div{
   width: 48%;
-    float: left;
+  float: left;
 }
 
 form.standard li.small div.last {
