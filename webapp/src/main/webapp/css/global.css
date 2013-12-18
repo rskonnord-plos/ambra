@@ -5936,7 +5936,7 @@ ul.date-doi-line li:first-child {
   text-align: right;
 }
 
-.article-actions .dropdown span {
+.article-actions .dropdown-icon  span{
   width: 10px;
   background-image: url(../images/bul.wht.pt.dn.png);
   background-repeat: no-repeat;
@@ -5946,6 +5946,7 @@ ul.date-doi-line li:first-child {
   border-bottom-left-radius: 0px;
 }
 
+.article-actions .btn-reveal:hover span {background-color: #3c63af; }
 /*
   twitter display on the article right hand side
 */
