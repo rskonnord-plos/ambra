@@ -170,13 +170,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * @return String
    */
   private String fetchAmendment() {
+    try {
+      if (articleInfoX.getRelatedArticles() != null
+              && !articleService.isCorrectionArticle(articleInfoX)
+              && !articleService.isRetractionArticle(articleInfoX)
+              && !articleService.isEocArticle(articleInfoX)) {
 
-    if (articleInfoX.getRelatedArticles() != null) {
-      // sort the related articles by date
-      Collections.sort(articleInfoX.getRelatedArticles());
-
-      for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
-        try {
+        for (RelatedArticleInfo relatedArticleInfo : articleInfoX.getRelatedArticles()) {
           if ((relatedArticleInfo.getArticleTypes() != null)) {
             // currently, we don't have many related articles; therefore, these lines
             // shouldn't cause performance overhead.
@@ -197,23 +197,23 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
                     articleService.isEocArticle(relatedArticleInfo)) {
 
               expressionOfConcern = this.fetchArticleService.getAmendmentBody(document);
-              eocCitation =  buildCitationFromArticle(article);
+              eocCitation = buildCitationFromArticle(article);
               break;
             }
 
             if (CORRECTION_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                     articleService.isCorrectionArticle(relatedArticleInfo)) {
 
-              CitationView citation =  buildCitationFromArticle(article);
+              CitationView citation = buildCitationFromArticle(article);
               articleCorrection.add(citation);
 
             }
           }
-        } catch (Exception e) {
-          populateErrorMessages(e);
-          return ERROR;
         }
       }
+    } catch (Exception e) {
+      populateErrorMessages(e);
+      return ERROR;
     }
     return SUCCESS;
   }
@@ -341,6 +341,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     if (articleAssetService.getArticleAsset(articleURI, "PDF", getAuthId()) == null) {
       hasPDF = false;
     }
+    // sort the related articles by date
+    Collections.sort(articleInfoX.getRelatedArticles());
     journalList = articleInfoX.getJournals();
     isResearchArticle = articleService.isResearchArticle(articleInfoX);
     articleIssues = articleService.getArticleIssues(articleURI);
@@ -435,9 +437,9 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       commentary = annotationService.listAnnotations(
-          articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT),
-          AnnotationOrder.MOST_RECENT_REPLY);
+              articleInfoX.getId(),
+              EnumSet.of(AnnotationType.COMMENT),
+              AnnotationOrder.MOST_RECENT_REPLY);
     } catch (Exception e) {
       populateErrorMessages(e);
       return ERROR;
@@ -482,7 +484,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
       validateArticleURI();
       articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
-          EnumSet.of(AnnotationType.COMMENT));
+              EnumSet.of(AnnotationType.COMMENT));
       trackbackCount = trackbackService.countTrackbacksForArticle(articleURI);
     } catch (Exception e) {
       populateErrorMessages(e);
