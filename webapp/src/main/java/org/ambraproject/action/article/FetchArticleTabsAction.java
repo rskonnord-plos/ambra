@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import org.ambraproject.ApplicationException;
 import org.ambraproject.action.BaseSessionAwareActionSupport;
 import org.ambraproject.models.Article;
+import org.ambraproject.service.article.NoSuchObjectIdException;
 import org.ambraproject.views.CitationView;
 import org.ambraproject.service.captcha.CaptchaService;
 import org.ambraproject.web.Cookies;
@@ -151,10 +152,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
     try {
       setCommonData();
       articleAssetWrapper = articleAssetService.listFiguresTables(articleInfoX.getDoi(), getAuthId());
-      hasPDF = true;
-      if (articleAssetService.getArticleAsset(articleURI, "PDF", getAuthId()) == null) {
-        hasPDF = false;
-      }
       fetchAmendment();
       transformedArticle = fetchArticleService.getArticleAsHTML(articleInfoX);
     } catch (NoSuchArticleIdException e) {
@@ -341,9 +338,13 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * @throws ApplicationException     when there is an error talking to the OTM
    * @throws NoSuchArticleIdException when the article can not be found
    */
-  private void setCommonData() throws ApplicationException, NoSuchArticleIdException {
+  private void setCommonData() throws ApplicationException, NoSuchArticleIdException, NoSuchObjectIdException {
     validateArticleURI();
     articleInfoX = articleService.getArticleInfo(articleURI, getAuthId());
+    hasPDF = true;
+    if (articleAssetService.getArticleAsset(articleURI, "PDF", getAuthId()) == null) {
+      hasPDF = false;
+    }
     journalList = articleInfoX.getJournals();
     isResearchArticle = articleService.isResearchArticle(articleInfoX);
     articleIssues = articleService.getArticleIssues(articleURI);
