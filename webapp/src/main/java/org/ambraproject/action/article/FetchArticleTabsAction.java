@@ -106,7 +106,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private List<String> competingInterest;
 
   private int pageCount = 0;
-  private int numCorrections = 0;
   private int numComments = 0;
 
   private List<AnnotationView> formalCorrections = new ArrayList<AnnotationView>();
@@ -248,9 +247,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   public String fetchArticleComments() {
     try {
       setCommonData();
-
-      numCorrections = annotationService.countAnnotations(articleInfoX.getId(),
-        EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION));
 
       numComments = annotationService.countAnnotations(articleInfoX.getId(),
           EnumSet.of(AnnotationType.COMMENT));
@@ -517,40 +513,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * populate the annotations
-   */
-  private void populateFromAnnotations() {
-    //get the corrections without replies loaded up, and ordered oldest to newest. We do need to show a count of replies on the main article page
-    AnnotationView[] annotationViews = annotationService.listAnnotations(
-            articleInfoX.getId(),
-            EnumSet.of(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION, AnnotationType.RETRACTION),
-            AnnotationOrder.NEWEST_TO_OLDEST
-    );
-    for (AnnotationView annotationView : annotationViews) {
-      AnnotationType annotationType = annotationView.getType();
-      switch (annotationType) {
-        case FORMAL_CORRECTION:
-          formalCorrections.add(annotationView);
-          break;
-        case MINOR_CORRECTION:
-          minorCorrections.add(annotationView);
-          break;
-        case RETRACTION:
-          retractions.add(annotationView);
-          break;
-        case COMMENT:
-          //this is already handled in setCommonData()
-          break;
-        case REPLY:
-          break;
-        default:
-          throw new RuntimeException("Unhandled enum value: " + annotationType);
-      }
-    }
-    numCorrections = formalCorrections.size() + minorCorrections.size() + retractions.size();
-  }
-
-  /**
    * validate the article URI
    * @throws NoSuchArticleIdException
    */
@@ -806,13 +768,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
   /**
-   * @return an array of formal corrections
-   */
-  public List<AnnotationView> getFormalCorrections() {
-    return this.formalCorrections;
-  }
-
-  /**
    *
    * @return body test of the article's retraction
    */
@@ -861,24 +816,8 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   }
 
 
-  /**
-   * @return an array of retractions
-   */
-
-  public List<AnnotationView> getRetractions() {
-    return this.retractions;
-  }
-
-  public List<AnnotationView> getMinorCorrections() {
-    return minorCorrections;
-  }
-
   public int getNumComments() {
     return numComments;
-  }
-
-  public int getNumCorrections() {
-    return numCorrections;
   }
 
   public AnnotationView[] getCommentary() {

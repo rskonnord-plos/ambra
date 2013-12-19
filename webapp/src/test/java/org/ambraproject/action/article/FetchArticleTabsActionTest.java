@@ -27,7 +27,6 @@ import org.ambraproject.service.user.UserService;
 import org.ambraproject.views.AnnotationView;
 import org.ambraproject.views.AuthorView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -60,13 +59,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
   @Override
   protected BaseActionSupport getAction() {
     return action;
-  }
-
-  @BeforeMethod
-  public void resetAction() {
-    action.getFormalCorrections().clear();
-    action.getMinorCorrections().clear();
-    action.getRetractions().clear();
   }
 
   @DataProvider(name = "articleAffiliations")
@@ -193,17 +185,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
 
     //store some annotations on the article
     dummyDataStore.deleteAll(Annotation.class);
-    Annotation formalCorrection = new Annotation(user, AnnotationType.FORMAL_CORRECTION, getArticleToFetch().getID());
-    formalCorrection.setTitle("formal correction title");
-    dummyDataStore.store(formalCorrection);
-
-    Annotation retraction = new Annotation(user, AnnotationType.RETRACTION, getArticleToFetch().getID());
-    retraction.setTitle("Retraction title");
-    dummyDataStore.store(retraction);
-
-    Annotation minorCorrection = new Annotation(user, AnnotationType.MINOR_CORRECTION, getArticleToFetch().getID());
-    minorCorrection.setTitle("minor correction title");
-    dummyDataStore.store(minorCorrection);
 
     Annotation comment = new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID());
     comment.setTitle("comment title");
@@ -227,15 +208,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
         "Action didn't record this as an article view");
 
     //check the comments
-    assertEquals(action.getFormalCorrections().toArray(), new AnnotationView[]{
-        new AnnotationView(formalCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)},
-        "Action returned incorrect formal corrections");
-    assertEquals(action.getRetractions().toArray(), new AnnotationView[]{
-        new AnnotationView(retraction, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)},
-        "Action returned incorrect retractions");
-    assertEquals(action.getMinorCorrections().toArray(), new AnnotationView[]{
-        new AnnotationView(minorCorrection, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)},
-        "Action returned incorrect formal corrections");
     assertEquals(action.getCommentary(), new AnnotationView[] {
         new AnnotationView(comment, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null)
     }, "Action returned incorrect commentary");
@@ -255,9 +227,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     //store some annotations on the article
     dummyDataStore.deleteAll(Annotation.class);
     //corrections shouldn't get listed
-    dummyDataStore.store(new Annotation(user, AnnotationType.FORMAL_CORRECTION, getArticleToFetch().getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.MINOR_CORRECTION, getArticleToFetch().getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.RETRACTION, getArticleToFetch().getID()));
 
     Annotation comment = new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID());
     comment.setTitle("comment title");
@@ -283,7 +252,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     assertEquals(action.getCommentary()[0].getReplies()[0],
         new AnnotationView(reply, getArticleToFetch().getDoi(), getArticleToFetch().getTitle(), null),
         "Action returned incorrect reply");
-    assertEquals(action.getNumCorrections(), 2, "Action didn't count corrections");
     assertEquals(action.getNumComments(), 1, "Action didn't count comments");
   }
 
@@ -322,10 +290,6 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
 
     //store some annotations on the article
     dummyDataStore.deleteAll(Annotation.class);
-    //corrections shouldn't get listed
-    dummyDataStore.store(new Annotation(user, AnnotationType.FORMAL_CORRECTION, getArticleToFetch().getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.MINOR_CORRECTION, getArticleToFetch().getID()));
-    dummyDataStore.store(new Annotation(user, AnnotationType.RETRACTION, getArticleToFetch().getID()));
 
     Annotation comment = new Annotation(user, AnnotationType.COMMENT, getArticleToFetch().getID());
     comment.setTitle("comment title");
@@ -342,6 +306,5 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     String resultComments = action.fetchArticleComments();
     assertEquals(resultComments, Action.SUCCESS, "Action didn't return success");
     assertEquals(action.getNumComments(), 1, "Action returned incorrect comments count");
-    assertEquals(action.getNumCorrections(), 2, "Action returned incorrect annotations count");
   }
 }
