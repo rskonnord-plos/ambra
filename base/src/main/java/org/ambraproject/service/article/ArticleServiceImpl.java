@@ -806,6 +806,7 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     for (ArticleRelationship relationship : article.getRelatedArticles()) {
       if (relationship.getOtherArticleDoi() != null) {
         try {
+          // related articles of the article itself
           Article otherArticle = getArticle(relationship.getOtherArticleDoi(), authId);
           RelatedArticleInfo relatedArticleInfo = new RelatedArticleInfo();
           relatedArticleInfo.setUri(URI.create(otherArticle.getDoi()));
@@ -837,12 +838,58 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
           if (!articleInfo.getRelatedArticles().contains(relatedArticleInfo)) {
             articleInfo.getRelatedArticles().add(relatedArticleInfo);
           }
+           /* Logic for the amendments Related Article Sidebar to include the link to the articles' other amendments */
+          if (isRetractionArticle(articleInfo) || isEocArticle(articleInfo) || isCorrectionArticle(articleInfo)) {
+            // make sure that the related article is the amendment's original article
+            if (relationship.isOriginalArticleOfAmendment(relationship.getType())) {
+
+              for (ArticleRelationship otherArticleRelationship :otherArticle.getRelatedArticles()) {
+                String relationshipType = otherArticleRelationship.getType();
+                // exclude the current amendment article, non-amendment articles, and other articles th
+                if (!articleInfo.getDoi().equals( otherArticleRelationship.getOtherArticleDoi())
+                        && otherArticleRelationship.isAmendmentRelationship(relationshipType)) {
+
+                  Article otherArticleRelatedArticle = getArticle(otherArticleRelationship.getOtherArticleDoi(), authId);
+                  RelatedArticleInfo otherArticleRelatedArticleInfo = new RelatedArticleInfo();
+                  otherArticleRelatedArticleInfo.setUri(URI.create(otherArticleRelatedArticle.getDoi()));
+                  otherArticleRelatedArticleInfo.setTitle(otherArticleRelatedArticle.getTitle());
+                  otherArticleRelatedArticleInfo.setDoi(otherArticleRelatedArticle.getDoi());
+                  otherArticleRelatedArticleInfo.setDate(otherArticleRelatedArticle.getDate());
+                  otherArticleRelatedArticleInfo.seteIssn(otherArticleRelatedArticle.geteIssn());
+                  otherArticleRelatedArticleInfo.setRelationType(relationshipType);
+                  otherArticleRelatedArticleInfo.setTypes(otherArticleRelatedArticle.getTypes());
+
+                  journals = otherArticleRelatedArticle.getJournals();
+                  journalViews = new HashSet<JournalView>(journals.size());
+                  for(org.ambraproject.models.Journal journal : journals) {
+                    journalViews.add(new JournalView(journal));
+                  }
+                  otherArticleRelatedArticleInfo.setJournals(journalViews);
+
+                  List<String> otherArticleRelatedArticleAuthors = new ArrayList<String>(otherArticleRelatedArticle.getAuthors().size());
+                  for (ArticleAuthor ac : otherArticleRelatedArticle.getAuthors()) {
+                    otherArticleRelatedArticleAuthors.add(ac.getFullName());
+                  }
+                  otherArticleRelatedArticleInfo.setAuthors(otherArticleRelatedArticleAuthors);
+                  //set article type
+                  if (otherArticleRelatedArticle.getTypes() != null) {
+                    otherArticleRelatedArticleInfo.setAt(otherArticleRelatedArticle.getTypes());
+                  }
+
+                  if (!articleInfo.getRelatedArticles().contains(otherArticleRelatedArticleInfo)) {
+                    articleInfo.getRelatedArticles().add(otherArticleRelatedArticleInfo);
+                  }
+                }
+              }
+            }
+          }
         } catch (NoSuchArticleIdException e) {
           //exclude this article
+        } catch (ApplicationException e) {
+
         }
       }
     }
-
 
     log.debug("loaded ArticleInfo: id={}, articleTypes={}, " +
       "date={}, title={}, authors={}, related-articles={}",

@@ -20,6 +20,9 @@
  */
 package org.ambraproject.models;
 
+import java.util.Set;
+import java.util.HashSet;
+
 /**
  * Relationship between two articles. The 'other article id' could be null if it is an article which is not in the
  * system.
@@ -29,10 +32,20 @@ package org.ambraproject.models;
 public class ArticleRelationship extends AmbraEntity {
 
   private Article parentArticle;
-
   private Long otherArticleID;
   private String otherArticleDoi;
   private String type;
+  private static final Set<String> ORIGINAL_ARTICLE_AMENDMENT_TYPE = new HashSet<String>();
+  private static final Set<String> AMENDMENT_ARTICLE_RELATIONSHIP_TYPE = new HashSet<String>();
+
+  static {
+    ORIGINAL_ARTICLE_AMENDMENT_TYPE.add("correction-forward");
+    ORIGINAL_ARTICLE_AMENDMENT_TYPE.add("object-of-concern");
+    ORIGINAL_ARTICLE_AMENDMENT_TYPE.add("retraction");
+    AMENDMENT_ARTICLE_RELATIONSHIP_TYPE.add("corrected-article");
+    AMENDMENT_ARTICLE_RELATIONSHIP_TYPE.add("retracted-article");
+    AMENDMENT_ARTICLE_RELATIONSHIP_TYPE.add("object-of-concern");
+  }
 
   public Long getOtherArticleID() {
     return otherArticleID;
@@ -83,5 +96,28 @@ public class ArticleRelationship extends AmbraEntity {
     return getID() != null ? getID().hashCode() : 0;
   }
 
+  /**
+   * Determines if the related article of the original article is an amendment
+   * @param type relationship type
+   * @return true/false
+   */
+  public boolean isAmendmentRelationship(String type) {
+    if (ORIGINAL_ARTICLE_AMENDMENT_TYPE.contains(type)) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Determines if the related article of an amendment is its original article
+   * @param type the relationship type
+   * @return true/false
+   */
+  public boolean isOriginalArticleOfAmendment(String type) {
+    if (AMENDMENT_ARTICLE_RELATIONSHIP_TYPE.contains(type)) {
+      return true;
+    }
+    return false;
+  }
 
 }
