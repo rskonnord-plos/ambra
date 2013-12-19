@@ -85,7 +85,7 @@ $(function () {
   };
 
   //Create the LI block for one referral
-  var createReferenceLI = function(curReference) {
+  var createReferenceLI = function(curReference, category) {
     var publication = "Unkown"
     if(curReference.publication.length > 0) {
       publication = curReference.publication;
@@ -101,8 +101,14 @@ $(function () {
       publication_date = $.datepicker.formatDate('dd M yy', new Date(Date.parse(curReference.published_on)));
     }
 
-    var liItem = $('<li></li>').html('<b>' + publication + '</b>: "<a href="' + curReference.referral + '">' + title +
-      '</a>"&nbsp;&nbsp;' + publication_date);
+    var htmlContent = '<b>' + publication + '</b>: "<a href="' + curReference.referral + '">' + title +
+        '</a>"&nbsp;&nbsp;' + publication_date;
+
+    if (category == 'Other') {
+      htmlContent = '<b>' + publication + '</b>: "<a href="' + curReference.referral + '">' + title + '</a>"';
+    }
+
+    var liItem = $('<li></li>').html(htmlContent);
 
     return liItem;
   };
@@ -120,7 +126,7 @@ $(function () {
         var list = $('<ul></ul>');
         for(var b = 0; b < categorizedResults[category].length; b++) {
           var curReference = categorizedResults[category][b];
-          list.append(createReferenceLI(curReference));
+          list.append(createReferenceLI(curReference, category));
         }
 
         $(html).append(list);
