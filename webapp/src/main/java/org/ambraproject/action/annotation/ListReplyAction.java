@@ -19,6 +19,7 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.service.article.ArticleAssetService;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.models.AnnotationType;
@@ -66,6 +67,8 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
   private Set<ArticleCategory> categories;
   private List<List<String>> articleIssues;
   private AnnotationView[] commentary = new AnnotationView[0];
+  private ArticleAssetService articleAssetService;
+  private boolean hasPDF = true;
 
   @Override
   public String execute() throws Exception {
@@ -83,6 +86,10 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
           || CollectionUtils.isNotEmpty(fetchArticleService.getCorrespondingAuthors(doc))
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorContributions(doc))
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorCompetingInterests(doc)));
+
+      if (articleAssetService.getArticleAsset(articleInfo.getDoi(), "PDF", getAuthId()) == null) {
+        hasPDF = false;
+      }
 
       this.categories = Cookies.setAdditionalCategoryFlags(articleInfo.getCategories(), articleInfo.getId());
 
@@ -209,5 +216,21 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
 
   public AnnotationView[] getCommentary() {
     return commentary;
+  }
+
+  public ArticleAssetService getArticleAssetService() {
+    return articleAssetService;
+  }
+
+  public void setArticleAssetService(ArticleAssetService articleAssetService) {
+    this.articleAssetService = articleAssetService;
+  }
+
+  public boolean isHasPDF() {
+    return hasPDF;
+  }
+
+  public void setHasPDF(boolean hasPDF) {
+    this.hasPDF = hasPDF;
   }
 }
