@@ -20,6 +20,7 @@ package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleAssetService;
+import org.ambraproject.service.article.NoSuchObjectIdException;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.models.AnnotationType;
@@ -87,10 +88,6 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorContributions(doc))
           || CollectionUtils.isNotEmpty(fetchArticleService.getAuthorCompetingInterests(doc)));
 
-      if (articleAssetService.getArticleAsset(articleInfo.getDoi(), "PDF", getAuthId()) == null) {
-        hasPDF = false;
-      }
-
       this.categories = Cookies.setAdditionalCategoryFlags(articleInfo.getCategories(), articleInfo.getId());
 
       articleIssues = articleService.getArticleIssues(articleInfo.getDoi());
@@ -98,6 +95,11 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
           EnumSet.of(AnnotationType.COMMENT),
           AnnotationService.AnnotationOrder.MOST_RECENT_REPLY);
 
+      if (articleAssetService.getArticleAsset(articleInfo.getDoi(), "PDF", getAuthId()) == null) {
+        hasPDF = false;
+      }
+    } catch (NoSuchObjectIdException e) {
+      hasPDF = false;
     } catch (Exception ae) {
       log.error("Could not list all replies for root: " + root, ae);
       addActionError("Reply fetching failed with error message: " + ae.getMessage());
