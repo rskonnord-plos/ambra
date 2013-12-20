@@ -46,8 +46,6 @@ public class URIGeneratorTest {
   public Object[][] getObjects() {
     return new Object[][]{
       { new Annotation(null, AnnotationType.REPLY, null), URIGenerator.getPrefix() + "reply/" },
-      { new Annotation(null, AnnotationType.MINOR_CORRECTION, null), URIGenerator.getPrefix() + "annotation/" },
-      { new Annotation(null, AnnotationType.FORMAL_CORRECTION, null), URIGenerator.getPrefix() + "annotation/" },
       { new UserProfile(), URIGenerator.getPrefix() + "profile/" }
     };
   }

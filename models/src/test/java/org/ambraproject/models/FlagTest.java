@@ -102,7 +102,7 @@ public class FlagTest extends BaseHibernateTest {
         "displayNameForCascadeDeleteOnFlag",
         "pass");
     Serializable creatorId = hibernateTemplate.save(creator);
-    Annotation annotation = new Annotation(creator, AnnotationType.FORMAL_CORRECTION, 23l);
+    Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, 23l);
     Serializable annotationId = hibernateTemplate.save(annotation);
 
     Flag flag = new Flag(creator, FlagReasonCode.INAPPROPRIATE, annotation);

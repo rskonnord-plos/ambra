@@ -91,26 +91,6 @@ public class AnnotationTest extends BaseHibernateTest {
   }
 
   @Test
-  public void testSaveWithCitation() {
-    UserProfile creator = new UserProfile("email@saveWithCitation.org", "displayNameForSaveWithCitation", "pass");
-    hibernateTemplate.save(creator);
-    Long articleID = (Long) hibernateTemplate.save(new Article("if:doi-for-saveWithCitation"));
-    Annotation annotation = new Annotation(creator, AnnotationType.RETRACTION, articleID);
-    annotation.setAnnotationCitation(new AnnotationCitation());
-    annotation.getAnnotationCitation().setTitle("test title");
-    annotation.getAnnotationCitation().setELocationId("test eLocationId");
-
-    Serializable id = hibernateTemplate.save(annotation);
-    Annotation storedAnnotation = (Annotation) hibernateTemplate.get(Annotation.class, id);
-    assertNotNull(storedAnnotation.getAnnotationCitation(), "Annotation didn't cascade save to annotation citation");
-    assertNotNull(storedAnnotation.getAnnotationCitation().getCreated(), "Citation didn't get created date set");
-    assertEquals(storedAnnotation.getAnnotationCitation().getTitle(), annotation.getAnnotationCitation().getTitle(),
-        "stored citation had incorrect title");
-    assertEquals(storedAnnotation.getAnnotationCitation().getELocationId(), annotation.getAnnotationCitation().getELocationId(),
-        "stored citation had incorrect eLocationId");
-  }
-
-  @Test
   public void testAddCitation() {
     long testStart = Calendar.getInstance().getTimeInMillis();
     UserProfile creator = new UserProfile(
@@ -216,7 +196,7 @@ public class AnnotationTest extends BaseHibernateTest {
         "displayNameForCascadeDelete",
         "pass");
     Serializable creatorId = hibernateTemplate.save(creator);
-    Annotation annotation = new Annotation(creator, AnnotationType.FORMAL_CORRECTION, 23l);
+    Annotation annotation = new Annotation(creator, AnnotationType.COMMENT, 23l);
     hibernateTemplate.save(annotation);
     hibernateTemplate.delete(annotation);
     assertNotNull(hibernateTemplate.get(UserProfile.class, creatorId), "Annotation deleted creator");
@@ -229,7 +209,7 @@ public class AnnotationTest extends BaseHibernateTest {
         "displayNameForCascadeDeleteCitation",
         "pass");
     hibernateTemplate.save(creator);
-    Annotation annotation = new Annotation(creator, AnnotationType.FORMAL_CORRECTION, 23l);
+    Annotation annotation = new Annotation(creator, AnnotationType.REPLY, 23l);
     Serializable annotationId = hibernateTemplate.save(annotation);
 
     //Add the citation

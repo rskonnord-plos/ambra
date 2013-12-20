@@ -109,10 +109,6 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
   private int pageCount = 0;
   private int numComments = 0;
 
-  private List<AnnotationView> formalCorrections = new ArrayList<AnnotationView>();
-  private List<AnnotationView> minorCorrections = new ArrayList<AnnotationView>();
-  private List<AnnotationView> retractions = new ArrayList<AnnotationView>();
-
   //commentary holds the comments that are being listed
   private AnnotationView[] commentary = new AnnotationView[0];
   private boolean isResearchArticle;
