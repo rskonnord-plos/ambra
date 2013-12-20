@@ -19,6 +19,8 @@
 package org.ambraproject.action.annotation;
 
 import org.ambraproject.action.BaseActionSupport;
+import org.ambraproject.service.article.ArticleAssetService;
+import org.ambraproject.service.article.NoSuchObjectIdException;
 import org.ambraproject.web.Cookies;
 import org.ambraproject.action.article.ArticleHeaderAction;
 import org.ambraproject.models.AnnotationType;
@@ -66,6 +68,8 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
   private Set<ArticleCategory> categories;
   private List<List<String>> articleIssues;
   private AnnotationView[] commentary = new AnnotationView[0];
+  private ArticleAssetService articleAssetService;
+  private boolean hasPDF = true;
 
   @Override
   public String execute() throws Exception {
@@ -91,6 +95,11 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
           EnumSet.of(AnnotationType.COMMENT),
           AnnotationService.AnnotationOrder.MOST_RECENT_REPLY);
 
+      if (articleAssetService.getArticleAsset(articleInfo.getDoi(), "PDF", getAuthId()) == null) {
+        hasPDF = false;
+      }
+    } catch (NoSuchObjectIdException e) {
+      hasPDF = false;
     } catch (Exception ae) {
       log.error("Could not list all replies for root: " + root, ae);
       addActionError("Reply fetching failed with error message: " + ae.getMessage());
@@ -209,5 +218,21 @@ public class ListReplyAction extends BaseActionSupport implements ArticleHeaderA
 
   public AnnotationView[] getCommentary() {
     return commentary;
+  }
+
+  public ArticleAssetService getArticleAssetService() {
+    return articleAssetService;
+  }
+
+  public void setArticleAssetService(ArticleAssetService articleAssetService) {
+    this.articleAssetService = articleAssetService;
+  }
+
+  public boolean isHasPDF() {
+    return hasPDF;
+  }
+
+  public void setHasPDF(boolean hasPDF) {
+    this.hasPDF = hasPDF;
   }
 }

@@ -101,6 +101,7 @@
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="articleService" ref="articleService"/>
     <property name="fetchArticleService" ref="fetchArticleService"/>
+    <property name="articleAssetService" ref="articleAssetService"/>
   </bean>
 
   <bean id="createFlagAction" class="org.ambraproject.action.annotation.CreateFlagAction">
