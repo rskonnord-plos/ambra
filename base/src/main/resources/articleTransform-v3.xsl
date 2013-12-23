@@ -61,9 +61,11 @@
       <xsl:call-template name="newline1"/>
       <xsl:call-template name="make-front"/>
       <xsl:call-template name="newline1"/>
-      <div class="articleinfo">
-        <xsl:call-template name="make-article-meta"/>
-      </div>
+      <xsl:if test="not((@article-type='correction') or (@article-type='retraction') or (@article-type='expression-of-concern'))">
+        <div class="articleinfo">
+          <xsl:call-template name="make-article-meta"/>
+        </div>
+      </xsl:if>
       <xsl:call-template name="make-editors-summary"/>
       <xsl:call-template name="newline2"/>
       <xsl:call-template name="newline1"/>
@@ -72,6 +74,12 @@
       <xsl:call-template name="newline1"/>
       <xsl:call-template name="make-back"/>
       <xsl:call-template name="newline1"/>
+      <xsl:if test="(@article-type='correction') or (@article-type='retraction') or (@article-type='expression-of-concern')">
+        <div class="articleinfo">
+          <xsl:call-template name="make-article-meta"/>
+        </div>
+        <xsl:call-template name="newline1"/>
+      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use (we replace with make-front) -->
