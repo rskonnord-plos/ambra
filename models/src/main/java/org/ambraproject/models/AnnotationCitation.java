@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Holds citation data for formal corrections and retractions
+ * Required for comments' authors unless the model changes
  *
  * @author Alex Kudlick 3/7/12
  */

@@ -86,7 +86,6 @@ public class ListReplyActionTest extends AmbraWebTest {
     assertEquals(baseAnnotation.getTitle(), annotation.getTitle(), "Base annotation had incorrect title");
     assertEquals(baseAnnotation.getBody(), "<p>" + annotation.getBody() + "</p>", "base annotation had incorrect body");
     assertNull(baseAnnotation.getCitation(), "base annotation had a citation when none was expected");
-    assertFalse(baseAnnotation.isCorrection(),"Returned annotation labeled as a correction when it wasn't");
 
     assertNotNull(baseAnnotation.getReplies(), "Action had null list of replies");
     assertEquals(baseAnnotation.getReplies().length, 1, "Action had incorrect number of replies");
@@ -95,72 +94,5 @@ public class ListReplyActionTest extends AmbraWebTest {
     assertNotNull(action.getArticleInfo(), "Action had null article info");
     assertEquals(action.getArticleInfo().getDoi(), article.getDoi(), "action had incorrect article doi");
     assertEquals(action.getArticleInfo().getTitle(), article.getTitle(), "action had incorrect article doi");
-  }
-
-  @Test
-  public void testExecuteWithCorrection() throws Exception {
-    UserProfile creator = new UserProfile(
-        "email@ListReplyActionTestWithCorrection.org",
-        "displayNameForListReplyActionTestWithCorrection", "pass");
-    dummyDataStore.store(creator);
-    Article article = new Article("id:doi-for-listReplyActionTestWithCorrection");
-    article.setTitle("test title");
-    article.setJournal("test journal");
-    article.seteLocationId("2139-12385");
-    article.setAuthors(new ArrayList<ArticleAuthor>(2));
-    article.getAuthors().add(new ArticleAuthor("John", "Smith", "M.D."));
-    article.getAuthors().add(new ArticleAuthor("Harvey", "Weinstein", "Ph.D."));
-    article.setCollaborativeAuthors(Arrays.asList("foo", "bar"));
-    dummyDataStore.store(article);
-
-    Annotation annotation = new Annotation(creator, AnnotationType.FORMAL_CORRECTION, article.getID());
-    annotation.setTitle("Correction");
-    annotation.setBody("This article contained sentences in which a preposition was the last word.");
-    dummyDataStore.store(annotation);
-
-    annotation.setAnnotationCitation(new AnnotationCitation(article));
-    dummyDataStore.update(annotation);
-
-    action.setRoot(annotation.getID());
-    String result = action.execute();
-    assertEquals(result, Action.SUCCESS, "action didn't return success");
-    assertEquals(action.getActionErrors().size(), 0,
-        "Action returned error messages: " + StringUtils.join(action.getActionErrors(), ";"));
-    assertEquals(action.getFieldErrors().size(), 0,
-        "Action returned field errors: " + StringUtils.join(action.getFieldErrors().values(), ";"));
-
-    AnnotationView baseAnnotation = action.getBaseAnnotation();
-    assertNotNull(baseAnnotation, "action had null base annotation");
-    assertEquals(baseAnnotation.getTitle(), "Formal Correction: " + annotation.getTitle(), "Base annotation had incorrect title");
-    assertEquals(baseAnnotation.getBody(), "<p>" + annotation.getBody() + "</p>", "base annotation had incorrect body");
-    assertTrue(baseAnnotation.isCorrection(), "annotation should have been labeled as a correction");
-
-    assertNotNull(baseAnnotation.getReplies(), "Action had null list of replies");
-    assertEquals(baseAnnotation.getReplies().length, 0, "Action had incorrect number of replies");
-
-    AnnotationCitationView actualCitation = baseAnnotation.getCitation();
-    AnnotationCitation expectedCitation = annotation.getAnnotationCitation();
-    assertNotNull(actualCitation, "Action returned null citation");
-    assertEquals(actualCitation.getTitle(), expectedCitation.getTitle(),
-        "Action's citation had incorrect title");
-    assertEquals(actualCitation.getJournal(), expectedCitation.getJournal(),
-        "Action's citation had incorrect journal");
-    assertEquals(actualCitation.geteLocationId(), expectedCitation.getELocationId(),
-        "Action's citation had incorrect eLocationId");
-    assertEquals(actualCitation.getCollabAuthors(), expectedCitation.getCollaborativeAuthors().toArray(),
-        "Action's citation had incorrect collab authors");
-    assertNotNull(actualCitation.getAuthors(), "Action's citation had no authors");
-    assertEquals(actualCitation.getAuthors().length, expectedCitation.getAuthors().size(),
-        "Action's citation had incorrect number of authors");
-    for (int i = 0; i < actualCitation.getAuthors().length; i++) {
-      AuthorView actualAuthor = actualCitation.getAuthors()[i];
-      CorrectedAuthor expectedAuthor = expectedCitation.getAuthors().get(i);
-      assertEquals(actualAuthor.getGivenNames(), expectedAuthor.getGivenNames(),
-          "Author " + (i + 1) + " had incorrect given names");
-      assertEquals(actualAuthor.getSurnames(), expectedAuthor.getSurName(),
-          "Author " + (i + 1) + " had incorrect surname");
-      assertEquals(actualAuthor.getSuffix(), expectedAuthor.getSuffix(),
-          "Author " + (i + 1) + " had incorrect suffix");
-    }
   }
 }

@@ -34,7 +34,7 @@ public class Annotation extends AmbraEntity {
 
   private String competingInterestBody;
 
-  //If this is a formal correction or retraction, holds the citation data
+  //required for getting the comments' authors
   private AnnotationCitation annotationCitation;
 
   public Annotation() {

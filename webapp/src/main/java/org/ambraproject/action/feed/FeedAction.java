@@ -79,8 +79,7 @@ import java.util.List;
  *                                                     data.
  * IssueURI    String           Yes        none        Issue URI (Required for type=Issue only)
  * maxResults  Integer          No         30          The maximun number of result to return.
- * type        String           No         Article     Article,Annotation,FormalCorrection
- *                                                     MinorCorrection,Retraction,Comment,Issue
+ * type        String           No         Article     Article,Annotation,Comment,Issue
  * mostViewed Boolean No False Parameter to enable list of most viewed articles
  *
  * </pre>
@@ -118,9 +117,6 @@ public class FeedAction extends BaseActionSupport implements ModelDriven {
         //Trackbacks are (logically but not physically) a form of annotation, if this type of feed is selected
         //We wanted it included
         trackbacks = feedService.getTrackbacks(new AnnotationFeedSearchParameters(searchParams));
-      case FormalCorrection:
-      case MinorCorrection:
-      case Retraction:
       case Comment:
       case Reply:
         //The getAnnotations method performs filters for all of the above types.

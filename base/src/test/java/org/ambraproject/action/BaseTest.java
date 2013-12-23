@@ -382,13 +382,6 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
   }
 
   protected void checkAnnotationProperties(AnnotationView result, Annotation expected) {
-    if (expected.getType() == AnnotationType.MINOR_CORRECTION) {
-      assertEquals(result.getTitle(), "Minor Correction: " + expected.getTitle(), "Annotation view had incorrect title");
-    } else if (expected.getType() == AnnotationType.FORMAL_CORRECTION) {
-      assertEquals(result.getTitle(), "Formal Correction: " + expected.getTitle(), "Annotation view had incorrect title");
-    } else if (expected.getType() == AnnotationType.RETRACTION) {
-      assertEquals(result.getTitle(), "Retraction: " + expected.getTitle(), "Annotation view had incorrect title");
-    }
     assertEquals(result.getBody(), "<p>" + expected.getBody() + "</p>", "Annotation view had incorrect body");
     assertEquals(result.getCompetingInterestStatement(),
         expected.getCompetingInterestBody() == null ? "" : expected.getCompetingInterestBody(),
@@ -396,13 +389,6 @@ public abstract class BaseTest extends AbstractTestNGSpringContextTests {
     assertEquals(result.getAnnotationUri(), expected.getAnnotationUri(), "Annotation view had incorrect annotation uri");
     assertEquals(result.getCreatorID(), expected.getCreator().getID(), "Annotation view had incorrect creator id");
     assertEquals(result.getCreatorDisplayName(), expected.getCreator().getDisplayName(), "Annotation view had incorrect creator name");
-
-    if (Arrays.asList(AnnotationType.FORMAL_CORRECTION, AnnotationType.MINOR_CORRECTION,
-        AnnotationType.RETRACTION).contains(expected.getType())) {
-      assertTrue(result.isCorrection(), "Result should have been created as a correction");
-    } else {
-      assertFalse(result.isCorrection(), "Result should not have been created as a correction");
-    }
 
     if (expected.getAnnotationCitation() == null) {
       assertNull(result.getCitation(), "returned non-null citation when null was expected");

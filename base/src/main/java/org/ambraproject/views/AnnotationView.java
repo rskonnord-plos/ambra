@@ -92,19 +92,7 @@ public class AnnotationView {
     }
     this.originalTitle = annotation.getTitle();
     String escapedTitle = TextUtils.escapeHtml(annotation.getTitle());
-    switch (annotation.getType()) {
-      case FORMAL_CORRECTION:
-        this.title = "Formal Correction: " + escapedTitle;
-        break;
-      case MINOR_CORRECTION:
-        this.title = "Minor Correction: " + escapedTitle;
-        break;
-      case RETRACTION:
-        this.title = "Retraction: " + escapedTitle;
-        break;
-      default:
-        this.title = escapedTitle;
-    }
+    this.title = escapedTitle;
 
     if (annotation.getBody() == null) {
       this.originalBody = "";
@@ -367,9 +355,7 @@ public class AnnotationView {
     return type;
   }
 
-  public boolean isCorrection() {
-    return type.isCorrection();
-  }
+
 
   public String getArticleDoi() {
     return articleDoi;

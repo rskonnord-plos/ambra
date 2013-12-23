@@ -233,9 +233,6 @@ public class AmbraFeedResult extends Feed implements Result {
     switch (t) {
       case Annotation:
         trackbacks = (List<LinkbackView>) ai.getStack().findValue("trackbacks");
-      case FormalCorrection:
-      case MinorCorrection:
-      case Retraction:
       case Comment:
       case Reply:
         List<AnnotationView> annotations = (List<AnnotationView>) ai.getStack().findValue("annotations");

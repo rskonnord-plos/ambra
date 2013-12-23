@@ -46,9 +46,6 @@ public interface FeedService {
    */
   public static enum FEED_TYPES {
     Comment(AnnotationType.COMMENT.toString()),
-    FormalCorrection(AnnotationType.FORMAL_CORRECTION.toString()),
-    MinorCorrection(AnnotationType.MINOR_CORRECTION.toString()),
-    Retraction(AnnotationType.RETRACTION.toString()),
     Reply(AnnotationType.REPLY.toString()),
     Annotation("Annotation"),
     Article("Article"),
@@ -67,7 +64,6 @@ public interface FeedService {
       return type;
     }
   }
-
 
   /**
    * Creates and returns a new <code>FeedSearchParameters</code> for clients of FeedService.
@@ -91,8 +87,6 @@ public interface FeedService {
    * @return solr search result that contains list of articles
    */
   public Document getSearchArticles(final FeedSearchParameters searchParameters) throws ApplicationException;
-
-
 
   /**
    * @param searchParams input parameters
