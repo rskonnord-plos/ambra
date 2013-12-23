@@ -2645,10 +2645,6 @@ ul.bulletlist li {
   border-top: 5px solid #f8af2d;
 }
 
-#responses .response.formal .info {
-  background: #FCE2E5;
-}
-
 #responses .response .response_content {
   padding: 20px 15px;
   word-wrap: break-word;
