@@ -2844,54 +2844,6 @@ ul.bulletlist li {
   margin-top: -29px; /* Center in window (29 == 1/2 of size) */
 }
 
-/* corrections */
-#correction_threads {
-  list-style: none;
-  padding: 0;
-}
-
-#correction_threads li {
-  background: #efefef;
-  margin-bottom: 4px;
-  padding: 20px;
-}
-
-#correction_threads li.formal {
-  background: #FCE2E5;
-}
-
-#correction_threads li .title a {
-  color: #e53350;
-  text-decoration: none;
-}
-
-#correction_threads li .title p a {
-  color:;
-}
-
-#correction_threads li .correction_title {
-  margin-bottom: 2px;
-  display: block;
-  font-size: 1.077em;
-}
-
-#correction_threads li a {
-  font-weight: bold;
-}
-
-#correction_threads .meta {
-  color: #666;
-  font-size: 0.846em;
-}
-
-.icon_corrections {
-  width: 17px;
-  height: 17px;
-  background: url(../images/icon_corrections.png) 0 0 no-repeat;
-  display: inline-block;
-  margin: 0px 0 -2px 5px;
-}
-
 /* related research */
 #suggestions,
 #more_by_authors,
