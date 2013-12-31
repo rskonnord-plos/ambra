@@ -30,7 +30,8 @@ public interface UserRegistrationService {
    * @throws NoSuchUserException          if no user with the given email exists
    * @throws UserAlreadyVerifiedException if the user was already verified
    */
-  public void verifyUser(String email, String verificationToken) throws NoSuchUserException, UserAlreadyVerifiedException;
+  public void verifyUser(String email, String verificationToken) throws NoSuchUserException, UserAlreadyVerifiedException,
+    VerificationTokenException;
 
   /**
    * Resend a verification email to the user with instructions on how to verify their account
@@ -45,9 +46,12 @@ public interface UserRegistrationService {
    * Send an email message to the user with a link to reset their newPassword
    *
    * @param email the user's email
+   *
+   * @return the token sent to the user to authenticate the account
+   *
    * @throws NoSuchUserException if there is no user with the given email
    */
-  public void sendForgotPasswordMessage(String email) throws NoSuchUserException;
+  public String sendForgotPasswordMessage(String email) throws NoSuchUserException;
 
   /**
    * Check whether an email verification token is valid
@@ -57,6 +61,13 @@ public interface UserRegistrationService {
    * @return true if the newPassword reset token is valid, false otherwise
    */
   public boolean validateVerificationToken(String email, String verificationToken);
+
+  /**
+   * Remove the verification token for the given email address
+   *
+   * @param email the user's email
+   */
+  public void removeVerificationToken(String email);
 
   /**
    * Reset a user's password. Will not reset the password if the verification token does not match the user
@@ -73,12 +84,13 @@ public interface UserRegistrationService {
    * @param oldEmail the user's old email address
    * @param newEmail the new email address for the user
    * @param password the user's password
+   *
+   * @return the generated token to be used to authenticate the new email address
    */
-  public void sendEmailChangeMessage(String oldEmail, String newEmail, String password) throws NoSuchUserException;
+  public String sendEmailChangeMessage(String oldEmail, String newEmail, String password) throws NoSuchUserException;
 
   /**
    * Change a user's email address
-   *
    *
    * @param oldEmail the user's old email address
    * @param newEmail the new email address to set

@@ -82,26 +82,34 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
   }
 
   @Override
-  public void verifyUser(String email, String verificationToken) throws NoSuchUserException, UserAlreadyVerifiedException {
+  public void verifyUser(String email, String verificationToken) throws NoSuchUserException,
+    UserAlreadyVerifiedException, VerificationTokenException {
+
     if (StringUtils.isEmpty(email)) {
       throw new IllegalArgumentException("Must supply an email");
     }
+
     if (StringUtils.isEmpty(verificationToken)) {
       throw new IllegalArgumentException("Must supply a verification token");
     }
+
     UserProfile profile = (UserProfile) DataAccessUtils.uniqueResult(
         hibernateTemplate.findByCriteria(DetachedCriteria.forClass(UserProfile.class)
-            .add(Restrictions.eq("email", email))
-            .add(Restrictions.eq("verificationToken", verificationToken))
-        )
+            .add(Restrictions.eq("email", email)))
     );
+
     if (profile == null) {
       throw new NoSuchUserException("No user with email: " + email);
     } else if (profile.getVerified()) {
       throw new UserAlreadyVerifiedException("User " + email + " was already verified");
+    } else if (!verificationToken.equals(profile.getVerificationToken())) {
+      throw new VerificationTokenException("An invalid verification token was given for this user");
     }
+
     log.debug("Verifying user {}", email);
+
     profile.setVerified(true);
+
     hibernateTemplate.update(profile);
   }
 
@@ -139,7 +147,7 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
    */
   @Override
   @Transactional
-  public void sendForgotPasswordMessage(String email) throws NoSuchUserException {
+  public String sendForgotPasswordMessage(String email) throws NoSuchUserException {
     if (StringUtils.isEmpty(email)) {
       throw new IllegalArgumentException("Must supply an email");
     }
@@ -156,6 +164,8 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
     profile.setVerificationToken(passwordResetToken);
     hibernateTemplate.update(profile);
     ambraMailer.sendForgotPasswordEmail(email, passwordResetToken);
+
+    return passwordResetToken;
   }
 
   /**
@@ -184,6 +194,29 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
     }
 
     return count == 1;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
+  public void removeVerificationToken(String email) {
+    UserProfile profile = (UserProfile) DataAccessUtils.uniqueResult(
+      hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserProfile.class)
+          .add(Restrictions.eq("email", email))
+      )
+    );
+    if (profile == null) {
+      throw new IllegalArgumentException("Incorrect email: " + email);
+    }
+
+    log.debug("Resetting token for {}", email);
+
+    profile.setVerificationToken(null);
+
+    hibernateTemplate.update(profile);
   }
 
   /**
@@ -223,9 +256,12 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
 
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   @Transactional
-  public void sendEmailChangeMessage(final String oldEmail, final String newEmail, final String password) throws NoSuchUserException {
+  public String sendEmailChangeMessage(final String oldEmail, final String newEmail, final String password) throws NoSuchUserException {
     for (Map.Entry<String, String> argument : new HashMap<String, String>() {{
       put("old email", oldEmail);
       put("new email", newEmail);
@@ -259,6 +295,8 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
     } catch (PasswordServiceException e) {
       throw new IllegalArgumentException("Error verifying password");
     }
+
+    return profile.getVerificationToken();
   }
 
   @Override
