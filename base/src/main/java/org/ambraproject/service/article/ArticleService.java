@@ -26,6 +26,7 @@ import org.ambraproject.views.CitedArticleView;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.article.ArticleInfo;
 import org.ambraproject.views.article.BaseArticleInfo;
+import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.text.ParseException;
@@ -278,4 +279,14 @@ public interface ArticleService {
    * @throws NoSuchArticleIdException
    */
   public void checkArticleState(final String articleDoi, final String authId) throws NoSuchArticleIdException;
+
+  /**
+   * Returns an article's amendments of type Retraction or Expression of Concern
+   * Used in displaying the search results
+   *
+   * @param articleURI the article doi
+   * @return
+   * @throws Exception
+   */
+  public List getArticleAmendments(final String articleURI) throws DataAccessException;
 }

@@ -57,6 +57,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
@@ -1305,5 +1306,13 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       relatedArticleInfo.setAt(otherArticle.getTypes());
     }
     return relatedArticleInfo;
+  }
+
+  public List<ArticleRelationship> getArticleAmendments(final String articleURI) {
+    List<ArticleRelationship> result;
+    result = hibernateTemplate.find("select relatedArticles from Article as art " +
+            "inner join art.relatedArticles as relatedArticles where art.doi = ? " +
+            "and relatedArticles.type in ('object-of-concern' , 'retraction')" , articleURI);
+    return result;
   }
 }
