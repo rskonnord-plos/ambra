@@ -215,6 +215,7 @@
     <property name="configuration" ref="ambraConfiguration"/>
     <property name="serverFactory" ref="solrServerFactory"/>
     <property name="cache" ref="solrCache" />
+    <property name="articleService" ref="articleService" />
   </bean>
 
   <bean id="journalCreator" class="org.ambraproject.service.journal.JournalCreatorImpl"
