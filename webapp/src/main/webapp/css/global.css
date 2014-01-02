@@ -2477,6 +2477,7 @@ div.fch_corr {
     height: 2em;
     padding-top: 0.4em;
     padding-right: 1em;
+    margin-top: -0.4em;
 }
 
 .eoc-ret_searchHit span {
@@ -2494,7 +2495,7 @@ div.fch_corr {
     padding-right: 0em;
     position: absolute;
     z-index: 1;
-    top: 12.6em;
+    top: 13em;
 }
 
 span.genus-species {
