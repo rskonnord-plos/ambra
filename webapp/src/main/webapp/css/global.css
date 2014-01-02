@@ -2401,7 +2401,7 @@ div.fch {
     margin-bottom:1.5em;
 }
 
-.eoc-ret_title span, .eoc-ret_header {
+.eoc-ret_title span, .eoc-ret_header, .eoc-ret_searchHit span {
     width: 14px;
     height: 15px;
     display: inline-block;
@@ -2468,6 +2468,33 @@ div.fch_corr {
 #nav-article-page li.corrections a {
     color: #333333;
     font-weight: bold;
+}
+
+/* Amendments in Search Results*/
+.eoc-ret_searchHit {
+    background: #fce2e5;
+    width: 18em;
+    height: 2em;
+    padding-top: 0.4em;
+    padding-right: 1em;
+}
+
+.eoc-ret_searchHit span {
+    margin-left: 1em;
+}
+
+.eoc-ret_searchHit a {
+    color: #e53350;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.eoc-ret_searchHit_fig {
+    width: 277px;
+    padding-right: 0em;
+    position: absolute;
+    z-index: 1;
+    top: 12.6em;
 }
 
 span.genus-species {
