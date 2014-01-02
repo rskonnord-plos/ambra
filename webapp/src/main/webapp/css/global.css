@@ -2475,9 +2475,13 @@ div.fch_corr {
     background: #fce2e5;
     width: 18em;
     height: 2em;
-    padding-top: 0.4em;
+    padding-top: 0.5em;
     padding-right: 1em;
     margin-top: -0.4em;
+}
+
+.eoc-ret_searchHit div:first-of-type {
+    float: left;
 }
 
 .eoc-ret_searchHit span {
