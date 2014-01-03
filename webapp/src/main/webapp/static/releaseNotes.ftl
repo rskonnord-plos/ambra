@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.2</h2>
+  <p>Released December 26th, 2013</p>
+  <h3>Features Implemented in Ambra 2.9.2</h3>
+  <ul>
+     <li>URL validation for crowdsourced media coverage form</li>
+     <li>Fix for advanced search article type facet</li>
+     <li>Reapplying Ambra 2.8.7 mapping for taxonomy synonyms</li>
+  </ul> 
+
   <h2>Ambra 2.9.1</h2>
   <p>Released December 17, 2013</p>
   <h3>Features Implemented in Ambra 2.9.1</h3>
