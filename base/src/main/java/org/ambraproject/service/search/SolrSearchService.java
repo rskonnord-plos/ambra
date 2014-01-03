@@ -115,12 +115,18 @@ public class SolrSearchService implements SearchService {
 
     SolrQuery query = createQuery(sParams.getQuery(),
         sParams.getStartPage(), sParams.getPageSize(), true);
-    SolrQuery journalFacetQuery = createJournalFacetQuery(sParams.getQuery(), true);
 
-    //Set filters for both queries, but (obviously) the journals query doesn't get the journal
-    //filter
-    setFilters(query, sParams, true);
-    setFilters(journalFacetQuery, sParams, false);
+    //Notice: there is some code duplication here. note below
+    SolrQuery journalFacetsQuery = createFacetsQuery(sParams.getQuery(), "cross_published_journal_key", true);
+    SolrQuery articleTypeFacetsQuery = createFacetsQuery(sParams.getQuery(), "article_type_facet", true);
+
+    //Set filters for the three queries,
+    setFilters(query, sParams, false, false);
+
+    //The journals query doesn't get the journal filter and the articles query doesn't get the articles filter
+    //Notice: there is some code duplication here. note below
+    setFilters(journalFacetsQuery, sParams, true, false);
+    setFilters(articleTypeFacetsQuery, sParams, false, true);
 
     //Set the sort ordering for results, if applicable.
     setSort(query, sParams);
@@ -139,18 +145,25 @@ public class SolrSearchService implements SearchService {
 
       //Set the field for dismax to use
       query.set("qf", fieldName);
-      journalFacetQuery.set("qf", fieldName);
+      journalFacetsQuery.set("qf", fieldName);
+      articleTypeFacetsQuery.set("qf", fieldName);
     }
 
     //Perform searches!
     SearchResultSinglePage results = search(query);
-    FacetField journals = facetSearch(journalFacetQuery, "cross_published_journal_key");
+
+    QueryResponse journalFacetsResponse = getSOLRResponse(journalFacetsQuery);
+    QueryResponse articleTypeFacetsResponse = getSOLRResponse(articleTypeFacetsQuery);
+    FacetField journals = journalFacetsResponse.getFacetField("cross_published_journal_key");
+    FacetField articleTypes = articleTypeFacetsResponse.getFacetField("article_type_facet");
+
     results.setJournalFacet(facetCountsToHashMap(journals));
+    results.setArticleTypeFacet(facetCountsToHashMap(articleTypes));
 
     //Only execute the keyword search facet if the keyword wasn't specified
     if (sParams.getFilterKeyword().length() == 0) {
       SolrQuery keywordFacetQuery = createKeywordFacetQuery(sParams.getQuery());
-      setFilters(keywordFacetQuery, sParams, true);
+      setFilters(keywordFacetQuery, sParams, false, false);
       FacetField keywords = facetSearch(keywordFacetQuery, "doc_partial_type");
       results.setKeywordFacet(facetCountsToHashMap(keywords));
     }
@@ -180,17 +193,29 @@ public class SolrSearchService implements SearchService {
     SolrQuery query = createQuery(null, sp.getStartPage(), sp.getPageSize(), false);
     query.setQuery(searchParameters.getUnformattedQuery().trim());
 
-    SolrQuery journalFacetQuery = createJournalFacetQuery(query.getQuery(), false);
+    SolrQuery journalFacetsQuery = createFacetsQuery(query.getQuery(), "cross_published_journal_key", false);
+    SolrQuery articleTypeFacetsQuery = createFacetsQuery(query.getQuery(), "article_type_facet", false);
 
-    setFilters(query, sp, true);
-    setFilters(journalFacetQuery, sp, false);
+    setFilters(query, sp, false, false);
+
+    //The journals query doesn't get the journal filter and the articles query doesn't get the articles filter
+    //Notice: there is some code duplication here. note above
+    setFilters(journalFacetsQuery, sp, true, false);
+    setFilters(articleTypeFacetsQuery, sp, false, true);
 
     setSort(query, sp);
 
-    FacetField journals = facetSearch(journalFacetQuery, "cross_published_journal_key");
+    QueryResponse journalFacetsResponse = getSOLRResponse(journalFacetsQuery);
+    QueryResponse articleTypeFacetsResponse = getSOLRResponse(articleTypeFacetsQuery);
+
+    //Notice: there is some code duplication here. note above
+    FacetField journals = journalFacetsResponse.getFacetField("cross_published_journal_key");
+    FacetField articleTypes = articleTypeFacetsResponse.getFacetField("article_type_facet");
+
     SearchResultSinglePage results = search(query.setQuery(searchParameters.getUnformattedQuery().trim()));
 
     results.setJournalFacet(facetCountsToHashMap(journals));
+    results.setArticleTypeFacet(facetCountsToHashMap(articleTypes));
 
     return results;
   }
@@ -317,6 +342,7 @@ public class SolrSearchService implements SearchService {
     query.removeFacetField("affiliate_facet");
     //Add the one we do want in this case.
     query.addFacetField("cross_published_journal_key");
+    query.addFacetField("article_type");
     query.setFacetLimit(MAX_FACET_SIZE);
 
     //Related to JO: http://joborder.plos.org/view.php?id=17480
@@ -325,7 +351,7 @@ public class SolrSearchService implements SearchService {
 
     SearchResultSinglePage preFilterResults = search(query);
 
-    setFilters(query, sp, true);
+    setFilters(query, sp, false, false);
 
     query.setQuery(q);
 
@@ -366,6 +392,7 @@ public class SolrSearchService implements SearchService {
     //selections other then the query
     //However, subjects and article type will be!
     results.setJournalFacet(preFilterResults.getJournalFacet());
+    results.setArticleTypeFacet(preFilterResults.getArticleTypeFacet());
 
     return results;
   }
@@ -685,15 +712,22 @@ public class SolrSearchService implements SearchService {
     this.serverFactory = serverFactory;
   }
 
-  private void setFilters(SolrQuery query, SearchParameters sp, boolean includeJournal) {
+  private void setFilters(SolrQuery query, SearchParameters sp, boolean ignoreJournals, boolean ignoreArticleTypes) {
     //Related to JO: http://joborder.plos.org/view.php?id=17480
     //(for now) we don't want to search on Issue Images
     query.addFilterQuery(createFilterNoIssueImageDocuments());
 
-    if (includeJournal) {
-      // Form field description: "Journals".  Query Filter.
+    // Form field description: "Journals".  Query Filter.
+    if(!ignoreJournals) {
       if (sp.getFilterJournals() != null && sp.getFilterJournals().length > 0) {
         query.addFilterQuery(createFilterLimitForJournals(sp.getFilterJournals()));
+      }
+    }
+
+    if(!ignoreArticleTypes) {
+      // Form field description: "Article Types".  Query Filter.
+      if (sp.getFilterArticleTypes() != null && sp.getFilterArticleTypes().length > 0) {
+        query.addFilterQuery(createFilterLimitForArticleTypes(sp.getFilterArticleTypes()));
       }
     }
 
@@ -705,11 +739,6 @@ public class SolrSearchService implements SearchService {
     // Not used in form, but in savedSearch alerts
     if (sp.getFilterSubjectsDisjunction() != null && sp.getFilterSubjectsDisjunction().length > 0) {
       query.addFilterQuery(createFilterLimitForSubjectDisjunction(sp.getFilterSubjectsDisjunction()));
-    }
-
-    // Form field description: "Article Types".  Query Filter.
-    if (sp.getFilterArticleType() != null && sp.getFilterArticleType().length > 0) {
-      query.addFilterQuery(createFilterLimitForArticleType(sp.getFilterArticleType()));
     }
 
     // Form field description: "Authors".  Query Filter.
@@ -771,7 +800,7 @@ public class SolrSearchService implements SearchService {
     return fq.replace(fq.length() - 4, fq.length(), "").toString(); // Remove last " OR".
   }
 
-  private String createFilterLimitForArticleType(String[] articleTypes) {
+  private String createFilterLimitForArticleTypes(String[] articleTypes) {
     Arrays.sort(articleTypes); // Consistent order so that each filter will only be cached once.
     StringBuilder fq = new StringBuilder();
     for (String articleType : articleTypes) {
@@ -884,7 +913,7 @@ public class SolrSearchService implements SearchService {
     return query;
   }
 
-  private SolrQuery createJournalFacetQuery(String queryString, boolean useDismax) {
+  private SolrQuery createFacetsQuery(String queryString, String field, boolean useDismax) {
     SolrQuery query = new SolrQuery(queryString);
     query.setTimeAllowed(queryTimeout);
     query.setIncludeScore(false);
@@ -897,7 +926,7 @@ public class SolrSearchService implements SearchService {
       query.set("defType", "dismax");
     }
 
-    query.addFacetField("cross_published_journal_key");
+    query.addFacetField(field);
     // Add a filter to ensure that Solr never returns partial documents
     query.addFilterQuery(createFilterFullDocuments());
 
@@ -1132,7 +1161,7 @@ public class SolrSearchService implements SearchService {
         //Set the field for dismax to use
         query.set("qf", fieldName);
       }
-      setFilters(query, sParams, true);
+      setFilters(query, sParams, false, false);
 
     } else {
 
@@ -1141,7 +1170,7 @@ public class SolrSearchService implements SearchService {
       sp = cleanStrings(sParams);
       query = createQuery(null, 0, resultLimit, false);
       query.setQuery(sParams.getUnformattedQuery());
-      setFilters(query, sp, true);
+      setFilters(query, sp, false, false);
     }
 
     query.addFilterQuery(createFilterLimitForPublishDate(lastSearchTime, currentSearchTime));

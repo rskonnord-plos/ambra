@@ -23,7 +23,7 @@ import org.ambraproject.service.mailer.AmbraMailer;
 import org.ambraproject.service.xml.XMLService;
 import org.ambraproject.util.TextUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
