@@ -181,4 +181,11 @@
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
   </bean>
+
+  <bean id="mediaCoverageAction" class="org.ambraproject.action.article.MediaCoverageAction">
+    <property name="permissionsService" ref="permissionsService"/>
+    <property name="captchaService" ref="captchaService"/>
+    <property name="ambraConfiguration" ref="ambraConfiguration"/>
+  </bean>
+
 </beans>

@@ -1,8 +1,16 @@
 /*
- * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2013 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -14,7 +22,8 @@ package org.ambraproject.action.article;
 import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.captcha.CaptchaService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -108,18 +117,23 @@ public class MediaCoverageAction extends BaseActionSupport {
 
     boolean isValid = true;
 
+    if (StringUtils.isBlank(uri)) {
+      isValid = false;
+    }
+
+    UrlValidator urlValidator = new UrlValidator();
+
     if (StringUtils.isBlank(link)) {
       addFieldError("link", "This field is required.");
       isValid = false;
-    } else {
-      this.link = this.link.substring(0, Math.min(this.link.length(), MAX_LENGTH));
+    } else if (!urlValidator.isValid(link)) {
+      addFieldError("link", "Invalid Media link URL");
+      isValid = false;
     }
 
     if (StringUtils.isBlank(name)) {
       addFieldError("name", "This field is required.");
       isValid = false;
-    } else {
-      this.name = this.name.substring(0, Math.min(this.name.length(), MAX_LENGTH));
     }
 
     if (StringUtils.isBlank(email)) {
@@ -128,12 +142,6 @@ public class MediaCoverageAction extends BaseActionSupport {
     } else if (!EmailValidator.getInstance().isValid(email)) {
       addFieldError("email", "Invalid e-mail address");
       isValid = false;
-    } else {
-      this.email = this.email.substring(0, Math.min(this.email.length(), MAX_LENGTH));
-    }
-
-    if (!StringUtils.isBlank(comment)) {
-      this.comment = this.comment.substring(0, Math.min(this.comment.length(), MAX_LENGTH));
     }
 
     HttpServletRequest request = ServletActionContext.getRequest();
@@ -143,8 +151,17 @@ public class MediaCoverageAction extends BaseActionSupport {
       isValid = false;
     }
 
-    return isValid;
+    if (isValid) {
+      this.link = this.link.substring(0, Math.min(this.link.length(), MAX_LENGTH));
+      this.name = this.name.substring(0, Math.min(this.name.length(), MAX_LENGTH));
+      this.email = this.email.substring(0, Math.min(this.email.length(), MAX_LENGTH));
 
+      if (!StringUtils.isBlank(comment)) {
+        this.comment = this.comment.substring(0, Math.min(this.comment.length(), MAX_LENGTH));
+      }
+    }
+
+    return isValid;
   }
 
   public String getUri() {
