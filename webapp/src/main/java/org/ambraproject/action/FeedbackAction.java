@@ -18,7 +18,7 @@ import org.ambraproject.service.mailer.AmbraMailer;
 import org.ambraproject.action.user.UserActionSupport;
 import org.apache.commons.collections.EnumerationUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Required;
 

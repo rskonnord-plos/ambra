@@ -91,12 +91,12 @@ $(function () {
       publication = curReference.publication;
     }
 
-    var title = "Unkown"
+    var title = "Unknown";
     if(curReference.title.length > 0) {
       title = curReference.title;
     }
 
-    var publication_date = "Unkown"
+    var publication_date = "Unknown";
     if(curReference.published_on.length > 0) {
       publication_date = $.datepicker.formatDate('dd M yy', new Date(Date.parse(curReference.published_on)));
     }
