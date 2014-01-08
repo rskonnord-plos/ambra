@@ -98,7 +98,8 @@ $(function () {
 
     var publication_date = "Unknown";
     if(curReference.published_on.length > 0) {
-      publication_date = $.datepicker.formatDate('dd M yy', new Date(Date.parse(curReference.published_on)));
+      var dateParts = /^(\d{4})-(\d{2})-(\d{2})T(.*)Z$/.exec(curReference.published_on);
+      publication_date = $.datepicker.formatDate('dd M yy', new Date(dateParts[1], dateParts[2] - 1, dateParts[3]));
     }
 
     var liItem = $('<li></li>').html('<b>' + publication + '</b>: "<a href="' + curReference.referral + '">' + title +
