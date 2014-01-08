@@ -343,12 +343,10 @@ function initMainContainer() {
     // the content, cache the content here when the user navigates away from that
     // page. So that this cache can be reused when the user navigates back to
     // this page later.
-    if(selected_tab == "related") {
-      if($.pjax.contentCache[window.location.href] !== undefined) {
-        $.pjax.contentCache[window.location.href].data = $("#pjax-container").outerHTML();
-        $.pjax.contentCache[window.location.href].loaded = true;
-      }
-    }
+
+    // for related tab, we want to have most up to date information for Media Coverage
+    // so caching logic isn't necessary anymore.
+
     pjax_selected_tab = this.name;
     selected_tab = this.name;
     return true;
