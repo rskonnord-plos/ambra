@@ -1699,6 +1699,8 @@ if ($(document).pjax) {
       $.getScript("http://wl.figshare.com/static/plos_widget.js?v=10");
       $.getScript("http://wl.figshare.com/static/jmvc/main_app/resources/jwplayer/jwplayer.js");
       figshare_widget_load = true;
+
+      addMediaCoverageLink();
     }
 
     // For related pages, if no item exists under more_by_authors and
