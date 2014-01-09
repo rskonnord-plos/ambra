@@ -89,6 +89,7 @@ public class AmendmentServiceImpl implements AmendmentService {
     }
     return amendments;
   }
+
   public void setAmbraServer(String ambraServer) {
     this.ambraServer = ambraServer;
   }
