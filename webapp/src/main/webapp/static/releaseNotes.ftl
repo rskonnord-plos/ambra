@@ -37,7 +37,7 @@
 
   <h2>Ambra 2.9.3</h2>
   <p>Released January 14, 2013</p>
-  <h3>Features Implemented in Ambra 2.9.3<h3>
+  <h3>Features Implemented in Ambra 2.9.3</h3>
   <ul>
      <li>Article page media coverage: fix for incorrect date display</li>
      <li>Article page media coverage: suppression of date display for non-media and blog coverage links</li>
