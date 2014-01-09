@@ -141,7 +141,6 @@
   <bean id="searchService" class="org.ambraproject.service.search.SolrSearchService">
     <property name="serverFactory" ref="solrServerFactory"/>
     <property name="configuration" ref="ambraConfiguration"/>
-    <property name="articleService" ref="articleService" />
   </bean>
 
   <bean id="ambraMailer" class="org.ambraproject.testutils.DummyAmbraMailer">

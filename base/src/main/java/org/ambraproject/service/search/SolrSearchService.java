@@ -18,13 +18,10 @@
 package org.ambraproject.service.search;
 
 import org.ambraproject.ApplicationException;
-import org.ambraproject.models.ArticleRelationship;
-import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.cache.Cache;
 import org.ambraproject.util.Pair;
 import org.ambraproject.views.SearchHit;
 import org.ambraproject.views.SearchResultSinglePage;
-import org.ambraproject.views.article.ArticleType;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -41,12 +38,9 @@ import org.slf4j.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,12 +81,6 @@ public class SolrSearchService implements SearchService {
   //And we want to keep the sorts in the order in which they are defined
   private List displaySorts = null;
   private Map validSorts = null;
-
-  // Used to display amendment types in the search result
-  private ArticleService articleService;
-  public static final String OBJECT_OF_CONCERN_RELATION = "object-of-concern";
-  public static final String RETRACTION_RELATION = "retraction";
-
 
   /**
    * Perform an "all the words" search (across most article fields)
@@ -1041,16 +1029,6 @@ public class SolrSearchService implements SearchService {
         }
       }
 
-      String[] amendment = {null , null};
-      // articleService can be null when this method is called in Queue
-      // The Expression of Concern articles should be excluded because the relationship type
-      // is the same for the original article and the eoc article
-      if (articleService!= null
-              && articleType != null && !articleType.equalsIgnoreCase("Expression of Concern")
-              && id != null) {
-        amendment = hasAmendment(id);
-      }
-
       SearchHit hit = SearchHit.builder()
         .setHitScore(score)
         .setUri(id)
@@ -1065,8 +1043,8 @@ public class SolrSearchService implements SearchService {
         .setHasAssets(figureTableCaptions.size() > 0)
         .setSubjects(flattenedSubjects)
         .setSubjectsPolyhierarchy(subjects)
-        .setAmendmentType(amendment[0])
-        .setAmendmentDoi(amendment[1])
+        //.setAmendmentType(amendment[0])
+        //.setAmendmentDoi(amendment[1])
         .build();
 
       if (log.isDebugEnabled())
@@ -1254,39 +1232,5 @@ public class SolrSearchService implements SearchService {
 
   public void setCache(Cache cache) {
     this.cache = cache;
-  }
-
-
-  public ArticleService getArticleService() {
-    return articleService;
-  }
-
-  public void setArticleService(ArticleService articleService) {
-    this.articleService = articleService;
-  }
-
-  /**
-   * Checks whether a search result has an amendment of type 'object-of-concern' or 'retraction'
-   * @param articleURI the doi of the search result
-   * @return an array containing the amendment type and doi
-   */
-  public String[] hasAmendment(String articleURI) {
-    List<ArticleRelationship> relatedArticles;
-    String[] amendment = new String[2];
-    if (!articleURI.startsWith("info:doi/"))
-      articleURI = "info:doi/" + articleURI;
-    relatedArticles = articleService.getArticleAmendments(articleURI);
-    for (ArticleRelationship relationship : relatedArticles) {
-        if (relationship.getType().equalsIgnoreCase(RETRACTION_RELATION)) {
-          amendment[0] = RETRACTION_RELATION;
-          amendment[1] = relationship.getOtherArticleDoi();
-          break;
-        }
-        if (relationship.getType().equalsIgnoreCase(OBJECT_OF_CONCERN_RELATION)) {
-          amendment[0] = OBJECT_OF_CONCERN_RELATION;
-          amendment[1] = relationship.getOtherArticleDoi();
-        }
-    }
-    return amendment;
   }
 }
