@@ -811,6 +811,47 @@
       <result name="success" type="json"/>
       <result name="error" type="json"/>
     </action>
+    <action name="amendments" class="org.ambraproject.action.article.FetchArticleAmendmentAction">
+      <result name="input" type="json">
+        <param name="excludeProperties">
+          URL,
+          articleURI,
+          authId,
+          currentJournal,
+          locale,
+          rssName,
+          rssPath,
+          texts,
+          permissions
+        </param>
+      </result>
+      <result name="success" type="json">
+        <param name="excludeProperties">
+          URL,
+          articleURI,
+          authId,
+          currentJournal,
+          locale,
+          rssName,
+          rssPath,
+          texts,
+          permissions
+        </param>
+      </result>
+      <result name="error" type="json">
+        <param name="excludeProperties">
+          URL,
+          articleURI,
+          authId,
+          currentJournal,
+          locale,
+          rssName,
+          rssPath,
+          texts,
+          permissions
+        </param>
+      </result>
+    </action>
 
   </package>
 
@@ -841,8 +882,6 @@
         <param name="templateFile">/static/feedError.ftl</param>
       </result>
     </action>
-
-
   </package>
 
   <!--
