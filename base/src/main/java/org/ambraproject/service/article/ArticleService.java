@@ -288,5 +288,5 @@ public interface ArticleService {
    * @return
    * @throws Exception
    */
-  public List getArticleAmendments(final String articleURI) throws DataAccessException;
+  public List getArticleAmendments(String articleDoi) throws DataAccessException;
 }

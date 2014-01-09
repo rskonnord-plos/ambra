@@ -1308,11 +1308,12 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
     return relatedArticleInfo;
   }
 
-  public List<ArticleRelationship> getArticleAmendments(final String articleURI) {
-    List<ArticleRelationship> result;
-    result = hibernateTemplate.find("select relatedArticles from Article as art " +
+  public List<ArticleRelationship> getArticleAmendments(final String articleDoi) {
+    if (articleDoi == null)
+      throw new IllegalArgumentException("articleDoi = null");
+    List<ArticleRelationship> result = hibernateTemplate.find("select relatedArticles from Article as art " +
             "inner join art.relatedArticles as relatedArticles where art.doi = ? " +
-            "and relatedArticles.type in ('object-of-concern' , 'retraction')" , articleURI);
+            "and relatedArticles.type in ('object-of-concern' , 'retraction')" , articleDoi);
     return result;
   }
 }
