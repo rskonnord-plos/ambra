@@ -284,7 +284,7 @@ public interface ArticleService {
    * Returns an article's amendments of type Retraction or Expression of Concern
    * Used in displaying the search results
    *
-   * @param articleURI the article doi
+   * @param articleDoi the article doi
    * @return
    * @throws Exception
    */
