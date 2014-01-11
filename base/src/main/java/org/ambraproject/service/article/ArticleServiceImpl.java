@@ -1311,9 +1311,10 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
   public List<ArticleRelationship> getArticleAmendments(final String articleDoi) {
     if (articleDoi == null)
       throw new IllegalArgumentException("articleDoi = null");
-    List<ArticleRelationship> result = hibernateTemplate.find("select relatedArticles from Article as art " +
-            "inner join art.relatedArticles as relatedArticles where art.doi = ? " +
-            "and relatedArticles.type in ('object-of-concern' , 'retraction')" , articleDoi);
+    List<ArticleRelationship> result = hibernateTemplate.find("select distinct relatedArticles from Article as art " +
+            "inner join art.relatedArticles as relatedArticles inner join art.types as type  where art.doi = ? " +
+            "and relatedArticles.type in ('object-of-concern' , 'retraction') and type not like '%expression-of-concern%'" +
+            "and type not like '%Expression%20of%20Concern%' " , articleDoi);
     return result;
   }
 }
