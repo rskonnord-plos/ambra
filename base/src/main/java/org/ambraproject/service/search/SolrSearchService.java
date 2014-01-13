@@ -886,7 +886,7 @@ public class SolrSearchService implements SearchService {
     // request only fields that we need to display
     query.setFields("id", "score", "title_display", "publication_date", "eissn", "journal", "article_type",
         "author_display", "abstract", "abstract_primary_display", "striking_image", "figure_table_caption",
-        "subject");
+        "subject", "expression_of_concern", "retraction");
     query.addFacetField("subject_facet");
     query.addFacetField("author_facet");
     query.addFacetField("editor_facet");
@@ -1007,7 +1007,8 @@ public class SolrSearchService implements SearchService {
       // TODO create a dedicated field for checking the existence of assets for a given article.
       List<String> figureTableCaptions = SolrServiceUtil.getFieldMultiValue(document, "figure_table_caption", String.class, message);
       List<String> subjects = SolrServiceUtil.getFieldMultiValue(document, "subject", String.class, message);
-
+      String expressionOfconcern = SolrServiceUtil.getFieldValue(document, "expression_of_concern", String.class, message);
+      String retraction = SolrServiceUtil.getFieldValue(document, "retraction", String.class, message);
       String abstractResult = "";
 
       //Use the primary abstract if it exists
@@ -1043,8 +1044,8 @@ public class SolrSearchService implements SearchService {
         .setHasAssets(figureTableCaptions.size() > 0)
         .setSubjects(flattenedSubjects)
         .setSubjectsPolyhierarchy(subjects)
-        //.setAmendmentType(amendment[0])
-        //.setAmendmentDoi(amendment[1])
+        .setExpressionOfConcern(expressionOfconcern)
+        .setRetraction(retraction)
         .build();
 
       if (log.isDebugEnabled())

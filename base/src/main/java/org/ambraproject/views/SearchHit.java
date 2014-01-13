@@ -50,8 +50,8 @@ public class SearchHit implements Serializable {
   private String abstractText;
   private String strikingImage;
   private Boolean hasAssets = Boolean.FALSE;
-  private String amendmentType;
-  private String amendmentDoi;
+  private String expressionOfConcern;
+  private String retraction;
 
   private Collection<String> subjects;
   private Collection<String> subjectsPolyhierarchy;
@@ -74,7 +74,7 @@ public class SearchHit implements Serializable {
                    List<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
                    Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage,
-                   boolean hasAssets, String amendmentType, String amendmentDoi) {
+                   boolean hasAssets, String expressionOfConcern, String retraction) {
     if (hitScore == null) {
       this.hitScore = 0f;
     } else {
@@ -93,8 +93,8 @@ public class SearchHit implements Serializable {
     this.subjectsPolyhierarchy = subjectsPolyhierarchy;
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
-    this.amendmentType = amendmentType;
-    this.amendmentDoi = amendmentDoi;
+    this.expressionOfConcern = expressionOfConcern;
+    this.retraction = retraction;
 
     //Make a list of first, second, third creators
     if(creators != null) {
@@ -229,12 +229,12 @@ public class SearchHit implements Serializable {
     return hasAssets;
   }
 
-  public String getAmendmentType() {
-    return amendmentType;
+  public String getExpressionOfConcern() {
+    return expressionOfConcern;
   }
 
-  public String getAmendmentDoi() {
-    return amendmentDoi;
+  public String getRetraction() {
+    return retraction;
   }
 
   public static Builder builder() {
@@ -260,8 +260,8 @@ public class SearchHit implements Serializable {
     private String abstractText;
     private String strikingImage;
     private Boolean hasAssets = Boolean.FALSE;
-    private String amendmentType;
-    private String amendmentDoi;
+    private String expressionOfConcern;
+    private String retraction;
 
 
     public Builder setHasAssets(Boolean hasAssets) {
@@ -330,13 +330,13 @@ public class SearchHit implements Serializable {
       return this;
     }
 
-    public Builder setAmendmentType(String amendmentType) {
-      this.amendmentType = amendmentType;
+    public Builder setExpressionOfConcern(String expressionOfConcern) {
+      this.expressionOfConcern = expressionOfConcern;
       return this;
     }
 
-    public Builder setAmendmentDoi(String amendmentDoi) {
-      this.amendmentDoi = amendmentDoi;
+    public Builder setRetraction(String retraction) {
+      this.retraction = retraction;
       return this;
     }
 
@@ -361,8 +361,8 @@ public class SearchHit implements Serializable {
           subjectsPolyhierarchy,
           strikingImage,
           hasAssets,
-          amendmentType,
-          amendmentDoi
+          expressionOfConcern,
+          retraction
          );
     }
 
@@ -385,8 +385,8 @@ public class SearchHit implements Serializable {
         ", hasAssets=" + hasAssets +
         ", subjects=" + subjects +
         ", subjectsPolyhierarchy=" + subjectsPolyhierarchy +
-        ", amendmentType=" + amendmentType +
-        ", amendmentDoi=" + amendmentDoi +
+        ", expressionOfConcern=" + expressionOfConcern +
+        ", retraction=" + retraction +
         '}';
   }
 

@@ -2485,7 +2485,8 @@ div.fch_corr {
 }
 
 .eoc-ret_searchHit span {
-    margin-left: 1em;
+    margin-left: .8em;
+    margin-right: .6em;
 }
 
 .eoc-ret_searchHit a {
