@@ -19,6 +19,9 @@
 
 package org.ambraproject.views;
 
+/**
+ * View object for article amendments; currently, used for sending amendments to solr for indexing
+ */
 public class ArticleAmendment {
   private final String parentArticleURI;
   private final String otherArticleDoi;
