@@ -20,6 +20,7 @@ package org.ambraproject.service.article;
 
 import org.ambraproject.ApplicationException;
 import org.ambraproject.models.Article;
+import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.models.Category;
 import org.ambraproject.models.CitedArticle;
 import org.ambraproject.views.CitedArticleView;
@@ -288,5 +289,5 @@ public interface ArticleService {
    * @return
    * @throws Exception
    */
-  public List getArticleAmendments(String articleDoi) throws DataAccessException;
+  public List<ArticleRelationship> getArticleAmendments(String articleDoi) throws DataAccessException;
 }
