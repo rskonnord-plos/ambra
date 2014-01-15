@@ -43,6 +43,9 @@ public class AmendmentServiceImpl implements AmendmentService {
 
   private String ambraServer;
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ArticleAmendment> fetchAmendmentsFromAmbra(String articleDoi) {
     String json = "";
