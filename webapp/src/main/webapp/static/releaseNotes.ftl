@@ -35,6 +35,25 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.3</h2>
+  <p>Released January 14, 2013</p>
+  <h3>Features Implemented in Ambra 2.9.3</h3>
+  <ul>
+     <li>Article page media coverage: fix for incorrect date display</li>
+     <li>Article page media coverage: suppression of date display for non-media and blog coverage links</li>
+     <li>Fixes for minor article page display bugs when navigating the across tabs</li>
+     <li>Population of description tag for CrossRef syndication</li>
+  </ul>
+
+  <h2>Ambra 2.9.2</h2>
+  <p>Released December 26, 2013</p>
+  <h3>Features Implemented in Ambra 2.9.2</h3>
+  <ul>
+     <li>URL validation for crowdsourced media coverage form</li>
+     <li>Fix for advanced search article type facet</li>
+     <li>Reapplying Ambra 2.8.7 mapping for taxonomy synonyms</li>
+  </ul> 
+
   <h2>Ambra 2.9.1</h2>
   <p>Released December 17, 2013</p>
   <h3>Features Implemented in Ambra 2.9.1</h3>

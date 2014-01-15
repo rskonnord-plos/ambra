@@ -66,7 +66,7 @@ public class SearchParameters implements Serializable {
   private String[]      filterSubjectsDisjunction = {}; // Only search in these subjects inclusively (or instead of and)
   private String[]      filterAuthors             = {}; // Only search in these authors
   private String        filterKeyword             = ""; // Only search in this document part
-  private String[]      filterArticleType         = {}; // Only search in these article type
+  private String[]      filterArticleTypes        = {}; // Only search in these article types
   private String[]      filterJournals            = {}; // Only search these Journals. If no elements, then default to the current journal
 
   private Date          filterStartDate           = null; //Only search for articles published in this date range
@@ -135,21 +135,21 @@ public class SearchParameters implements Serializable {
       this.volume = volume.trim();
   }
 
-  public String[] getFilterArticleType() {
-    return filterArticleType;
+  public String[] getFilterArticleTypes() {
+    return filterArticleTypes;
   }
 
-  public void setFilterArticleType(String[] articleTypes) {
+  public void setFilterArticleTypes(String[] articleTypes) {
     if (articleTypes == null || articleTypes.length < 1) {
-      this.filterArticleType = new String[]{};
+      this.filterArticleTypes = new String[]{};
     } else {
       List<String> filterArticleTypeList = new ArrayList<String>();
       for (String articleType : articleTypes) {
         if (articleType != null && articleType.trim().length() > 0)
           filterArticleTypeList.add(articleType.trim());
       }
-      this.filterArticleType = new String[filterArticleTypeList.size()];
-      filterArticleTypeList.toArray(this.filterArticleType);
+      this.filterArticleTypes = new String[filterArticleTypeList.size()];
+      filterArticleTypeList.toArray(this.filterArticleTypes);
     }
   }
 
@@ -329,7 +329,7 @@ public class SearchParameters implements Serializable {
     sp.setVolume(this.getVolume());
     sp.setELocationId(this.getELocationId());
     sp.setId(this.getId());
-    sp.setFilterArticleType(this.getFilterArticleType());
+    sp.setFilterArticleTypes(this.getFilterArticleTypes());
     sp.setFilterKeyword(this.getFilterKeyword());
     sp.setFilterSubjects(this.getFilterSubjects());
     sp.setFilterSubjectsDisjunction(this.getFilterSubjectsDisjunction());
@@ -357,7 +357,7 @@ public class SearchParameters implements Serializable {
         ", filterSubjectsDisjunction=" + (filterSubjectsDisjunction == null ? null : Arrays.asList(filterSubjectsDisjunction)) +
         ", filterAuthors=" + (filterAuthors == null ? null : Arrays.asList(filterAuthors)) +
         ", filterKeyword='" + filterKeyword + "'" +
-        ", filterArticleType="+ (filterArticleType == null ? null : Arrays.asList(filterArticleType)) +
+        ", filterArticleType="+ (filterArticleTypes == null ? null : Arrays.asList(filterArticleTypes)) +
         ", filterJournals=" + (filterJournals == null ? null : Arrays.asList(filterJournals)) +
         ", filterStartDate=" + filterStartDate +
         ", filterEndDate=" + filterEndDate +

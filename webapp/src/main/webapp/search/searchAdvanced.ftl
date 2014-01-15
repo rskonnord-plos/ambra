@@ -173,7 +173,7 @@
           <#if filterReset>
             <fieldset id="filterReset">
               <legend><span>There are no results for this search query.</span></legend>
-              <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleType?size > 1))>
+              <#if ((filterSubjects?size > 0) || (filterJournals?size > 0) || (filterArticleTypes?size > 1))>
                 <ol>
                   <li>You are filtering with the following parameters:</li>
                   <#if (filterSubjects?size > 0)>
@@ -190,15 +190,15 @@
                           and </#if><#else><#if journal_has_next>, </#if></#if></#list></b>
                     </li>
                   </#if>
-                  <#if (filterArticleType?size > 0)>
-                    <li>Article Type: <b><#list filterArticleType as articleType>"${articleType}"
-                      <#if (articleType_index) gt filterArticleType?size - 3><#if articleType_has_next>
+                  <#if (filterArticleTypes?size > 0)>
+                    <li>Article Type: <b><#list filterArticleTypes as articleType>"${articleType}"
+                      <#if (articleType_index) gt filterArticleTypes?size - 3><#if articleType_has_next>
                           and </#if><#else><#if articleType_has_next>, </#if></#if></#list></b>
                     </li>
                   </#if>
                   <li>
                     <div class="btnwrap">
-                      <a class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,filterArticleType,filterJournals,filterSubjects,startPage" values="" />&noSearchFlag=set"/>Clear Filters</a>
+                      <a class="btn" href="${advancedSearchURL}?<@URLParameters parameters=searchParameters names="filterKeyword,filterArticleTypes,filterJournals,filterSubjects,startPage" values="" />&noSearchFlag=set"/>Clear Filters</a>
                     </div>
                   </li>
                 </ol>
@@ -307,11 +307,11 @@
           <fieldset id="artType">
             <legend><span>Filter by Article Type</span></legend>
             <ol>
-              <li><label><input id="articleType_all" type="radio" name="filterArticleTypeOpt" value="all"
-                <#if (filterArticleType?size == 0)> checked</#if> title="Search All Article Types"/> Search all
+              <li><label><input id="articleTypes_all" type="radio" name="filterArticleTypesOpt" value="all"
+                <#if (filterArticleTypes?size == 0)> checked</#if> title="Search All Article Types"/> Search all
                   article types</label></li>
-              <li><label><input id="articleType_some" type="radio" name="filterArticleTypeOpt" value="some"
-                <#if (filterArticleType?size gt 0)> checked</#if> title="Search For Only Selected Article Type"/>
+              <li><label><input id="articleTypes_some" type="radio" name="filterArticleTypesOpt" value="some"
+                <#if (filterArticleTypes?size gt 0)> checked</#if> title="Search For Only Selected Article Type"/>
                   Only look for articles with the following article type:</label></li>
               <li class="options">
                 <fieldset id="fsarticleTypOpt">
@@ -323,13 +323,13 @@
                           <#assign articleTypeId = articleType.name?replace(" ","_","r")?replace("/", "_", "r")>
                           <li>
                             <span class="checkboxWrapper">
-                              <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                                     type="checkbox" <#if (filterArticleType?seq_contains(articleType.name)) > checked</#if>
+                              <input id="filterArticleTypes_${articleTypeId}" name="filterArticleTypes" value="${articleType.name}"
+                                     type="checkbox" <#if (filterArticleTypes?seq_contains(articleType.name)) > checked</#if>
                                      title="Select Article Type ${articleType.name}"
                                      alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
-                              <div onclick="enableCheckboxes('filterArticleType_${articleTypeId}','articleType_some')" class="checkboxOverlay"></div>
+                              <div onclick="enableCheckboxes('filterArticleTypes_${articleTypeId}','articleType_some')" class="checkboxOverlay"></div>
                             </span>
-                            <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+                            <label for="filterArticleTypes_${articleTypeId}">${articleType.name}</label>
                           </li>
                         </#if>
                       </#list>
@@ -340,12 +340,12 @@
                           <#assign articleTypeId = articleType.name?replace(" ","_","r")>
                           <li>
                             <span class="checkboxWrapper">
-                              <input id="filterArticleType_${articleTypeId}" name="filterArticleType" value="${articleType.name}"
-                                     type="checkbox" <#if (filterArticleType?seq_contains(articleType.name)) > checked="true"</#if>
+                              <input id="filterArticleTypes_${articleTypeId}" name="filterArticleTypes" value="${articleType.name}"
+                                     type="checkbox" <#if (filterArticleTypes?seq_contains(articleType.name)) > checked="true"</#if>
                                      title="Select Article Type ${articleType.name}"
                                      alt="Select Article Type ${articleType.name} Check Box"/>&nbsp;
-                              <div onclick="enableCheckboxes('filterArticleType_${articleTypeId}','articleType_some')" class="checkboxOverlay"></div>
-                              <label for="filterArticleType_${articleTypeId}">${articleType.name}</label>
+                              <div onclick="enableCheckboxes('filterArticleTypes_${articleTypeId}','articleTypes_some')" class="checkboxOverlay"></div>
+                              <label for="filterArticleTypes_${articleTypeId}">${articleType.name}</label>
                             </span>
                           </li>
                         </#if>
