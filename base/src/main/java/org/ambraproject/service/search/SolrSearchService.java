@@ -1007,7 +1007,7 @@ public class SolrSearchService implements SearchService {
       // TODO create a dedicated field for checking the existence of assets for a given article.
       List<String> figureTableCaptions = SolrServiceUtil.getFieldMultiValue(document, "figure_table_caption", String.class, message);
       List<String> subjects = SolrServiceUtil.getFieldMultiValue(document, "subject", String.class, message);
-      String expressionOfconcern = SolrServiceUtil.getFieldValue(document, "expression_of_concern", String.class, message);
+      List<String> expressionOfconcern = SolrServiceUtil.getFieldMultiValue(document, "expression_of_concern", String.class, message);
       String retraction = SolrServiceUtil.getFieldValue(document, "retraction", String.class, message);
       String abstractResult = "";
 

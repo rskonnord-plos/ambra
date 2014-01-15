@@ -50,7 +50,7 @@ public class SearchHit implements Serializable {
   private String abstractText;
   private String strikingImage;
   private Boolean hasAssets = Boolean.FALSE;
-  private String expressionOfConcern;
+  private List<String> expressionOfConcern;
   private String retraction;
 
   private Collection<String> subjects;
@@ -74,7 +74,7 @@ public class SearchHit implements Serializable {
                    List<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
                    Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage,
-                   boolean hasAssets, String expressionOfConcern, String retraction) {
+                   boolean hasAssets, List<String> expressionOfConcern, String retraction) {
     if (hitScore == null) {
       this.hitScore = 0f;
     } else {
@@ -229,7 +229,7 @@ public class SearchHit implements Serializable {
     return hasAssets;
   }
 
-  public String getExpressionOfConcern() {
+  public List<String> getExpressionOfConcern() {
     return expressionOfConcern;
   }
 
@@ -260,7 +260,7 @@ public class SearchHit implements Serializable {
     private String abstractText;
     private String strikingImage;
     private Boolean hasAssets = Boolean.FALSE;
-    private String expressionOfConcern;
+    private List<String> expressionOfConcern;
     private String retraction;
 
 
@@ -330,7 +330,7 @@ public class SearchHit implements Serializable {
       return this;
     }
 
-    public Builder setExpressionOfConcern(String expressionOfConcern) {
+    public Builder setExpressionOfConcern(List<String> expressionOfConcern) {
       this.expressionOfConcern = expressionOfConcern;
       return this;
     }
