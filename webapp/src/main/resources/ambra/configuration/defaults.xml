@@ -231,9 +231,10 @@
       <registration>
         <appContext>/ambra-registration</appContext><!-- app context for registration -->
         <url>
-          <base>
-            https://${ambra.network.hosts.cas}:${ambra.network.ports.cas-ssl}${ambra.services.registration.appContext}
-          </base>
+          <base>https://${ambra.network.hosts.cas}:${ambra.network.ports.cas-ssl}${ambra.services.registration.appContext}</base>
+          <orcidConfirm>${ambra.services.registration.url.base}/orcidConfirm.action</orcidConfirm>
+          <orcidAuthenticate>https://orcid.org/oauth/authorize</orcidAuthenticate>
+          <authenticated>${ambra.services.registration.url.base}/authenticated.action</authenticated>
           <!-- properties below are used by pub app to determine where to send the user for certain actions -->
           <registration>${ambra.services.registration.url.base}/register.action</registration>
           <change-password>${ambra.services.registration.url.base}/changePassword.action</change-password>
@@ -270,6 +271,15 @@
       <!-- FIXME: failover:tcp://address:port of ActiveMQ broker -->
       <activemq>tcp://${ambra.network.hosts.default}:61616</activemq>
 
+      <orcid>
+        <url>
+          <register>https://orcid.org/signin</register>
+          <authorizationEndPoint>https://api.orcid.org/oauth/authorize</authorizationEndPoint>
+          <tokenEndPoint>https://api.orcid.org/oauth/token</tokenEndPoint>
+        </url>
+        <client-id>something</client-id>
+        <client-secret>something</client-secret>
+      </orcid>
     </services>
 
     <!-- Define defaults for spring - must be redone soon -->

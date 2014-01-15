@@ -1,10 +1,16 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2007-2014 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -14,9 +20,11 @@ package org.ambraproject.service.user;
 
 import org.ambraproject.models.ArticleView;
 import org.ambraproject.models.UserLogin;
+import org.ambraproject.models.UserOrcid;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.util.Pair;
+import org.ambraproject.views.OrcidAuthorization;
 import org.ambraproject.views.SavedSearchView;
 
 import java.util.List;
@@ -44,6 +52,28 @@ public interface UserService {
    * @return the user specified by the given id
    */
   public UserProfile getUser(Long userId);
+
+  /**
+   * Save the current user's ORCiD information
+   *
+   * @param userProfileId the userProfileId of the account to update
+   * @param orcidAuthorization the orcidAuthorization set of values to update with
+   */
+  public void saveUserOrcid(Long userProfileId, OrcidAuthorization orcidAuthorization);
+
+  /**
+   * Remove any record of the user's ORCiD from our system
+   *
+   * @param userProfileId the userProfileId of the account to update
+   */
+  public void removeUserOrcid(Long userProfileId);
+
+  /**
+   * Fetch the user's orcid data (or null if it does not exist)
+   *
+   * @param userProfileId the userProfileId of the account to fetch
+   */
+  public UserOrcid getUserOrcid(Long userProfileId);
 
   /**
    * Gets the user specified by the authentication ID (CAS ID currently)

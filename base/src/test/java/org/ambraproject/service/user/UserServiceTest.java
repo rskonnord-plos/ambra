@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2006-2013 by Public Library of Science
+ * Copyright (c) 2006-2014 by Public Library of Science
+ *
  * http://plos.org
  * http://ambraproject.org
  *
@@ -7,7 +8,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,16 +25,19 @@ import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserLogin;
+import org.ambraproject.models.UserOrcid;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserRole;
 import org.ambraproject.models.UserSearch;
 import org.ambraproject.service.search.SearchParameters;
+import org.ambraproject.views.OrcidAuthorization;
 import org.ambraproject.views.SavedSearchView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,6 +146,58 @@ public class UserServiceTest extends BaseTest {
         "stored login had incorrect IP");
     assertEquals(storedLogins.get(storedLogins.size() - 1).getSessionId(), login.getSessionId(),
         "stored login had incorrect sessionID");
+  }
+
+  /**
+   * Test the save, fetch and delete of a user's orcid record
+   * @param id
+   * @param userProfile
+   */
+  @Test(dataProvider = "userProfile")
+  public void testUserOrcid(Long id, UserProfile userProfile) {
+    OrcidAuthorization orcidAuth = OrcidAuthorization.builder()
+      .setOrcid("444-444-4444")
+      .setScope("scope")
+      .setRefreshToken("refreshtoken")
+      .setTokenType("tokentype")
+      .setAccessToken("accesstoken")
+      .setExpiresIn(100)
+      .build();
+
+    userService.saveUserOrcid(id, orcidAuth);
+
+    UserOrcid userOrcid = userService.getUserOrcid(id);
+
+    assertEquals(userOrcid.getOrcid(), "444-444-4444");
+    assertEquals(userOrcid.getTokenScope(), "scope");
+    assertEquals(userOrcid.getRefreshToken(), "refreshtoken");
+    assertEquals(userOrcid.getAccessToken(), "accesstoken");
+    //Make sure the fetched expires is in the future.
+    assertTrue(userOrcid.getTokenExpires().after(Calendar.getInstance()));
+
+    //Test update:
+    orcidAuth = OrcidAuthorization.builder()
+      .setOrcid("444-444-4444")
+      .setScope("scope")
+      .setRefreshToken("222refreshtoken2")
+      .setTokenType("tokentype")
+      .setAccessToken("222accesstoken2")
+      .setExpiresIn(100)
+      .build();
+    userService.saveUserOrcid(id, orcidAuth);
+
+    userOrcid = userService.getUserOrcid(id);
+
+    assertEquals(userOrcid.getOrcid(), "444-444-4444");
+    assertEquals(userOrcid.getTokenScope(), "scope");
+    assertEquals(userOrcid.getRefreshToken(), "222refreshtoken2");
+    assertEquals(userOrcid.getAccessToken(), "222accesstoken2");
+    //Make sure the fetched expires is in the future.
+    assertTrue(userOrcid.getTokenExpires().after(Calendar.getInstance()));
+
+    //Test delete
+    userService.removeUserOrcid(id);
+    assertNull(userService.getUserOrcid(id));
   }
 
   @Test(dataProvider = "userProfile")

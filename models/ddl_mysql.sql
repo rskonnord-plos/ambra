@@ -347,6 +347,18 @@
         primary key (userLoginID)
     );
 
+    create table userOrcid (
+        userProfileID bigint not null,
+        lastModified datetime not null,
+        created datetime not null,
+        orcid varchar(25),
+        accessToken varchar(50),
+        refreshToken varchar(50),
+        tokenScope varchar(100),
+        tokenExpires datetime,
+        primary key (userProfileID)
+    );
+
     create table userProfile (
         userProfileID bigint not null auto_increment,
         lastModified datetime not null,

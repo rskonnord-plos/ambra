@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2006-2013 by Public Library of Science
- *     http://plos.org
- *     http://ambraproject.org
+ * Copyright (c) 2007-2014 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ambraproject.service.user;
 
 import com.google.gson.Gson;
@@ -25,6 +25,7 @@ import org.ambraproject.models.SavedSearch;
 import org.ambraproject.models.SavedSearchQuery;
 import org.ambraproject.models.SavedSearchType;
 import org.ambraproject.models.UserLogin;
+import org.ambraproject.models.UserOrcid;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.models.UserSearch;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
@@ -32,6 +33,7 @@ import org.ambraproject.service.permission.PermissionsService;
 import org.ambraproject.service.search.SearchParameters;
 import org.ambraproject.util.Pair;
 import org.ambraproject.util.TextUtils;
+import org.ambraproject.views.OrcidAuthorization;
 import org.ambraproject.views.SavedSearchView;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -52,6 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -397,6 +400,81 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
     } else {
       throw new IllegalArgumentException("Null userId");
     }
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
+  public void saveUserOrcid(Long userProfileId, OrcidAuthorization orcidAuthorization) {
+    UserOrcid userOrcid = (UserOrcid) DataAccessUtils.uniqueResult(
+      hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserOrcid.class)
+          .add(Restrictions.eq("ID", userProfileId))
+          .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+      ));
+
+    boolean isNew = (userOrcid == null);
+    if(isNew) {
+      userOrcid = new UserOrcid();
+      userOrcid.setID(userProfileId);
+    }
+
+    //Note we don't store the token type property of the OrcidAuthorization object.
+    //http://support.orcid.org/knowledgebase/articles/119985-post-oauth-token
+    //The token type for our purposes will always be "bearer"
+
+    userOrcid.setOrcid(orcidAuthorization.getOrcid());
+    userOrcid.setAccessToken(orcidAuthorization.getAccessToken());
+    userOrcid.setRefreshToken(orcidAuthorization.getRefreshToken());
+    userOrcid.setTokenScope(orcidAuthorization.getScope());
+
+    Calendar newExpiresIn = Calendar.getInstance();
+    //expires-in is "seconds from now"
+    newExpiresIn.setTimeInMillis(newExpiresIn.getTimeInMillis() + (orcidAuthorization.getExpiresIn() * 1000));
+    userOrcid.setTokenExpires(newExpiresIn);
+
+    if(isNew) {
+      hibernateTemplate.save(userOrcid);
+    } else {
+      hibernateTemplate.update(userOrcid);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
+  public void removeUserOrcid(Long userProfileId) {
+    UserOrcid userOrcid = (UserOrcid) DataAccessUtils.uniqueResult(
+      hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserOrcid.class)
+          .add(Restrictions.eq("ID", userProfileId))
+          .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+      ));
+
+    if(userOrcid != null) {
+      hibernateTemplate.delete(userOrcid);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
+  public UserOrcid getUserOrcid(Long userProfileId) {
+    UserOrcid userOrcid = (UserOrcid) DataAccessUtils.uniqueResult(
+      hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserOrcid.class)
+          .add(Restrictions.eq("ID", userProfileId))
+          .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+      ));
+
+    return userOrcid;
   }
 
   @Override
