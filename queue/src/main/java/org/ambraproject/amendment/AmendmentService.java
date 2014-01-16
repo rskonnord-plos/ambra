@@ -20,13 +20,12 @@
 
 package org.ambraproject.amendment;
 
-import org.ambraproject.models.ArticleRelationship;
 import org.ambraproject.views.ArticleAmendment;
 
 import java.util.List;
 
 /**
- * A service used to retrieve an article's amendments of type retraction and/or eoc from the database
+ * A service used to retrieve an article's amendments from the database
  */
 public interface AmendmentService {
 
