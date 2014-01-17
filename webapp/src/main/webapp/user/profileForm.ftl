@@ -15,12 +15,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+
 <form name="userForm" id="userForm" action="/user/secure/profile/save" method="post"
 title="User Information Form" class="ambra-form" enctype="multipart/form-data">
   <#if (fieldErrors.size() != 0 && tabID == "profile")>
     <p class="required">Please correct the errors below. </p>
   </#if>
-
+  <#include "/includes/orcid_info.ftl">
   <#--store the email, alerts, and displayName on the page so that they get set on the action when we go back to save-->
   <@s.hidden name="email"/>
   <@s.hidden name="alertsJournals"/>
