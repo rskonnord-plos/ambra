@@ -97,7 +97,7 @@ public class OrcidServiceImpl implements OrcidService {
     //never actually have to use the returned accessToken.  However
     //I am capturing it for future use.
 
-    PostMethod post = createOrcIDAccessTokenQuery(authorizationCode);
+    PostMethod post = createOrcidAccessTokenQuery(authorizationCode);
 
     try {
      long timestamp = System.currentTimeMillis();
@@ -107,14 +107,14 @@ public class OrcidServiceImpl implements OrcidService {
 
       //The error handling here is a bit weird
 
-      //OrcID will return a 500 error if an invalid token is present
+      //ORCiD will return a 500 error if an invalid token is present
       //It will also return this code if the application throws an exception on their end
       //The only way to seemingly disambiguate would be to parse the response text if we
       //want to improve on this later
       //For now, I log the error and return null.
 
-      //OrcID will return 401 when an invalid client-id or client-secret is present
-      //OrcID returns 200 on success
+      //ORCiD will return 401 when an invalid client-id or client-secret is present
+      //ORCiD returns 200 on success
 
       if (response == 200) {
         String result = post.getResponseBodyAsString();
@@ -150,7 +150,7 @@ public class OrcidServiceImpl implements OrcidService {
   }
 
 
-  private PostMethod createOrcIDAccessTokenQuery(String authorizationCode) throws UnsupportedEncodingException {
+  private PostMethod createOrcidAccessTokenQuery(String authorizationCode) throws UnsupportedEncodingException {
     final String query = "code=" + authorizationCode +
       "&redirect_uri=" + URLEncoder.encode(this.redirectURL, "UTF-8") +
       "&client_id=" + this.clientID +
