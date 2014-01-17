@@ -1610,7 +1610,15 @@ var imageURI = getParameterByName("imageURI");
 if (imageURI) {
   var index = imageURI.lastIndexOf(".");
   if (index > 0) {
-    var doi = imageURI.substr(0, index);
+    // for corrections figure doi end in ".xnnn.cn" instead of ".xnnn"
+    var doi = null;
+    if (imageURI.substr(index) == ".cn") {
+      var index2 = imageURI.substr(0, index).lastIndexOf(".");
+      doi = imageURI.substr(0, index2);
+    }
+    else {
+      doi = imageURI.substr(0, index);
+    }
     launchModal(doi, imageURI, 'fig');
   }
 }

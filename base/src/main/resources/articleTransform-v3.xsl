@@ -1044,7 +1044,15 @@
         </xsl:variable>
 
         <xsl:variable name="targetURI">
-          <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
+          <!-- for corrections figure doi ending in ".xnnn.cn" instead of ".xnnn" -->
+          <xsl:choose>
+            <xsl:when test="ends-with($imageURI,'.cn')">
+              <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-8))"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="substring($imageURI, 1, (string-length($imageURI)-5))"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:variable>
 
         <div class="figure">
