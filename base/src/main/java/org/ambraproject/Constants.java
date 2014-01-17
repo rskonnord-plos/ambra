@@ -32,7 +32,6 @@ public interface Constants {
   String USER_ID_KEY = "org.ambraproject.user-id";
   String AUTH_KEY = CASFilter.CAS_FILTER_USER;
   String SINGLE_SIGNON_RECEIPT = CASFilter.CAS_FILTER_RECEIPT;
-  String SINGLE_SIGNON_LOGIN_TOKEN = "org.ambraproject.sso.login.token";
   String SINGLE_SIGNON_EMAIL_KEY = "org.ambraproject.sso.email";
   /** Authentication method used for anonymous user, otherwise it is normally CAS */
   String ANONYMOUS_USER_AUTHENTICATION = "ANONYMOUS_USER_AUTHENTICATION";
