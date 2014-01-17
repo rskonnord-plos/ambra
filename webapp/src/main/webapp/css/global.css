@@ -2395,68 +2395,68 @@ div.fch {
   margin-bottom: 1em;
 }
 
-.eoc-ret_title {
-    width: auto;
-    height: 16px;
-    margin-bottom:1.5em;
+.eoc-ret-title {
+  width: auto;
+  height: 16px;
+  margin-bottom:1.5em;
 }
 
-.eoc-ret_title span, .eoc-ret_header {
-    width: 14px;
-    height: 15px;
-    display: inline-block;
-    background: url(../images/icon-ExpOfConcern-retraction.png) no-repeat;
-    margin-right: 0.3em;
+.eoc-ret-title span, .eoc-ret-header, .eoc-ret-searchHit span {
+  width: 14px;
+  height: 15px;
+  display: inline-block;
+  background: url(../images/icon-ExpOfConcern-retraction.png) no-repeat;
+  margin-right: 0.3em;
 }
 
-.eoc-ret_title strong {
-    font-size: 17px;
+.eoc-ret-title strong {
+  font-size: 17px;
 }
 
 .fch .citation a {
-    color: #3c63af;
-    font-weight: bold;
+  color: #3c63af;
+  font-weight: bold;
 }
 
 .fch .citation .date {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 div.fch_corr {
-    background:#efefef;
-    padding: 18px 20px 15px;
-    margin-bottom: 1em;
+  background:#efefef;
+  padding: 18px 20px 15px;
+  margin-bottom: 1em;
 }
 
 .corr_title span, .corr_header {
-    width: 13px;
-    height: 15px;
-    display: inline-block;
-    background: url(../images/icon-correction.png) no-repeat;
-    margin-right: 0.3em;
+  width: 13px;
+  height: 15px;
+  display: inline-block;
+  background: url(../images/icon-correction.png) no-repeat;
+  margin-right: 0.3em;
 }
 
 .corr_title strong {
-    font-size: 17px;
+  font-size: 17px;
 }
 
 .corr_title {
-    width: auto;
-    height: 16px;
-    margin-bottom:1.5em;
+  width: auto;
+  height: 16px;
+  margin-bottom:1.5em;
 }
 
 .fch_corr .citation li {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .fch_corr .citation a {
-    color: #3c63af;
-    font-weight: bold;
+  color: #3c63af;
+  font-weight: bold;
 }
 
 .fch_corr .citation .date {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* Amendment left nav */
@@ -2466,8 +2466,41 @@ div.fch_corr {
 }
 
 #nav-article-page li.corrections a {
-    color: #333333;
-    font-weight: bold;
+  color: #333333;
+  font-weight: bold;
+}
+
+/* Amendments in Search Results*/
+.eoc-ret-searchHit {
+  background: #fce2e5;
+  width: 18em;
+  height: 2em;
+  padding-top: 0.5em;
+  padding-right: 1em;
+  margin-top: -0.4em;
+}
+
+.eoc-ret-searchHit div:first-of-type {
+  float: left;
+}
+
+.eoc-ret-searchHit span {
+  margin-left: .8em;
+  margin-right: .6em;
+}
+
+.eoc-ret-searchHit a {
+  color: #e53350;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.eoc-ret-searchHit-fig {
+  width: 277px;
+  padding-right: 0em;
+  position: absolute;
+  z-index: 1;
+  top: 13em;
 }
 
 span.genus-species {

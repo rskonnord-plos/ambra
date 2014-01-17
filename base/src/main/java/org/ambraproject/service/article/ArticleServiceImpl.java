@@ -57,6 +57,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
@@ -1305,5 +1306,16 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
       relatedArticleInfo.setAt(otherArticle.getTypes());
     }
     return relatedArticleInfo;
+  }
+
+  public List<ArticleRelationship> getArticleAmendments(final String articleDoi) {
+    if (articleDoi == null)
+      throw new IllegalArgumentException("articleDoi = null");
+    // TODO: order the amendments by date
+    List<ArticleRelationship> result = hibernateTemplate.find("select distinct relatedArticles from Article as art " +
+            "inner join art.relatedArticles as relatedArticles inner join art.types as type  where art.doi = ? " +
+            "and relatedArticles.type in ('object-of-concern' , 'retraction', 'correction-forward') and type not like '%expression-of-concern%'" +
+            "and type not like '%Expression%20of%20Concern%'" , articleDoi);
+    return result;
   }
 }

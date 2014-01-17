@@ -50,6 +50,9 @@ public class SearchHit implements Serializable {
   private String abstractText;
   private String strikingImage;
   private Boolean hasAssets = Boolean.FALSE;
+  private List<String> expressionOfConcern;
+  private String retraction;
+
   private Collection<String> subjects;
   private Collection<String> subjectsPolyhierarchy;
 
@@ -70,7 +73,8 @@ public class SearchHit implements Serializable {
   public SearchHit(Float hitScore, String uri, String title,
                    List<String> creators, Date date, String issn,
                    String journalTitle, String articleTypeForDisplay, String abstractText,
-                   Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage, boolean hasAssets) {
+                   Collection<String> subjects, Collection<String> subjectsPolyhierarchy, String strikingImage,
+                   boolean hasAssets, List<String> expressionOfConcern, String retraction) {
     if (hitScore == null) {
       this.hitScore = 0f;
     } else {
@@ -89,6 +93,8 @@ public class SearchHit implements Serializable {
     this.subjectsPolyhierarchy = subjectsPolyhierarchy;
     this.strikingImage = strikingImage;
     this.hasAssets = hasAssets;
+    this.expressionOfConcern = expressionOfConcern;
+    this.retraction = retraction;
 
     //Make a list of first, second, third creators
     if(creators != null) {
@@ -223,6 +229,14 @@ public class SearchHit implements Serializable {
     return hasAssets;
   }
 
+  public List<String> getExpressionOfConcern() {
+    return expressionOfConcern;
+  }
+
+  public String getRetraction() {
+    return retraction;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -246,6 +260,9 @@ public class SearchHit implements Serializable {
     private String abstractText;
     private String strikingImage;
     private Boolean hasAssets = Boolean.FALSE;
+    private List<String> expressionOfConcern;
+    private String retraction;
+
 
     public Builder setHasAssets(Boolean hasAssets) {
       this.hasAssets = hasAssets;
@@ -313,10 +330,21 @@ public class SearchHit implements Serializable {
       return this;
     }
 
+    public Builder setExpressionOfConcern(List<String> expressionOfConcern) {
+      this.expressionOfConcern = expressionOfConcern;
+      return this;
+    }
+
+    public Builder setRetraction(String retraction) {
+      this.retraction = retraction;
+      return this;
+    }
+
     public Builder setStrikingImage(String strikingImage) {
       this.strikingImage = strikingImage;
       return this;
     }
+
 
     public SearchHit build() {
       return new SearchHit(
@@ -332,7 +360,10 @@ public class SearchHit implements Serializable {
           subjects,
           subjectsPolyhierarchy,
           strikingImage,
-          hasAssets);
+          hasAssets,
+          expressionOfConcern,
+          retraction
+         );
     }
 
   }
@@ -354,6 +385,8 @@ public class SearchHit implements Serializable {
         ", hasAssets=" + hasAssets +
         ", subjects=" + subjects +
         ", subjectsPolyhierarchy=" + subjectsPolyhierarchy +
+        ", expressionOfConcern=" + expressionOfConcern +
+        ", retraction=" + retraction +
         '}';
   }
 
