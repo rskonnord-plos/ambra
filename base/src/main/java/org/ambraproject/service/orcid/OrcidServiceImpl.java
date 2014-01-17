@@ -135,10 +135,9 @@ public class OrcidServiceImpl implements OrcidService {
         }
 
         log.error("Received empty response, response code {}, when executing query  {}", response, post.getURI().toString());
-        throw new Exception("Received empty response from ORCiD");
-
+        throw new IOException("Received empty response from ORCiD");
       } else if (response == 401) {
-        throw new Exception("Invalid client ID or secret not defined for ORCiD, check your ambra configuration");
+        throw new OrcidAuthorizationException("Invalid client ID or secret not defined for ORCiD, check your ambra configuration");
       } else {
         log.error("Received response code {} when executing query {}", response, post.getURI().toString());
         log.error("Received response body: {}", post.getResponseBodyAsString());

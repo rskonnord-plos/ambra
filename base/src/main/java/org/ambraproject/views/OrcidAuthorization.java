@@ -39,13 +39,13 @@ public class OrcidAuthorization {
   private final String scope;
   private final String orcid;
 
-  private OrcidAuthorization(String accessToken, String tokenType, String refreshToken, long expiresIn, String scope, String orcid) {
-    this.accessToken = accessToken;
-    this.tokenType = tokenType;
-    this.refreshToken = refreshToken;
-    this.expiresIn = expiresIn;
-    this.scope = scope;
-    this.orcid = orcid;
+  private OrcidAuthorization(Builder builder) {
+    this.accessToken = builder.accessToken;
+    this.tokenType = builder.tokenType;
+    this.refreshToken = builder.refreshToken;
+    this.expiresIn = builder.expiresIn;
+    this.scope = builder.scope;
+    this.orcid = builder.orcid;
   }
 
   public String getAccessToken() {
@@ -119,13 +119,7 @@ public class OrcidAuthorization {
     }
 
     public OrcidAuthorization build() {
-      return new OrcidAuthorization(
-        this.accessToken,
-        this.tokenType,
-        this.refreshToken,
-        this.expiresIn,
-        this.scope,
-        this.orcid);
+      return new OrcidAuthorization(this);
     }
   }
 }
