@@ -6109,3 +6109,77 @@ form.standard .note{
 a#media-coverage-form-link {
   cursor: pointer;
 }
+
+.panel {
+    border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 35px;
+}
+
+.panel.orcid-info .left {
+    width: 35%;
+    margin-right: 10px;
+    float: left;
+    font-size: 16px;
+}
+
+.panel.orcid-info .left.border {
+    border-right: 1px solid #ccc;
+}
+
+.panel.orcid-info .left p{
+    margin-bottom: 0.25em;
+}
+
+.panel.orcid-info .right {
+    width: 65%;
+    float: left;
+}
+
+.panel.orcid-info .right {
+    width: 60%;
+    float: left;
+}
+
+.panel.orcid-info.short{
+     width: 50%;
+}
+
+.panel.orcid-info.short .left{
+    margin-right: 5px;
+}
+
+.panel.orcid-info.short .right{
+    margin-right: 5px;
+    padding-top: .5em;
+}
+.icon {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.icon.check {
+    background: url('/images/icon-check.png') no-repeat 2px 0;
+    height: 14px;
+    width: 18px;
+}
+
+.image-text {
+    display: block;
+    text-indent: -2000px;
+}
+
+.image-text.orcid {
+    background: url('/images/logo-orcid.png') no-repeat 0 0;
+    width: 140px;
+    height: 43px;
+    margin-bottom: 10px;
+}
+
+.success {
+    color: #16A127;
+    font-size: 16px;
+}
+
