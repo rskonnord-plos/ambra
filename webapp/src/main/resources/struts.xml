@@ -1011,6 +1011,18 @@
       </result>
     </action>
 
+    <action name="orcidconfirm" class="org.ambraproject.action.user.OrcidConfirmAction">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/orcidConfirmed.ftl</param>
+      </result>
+      <result name="error" type="generic_freemarker">
+        <param name="templateFile">/user/orcidFailed.ftl</param>
+      </result>
+      <result name="denied" type="generic_freemarker">
+        <param name="templateFile">/user/orcidDenied.ftl</param>
+      </result>
+    </action>
+
     <action name="saveProfile" class="org.ambraproject.action.user.EditUserAction" method="saveUser">
       <result name="success" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>

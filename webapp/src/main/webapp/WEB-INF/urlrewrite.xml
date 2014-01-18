@@ -67,6 +67,15 @@
 
   <rule>
     <note>
+      re-write incoming confirm orcid requests.
+      /user/secure/profile/orcid/confirm -> /user/secure/orcidconfirm.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/orcid/confirm?(.*)$</from>
+    <to>$1/user/secure/orcidconfirm.action?$2</to>
+  </rule>
+
+  <rule>
+    <note>
       re-write incoming save user profile requests.
       /user/secure/profile/save -> /user/secure/saveProfile.action
     </note>

@@ -22,7 +22,12 @@ title="User Information Form" class="ambra-form" enctype="multipart/form-data">
   <#if (fieldErrors.size() != 0 && tabID == "profile")>
     <p class="required">Please correct the errors below. </p>
   </#if>
-  <#include "/includes/orcid_info.ftl">
+  <#if orcid??>
+    <#include "/includes/orcid_status.ftl">
+  <#else>
+    <#include "/includes/orcid_info.ftl">
+  </#if>
+
   <#--store the email, alerts, and displayName on the page so that they get set on the action when we go back to save-->
   <@s.hidden name="email"/>
   <@s.hidden name="alertsJournals"/>

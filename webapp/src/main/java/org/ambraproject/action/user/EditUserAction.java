@@ -21,10 +21,15 @@ package org.ambraproject.action.user;
 import org.ambraproject.Constants;
 import org.ambraproject.models.Journal;
 import org.ambraproject.models.SavedSearchType;
+import org.ambraproject.models.UserOrcid;
 import org.ambraproject.models.UserProfile;
+import org.ambraproject.service.orcid.OrcidService;
 import org.ambraproject.service.user.UserAlert;
 import org.ambraproject.views.SavedSearchView;
+import org.apache.http.HttpHeaders;
+import org.apache.struts2.interceptor.ServletRequestAware;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,9 +40,16 @@ import java.util.Set;
  * @author Joe Osowski 04/12/2013
  * @author Alex Kudlick 10/23/12
  */
-public class EditUserAction extends UserActionSupport {
-
+public class EditUserAction extends UserActionSupport implements ServletRequestAware {
   private List<SavedSearchView> savedSearches;
+  private OrcidService orcidService;
+
+  private String orcid;
+  private String clientID;
+  private String scope;
+  private String orcidAuth;
+  private String redirectURL;
+  private HttpServletRequest request;
 
   //tabID maps to tabs defined in user.js
   private String tabID = "profile";
@@ -85,6 +97,18 @@ public class EditUserAction extends UserActionSupport {
         weeklyAlerts.add(curJournal.toLowerCase());
       }
     }
+
+    UserOrcid userOrcid = userService.getUserOrcid(userProfile.getID());
+
+    if(userOrcid != null) {
+      orcid = userOrcid.getOrcid();
+    }
+
+    clientID = orcidService.getClientID();
+    scope = orcidService.getScope();
+    orcidAuth = configuration.getString(OrcidService.ORCID_AUTHORIZATION_URL);
+    //TODO: Better way to handle this?  Config?
+    redirectURL = "http://" + request.getHeader(HttpHeaders.HOST) + "/user/secure/profile/orcid/confirm";
 
     return SUCCESS;
   }
@@ -233,7 +257,33 @@ public class EditUserAction extends UserActionSupport {
     return tabID;
   }
 
+  public String getOrcid() {
+    return orcid;
+  }
+
+  public String getClientID() {
+    return clientID;
+  }
+
+  public String getScope() {
+    return scope;
+  }
+
+  public String getOrcidAuth() {
+    return orcidAuth;
+  }
+
+  public String getRedirectURL() {
+    return redirectURL;
+  }
+
   public Collection<SavedSearchView> getUserSearchAlerts() throws Exception {
     return savedSearches;
   }
+
+  public void setOrcidService(OrcidService orcidService) {
+    this.orcidService = orcidService;
+  }
+
+  public void setServletRequest(HttpServletRequest request) { this.request = request; }
 }

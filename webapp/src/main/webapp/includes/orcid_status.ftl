@@ -4,9 +4,9 @@
 
     </div>
     <div class="right ">
-        <p>Your ORCid account: <strong><a href="blah!">0000-0002-1825-0777</a></strong><br />
-            is linked to your PLOS account. <strong><a href="blah!">De-link</a></strong>
-
+        <#-- Change orcURL to be production -->
+        <p>Your ORCiD account: <strong><a href="http://sandbox-1.orcid.org/${orcid}">${orcid}</a></strong><br />
+            is linked to your Ambra account. <strong><a href="blah!">De-link</a></strong>
         </p>
     </div>
 </div>

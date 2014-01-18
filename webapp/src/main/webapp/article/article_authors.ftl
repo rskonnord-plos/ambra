@@ -1,5 +1,3 @@
-<#import "/article/article_variables.ftl" as article>
-
 <div id="pagebdy-wrap">
   <div id="pagebdy">
 
