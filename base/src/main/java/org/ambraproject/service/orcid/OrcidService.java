@@ -27,7 +27,7 @@ import org.ambraproject.views.OrcidAuthorization;
  */
 public interface OrcidService {
   //Key for property stored in the ambra configuration
-  public static final String ORCID_AUTHORIZATION_URL = "ambra.services.orcid.authorizationEndPoint";
+  public static final String ORCID_AUTHORIZATION_URL = "ambra.services.orcid.url.authorizationEndPoint";
 
   /**
    * When the user has granted us access to ORCiD.  We're given an authorization token.  Using this token query ORCiD

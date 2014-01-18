@@ -433,4 +433,11 @@
     <property name="sessionFactory" ref="hibernateSessionFactory" />
   </bean>
 
+  <bean id="orcidService" class="org.ambraproject.service.orcid.OrcidServiceImpl">
+    <property name="httpClient" ref="httpClient"/>
+    <property name="clientID" value="${ambra.services.orcid.client-id}" />
+    <property name="clientSecret" value="${ambra.services.orcid.client-secret}" />
+    <property name="tokenEndPoint" value="${ambra.services.orcid.url.tokenEndPoint}" />
+  </bean>
+
 </beans>

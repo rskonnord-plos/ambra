@@ -42,7 +42,6 @@ public class OrcidServiceImplTest {
     service.setHttpClient(mockHttpClient);
     service.setClientID("bleh");
     service.setClientSecret("bleh");
-    service.setRedirectURL("http://bleh.org");
     service.setTokenEndPoint("http://bleh.org");
 
     OrcidAuthorization orcidAuth = service.authorizeUser("blehcode");
@@ -71,7 +70,6 @@ public class OrcidServiceImplTest {
     service.setHttpClient(mockHttpClient);
     service.setClientID("bleh");
     service.setClientSecret("bleh");
-    service.setRedirectURL("http://bleh.org");
     service.setTokenEndPoint("http://bleh.org");
 
     OrcidAuthorization orcidAuth = service.authorizeUser("blehcode");
@@ -93,7 +91,6 @@ public class OrcidServiceImplTest {
     service.setHttpClient(mockHttpClient);
     service.setClientID("bleh");
     service.setClientSecret("bleh");
-    service.setRedirectURL("http://bleh.org");
     service.setTokenEndPoint("http://bleh.org");
 
     service.authorizeUser("blehcode");
@@ -115,7 +112,6 @@ public class OrcidServiceImplTest {
     service.setHttpClient(mockHttpClient);
     service.setClientID("bleh");
     service.setClientSecret("bleh");
-    service.setRedirectURL("http://bleh.org");
     service.setTokenEndPoint("http://bleh.org");
 
     service.authorizeUser("blehcode");

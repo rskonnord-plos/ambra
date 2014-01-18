@@ -48,7 +48,6 @@ public class OrcidServiceImpl implements OrcidService {
   private HttpClient httpClient;
   private String clientID;
   private String clientSecret;
-  private String redirectURL;
 
   /**
    * This sets the access level to request of ORCiD
@@ -152,7 +151,6 @@ public class OrcidServiceImpl implements OrcidService {
 
   private PostMethod createOrcidAccessTokenQuery(String authorizationCode) throws UnsupportedEncodingException {
     final String query = "code=" + authorizationCode +
-      "&redirect_uri=" + URLEncoder.encode(this.redirectURL, "UTF-8") +
       "&client_id=" + this.clientID +
       "&scope=" + URLEncoder.encode(API_SCOPE, "UTF-8") +
       "&client_secret=" + this.clientSecret +
@@ -194,10 +192,6 @@ public class OrcidServiceImpl implements OrcidService {
 
   public void setClientID(String clientID) {
     this.clientID = clientID;
-  }
-
-  public void setRedirectURL(String redirectURL) {
-    this.redirectURL = redirectURL;
   }
 
   public void setClientSecret(String clientSecret) {
