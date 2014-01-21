@@ -173,11 +173,29 @@
     <property name="browseService" ref="browseService"/>
   </bean>
 
+  <bean id="mockHttpClient" class="org.apache.commons.httpclient.HttpClientMock">
+    <!-- Fake response code and body defined below -->
+    <constructor-arg index="0" value="200"/>
+    <!-- Fake response for orcid -->
+    <constructor-arg index="1" value="{&quot;access_token&quot;:&quot;8056b6d5-f96d-42c8-8df9-41f70908ad33&quot;,&quot;token_type&quot;:&quot;bearer&quot;,&quot;refresh_token&quot;:&quot;d8c72880-00ac-4447-a2af-e90f1673f4bc&quot;,&quot;expires_in&quot;:631135971,&quot;,&quot;scope&quot;:&quot;/orcid-profile/read-limited&quot;,&quot;orcid&quot;:&quot;0000-0003-4954-7894&quot;}"/>
+  </bean>
+
+  <bean id="orcidService" class="org.ambraproject.service.orcid.OrcidServiceImpl">
+    <property name="httpClient" ref="mockHttpClient"/>
+    <property name="clientID" value="foo" />
+    <property name="clientSecret" value="foo" />
+    <property name="tokenEndPoint" value="foo" />
+  </bean>
+
+  <bean id="mockRequest" class="org.springframework.mock.web.MockHttpServletRequest" />
+  
   <bean id="editUserAction" class="org.ambraproject.action.user.EditUserAction">
     <property name="permissionsService" ref="permissionsService"/>
     <property name="journalService" ref="journalService"/>
     <property name="userService" ref="userService"/>
     <property name="ambraConfiguration" ref="ambraConfiguration"/>
+    <property name="orcidService" ref="orcidService"/>
+    <property name="servletRequest" ref="mockRequest"/>
     <property name="profanityCheckingService" ref="profanityCheckingService"/>
   </bean>
 
