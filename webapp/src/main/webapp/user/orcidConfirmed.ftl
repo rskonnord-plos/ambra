@@ -17,10 +17,11 @@
   limitations under the License.
 -->
 <#-- begin : main content -->
+<@s.url id="profileURL" action="editProfile" namespace="/user/secure" />
 <div id="pagebdy">
   <h1>Your ORCiD has been confirmed</h1>
   <p><strong>Your ORCiD has been confirmed and is set to: ${orcid}</strong></p>
-  <p>You may now continue to your profile</p>
+  <p>You may now continue to your <a href="${profileURL}">profile</a></p>
 </div>
 <#-- end : main contents -->
 
