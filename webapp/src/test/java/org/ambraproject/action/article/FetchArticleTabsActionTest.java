@@ -125,7 +125,7 @@ public class FetchArticleTabsActionTest extends FetchActionTest {
     ArticleRelationship eocRelationship = new ArticleRelationship();
     eocRelationship.setParentArticle(getArticleToFetch());
     eocRelationship.setOtherArticleID(Long.valueOf(dummyDataStore.store(eocArticle)));
-    eocRelationship.setType("object-of-concern");
+    eocRelationship.setType("expressed-concern");
     eocRelationship.setOtherArticleDoi(eocArticle.getDoi());
     articleRelationships.add(eocRelationship);
     getArticleToFetch().setRelatedArticles(articleRelationships);

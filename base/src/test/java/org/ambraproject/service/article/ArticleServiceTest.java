@@ -775,7 +775,7 @@ public class ArticleServiceTest extends BaseTest {
     ArticleRelationship eocRelationship = new ArticleRelationship();
     eocRelationship.setParentArticle(article);
     eocRelationship.setOtherArticleID(Long.valueOf(dummyDataStore.store(eocArticle)));
-    eocRelationship.setType("object-of-concern");
+    eocRelationship.setType("expressed-concern");
 
     eocRelationship.setOtherArticleDoi(eocArticle.getDoi());
     articleRelationships.add(eocRelationship);

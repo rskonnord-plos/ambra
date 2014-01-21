@@ -89,7 +89,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
    * Returned by fetchArticle() when the given DOI is not in the repository.
    */
   public static final String ARTICLE_NOT_FOUND = "articleNotFound";
-  public static final String OBJECT_OF_CONCERN_RELATION = "object-of-concern";
+  public static final String EXPRESSION_OF_CONCERN_RELATION = "expressed-concern";
   public static final String CORRECTION_RELATION = "correction-forward";
   public static final String RETRACTION_RELATION = "retraction";
 
@@ -189,7 +189,7 @@ public class FetchArticleTabsAction extends BaseSessionAwareActionSupport implem
               break;
             }
 
-            if (OBJECT_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
+            if (EXPRESSION_OF_CONCERN_RELATION.equalsIgnoreCase(relatedArticleInfo.getRelationType()) &&
                     articleService.isEocArticle(relatedArticleInfo)) {
 
               expressionOfConcern = this.fetchArticleService.getAmendmentBody(document);

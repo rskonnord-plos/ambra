@@ -35,12 +35,14 @@ public class ArticleRelationship extends AmbraEntity {
   private Long otherArticleID;
   private String otherArticleDoi;
   private String type;
+  // from original article to amendments
   private static final Set<String> ORIGINAL_ARTICLE_AMENDMENT_TYPE = new HashSet<String>();
+  // from amendment to original article defined in xml
   private static final Set<String> AMENDMENT_ARTICLE_RELATIONSHIP_TYPE = new HashSet<String>();
 
   static {
     ORIGINAL_ARTICLE_AMENDMENT_TYPE.add("correction-forward");
-    ORIGINAL_ARTICLE_AMENDMENT_TYPE.add("object-of-concern");
+    ORIGINAL_ARTICLE_AMENDMENT_TYPE.add("expressed-concern");
     ORIGINAL_ARTICLE_AMENDMENT_TYPE.add("retraction");
     AMENDMENT_ARTICLE_RELATIONSHIP_TYPE.add("corrected-article");
     AMENDMENT_ARTICLE_RELATIONSHIP_TYPE.add("retracted-article");
