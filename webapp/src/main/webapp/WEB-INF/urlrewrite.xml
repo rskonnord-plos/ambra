@@ -76,6 +76,24 @@
 
   <rule>
     <note>
+      re-write incoming remove orcid requests.
+      /user/secure/profile/orcid/remove -> /user/secure/orcidRemove.action
+    </note>
+    <from>^(/.+)?/user/secure/profile/orcid/remove$</from>
+    <to>$1/user/secure/orcidRemove.action</to>
+  </rule>
+
+  <outbound-rule>
+    <note>
+      re-write outbound remove orcid requests.
+      /user/secure/orcidRemove.action -> /user/secure/profile/orcid/remove
+    </note>
+    <from>^(/.+)?/user/secure/orcidRemove.action$</from>
+    <to>$1/user/secure/profile/orcid/remove</to>
+  </outbound-rule>
+
+  <rule>
+    <note>
       re-write incoming save user profile requests.
       /user/secure/profile/save -> /user/secure/saveProfile.action
     </note>

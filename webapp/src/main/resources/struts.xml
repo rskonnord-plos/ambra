@@ -1011,6 +1011,15 @@
       </result>
     </action>
 
+    <action name="orcidRemove" class="org.ambraproject.action.user.OrcidRemoveAction">
+      <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/orcidRemoved.ftl</param>
+      </result>
+      <result name="login" type="generic_freemarker">
+        <param name="templateFile">/user/orcidFailed.ftl</param>
+      </result>
+    </action>
+
     <action name="orcidconfirm" class="org.ambraproject.action.user.OrcidConfirmAction">
       <result name="success" type="generic_freemarker">
         <param name="templateFile">/user/orcidConfirmed.ftl</param>
