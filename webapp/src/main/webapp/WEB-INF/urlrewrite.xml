@@ -68,10 +68,10 @@
   <rule>
     <note>
       re-write incoming confirm orcid requests.
-      /user/secure/profile/orcid/confirm -> /user/secure/orcidconfirm.action
+      /user/secure/profile/orcid/confirm -> /user/secure/orcidConfirm.action
     </note>
     <from>^(/.+)?/user/secure/profile/orcid/confirm?(.*)$</from>
-    <to>$1/user/secure/orcidconfirm.action?$2</to>
+    <to>$1/user/secure/orcidConfirm.action?$2</to>
   </rule>
 
   <rule>

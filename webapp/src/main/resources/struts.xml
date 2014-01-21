@@ -1020,7 +1020,7 @@
       </result>
     </action>
 
-    <action name="orcidconfirm" class="org.ambraproject.action.user.OrcidConfirmAction">
+    <action name="orcidConfirm" class="org.ambraproject.action.user.OrcidConfirmAction">
       <result name="success" type="generic_freemarker">
         <param name="templateFile">/user/orcidConfirmed.ftl</param>
       </result>
