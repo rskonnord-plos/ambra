@@ -154,7 +154,9 @@ public class UserServiceTest extends BaseTest {
    * @param userProfile
    */
   @Test(dataProvider = "userProfile")
-  public void testUserOrcid(Long id, UserProfile userProfile) {
+  public void testUserOrcid(Long id, UserProfile userProfile) throws Exception {
+    dummyDataStore.deleteAll(UserOrcid.class);
+
     OrcidAuthorization orcidAuth = OrcidAuthorization.builder()
       .setOrcid("444-444-4444")
       .setScope("scope")
@@ -199,6 +201,41 @@ public class UserServiceTest extends BaseTest {
     userService.removeUserOrcid(id);
     assertNull(userService.getUserOrcid(id));
   }
+
+  @Test(expectedExceptions = DuplicateOrcidException.class)
+  public void testDuplicateUserOrcid() throws Exception {
+    dummyDataStore.deleteAll(UserOrcid.class);
+    dummyDataStore.deleteAll(UserProfile.class);
+
+    UserProfile userProfile = new UserProfile();
+    userProfile.setDisplayName("nameForTestLogin");
+    userProfile.setEmail("emailForTest1@Login.org");
+    userProfile.setAuthId("authIdForTestLogin1");
+    userProfile.setPassword("pass");
+    Long id = Long.valueOf(dummyDataStore.store(userProfile));
+
+    OrcidAuthorization orcidAuth = OrcidAuthorization.builder()
+      .setOrcid("444-444-4444")
+      .setScope("scope")
+      .setRefreshToken("refreshtoken")
+      .setTokenType("tokentype")
+      .setAccessToken("accesstoken")
+      .setExpiresIn(100)
+      .build();
+
+    userService.saveUserOrcid(id, orcidAuth);
+
+    userProfile = new UserProfile();
+    userProfile.setDisplayName("nameForTestLogin2");
+    userProfile.setEmail("emailForTest2@Login.org");
+    userProfile.setAuthId("authIdForTestLogin2");
+    userProfile.setPassword("pass2");
+    Long id2 = Long.valueOf(dummyDataStore.store(userProfile));
+
+    userService.saveUserOrcid(id2, orcidAuth);
+  }
+
+  //DuplicateOrcidException
 
   @Test(dataProvider = "userProfile")
   public void testRecordArticleView(Long userId, UserProfile userProfile) {

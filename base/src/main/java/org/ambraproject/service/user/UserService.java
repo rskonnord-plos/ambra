@@ -59,7 +59,7 @@ public interface UserService {
    * @param userProfileId the userProfileId of the account to update
    * @param orcidAuthorization the orcidAuthorization set of values to update with
    */
-  public void saveUserOrcid(Long userProfileId, OrcidAuthorization orcidAuthorization);
+  public void saveUserOrcid(Long userProfileId, OrcidAuthorization orcidAuthorization) throws DuplicateOrcidException;
 
   /**
    * Remove any record of the user's ORCiD from our system

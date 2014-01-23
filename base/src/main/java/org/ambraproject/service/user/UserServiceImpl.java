@@ -408,8 +408,20 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
    */
   @Override
   @Transactional
-  public void saveUserOrcid(Long userProfileId, OrcidAuthorization orcidAuthorization) {
+  public void saveUserOrcid(Long userProfileId, OrcidAuthorization orcidAuthorization) throws DuplicateOrcidException {
     UserOrcid userOrcid = (UserOrcid) DataAccessUtils.uniqueResult(
+      hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserOrcid.class)
+          .add(Restrictions.eq("orcid", orcidAuthorization.getOrcid()))
+          .add(Restrictions.ne("ID", userProfileId))
+          .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+      ));
+
+    if(userOrcid != null) {
+      throw new DuplicateOrcidException("ORCiD: '" + orcidAuthorization.getOrcid() + "' is already in use");
+    }
+
+    userOrcid = (UserOrcid) DataAccessUtils.uniqueResult(
       hibernateTemplate.findByCriteria(
         DetachedCriteria.forClass(UserOrcid.class)
           .add(Restrictions.eq("ID", userProfileId))
