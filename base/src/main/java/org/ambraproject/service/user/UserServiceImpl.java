@@ -418,7 +418,7 @@ public class UserServiceImpl extends HibernateServiceImpl implements UserService
       ));
 
     if(userOrcid != null) {
-      throw new DuplicateOrcidException("ORCiD: '" + orcidAuthorization.getOrcid() + "' is already in use");
+      throw new DuplicateOrcidException("ORCiD: '" + orcidAuthorization.getOrcid() + "' is already in use by another account");
     }
 
     userOrcid = (UserOrcid) DataAccessUtils.uniqueResult(
