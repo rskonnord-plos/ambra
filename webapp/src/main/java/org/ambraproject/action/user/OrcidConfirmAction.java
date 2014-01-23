@@ -19,40 +19,36 @@
 package org.ambraproject.action.user;
 
 import org.ambraproject.models.UserProfile;
-import org.ambraproject.service.orcid.OrcidService;
-import org.ambraproject.service.user.UserService;
+import org.ambraproject.service.user.DuplicateOrcidException;
 import org.ambraproject.views.OrcidAuthorization;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 import java.util.Map;
 import static org.ambraproject.Constants.AMBRA_USER_KEY;
 
 /**
  * Confirm and save the user's orcid information
  */
-public class OrcidConfirmAction extends UserActionSupport {
+public class OrcidConfirmAction extends EditUserAction {
   private static final Logger log = LoggerFactory.getLogger(OrcidConfirmAction.class);
-
   private String code;
-  private String orcid;
-  private OrcidService orcidService;
-  private UserService userService;
 
   /**
    * If access has been denied, orcid will return these values
    */
   private String error;
   private String error_description;
-  private static final String ACCESS_DEFINED = "denied";
 
   @Override
   public String execute() throws Exception {
+    //Call parent execute to grab all page variables
+    super.execute();
+
     //If error is set, user denied us access to their profile data
-    if(error != null) {
-      return ACCESS_DEFINED;
-    } else {
+    //Just pass through, display error in ftl
+
+    if(error == null) {
       Map<String, Object> session = ServletActionContext.getContext().getSession();
       UserProfile user = (UserProfile)session.get(AMBRA_USER_KEY);
 
@@ -66,34 +62,39 @@ public class OrcidConfirmAction extends UserActionSupport {
 
         if(orcidAuthorization == null) {
           //Handle user access denied and site down handled the same way
-          return ERROR;
+          error = "System error";
+          error_description = "There was a system error when authenticating your ORCiD";
         } else {
           this.orcid = orcidAuthorization.getOrcid();
-          this.userService.saveUserOrcid(user.getID(), orcidAuthorization);
 
+          try {
+            this.userService.saveUserOrcid(user.getID(), orcidAuthorization);
+          } catch(DuplicateOrcidException ex) {
+            log.error(ex.getMessage(), ex);
+            error = "System error";
+            error_description = ex.getMessage();
+          }
           log.debug("User authenticated via ORCiD {}", this.orcid);
-
-          return SUCCESS;
         }
       }
     }
+
+    return SUCCESS;
   }
 
-  public String getOrcid() {
-    return orcid;
+  /**
+   * Here to let freemarker know that this is the confirmed OrcidConfim action and to display a notification
+   * That the account has been confirmed (or not)
+   *
+   * @return true
+   */
+  public boolean getOrcidConfirm() {
+    return true;
   }
 
   public void setCode(String code) {
     this.code = code;
   }
-
-  @Required
-  public void setOrcidService(OrcidService orcidService) {
-    this.orcidService = orcidService;
-  }
-
-  @Required
-  public void setUserService(UserService userService) { this.userService = userService; }
 
   public String getError() {
     return error;

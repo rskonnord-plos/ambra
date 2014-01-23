@@ -1022,13 +1022,7 @@
 
     <action name="orcidConfirm" class="org.ambraproject.action.user.OrcidConfirmAction">
       <result name="success" type="generic_freemarker">
-        <param name="templateFile">/user/orcidConfirmed.ftl</param>
-      </result>
-      <result name="error" type="generic_freemarker">
-        <param name="templateFile">/user/orcidFailed.ftl</param>
-      </result>
-      <result name="denied" type="generic_freemarker">
-        <param name="templateFile">/user/orcidDenied.ftl</param>
+        <param name="templateFile">/user/userTabs.ftl</param>
       </result>
     </action>
 

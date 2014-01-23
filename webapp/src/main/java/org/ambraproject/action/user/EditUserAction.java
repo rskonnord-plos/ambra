@@ -42,9 +42,9 @@ import java.util.Set;
  */
 public class EditUserAction extends UserActionSupport implements ServletRequestAware {
   private List<SavedSearchView> savedSearches;
-  private OrcidService orcidService;
+  protected OrcidService orcidService;
 
-  private String orcid;
+  protected String orcid;
   private String clientID;
   private String scope;
   private String orcidAuth;

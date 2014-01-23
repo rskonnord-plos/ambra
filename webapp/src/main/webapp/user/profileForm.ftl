@@ -22,6 +22,23 @@ title="User Information Form" class="ambra-form" enctype="multipart/form-data">
   <#if (fieldErrors.size() != 0 && tabID == "profile")>
     <p class="required">Please correct the errors below. </p>
   </#if>
+
+  <#if orcidConfirm??>
+    <#-- New ORCiD confirmed (or error state) handeled here -->
+    <#if orcid?? && !error??>
+      <div class="success">
+        <h1>Your new ORCiD has been confirmed!</h1>
+      </div>
+    </#if>
+
+    <#if error??>
+      <div class="error">
+        <h1>There was a problem with your ORCiD: ${error}</h1>
+        <p><strong>${error_description}.  If this continues to occur, please contact our support.</strong></p>
+      </div>
+    </#if>
+  </#if>
+
   <#if orcid??>
     <#include "/includes/orcid_status.ftl">
   <#else>
