@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.4</h2>
+  <p>Released January 28, 2013</p>
+  <h3>Features Implemented in Ambra 2.9.4</h3>
+  <ul>
+      <li>Version 7 of taxonomy terms</li>
+      <li>Fix for error under certain initial database conditions - originating from an OSS community user</li>
+      <li>Fix for input error handling on article list curation tool for PLOS One homepage</li>
+  </ul> 
+
   <h2>Ambra 2.9.3</h2>
   <p>Released January 14, 2013</p>
   <h3>Features Implemented in Ambra 2.9.3</h3>
