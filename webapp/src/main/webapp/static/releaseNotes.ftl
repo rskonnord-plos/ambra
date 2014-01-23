@@ -36,7 +36,7 @@
   </p>
 
   <h2>Ambra 2.9.4</h2>
-  <p>Released January 28, 2013</p>
+  <p>Released January 28, 2014</p>
   <h3>Features Implemented in Ambra 2.9.4</h3>
   <ul>
       <li>Version 7 of taxonomy terms</li>
@@ -45,7 +45,7 @@
   </ul> 
 
   <h2>Ambra 2.9.3</h2>
-  <p>Released January 14, 2013</p>
+  <p>Released January 14, 2014</p>
   <h3>Features Implemented in Ambra 2.9.3</h3>
   <ul>
      <li>Article page media coverage: fix for incorrect date display</li>
