@@ -19,7 +19,7 @@
 package org.ambraproject.service.user;
 
 /**
- * TODO: Write me
+ * Thrown when a user's email validation token is bad
  */
 public class VerificationTokenException extends Exception {
   public VerificationTokenException() {
