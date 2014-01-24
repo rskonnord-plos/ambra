@@ -66,7 +66,7 @@ public class OrcidConfirmAction extends EditUserAction {
         return LOGIN;
       } else {
         //If code is not present as a parameter, assume the account is already confirmed and
-        //the request has come via the rediect
+        //the request has come via the redirect
         UserOrcid userOrcid = userService.getUserOrcid(user.getID());
         if(this.code == null && userOrcid != null) {
           this.orcid = userOrcid.getOrcid();
