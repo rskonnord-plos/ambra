@@ -1540,19 +1540,9 @@ function onReadyALM() {
 
         // this logic is NOT part of the almSignPost logic.
         // this logic adds "Media Coverage" link on the left hand side article nav
+        // only on initial article page load
         if (articleCoverageCurated.metrics.total > 0) {
-
-          var mediaCoverageLink = $("<a></a>")
-              .attr("href", "/article/related/info:doi/" + $('meta[name=citation_doi]').attr("content"))
-              .text("Media Coverage (" + articleCoverageCurated.metrics.total + ")");
-
-          // the media coverage link should be above the "Figures" link
-          // if "Figures" link doesn't exist, add it to the bottom of the list
-          if ($("#nav-article-page #nav-figures").length > 0) {
-            $("#nav-article-page #nav-figures").before($("<li></li>").append(mediaCoverageLink));
-          } else {
-            $("#nav-article-page ul:nth-child(2)").append($("<li></li>").append(mediaCoverageLink));
-          }
+          buildMediaCoverageLink(articleCoverageCurated.metrics.total);
         }
 
       }
@@ -1913,5 +1903,49 @@ function confirmALMDataDisplayed() {
   }
 }
 
+function buildMediaCoverageLink(coverageTotal) {
+  var mediaCoverageLink = $("<a></a>")
+      .attr("href", "/article/related/info:doi/" + $('meta[name=citation_doi]').attr("content"))
+      .text("Media Coverage (" + coverageTotal + ")");
 
+  // the media coverage link should be above the "Figures" link
+  // if "Figures" link doesn't exist, add it to the bottom of the list
+  if ($("#nav-article-page #nav-figures").length > 0) {
+    $("#nav-article-page #nav-figures").before($("<li></li>").append(mediaCoverageLink));
+  } else {
+    $("#nav-article-page ul:nth-child(2)").append($("<li></li>").append(mediaCoverageLink));
+  }
+}
 
+/**
+ * Adds the media coverage link when a user clicks on the article tab on the article page
+ */
+function addMediaCoverageLink() {
+  var almService = new $.fn.alm(), doi = $('meta[name=citation_doi]').attr("content");
+
+  var almSuccess = function (response) {
+    var data, sources, source;
+
+    if (response && response.length > 0) {
+      data = response[0];
+      sources = data.sources;
+
+      for(var i = 0; i < sources.length; i++){
+        source = sources[i];
+
+        if(source.name.toLowerCase() == 'articlecoveragecurated'){
+          if (source.metrics.total > 0) {
+            buildMediaCoverageLink(source.metrics.total);
+          }
+          break;
+        }
+      }
+    }
+  };
+
+  var almError = function() {
+    // do nothing
+  };
+
+  almService.getArticleSummaries([ doi ], almSuccess, almError);
+}

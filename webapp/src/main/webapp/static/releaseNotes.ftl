@@ -35,8 +35,27 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.4</h2>
+  <p>Released January 28, 2014</p>
+  <h3>Features Implemented in Ambra 2.9.4</h3>
+  <ul>
+      <li>Version 7 of taxonomy terms</li>
+      <li>Fix for error under certain initial database conditions - originating from an OSS community user</li>
+      <li>Fix for input error handling on article list curation tool for PLOS One homepage</li>
+  </ul> 
+
+  <h2>Ambra 2.9.3</h2>
+  <p>Released January 14, 2014</p>
+  <h3>Features Implemented in Ambra 2.9.3</h3>
+  <ul>
+     <li>Article page media coverage: fix for incorrect date display</li>
+     <li>Article page media coverage: suppression of date display for non-media and blog coverage links</li>
+     <li>Fixes for minor article page display bugs when navigating the across tabs</li>
+     <li>Population of description tag for CrossRef syndication</li>
+  </ul>
+
   <h2>Ambra 2.9.2</h2>
-  <p>Released December 26th, 2013</p>
+  <p>Released December 26, 2013</p>
   <h3>Features Implemented in Ambra 2.9.2</h3>
   <ul>
      <li>URL validation for crowdsourced media coverage form</li>
