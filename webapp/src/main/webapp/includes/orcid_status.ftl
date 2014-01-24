@@ -8,7 +8,20 @@
     <div class="right ">
         <#-- Change orcURL to be production -->
         <p>Your ORCiD account: <strong><a href="http://sandbox-1.orcid.org/${orcid}">${orcid}</a></strong><br />
-            is linked to your Ambra account. <strong><a href="${orcIDRemoveURL}">De-link</a></strong>
+            is linked to your PLOS account. <strong><a href="${orcIDRemoveURL}"
+                                                    data-js="orcid-delink">De-link</a></strong>
         </p>
+    </div>
+</div>
+
+<div class="orcid-form">
+    <h3>De-link ORCiD account</h3>
+  <p>Are you sure you want to de-link your ORCid account from your PLOS account?</p>
+    <div id="user-tabs" class="nav tab-nav">
+        <ul>
+            <li class="active"><a href="#de-link">De-link</a></li>
+            <li><a href="#cancel">Cancel</a></li>
+
+        </ul>
     </div>
 </div>
