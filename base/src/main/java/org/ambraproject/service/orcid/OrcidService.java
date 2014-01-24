@@ -44,12 +44,19 @@ public interface OrcidService {
   /**
    * The clientID of this application.  Stored in the configuration as ..services/orcid/client-id
    *
+   * This is the client identifier assigned by ORCiD to associate this application with an ORCiD account and secret
+   *
    * @return the client ID
    */
   public String getClientID();
 
   /**
-   * The scope of authority to be granted for
+   * The scope of authority to be granted for.  There are varying levels of access to be asked of by the
+   * application.  Note:
+   *
+   * http://support.orcid.org/knowledgebase/articles/120162-orcid-scopes
+   *
+   * More comments provided in the implementation inline
    *
    * @return The scope of authority to be granted for
    */
