@@ -65,10 +65,9 @@ public class OrcidConfirmAction extends EditUserAction {
           error = "System error";
           error_description = "There was a system error when authenticating your ORCiD";
         } else {
-          this.orcid = orcidAuthorization.getOrcid();
-
           try {
             this.userService.saveUserOrcid(user.getID(), orcidAuthorization);
+            this.orcid = orcidAuthorization.getOrcid();
           } catch(DuplicateOrcidException ex) {
             log.error(ex.getMessage(), ex);
             error = "System error";
