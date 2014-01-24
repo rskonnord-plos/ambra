@@ -19,7 +19,7 @@
 <@s.url id="profileURL" action="editProfile" namespace="/user/secure" />
 <#-- begin : main content -->
 <div id="pagebdy">
-  <h1>Your ORCiD has been removed.</h1>
+  <h1>Your ORCiD has been de-linked.</h1>
   <p>You may now continue to your <a href="${profileURL}">profile</a></p>
 </div>
 <#-- end : main contents -->

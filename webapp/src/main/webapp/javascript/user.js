@@ -677,6 +677,9 @@ $(function () {
       });
   });
 
+
+
+
   $('form[name=userSearchAlerts]').submit(function(event) {
     event.preventDefault();
 
@@ -700,4 +703,23 @@ $(function () {
         console.log(response);
       });
   });
+
+    $('.orcid-info').on("click","a[data-js='orcid-delink']", function(event) {
+        $( ".orcid-form" ).dialog({
+            autoOpen: false,
+            height: 300,
+            width: 350,
+            modal: true
+        });
+
+   //     event.preventDefault();
+
+//        $.post("/user/secure/profile/orcid/remove", $(this).serialize())
+//            .done(function(json) {
+//              alert('done');
+//            })
+//            .fail(function(response) {
+//                alert('fail');
+//            });
+    });
 });

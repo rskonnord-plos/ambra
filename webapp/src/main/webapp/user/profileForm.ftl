@@ -26,15 +26,15 @@ title="User Information Form" class="ambra-form" enctype="multipart/form-data">
   <#if orcidConfirm??>
     <#-- New ORCiD confirmed (or error state) handeled here -->
     <#if orcid?? && !error??>
-      <div class="success">
-        <h1>Your new ORCiD has been confirmed!</h1>
+      <div class="message success">
+        <p><span class="icon check"></span><strong>Congratulations, your ORCiD is now linked!</strong></p>
       </div>
     </#if>
 
     <#if error??>
-      <div class="error">
-        <h1>There was a problem with your ORCiD: ${error}</h1>
-        <p><strong>${error_description}.  If this continues to occur, please contact our support.</strong></p>
+      <div class="message error">
+        <h3><span class="icon warning"></span>There was a problem with your ORCiD: ${error}</h3>
+        <p>${error_description}.  If this continues to occur, please contact our support.</strong></p>
       </div>
     </#if>
   </#if>
@@ -43,6 +43,7 @@ title="User Information Form" class="ambra-form" enctype="multipart/form-data">
     <#include "/includes/orcid_status.ftl">
   <#else>
     <#include "/includes/orcid_info.ftl">
+
   </#if>
 
   <#--store the email, alerts, and displayName on the page so that they get set on the action when we go back to save-->
