@@ -1433,9 +1433,6 @@
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
       <xsl:apply-templates/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
-      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template (formats mixed-citation names, most mixed-citation formatting is in the xml) -->
@@ -1460,9 +1457,6 @@
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
-      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-type journal and no publication-type) -->
@@ -1471,9 +1465,6 @@
       <xsl:apply-templates select="collab" mode="book"/>
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
-      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-types book and other) -->
