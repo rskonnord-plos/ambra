@@ -1,4 +1,19 @@
 /*
+ jQuery.ThreeDots.min
+
+
+ Author Jeremy Horn
+ Version 1.0.10
+ Date: 1/25/2009
+ More: http://tpgblog.com/ThreeDots/
+ compiled by http://yui.2clics.net/
+ */
+
+(function(e){e.fn.ThreeDots=function(h){var g=this;if((typeof h=="object")||(h==undefined)){e.fn.ThreeDots.the_selected=this;var g=e.fn.ThreeDots.update(h)}return g};e.fn.ThreeDots.update=function(u){var k,t=null;var m,j,s,q,o;var l,i;var r,h,n;if((typeof u=="object")||(u==undefined)){e.fn.ThreeDots.c_settings=e.extend({},e.fn.ThreeDots.settings,u);var p=e.fn.ThreeDots.c_settings.max_rows;if(p<1){return e.fn.ThreeDots.the_selected}var g=false;jQuery.each(e.fn.ThreeDots.c_settings.valid_delimiters,function(v,w){if(((new String(w)).length==1)){g=true}});if(g==false){return e.fn.ThreeDots.the_selected}e.fn.ThreeDots.the_selected.each(function(){k=e(this);if(e(k).children("."+e.fn.ThreeDots.c_settings.text_span_class).length==0){return true}l=e(k).children("."+e.fn.ThreeDots.c_settings.text_span_class).get(0);var y=a(k,true);var x=e(l).text();d(k,l,y);var v=e(l).text();if((h=e(k).attr("threedots"))!=undefined){e(l).text(h);e(k).children("."+e.fn.ThreeDots.c_settings.e_span_class).remove()}r=e(l).text();if(r.length<=0){r=""}e(k).attr("threedots",x);if(a(k,y)>p){curr_ellipsis=e(k).append('<span style="white-space:nowrap" class="'+e.fn.ThreeDots.c_settings.e_span_class+'">'+e.fn.ThreeDots.c_settings.ellipsis_string+"</span>");while(a(k,y)>p){i=b(e(l).text());e(l).text(i.updated_string);t=i.word;n=i.del;if(n==null){break}}if(t!=null){var w=c(k,y);if((a(k,y)<=p-1)||(w)||(!e.fn.ThreeDots.c_settings.whole_word)){r=e(l).text();if(i.del!=null){e(l).text(r+n)}if(a(k,y)>p){e(l).text(r)}else{e(l).text(e(l).text()+t);if((a(k,y)>p+1)||(!e.fn.ThreeDots.c_settings.whole_word)||(v==t)||w){while((a(k,y)>p)){if(e(l).text().length>0){e(l).text(e(l).text().substr(0,e(l).text().length-1))}else{break}}}}}}}if(x==e(e(k).children("."+e.fn.ThreeDots.c_settings.text_span_class).get(0)).text()){e(k).children("."+e.fn.ThreeDots.c_settings.e_span_class).remove()}else{if((e(k).children("."+e.fn.ThreeDots.c_settings.e_span_class)).length>0){if(e.fn.ThreeDots.c_settings.alt_text_t){e(k).children("."+e.fn.ThreeDots.c_settings.text_span_class).attr("title",x)}if(e.fn.ThreeDots.c_settings.alt_text_e){e(k).children("."+e.fn.ThreeDots.c_settings.e_span_class).attr("title",x)}}}})}return e.fn.ThreeDots.the_selected};e.fn.ThreeDots.settings={valid_delimiters:[" ",",","."],ellipsis_string:"...",max_rows:2,text_span_class:"ellipsis_text",e_span_class:"threedots_ellipsis",whole_word:true,allow_dangle:false,alt_text_e:false,alt_text_t:false};function c(k,h){if(e.fn.ThreeDots.c_settings.allow_dangle==true){return false}var l=e(k).children("."+e.fn.ThreeDots.c_settings.e_span_class).get(0);var g=e(l).css("display");var i=a(k,h);e(l).css("display","none");var j=a(k,h);e(l).css("display",g);if(i>j){return true}else{return false}}function a(i,j){var g=typeof j;if((g=="object")||(g==undefined)){return e(i).height()/j.lh}else{if(g=="boolean"){var h=f(e(i));return{lh:h}}}}function b(k){var j;var i=e.fn.ThreeDots.c_settings.valid_delimiters;k=jQuery.trim(k);var g=-1;var h=null;var l=null;jQuery.each(i,function(m,o){if(((new String(o)).length!=1)||(o==null)){return false}var n=k.lastIndexOf(o);if(n!=-1){if(n>g){g=n;h=k.substring(g+1);l=o}}});if(g>0){return{updated_string:jQuery.trim(k.substring(0,g)),word:h,del:l}}else{return{updated_string:"",word:jQuery.trim(k),del:null}}}function f(h){e(h).append("<div id='temp_ellipsis_div' style='position:absolute; visibility:hidden'>H</div>");var g=e("#temp_ellipsis_div").height();e("#temp_ellipsis_div").remove();return g}function d(k,l,m){var q=e(l).text();var i=q;var o=e.fn.ThreeDots.c_settings.max_rows;var h,g,n,r,j;var p;if(a(k,m)<=o){return}else{p=0;curr_length=i.length;curr_middle=Math.floor((curr_length-p)/2);h=q.substring(p,p+curr_middle);g=q.substring(p+curr_middle);while(curr_middle!=0){e(l).text(h);if(a(k,m)<=(o)){j=Math.floor(g.length/2);n=g.substring(0,j);p=h.length;i=h+n;curr_length=i.length;e(l).text(i)}else{i=h;curr_length=i.length}curr_middle=Math.floor((curr_length-p)/2);h=q.substring(0,p+curr_middle);g=q.substring(p+curr_middle)}}}})(jQuery);
+
+
+
+/*
  * Copyright (c) 2006-2013 by Public Library of Science http://plos.org http://ambraproject.org
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -223,15 +238,15 @@ var FVBuildFigs = function(data) {
     var slide = $('<div class="slide" />');
     var data = $('<div class="data" />');
     var txt = $('<div class="txt" />');
-    var content = $('<div class="content" />')
+    var content = $('<div class="content" />');
+    var txt_more = $('<div class="text-more" />');
     var title = '<div class="title">' + title_txt + '</div>';
-    var toggleMore = $('<div class="toggle more">view all</div>').click(FVToggleExpand);
-    var toggleLess = $('<div class="toggle less" title="view less" />').click(FVToggleExpand);
+    var toggleLess = $('<div class="toggle less" title="view less" />');
     var context_hash = showInContext(this.uri);
     if ($FV.external_page) { // the image is on another page
       context_hash = '/article/' + $FV.url + context_hash;
     }
-    var desc = '<div class="desc">' + this.transformedDescription + '<p>' + this.doi.replace('info:doi/','doi:') + '</p></div>';
+    var doi = '<p>' + this.doi.replace('info:doi/','doi:') + '</p>';
 
     // we're not building the images here, just divs with the src of medium & large verisons in data attributes
     var $fig = $('<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-lg-src="' + path + this.uri + '&representation=' + this.repLarge + '" data-img-txt="' + image_title + '"></div>');
@@ -257,10 +272,12 @@ var FVBuildFigs = function(data) {
     content.append(title);
 
     if (!/^\s*$/.test(this.transformedDescription)) {
-      content.append(toggleMore);
-      content.append(desc);
+      txt_more.append('<div class="desc">' + this.transformedDescription + '</div>');
     }
+
+    txt_more.append(doi);
     txt.append(toggleLess);
+    content.append(txt_more);
     txt.append(content);
     data.append(txt);
     data.append(context_lnk);
@@ -282,7 +299,7 @@ var FVBuildFigs = function(data) {
   $FV.thumbs.active = null; // used to track active thumb & figure
 
   // figures controls
-  $('<span class="fig-btn thmb-btn">All Figures</span>').on('click',function() {
+  $('<span class="fig-btn thmb-btn"><i class="icn"></i> All Figures</span>').on('click',function() {
     $FV.figs_pane.toggleClass('thmbs-vis');
     $FV.thmbs_vis = $FV.thmbs_vis ? false : true;
     FVThumbPos($FV.thumbs.active);
@@ -344,6 +361,7 @@ var FVBuildRefs = function(references) {
   $FV.refs_pane = $('<div id="fig-viewer-refs" class="pane cf" />');
   var $refs_content = $('<ol class="references" />');
   $refs_content.html(references.html());
+  $FV.refs_pane.append('<h3>References</h3>');
   $FV.refs_pane.append($refs_content);
   $FV.cont.append($FV.refs_pane);
 };
@@ -370,20 +388,6 @@ var FVDisplayPane = function(pane) {
   }
 };
 
-
-/**
- * When the user clicks "more" or "less", change the expanded state of every slide.
- */
-var FVToggleExpand = function() {
-  if ($FV.txt_expanded) {
-    $FV.slides_el.removeClass('txt-expand');
-    $FV.txt_expanded = false;
-  } else {
-    $FV.slides_el.addClass('txt-expand');
-    $FV.txt_expanded = true;
-  }
-};
-
 // change figure slides functionality
 var FVChangeSlide = function($thmb) {
 
@@ -407,6 +411,7 @@ var FVChangeSlide = function($thmb) {
   var this_sld = $FV.slides.eq(i);
   this_sld.show();
   FVDisplayFig(i);
+  FVFigDescripton(this_sld);
 
   $FV.thumbs.active.next().length ? $FV.nxt.removeClass('invisible') : $FV.nxt.addClass('invisible');
   $FV.thumbs.active.prev().length ? $FV.prv.removeClass('invisible') : $FV.prv.addClass('invisible');
@@ -415,6 +420,68 @@ var FVChangeSlide = function($thmb) {
   }
 
 };
+
+// figure descriptin
+var FVFigDescripton = function(sld) {
+  var $btn_less = sld.find('div.toggle.less');
+  var $desc = sld.find('div.desc');
+  var $title = sld.find('div.title');
+  sld.find('div.tease').remove();
+
+  var truncate = function() {
+
+    // test to see if heading is more than 1 line using CSS class
+    $title.addClass('test-height');
+    var h1 = $title.height();
+    $title.removeClass('test-height');
+    var h2 = $title.height();
+
+    // if heading is one line truncate teaser text to 2 lines, otherwise to 1 line
+    var row;
+    if (h1 == h2) {
+      row = 2;
+    } else {
+      row = 1;
+    }
+    var desc_text = $desc.html();
+    var $tease = $('<div class="tease" />');
+    $tease.append(desc_text);
+    var $tease_p = $tease.find('p');
+    $tease_p.wrapInner('<span class="ellipsis_text" />');
+
+    $tease.insertAfter($title);
+    $tease_p.ThreeDots({
+      max_rows:row,
+      ellipsis_string:'... <span class="toggle more">show more</span>'
+    });
+    $tease_p.find('span.more').click(function() {
+      $FV.slides_el.addClass('txt-expand');
+      $FV.txt_expanded = true;
+    });
+  };
+
+  // truncation only possible if teaser is visible
+  // if descriptions are open teaser is hidden
+
+  // check display of descriptions
+  if (!$FV.txt_expanded) { // landed on this slide and descriptions are hidden.
+    truncate();
+    $btn_less.click(function() {
+      $FV.slides_el.removeClass('txt-expand');
+      $FV.txt_expanded = false;
+    });
+  } else { // landed on this slide and descriptions are visible. 
+    // truncate following description reveal  
+    $btn_less.click(function() {
+      $FV.slides_el.removeClass('txt-expand');
+      $FV.txt_expanded = false;
+      sld.find('div.tease').remove();
+      truncate();
+    });
+
+  }
+};
+
 
 
 /**
