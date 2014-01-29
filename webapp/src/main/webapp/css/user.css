@@ -652,3 +652,8 @@ li.subjectAreaSelector div.selectSubjectAreas {
 }
 
 /** END CSS for journal alerts selector **/
+
+.ui-dialog .ui-dialog-buttonset .ui-button.primary{
+    background: #3c63af !important;
+    color: #fff !important;
+}

@@ -18,6 +18,7 @@
 -->
 <@s.url action="privacy" namespace="/static" includeParams="none" id="privacyURL"/>
 
+
 <h1 class="displayName">${displayName}</h1>
 <ul class="info-list">
   <li>Display Name: <b>${displayName}</b>&nbsp;<span class="note">(Display names are permanent)</span></li>
@@ -33,6 +34,8 @@
       password</a>
   </li>
 </ul>
+
+
 
 <div id="user-forms" class="tab-block" active="${tabID}">
   <div id="user-tabs" class="nav tab-nav">

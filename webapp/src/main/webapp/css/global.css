@@ -5412,10 +5412,11 @@ The CSS for dialog widget,
 
 .ui-dialog .ui-dialog-buttonpane {
     text-align: left;
-    border-width: 1px 0 0 0;
+    border-width:0 0 0 0;
     background-image: none;
     margin: .5em 0 0 0;
     padding: .3em 1em .5em .4em;
+
 }
 
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
@@ -5443,7 +5444,8 @@ The CSS for dialog widget,
 /* Customized css for the FigShare dialog */
 
 /* jqueryUI overrides*/
-.ui-dialog.tooltip-like .ui-dialog-titlebar-close.ui-state-hover {
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close.ui-state-hover,
+.ui-dialog.default-modal .ui-dialog-titlebar-close.ui-state-hover{
     border: none /*{borderColorHover}*/;
     background: none;
     font-weight: normal /*{fwDefault}*/;
@@ -5479,7 +5481,7 @@ The CSS for dialog widget,
 
 /* css for the close button on the dialog */
 
-.ui-dialog.tooltip-like .ui-dialog-titlebar-close {
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close{
     position: absolute;
     right: 2px;
     top: 12px;
@@ -5491,19 +5493,23 @@ The CSS for dialog widget,
     display: block;
 }
 
-.ui-dialog.tooltip-like .ui-dialog-titlebar-close span {
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close span{
     background-image: url('../images/btn.sprite.close.small.png');
     background-position: 2px 1px;
     width: 17px;
     height: 17px;
 }
 
-.ui-dialog.tooltip-like .ui-dialog-titlebar-close:hover {
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close:hover{
     background-color: #3C63AF;
 }
 
-.ui-dialog.tooltip-like .ui-dialog-titlebar-close:hover span {
+.ui-dialog.tooltip-like .ui-dialog-titlebar-close:hover span{
     background-position: 2px -13px;
+}
+
+.default-modal .ui-dialog-titlebar-close {
+    display: none;
 }
 
 
@@ -6075,7 +6081,8 @@ form.standard label {
 
 form.standard input[type="button"],
 form.standard input[type="submit"],
-form.standard .button{
+form.standard .button,
+.ui-dialog .ui-dialog-buttonset .ui-button{
     background: #333;
     color: #fff;
     margin-right: 2px;
@@ -6090,14 +6097,16 @@ form.standard .button{
 
 form.standard input[type="button"]:hover,
 form.standard input[type="submit"]:hover,
-form.standard .button:hover{
+form.standard .button:hover,
+.ui-dialog .ui-dialog-buttonset .ui-button:hover{
     background: #3c63af !important;
     color: #fff !important;
 }
 
 form.standard input[type="button"].primary,
 form.standard input[type="submit"].primary,
-form.standard .button.primary{
+form.standard .button.primary,
+.ui-dialog .ui-dialog-buttonset .primary.ui-button{
     background: #f8af2d;
     color: #333;
 }

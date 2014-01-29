@@ -6,4 +6,11 @@
     <div class="right ">
         <p>ORCID provides a persistent digital identifier that distinguishes you from every other researcher and, through integration in key research workflows such as manuscript and grant submission, supports automated linkages between you and your professional activities ensuring that your work is recognized. <a href="http://orcid.org/about/what-is-orcid" target="_blank">Find out more</a>.</p>
     </div>
+        <a href="#" data-js="orcid-delink">test</a>
+
+</div>
+
+<div class="orcid-form" >
+    <p><strong>Are you sure you want to de-link your ORCid account from your PLOS account?</strong></p>
+
 </div>

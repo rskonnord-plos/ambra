@@ -14,14 +14,3 @@
     </div>
 </div>
 
-<div class="orcid-form">
-    <h3>De-link ORCiD account</h3>
-  <p>Are you sure you want to de-link your ORCid account from your PLOS account?</p>
-    <div id="user-tabs" class="nav tab-nav">
-        <ul>
-            <li class="active"><a href="#de-link">De-link</a></li>
-            <li><a href="#cancel">Cancel</a></li>
-
-        </ul>
-    </div>
-</div>
