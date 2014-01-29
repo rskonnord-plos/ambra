@@ -86,7 +86,7 @@ $(function () {
 
   //Create the LI block for one referral
   var createReferenceLI = function(curReference, category) {
-    var publication = "Unkown"
+    var publication = "Unknown"
     if(curReference.publication.length > 0) {
       publication = curReference.publication;
     }
