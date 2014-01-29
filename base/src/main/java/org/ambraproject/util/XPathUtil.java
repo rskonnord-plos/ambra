@@ -21,6 +21,7 @@
 
 package org.ambraproject.util;
 
+import org.ambraproject.rhino.shared.XPathExtractor;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -39,7 +40,7 @@ import java.util.Map;
  *         <p/>
  *         org.ambraproject.util
  */
-public class XPathUtil {
+public class XPathUtil implements XPathExtractor {
 
   /**
    * The XPath instance used to create expressions
@@ -119,6 +120,14 @@ public class XPathUtil {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Node selectNode(Node node, String expression) throws XPathException {
+    return selectSingleNode(node, expression);
+  }
+
+  /**
    * Select a single node from the input source.
    *
    * @param inputSource - the input source to select from
@@ -138,6 +147,7 @@ public class XPathUtil {
    * @return - a NodeList containing the nodes described by the XPath expression, or null if there are none
    * @throws XPathExpressionException - if there's a problem parsing the expression
    */
+  @Override
   public NodeList selectNodes(Node document, String expression) throws XPathExpressionException {
     return (NodeList) getXPathExpression(expression).evaluate(document, XPathConstants.NODESET);
   }
@@ -219,5 +229,10 @@ public class XPathUtil {
    */
   public Object evaluate(InputSource inputSource, String expression, QName returnType) throws XPathExpressionException {
     return getXPathExpression(expression).evaluate(inputSource, returnType);
+  }
+
+  @Override
+  public String selectString(Node node, String xpath) throws XPathException {
+    return evaluate(node, xpath);
   }
 }

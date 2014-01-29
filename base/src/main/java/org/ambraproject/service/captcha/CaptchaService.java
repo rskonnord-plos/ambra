@@ -23,4 +23,6 @@ public interface CaptchaService {
    * @return Returns a captchaHTML block to insert into a web page
    */
   public String getCaptchaHTML();
+
+  public String getPublicKey();
 }

@@ -754,50 +754,43 @@
               <xsl:if test="$cit[@publication-type='journal']">
                 <xsl:variable name="apos">'</xsl:variable>
                 <xsl:if test="$cit/extraCitationInfo">
-                  <xsl:if test="not(element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link)">
-                    <xsl:element name="ul">
-                      <xsl:attribute name="class">find</xsl:attribute>
-                      <xsl:attribute name="data-citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:attribute>
-                      <xsl:if test="$cit/extraCitationInfo/@doi">
-                        <xsl:attribute name="data-doi"><xsl:value-of select="$cit/extraCitationInfo/@doi"/></xsl:attribute>
-                      </xsl:if>
-                      <xsl:if test="$cit/extraCitationInfo/@crossRefUrl">
-                        <xsl:element name="li">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
-                            <xsl:attribute name="target">_new</xsl:attribute>
-                            <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
-                            CrossRef
-                          </xsl:element>
+                  <xsl:element name="ul">
+                    <xsl:attribute name="class">find</xsl:attribute>
+                    <xsl:attribute name="data-citedArticleID"><xsl:value-of select="$cit/extraCitationInfo/@citedArticleID"/></xsl:attribute>
+                    <xsl:if test="$cit/extraCitationInfo/@doi">
+                      <xsl:attribute name="data-doi"><xsl:value-of select="$cit/extraCitationInfo/@doi"/></xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="$cit/extraCitationInfo/@crossRefUrl">
+                      <xsl:element name="li">
+                        <xsl:element name="a">
+                          <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@crossRefUrl"/></xsl:attribute>
+                          <xsl:attribute name="target">_new</xsl:attribute>
+                          <xsl:attribute name="title">Go to article in CrossRef</xsl:attribute>
+                          View Article
                         </xsl:element>
-                      </xsl:if>
-                      <xsl:if test="$cit/extraCitationInfo/@pubMedUrl">
-                        <xsl:element name="li">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubMedUrl"/></xsl:attribute>
-                            <xsl:attribute name="target">_new</xsl:attribute>
-                            <xsl:attribute name="title">Go to article in PubMed</xsl:attribute>
-                            PubMed/NCBI
-                          </xsl:element>
+                      </xsl:element>
+                    </xsl:if>
+                    <xsl:if test="$cit/extraCitationInfo/@pubMedUrl">
+                      <xsl:element name="li">
+                        <xsl:element name="a">
+                          <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@pubMedUrl"/></xsl:attribute>
+                          <xsl:attribute name="target">_new</xsl:attribute>
+                          <xsl:attribute name="title">Go to article in PubMed</xsl:attribute>
+                          PubMed/NCBI
                         </xsl:element>
-                      </xsl:if>
-                      <xsl:if test="$cit/extraCitationInfo/@googleScholarUrl">
-                        <xsl:element name="li">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@googleScholarUrl"/></xsl:attribute>
-                            <xsl:attribute name="target">_new</xsl:attribute>
-                            <xsl:attribute name="title">Go to article in Google Scholar</xsl:attribute>
-                            Google Scholar
-                          </xsl:element>
+                      </xsl:element>
+                    </xsl:if>
+                    <xsl:if test="$cit/extraCitationInfo/@googleScholarUrl">
+                      <xsl:element name="li">
+                        <xsl:element name="a">
+                          <xsl:attribute name="href"><xsl:value-of select="$cit/extraCitationInfo/@googleScholarUrl"/></xsl:attribute>
+                          <xsl:attribute name="target">_new</xsl:attribute>
+                          <xsl:attribute name="title">Go to article in Google Scholar</xsl:attribute>
+                          Google Scholar
                         </xsl:element>
-                      </xsl:if>
-                    </xsl:element>
-                  </xsl:if>
-                  <xsl:if test="element-citation//ext-link | mixed-citation//ext-link | nlm-citation//ext-link">
-                    <xsl:element name="ul">
-                      <xsl:attribute name="class">find-nolinks</xsl:attribute>
-                    </xsl:element>
-                  </xsl:if>
+                      </xsl:element>
+                    </xsl:if>
+                  </xsl:element>
                 </xsl:if>
                 <xsl:if test="not($cit/extraCitationInfo)">
                   <xsl:element name="ul">
@@ -1439,15 +1432,9 @@
 
     <!-- 1/4/12: plos-specific template -->
     <xsl:template match="mixed-citation">
-      <xsl:apply-templates select="*[not(self::comment)]|text()"/>
-      <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi">
-        <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
-        <xsl:element name="a">
-          <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
-          <xsl:value-of select="$citedArticleDoi"/>
-        </xsl:element>.
+      <xsl:apply-templates/>
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
       </xsl:if>
     </xsl:template>
 
@@ -1473,13 +1460,8 @@
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi">
-        <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
-        <xsl:element name="a">
-          <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
-          <xsl:value-of select="$citedArticleDoi"/>
-        </xsl:element>.
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
       </xsl:if>
     </xsl:template>
 
@@ -1489,13 +1471,8 @@
       <xsl:apply-templates select="collab" mode="book"/>
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
-      <xsl:if test="extraCitationInfo/@doi">
-        <xsl:variable name="citedArticleDoi"><xsl:value-of select="extraCitationInfo/@doi"/></xsl:variable>
-        doi:
-        <xsl:element name="a">
-          <xsl:attribute name="href">http://dx.doi.org/<xsl:value-of select="$citedArticleDoi"/></xsl:attribute>
-          <xsl:value-of select="$citedArticleDoi"/>
-        </xsl:element>.
+      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
+        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
       </xsl:if>
     </xsl:template>
 
@@ -1899,7 +1876,7 @@
     <xsl:template name="citationComment">
       <!-- only output a single comment tag that appears as the very last child of the citation -->
       <xsl:variable name="x" select="child::comment[position()=last()]"/>
-      <xsl:if test="not(starts-with(lower-case($x),'doi:')) and not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
+      <xsl:if test="not(starts-with($x,'p.')) and not(starts-with($x,'In:') and not(starts-with($x,'pp.')))">
         <xsl:text> </xsl:text><xsl:apply-templates select="$x"/>
       </xsl:if>
     </xsl:template>
@@ -2106,12 +2083,18 @@
 
     <!-- 10/28/13: suppress, we don't use -->
     <xsl:template match="ext-link">
-      <xsl:if test="not(ancestor::ref-list) or not(ends-with(lower-case(normalize-space(preceding::text()[1])),'doi:'))">
-        <a>
-          <xsl:call-template name="assign-href"/>
+      <xsl:variable name="previousText"><xsl:value-of select="lower-case(normalize-space(preceding::text()[1]))"/></xsl:variable>
+      <xsl:choose>
+        <xsl:when test="not(ancestor::ref-list) or not(substring($previousText, string-length($previousText)-3)='doi:')">
+          <a>
+            <xsl:call-template name="assign-href"/>
+            <xsl:apply-templates/>
+          </a>
+        </xsl:when>
+        <xsl:otherwise>
           <xsl:apply-templates/>
-        </a>
-      </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:template>
 
     <!-- 1/4/12: suppress, we don't use  -->

@@ -1270,8 +1270,8 @@ $.fn.alm = function () {
       },
       success:function (data) {
 
-        var toolTip = $('<div class=\"tileTooltip\"></div>'), toolTipTable = $('<table class=\"tile_mini\"></table>'),
-            item, totalStat, key, tooltips = {};
+        var popup = $('<div id=\"popup\"></div>'), dialogTable = $('<table class=\"tile_mini\"></table>'),
+            item, totalStat, key, itemInfoMap = {};
 
         // build tooltip
         for (i = 0; i < source.events.items.length; i++) {
@@ -1285,27 +1285,44 @@ $.fn.alm = function () {
               key = "SI";
             }
           }
+
+          var itemInfo = new Object();
           totalStat = item.stats.downloads + item.stats.page_views;
-          tooltips[key] = "<td class=\"data1\">" + totalStat + "</td>";
+          itemInfo.stat = "<td class=\"data1\">" + totalStat + "</td>";
+          itemInfo.link =  item.figshare_url;
+          itemInfoMap[key] = itemInfo;
         }
 
         for (i = 0; i < data.secondaryObjects.length; i++) {
           key = data.secondaryObjects[i].doi.replace("info:doi/", "");
-          toolTipTable.append("<tr><td>" + data.secondaryObjects[i].title + "</td>" + tooltips[key] + "</tr>");
+          var link = "<a href=\"" + itemInfoMap[key].link + "\" target=_blank>" + data.secondaryObjects[i].title + "</a>";
+          dialogTable.append("<tr><td>" + link + "</td>" + itemInfoMap[key].stat + "</tr>");
         }
 
-        if (tooltips["SI"]) {
-          toolTipTable.append("<tr><td>Supporting Info files</td>" + tooltips["SI"] + "</tr>");
+        if (itemInfoMap["SI"]) {
+          var link = "<a href=\"" + itemInfoMap["SI"].link + "\" target=_blank>  Supporting Info Files </a>";
+          dialogTable.append("<tr><td>" + link + "</td>" + itemInfoMap["SI"].stat + "</tr>");
         }
 
-        $("#figshareImageOnArticleMetricsTab").tooltip({
-          delay: 250,
-          fade: 250,
-          track: true,
-          showURL: false,
-          bodyHandler: function () {
-            return toolTip.append(toolTipTable);
+        popup.append(dialogTable);
+        popup.dialog({
+          dialogClass: "tooltip-like figure-table",
+          autoOpen: false,
+          draggable: false,
+          resizable: false,
+          height: "auto",
+          width: "auto",
+          closeText:"",
+          modal: true,
+          position: {my: "left top", at:"right center", of:"#figshareImageOnArticleMetricsTab"},
+          open: function(){
+            $('.ui-widget-overlay').bind('click',function(){
+              popup.dialog('close');
+            })
           }
+        });
+        $("#figshareImageOnArticleMetricsTab").click(function() {
+          popup.dialog("open");
         });
       }
     });
@@ -1390,6 +1407,8 @@ function onReadyALM() {
   //TODO: Review if this should go into it's own file or not.
   //Appropriate results.
 
+  // Adding media coverage link logic in almSuccess
+
   var fadeInDuration = 300, twoDaysInMilliseconds = 172800000;
 
   if ($("#almSignPost").length > 0) {
@@ -1417,7 +1436,7 @@ function onReadyALM() {
         responseObject = response[0];
 
         //distinguish sources
-        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref;
+        var counter, pmc, scopus, facebook, twitter, mendeley, citeulike, crossref, articleCoverageCurated, doiLink;
         sources = responseObject.sources;
 
         for(var i = 0; i < sources.length; i += 1){
@@ -1445,6 +1464,9 @@ function onReadyALM() {
           }
           else if(source.name.toLowerCase() == 'crossref'){
             crossref = source;
+          }
+          else if(source.name.toLowerCase() == 'articlecoveragecurated'){
+            articleCoverageCurated = source;
           }
         }
 
@@ -1514,6 +1536,15 @@ function onReadyALM() {
         }
 
         $('#almSignPost').fadeIn(fadeInDuration);
+
+
+        // this logic is NOT part of the almSignPost logic.
+        // this logic adds "Media Coverage" link on the left hand side article nav
+        // only on initial article page load
+        if (articleCoverageCurated.metrics.total > 0) {
+          buildMediaCoverageLink(articleCoverageCurated.metrics.total);
+        }
+
       }
     };
 
@@ -1870,4 +1901,51 @@ function confirmALMDataDisplayed() {
         "<img src=\"../images/icon_error.png\"/>&nbsp;Metrics unavailable. Please check back later.");
     }
   }
+}
+
+function buildMediaCoverageLink(coverageTotal) {
+  var mediaCoverageLink = $("<a></a>")
+      .attr("href", "/article/related/info:doi/" + $('meta[name=citation_doi]').attr("content"))
+      .text("Media Coverage (" + coverageTotal + ")");
+
+  // the media coverage link should be above the "Figures" link
+  // if "Figures" link doesn't exist, add it to the bottom of the list
+  if ($("#nav-article-page #nav-figures").length > 0) {
+    $("#nav-article-page #nav-figures").before($("<li></li>").append(mediaCoverageLink));
+  } else {
+    $("#nav-article-page ul:nth-child(2)").append($("<li></li>").append(mediaCoverageLink));
+  }
+}
+
+/**
+ * Adds the media coverage link when a user clicks on the article tab on the article page
+ */
+function addMediaCoverageLink() {
+  var almService = new $.fn.alm(), doi = $('meta[name=citation_doi]').attr("content");
+
+  var almSuccess = function (response) {
+    var data, sources, source;
+
+    if (response && response.length > 0) {
+      data = response[0];
+      sources = data.sources;
+
+      for(var i = 0; i < sources.length; i++){
+        source = sources[i];
+
+        if(source.name.toLowerCase() == 'articlecoveragecurated'){
+          if (source.metrics.total > 0) {
+            buildMediaCoverageLink(source.metrics.total);
+          }
+          break;
+        }
+      }
+    }
+  };
+
+  var almError = function() {
+    // do nothing
+  };
+
+  almService.getArticleSummaries([ doi ], almSuccess, almError);
 }

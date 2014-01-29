@@ -77,7 +77,7 @@ changeField();
 
 var journals_all = $('#journalsOpt_all');
 var subject_all = $('#subjectOption_all');
-var article_all = $('#articleType_all');
+var article_all = $('#articleTypes_all');
 
 var disableFormEls = function(el) {
   inpts = el.closest('ol').find('.options input');
@@ -110,7 +110,7 @@ article_all.change(function() {
   disableFormEls($(this));
 });
 
-$('#articleType_some').change(function() {
+$('#articleTypes_some').change(function() {
   enableFormEls($(this));
 });
 
