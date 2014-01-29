@@ -3,6 +3,7 @@ package org.ambraproject.service.user;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.hibernate.HibernateServiceImpl;
 import org.ambraproject.service.mailer.AmbraMailer;
+import org.ambraproject.service.password.PasswordDigestService;
 import org.ambraproject.util.TokenGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -14,8 +15,6 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.ambraproject.service.password.PasswordDigestService;
-import org.ambraproject.service.password.PasswordServiceException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +41,7 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
 
   /**
    * {@inheritDoc}
+   *
    * @param userProfile
    * @param password
    */
@@ -70,12 +70,10 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
 
     try {
       log.debug("Registering new user with email: {}", userProfile.getEmail());
-      userProfile.setPassword(passwordDigestService.getDigestPassword(password));
+      userProfile.setPassword(passwordDigestService.generateDigest(password));
       Long id = (Long) hibernateTemplate.save(userProfile);
       ambraMailer.sendVerificationEmail(userProfile.getEmail(), userProfile.getVerificationToken());
       return id;
-    } catch (PasswordServiceException e) {
-      throw new IllegalArgumentException("Could not hash password", e);
     } catch (DataIntegrityViolationException e) {
       throw new IllegalArgumentException("Didn't provide required field for user profile", e);
     }
@@ -213,13 +211,9 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
       throw new IllegalArgumentException("Incorrect email/verfication token: "
           + email + " / " + verificationToken);
     }
-    try {
-      log.debug("Setting new password for {}", email);
-      profile.setPassword(passwordDigestService.getDigestPassword(newPassword));
-      hibernateTemplate.update(profile);
-    } catch (PasswordServiceException e) {
-      throw new IllegalArgumentException("Failed to hash password");
-    }
+    log.debug("Setting new password for {}", email);
+    profile.setPassword(passwordDigestService.generateDigest(newPassword));
+    hibernateTemplate.update(profile);
 
   }
 
@@ -247,18 +241,14 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
       throw new NoSuchUserException("No user with the email: " + oldEmail);
     }
 
-    try {
-      boolean validPassword = passwordDigestService.verifyPassword(password, profile.getPassword());
-      if (!validPassword) {
-        throw new SecurityException("Invalid password");
-      }
-      log.debug("sending email change verification to {}", newEmail);
-      profile.setVerificationToken(TokenGenerator.getUniqueToken());
-      hibernateTemplate.update(profile);
-      ambraMailer.sendChangeEmailNotice(oldEmail, newEmail, profile.getVerificationToken());
-    } catch (PasswordServiceException e) {
-      throw new IllegalArgumentException("Error verifying password");
+    boolean validPassword = passwordDigestService.verifyPassword(password, profile.getPassword());
+    if (!validPassword) {
+      throw new SecurityException("Invalid password");
     }
+    log.debug("sending email change verification to {}", newEmail);
+    profile.setVerificationToken(TokenGenerator.getUniqueToken());
+    hibernateTemplate.update(profile);
+    ambraMailer.sendChangeEmailNotice(oldEmail, newEmail, profile.getVerificationToken());
   }
 
   @Override
