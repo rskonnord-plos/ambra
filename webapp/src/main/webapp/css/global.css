@@ -6109,3 +6109,9 @@ form.standard .note{
 a#media-coverage-form-link {
   cursor: pointer;
 }
+
+#media_coverage_addition {
+  font-weight: bold;
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
