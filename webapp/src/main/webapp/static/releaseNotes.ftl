@@ -35,6 +35,17 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.5</h2>
+  <p>Released February 4th, 2014</p>
+  <h3>Features Implemented in Ambra 2.9.5</h3>
+  <ul>
+      <li>Reposition of article page media coverage submission link</li>
+      <li>Fix for the return of 'unkown' in the article page's media coverage section</li>
+      <li>Removal of article page references use of CrossRef backfill for DOI citations</li>
+      <li>Increased salt in Ambra's password service</li>
+      <li>Break of relationship between DB schemas and Ambra releases (this is backwards compatible)</li>
+  </ul>
+
   <h2>Ambra 2.9.4</h2>
   <p>Released January 28, 2014</p>
   <h3>Features Implemented in Ambra 2.9.4</h3>
