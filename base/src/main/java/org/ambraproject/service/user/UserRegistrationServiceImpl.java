@@ -80,7 +80,8 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
   }
 
   @Override
-  public void verifyUser(String email, String verificationToken) throws NoSuchUserException, UserAlreadyVerifiedException {
+  public void verifyUser(String email, String verificationToken) throws NoSuchUserException,
+    UserAlreadyVerifiedException, VerificationTokenException {
     if (StringUtils.isEmpty(email)) {
       throw new IllegalArgumentException("Must supply an email");
     }
@@ -89,14 +90,14 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
     }
     UserProfile profile = (UserProfile) DataAccessUtils.uniqueResult(
         hibernateTemplate.findByCriteria(DetachedCriteria.forClass(UserProfile.class)
-            .add(Restrictions.eq("email", email))
-            .add(Restrictions.eq("verificationToken", verificationToken))
-        )
+            .add(Restrictions.eq("email", email)))
     );
     if (profile == null) {
       throw new NoSuchUserException("No user with email: " + email);
     } else if (profile.getVerified()) {
       throw new UserAlreadyVerifiedException("User " + email + " was already verified");
+    } else if (!verificationToken.equals(profile.getVerificationToken())) {
+      throw new VerificationTokenException("An invalid verification token was given for this user");
     }
     log.debug("Verifying user {}", email);
     profile.setVerified(true);
@@ -108,7 +109,7 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
    */
   @Override
   @Transactional
-  public void resendVerificationEmail(String email) throws NoSuchUserException, UserAlreadyVerifiedException {
+  public String resendVerificationEmail(String email) throws NoSuchUserException, UserAlreadyVerifiedException {
     if (StringUtils.isEmpty(email)) {
       throw new IllegalArgumentException("Must supply an email");
     }
@@ -130,6 +131,8 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
 
     log.debug("Resending verification email to {}", email);
     ambraMailer.sendVerificationEmail(email, profile.getVerificationToken());
+
+    return profile.getVerificationToken();
   }
 
   /**
@@ -137,7 +140,7 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
    */
   @Override
   @Transactional
-  public void sendForgotPasswordMessage(String email) throws NoSuchUserException {
+  public String sendForgotPasswordMessage(String email) throws NoSuchUserException {
     if (StringUtils.isEmpty(email)) {
       throw new IllegalArgumentException("Must supply an email");
     }
@@ -154,6 +157,8 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
     profile.setVerificationToken(passwordResetToken);
     hibernateTemplate.update(profile);
     ambraMailer.sendForgotPasswordEmail(email, passwordResetToken);
+
+    return passwordResetToken;
   }
 
   /**
@@ -189,6 +194,29 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
    */
   @Override
   @Transactional
+  public void removeVerificationToken(String email) {
+    UserProfile profile = (UserProfile) DataAccessUtils.uniqueResult(
+      hibernateTemplate.findByCriteria(
+        DetachedCriteria.forClass(UserProfile.class)
+          .add(Restrictions.eq("email", email))
+      )
+    );
+    if (profile == null) {
+      throw new IllegalArgumentException("Incorrect email: " + email);
+    }
+
+    log.debug("Resetting token for {}", email);
+
+    profile.setVerificationToken(null);
+
+    hibernateTemplate.update(profile);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
   public void resetPassword(final String email, final String verificationToken, final String newPassword) {
     for (Map.Entry<String, String> argument : new HashMap<String, String>() {{
       put("email", email);
@@ -217,9 +245,12 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
 
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   @Transactional
-  public void sendEmailChangeMessage(final String oldEmail, final String newEmail, final String password) throws NoSuchUserException {
+  public String sendEmailChangeMessage(final String oldEmail, final String newEmail, final String password) throws NoSuchUserException {
     for (Map.Entry<String, String> argument : new HashMap<String, String>() {{
       put("old email", oldEmail);
       put("new email", newEmail);
@@ -245,15 +276,19 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
     if (!validPassword) {
       throw new SecurityException("Invalid password");
     }
+
     log.debug("sending email change verification to {}", newEmail);
     profile.setVerificationToken(TokenGenerator.getUniqueToken());
     hibernateTemplate.update(profile);
     ambraMailer.sendChangeEmailNotice(oldEmail, newEmail, profile.getVerificationToken());
+
+    return profile.getVerificationToken();
   }
 
   @Override
   @Transactional
-  public void updateEmailAddress(final String oldEmail, final String newEmail, final String verificationToken) throws NoSuchUserException {
+  public void updateEmailAddress(final String oldEmail, final String newEmail, final String verificationToken) throws
+    NoSuchUserException, VerificationTokenException {
     for (Map.Entry<String, String> argument : new HashMap<String, String>() {{
       put("old email", oldEmail);
       put("new email", newEmail);
@@ -268,12 +303,13 @@ public class UserRegistrationServiceImpl extends HibernateServiceImpl implements
         hibernateTemplate.findByCriteria(
             DetachedCriteria.forClass(UserProfile.class)
                 .add(Restrictions.eq("email", oldEmail))
-                .add(Restrictions.eq("verificationToken", verificationToken))
         )
     );
 
     if (profile == null) {
       throw new NoSuchUserException("No user with the email: " + oldEmail);
+    } else if (!verificationToken.equals(profile.getVerificationToken())) {
+      throw new VerificationTokenException("An invalid verification token was given for this user");
     }
 
     log.debug("Changing email for {} to {}", oldEmail, newEmail);
