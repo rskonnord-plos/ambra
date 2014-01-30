@@ -33,7 +33,7 @@ public class ConfigurationTest extends TestCase {
   protected void setUp() throws ConfigurationException {
     ConfigurationStore store = ConfigurationStore.getInstance();
     ClassLoader loader = getClass().getClassLoader();
-    System.setProperty("ambra.virtualJournals.templateDir", loader.getResource(".").getFile());
+    System.setProperty("ambra.virtualJournals.templateDir", loader.getResource("").getFile());
     store.loadConfiguration(loader.getResource("ambra/configuration/defaults-dev.xml"));
     conf = store.getConfiguration();
     /*
