@@ -1,7 +1,6 @@
-/* $HeadURL::                                                                                      $
- * $Id$
+/*
+ * Copyright (c) 2006-2014 by Public Library of Science
  *
- * Copyright (c) 2006-2010 by Public Library of Science
  * http://plos.org
  * http://ambraproject.org
  *
@@ -9,7 +8,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,21 +19,26 @@
 package org.ambraproject.configuration;
 
 import java.util.List;
-
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-
 import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConfigurationTest extends TestCase {
+  private static final Logger log = LoggerFactory.getLogger(ConfigurationTest.class);
   private static Configuration conf = null;
 
   protected void setUp() throws ConfigurationException {
     ConfigurationStore store = ConfigurationStore.getInstance();
     ClassLoader loader = getClass().getClassLoader();
-    System.setProperty("ambra.virtualJournals.templateDir", loader.getResource("").getFile());
+
+    log.debug("Log file location: {}", loader.getResource("").getFile());
+
+    System.setProperty(ConfigurationStore.JOURNAL_TEMPLATE_DIR, loader.getResource("").getFile());
     store.loadConfiguration(loader.getResource("ambra/configuration/defaults-dev.xml"));
+
     conf = store.getConfiguration();
     /*
      * We want to use a test version of global-defaults.
