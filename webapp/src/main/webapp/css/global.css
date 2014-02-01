@@ -6183,3 +6183,8 @@ a#media-coverage-form-link {
     font-size: 16px;
 }
 
+#media_coverage_addition {
+  font-weight: bold;
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
