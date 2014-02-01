@@ -49,7 +49,7 @@ class Migrations {
       //          // Do stuff
       //        }
       //      },
-
+      new ScriptMigration(1001, "migrate_ambra_1001.sql")
   });
 
   /**
