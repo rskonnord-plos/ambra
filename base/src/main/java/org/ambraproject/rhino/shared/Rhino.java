@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package org.ambraproject.util;
+package org.ambraproject.rhino.shared;
 
 import org.ambraproject.views.article.ArticleType;
 import org.slf4j.Logger;
