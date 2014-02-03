@@ -18,6 +18,7 @@
 */
 package org.ambraproject.action.user;
 
+import org.ambraproject.models.UserOrcid;
 import org.ambraproject.models.UserProfile;
 import org.ambraproject.service.user.DuplicateOrcidException;
 import org.ambraproject.views.OrcidAuthorization;
@@ -32,6 +33,11 @@ import static org.ambraproject.Constants.AMBRA_USER_KEY;
  */
 public class OrcidConfirmAction extends EditUserAction {
   private static final Logger log = LoggerFactory.getLogger(OrcidConfirmAction.class);
+
+  //Redirect user back to this action after confirm to avoid
+  //Issue if user refreshes page to try to authenticate their account again
+  private static final String REDIRECT = "redirect";
+
   private String code;
 
   /**
@@ -48,7 +54,9 @@ public class OrcidConfirmAction extends EditUserAction {
     //If error is set, user denied us access to their profile data
     //Just pass through, display error in ftl
 
-    if(error == null) {
+    if(error != null) {
+      return ERROR;
+    } else {
       Map<String, Object> session = ServletActionContext.getContext().getSession();
       UserProfile user = (UserProfile)session.get(AMBRA_USER_KEY);
 
@@ -57,29 +65,43 @@ public class OrcidConfirmAction extends EditUserAction {
         //Some how the user got here with out this?  URL Hacking?
         return LOGIN;
       } else {
-        //on bad config an exception will be thrown, just let it pass through
-        OrcidAuthorization orcidAuthorization = orcidService.authorizeUser(this.code);
-
-        if(orcidAuthorization == null) {
-          //Handle user access denied and site down handled the same way
-          error = "System error";
-          error_description = "There was a system error when authenticating your ORCiD";
+        //If code is not present as a parameter, assume the account is already confirmed and
+        //the request has come via the redirect
+        UserOrcid userOrcid = userService.getUserOrcid(user.getID());
+        if(this.code == null && userOrcid != null) {
+          this.orcid = userOrcid.getOrcid();
+          return SUCCESS;
         } else {
-          this.orcid = orcidAuthorization.getOrcid();
+          //on bad config an exception will be thrown, just let it pass through
+          OrcidAuthorization orcidAuthorization = orcidService.authorizeUser(this.code);
 
-          try {
-            this.userService.saveUserOrcid(user.getID(), orcidAuthorization);
-          } catch(DuplicateOrcidException ex) {
-            log.error(ex.getMessage(), ex);
+          if(orcidAuthorization == null) {
+            //Handle user access denied and site down handled the same way
             error = "System error";
-            error_description = ex.getMessage();
+            error_description = "There was a system error when authenticating your ORCiD";
+
+            return ERROR;
+          } else {
+            try {
+              this.userService.saveUserOrcid(user.getID(), orcidAuthorization);
+              this.orcid = orcidAuthorization.getOrcid();
+
+              log.debug("User authenticated via ORCiD {}", this.orcid);
+
+              //Redirect user back to this action after confirm to avoid
+              //Issue if user refreshes page to try to authenticate their account again
+              return REDIRECT;
+            } catch(DuplicateOrcidException ex) {
+              log.error(ex.getMessage(), ex);
+              error = "System error";
+              error_description = ex.getMessage();
+
+              return ERROR;
+            }
           }
-          log.debug("User authenticated via ORCiD {}", this.orcid);
         }
       }
     }
-
-    return SUCCESS;
   }
 
   /**

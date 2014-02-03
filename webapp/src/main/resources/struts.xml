@@ -1021,7 +1021,13 @@
     </action>
 
     <action name="orcidConfirm" class="org.ambraproject.action.user.OrcidConfirmAction">
+      <result name="redirect" type="redirect">
+        <param name="location">/user/secure/profile/orcid/confirm</param>
+      </result>
       <result name="success" type="generic_freemarker">
+        <param name="templateFile">/user/userTabs.ftl</param>
+      </result>
+      <result name="error" type="generic_freemarker">
         <param name="templateFile">/user/userTabs.ftl</param>
       </result>
     </action>
