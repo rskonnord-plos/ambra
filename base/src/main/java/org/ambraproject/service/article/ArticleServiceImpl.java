@@ -1278,6 +1278,14 @@ public class ArticleServiceImpl extends HibernateServiceImpl implements ArticleS
    return orderedCategories;
   }
 
+  /**
+   * This method returns an instance of the RelatedArticleInfo based on the article's related article and
+   * their relationship.
+   *
+   * @param relationship the relationship between the parent article and its related article
+   * @param otherArticle the article's related article
+   * @return an instance of the RelatedArticleInfo
+   */
   private RelatedArticleInfo getRelatedArticleInfo(ArticleRelationship relationship, Article otherArticle) {
     RelatedArticleInfo relatedArticleInfo = new RelatedArticleInfo();
     relatedArticleInfo.setUri(URI.create(otherArticle.getDoi()));
