@@ -446,15 +446,15 @@ var FVFigDescripton = function(sld) {
     var desc_text = $desc.html();
     var $tease = $('<div class="tease" />');
     $tease.append(desc_text);
-    var $tease_p = $tease.find('p');
-    $tease_p.wrapInner('<span class="ellipsis_text" />');
+
+    $tease.wrapInner('<span class="ellipsis_text" />');
 
     $tease.insertAfter($title);
-    $tease_p.ThreeDots({
+    $tease.ThreeDots({
       max_rows:row,
       ellipsis_string:'... <span class="toggle more">show more</span>'
     });
-    $tease_p.find('span.more').click(function() {
+    $tease.find('span.more').click(function() {
       $FV.slides_el.addClass('txt-expand');
       $FV.txt_expanded = true;
     });
