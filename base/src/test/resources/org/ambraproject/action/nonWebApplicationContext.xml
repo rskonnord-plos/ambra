@@ -226,8 +226,6 @@
   </bean>
 
   <bean id="passwordDigestService" class="org.ambraproject.service.password.PasswordDigestService">
-    <property name="algorithm" value="SHA-256"/>
-    <property name="encodingCharset" value="UTF-8"/>
   </bean>
 
   <bean id="userRegistrationService" class="org.ambraproject.service.user.UserRegistrationServiceImpl">
