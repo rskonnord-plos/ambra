@@ -19,6 +19,7 @@
 
 package org.ambraproject.service.migration;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -35,7 +36,7 @@ class Migrations {
     throw new AssertionError("Not instantiable");
   }
 
-  private static final SchemaMigration[] MIGRATIONS = {
+  private static final ImmutableCollection<SchemaMigration> MIGRATIONS = ImmutableList.copyOf(new SchemaMigration[]{
 
       // New migrations may be added to the end of this array.
       //
@@ -49,7 +50,7 @@ class Migrations {
       //        }
       //      },
     new ScriptMigration(1001, "migrate_ambra_1001.sql")
-  };
+  });
 
   /**
    * Get all migrations (legacy and non-legacy) necessary to migrate the database schema from its earliest version to
@@ -60,7 +61,7 @@ class Migrations {
   static ImmutableList<Migration> getAllMigrations() {
     Collection<Migration> migrations = Lists.newArrayList();
     migrations.addAll(Arrays.asList(LegacyMigration.values()));
-    migrations.addAll(Arrays.asList(MIGRATIONS));
+    migrations.addAll(MIGRATIONS);
     return sort(migrations);
   }
 

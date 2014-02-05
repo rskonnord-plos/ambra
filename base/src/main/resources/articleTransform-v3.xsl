@@ -62,9 +62,9 @@
       <xsl:call-template name="make-front"/>
       <xsl:call-template name="newline1"/>
       <xsl:if test="not((@article-type='correction') or (@article-type='retraction') or (@article-type='expression-of-concern'))">
-        <div class="articleinfo">
-          <xsl:call-template name="make-article-meta"/>
-        </div>
+      <div class="articleinfo">
+        <xsl:call-template name="make-article-meta"/>
+      </div>
       </xsl:if>
       <xsl:call-template name="make-editors-summary"/>
       <xsl:call-template name="newline2"/>
@@ -1476,9 +1476,6 @@
       <xsl:apply-templates select="*[not(self::annotation) and not(self::edition) and not(self::person-group)
         and not(self::collab) and not(self::comment) and not(self::year) and not (self::article-title)]|text()" mode="none"/>
       <xsl:call-template name="citationComment"/>
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
-      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-type journal and no publication-type) -->
@@ -1487,9 +1484,6 @@
       <xsl:apply-templates select="collab" mode="book"/>
       <xsl:apply-templates select="*[not(self::edition) and not(self::person-group) and not(self::collab) and not(self::comment)] | text()" mode="none"/>
       <xsl:call-template name="citationComment" />
-      <xsl:if test="extraCitationInfo/@doi and not(ext-link) and not(comment/ext-link)">
-        doi: <xsl:value-of select="extraCitationInfo/@doi"/>
-      </xsl:if>
     </xsl:template>
 
     <!-- 1/4/12: plos-specific template: legacy references (publication-types book and other) -->

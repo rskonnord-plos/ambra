@@ -20,7 +20,7 @@
 
 package org.ambraproject.views.article;
 
-import org.ambraproject.util.Rhino;
+import org.ambraproject.rhino.shared.Rhino;
 import org.ambraproject.views.JournalView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

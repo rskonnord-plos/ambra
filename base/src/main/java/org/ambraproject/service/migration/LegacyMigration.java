@@ -34,9 +34,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.ambraproject.service.migration.BootstrapMigratorServiceImpl.execSQLScript;
-import static org.ambraproject.service.migration.BootstrapMigratorServiceImpl.getSQLScript;
-
 /**
  * Hard-coded migration logic abstracted into the {@link Migration} interface, but otherwise untouched.
  * <p/>
@@ -61,7 +58,7 @@ enum LegacyMigration implements Migration {
           v.setUpdateInProcess(true);
           session.save(v);
 
-          execSQLScript(session, "migrate_ambra_2_8_2_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_8_2_part1.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -88,7 +85,7 @@ enum LegacyMigration implements Migration {
           v.setUpdateInProcess(true);
           session.save(v);
 
-          execSQLScript(session, "migrate_ambra_2_8_0_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_8_0_part1.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -115,7 +112,7 @@ enum LegacyMigration implements Migration {
           v.setUpdateInProcess(true);
           session.save(v);
 
-          execSQLScript(session, "migrate_ambra_2_5_5_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_5_5_part1.sql");
 
           return v.getID();
         }
@@ -137,7 +134,7 @@ enum LegacyMigration implements Migration {
           Version v = (Version) session.load(Version.class, versionID);
 
           //Now that hash is populated, add a null constraint, unique constraint and created index
-          execSQLScript(session, "migrate_ambra_2_5_5_part2.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_5_5_part2.sql");
 
           v.setUpdateInProcess(false);
 
@@ -166,7 +163,7 @@ enum LegacyMigration implements Migration {
           v.setUpdateInProcess(true);
           session.save(v);
 
-          execSQLScript(session, "migrate_ambra_2_5_0.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_5_0.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -194,7 +191,7 @@ enum LegacyMigration implements Migration {
 
           log.debug("Creating new table.");
 
-          execSQLScript(session, "migrate_ambra_2_4_9_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_4_9_part1.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -222,7 +219,7 @@ enum LegacyMigration implements Migration {
 
           log.debug("Creating new table.");
 
-          execSQLScript(session, "migrate_ambra_2_4_8_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_4_8_part1.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -247,7 +244,7 @@ enum LegacyMigration implements Migration {
           v.setUpdateInProcess(true);
           session.save(v);
 
-          execSQLScript(session, "migrate_ambra_2_4_6_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_4_6_part1.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -273,7 +270,7 @@ enum LegacyMigration implements Migration {
           v.setUpdateInProcess(true);
           session.save(v);
 
-          execSQLScript(session, "migrate_ambra_2_4_3_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_4_3_part1.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -301,7 +298,7 @@ enum LegacyMigration implements Migration {
 
           log.debug("Creating new table.");
 
-          execSQLScript(session, "migrate_ambra_2_4_0_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_4_0_part1.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -329,11 +326,11 @@ enum LegacyMigration implements Migration {
 
           log.debug("Creating new table.");
 
-          execSQLScript(session, "migrate_ambra_2_3_7_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_7_part1.sql");
 
           log.debug("Table created, now generating data.");
 
-          execSQLScript(session, "migrate_ambra_2_3_7_part2.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_7_part2.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -361,15 +358,15 @@ enum LegacyMigration implements Migration {
 
           log.debug("Creating new tables.");
 
-          execSQLScript(session, "migrate_ambra_2_3_4_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_4_part1.sql");
 
           log.debug("Tables created, now migrating data.");
 
-          execSQLScript(session, "migrate_ambra_2_3_4_part2.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_4_part2.sql");
 
           log.debug("Migrated data, now dropping tables");
 
-          execSQLScript(session, "migrate_ambra_2_3_4_part3.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_4_part3.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -396,11 +393,11 @@ enum LegacyMigration implements Migration {
           session.save(v);
 
           log.debug("Creating new tables.");
-          execSQLScript(session, "migrate_ambra_2_3_2_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_2_part1.sql");
           log.debug("Tables created, now migrating and cleaning up data.");
-          execSQLScript(session, "migrate_ambra_2_3_2_part2.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_2_part2.sql");
           log.debug("Migrated data, now dropping tables");
-          execSQLScript(session, "migrate_ambra_2_3_2_part3.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_3_2_part3.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -428,19 +425,19 @@ enum LegacyMigration implements Migration {
 
           log.debug("Creating new tables.");
 
-          execSQLScript(session, "migrate_ambra_2_2_2_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_2_part1.sql");
 
           log.debug("Tables created, now migrating data.");
 
-          execSQLScript(session, "migrate_ambra_2_2_2_part2.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_2_part2.sql");
 
           log.debug("Cleaning up data");
 
-          execSQLScript(session, "migrate_ambra_2_2_2_part3.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_2_part3.sql");
 
           log.debug("Migrated data, now dropping tables");
 
-          execSQLScript(session, "migrate_ambra_2_2_2_part4.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_2_part4.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -463,7 +460,7 @@ enum LegacyMigration implements Migration {
         public Object doInHibernate(Session session) throws HibernateException, SQLException {
           log.debug("Creating new tables.");
 
-          execSQLScript(session, "migrate_ambra_2_2_0_part1.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_0_part1.sql");
 
           Version v = new Version();
           v.setName("Ambra 2.20");
@@ -478,7 +475,7 @@ enum LegacyMigration implements Migration {
           String sqlScript = "";
           try {
             log.debug("migrate_ambra_2_2_0_part2.sql started");
-            sqlScript = getSQLScript("migrate_ambra_2_2_0_part2.sql");
+            sqlScript = BootstrapMigratorServiceImpl.getSQLScript("migrate_ambra_2_2_0_part2.sql");
             log.debug("migrate_ambra_2_2_0_part2.sql completed");
           } catch (IOException ex) {
             throw new HibernateException(ex.getMessage(), ex);
@@ -486,12 +483,12 @@ enum LegacyMigration implements Migration {
 
           session.createSQLQuery(sqlScript).executeUpdate();
 
-          execSQLScript(session, "migrate_ambra_2_2_0_part3.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_0_part3.sql");
 
           //step 4 also creates a trigger, so we need to execute it the same as with step 2
           try {
             log.debug("migrate_ambra_2_2_0_part4.sql started");
-            sqlScript = getSQLScript("migrate_ambra_2_2_0_part4.sql");
+            sqlScript = BootstrapMigratorServiceImpl.getSQLScript("migrate_ambra_2_2_0_part4.sql");
             log.debug("migrate_ambra_2_2_0_part4.sql completed");
           } catch (IOException ex) {
             throw new HibernateException(ex.getMessage(), ex);
@@ -499,8 +496,8 @@ enum LegacyMigration implements Migration {
           session.createSQLQuery(sqlScript).executeUpdate();
 
 
-          execSQLScript(session, "migrate_ambra_2_2_0_part5.sql");
-          execSQLScript(session, "migrate_ambra_2_2_0_part6.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_0_part5.sql");
+          BootstrapMigratorServiceImpl.execSQLScript(session, "migrate_ambra_2_2_0_part6.sql");
 
           v.setUpdateInProcess(false);
           session.update(v);
@@ -513,15 +510,16 @@ enum LegacyMigration implements Migration {
     }
   };
 
-  private static Logger log = LoggerFactory.getLogger(LegacyMigration.class);
+  private static final Logger log = LoggerFactory.getLogger(LegacyMigration.class);
 
   static final int MIN_VERSION = 210;
 
   private final int version;
 
   private LegacyMigration(int version) {
-    Preconditions.checkArgument(version > MIN_VERSION);
-    Preconditions.checkArgument(version < SchemaMigration.THRESHOLD);
+    Preconditions.checkArgument(version > MIN_VERSION, "Legacy versions don't go below " + MIN_VERSION);
+    Preconditions.checkArgument(version < SchemaMigration.THRESHOLD,
+        "Legacy versions must be less than " + SchemaMigration.THRESHOLD);
     this.version = version;
   }
 

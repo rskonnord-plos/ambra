@@ -25,8 +25,6 @@ import org.hibernate.Session;
 
 import java.sql.SQLException;
 
-import static org.ambraproject.service.migration.BootstrapMigratorServiceImpl.execSQLScript;
-
 /**
  * A simple migration that applies one or more resource files as SQL scripts.
  *
@@ -43,13 +41,13 @@ class ScriptMigration extends SchemaMigration {
   ScriptMigration(int version, String... scriptPaths) {
     super(version);
     this.scriptPaths = ImmutableList.copyOf(scriptPaths);
-    Preconditions.checkArgument(!this.scriptPaths.isEmpty());
+    Preconditions.checkArgument(!this.scriptPaths.isEmpty(), "Empty list of migration scripts");
   }
 
   @Override
   protected void execute(Session session) throws SQLException {
     for (String scriptPath : scriptPaths) {
-      execSQLScript(session, scriptPath);
+      BootstrapMigratorServiceImpl.execSQLScript(session, scriptPath);
     }
   }
 

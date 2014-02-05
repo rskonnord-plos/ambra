@@ -106,7 +106,10 @@ public class BootstrapMigratorServiceImpl extends HibernateServiceImpl implement
         Criteria c = session.createCriteria(Version.class)
             .setProjection(Projections.max("version"));
 
-        int version = (Integer) c.uniqueResult();
+        Integer version = (Integer) c.uniqueResult();
+        if (version == null) {
+          return false; // no migrations have been run yet
+        }
 
         c = session.createCriteria(Version.class)
             .add(Restrictions.eq("version", version));
