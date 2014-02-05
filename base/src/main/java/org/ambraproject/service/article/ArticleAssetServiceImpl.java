@@ -155,6 +155,7 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
   @Override
   public ArticleAsset getArticleAsset(final String assetUri, final String representation, final String authId)
       throws NoSuchObjectIdException {
+
     // sanity check parms
     if (assetUri == null)
       throw new IllegalArgumentException("URI == null");
@@ -164,7 +165,6 @@ public class ArticleAssetServiceImpl extends HibernateServiceImpl implements Art
     }
     checkPermissions(assetUri, authId);
     try {
-
       List<ArticleAsset> asset = hibernateTemplate.findByCriteria(
               DetachedCriteria.forClass(ArticleAsset.class)
                       .add(Restrictions.eq("doi", assetUri))

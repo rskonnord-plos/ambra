@@ -1571,11 +1571,6 @@ span.author span.rel-footnote {
   cursor: pointer;
 }
 
-/*#nav-article-page li.corrections a {
-  color: #E53350;
-  font-weight: bold;
-}*/
-
 #nav-article-page .nav-page {
   border-bottom: 1px solid #d1d1d1;
 }
@@ -6118,10 +6113,7 @@ form.standard ul li {
     margin-bottom: 10px;
     display: block;
 }
-
-form.standard ul li.short {
-}
-
+form.standard ul li.short{ }
 form.standard ul {
     list-style-type: none;
     padding-left: 0;

@@ -68,7 +68,6 @@ public interface FetchArticleService extends HibernateService {
    * @throws TransformerException
    * @throws XPathExpressionException
    */
-
   public String  getAmendmentBody(Document doc) throws TransformerException, XPathExpressionException;
 
   /**

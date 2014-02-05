@@ -29,12 +29,7 @@ import org.ambraproject.action.BaseActionSupport;
 import org.ambraproject.service.article.ArticleService;
 import org.ambraproject.service.article.NoSuchArticleIdException;
 import org.ambraproject.models.Article;
-import org.ambraproject.models.ArticleAuthor;
 import org.ambraproject.util.UriUtil;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Action to create a citation.  Does not care what the output format is.
