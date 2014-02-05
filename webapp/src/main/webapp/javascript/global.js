@@ -31,6 +31,13 @@ var close_time;
 $(document).ready(function () {
   onReadyDocument();
   onReadyMainContainer();
+    $(document.body).on("click","a.test", function(event) {
+
+        alert("hello");
+        event.preventDefault();
+
+
+    });
 });
 
 // on document ready.
@@ -343,10 +350,12 @@ function initMainContainer() {
     // the content, cache the content here when the user navigates away from that
     // page. So that this cache can be reused when the user navigates back to
     // this page later.
-
-    // for related tab, we want to have most up to date information for Media Coverage
-    // so caching logic isn't necessary anymore.
-
+    if(selected_tab == "related") {
+      if($.pjax.contentCache[window.location.href] !== undefined) {
+        $.pjax.contentCache[window.location.href].data = $("#pjax-container").outerHTML();
+        $.pjax.contentCache[window.location.href].loaded = true;
+      }
+    }
     pjax_selected_tab = this.name;
     selected_tab = this.name;
     return true;
@@ -1697,8 +1706,6 @@ if ($(document).pjax) {
       $.getScript("http://wl.figshare.com/static/plos_widget.js?v=10");
       $.getScript("http://wl.figshare.com/static/jmvc/main_app/resources/jwplayer/jwplayer.js");
       figshare_widget_load = true;
-
-      addMediaCoverageLink();
     }
 
     // For related pages, if no item exists under more_by_authors and

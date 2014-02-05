@@ -677,9 +677,6 @@ $(function () {
       });
   });
 
-
-
-
   $('form[name=userSearchAlerts]').submit(function(event) {
     event.preventDefault();
 
@@ -704,38 +701,6 @@ $(function () {
       });
   });
 
-    $(document.body).on("click","a[data-js='orcid-delink']", function(event) {
-        $(".orcid-form").dialog({
-            autoOpen: true,
-            width: 550,
-            modal: true,
-            resizable: false,
-            dialogClass: 'default-modal',
-            title: 'De-link ORCiD account',
-            buttons: [{ text: "de-link",
-              click: function() {
-                          $.post("/user/secure/profile/orcid/remove", $(this).serialize())
-            .done(function(json) {
-                                  location.reload(true);
-            })
-            .fail(function(response) {
-                                  alert("fail");
-                                //  location.reload(true);
-            });
-                },
-                class: 'primary'
-            },
-                { text: 'Cancel',
-                    click: function() {
-                        $( this ).dialog( "close" );
-                    }
-                } ]
-        });
 
 
-
-       event.preventDefault();
-
-
-    });
 });

@@ -14,3 +14,7 @@
     </div>
 </div>
 
+<div class="orcid-form">
+    <p><strong>Are you sure you want to de-link your ORCid account from your PLOS account?</strong></p>
+</div>
+
