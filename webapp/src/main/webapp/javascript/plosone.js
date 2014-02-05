@@ -70,14 +70,14 @@ $(function () {
     el.closest('.articles-list').append(content);
     el.closest('.articles-list').find('a.abstract').on('click', function (e) {
       doi = $(this).data('doi');
-      launchModal(doi, null, 'abstract', true);
+      FigViewerInit(doi, null, 'abst', true);
       e.preventDefault();
       return false;
     });
 
     el.closest('.articles-list').find('a.figures').on('click', function (e) {
       doi = $(this).data('doi');
-      launchModal(doi, null, 'fig', true);
+      FigViewerInit(doi, null, 'figs', true);
       e.preventDefault();
       return false;
     });
