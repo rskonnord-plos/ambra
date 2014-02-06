@@ -1,6 +1,7 @@
 <div class="panel orcid-info cf">
     <div class="left border">
         <a href="http://orcid.org/about/what-is-orcid" target="_blank" class="image-text orcid">ORCID</a>
+
         <p>
             <a href="${orcidAuth}?scope=${scope?url}&redirect_uri=${redirectURL?url}&response_type=code&client_id=${clientID}&access_type=offline"><strong>Link
                 or create</strong></a> your ORCiD account now.</p>
@@ -11,10 +12,10 @@
             linkages between you and your professional activities ensuring that your work is recognized. <a
                     href="http://orcid.org/about/what-is-orcid" target="_blank">Find out more</a>.</p>
     </div>
-    <a href="#" class="test">test</a>
+
 </div>
 
-<div class="orcid-form" >
-    <p><strong>Are you sure you want to de-link your ORCid account from your PLOS account?</strong></p>
-</div>
+
+
+
 

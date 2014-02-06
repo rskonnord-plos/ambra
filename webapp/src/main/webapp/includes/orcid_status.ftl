@@ -14,7 +14,10 @@
     </div>
 </div>
 
-<div class="orcid-form">
-    <p><strong>Are you sure you want to de-link your ORCid account from your PLOS account?</strong></p>
+<div class="orcid-form no-display" >
+    <p class="messaging action"><strong>Are you sure you want to de-link your ORCid account from your PLOS
+        account?</strong></p>
+    <p class="messaging success no-display"><strong>Your account has been successfully de-linked</strong></p>
+    <p class="messaging failure no-display"><strong>Something has gone wrong! would you like to try again</strong></p>
 </div>
 

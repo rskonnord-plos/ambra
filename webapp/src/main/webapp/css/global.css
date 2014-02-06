@@ -305,6 +305,8 @@ th {
   float: right;
 }
 
+.no-display{display: none;}
+
 .btn,
 a.btn,
   /* active an inactive buttons in search results */

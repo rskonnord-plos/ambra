@@ -1,10 +1,9 @@
-
 $(function () {
 
   var indexes = {
-    profile:0,
-    journalAlerts:1,
-    savedSearchAlerts:2
+    profile: 0,
+    journalAlerts: 1,
+    savedSearchAlerts: 2
   };
 
   var activeIndex = indexes[$("#user-forms").attr('active')] || 0;
@@ -15,27 +14,27 @@ $(function () {
   //user/secure/editProfile.action?tabId=alerts$
   //user/secure/editProfile.action?tabId=savedSearchAlerts
   tabParam = getParameterByName("tabId");
-  if(tabParam) {
-    if(tabParam == "preferences") {
+  if (tabParam) {
+    if (tabParam == "preferences") {
       activeIndex = 0;
     }
 
-    if(tabParam == "alerts") {
+    if (tabParam == "alerts") {
       activeIndex = 1;
     }
 
-    if(tabParam == "savedSearchAlerts") {
+    if (tabParam == "savedSearchAlerts") {
       activeIndex = 2;
     }
   }//End block to delete
 
   /*
-  * Functions for the taxonomy browser
-  **/
-  var getJournalSubjectsFormValue = function(journal) {
+   * Functions for the taxonomy browser
+   **/
+  var getJournalSubjectsFormValue = function (journal) {
     var results = [];
 
-    $("input[name=journalSubjectFilters\\[\\'" + journal + "\\'\\]]").each(function(index, node) {
+    $("input[name=journalSubjectFilters\\[\\'" + journal + "\\'\\]]").each(function (index, node) {
         results.push($(node).val())
       }
     );
@@ -45,7 +44,7 @@ $(function () {
     return results;
   };
 
-  var addJournalSubjectsFormValue = function(journal, subject) {
+  var addJournalSubjectsFormValue = function (journal, subject) {
     var form = $("form[name=userAlerts]");
 
     //console.log("Appending subject:" + subject);
@@ -53,7 +52,7 @@ $(function () {
     form.append($("<input type=\"hidden\" name=\"journalSubjectFilters['" + journal + "']\" value=\"" + subject + "\">"));
   };
 
-  var selectSubject = function(subject) {
+  var selectSubject = function (subject) {
     var list = $('div.subjectsSelected ol');
 
     selectedSubjects.push(subject);
@@ -61,15 +60,15 @@ $(function () {
     findAndDisableSubject(subject);
     addJournalSubjectsFormValue(journal, subject);
 
-    if($("div.noSubjectsSelected").is(":visible")) {
-      $("div.noSubjectsSelected").slideUp({ complete: function() {
+    if ($("div.noSubjectsSelected").is(":visible")) {
+      $("div.noSubjectsSelected").slideUp({ complete: function () {
         $('div.subjectsSelected').slideDown();
       }});
     }
 
     var newNode = $("<li class=\"taxonomyNode\" style=\"display:none;\"><div class=\"filter-item\">" + subject + "&nbsp;<img src=\"/images/btn.close.png\"></div></li>");
 
-    newNode.find("img").click(function(event) {
+    newNode.find("img").click(function (event) {
       removeSubject($.trim($(event.target).parent().text()));
     });
 
@@ -80,36 +79,36 @@ $(function () {
     setSubjectSelectedState();
   };
 
-  var removeAllSubjects = function() {
+  var removeAllSubjects = function () {
     //console.log("Selected subject list: " + selectedSubjects);
 
     var selectedSubjectsTemp = selectedSubjects;
-    for(var i = 0; i < selectedSubjectsTemp.length; i++) {
+    for (var i = 0; i < selectedSubjectsTemp.length; i++) {
       //console.log("Removing subject: " + selectedSubjectsTemp[i]);
       removeSubject(selectedSubjectsTemp[i]);
     }
   };
 
-  var removeSubject = function(subject) {
+  var removeSubject = function (subject) {
     var list = $('div.subjectsSelected ol');
 
     //console.log("Subject List: " + selectedSubjects);
 
-    selectedSubjects = $(selectedSubjects).filter(function(value) {
+    selectedSubjects = $(selectedSubjects).filter(function (value) {
       return ($.trim(subject) != $.trim(value));
     });
 
     //console.log("Subject List: " + selectedSubjects);
-    list.find("div").filter(function() {
+    list.find("div").filter(function () {
       return ($.trim($(this).text()) == subject);
-    }).parent().slideUp({ complete: function() {
-      $(this).remove();
-    }});
+    }).parent().slideUp({ complete: function () {
+        $(this).remove();
+      }});
 
     findAndEnableSubject(subject);
 
-    if(selectedSubjects.length == 0) {
-      $("div.subjectsSelected").slideUp({ complete: function() {
+    if (selectedSubjects.length == 0) {
+      $("div.subjectsSelected").slideUp({ complete: function () {
         $('div.noSubjectsSelected').slideDown();
       }});
     }
@@ -125,8 +124,8 @@ $(function () {
    * If the user selects a subject without first making other form selections
    * Auto selected appropriate items
    */
-  var setSubjectSelectedState = function() {
-    $("#subjectSome_" + journal).attr('checked','true');
+  var setSubjectSelectedState = function () {
+    $("#subjectSome_" + journal).attr('checked', 'true');
     $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").attr('checked', 'true');
   };
 
@@ -134,7 +133,7 @@ $(function () {
    * If the user selects a subject without first making other form selections
    * Auto selected appropriate items
    */
-  var setSubjectUnSelectedState = function() {
+  var setSubjectUnSelectedState = function () {
     $("#subjectSome_" + journal).removeAttr('checked');
     $("#subjectAll_" + journal).removeAttr('checked');
     $("form[name=userAlerts] input[name=weeklyAlerts][value=" + journal + "]").removeAttr('checked');
@@ -142,18 +141,18 @@ $(function () {
     removeAllSubjects();
   };
 
-  var toggleSubjectSelector = function(eventObj, journal) {
+  var toggleSubjectSelector = function (eventObj, journal) {
     console.log('toggleSubjectSelector:' + $(eventObj.target).attr('class'));
 
     var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
     //If the current clicked node is a child, find the parent instead
-    var parentLI = $(eventObj.target).hasClass("filtered")?$(eventObj.target):$(eventObj.target).parents("li.filtered");
+    var parentLI = $(eventObj.target).hasClass("filtered") ? $(eventObj.target) : $(eventObj.target).parents("li.filtered");
     var chkBox = parentLI.find("input[name=weeklyAlerts]");
 
     //If user clicked on the checkbox or the checkbox's label
     //force the state of the rest of the form to comply
 
-    if(selector.is(":visible")) {
+    if (selector.is(":visible")) {
       //$(chkBox).attr("checked", false);
       $(selector).slideUp();
       $(parentLI)
@@ -175,10 +174,10 @@ $(function () {
     eventObj.preventDefault();
   };
 
-  var getTaxonomyTreeText = function(node) {
+  var getTaxonomyTreeText = function (node) {
     var parent = node.parents(".taxonomyNode");
 
-    if(parent.length > 0) {
+    if (parent.length > 0) {
       return(getTaxonomyTreeText($(parent[0])) + '/' + node.attr('data-key'));
     }
 
@@ -186,30 +185,30 @@ $(function () {
   };
 
   /* Find matching subjects in the tree and mark them selected */
-  var findAndDisableSubject = function(subject) {
-    $("#subjectAreaSelector span").filter(function() {
+  var findAndDisableSubject = function (subject) {
+    $("#subjectAreaSelector span").filter(function () {
         return ($(this).text() == subject);
       }
     ).addClass("checked")
-     .unbind('click');
+      .unbind('click');
   };
 
   /* Find matching subjects in the tree and enable them to be selected */
-  var findAndEnableSubject = function(subject) {
-    $("#subjectAreaSelector span").filter(function() {
-      return ($(this).text() == subject);
-     }
+  var findAndEnableSubject = function (subject) {
+    $("#subjectAreaSelector span").filter(function () {
+        return ($(this).text() == subject);
+      }
     ).removeClass("checked")
-     .click(function(event) {
-       selectSubject($(event.target).text());
+      .click(function (event) {
+        selectSubject($(event.target).text());
       });
   };
 
-  var createTaxonomyNodes = function(rootNode, response) {
-    $.each(response.categories, function(key, val) {
+  var createTaxonomyNodes = function (rootNode, response) {
+    $.each(response.categories, function (key, val) {
       var img = "";
 
-      if(val.length > 0) {
+      if (val.length > 0) {
         img = "<image class=\"expand\" src=\"/images/transparent.gif\"/>";
       } else {
         img = "<image src=\"/images/transparent.gif\"/>";
@@ -220,29 +219,29 @@ $(function () {
 
       $(rootNode).append(node);
 
-      node.find("span").each(function() {
+      node.find("span").each(function () {
         var selected = false;
 
         for (var i = 0; i < selectedSubjects.length; i++) {
-          if(selectedSubjects[i] == $(this).text()) {
+          if (selectedSubjects[i] == $(this).text()) {
             selected = true;
           }
         }
 
         //If the subject is already selected, don't set up events
-        if(selected) {
+        if (selected) {
           $(this).addClass("checked");
         } else {
-          $(this).click(function(event) {
+          $(this).click(function (event) {
             selectSubject($(event.target).parents("li").attr("data-key"));
           });
         }
       });
 
-      if(val.length > 0) {
-        $(node).find('img').click(function(event) {
+      if (val.length > 0) {
+        $(node).find('img').click(function (event) {
           //Already expanded state, remove children nodes
-          if($(event.target).hasClass("expanded")) {
+          if ($(event.target).hasClass("expanded")) {
             $(node).find('ol').children().remove();
             $(event.target).removeClass("expanded");
             $(event.target).addClass("expand");
@@ -254,10 +253,10 @@ $(function () {
             curTree = getTaxonomyTreeText(node);
 
             $.get("/taxonomy/json/" + curTree, $(this).serialize())
-              .done(function(response) {
+              .done(function (response) {
                 createTaxonomyNodes($(node).find('ol'), response);
               })
-              .fail(function(response) {
+              .fail(function (response) {
                 displaySystemError($('form[name=userAlerts]'), response);
                 console.log(response);
               });
@@ -267,34 +266,34 @@ $(function () {
     });
   }
 
-  var createTaxonomyNodesFromMap = function(rootNode, filter, map) {
-    $.each(map, function(key, val) {
+  var createTaxonomyNodesFromMap = function (rootNode, filter, map) {
+    $.each(map, function (key, val) {
       console.log(key);
       var hasChildren = !$.isEmptyObject(val.children);
-      var img = "<image " + (hasChildren?"class=\"expanded-nopointer\" ":"") + "src=\"/images/transparent.gif\"/>";
+      var img = "<image " + (hasChildren ? "class=\"expanded-nopointer\" " : "") + "src=\"/images/transparent.gif\"/>";
       var node = $("<li class=\"taxonomyNode\" data-key=\"" + key + "\">" + img + "<span>" +
         key.replace(new RegExp("(" + filter + ")", "gi"), "<b>$1</b>")
-         + "</span><ol></ol></li>")
+        + "</span><ol></ol></li>")
         .attr("data-value", key);
 
       $(rootNode).append(node);
 
-      node.find("span").each(function() {
+      node.find("span").each(function () {
         var selected = false;
 
         selectedSubjects = getJournalSubjectsFormValue(journal);
 
         for (var i = 0; i < selectedSubjects.length; i++) {
-          if(selectedSubjects[i] == $(this).text()) {
+          if (selectedSubjects[i] == $(this).text()) {
             selected = true;
           }
         }
 
         //If the subject is already selected, don't set up events
-        if(selected) {
+        if (selected) {
           $(this).addClass("checked");
         } else {
-          $(this).click(function(event) {
+          $(this).click(function (event) {
             selectSubject($(event.target).parents("li").attr("data-key"));
           });
         }
@@ -305,30 +304,30 @@ $(function () {
   }
 
   //Grab base taxonomy data
-  var resetInitialSubjectList = function() {
+  var resetInitialSubjectList = function () {
     $('#subjectAreaSelector').children().remove();
     $.get("/taxonomy/json", $(this).serialize())
-    .done(function(response) {
-      createTaxonomyNodes($('#subjectAreaSelector'), response);
-    })
-    .fail(function(response) {
-      displaySystemError($('form[name=userAlerts]'), response);
-      console.log(response);
-    });
+      .done(function (response) {
+        createTaxonomyNodes($('#subjectAreaSelector'), response);
+      })
+      .fail(function (response) {
+        displaySystemError($('form[name=userAlerts]'), response);
+        console.log(response);
+      });
   };
 
   $(".subjectSearchInput[type='text']").autocomplete({
-    select: function(event, ul) {
+    select: function (event, ul) {
       $(".subjectSearchInput[type='text']").val(ul.item.value);
       return false;
     },
 
-    focus: function(event, ul) {
+    focus: function (event, ul) {
       //Don't update the text of the box until a selection is made
       return false;
     },
 
-    source: function(entry, response) {
+    source: function (entry, response) {
       var termsHost = $('meta[name=termsHost]').attr("content");
 
       //make the request to solr
@@ -337,23 +336,23 @@ $(function () {
         context: document.body,
         timeout: 10000,
         callbackParameter: "json.wrf",
-        data:{
+        data: {
           "terms": "true",
-          "terms.fl" : "subject_facet",
-          "terms.regex" : ".*" + entry.term + ".*",
-          "terms.limit" : 25,
-          "terms.sort" : "index",
-          "terms.regex.flag" : "case_insensitive",
+          "terms.fl": "subject_facet",
+          "terms.regex": ".*" + entry.term + ".*",
+          "terms.limit": 25,
+          "terms.sort": "index",
+          "terms.regex.flag": "case_insensitive",
           "wt": "json"
         },
         success: function (data) {
           var options = [];
           //Every other element is what we want
-          for(var i = 0; i < data.terms.subject_facet.length; i = i + 2) {
+          for (var i = 0; i < data.terms.subject_facet.length; i = i + 2) {
             options.push({
-              label:data.terms.subject_facet[i].replace(new RegExp("(" + entry.term + ")", "gi"), "<b>$1</b>"),
+              label: data.terms.subject_facet[i].replace(new RegExp("(" + entry.term + ")", "gi"), "<b>$1</b>"),
               type: "html",
-              value:data.terms.subject_facet[i]
+              value: data.terms.subject_facet[i]
             });
           }
           response(options);
@@ -365,28 +364,28 @@ $(function () {
     }
   });
 
-  var searchTaxonomy = function(filter) {
-    if(filter.length == 0) {
+  var searchTaxonomy = function (filter) {
+    if (filter.length == 0) {
       $('#subjectAreaSelector').children().remove();
       getInitialSubjectList();
       return;
     }
 
-    if(filter.length < 3) {
+    if (filter.length < 3) {
       var node = $("<li><span class=\"required temp\">You must specify a term at least three letters long</span></li>");
       $('#subjectAreaSelector').children().remove();
       $('#subjectAreaSelector').append(node);
     } else {
       $.get("/taxonomy/json?filter=" + filter)
-        .done(function(response) {
+        .done(function (response) {
           $('#subjectAreaSelector').children().remove();
-          if(response.map == null) {
+          if (response.map == null) {
             response.status = 1;
             response.statusText = 'Map is null';
 
             displaySystemError($('form[name=userAlerts]'), response);
           } else {
-            if($.isEmptyObject(response.map)) {
+            if ($.isEmptyObject(response.map)) {
               var node = $("<li><span class=\"required temp\">The term you specified did not return any matches</span></li>");
               $('#subjectAreaSelector').children().remove();
               $('#subjectAreaSelector').append(node);
@@ -395,7 +394,7 @@ $(function () {
             }
           }
         })
-        .fail(function(response) {
+        .fail(function (response) {
           displaySystemError($('form[name=userAlerts]'), response);
           console.log(response);
         });
@@ -408,12 +407,12 @@ $(function () {
   selectedSubjects = getJournalSubjectsFormValue(journal);
 
   //Bind to UI events
-  $("li div.filter-item img").click(function(event) {
+  $("li div.filter-item img").click(function (event) {
     removeSubject($.trim($(event.target).parent().text()));
   });
 
-  $("#subjectAll_" + journal).click(function(eventObj) {
-    if(eventObj.target.checked) {
+  $("#subjectAll_" + journal).click(function (eventObj) {
+    if (eventObj.target.checked) {
       //resetInitialSubjectList();
       //removeAllSubjects();
 
@@ -425,20 +424,20 @@ $(function () {
     setSubjectSelectedState();
   });
 
-  $("#alert-form ol > li.filtered li.alerts-weekly label").click(function(eventObj) {
+  $("#alert-form ol > li.filtered li.alerts-weekly label").click(function (eventObj) {
     var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
 
-    if(!selector.is(":visible")) {
+    if (!selector.is(":visible")) {
       $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click();
     }
 
     eventObj.stopPropagation();
   });
 
-  $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function(eventObj) {
+  $("#alert-form ol > li.filtered input[name=weeklyAlerts]").click(function (eventObj) {
     //Kind of kludge, but this forces the event to be handled at the parent level
     var selector = $("li.subjectAreaSelector[journal=" + journal + "]");
-    if(!selector.is(":visible")) {
+    if (!selector.is(":visible")) {
       $("#alert-form ol > li.filtered").click();
     }
   });
@@ -447,25 +446,25 @@ $(function () {
     toggleSubjectSelector(eventObj, journal);
   });
 
-  $(":input[name='searchSubject_btn']").click(function(eventObj) {
+  $(":input[name='searchSubject_btn']").click(function (eventObj) {
     var filter = $(".subjectSearchInput[type='text']").val();
 
-    if($.trim(filter).length > 0) {
+    if ($.trim(filter).length > 0) {
       searchTaxonomy(filter);
     } else {
       resetInitialSubjectList();
     }
   });
 
-  if($(".subjectSearchInput[type='text']").val()) {
+  if ($(".subjectSearchInput[type='text']").val()) {
     $("div.clearFilter").css("display", "block");
   }
 
-  $(".subjectSearchInput[type='text']").keydown(function(eventObj) {
+  $(".subjectSearchInput[type='text']").keydown(function (eventObj) {
     //If user pressed enter, don't submit for form, just do the taxonomy search
     setSubjectSelectedState();
 
-    if(eventObj.which == 13) {
+    if (eventObj.which == 13) {
       eventObj.preventDefault();
       eventObj.stopPropagation();
       if ($(eventObj.target).val()) {
@@ -475,7 +474,7 @@ $(function () {
     }
   });
 
-  $(".subjectSearchInput[type='text']").keyup(function(eventObj) {
+  $(".subjectSearchInput[type='text']").keyup(function (eventObj) {
     if ($(eventObj.target).val()) {
       $("div.clearFilter").css("display", "block");
     } else {
@@ -483,7 +482,7 @@ $(function () {
     }
   });
 
-  $("div.clearFilter").click(function(eventObj) {
+  $("div.clearFilter").click(function (eventObj) {
     $(".subjectSearchInput[type='text']").val("");
     $("div.clearFilter").css("display", "none");
     $(".subjectSearchInput[type='text']").focus();
@@ -491,7 +490,7 @@ $(function () {
     resetInitialSubjectList();
   });
 
-  if($('#subjectAreaSelector').length) {
+  if ($('#subjectAreaSelector').length) {
     resetInitialSubjectList();
 
     //Don't bubble up the event
@@ -532,20 +531,20 @@ $(function () {
   //checkboxes on the search alerts form
   $("#checkAllWeeklySavedSearch").change(function () {
     $("li.search-alerts-weekly input").not(":first")
-        .attr("checked", $(this).is(":checked"));
+      .attr("checked", $(this).is(":checked"));
   });
 
   $("#checkAllMonthlySavedSearch").click(function () {
     $("li.search-alerts-monthly input").not(":first")
-        .attr("checked", $(this).is(":checked"));
+      .attr("checked", $(this).is(":checked"));
   });
 
   $("#checkAllDeleteSavedSearch").click(function () {
     $("li.search-alerts-delete input").not(":first")
-        .attr("checked", $(this).is(":checked"));
+      .attr("checked", $(this).is(":checked"));
   });
 
-  var confirmedSaved = function() {
+  var confirmedSaved = function () {
     var confirmBox = $("#save-confirm");
 
     //Set the center alignment padding + border see css style
@@ -553,8 +552,8 @@ $(function () {
     var popMargLeft = ($(confirmBox).width() + 24) / 2;
 
     $(confirmBox).css({
-      'margin-top' : -popMargTop,
-      'margin-left' : -popMargLeft
+      'margin-top': -popMargTop,
+      'margin-left': -popMargLeft
     });
 
     //Fade in the Popup
@@ -564,30 +563,34 @@ $(function () {
   };
 
   //Remove error messages before adding new ones
-  var cleanMesssages = function() {
-    $("span.required.temp").each(function(index, val) {
+  var cleanMesssages = function () {
+    $("span.required.temp").each(function (index, val) {
       $(val).slideUp();
-      setTimeout(function() { $(val).remove() }, 500);
+      setTimeout(function () {
+        $(val).remove()
+      }, 500);
     });
 
-    $("div.required.temp").each(function(index, val) {
+    $("div.required.temp").each(function (index, val) {
       $(val).slideUp();
-      setTimeout(function() { $(val).remove() }, 500);
+      setTimeout(function () {
+        $(val).remove()
+      }, 500);
     });
 
     $("li").removeClass("form-error");
   }
 
-  var validateProfileResponse = function(formObj, response) {
+  var validateProfileResponse = function (formObj, response) {
     var formBtn = $(formObj).find(":input[name='formSubmit']");
 
-    if(!$.isEmptyObject(response.fieldErrors)) {
+    if (!$.isEmptyObject(response.fieldErrors)) {
       var message = $('<span class="required temp">Please correct the errors above.</span>');
 
       formBtn.after(message);
 
-      $.each(response.fieldErrors, function(index, value) {
-        $(formObj).find(":input[name='" + index + "']").each(function(formIndex, element) {
+      $.each(response.fieldErrors, function (index, value) {
+        $(formObj).find(":input[name='" + index + "']").each(function (formIndex, element) {
           //Append class to parent LI
           $(element).parent().addClass("form-error");
           $(element).after(" <span class='required temp'>" + response.fieldErrors[index] + "</span>");
@@ -598,24 +601,24 @@ $(function () {
     }
   };
 
-  var validateAlertsResponse = function(formObj, response) {
+  var validateAlertsResponse = function (formObj, response) {
     //This action can only return one error
-    if(response.actionErrors.length > 0) {
+    if (response.actionErrors.length > 0) {
       //Display a message at the bottom of the form
-      $(formObj).find(":input[name='formSubmit']:eq(1)").each(function(index, val) {
+      $(formObj).find(":input[name='formSubmit']:eq(1)").each(function (index, val) {
         var message = $('<span style=\"display:none\" class="required temp">Please correct the error listed above.</span>');
         $(val).after(message);
         message.slideDown();
       });
 
-      if($(formObj).find("div.noSubjectsSelected").is(":visible")) {
-        $(formObj).find("div.noSubjectsSelected:eq(0)").each(function(index, val) {
+      if ($(formObj).find("div.noSubjectsSelected").is(":visible")) {
+        $(formObj).find("div.noSubjectsSelected:eq(0)").each(function (index, val) {
           var message = $('<div  style=\"display:none\" class="required temp">' + response.actionErrors[0] + '</div>');
           $(val).after(message);
           message.slideDown();
         });
       } else {
-        $(formObj).find(":input[name='formSubmit']:eq(0)").each(function(index, val) {
+        $(formObj).find(":input[name='formSubmit']:eq(0)").each(function (index, val) {
           var message = $('<div  style=\"display:none\" class="required temp">' + response.actionErrors[0] + '</div>');
           $(val).before(message);
           message.slideDown();
@@ -626,11 +629,11 @@ $(function () {
     }
   };
 
-  var displaySystemError = function(formObj, response) {
+  var displaySystemError = function (formObj, response) {
     var message = "System error.  Code: " + response.status + " (" + response.statusText + ")";
     var formBtn = $(formObj).find(":input[name='formSubmit']");
 
-    if($(formObj).find("span.required.temp").size() == 0) {
+    if ($(formObj).find("span.required.temp").size() == 0) {
       var errorP = $('<span class="required temp"/>');
 
       errorP.text(message);
@@ -641,53 +644,54 @@ $(function () {
   };
 
   //Make the forms submit via ajax
-  $('form[name=userForm]').submit(function(event) {
+  $('form[name=userForm]').submit(function (event) {
     event.preventDefault();
 
     $.post("/user/secure/saveProfileJSON.action", $(this).serialize())
-      .done(function(response) {
+      .done(function (response) {
         cleanMesssages();
-        if(validateProfileResponse($('form[name=userForm]'), response)) {
+        if (validateProfileResponse($('form[name=userForm]'), response)) {
           confirmedSaved();
         }
       })
-      .fail(function(response) {
+      .fail(function (response) {
         displaySystemError($('form[name=userForm]'), response);
         console.log(response);
       });
   });
 
-  $('form[name=userAlerts]').submit(function(event) {
+  $('form[name=userAlerts]').submit(function (event) {
     event.preventDefault();
 
     $.post("/user/secure/saveUserAlertsJSON.action", $(this).serialize())
-      .done(function(response) {
+      .done(function (response) {
         cleanMesssages();
-        if(validateAlertsResponse($('form[name=userAlerts]'), response)) {
+        if (validateAlertsResponse($('form[name=userAlerts]'), response)) {
           confirmedSaved();
 
-          if($("#subjectAll_" + journal).is(':checked')) {
+          if ($("#subjectAll_" + journal).is(':checked')) {
             removeAllSubjects();
-          };
+          }
+          ;
         }
       })
-      .fail(function(response) {
+      .fail(function (response) {
         displaySystemError($('form[name=userAlerts]'), response);
         console.log(response);
       });
   });
 
-  $('form[name=userSearchAlerts]').submit(function(event) {
+  $('form[name=userSearchAlerts]').submit(function (event) {
     event.preventDefault();
 
     $.post("/user/secure/saveSearchAlertsJSON.action", $(this).serialize())
-      .done(function(json) {
+      .done(function (json) {
         //There is no form to validate
-        $.each(json.deleteAlerts, function(index, value) {
-          $("#saID" + value).slideUp(400, function(target) {
+        $.each(json.deleteAlerts, function (index, value) {
+          $("#saID" + value).slideUp(400, function (target) {
             $("#saID" + value).remove();
 
-            if($(".saID").size() == 0) {
+            if ($(".saID").size() == 0) {
               $("#saOL").slideUp();
               $("#sa_none_defined").slideDown();
             }
@@ -695,12 +699,62 @@ $(function () {
         });
         confirmedSaved();
       })
-      .fail(function(response) {
+      .fail(function (response) {
         displaySystemError($('form[name=userSearchAlerts]'), response);
         console.log(response);
       });
   });
 
+  $(document.body).on("click", "a[data-js='orcid-delink']", function (event) {
+
+    var $modal = $(".orcid-form");
+    var popupMessage = function (which_message) {
+      $('p.messaging').addClass('no-display').siblings(which_message).removeClass('no-display');
+    };
+    var removeUrl = $("a[data-js='orcid-delink']").attr('href');
+
+    event.preventDefault();
+
+    $modal.dialog({
+      autoOpen: true,
+      width: 550,
+      modal: true,
+      resizable: false,
+      dialogClass: 'default-modal',
+      title: 'De-link ORCiD account',
+      buttons: [
+        { text: "de-link",
+          click: function () {
+            $.post(removeUrl, $(this).serialize())
+              .done(function (json) {
+                popupMessage('.success');
+                $modal.dialog("option", "buttons", [
+                  { text: "Close", click: function () {
+                    $(this).dialog('close');
+                    window.location.href = "/user/secure/profile";
+                  } }
+                ]);
+
+              })
+              .fail(function (response) {
+                popupMessage('.failure');
+                $modal.dialog("option", "buttons", [
+                  { text: "Close", click: function () {
+                    popupMessage('.action');
 
 
+                  } }
+                ]);
+              });
+          },
+          class: 'primary'
+        },
+        { text: 'Cancel',
+          click: function () {
+            $(this).dialog("close");
+          }
+        }
+      ]
+    });
+  });
 });
