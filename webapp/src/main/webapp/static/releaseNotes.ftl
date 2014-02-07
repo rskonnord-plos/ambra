@@ -35,6 +35,15 @@
     become available. This page summarizes features and known bugs in each updated version.
   </p>
 
+  <h2>Ambra 2.9.6</h2>
+  <p>Released February 11, 2014</p>
+  <h3>Features Implemented in Ambra 2.9.6</h3>
+  <ul>
+      <li>New figure lightbox for the article pages</li>
+      <li>Updated permissions service</li>
+      <li>Another fix for input error handling on article list curation tool for PLOS One homepage</li>
+  </ul>
+
   <h2>Ambra 2.9.5</h2>
   <p>Released February 4, 2014</p>
   <h3>Features Implemented in Ambra 2.9.5</h3>
