@@ -36,6 +36,9 @@ public enum AnnotationType {
       return COMMENT;
     } else if (REPLY.string.equals(string)) {
       return REPLY;
+      // TODO: Remove after deleting Formal Corrections/Retractions from db
+    } else if (string.equalsIgnoreCase("FormalCorrection") || string.equalsIgnoreCase("Retraction")){
+      return null;
     } else {
       throw new IllegalArgumentException("Unknown annotation type: " + string);
     }
