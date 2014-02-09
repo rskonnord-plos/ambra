@@ -4584,6 +4584,10 @@ legend.conjunction span {
   cursor: pointer;
 }
 
+.fig-btn .icn {
+  background-image: url(../images/fv.sprite.png);
+}
+
 #fig-viewer-controls .thmb-btn {
   padding: 0;
   width: 162px;
@@ -4591,18 +4595,32 @@ legend.conjunction span {
   font-weight: bold;
 }
 
-.fig-btn .icn {
-  display: block;
-  width: 7px;
-  height: 11px;
-  background-image: url(../images/fv.sprite.png);
-  margin-top: 10px;
+#fig-viewer-controls .thmb-btn .icn {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  background-position: -90px -20px;
+  margin-right: 2px;
 }
 
 #fig-viewer-controls .fig-btn:hover,
 .thmbs-vis #fig-viewer-controls .thmb-btn {
   background-color: #3c63af;
   color: #fff;
+}
+
+#fig-viewer-controls .thmb-btn:hover .icn,
+.thmbs-vis #fig-viewer-controls .thmb-btn .icn {
+  background-position: -110px -20px;
+}
+
+.fig-btn.next .icn,
+.fig-btn.prev .icn {
+  display: block;
+  width: 7px;
+  height: 11px;
+  margin-top: 10px;
 }
 
 .fig-btn.next .icn {
@@ -4688,6 +4706,12 @@ legend.conjunction span {
   font-weight: bold;
   line-height: 1.143;
 }
+
+#fig-viewer-slides .txt .title.test-height {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 #fig-viewer-slides .txt .title b {
   color: #636363;
   text-transform: uppercase;
@@ -4731,18 +4755,26 @@ legend.conjunction span {
   display: block;
 }
 
-#fig-viewer-slides .desc {
+#fig-viewer-slides .text-more {
   display: none;
   font-size: 0.923em;
   line-height: 1.167;
   padding: 5px 0 15px;
 }
 
-#fig-viewer-slides.txt-expand .desc {
+#fig-viewer-slides .tease {
+  padding-top: 1px;
+}
+
+#fig-viewer-slides.txt-expand .text-more {
   display: block;
 }
 
-#fig-viewer-slides .desc p {
+#fig-viewer-slides.txt-expand .tease {
+  display: none;
+}
+
+#fig-viewer-slides .txt p {
   margin: 0;
 }
 
@@ -4882,12 +4914,60 @@ legend.conjunction span {
   line-height: 1.077;
 }
 
+#fig-viewer-abst .info p {
+  border: 1px solid #e1e1e1;
+  border-top-width: 0;
+  margin: 0;
+  padding: 6px 8px 9px;
+}
+
+#fig-viewer-abst .info p:first-child {
+  border-top-width: 1px;
+}
+#fig-viewer-abst .info p:nth-child(odd) {
+  background: #e8e8e8;
+  border-right-color: #e8e8e8;
+  border-left-color: #e8e8e8;
+}
+
+#fig-viewer-abst .info p:nth-child(1) {
+  border-top-color: #e8e8e8;
+}
+
+#fig-viewer-abst .info p strong {
+  font-size: 1.077em;
+  display: block;
+  color: #636363;
+}
+
 .fv-lnk-pdf a {
   padding: 0 23px;
   font-size: 16px;
   line-height: 28px;
   font-weight: normal;
   background: #636363;
+}
+
+
+#fig-viewer-refs h3 {
+  margin: 25px 0 7px 21px;
+}
+
+#fig-viewer-refs ol {
+  padding-left: 3.077em;
+  width: 87.5%;
+  margin-top: 0;
+}
+#fig-viewer-refs ol > li {
+  font-size: 1.231em;
+  font-weight: bold;
+  line-height: 1.25;
+  margin-bottom: 7px;
+}
+
+#fig-viewer-refs .find {
+  font-size: 0.813em;
+  font-weight: normal;
 }
 
 /* applied to body element while modal is active to prevent scrolling */
