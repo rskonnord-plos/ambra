@@ -33,8 +33,8 @@ title="User Information Form" class="ambra-form" enctype="multipart/form-data">
 
     <#if error??>
       <div class="message error">
-        <h3><span class="icon warning"></span>There was a problem with your ORCiD: ${error}</h3>
-        <p>${error_description}.  If this continues to occur, please contact our support.</strong></p>
+        <p><span class="icon error"></span><strong>There was a problem with your ORCiD</strong></br>
+        ${error_description}.  If this continues to occur, please contact our support.</p>
       </div>
     </#if>
   </#if>

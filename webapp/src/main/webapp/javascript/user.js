@@ -723,7 +723,8 @@ $(function () {
       dialogClass: 'default-modal',
       title: 'De-link ORCiD account',
       buttons: [
-        { text: "de-link",
+        { text: "De-link",
+          className: "primary",
           click: function () {
             $.post(removeUrl, $(this).serialize())
               .done(function (json) {
@@ -742,12 +743,10 @@ $(function () {
                   { text: "Close", click: function () {
                     popupMessage('.action');
 
-
                   } }
                 ]);
               });
-          },
-          class: 'primary'
+          }
         },
         { text: 'Cancel',
           click: function () {

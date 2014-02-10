@@ -326,7 +326,8 @@ a.btn,
   cursor: pointer;
 }
 
-.btn.primary {
+.btn.primary,
+btn.main{
   background: #F8AF2D;
   color: #333;
 }
@@ -5426,7 +5427,7 @@ The CSS for dialog widget,
 }
 
 .ui-dialog .ui-dialog-buttonpane button {
-    margin: .5em .4em .5em 0;
+    margin: .5em 5px .5em 0;
     cursor: pointer;
 }
 
@@ -6168,13 +6169,21 @@ a#media-coverage-form-link {
 }
 .icon {
     display: inline-block;
-    margin-right: 5px;
+    margin-right: 3px;
 }
 
 .icon.check {
-    background: url('/images/icon-check.png') no-repeat 2px 0;
-    height: 14px;
-    width: 18px;
+    background: url('/images/icon-check.png') no-repeat 0 0;
+    height: 16px;
+    width: 16px;
+    vertical-align: middle;
+}
+
+.icon.error {
+    background: url('/images/icon-error.png') no-repeat 0 0;
+    height: 16px;
+    width: 16px;
+    vertical-align: text-top;
 }
 
 .image-text {
@@ -6187,11 +6196,19 @@ a#media-coverage-form-link {
     width: 140px;
     height: 43px;
     margin-bottom: 10px;
+    line-height: 20px;
 }
 
+.message {
+    font-size: 16px;
+    line-height: 20px;
+}
 .success {
     color: #16A127;
-    font-size: 16px;
+}
+
+.error {
+    color: #E53350;
 }
 
 #media_coverage_addition {
