@@ -256,7 +256,7 @@ function initMainContainer() {
         e.preventDefault();
         doi = $(this).data('doi');
         ref = $(this).data('uri');
-        launchModal(doi, ref, 'fig');
+        FigViewerInit(doi, ref, 'figs');
       });
     } else {
       $figure_thmbs.addClass('collapse');
@@ -271,7 +271,7 @@ function initMainContainer() {
       e.preventDefault();
       ref = $(this).data('uri');
       doi = $(this).data('doi');
-      launchModal(doi, ref, 'fig');
+      FigViewerInit(doi, ref, 'figs');
     });
     $lnks.append('<div class="expand" />');
   }
@@ -281,13 +281,13 @@ function initMainContainer() {
   if ($fig_results.length) {
     $fig_results.find('a.figures').on('click', function (e) {
       doi = $(this).data('doi');
-      launchModal(doi, null, 'fig', true);
+      FigViewerInit(doi, null, 'figs', true);
       e.preventDefault();
       return false;
     });
     $fig_results.find('a.abstract').on('click', function (e) {
       doi = $(this).data('doi');
-      launchModal(doi, null, 'abstract', true);
+      FigViewerInit(doi, null, 'abst', true);
       e.preventDefault();
       return false;
     });
@@ -298,7 +298,7 @@ function initMainContainer() {
   if ($nav_figs.length) {
     $nav_figs.on('click', function () {
       var doi = $(this).data('doi');
-      launchModal(doi, null, 'fig');
+      FigViewerInit(doi, null, 'figs');
     });
   }
 
@@ -307,12 +307,12 @@ function initMainContainer() {
   if ($toc_block_links.length) {
     $toc_block_links.find('a.figures').on('click', function () {
       var doi = $(this).data('doi');
-      launchModal(doi, null, 'fig', true);
+      FigViewerInit(doi, null, 'figs', true);
     });
 
     $toc_block_links.find('a.abstract').on('click', function () {
       var doi = $(this).data('doi');
-      launchModal(doi, null, 'abstract', true);
+      FigViewerInit(doi, null, 'abst', true);
     });
   }
 
@@ -1088,416 +1088,24 @@ $.fn.outerHTML = function(){
 }
 
 // End of $ function definitions
-
-// Begin Figure Viewer
-
-var launchModal = function (doi, ref, state, imgNotOnPage) {
-  var path = '/article/fetchObject.action?uri='
-  //var path = 'article/';
-  var $modal = $('<div id="fig-viewer" class="modal" />');
-  var $thmbs = $('<div id="fig-viewer-thmbs" />');
-  var $slides = $('<div id="fig-viewer-slides" />');
-  var $abstract = $('<div id="fig-viewer-abst" />');
-  var $mask = $('<div id="modal-mask" />').on('click', function () {
-    killModal();
-  });
-  var active_thmb = null;
-  var page_url;
-  var modal_h;
-  var slides_h;
-  var $figs;
-  var figs_h;
-  var thmbs_h;
-  var thmb_h;
-  var thmbs_resized_h;
-  var $thmb_1;
-  var abst_h;
-  var $abs_txt;
-  var abs_txt_h;
-  var $all_thmb;
-  var $all_sld;
-  var txt_expanded;
-
-  /**
-   * When the user clicks "more" or "less", change the expanded state of every slide.
-   */
-  var toggleExpand = function () {
-    var slideCaptions = $('#fig-viewer-slides .slide .content');
-    var titleCaptions = $('#fig-viewer-slides .slide .title');
-    var toggleMoreButton = $('#fig-viewer-slides .slide .more');
-    var toggleLessButton = $('#fig-viewer-slides .slide .less');
-
-    if (txt_expanded) {
-      slideCaptions.removeClass('expand');
-      titleCaptions.removeClass('titleexpand');
-      toggleMoreButton.removeClass('hidden');
-      toggleLessButton.addClass('hidden');
-      txt_expanded = false;
-    } else {
-      slideCaptions.addClass('expand');
-      titleCaptions.addClass('titleexpand');
-      toggleMoreButton.addClass('hidden');
-      toggleLessButton.removeClass('hidden');
-      txt_expanded = true;
-    }
-  };
-
-  var buildFigs = function () {
-    $.ajax({
-      url:'/article/lightbox.action?uri=' + doi,
-      // url: 'article/' + doi,
-      dataFilter:function (data, type) {
-        return data.replace(/(^\/\*|\*\/$)/g, '');
-      },
-      dataType:'json',
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-      },
-      success:function (data) {
-        page_url = data.URL;
-        $.each(data.secondaryObjects, function () {
-          title_txt = (this.title ? this.title + '. ' : '') + this.transformedCaptionTitle;
-
-          image_title = this.title + ' ' + this.plainCaptionTitle;
-
-          $thmb = $('<div class="thmb"' + ' data-uri="' + this.uri + '"><div class="thmb-wrap"><img src="' + path + this.uri + '&representation=PNG_I' + '" alt="' + image_title + '" title="' + image_title + '"></div></div>').on('click', function () {
-            changeSlide($(this));
-          })
-          $thmbs.append($thmb);
-          var slide = $('<div class="slide" />');
-          var txt = $('<div class="txt" />');
-          var lnks = $('<div class="lnks" />');
-          var content = $('<div class="content" />')
-          var title = '<div class="title">' + title_txt + '</div>';
-          txt_expanded = false;
-          var toggleMore = $('<div class="toggle more">show more</div>').click(toggleExpand);
-          var toggleLess = $('<div class="toggle less hidden">show less</div>').click(toggleExpand);
-          var context_hash = showInContext(this.uri);
-          if (imgNotOnPage) { // the image is on another page
-            context_hash = '/article/' + page_url + context_hash;
-          }
-          var desc = '<div class="desc">' + this.transformedDescription + '<p>' + this.doi.replace('info:doi/','doi:') + '</p></div>';
-          var img = '<div class="figure" data-img-src="' + path + this.uri + '&representation=' + this.repMedium + '" data-img-txt="' + image_title + '"></div>'
-          var lnks_txt = '<ul class="download">'
-            + '<li class="label">Download: </li>'
-            + '<li><span class="icon"><a href="' + "/article/" + this.uri + "/powerpoint" + '">PPT</a></span> <a href="' + "/article/" + this.uri + "/powerpoint" + '" class="ppt">PowerPoint slide</a></li>'
-            + '<li><span class="icon"><a href="' + "/article/" + this.uri + "/largerimage" + '">PNG</a></span> <a href="' + "/article/" + this.uri + "/largerimage" + '" class="png">larger image (' + displaySize(this.sizeLarge) + ')</a></li>'
-            + '<li><span class="icon"><a href="' + "/article/" + this.uri + "/originalimage" + '">TIFF</a></span> <a href="' + "/article/" + this.uri + "/originalimage" + '" class="tiff">original image (' + displaySize(this.sizeTiff) + ')</a></li>'
-            + '</ul>'
-            + '<ul class="figure_navigation">'
-            + '<li><span class="btn active">browse figures</span></li>'
-            + '<li><span class="btn viewAbstract" onclick="toggleModalState();">view abstract</span></li>'
-            + '<li><a class="btn" href="' + context_hash + '" onclick="killModal();">show in context</a></li>'
-            + '</ul>'
-          slide.append(img);
-          content.append(title);
-
-          if (!/^\s*$/.test(this.transformedDescription) ||
-            $(title).text().length > 50) {
-            content.append(toggleMore);
-            content.append(desc);
-          }
-          txt.append(toggleLess);
-          txt.append(content);
-          lnks.append(lnks_txt);
-          slide.append(txt);
-          slide.append(lnks);
-          $slides.append(slide);
-        });
-
-        btn_prev = $('<span class="fig-btn prev" />').on('click',function () {
-          t = active_thmb.prev()
-          changeSlide(t);
-        }).appendTo($slides);
-        btn_next = $('<span class="fig-btn next" />').on('click',function () {
-          t = active_thmb.next()
-          changeSlide(t);
-        }).appendTo($slides);
-        $modal.append($slides);
-        $modal.append($thmbs);
-        $thmb_1 = $thmbs.find('div.thmb').eq(0);
-        $all_thmb = $thmbs.find('div.thmb');
-        $all_sld = $slides.find('div.slide');
-        if (ref) {
-          $thmbs.find('div[data-uri="' + ref + '"]').trigger('click');
-        } else {
-          $thmb_1.trigger('click');
-        }
-        buildAbs(data, imgNotOnPage);
-
-        // rerun mathjax
-        try {
-          var domelem = $modal[0];
-          if (domelem && typeof MathJax != "undefined") {
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub,domelem]);
-          }
-        } catch (e) {
-          // ignore
-        }
-      }
-    });
-  };
-
-  /**
-   * @param isButton {boolean} {@code true} to style as a button; {@code false} for plain-text link
-   * @return {String} an HTML snippet for the lightbox's "full text" button
-   */
-  var getFullTextElement = function (isButton) {
-    var articleBlock = $('#article-block');
-    var aClass = isButton ? 'class="btn"' : '';
-    if (articleBlock.length == 0) {
-      // Not on the article page, so the full text button should link there
-      return '<a ' + aClass + ' href="' + '/article/' + page_url + '">';
-    }
-    // On the article page, so "full text" closes the lightbox and jumps to the abstract
-    var href = '#abstract0';
-    if (articleBlock.find(href).length == 0) {
-      href = '#'; // article has no abstract; default to top of page
-    }
-    return '<a ' + aClass + ' href="' + href + '" onclick="killModal();">';
-  };
-
-  var buildAbs = function (data, linkTitle) {
-    var abstractText = data.abstractText;
-    var abstractHtml = '<div id="fig-viewer-abst">'
-      + '<div class="txt"><p>' + abstractText + '</p></div>'
-      + '<div class="lnks">'
-      + '<ul class="download">'
-      + '<li class="label">Download: </li>'
-//   + '<li><span class="icon">PDF</span> <a href="' + "/article/" + this.uri + "/pdf" + '" class="pdf">Full Article PDF Version</a></li>'
-      + '<li><span class="icon">PDF</span> <a href="' + "/article/" + doi + "/pdf" + '" class="pdf" target="_blank">Full Article PDF Version</a></li>'
-      + '</ul>'
-      + '<ul class="figure_navigation">'
-      + '<li><span class="btn" onclick="toggleModalState();">browse figures</span></li>'
-      + '<li><span class="btn active viewAbstract">view abstract</span></li>'
-      + '<li>' + getFullTextElement(true) + 'show in context</a></li>'
-      + '</ul>'
-      + '</div>'
-      + '</div>';
-
-    $modal.append(abstractHtml);
-
-    if (!abstractText || /^\s*$/.test(abstractText)) {
-      // There is no abstract. Go back and hide the "view abstract" button created in buildFigs (not just here).
-      $modal.find('.viewAbstract').hide();
-    }
-
-    displayModal(data.articleType, data.articleTitle, data.authors, data.uri, linkTitle);
-  };
-
-
-  var displayModal = function (articleType, title, authors, articleDoi, linkTitle) {
-    if(typeof(_gaq) !== 'undefined'){
-      _gaq.push(['_trackEvent',"Lightbox", "Display Modal", ""]);
-    }
-    $hdr = $('<div class="header" />');
-    if (linkTitle) {
-      var articleLink = "http://dx.plos.org/" + articleDoi.replace("info:doi/", "");
-      h1 = '<h1><a href="' + articleLink + '">' + title + '</a></h1>';
-    } else {
-      h1 = '<h1>' + title + '</h1>';
-    }
-    authorList = $('<ul class="authors"></ul>');
-    $.each(authors, function (index, author) {
-      $('<li>' + author + '</li>').appendTo(authorList);
-    })
-
-    $hdr.append('<span id="article-type-heading">' + articleType + '</span>');
-    $hdr.append(h1);
-    $hdr.append(authorList);
-
-    $close = $('<span class="close" />').on('click', function () {
-      killModal();
-    });
-    $hdr.append($close);
-    $modal.prepend($hdr);
-    if (state == 'abstract') {
-      $modal.addClass('abstract');
-    }
-
-    $('body').append($modal)
-      .append($mask);
-
-    // add helper class to body element to prevent page scrolling when modal is open
-    $('body').addClass('modal-active');
-
-    modal_h = $modal.height();
-    slides_h = $slides.height();
-    $figs = $slides.find('div.figure');
-    figs_h = $figs.eq(0).height();
-    thmbs_h = $thmbs.height();
-    abst_h = $abstract.height();
-    $abs_txt = $abstract.find('div.txt');
-    abs_txt_h = $abs_txt.height();
-    bt = parseInt($thmb_1.css('borderTopWidth'));
-    bb = parseInt($thmb_1.css('borderBottomWidth'));
-    h = $thmb_1.innerHeight();
-    thmb_h = bt + bb + h;
-    thmbs_resized_h = thmbs_h;
-    resizeModal();
-    $win.bind('resize.modal', resizeModal);
-
-  };
-
-  var changeSlide = function (thmb) {
-    if(typeof(_gaq) !== 'undefined'){
-      _gaq.push(['_trackEvent',"Lightbox", "Slide Changed", ""]);
-    }
-
-    $all_sld.hide();
-    this_sld = $all_sld.eq($all_thmb.index(thmb));
-    $fig = this_sld.find('div.figure');
-    if ($fig.is('[data-img-src]')) {
-      src = $fig.data('img-src');
-      txt = $fig.data('img-txt');
-      img = '<img src="' + src + '" title="' + txt + '" alt="' + txt + '">';
-      $fig.append(img);
-      $fig.removeAttr('data-img-src')
-        .removeAttr('data-img-txt');
-    }
-    this_sld.show();
-    if (active_thmb !== null) {
-      active_thmb.removeClass('active');
-    }
-    active_thmb = thmb;
-    active_thmb.addClass('active');
-    active_thmb.next().length ? btn_next.show() : btn_next.hide();
-    active_thmb.prev().length ? btn_prev.show() : btn_prev.hide();
-
-    thumbPos(thmb);
-  };
-
-
-  /**
-   * Bring a thumbnail image into view if it's scrolled out of view.
-   * @param thmb the thumbnail image to bring into view
-   */
-  var thumbPos = function (thmb) {
-    var index = $all_thmb.index(thmb);
-    var thmb_top = index * thmb_h;
-    var thmb_bottom = thmb_top + thmb_h;
-    var currentScroll = $thmbs.scrollTop();
-
-    if (thmb_top < currentScroll) {
-      // thmb is above the top of the visible area, so snap it to the top
-      $thmbs.scrollTop(thmb_top);
-    } else if (currentScroll + thmbs_resized_h < thmb_bottom) {
-      // thmb is below the bottom of the visible area, so snap it to the bottom
-      $thmbs.scrollTop(thmb_bottom - thmbs_resized_h);
-    }
-  };
-
-
-  var displaySize = function (num) {
-    if (num < 0) {
-      return "unknown";
-    } else {
-      if (num < 1000) {
-        return "" + num + "B";
-      } else {
-        if (num < 1000000) {
-          return "" + Math.round(num / 1000) + "KB";
-        } else {
-          return "" + Math.round(num / 10000) / 100 + "MB";
-        }
-      }
-    }
-  };
-
-  var showInContext = function (uri) {
-    uri = uri.split('/');
-    uri = uri.pop();
-    uri = uri.split('.');
-    uri = uri.slice(1);
-    uri = uri.join('-');
-    return '#' + uri;
-  };
-
-
-  var resizeModal = function () {
-    var doc_h = $(document).height();
-    var win_h = $win.height();
-    var win_w = $win.width();
-    $mask.css({'width':win_w, 'height':doc_h});
-    if (win_h >= modal_h) {
-      $modal.css('top', Math.round(win_h / 2 - modal_h / 2));
-      $slides.css('height', slides_h);
-      $figs.css('height', figs_h);
-      $thmbs.css('height', thmbs_h);
-      $abstract.css('height', abst_h);
-      $abs_txt.css('height', abs_txt_h);
-      thmbs_resized_h = thmbs_h;
-    } else {
-      $modal.css('top', 0);
-      $slides.css('height', win_h - (modal_h - slides_h));
-      $figs.css('height', win_h - (modal_h - figs_h));
-      $thmbs.css('height', thmbs_resized_h);
-      $abstract.css('height', win_h - (modal_h - abst_h));
-      $abs_txt.css('height', win_h - (modal_h - abs_txt_h));
-    }
-    $modal.css('left', Math.round(win_w / 2 - $modal.width() / 2));
-    thumbPos(active_thmb);
-  };
-
-  $(this).bind('keydown', function (e) {
-    if (e.which == 37 || e.which == 38) {
-      if (active_thmb.prev().length) {
-        t = active_thmb.prev()
-        changeSlide(t);
-      }
-      return false;
-    }
-
-    if (e.which == 39 || e.which == 40) {
-      if (active_thmb.next().length) {
-        t = active_thmb.next()
-        changeSlide(t);
-      }
-      return false;
-    }
-  });
-
-  if ($.support.touchEvents) {
-    $slides.swipe({
-      swipeLeft:function(event, direction, distance, duration, fingerCount) {
-        if (active_thmb.next().length) {
-          t = active_thmb.next()
-          changeSlide(t);
-        }
-      },
-      swipeRight:function(event, direction, distance, duration, fingerCount) {
-        if (active_thmb.prev().length) {
-          t = active_thmb.prev()
-          changeSlide(t);
-        }
-      },
-      tap:function(event, target) {
-        target.click();
-      },
-      threshold:25
-    });
-  }
-
-  buildFigs();
-};
-
-var killModal = function () {
-  $('div.modal').remove();
-  $('#modal-mask').remove();
-
-  // remove helper class added in displayModal()
-  $('body').removeClass('modal-active');
-
-  $win.unbind('resize.modal');
-  //will record the timeStamp for when the modal is closed
-  if(typeof event !== 'undefined') {
-    close_time = event.timeStamp;
-  }
-};
-
-// End Figure Viewer
-
 // Begin other global functions
+
+// contert numbers to data storage units
+var convertToBytes = function(num) {
+  if (num < 0) {
+    return "unknown";
+  } else {
+    if (num < 1000) {
+      return "" + num + "B";
+    } else {
+      if (num < 1000000) {
+        return "" + Math.round(num / 1000) + "KB";
+      } else {
+        return "" + Math.round(num / 10000) / 100 + "MB";
+      }
+    }
+  }
+};
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -1592,23 +1200,19 @@ var $toc_block_cover = $('#toc-block .cover img');
 if ($toc_block_cover.length) {
   var doi = $toc_block_cover.data('doi');
   $toc_block_cover.click(function () {
-    launchModal(doi, null, 'fig', true);
+    FigViewerInit(doi, null, 'figs', true);
   });
 }
-
-var toggleModalState = function () {
-  if(typeof(_gaq) !== 'undefined'){
-    _gaq.push(['_trackEvent',"Lightbox", "Toggle Modal Abstract", ""]);
-  }
-  $('#fig-viewer').toggleClass('abstract');
-};
 
 var imageURI = getParameterByName("imageURI");
 if (imageURI) {
   var index = imageURI.lastIndexOf(".");
   if (index > 0) {
     var doi = imageURI.substr(0, index);
-    launchModal(doi, imageURI, 'fig');
+    if (typeof FigViewerInit != "undefined") {
+      // check to make sure figviewer.js is included, when called in main
+      FigViewerInit(doi, imageURI, 'figs');
+    }
   }
 }
 delete imageURI;
@@ -1626,14 +1230,6 @@ $(window).load(function () {
   });
 });
 
-
-//Why is this bound universally?  That seems strange.
-//-Joe
-$(document).bind('keydown', function (e) {
-  if (e.which == 27) {
-    killModal();
-  }
-});
 
 // End global block
 
@@ -1854,4 +1450,3 @@ function tableOpen(tableId, type) {
   }
   return false;
 }
-
