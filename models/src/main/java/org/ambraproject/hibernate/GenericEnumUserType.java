@@ -1,10 +1,16 @@
 /*
- * $HeadURL$
- * $Id$
- * Copyright (c) 2006-2012 by Public Library of Science http://plos.org http://ambraproject.org
+ * Copyright (c) 2006-2014 by Public Library of Science
+ *
+ * http://plos.org
+ * http://ambraproject.org
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Unless required by applicable law or agreed to in writing, software
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -13,11 +19,14 @@
 
 package org.ambraproject.hibernate;
 
+import org.ambraproject.models.UserRole;
 import org.hibernate.HibernateException;
 import org.hibernate.type.AbstractSingleColumnStandardBasicType;
 import org.hibernate.type.TypeResolver;
 import org.hibernate.usertype.ParameterizedType;
 import org.hibernate.usertype.UserType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -43,6 +52,7 @@ import java.util.Properties;
  * The dollar sign indicates an inner class
  */
 public class GenericEnumUserType implements UserType, ParameterizedType {
+  private static final Logger log = LoggerFactory.getLogger(GenericEnumUserType.class);
 
   private Class<? extends Enum> enumClass;
   private Class<?> identifierType;
@@ -102,7 +112,17 @@ public class GenericEnumUserType implements UserType, ParameterizedType {
       throws HibernateException, SQLException {
     Object identifier = type.get(rs, names[0]);
     try {
-      return valueOfMethod.invoke(enumClass, new Object[]{identifier});
+      for(Object key : enumClass.getEnumConstants()) {
+        Object keyValue = identifierMethod.invoke(key);
+
+        if(keyValue.equals(identifier)) {
+          return valueOfMethod.invoke(enumClass, identifier);
+        }
+      }
+
+      log.warn("Found unrecognized enumeration value '{}', for enumeration: {}", identifier, enumClass.toString());
+
+      return null;
     } catch (Exception exception) {
       throw new HibernateException("Exception while invoking valueOfMethod of enumeration class: ",
           exception);
